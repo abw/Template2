@@ -363,55 +363,6 @@ need to be explicit:
 
 =back
 
-The following example demonstrates how an empty list ('folk') can be 
-populated with formatted strings by using the push() method in conjunction
-with a FOREACH loop.  The resultant list can then be printed using join.
-
-    [% # define some initial data
-       people   => [ 
-           { id => 'tom',   name => 'Tom'     },
-	   { id => 'dick',  name => 'Richard' },
-           { id => 'larry', name => 'Larry'   },
-       ]
-
-       # define an empty list that list methods can be called against
-       folk = [] 
-    -%]
-
-    [% folk.push("<a href=\"${person.id}.html\">$person.name</a>")
-         FOREACH person = people.sort('name') -%]
-    [% folk.join(",\n") %]
-
-Output:
-
-    <a href="larry.html">Larry</a>,
-    <a href="dick.html">Richard</a>,
-    <a href="tom.html">Tom</a>
-
-You can define your own virtual methods for scalars, lists and hash
-arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
-and $HASH_OPS are references to hash arrays that define these virtual
-methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
-hash/list reference as the first item.  SCALAR_OPS are subroutines
-that accept a scalar value as the first item.  Any other arguments
-specified when the method is called will be passed to the subroutine.
-
-    # load Template::Stash to make method tables visible
-    use Template::Stash;
-
-    # define list method to return new list of odd numbers only
-    $Template::Stash::LIST_OPS->{ odd } = sub {
-	my $list = shift;
-	return [ grep { $_ % 2 } @$list ];
-    };
-
-template:
-
-    [% primes = [ 2, 3, 5, 7, 9 ] %]
-    [% primes.odd.join(', ') %]		# 3, 5, 7, 9
-
-See also the examples in the t/vmeth.t test script.
-
 =head2 Automagic Promotion of Scalar to List for Virtual Methods
 
 In addition to the scalar virtual methods listed in the previous
@@ -461,25 +412,24 @@ will be called, as expected, in preference to the list virtual method.
 
 =head2 Defining Custom Virtual Methods
 
-You can define your own virtual methods by adding them to the hash
-arrays referenced by the C<$SCALAR_OPS>, C<$LIST_OPS> and C<$HASH_OPS>
-package variables in the Template::Stash module.
+You can define your own virtual methods for scalars, lists and hash
+arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
+and $HASH_OPS are references to hash arrays that define these virtual
+methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
+hash/list reference as the first item.  SCALAR_OPS are subroutines
+that accept a scalar value as the first item.  Any other arguments
+specified when the method is called will be passed to the subroutine.
 
-    $Template::Stash::SCALAR_OPS->{ commify } = sub {
-	# stolen from perlfaq 5
-	local $_  = shift;
-        my $c = shift || ",";
-        my $n = int(shift || 3);
-        return $_ if $n<1;
-        1 while s/^([-+]?\d+)(\d{$n})/$1$c$2/;
-        return $_;
+    # load Template::Stash to make method tables visible
+    use Template::Stash;
+
+    # define list method to return new list of odd numbers only
+    $Template::Stash::LIST_OPS->{ odd } = sub {
+	my $list = shift;
+	return [ grep { $_ % 2 } @$list ];
     };
 
-In each case, the subroutine you define is passed the scalar item, 
-hash or list reference, followed by any other argument specified
-when the virtual method is called.  
+template:
 
-You can then call your virtual method like any other:
-
-    [% big_number.commify %]
-
+    [% primes = [ 2, 3, 5, 7, 9 ] %]
+    [% primes.odd.join(', ') %]		# 3, 5, 7, 9
