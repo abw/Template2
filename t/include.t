@@ -55,7 +55,7 @@ my $tproc = Template->new({
     INTERPOLATE  => 1,
     INCLUDE_PATH => "$dir/src:$dir/lib",
     TRIM         => 1,
-    RESET_BLOCKS => 0,
+    AUTO_RESET   => 0,
 });
 
 my $tt_reset = Template->new({ 
@@ -71,9 +71,11 @@ __DATA__
 [% a %]
 [% PROCESS incblock -%]
 [% b %]
+[% INCLUDE first_block %]
 -- expect --
 alpha
 bravo
+this is my first block, a is set to 'alpha'
 
 -- test --
 [% INCLUDE first_block %]
