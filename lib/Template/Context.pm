@@ -771,7 +771,7 @@ sub _init {
 
 	# hack to get stash to know about debug mode
 	$predefs->{ _DEBUG } = ( ($config->{ DEBUG } || 0)
-                               & Template::Constants::DEBUG_UNDEF ) ? 1 : 0
+                               & &Template::Constants::DEBUG_UNDEF ) ? 1 : 0
             unless defined $predefs->{ _DEBUG };
                                 
 	Template::Config->stash($predefs)
