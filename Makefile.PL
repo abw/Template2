@@ -20,7 +20,7 @@ use vars qw( $TT_VERSION $TT_PREFIX $TT_IMAGES $TT_RUN_DBI
 # check O/S to set sensible defaults
 
 my ($WIN32, $FLAVOUR, $PREFIX, $IMAGES, $MAKE);
-if ($^O =~ /win/i) {
+if ($^O eq 'MSWin32') {  # any others also?
     $WIN32   = 1;
     $FLAVOUR = 'Win32';
     $PREFIX  = 'C:/Program Files/Template Toolkit 2';
@@ -439,13 +439,10 @@ sub optional_stash_xs {
 XS Stash: TT2 now twice as fast!
 --------------------------------
 
-We have a new, high speed version of the Template::Stash. It's 
+We have a new high speed version of the Template::Stash. It's 
 a Perl XS module which can evaluate templates about twice as fast as 
-the pure-Perl version.  It has been widely tested and is thought to be 
-stable and reliable.  However, please note that there may be outstanding
-issues relating to accessing data from tied hashes (e.g. Apache::Session).
-Consult the README file or the Template Toolkit mailing list for details:
-http://www.tt2.org/pipermail/templates/2001-September/001568.html
+the pure-Perl version.  It is still officially "experimental" but 
+is thought to be generally stable and reliable.
 
 You can choose to build the XS stash module and enable it by default
 so that it is used automatically for all templates.  If you build it
