@@ -340,6 +340,13 @@ bar: This is two/bar
 baz: This is the baz file, a: alpha
 
 -- test --
+foo: [% INSERT foo | trim +%]
+bar: [% INSERT bar | trim +%]
+-- expect --
+foo: This is one/foo
+bar: This is two/bar
+
+-- test --
 -- use ttd2 --
 foo: [% PROCESS foo | trim +%]
 bar: [% PROCESS bar | trim +%]
@@ -348,3 +355,10 @@ baz: [% PROCESS baz a='alpha' | trim %]
 foo: This is two/foo
 bar: This is two/bar
 baz: This is the baz file, a: alpha
+
+-- test --
+foo: [% INSERT foo | trim +%]
+bar: [% INSERT bar | trim +%]
+-- expect --
+foo: This is two/foo
+bar: This is two/bar
