@@ -36,14 +36,15 @@ use File::Spec;
 use File::Basename;
 use Text::ParseWords qw(quotewords);
 
-
-#------------------------------------------------------------------------
-# config
-#------------------------------------------------------------------------
 my $NAME     = "ttree";
 my $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 my $HOME     = $ENV{ HOME } || '';
 my $RCFILE   = $ENV{"\U${NAME}rc"} || "$HOME/.${NAME}rc";
+
+
+#------------------------------------------------------------------------
+# configuration options
+#------------------------------------------------------------------------
 
 # offer create a sample config file if it doesn't exist, unless a '-f'
 # has been specified on the command line
@@ -52,8 +53,8 @@ unless (-f $RCFILE or grep(/^-f$/, @ARGV) ) {
 	  "(file: $RCFILE)   [y/n]: ");
     my $y = <STDIN>;
     if ($y =~ /^y(es)?/i) {
-	write_config($RCFILE);
-	exit(0);
+        write_config($RCFILE);
+        exit(0);
     }
 }
 
@@ -75,9 +76,9 @@ my $suffix   = $config->suffix;
 my $depends  = $config->depend;
 my $depsfile = $config->depend_file;
 my $srcdir   = $config->src
-	       || die "Source directory not set (-s)\n";
+    || die "Source directory not set (-s)\n";
 my $destdir  = $config->dest
-	       || die "Destination directory not set (-d)\n";
+    || die "Destination directory not set (-d)\n";
 die "Source and destination directories may not be the same:\n  $srcdir\n"
     if $srcdir eq $destdir;
 
@@ -94,32 +95,58 @@ my $ucttopts = {
 # get all template variable definitions
 my $replace = $config->get('define');
 
-#print "replace hash: ", join(', ', map { "$_ => $replace->{ $_ }"} 
-#			     keys %$replace), "\n";
-
 # now create complete parameter hash for creating template processor
 my $ttopts   = {
     %$ucttopts,
     RELATIVE     => $relative,
     ABSOLUTE     => $absolute,
-#    INCLUDE_PATH => [ @$libdir, '.' ],
     INCLUDE_PATH => [ $srcdir, @$libdir ],
     OUTPUT_PATH  => $destdir,
 };
 
+
+#------------------------------------------------------------------------
+# inter-file dependencies
+#------------------------------------------------------------------------
+
 if ($depsfile or $depends) {
-	$depends = read_depends($depsfile, $depends);
-    print "depends: ", join(', ', map { "$_ => [ @{$depends->{ $_ }} ]"} 
-                                 keys %$depends), "\n";
+	$depends = dependencies($depsfile, $depends);
 } 
 else {
-	$depends = undef;
+	$depends = { };
 }
+
+my $global_deps = $depends->{'*'} || [ ];
+
+# add any PRE_PROCESS, etc., templates as global dependencies
+foreach my $ttopt (qw( PRE_PROCESS POST_PROCESS PROCESS WRAPPER )) {
+    my $deps = $ucttopts->{ $ttopt } || next;
+    my @deps = ref $deps eq 'ARRAY' ? (@$deps) : ($deps);
+    next unless @deps;
+    push(@$global_deps, @deps);
+}
+
+# remove any duplicates
+$global_deps = { map { ($_ => 1) } @$global_deps };
+$global_deps = [ keys %$global_deps ];
+
+# update $depends hash or delete it if there are no dependencies
+if (@$global_deps) {
+    $depends->{'*'} = $global_deps;
+}
+else {
+    delete $depends->{'*'};
+    $global_deps = undef;
+}
+$depends = undef
+    unless keys %$depends;
+
 
 
 #------------------------------------------------------------------------
 # pre-amble
 #------------------------------------------------------------------------
+
 print "$NAME $VERSION (Template Toolkit version $Template::VERSION)\n\n"
     if $verbose;
 
@@ -139,27 +166,9 @@ if ($verbose) {
     	if $dryrun;
 }
 
-#if ($debug) {
-#    local $" = ', ';
-#    print STDERR "Template Toolkit configuration:\n";
-#    foreach (keys %$ucttopts) {
-#        my $val = $ucttopts->{$_};
-#        next unless $val;
-#        if (ref($val) eq 'ARRAY') {
-#            next unless @$val;
-#            $val = "[ @$val ]";
-#        }
-#        printf STDERR "  %-12s => $val\n", $_;
-#    }
-#    print STDERR "\n";
-#}
-
-
 #------------------------------------------------------------------------
-# main-amble
+# main processing loop
 #------------------------------------------------------------------------
-
-#chdir($srcdir) || die "$srcdir: $!\n";
 
 my $template = Template->new($ttopts);
 
@@ -173,6 +182,13 @@ else {
     # implicitly process all file in source directory
     process_tree();
 }
+
+exit(0);
+
+
+#========================================================================
+# END 
+#========================================================================
 
 
 #------------------------------------------------------------------------
@@ -283,10 +299,9 @@ sub process_file {
         $desttime = ( stat($dest) )[9];
 
 		if (defined $depends) {
-			my $depfiles = get_dependant_files($file, $depends);
-			my $time  = get_newest_file($depfiles);
-			if (defined $time && ($srctime < $time)) {
-				$srctime = $time;
+			my $deptime  = depend_time($file, $depends);
+			if (defined $deptime && ($srctime < $deptime)) {
+				$srctime = $deptime;
 			}
 		}
 	
@@ -344,35 +359,36 @@ sub process_file {
 
 
 #------------------------------------------------------------------------
-# read_depends($file)
+# dependencies($file, $depends)
 # 
-# Reads the dependency file and returns a hash of arrays.
+# Read the dependencies from $file, if defined, and merge in with 
+# those passed in as the hash array $depends, if defined.
 #------------------------------------------------------------------------
 
-sub read_depends {
+sub dependencies {
 	my ($file, $depend) = @_;
 	my %depends = ();
 
 	if (defined $file) {
-		my ($fh, $line);
-
+		my ($fh, $text, $line);
 		open $fh, $file or die "Can't open $file, $!";
+        local $/ = undef;
+        $text = <$fh>;
+        close($fh);
+        $text =~ s[\\\n][]mg;
 		
-		while (defined( $line = getline($fh) )) {
+        foreach $line (split("\n", $text)) {
 			next if $line =~ /^\s*#/;
+            chomp $line;
 			my ($file, @files) = quotewords('\s*:\s*', 0, $line);
 			$file =~ s/^\s+//;
 			@files = grep(defined, quotewords('\s+', 0, @files));
 			$depends{$file} = \@files;
 		}
-
-		close $fh;
 	}
 
 	if (defined $depend) {
-		my ($key);
-
-		foreach $key (keys %$depend) {
+		foreach my $key (keys %$depend) {
 			$depends{$key} = [ quotewords(',', 0, $depend->{$key}) ];
 		}
 	}
@@ -381,118 +397,55 @@ sub read_depends {
 }
 
 
+
 #------------------------------------------------------------------------
-# get_newest_file(\@files)
+# depend_time($file, \%depends)
 #
-# Returns the mtime of the ``newest'' file in @files.
+# Returns the mtime of the most recent in @files.
 #------------------------------------------------------------------------
 
-sub get_newest_file {
-    my $files = shift;
-    my @absfiles;
+sub depend_time {
+	my ($file, $depends) = @_;
+    my ($deps, $absfile, $modtime);
+    my $maxtime = 0;
+    my @pending = ($file);
+    my @files;
+    my %seen;
 
-    FILE: foreach my $file (@$files) {
-        if (File::Spec->file_name_is_absolute($file)) {
-            push(@absfiles, $file);
-            next FILE;
+    # push any global dependencies onto the pending list
+    if ($deps = $depends->{'*'}) {
+        push(@pending, @$deps);
+    }
+
+    # iterate through the list of pending files
+    while (@pending) {
+        $file = shift @pending;
+        next if $seen{ $file }++;
+
+        if (File::Spec->file_name_is_absolute($file) && -f $file) {
+            $modtime = (stat($file))[9];
         }
-        foreach my $dir ($srcdir, @$libdir) {
-            my $absfile = File::Spec->catfile($dir, $file);
-            if (-f $absfile) {
-                push(@absfiles, $absfile);
-                next FILE;
+        else {
+            $modtime = 0;
+            foreach my $dir ($srcdir, @$libdir) {
+                $absfile = File::Spec->catfile($dir, $file);
+                if (-f $absfile) {
+                    $modtime = (stat($absfile))[9];
+                    last;
+                }
             }
         }
+        $maxtime = $modtime
+            if $modtime > $maxtime;
+
+
+        if ($deps = $depends->{ $file }) {
+            push(@pending, @$deps);
+        }
     }
-	my @mtimes = map { (stat($_))[9] } @absfiles;
 
-	# Get the index of the file with the largest mtime.
-	my $i = do {
-		my ($max, $m, $i, $index);
-		$max = $i = 0;
-
-		foreach $m (@mtimes) {
-			if ($max < $m) {
-				$max = $m;
-				$index = $i;
-			}
-			$i++;
-		}
-
-		$index;
-	};
-
-	if (defined $i) {
-		return $mtimes[$i];
-	} else {
-		return undef;
-	}
+    return $maxtime;
 }
-
-
-
-#------------------------------------------------------------------------
-# get_dependant_files($file, $depends)
-#
-# Gathers and returns a list of files that $file depends on from the
-# hash of arrays, $depends.
-#------------------------------------------------------------------------
-
-sub get_dependant_files {
-	my ($file, $depends) = @_;
-	my @files = ();
-	$depends = { %{$depends} }; # Copy $depends, because be modify it.
-
-	if (exists $depends->{$file}) {
-		my ($i) = 0;
-		# [dylan] No, this doesn't delete a real file, hehe!
-		@files = (@{ delete $depends->{$file} });
-
-		while (exists $files[$i]) {
-			my $file = $files[$i];
-			if (not defined $file) {
-				die "dependant file $i is undefined!!\n";
-			}
-			if (exists $depends->{$file}) {
-				push(@files, @{ delete $depends->{$file} });
-			}
-		} 
-        continue {
-			$i++;
-		}
-	}
-	
-	return \@files;
-}
-
-
-#------------------------------------------------------------------------
-# getline($fh)
-# 
-# This is a wrapper around readline($fh) that returns a single line, but
-# allows that 'line' to span several newsline if the continuation
-# charecter \ is used.
-#------------------------------------------------------------------------
-
-sub getline {
-	my ($fh) = @_;
-	my ($buf, @buffer);
-
-	while (defined ( $buf = readline($fh) ) ) {
-		chomp $buf;
-		if (substr($buf, -1, 1) ne '\\') {
-			push(@buffer, $buf);
-			last;
-		} else {
-			chop $buf;
-			push(@buffer, $buf);
-		}
-	}
-
-	
-	return @buffer ? join('', @buffer, "\n") : undef;
-}
-
 
 
 #------------------------------------------------------------------------
@@ -594,72 +547,54 @@ sub write_config {
 #     perldoc ttree
 #     ttree -h
 #
-# NOTE: The directories specified below adopt the UNIX convention of
-# specifying a user's home directory with the '~' character.  This
-# feature may not be available on other platforms in which case you
-# should specify the directory in entirety.
 #------------------------------------------------------------------------
 
-#------------------------------------------------------------------------
-# General options
+# directory containing other ttree configuration files
+# this option is only valid in the main .ttreerc 
+#
+#     cfg = /path/to/ttree/config/directory
 
-# print summary of what's going on (-v)
+# directory containing source page templates
+src = /path/to/your/source/page/templates
+
+# directory where output files should be written
+dest = /path/to/your/html/output/directory
+
+# additional directories of library templates
+lib = /first/path/to/your/library/templates
+lib = /second/path/to/your/library/templates
+
+# print summary of what's going on 
 verbose 
 
-# recurse into any sub-directories and process files (-r)
+# recurse into any sub-directories and process files
 recurse
 
-
-#------------------------------------------------------------------------
-# The 'cfg' option defines a directory in which other ttree configuration
-# files can be found;  you can specify a file using the '-f' option,
-# 'ttree -f myconfig' and the script will look for the file in this
-# directory.  Alteratively, provide an absolute path as an argument,
-# 'ttree -f /tmp/foo'.
-# 
-# By default, this option is commented out.  You will need to create a 
-# directory, uncomment the following line and set the value appropriately.
-# Having done that, you can then create files exactly like this in that
-# location.
-
-#cfg = ~/.ttree
-
-#------------------------------------------------------------------------
-# The remaining options define the default behaviour when you run ttree.
-# This file is always processed before any file specified by '-f'.  If
-# you define the 'src' and 'dest' options then these will be used by
-# default.  Values for these options defined in files loaded with '-f'
-# will override these default.  Other options such as 'lib', 'ignore',
-# 'copy' and 'accept' are accumulative.
-
-# The 'src' option defines the location of the template files that
-# you want to process
-src  = ~/websrc/public_html
-
-# The 'dest' option specifies where the output should go.  The script
-# compares the modification dates of files in the 'src' and 'dest'
-# directories to work out which need to be processed. 
-dest = ~/public_html
-
-# 'lib' tells the processor (via INCLUDE_PATH) where to find any
-# template files that may be INCLUDE'd.  You can specify many.
-lib = ~/websrc/templates
-lib = /usr/local/templates/lib
-
-# Things that aren't templates and should be ignored, specified as Perl
-# regexen.
+# regexen of things that aren't templates and should be ignored
 ignore = \\b(CVS|RCS)\\b
 ignore = ^#
 
-# Things that should be copied rather than processed.
+# ditto for things that should be copied rather than processed.
 copy = \\.png\$ 
 copy = \\.gif\$ 
 
-# By default, everything not ignored or copied is accepted; add 'accept'
+# by default, everything not ignored or copied is accepted; add 'accept'
 # lines if you want to filter further. e.g.
-# accept = \\.html\$
-# accept = \\.atml\$
+#
+#    accept = \\.html\$
+#    accept = \\.tt2\$
 
+# options to rewrite files suffixes (htm => html, tt2 => html)
+#
+#    suffix htm=html
+#    suffix tt2=html
+
+# options to define dependencies between templates
+#
+#    depend *=header,footer,menu
+#    depend index.html=mainpage,sidebar
+#    depend menu=menuitem,menubar
+# 
 END_OF_CONFIG
 
     close(CONFIG);
