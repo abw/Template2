@@ -134,6 +134,7 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 					  $factory->debug($_[2]);
 				      }
 				      else {
+# print STDERR "debug ($_[0]->{ DEBUG }) @{$_[2]->[0]}\n";
 					  $_[0]->{ DEBUG } ? $factory->debug($_[2]) : '';
 				      }
 				    }
@@ -245,15 +246,10 @@ defblock: defblockname
 				    }
 ;
 
-# removed for now
-#	     print STDERR "experimental block args: [@{ $_[3] }]\n" if $_[3];
-
 defblockname: BLOCK blockname       { push(@{ $_[0]->{ DEFBLOCKS } }, $_[2]);
 				      $_[2];
 				    }
 ;
-
-
 
 blockname:  filename 
         |   LITERAL		    { $_[1] =~ s/^'(.*)'$/$1/; $_[1]      }
