@@ -544,19 +544,21 @@ EOF
 #------------------------------------------------------------------------
 
 sub redirect_filter_factory {
-    my ($context, $file, $binmode) = @_;
+    my ($context, $file, $options) = @_;
     my $outpath = $context->config->{ OUTPUT_PATH };
 
     return (undef, Template::Exception->new('redirect', 
                                             'OUTPUT_PATH is not set'))
         unless $outpath;
 
+    $options = { binmode => $options } unless ref $options;
+
     sub {
         my $text = shift;
         my $outpath = $context->config->{ OUTPUT_PATH }
             || return '';
         $outpath .= "/$file";
-        my $error = Template::_output($outpath, $text, $binmode);
+        my $error = Template::_output($outpath, \$text, $options);
         die Template::Exception->new('redirect', $error)
             if $error;
         return '';
