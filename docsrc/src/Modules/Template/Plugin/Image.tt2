@@ -144,9 +144,9 @@ The syntax of this field is:
    <xres> "/" <yres> <unit>
    <xres> "/" <yres>
 
-The <res>, <xres> and <yres> fields are numbers.  The <unit> is a
-string like C<dpi>, C<dpm> or C<dpcm> (denoting "dots per
-inch/cm/meter).
+The E<lt>resE<gt>, E<lt>xresE<gt> and E<lt>yresE<gt> fields are
+numbers.  The E<lt>unitE<gt> is a string like C<dpi>, C<dpm> or
+C<dpcm> (denoting "dots per inch/cm/meter).
 
 =item SamplesPerPixel
 
