@@ -69,7 +69,7 @@ And then print each item in the column going across the output rows
 
 =head2 Accessing Cookies
 
-Jeff Boes E<lt>boes@nexcerpt.comE<gt> asks:
+Jeff Boes E<lt>jboes@nexcerpt.comE<gt> asks:
 
     Does anyone have a quick-n-dirty approach to accessing 
     cookies from templates? 
