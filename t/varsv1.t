@@ -81,7 +81,7 @@ my $params = {
     # don't define a 'z' - DEFAULT test relies on its non-existance
 };
 
-test_expect(\*DATA, { INTERPOLATE => 1, VERSION => 1 }, $params);
+test_expect(\*DATA, { INTERPOLATE => 1, V1DOLLAR => 1 }, $params);
 
 #------------------------------------------------------------------------
 # subs 

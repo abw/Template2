@@ -9,5 +9,6 @@
 ^parser/Parser\.output
 ^docs/design/
 ^docs/tpj/
-^docs/pod/.*\.pod$
+^docs/about
+^docs/release
 

@@ -26,10 +26,13 @@ WriteMakefile(
 sub build_docs {
     return <<EOF;
 echo "Building documentation for version \$(VERSION)" ;           \\
-\$(CHMOD) 644 docs/pod/*.pod;                                     \\
 \$(PERL) bin/ttree -f ./docs/ttree.cfg -a;                        \\
-\$(CHMOD) 444 docs/pod/*.pod;                                     \\
 EOF
 }
 
+
+# Could add these before/after call to ttree to write-protect output docs
+# to prevent accidental editing.  Better to edit the source files...
+# \$(CHMOD) 644 docs/pod/*.pod;                                     \\
+# \$(CHMOD) 444 docs/pod/*.pod;                                     \\
 

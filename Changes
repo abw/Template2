@@ -1,3 +1,506 @@
+#========================================================================
+#
+# Changes 
+#
+# DESCRIPTION
+#   Revision history for Template Toolkit.
+#
+# AUTHOR
+#   Andy Wardley   <abw@kfs.org>
+#
+#------------------------------------------------------------------------
+# $Id$
+#========================================================================
+
+
+#========================================================================
+#                       ***** VERSION 2.00 *****
+#
+# The following list outlines the major differences between version 1.*
+# and version 2.00 of the Template Toolkit. 
+#========================================================================
+
+New Language Features
+---------------------
+
+* New SWITCH / CASE statement.  SWITCH takes an expression, CASE takes
+  a value or list of values to match.  CASE may also be left blank or
+  written as [% CASE default %] to specify a default match.  Only one
+  CASE matches, there is no drop-through between CASE statements.
+  
+    [% SWITCH myvar %]
+    [% CASE value1 %]
+       ...
+    [% CASE [ value2 value3 ] %]   # multiple values to match
+       ...
+    [% CASE myhash.keys %]         # ditto
+       ...
+    [% CASE %]                     # default, or [% CASE default %]
+       ...
+    [% END %]
+  
+* New TRY / CATCH / FINAL construct for fully functional, nested
+  exception handling.  The block following the TRY is executed and
+  output if no exceptions are throw.  Otherwise, the relevant CATCH
+  block is executed.  CATCH types are hierarchical (e.g 'foo' catches
+  'foo.bar') or the CATCH type may be left blank or specified as [%
+  CATCH default %] to provide a default handler.  The contents of a
+  FINAL block, if specified, will be processed last of all, regardless
+  of the result (except an uncaught exception which is throw upwards
+  to any enclosing TRY block).
+  
+    [% TRY %]
+       ...blah...blah...
+       [% CALL somecode %]	  # may throw an exception
+       ...etc...
+       [% INCLUDE someblock %]    # may have a [% THROW ... %] directive
+       ...and so on...
+    [% CATCH file %]		  # catch system-generated 'file' exception 
+       ...
+    [% CATCH DBI %]		  # catch 'DBI' or 'DBI.*'
+       ...
+    [% CATCH %]	                  # catch anything else
+       ...
+    [% FINAL %]		          # optional
+       All done!
+    [% END %]
+
+* New CLEAR directive to clear the current output buffer.  This is typically 
+  used in a CATCH block to clear the output of a failed TRY block.  Any output
+  generated in a TRY block up to the point that an exception was thrown will
+  be output by default.  The [% CLEAR %] directive in a catch block clears
+  this output from the TRY block.
+
+    [% TRY %]
+       blah blah blah, this is the current output block
+       [% THROW some.error 'Danger Will Robinson!' %]
+       not reached...
+    [% CATCH %]
+       [% # at this point, the output block contains the 'blah blah...' line
+          # up to the point where the THROW occured, but we don't want it
+          CLEAR
+       %]
+       Here we can add some more text if we want...
+    [% END %]
+
+  In general, the CLEAR directive clears the current output from the
+  template or enclosing block.
+
+* New META directive allowing you to define metadata items for your
+  template.  These are attached to the compiled template and wrapped
+  up as a Template::Document object.  The 'template' variable is a
+  reference to the current parent document and metadata items may be
+  accessed directly.  Of particular note is the fact that the
+  'template' variable is correctly defined for all PRE_PROCESS and
+  POST_PROCESS headers.  Thus, your headers and footers can access
+  items from the main template (e.g. title, author, section, keywords,
+  flags, etc) and display them or act accordingly.
+  
+  mytemplate:
+    [% META 
+       title     = 'This is a Test'
+       author    = 'Andy Wardley'
+       copyright = "2000, Andy Wardley" 
+    %]
+  
+    <h1>[% template.title %]</h1>
+    blah blah
+  
+  header:   (a PRE_PROCESS template)
+    <html>
+    <head><title>[% template.title %]</title></head>
+    <body>
+  
+  footer:  (a POST_PROCESS template)
+    <hr>
+    &copy; Copyright [% template.copyright or '2000, MyCompany' %]
+
+* New RAWPERL ... END block directive allows you to write raw Perl
+  code which is integrated intact and unsullied into the destination
+  template sub-routine.  The existing PERL ... END directive continues
+  to be supported, offering runtime evaluation of a block which may
+  contain other template directives, etc, which are first evaluated
+  (e.g. PERL...END processes the block and filters the output into
+  Perl evaluation at runtime).
+
+* The output from any directive or block can now be captured and assigned to 
+  a variable.
+
+    [% htext = INCLUDE header %]
+    [% btext = BLOCK %]
+       blah blah
+       [% x %] [% y %] [% z %]
+    [% END %]
+  
+    # you can even assign the output of loops, conditions, etc.
+    [% numbers = FOREACH n = [2, 3, 5, 7, 11, 13] %]
+       blah blah [% n %]
+    [% END %]
+
+* The handling of complex expressions has been improved, permitting
+  basic directives to contain logical shortcut operators, etc.
+
+    [% foo or bar %]             # GET foo, or bar if foo is false (0/undef)
+    [% CALL func1 and func2 %]   # func2 only called if func1 returns true
+    [% name = user.id or cgi.param('id') %].
+
+* A new "x ? y : z" operation is provided as a shorthand for
+  "if x then y else z"
+
+    [% foo = bar ? baz : qux %]
+
+* Various new pseudo-methods have been added for inspecting and manipulating
+  data.  The full list now looks something like this:
+
+      [% value.defined %]                  # value is defined
+      [% value.length %]                   # length of string
+      [% value.split(delimiter, limit) %]  # split string as Perl does
+
+      [% hash.keys %]                      # return list of hash keys
+      [% hash.values %]                    # ditto hash values
+
+      [% list.size %]                      # number of items in list
+      [% list.max %]                       # last item number (size - 1)
+      [% list.first %]                     # first item    
+      [% list.last %]                      # last item
+      [% list.reverse %]                   # list in reverse order
+      [% list.sort(field) %]               # list in sorted order
+      [% list.join(joint) %]               # join items into single string
+
+
+Templates Compiled to Perl Code
+-------------------------------
+
+* Templates are now compiled to Perl code, with credit and respect due
+  to Doug Steinwand for providing an implementation around which the
+  new parser was built.  This brings a number of important benefits:
+
+  - Speed and Memory Efficiency
+
+    Version 1 used a list of opcodes to represent directives and
+    lower-level operations.  These were evaluated by the hideously
+    contrived, and darkly sinister Template::Context::_evaluate()
+    method.  In version 2, all templates are parsed and rebuilt as
+    Perl code.  This is then evaluated and stored as a reference to a
+    Perl sub-routine which can then be executed and re-executed 
+    significantly faster and with far less memory overhead.
+
+  - Persistance.
+
+    Once a template has been compiled to Perl code it can be saved to
+    disk as a "compiled template" by defining the COMPILE_EXT option.
+    This allows you to specify a filename extension (e.g. '.ttc')
+    which is added to the template filename and used to create a new
+    file containg the Perl code.  Next time you use the template, even
+    if you've shut down your program/server/computer in the mean time,
+    the compiled template is there in a file as Perl code and is
+    simply require()d and executed.  It all happens significantly
+    faster because there's no Template::Parser to run.  In fact, if
+    all your templates are "compiled" on disk then the
+    Template::Parser and Template::Grammar modules won't even be
+    loaded, further reducing startup time and memory consumption (the
+    grammar file, in particular is rather large).  The
+    Template::Provider module handles the loading, caching and
+    persistance of templates, and will examine file timestamps and
+    re-compiled modified templates as required.
+
+  - Flexibility.  
+
+    Because "compiled templates" are now nothing more than Perl
+    sub-routines, you can use anyone or anything to generate them and
+    run them all under the same roof.  Different parser back-ends can 
+    generate Perl code optimised for speed or functionality, for example.
+    Or different parsers can compile different template languages 
+    (PHP, ASP, Mason, roll-your-own, etc.) and run them alongside
+    regular templates.  Or if you don't trust a parser, you can wri
+    even write your own Perl code and have your templates execute 
+    as fast as the code you can write.
+
+* Templates (i.e. sub-routines) now return their generated output,
+  rather than sending it to $context->output().  This speeds things 
+  up and makes the code simpler, as well as allowing greater 
+  flexibility in how template sub-routines can work.
+
+* Exceptions (errors) are now raised via Perl's die() and caught by
+  an enclosing eval { } block.  Again, this simplifies the code generated
+  and improves runtime efficiency.
+
+* The directives [% RETURN %] and [% STOP %] are now implemented as 
+  special case exceptions which are caught in the appropriate place 
+  and handled accordingly.
+
+
+Miscellaneous Features
+----------------------
+
+* The INTERPOLATE option is now automatically disabled within PERL and 
+  RAWPERL blocks to prevent Perl $variables from being interpreted as 
+  template variables.
+
+    # INTERPOLATE = 1
+    This $var will get interpolated...
+    [% PERL %]
+       # but these won't
+       my $foo = 'some value';
+       my $bar = 'another value';
+       # etc...
+    [% END %]
+    no we're interpolating variables again, like $var
+
+* Added the TRIM option to automatically removed leading and trailing 
+  whitespace from the output of templates and BLOCKs.  This was suggested
+  by someone on the mailing list (was it Swen?) but I recall who at the 
+  moment.  I'll check and fill in this **gap**, but thanks to him anwyay.
+
+
+
+Plugins and Filters
+-------------------
+
+* Added the 'upper' and 'lower' filters for case folding text.
+
+
+  
+  * Bare CATCH blocks are no longer permitted and must be explicitly 
+    scoped with a matching TRY.  In most cases, this simply means adding
+    a [% TRY %] to the start of any templates that define CATCH blocks, 
+    and ensuring that the CATCH blocks are moved to the end of the file
+    (or relevant place).
+
+       # version 1 - no longer supported
+       blah blah blah...some error occurs
+
+       [% CATCH some_kind_of_error %]
+          handler template...
+       [% END %]
+
+       # version 2
+       [% TRY %]
+       blah blah blah...some error occurs...
+
+       [% CATCH some_kind_of_error %]
+          handler template...
+       [% END %]
+
+    Also be aware that this may change the expected output in case of 
+    errors.  By default, all output in the TRY block up to the point 
+    of error will be returned, with the relevant catch block, and then
+    and further template output appended.  You can use [% CLEAR %] within
+    a CATCH block to clear the output from the TRY block, if you prefer.
+    TRY blocks can be nested indefinately.
+
+  * The ERROR directive is no longer supported.  It was very ill-defined
+    anyway and serves no purpose that can't be acheived by defining 
+    custom filters, error handlers bound to template variables, or whatever.
+    I haven't implemented any special error or logging facilities, other 
+    than the general purpose exception handling, but welcome any thoughts
+    on what or if anything else is needed.  
+
+  * The current exception caught in a catch block is now aliased to the 
+    variable 'error' rather than 'e'.  This is much more logical, IMHO, 
+    and was only prevented previously by 'error' being a reserved word.
+    Note that 'e' is still defined, in addition to 'error'.  This may 
+    be deprecated at some point in the future.
+
+  * The use of a leading '$' on variables is no longer optional, and
+    should only be used to explicitly to indicate interpolatation of a
+    variable name.  Most of the time you *don't* want to do this, so
+    leave the '$' off.  This represent a slight shift away from the
+    (optional) Perlness of the language, but I think it's a necessary
+    step to improve the clarity and consistency of the language.  
+
+    As previously discussed on the mailing list, in interpolated text
+    (i.e. a "double quoted" string or regular template text with
+    INTERPOLATE set), both '$foo' or '${foo}' are interpolated as the
+    value of the variable 'foo'.  This is good because it is a
+    de-facto standard, consistent with Perl, shell, etc.  But inside a
+    directive, [% $foo %] and [% ${foo} %] mean different things, the
+    first being equivalent to [% foo %] or [% GET foo %] (the leading
+    '$' is ignored) but the second actually fetching a variable whose
+    name is stored in the variable 'foo'.  In other words, '${foo}'
+    interpolates to the value of foo ('bar', say) and then this is
+    used as the parameter to GET (which itself is optional).  Thus, in
+    this case, [% ${foo} %] is [% GET ${foo} %] is [% GET bar %].
+
+    This makes more sense if you look at the common example of accesing
+    an entry from a hash array using the value of an variable as the 
+    key (e.g. $hash->{ $key }).  In version 1, the leading '$' on 
+    variables is ignored, meaning that the following are NOT identical.
+
+      # version 1
+      [% hash.$key   %]     # ERROR - '$' ignored => [% hash.key %]
+      [% hash.${key} %]     # OK - '$key' is interpolated first
+
+    It gets more confusing if you excercise your right to add optional
+    leading '$'s in other places (which is one reason why I've always 
+    suggested against their use).
+
+      # version 1 - same as above
+      [% $hash.$key   %]
+      [% $hash.${key} %]
+
+    In particular, that last example should demonstrate the
+    inconsistency.  Unlike interpolated text, '$...' and '${...}' are
+    not treated the same and '$hash' is not interpolate while '${key}'
+    is.  The only consistent solution I can see to this is to make
+    both '$xxx' and '${xxx}' indicate interpolation in all cases, so
+    that's what I've done.  In version 2, the syntax becomes a lot
+    clearer and aligns more closely to a markup language than a
+    programming language.  I think this is a Good Thing, but let me 
+    know what you think...
+
+    Here's the Version 2 summary, assuming INTERPOLATE is set.
+
+      # version 2
+      my name is $name
+      my name is $user.name
+      my name is ${user.name}
+
+
+      [% GET name %]                 [% name %]
+      [% GET user.name %]            [% user.name %]
+      [% GET people.fred %]          [% people.fred %]
+      [% GET people.$name        %]  [% people.$name %]
+      [% GET people.${user.name} %]  [% people.${user.name} %]
+
+      [% INCLUDE header 
+         title = "Home Page for $name"
+      %]
+      [% INCLUDE header
+         title = "Home Page for $user.name"
+      %]
+      [% INCLUDE header
+         title = "Home Page for ${user.name}"
+      %]
+
+    If you find it slightly confusing that the dollar should be
+    missing inside directives, then you may find it helps to think 
+    of the '[% ... %]' as an even more advanced form of '${ ... }'.
+    e.g.
+
+       $foo  ==>  ${foo}  ==> [% foo %]
+
+    Personally, I think this solution works well and although it restricts
+    your freedom in using '$'s wherever you like, it really does help to 
+    make things clearer.  Let me know what you think.  For now, there's 
+    a VERSION => 1 flag you can set to revert to the old behaviour.
+
+In addition to those changes, the main new features of the language are:
+
+      
+There are a number of other significant changes in the architecture
+and implementation.
+
+
+  * Local named BLOCK definitions are better behaved and don't permanently
+    mask any real files.  Currently, INCLUDE does not import BLOCKs, but
+    PROCESS does (as per variables), although this may change slightly.
+
+  * The Template::Stash object now encapsulates all the magical variable
+    resolution code.  Both simple and compound variables can be accessed
+    or updated using the get() and set() methods, with all "variable magic"
+    happening automatically.
+
+  * The Template::Context object is now greatly simplified.  This acts
+    as a general interface to the Template Toolkit functionality, being
+    a collection of the various other modules that actually implement 
+    the functionality (e.g. Template::Stash, Template::Provider, 
+    Template::Document, Template::Plugins, etc.)
+
+  * The Template::Provider object provides a general facility for
+    retrieving templates from disk (or other source), and if necessary
+    compiling via a call to a Template::Parser helper object.
+    Multiple Template::Provider objects may be specified as the
+    TEMPLATES option to a Template::Context.  These form a
+    chain-of-command in which each successive provider is asked to
+    fetch() a template and may return a compiled template, an error,
+    or decline to service the request, thereby deferring to the next
+    provider in the chain.  The Template::Provider also handles
+    caching of compiled templates and has many improvements over the
+    version 1 Template::Cache, most significant of which is the
+    ability to limit the cache to a maximum number of templates.
+
+  * The Template::Parser object now compiles template text into Perl code
+    and then evaluates it into a sub-routine reference using Perl's
+    eval().  This is then wrapped up into a Template::Document object,
+    including any metadata items and/or additional named BLOCKs defined
+    in the input template.
+
+  * The Template::Document object is a thin wrapper around a compiled
+    template sub-routine.  It provides a process() method for processing
+    the template and a blocks() method for returning a reference to the
+    hash array of any additional named BLOCKs defined in the original 
+    template text.  An AUTOLOAD method returns values of metadata items,
+    allowing a Template::Document reference to be used as the 'template'
+    variable.
+
+  * The Template::Service module provides a high-level service for
+    processing templates, using an underlying Template::Context
+    reference to access the toolkit functionality.  PRE_PROCESS and
+    POST_PROCESS templates may be specified which are added to all
+    templates processed via this service.  An ERROR template may also
+    be specified, or as a reference to a hash array mapping error
+    types to template names.  This is then used to provide consistent
+    and automatic error handling in response to uncaught errors thrown
+    from templates.  In such a case, the approporiate error template
+    is processed in place of the original template.  PRE_PROCESS and 
+    POST_PROCESS templates are added to the error template to maintain
+    the expected consistency of the service.  The Template::Service 
+    module may be sub-classed, or replaced by other modules to implement
+    different template based services.
+
+  * The Template::Plugins module is a special purpose provider variant 
+    for loading and instantiating plugins.  Multiple plugin providers 
+    may be specified as the PLUGINS option to a context and these act
+    in a chain-of-command as per the TEMPLATES providers.
+
+  * The Template::Filters module is similar to Template::Plugins, but
+    for providing access to filters.  The FILTERS options may also 
+    contain multiple entries as above.
+   
+  * The Template::Base module defines a common base class for many of
+    the toolkit modules.  It implements shared functionality such as a
+    constructor, error reporting and handling, etc.  Modules are now
+    much easier to sub-class, all using separate new() and _init()
+    methods.
+
+  * The Template::Config module (name may change) provides methods for
+    loading and instantiating different Template Toolkit modules.  Using
+    this factory-based approach makes it far easier to change the default
+    object class for a specific part of the toolkit.  e.g.
+
+      use Template;
+      use Template::Config;
+
+      $Template::Config::PARSER = 'MyTemplate::MyParser';
+
+      my $tt = Template->new({ ... })
+	...
+
+      # $tt object will use a MyTemplate::MyParser object for PARSER
+    
+  * The Template module remains, as it ever was, a simple front-end
+    to the Template Toolkit.  This creates a single Template::Service
+    to which it delegates control for processing templates.  Output
+    is returned according to the OUTPUT options specified for the module
+    and/or any output option passed explicitly to the process() method.
+
+There's still some debug code in the wrong places, and some things that
+need to be tidied up to boost performance.  In particular, the parser
+goes out of its way to pretty-print generated Perl code (for the sake of
+easy debugging - set $Template::Parser::DEBUG to see the generated code)
+so expect it to run a little sluggish.  Once the templates are compiled, 
+they should execute measurably faster than before but unless you're 
+running a persistant server, you probably won't notice how fast they
+run because the process time is overshadowed by the parse time.
+I did some very rough benchmarks and had it processing templates 
+around 2 - 3 times faster than version 1.  This still falls short of
+what's possible, but for now it represents a good start.  :-)=  
+
+
+
+
+
 This list isn't complete - it's more of a reminder to me at the moment.
 ----------------------------------------------------------------------
 
@@ -38,3 +541,34 @@ changes from alpha to beta
 
 * fixed bug in Context filter() provider method which wasn't caching 
   filters with args.
+
+
+The Template Toolkit has been re-written for version 2 and includes
+many enhancements and new features.  It remains backwardly compatible
+with version 1.* in all but a few minor areas where syntax or
+structure have been changed for the sake of clarity and/or progress.
+By and large it is a superset of version 1, being better, stronger and
+significantly faster without sacrificing existing functionality.
+
+The most important internal change is that all templates are now
+compiled to Perl code for greater speed, efficiency and portability.
+Doug Steinwand was instrumental in this and deserves much credit for
+providing the code and ideas around which the new parser was built.
+In trivial benchmarks, you can expect to see templates being processed
+roughly twice as fast under version 2 as version 1, without losing any
+features or functionality.  Doug's original version was significantly
+faster still, although it acheived this by bypassing the stash for
+variable access and consequently losing some of the magical variable
+binding.  For the initial release of version 2.00, I wanted to
+maintain backwards compatability with version 1.00 as much as
+possible, so I had to code the stash back in, and accept that it
+wouldn't be as fast as it could have been.  But hey, it's still
+*twice* as fast.
+
+Better still is that the new, improved architecture makes it much
+easier to install an alternate parser grammar to generate Perl code
+from the template source.  Once compiled to Perl, all templates can
+run alongside each other, regardless of how they were parsed and
+constructed.  Thus we could have a alternate grammar based on Doug's
+code which could be switched in when you need absolute speed and 
+don't mind if some things work a little different.

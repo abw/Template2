@@ -41,7 +41,6 @@ $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 my (@RESERVED, %CMPOP, $LEXTABLE, $RULES, $STATES);
 my $factory;
-my $v1compat;
 
 
 #========================================================================

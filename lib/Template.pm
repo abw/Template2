@@ -38,7 +38,7 @@ use Template::Utils;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '1.51';
+$VERSION     = '1.52';
 $ERROR       = '';
 $DEBUG       = 0;
 

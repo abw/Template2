@@ -108,7 +108,6 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 	|   PROCESS nameargs	    { $factory->process($_[2])            }
 #	|   PLUGIN nameargs	    { $factory->plugin($_[2])             }
 	|   THROW nameargs          { $factory->throw($_[2])              }
-#	|   ERROR sterm		    { $factory->error($_[2])              }
 	|   CLEAR		    { $factory->clear()                   }
 	|   BREAK		    { $factory->break()                   }
 	|   RETURN		    { $factory->return()                  }
@@ -279,8 +278,7 @@ node:	    item		    { [ $_[1], 0 ]                        }
 
 item:	    IDENT		    { "'$_[1]'"                           }
 	|   '${' sterm '}'	    { $_[2]                               }
-	|   '$' IDENT		    { ($v1compat ||= 
-				               ($_[0]->{ VERSION } == 1))
+	|   '$' IDENT		    { $_[0]->{ V1DOLLAR }
 				       ? "'$_[2]'" 
 				       : $factory->ident(["'$_[2]'", 0])  }
 ;

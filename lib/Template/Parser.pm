@@ -97,7 +97,7 @@ sub new {
 	INTERPOLATE => 0,
 	PRE_CHOMP   => 0,
 	POST_CHOMP  => 0,
-	VERSION     => 2,
+	V1DOLLAR    => 0,
 	GRAMMAR     => undef,
 	_ERROR      => '',
     }, $class;
@@ -697,7 +697,7 @@ sub _dump {
     my $self = shift;
     my $output = "$self:\n";
     foreach my $key (qw( START_TAG END_TAG TAG_STYLE CASE INTERPOLATE 
-			 PRE_CHOMP POST_CHOMP VERSION ) ) {
+			 PRE_CHOMP POST_CHOMP V1DOLLAR ) ) {
 	
 	$output .= sprintf("%-12s => %s\n", $key, $self->{ $key });
     }
