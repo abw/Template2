@@ -7,17 +7,16 @@
 #   Toolkit.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@andywardley.com>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#------------------------------------------------------------------------
-#
+# REVISION
 #   $Id$
 #
 #========================================================================
@@ -39,7 +38,7 @@ use File::Path;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.07b';
+$VERSION     = '2.07c';
 $ERROR       = '';
 $DEBUG       = 0;
 
