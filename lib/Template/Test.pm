@@ -36,7 +36,7 @@ use Exporter;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0;
 @ISA     = qw( Exporter );
-@EXPORT  = qw( ntests ok match flush test_expect callsign banner );
+@EXPORT  = qw( ntests ok match flush test_expect callsign banner assert );
 $| = 1;
 
 $EXTRA    = 0;   # any extra tests to come after test_expect()
@@ -97,6 +97,25 @@ sub ok {
 	push(@results, $result);
     }
     return $result;
+}
+
+
+#------------------------------------------------------------------------
+# assert($truth, $error)
+#
+# Test value for truth, die if false.
+#------------------------------------------------------------------------
+
+sub assert {
+    my ($ok, $err) = @_;
+    return ok(1) if $ok;
+
+    # failed
+    my ($pkg, $file, $line) = caller();
+    $err ||= "assert failed";
+    $err .= " at $file line $line\n";
+    ok(0);
+    die $err;
 }
 
 
@@ -616,8 +635,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.34, distributed as part of the
-Template Toolkit version 2.06a, released on 19 November 2001.
+2.35, distributed as part of the
+Template Toolkit version 2.06a, released on 25 November 2001.
 
 =head1 COPYRIGHT
 
