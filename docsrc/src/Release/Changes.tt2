@@ -23,6 +23,16 @@
 # $Id$
 #========================================================================
 
+#------------------------------------------------------------------------
+# Version 2.08e - March 18th                      ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* changed Template::Provider and Template::Context to propagate nested
+  exceptions (e.g. [ file => [ parse => 'blah blah' ] ]) to allow the 
+  caller to accurately differentiate between parse errors and missing
+  file or other errors.
+  http://tt2.org/pipermail/templates/2003-March/004359.html
+
 
 #------------------------------------------------------------------------
 # Version 2.08d - March 18th                      ## DEVELOPER RELEASE ##
