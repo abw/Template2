@@ -109,7 +109,16 @@ follows:
 
   # .ttreerc
   depend foo=bar,baz
-  depend carash=bang,wallop
+  depend crash=bang,wallop
+
+The file appearing on the left of the C<=> is specified relative to
+the C<src> or C<lib> directories.  The file(s) appearing on the right
+can be specified relative to any of these directories or as absolute
+file paths.
+
+For example:
+
+  $ ttree --depend foo=bar,/tmp/baz
 
 =head2 Format of B<depend_file>
 
