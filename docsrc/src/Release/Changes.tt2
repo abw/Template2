@@ -35,6 +35,39 @@
 * Applied patch from Jim Cromie to t/autoform.t to skip tests on all
   versions of Perl from 5.8.0 onwards.
 
+* Changed $OUTPUT in Template::Directive to be a package variable, 
+  allowing it to be re-defined to permit a flushed output hack.
+  http://tt2.org/pipermail/templates/2003-October/005136.html
+
+* Applied a patch from Darren to the 'item' hash vmethod to protect
+  against accessing private variables (prefixed '.' or '_')
+  http://tt2.org/pipermail/templates/2003-June/004761.html
+
+* Applied a patch from Ivan Adzhubey to template/splash/frame.
+  http://tt2.org/pipermail/templates/2003-August/004953.html
+
+* Applied a patch from Bryce Harrington to add the absolute and 
+  relative options to ttree.  Also applied a patch from Mark Anderson 
+  to add the 'template_debug'.  Removed the old debug option which was 
+  as good as useless.  
+  http://tt2.org/pipermail/templates/2003-October/005110.html
+  http://tt2.org/pipermail/templates/2003-October/005126.html
+
+* Applied another patch from Mark to push files named on the command 
+  line through the process_file() sub to ensure that various options 
+  like accept checking, pemission preserving and copy processing (but 
+  not modification time) are applied.
+  http://tt2.org/pipermail/templates/2003-October/005132.html
+
+* Applied a variation of yet another ttree patch from Mark to add the 
+  'suffix' option for changing the suffix of output files created.
+  http://tt2.org/pipermail/templates/2003-October/005121.html
+
+* Applied a variation of a patch from Dylan William Hardison which 
+  adds the 'depend' and 'depend_file' options to ttree.
+  http://tt2.org/pipermail/templates/2003-July/004783.html
+  http://tt2.org/pipermail/templates/2003-October/005147.html
+
 
 #------------------------------------------------------------------------
 # Version 2.10 - 24th July 2003
