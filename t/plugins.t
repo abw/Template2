@@ -150,7 +150,6 @@ This is the Bar plugin, value is 64
 # LOAD_PERL
 #------------------------------------------------------------------------
 
--- start --
 -- test --
 -- use tt3 --
 [% USE baz = MyPlugs.Baz(128) -%]

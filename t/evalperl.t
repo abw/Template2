@@ -110,7 +110,6 @@ some stuff
 This is some text
 ERROR: [perl] EVAL_PERL not set
 
--- start --
 -- test --
 -- use do_perl --
 some stuff
