@@ -536,6 +536,8 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 		if (flags & TT_DEBUG_FLAG)
 		    result = (SV *) mk_mortal_av(&PL_sv_undef, NULL, ERRSV);
 	    }
+	    else 
+		scalar_op(root, item, args, &result);
 	}
     }
 
