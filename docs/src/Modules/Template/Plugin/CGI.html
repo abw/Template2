@@ -19,6 +19,11 @@
 	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
+	        title ="METHODS"
+                subs  = [
+                    "params()"
+		];
+	PROCESS tocitem 
 	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
@@ -71,6 +76,23 @@ constructor:
 </p>
 [%- END %]
 [% WRAPPER section
+    title="METHODS"
+-%]<p>
+In addition to all the methods supported by the CGI module, this
+plugin defines the following.
+</p>
+[% WRAPPER subsection
+   title = "params()"
+-%]<p>
+This method returns a reference to a hash of all the CGI parameters.
+Any parameters that have multiple values will be returned as lists.
+</p>
+<pre>    [% tt_start_tag %] USE CGI('user=abw&amp;item=foo&amp;item=bar') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] CGI.params.user [% tt_end_tag %]            # abw
+    [% tt_start_tag %] CGI.params.item.join(', ') [% tt_end_tag %] # foo, bar</pre>
+[%- END %]
+[%- END %]
+[% WRAPPER section
     title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@andywardley.com&gt;
@@ -82,8 +104,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.52, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.54, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -324,6 +324,12 @@ module (if installed on your system).
     [% calc = date.calc %]
     [% calc.Monday_of_Week(22, 2001).join('/') %]
 
+The manip() method can be used to create an interface to the Date::Manip
+module (if installed on your system).
+
+    [% manip = date.manip %]
+    [% manip.UnixDate("Noon Yesterday","%Y %b %d %H:%M") %]
+
 =head1 AUTHORS
 
 Thierry-Michel Barral E<lt>kktos@electron-libre.comE<gt> wrote the original
@@ -332,10 +338,13 @@ plugin.
 Andy Wardley E<lt>abw@cre.canon.co.ukE<gt> provided some minor
 fixups/enhancements, a test script and documentation.
 
+Mark D. Mills E<lt>mark@hostile.orgE<gt> cloned Date::Manip from the
+cute Date::Calc sub-plugin.
+
 =head1 VERSION
 
-2.57, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.60, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 
 

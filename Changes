@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.08a, detailing
+#   Revision history for the Template Toolkit version 2.08b, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -21,6 +21,35 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.08b - November 1st 2002               ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied two patches from Leon to fix bug in constant folding with
+  multiple replacements (a missing 'g' on a s///)
+
+* Applied a patch from Tatsuhiko Miyagawa to Template::Constants to 
+  replace 'our' perl5.6isms.
+
+* Added the Template::Plugin::Procedural module for creating plugins that
+  use subroutines rather than method calls.
+
+* Fixed a html.t test to allow numerical instead of named entities (mark)
+
+* Added the params() method to the CGI plugin.
+
+* Changed File::Temp and File::Basename to be loaded dynamically in 
+  Template::Document as and when needed.  Thanks to a patch from 
+  Bradley Baetz.
+
+* Added a preload() method to Template::Config to preload in advance 
+  all the Template::* modules typically used.  Also added call to 
+  preload() from Template module if $ENV{MOD_PERL} is set.
+
+* Applied a patch from Randal Schwartz to fix rowspan attribute in 
+  templates/html/cell and templates/html/row
+
 
 #------------------------------------------------------------------------
 # Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
@@ -143,6 +172,7 @@
 * Applied Makefile.PL portability patch from Chris Nandor.
 
 * Minor documentation fixes.
+
 
 #------------------------------------------------------------------------
 # Version 2.07 - April 17th 2002 

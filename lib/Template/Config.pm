@@ -49,13 +49,13 @@ $CONSTANTS = 'Template::Namespace::Constants';
                $PLUGINS, $PROVIDER, $SERVICE, $STASH );
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '/usr/local/tt2';
+$INSTDIR  = '';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
-$LATEX_PATH    = '/usr/bin/latex';
-$PDFLATEX_PATH = '/usr/bin/pdflatex';
-$DVIPS_PATH    = '/usr/bin/dvips';
+$LATEX_PATH    = '';
+$PDFLATEX_PATH = '';
+$DVIPS_PATH    = '';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -369,6 +369,12 @@ Load a module via require().  Any occurences of '::' in the module name
 are be converted to '/' and '.pm' is appended.  Returns 1 on success
 or undef on error.  Use $class-E<gt>error() to examine the error string.
 
+=head2 preload()
+
+This method preloads all the other Template::* modules that are likely
+to be used.  It is called by the Template module when running under 
+mod_perl ($ENV{MOD_PERL} is set).
+
 =head2 parser(\%config)
 
 Instantiate a new parser object of the class whose name is denoted by
@@ -392,8 +398,9 @@ Returns an object reference or undef on error, as above.
 
 =head2 stash(\%vars)
 
-Instantiate a new stash object (default: Template::Templates) using the 
-contents of the optional hash array passed by parameter as initial variable
+Instantiate a new stash object (Template::Stash or Template::Stash::XS
+depending on the default set at installation time) using the contents
+of the optional hash array passed by parameter as initial variable
 definitions.  Returns an object reference or undef on error, as above.
 
 =head2 context(\%config)
@@ -434,8 +441,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.55, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.57, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 =head1 COPYRIGHT
 

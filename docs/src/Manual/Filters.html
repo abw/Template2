@@ -28,7 +28,8 @@
 		    "html",
 		    "html_entity",
 		    "html_para",
-		    "html_break",
+		    "html_break / html_para_break",
+		    "html_line_break",
 		    "uri",
 		    "indent(pad)",
 		    "truncate(length)",
@@ -36,8 +37,8 @@
 		    "remove(string) ",
 		    "replace(search, replace) ",
 		    "redirect(file)",
-		    "eval(template_text)",
-		    "perl(perlcode)",
+		    "eval / evaltt",
+		    "perl / evalperl",
 		    "stdout(binmode)",
 		    "stderr",
 		    "null",
@@ -207,7 +208,7 @@ output:
     &lt;/p&gt;</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "html_break"
+   title = "html_break / html_para_break"
 -%]<p>
 Similar to the html_para filter described above, but uses the HTML tag
 sequence &lt;br&gt;&lt;br&gt; to join paragraphs.
@@ -223,6 +224,23 @@ output:
     &lt;br&gt;
     &lt;br&gt;
     Mary had a little lamb.</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "html_line_break"
+-%]<p>
+This filter replaces any newlines with &lt;br&gt; HTML tags,
+thus preserving the line breaks of the original text in the 
+HTML output.
+</p>
+<pre>    [% tt_start_tag %] FILTER html_line_break [% tt_end_tag %]
+    The cat sat on the mat.
+    Mary had a little lamb.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    The cat sat on the mat.&lt;br&gt;
+    Mary had a little lamb.&lt;br&gt;</pre>
 [%- END %]
 [% WRAPPER subsection
    title = "uri"
@@ -342,7 +360,7 @@ A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "eval(template_text)"
+   title = "eval / evaltt"
 -%]<p>
 The 'eval' filter evaluates the block as template text, processing
 any directives embedded within it.  This allows template variables to
@@ -367,7 +385,7 @@ The 'evaltt' filter is provided as an alias for 'eval'.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "perl(perlcode)"
+   title = "perl / evalperl"
 -%]<p>
 The 'perl' filter evaluates the block as Perl code.  The EVAL_PERL
 option must be set to a true value or a 'perl' exception will be
@@ -513,7 +531,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.08a, released on 14 August 2002.
+Template Toolkit version 2.08b, released on 01 November 2002.
 </p>
 [%- END %]
 [% WRAPPER section

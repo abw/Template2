@@ -294,7 +294,7 @@ throws a 'filter' exception on error.
 =head2 localise(\%vars)
 
 Clones the stash to create a context with localised variables.  Returns a 
-reference to the newly cloned Template::Stash object which is also stored
+reference to the newly cloned stash object which is also stored
 internally.
 
     $stash = $context->localise();

@@ -332,6 +332,12 @@ Plugin interface to Pod::POM (Pod Object Model)
 
 
 
+=item L<Template::Plugin::Procedural|Template::Plugin::Procedural>
+
+Base class for procedural plugins
+
+
+
 =item L<Template::Plugin::String|Template::Plugin::String>
 
 Object oriented interface for string manipulation
@@ -407,7 +413,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08a, released on 14 August 2002.
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 =head1 COPYRIGHT
 

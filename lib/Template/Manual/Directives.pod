@@ -1306,7 +1306,7 @@ equivalent to:
     [% INCLUDE header title='Hello World' %]
     [% INCLUDE header title='Hello World' bgcol='#123456# %]
 
-Here's anothe example, defining a macro for display numbers
+Here's another example, defining a macro for display numbers
 in comma-delimited groups of 3, using the chunk and join virtual
 method.
 
@@ -2152,7 +2152,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08a, released on 14 August 2002.
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 =head1 COPYRIGHT
 

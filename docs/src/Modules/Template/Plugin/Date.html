@@ -140,6 +140,12 @@ module (if installed on your system).
 </p>
 <pre>    [% tt_start_tag %] calc = date.calc [% tt_end_tag %]
     [% tt_start_tag %] calc.Monday_of_Week(22, 2001).join('/') [% tt_end_tag %]</pre>
+<p>
+The manip() method can be used to create an interface to the Date::Manip
+module (if installed on your system).
+</p>
+<pre>    [% tt_start_tag %] manip = date.manip [% tt_end_tag %]
+    [% tt_start_tag %] manip.UnixDate(&quot;Noon Yesterday&quot;,&quot;%Y %b %d %H:%M&quot;) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
     title="AUTHORS"
@@ -151,12 +157,16 @@ plugin.
 Andy Wardley &lt;abw@cre.canon.co.uk&gt; provided some minor
 fixups/enhancements, a test script and documentation.
 </p>
+<p>
+Mark D. Mills &lt;mark@hostile.org&gt; cloned Date::Manip from the
+cute Date::Calc sub-plugin.
+</p>
 [%- END %]
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.57, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.60, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -777,11 +777,11 @@ Template::Filters object.  A reference to a hash array of configuration
 items may be passed as a parameter.  These are described below.  
 
     my $filters = Template::Filters->new({
-        FILTERS => { ... },
+	FILTERS => { ... },
     });
 
     my $template = Template->new({
-        LOAD_FILTERS => [ $filters ],
+	LOAD_FILTERS => [ $filters ],
     });
 
 A default Template::Filters module is created by the Template.pm module
@@ -840,11 +840,11 @@ dynamic (1).  A filter may also be specified as a solitary subroutine
 reference and is assumed to be static.
 
     $filters = Template::Filters->new({
-        FILTERS => {
-            'sfilt1' =>   \&static_filter,      # static
+  	FILTERS => {
+  	    'sfilt1' =>   \&static_filter,      # static
             'sfilt2' => [ \&static_filter, 0 ], # same as above
-            'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
-        },
+  	    'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
+  	},
     });
 
 Additional filters can be specified at any time by calling the 
@@ -866,9 +866,9 @@ the output of a template block which is passed as the only argument.
 The subroutine should return the modified text.
 
     sub static_filter {
-        my $text = shift;
-        # do something to modify $text...
-        return $text;
+  	my $text = shift;
+	# do something to modify $text...
+  	return $text;
     }
 
 The following template fragment:
@@ -891,13 +891,13 @@ another subroutine reference (usually a closure) which implements the
 filter.
 
     sub dynamic_filter_factory {
-        my ($context, @args) = @_;
+	my ($context, @args) = @_;
 
-        return sub {
-            my $text = shift;
-            # do something to modify $text...
-            return $text;           
-        }
+  	return sub {
+  	    my $text = shift;
+	    # do something to modify $text...
+	    return $text;	    
+  	}
     }
 
 The following template fragment:
@@ -943,7 +943,7 @@ value.
     use Template::Constants qw( :debug );
 
     my $template = Template->new({
-        DEBUG => DEBUG_FILTERS | DEBUG_PLUGINS,
+	DEBUG => DEBUG_FILTERS | DEBUG_PLUGINS,
     });
 
 
@@ -1093,7 +1093,7 @@ output:
     Mary had a little lamb.
     </p>
 
-=head2 html_break
+=head2 html_break / html_para_break
 
 Similar to the html_para filter described above, but uses the HTML tag
 sequence E<lt>brE<gt>E<lt>brE<gt> to join paragraphs.
@@ -1111,11 +1111,13 @@ output:
     <br>
     Mary had a little lamb.
 
-=head2 html_linebreak
+=head2 html_line_break
 
-This filter replaces any newlines with E<lt>brE<gt> HTML tags.
+This filter replaces any newlines with E<lt>brE<gt> HTML tags,
+thus preserving the line breaks of the original text in the 
+HTML output.
 
-    [% FILTER html_break %]
+    [% FILTER html_line_break %]
     The cat sat on the mat.
     Mary had a little lamb.
     [% END %]
@@ -1229,12 +1231,12 @@ or more succinctly, using side-effect notation:
 
     [% INCLUDE userinfo 
          FILTER redirect("users/${user.id}.html")
-           FOREACH user = myorg.userlist 
+	   FOREACH user = myorg.userlist 
     %]
 
 A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
 
-=head2 eval(template_text)
+=head2 eval / evaltt
 
 The 'eval' filter evaluates the block as template text, processing
 any directives embedded within it.  This allows template variables to
@@ -1243,7 +1245,7 @@ returning template fragments from an external source such as a
 database, which can then be processed in the template as required.
 
     my $vars  = {
-        fragment => "The cat sat on the [% place %]",
+	fragment => "The cat sat on the [% place %]",
     };
     $template->process($file, $vars);
 
@@ -1257,7 +1259,7 @@ is therefore equivalent to
 
 The 'evaltt' filter is provided as an alias for 'eval'.
 
-=head2 perl(perlcode)
+=head2 perl / evalperl
 
 The 'perl' filter evaluates the block as Perl code.  The EVAL_PERL
 option must be set to a true value or a 'perl' exception will be
@@ -1392,8 +1394,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.60, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.63, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 =head1 COPYRIGHT
 

@@ -118,20 +118,20 @@ Template::Plugin::Procedural - Base class for procedural plugins
 =head1 DESCRIPTION
 
 B<Template::Plugin::Procedural> is a base class for Template Toolkit
-plugins that causes defined subprocedures to be called directly
-rather than as a method.  Essentially this means that subroutines will
-not receive the class name or object as its first argument.
+plugins that causes defined subroutines to be called directly rather
+than as a method.  Essentially this means that subroutines will not
+receive the class name or object as its first argument.
 
 This is most useful when creating plugins for modules that normally
 work by exporting subroutines that do not expect such additional
 arguments.
 
-Despite the fact that procedures will not be called in an OO manner,
-inheritance still functions as normal.  A class that uses
-B<Template::Plugin::Procedural> can be subclassed and both subprocedures
-defined in the subclass and subprocedures defined in the original
-class will be available to the Template Toolkit and will be called
-without the class/object argument.
+Despite the fact that subroutines will not be called in an OO manner,
+inheritance still function as normal.  A class that uses
+B<Template::Plugin::Procedural> can be subclassed and both subroutines
+defined in the subclass and subroutines defined in the original class
+will be available to the Template Toolkit and will be called without
+the class/object argument.
 
 =head1 AUTHOR
 
@@ -144,8 +144,8 @@ L<http://www.twoshortplanks.com|http://www.twoshortplanks.com>
 
 =head1 VERSION
 
-2.01, distributed as part of the
-Template Toolkit version 2.08a, released on 02 September 2002.
+1.01, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 =head1 COPYRIGHT
 

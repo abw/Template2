@@ -22,6 +22,7 @@
 	        title ="PUBLIC METHODS"
                 subs  = [
                     "load(\$module)",
+		    "preload()",
 		    "parser(\\%config)",
 		    "provider(\\%config)",
 		    "plugins(\\%config)",
@@ -79,6 +80,14 @@ or undef on error.  Use $class-&gt;error() to examine the error string.
 </p>
 [%- END %]
 [% WRAPPER subsection
+   title = "preload()"
+-%]<p>
+This method preloads all the other Template::* modules that are likely
+to be used.  It is called by the Template module when running under 
+mod_perl ($ENV{MOD_PERL} is set).
+</p>
+[%- END %]
+[% WRAPPER subsection
    title = "parser(\\%config)"
 -%]<p>
 Instantiate a new parser object of the class whose name is denoted by
@@ -110,8 +119,9 @@ Returns an object reference or undef on error, as above.
 [% WRAPPER subsection
    title = "stash(\\%vars)"
 -%]<p>
-Instantiate a new stash object (default: Template::Templates) using the 
-contents of the optional hash array passed by parameter as initial variable
+Instantiate a new stash object (Template::Stash or Template::Stash::XS
+depending on the default set at installation time) using the contents
+of the optional hash array passed by parameter as initial variable
 definitions.  Returns an object reference or undef on error, as above.
 </p>
 [%- END %]
@@ -160,8 +170,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.55, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.57, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 </p>
 [%- END %]
 [% WRAPPER section

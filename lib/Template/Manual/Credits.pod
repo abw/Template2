@@ -94,6 +94,7 @@ Please let me know if you think anyone is missing from this list.
 
   Stephen Adkins            <stephen.adkins@officevision.com>
   Chuck Adams               <scrytch@uswest.net>
+  Bradley Baetz             <bbaetz@student.usyd.edu.au>
   Thierry-Michel Barral     <kktos@electron-libre.com>
   Craig Barratt             <craig@arraycomm.com>
   Stas Bekman               <stas@stason.org>
@@ -125,6 +126,7 @@ Please let me know if you think anyone is missing from this list.
   Craig McLane              <mclanec@oxy.edu>     
   Leslie Michael Orchard    <deus_x@ninjacode.com>
   Eugene Miretskiy          <eugene@invision.net>
+  Tatsuhiko Miyagawa        <miyagawa@edge.co.jp>
   Keith G. Murphy           <keithmur@mindspring.com>
   Chris Nandor              <pudge@pobox.com>
   Briac Pilpré              <briac@pilpre.com>
@@ -155,7 +157,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08a, released on 14 August 2002.
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 =head1 COPYRIGHT
 

@@ -19,7 +19,8 @@
 	        title ="Template Toolkit Language"
                 subs  = [
                     "Why doesn't $tt_start_tag a = b IF c $tt_end_tag work as expected?",
-		    "If I'm using TT to write out a TT template, is there a good way to escape $tt_start_tag and $tt_end_tag?"
+		    "If I'm using TT to write out a TT template, is there a good way to escape $tt_start_tag and $tt_end_tag?",
+		    "How do I iterate over a hash?"
 		];
 	PROCESS tocitem 
 	        title ="Plugins"
@@ -90,6 +91,18 @@ Or something like:
 <pre>  [% tt_start_tag %] TAGS [- -] [% tt_end_tag %]
   [- INCLUDE foo -]   # is a directive
   [% tt_start_tag %] INCLUDE foo [% tt_end_tag %]   # not a directive, just plain text, passed through</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "How do I iterate over a hash?"
+-%]<p>
+This is covered in the [% ttlink('VMethods', 'Template::Manual::VMethods') -%] section
+of the manual page.  A list of all the keys that are in the hash can
+be obtained with the 'keys' virtual method.  You can then iterate
+over that list and by looking up each key in turn get the value.
+</p>
+<pre>    [% tt_start_tag %] FOREACH key = product.keys [% tt_end_tag %]
+       [% tt_start_tag %] key [% tt_end_tag %] =&gt; [% tt_start_tag %] product.$key [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [%- END %]
 [% WRAPPER section
@@ -319,8 +332,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.55, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 </p>
 [%- END %]
 [% WRAPPER section

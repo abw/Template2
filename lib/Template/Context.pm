@@ -1468,7 +1468,7 @@ throws a 'filter' exception on error.
 =head2 localise(\%vars)
 
 Clones the stash to create a context with localised variables.  Returns a 
-reference to the newly cloned Template::Stash object which is also stored
+reference to the newly cloned stash object which is also stored
 internally.
 
     $stash = $context->localise();
@@ -1516,8 +1516,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.70, distributed as part of the
-Template Toolkit version 2.08a, released on 14 August 2002.
+2.72, distributed as part of the
+Template Toolkit version 2.08b, released on 01 November 2002.
 
 =head1 COPYRIGHT
 
