@@ -165,7 +165,7 @@ my $SPLASH_STYLES = {
 
 welcome_message();
 version_check();
-# mandatory_modules();
+mandatory_modules();
 optional_modules();
 optional_stash_xs();
 optional_latex();
@@ -244,6 +244,16 @@ my %opts = (
     'dist'         => {
 	'COMPRESS' => 'gzip',
 	'SUFFIX'   => 'gz',
+    },
+    'clean'        => {
+	'FILES'    => join(' ', qw( docs/ttree.cfg 
+				    examples/ttree.cfg 
+				    t/dbi_test.cfg 
+				    t/test/src/baz.ttc
+				    t/test/src/complex.org 
+				    t/test/src/complex.ttc
+				    t/test/src/evalperl.ttc
+				    t/test/src/foo.ttc )),
     },
 );
 
@@ -348,7 +358,7 @@ EOF
 sub mandatory_modules {
     eval "use AppConfig";
     if ($@ or $AppConfig::VERSION < 1.52) {
-	die(<<EOF);
+	warn(<<EOF);
 
 The Template Toolkit requires that the AppConfig module (version 1.52
 or later) first be installed.  This is used by the 'ttree' program for
@@ -362,7 +372,7 @@ EOF
 
     eval "use File::Spec";
     if ($@ or $File::Spec::VERSION < 0.6) {
-	die(<<EOF);
+	warn(<<EOF);
 
 The Template Toolkit requires that the File::Spec module (version 0.6
 or later) first be installed.  This is used by the File plugin.  It is
@@ -901,7 +911,7 @@ EOF
 sub build_docs {
     return <<EOF;
 echo "Building documentation for version \$(VERSION)" ;           \\
-\$(PERL) bin/ttree -f ./docs/ttdist.cfg --define version=\$(VERSION) -a;  \\
+\$(PERL) -I\$(INST_ARCHLIB) -I\$(INST_LIB) bin/ttree -f ./docs/ttdist.cfg --define version=\$(VERSION) -a;  \\
 EOF
 }
 

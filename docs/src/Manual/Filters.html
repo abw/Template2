@@ -21,6 +21,8 @@
                     'format(format)',
 		    'upper',
 		    'lower',
+		    'ucfirst',
+		    'lcfirst',
 		    'trim',
 		    'collapse',
 		    'html',
@@ -98,6 +100,28 @@ Folds the input to lower case.
 output:
 </p>
 <pre>    hello world</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'ucfirst'
+-%]<p>
+Folds the first character of the input to UPPER CASE.
+</p>
+<pre>    [% tt_start_tag %] &quot;hello&quot; | FILTER ucfirst [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    Hello</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'lcfirst'
+-%]<p>
+Folds the first character of the input to lower case.
+</p>
+<pre>    [% tt_start_tag %] &quot;HELLO&quot; | FILTER lcfirst [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    hELLO</pre>
 [%- END %]
 [% WRAPPER subsection
    title = 'trim'
@@ -468,7 +492,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06c, released on 15 December 2001.
+Template Toolkit version 2.06d, released on 17 January 2002.
 </p>
 [%- END %]
 [% WRAPPER section

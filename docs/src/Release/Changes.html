@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.06c, detailing
+#   Revision history for the Template Toolkit version 2.06d, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -21,7 +21,40 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06c - 13th December 2001              ## DEVELOPER RELEASE ##
+# Version 2.06d                                   ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied a patch to the DBI plugin from Simon Matthews to stop it 
+  from closing a DBH which was passed in open from an external source.
+
+* Applied another patch from Simon to fix a bug with compiled templates
+  which were never being loaded due to a '&lt;' comparison of timestamps
+  rather than '&lt;='.  See
+  http://tt2.org/pipermail/templates/2002-January/002361.html
+
+* Changed URL plugin to accept multiple values for CGI parameters, e.g.
+  [% tt_start_tag %] USE URL('/cgi-bin/foo', items=[10,20]) [% tt_end_tag %] generates a URL like:
+  /cgi-bin/foo?item=10&amp;amp;item=20
+
+* Applied a patch from David D. Kilzer to Makefile.PL to add -I flags
+  to the various invocations of perl that we missed, and also to add
+  a clean/FILES target for WriteMakefile().  See.
+  http://tt2.org/pipermail/templates/2002-January/002431.html
+
+* Fixed Makefile.PL to warn, not die, about mandatory modules, leaving
+  it to the definitions in the PREREQ_PM which the CPAN module can 
+  understand.  Thanks to Leon for waving the flag.
+
+* Added ucfirst and lcfirst filters to fold first character to upper
+  or lower case respectively.  Thanks to Paul Makepeace for the patch.
+
+* Fixed truncate method of String plugin to not append suffix if the 
+  string is already shorter than the required length.  Thanks to 
+  Yann Kerhervé for the patch.
+
+
+#------------------------------------------------------------------------
+# Version 2.06c - 20th December 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed both Perl and XS Stash modules to try to apply a SCALAR_OPS
@@ -34,6 +67,10 @@
   Hodgkinson.  Also made various minor cleanups to DBI code and updated 
   documentation and tests.  Incidentally, this tickled the missing 
   feature in the XS stash which doesn't yet support tied hashes.
+
+* Applied a patch from Christian Schaffner which fixes a problem in 
+  the Makefile.PL for installation via the fink package manager under 
+  Mac OS X.
 
 * Fixed up some of the ugliness in the docsrc tools.
 

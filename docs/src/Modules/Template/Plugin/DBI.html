@@ -81,10 +81,12 @@ Making an automagical database connection using DBI_DSN environment variable:
 <p>
 Making database queries:
 </p>
-<pre>    [% tt_start_tag %] FOREACH user = DBI.query('SELECT * FROM users') [% tt_end_tag %]
+<pre>    # single step query
+    [% tt_start_tag %] FOREACH user = DBI.query('SELECT * FROM users') [% tt_end_tag %]
        [% tt_start_tag %] user.uid [% tt_end_tag %] blah blah [% tt_start_tag %] user.name [% tt_end_tag %] etc. etc.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] query = DBI.prepare('SELECT * FROM users WHERE uid = ?') [% tt_end_tag %]</pre>
+<pre>    # two stage prepare/execute
+    [% tt_start_tag %] query = DBI.prepare('SELECT * FROM users WHERE uid = ?') [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] FOREACH user = query.execute('sam') [% tt_end_tag %]
        ...
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
@@ -232,8 +234,37 @@ can use a separate prepare/execute cycle.
        ...
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
-You can use the do() method to execute non-SELECT statements like 
-this:
+The query() and execute() methods return an iterator object which
+manages the result set returned.  You can save a reference to the
+iterator and access methods like size() to determine the number of
+rows returned by a query.
+</p>
+<pre>    [% tt_start_tag %] users = DBI.query('SELECT * FROM users') [% tt_end_tag %]
+    [% tt_start_tag %] users.size [% tt_end_tag %] records returned</pre>
+<p>
+or even
+</p>
+<pre>    [% tt_start_tag %] DBI.query('SELECT * FROM users').size [% tt_end_tag %]</pre>
+<p>
+When used within a FOREACH loop, the iterator is always aliased to the 
+special <code>'loop'</code> variable.  This makes it possible to do things like this:
+</p>
+<pre>    [% tt_start_tag %] FOREACH user = DBI.query('SELECT * FROM users') [% tt_end_tag %]
+       [% tt_start_tag %] loop.count [% tt_end_tag %]/[% tt_start_tag %] loop.size [% tt_end_tag %]: [% tt_start_tag %] user.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+to generate a result set of the form:
+</p>
+<pre>    1/3: Jerry Garcia
+    2/3: Kurt Cobain
+    3/3: Freddie Mercury</pre>
+<p>
+See [% ttlink('Template::Iterator') -%] for further details on iterators and the
+methods that they implement.
+</p>
+<p>
+The DBI plugin also provides the do() method to execute non-SELECT
+statements like this:
 </p>
 <pre>    [% tt_start_tag %] IF DBI.do(&quot;DELETE FROM users WHERE uid = '$uid'&quot;) [% tt_end_tag %]
        The user '[% tt_start_tag %] uid [% tt_end_tag %]' was successfully deleted.
@@ -412,8 +443,8 @@ Andy Wardley, Craig Barratt, Dave Hodgkinson and Rafael Kitover.
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.31, distributed as part of the
-Template Toolkit version 2.06c, released on 15 December 2001.
+2.34, distributed as part of the
+Template Toolkit version 2.06d, released on 17 January 2002.
 </p>
 [%- END %]
 [% WRAPPER section

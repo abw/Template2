@@ -930,8 +930,8 @@ Andy Wardley, Craig Barratt, Dave Hodgkinson and Rafael Kitover.
 
 =head1 VERSION
 
-2.32, distributed as part of the
-Template Toolkit version 2.06c, released on 20 December 2001.
+2.34, distributed as part of the
+Template Toolkit version 2.06d, released on 17 January 2002.
 
 
 

@@ -35,6 +35,26 @@ output:
 
     hello world
 
+=head2 ucfirst
+
+Folds the first character of the input to UPPER CASE.
+
+    [% "hello" | FILTER ucfirst %]
+
+output:
+
+    Hello
+
+=head2 lcfirst
+
+Folds the first character of the input to lower case.
+
+    [% "HELLO" | FILTER lcfirst %]
+
+output:
+
+    hELLO
+
 =head2 trim
 
 Trims any leading or trailing whitespace from the input text.  Particularly 

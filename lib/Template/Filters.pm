@@ -902,6 +902,26 @@ output:
 
     hello world
 
+=head2 ucfirst
+
+Folds the first character of the input to UPPER CASE.
+
+    [% "hello" | FILTER ucfirst %]
+
+output:
+
+    Hello
+
+=head2 lcfirst
+
+Folds the first character of the input to lower case.
+
+    [% "HELLO" | FILTER lcfirst %]
+
+output:
+
+    hELLO
+
 =head2 trim
 
 Trims any leading or trailing whitespace from the input text.  Particularly 
@@ -1251,8 +1271,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.41, distributed as part of the
-Template Toolkit version 2.06c, released on 20 December 2001.
+2.42, distributed as part of the
+Template Toolkit version 2.06d, released on 17 January 2002.
 
 =head1 COPYRIGHT
 

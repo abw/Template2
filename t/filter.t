@@ -430,6 +430,15 @@ The cat sat on the mat
 Mary ...
 
 -- test --
+[% 'Hello World' | truncate(8) +%]
+[% 'Hello World' | truncate(10) +%]
+[% 'Hello World' | truncate(20) +%]
+-- expect --
+Hello...
+Hello W...
+Hello World
+
+-- test --
 [% "foo..." FILTER repeat(5) %]
 
 -- expect --

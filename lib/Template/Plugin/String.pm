@@ -770,8 +770,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.05, distributed as part of the
-Template Toolkit version 2.06c, released on 20 December 2001.
+2.06, distributed as part of the
+Template Toolkit version 2.06d, released on 17 January 2002.
 
 =head1 COPYRIGHT
 
