@@ -19,7 +19,7 @@ use Cwd;
 
 my $VERSION = 0.01;
 my $PROGRAM = basename($0);
-
+my @DIST_FILES = qw( README INSTALL Changes TODO );
 
 #------------------------------------------------------------------------
 # attempt to grok the root directory of the distribution;
@@ -89,7 +89,7 @@ find({
 glue_file("Template/Tools/tpage.pod", "$bin/tpage");
 glue_file("Template/Tools/ttree.pod", "$bin/ttree");
 
-foreach my $f (qw( README Changes TODO )) {
+foreach my $f (@DIST_FILES) {
     copy_file("$txt/$f", "$root/$f");
 }
 
