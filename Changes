@@ -17,7 +17,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.01 - 
+# Version 2.01  30th March 2001
 #------------------------------------------------------------------------
 
 * New Makefile.PL offers to install optional libraries, images, build
@@ -200,7 +200,7 @@
   modification time of the files went backwards.  In addition, it now
   uses the $Template::Provider::STAT_TTL (time to live) variable
   (default: 1) to determine how often to stat the files to check for
-  changes.
+  changes.  TT2 now supports time running backwards!  :-)
 
 * Applied a patch from Vivek Khera which fixes a memory leak in the 
   MACRO directive, prevalent when using TT under mod_perl.  Also added 
