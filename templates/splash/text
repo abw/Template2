@@ -10,7 +10,7 @@
 	style   = default
 	col     = style.col.text  or default.col.text
 	font    = style.font.face or default.font.face
-	size    = style.font.size or default.font.size
+	size    = style.font.item('size') or default.font.item('size')
     ;
     SET
 	bold    = bold.defined ? bold : style.font.bold

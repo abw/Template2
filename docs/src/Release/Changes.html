@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.06e, detailing
+#   Revision history for the Template Toolkit version 2.06f, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,16 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.06f - March 12th 2002                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in both the Perl and XS Stash modules which resulted in 
+  virtual methods being called on the base stash, e.g. [% tt_start_tag %] size [% tt_end_tag %]
+  was treated as [% tt_start_tag %] stash.size [% tt_end_tag %].  The only exception that we allow
+  through is 'import' so that we can [% tt_start_tag %] import(another_hash) [% tt_end_tag %]
+
 
 #------------------------------------------------------------------------
 # Version 2.06e - March 12th 2002                 ## DEVELOPER RELEASE ##
@@ -55,8 +65,8 @@
 * Applied a patch from Simon Wilcox to strip MS-DOS \r characters from 
   end of lines read by the Datafile plugin.
 
-* Applied a patch from Ville Skyttä &lt;ville.skytta@iki.fi&gt; which fixes
-  numerous minor bugs in various splash templates.
+* Applied a patch from Ville Skyttä which fixes numerous minor bugs 
+  in various splash templates.
 
 * Added the 'defined' and 'exists' virtual hash methods for testing if
   a value has a defined value, or exists in the hash, respectively.
@@ -67,6 +77,13 @@
 
 * Applied a patch from Mark Fowler to improve the XML XPath plugin's
   handling of nested elements.
+
+* Fixed handling of prefix support in template() and insert() methods
+  of Template::Content.  Any prefix is stripped from the name but passed 
+  as the second argument to the provider fetch() method.  e.g.
+  [% tt_start_tag %] INCLUDE foo:bar [% tt_end_tag %] calls the foo $provider-&gt;fetch('bar', 'foo') and
+  [% tt_start_tag %] INCLUDE http://tt2.org/t/templates/hello [% tt_end_tag %] results in a call to
+  $provider-&gt;fetch('//tt2.org/t/templates/hello', 'http')
 
 
 #------------------------------------------------------------------------
