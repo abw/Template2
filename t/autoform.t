@@ -31,8 +31,8 @@ eval "use Text::Autoformat";
 if ($@) {
     skip_all('Text::Autoformat module not installed');
 }
-if ($] == 5.008) {
-     skip_all('Text::Autoformat tests unreliable under 5.8.0');
+if ($] >= 5.008) {
+     skip_all("Text::Autoformat tests unreliable under $]");
 }
 
 # for testing known bug with locales that don't use '.' as a decimal 
