@@ -370,7 +370,7 @@ sub process {
             # instead?
 
             pop(@{$element->{ callers }})
-                if (UNIVERSAL::isa($element, 'Template::Document'));
+                if (UNIVERSAL::isa($component, 'Template::Document'));
         }
         $stash->set('component', $component);
     };
@@ -1554,8 +1554,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.89, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.91, distributed as part of the
+Template Toolkit version 2.14, released on 04 October 2004.
 
 =head1 COPYRIGHT
 
