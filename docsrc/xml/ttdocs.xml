@@ -844,6 +844,13 @@
 	      module="1"
 	      seealso="Template::Plugin, Template::Iterator"/>
 
+	<!-- Template::Plugin::Math -->
+	<page id="Plugin_Math" 
+	      name="Template::Plugin::Math"
+	      about="Plugin interface to mathematical functions"
+	      module="1"
+	      seealso="Template::Plugin"/>
+
 	<!-- Template::Plugin::Pod -->
 	<page id="Plugin_Pod" 
 	      name="Template::Plugin::Pod"
