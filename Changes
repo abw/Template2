@@ -13,7 +13,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.00 beta 3  2000/08/
+# Version 2.00 beta 3  10th August 2000
 #------------------------------------------------------------------------
 
 * Added the WRAPPER directive to include another template, passing the 
@@ -160,13 +160,15 @@
   the %INC hash.  This caused 1 to be returned from require() instead 
   of the compiled template.
 
-* Applied various documentation and test patches from Leon Brocard.
-  Fixed docs to quote dotted exception types to prevent string 
-  concatenation, as noted by Randal Schwartz.
+* Added ABSOLUTE and RELATIVE options to tpage by default.
 
+* Applied various documentation and test patches from Leon Brocard.
+  Fixed docs to quote dotted exception types to prevent string
+  concatenation, as noted by Randal Schwartz.  Generally added a 
+  whole lot more documentation.
 
 #------------------------------------------------------------------------
-# Version 2.00 beta 2
+# Version 2.00 beta 2   14th July 2000
 #------------------------------------------------------------------------
 
 * Added COMPILE_DIR option.  This allows you to specify a separate 
@@ -208,7 +210,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.00 beta 1
+# Version 2.00 beta 1   10th July 2000
 #------------------------------------------------------------------------
 
 * Template::Context include()/process() now works with raw CODE refs.

@@ -1,69 +1,66 @@
 
-              Template Toolkit Version 2.00 Beta Release 1
+              Template Toolkit Version 2.00 Beta Release 3
 
-                              10-July-2000
+                              10-August-2000
 
 
-                        ** IMPORTANT WARNING ** 
+              ** IMPORTANT WARNING FOR VERSION 1.xx USERS ** 
 
-    If you install these modules you will totally screw up your existing 
-    version 1.* installation.  I do plan to make V1 and V2 work harmoniously
-    with each other but that time is not yet now.  Install it to an entirely 
-    different location or don't "make install"  it at all.  You have been
-    warned (and will be again).
+    If you install these modules you will totally screw up your
+    existing version 1.* installation (if you have one, that is).  If
+    you're ready to take the plunge and aren't relying too heavily on
+    any of the "features" that have changed from version 1.xx to 2.xx
+    (see Changes file), then go ahead.  Be bold.  See the Changes file
+    for a summary of all the great new things for you to play with,
+    and the issues that you might need to attend to.
+
+    You might then decide to re-install Version 1.07 to a different
+    location in case you ever need it, e.g.
+
+        perl Makefile.PL PREFIX=/some/where/else
+
+    Remember to add "use lib '/some/where/else'" to your Perl scripts
+    that want to use Version 1.07, and also to the V1 'tpage' and
+    'ttree' scripts (in /some/where/else/bin) so that they continue to
+    use the right versions of the modules.
+
+    Alternatively, you can install this Version 2.00 beta to a
+    different location and follow the strategy outlined above, or not
+    "make install" it at all.
 
                      ** END OF IMPORTANT WARNING ** 
 
 Hello World
 -----------
 
-This is the first beta release of version 2 of the Perl Template
-Toolkit.  It is fully-featured, reliable and reasonably bug-free.
-Most of the modules are documented fully, or near-fully, but the main
-Template.pm documentation and some other bits and pieces still need
-some work.  The API is almost frozen.  Some of the option names may
-still change and the filters interface will almost certainly get
-improved a little before the real v2.  Other than that, this is pretty
-much what version 2 will look like.  If you think there's anything
-missing, or that which could be done better then now is the time to
-speak or forever hold your peace (or at least until version 2.01)
+This is the third (and possibly final) beta release of Version 2.00 of
+the Perl Template Toolkit.  It is fully-featured, reliable and all
+known bugs have been fixed (but see the TODO list for a few
+outstanding issues and minor "features").  The Changes file details
+changes from the last beta release, and versions before that.  It also
+includes the major changes from Version 1.xx to 2.00.
 
-Beware
-------
+The API is now frozen for Version 2.00.  The final remaining effort
+was to improve the filters interface and this is now up to scratch with
+the rest of the toolkit and suitable for release.
 
-Most, if not all of the modules are lacking specific cleanup code and
-many of them need it.  In particular, the Template::Provider builds a
-linked list to cache compiled templates and the circular refs prevent
-it from being cleaned up automatically.  It's not a major problem.  I
-just need to write some fairly trivial code to clean it up here, and
-in a couple of other places (e.g. filters cache).  Until then, it will
-leak memory like a sieve, so don't use it in a persistant server
-unless you take other precautions.  Don't worry - it'll get fixed in
-the mix.
+Most, if not all of the individual modules are fully documented and 
+reasonably accurate and complete.  I need to do one final sweep to 
+tidy up some loose ends, but on the whole they're pretty much there.
 
-Be Warned
----------
+The main Template.pod document is complete or very nearly complete in 
+all the important areas.  Configuration options are fully documented
+and all but a few of the directives are documented, although with a 
+handful of TODO's littered around marking sections that are incomplete
+or in need of work.  We're still missing a general overview and possibly 
+a few other meta-sections.  The documentation should probably be broken
+up into smaller sections and converted to HTML for those that want it
+that way.  That may happen before, or possibly after the release of 
+Version 2.00
 
-If you missed the IMPORTANT WARNING earlier, then let me just remind
-you not to install it unless you know what you're doing.  There's a
-Makefile.PL now, but we still don't trust you not to do something
-silly, so it will issue an annoying warning when you run it.  The
-version 2 modules are very different from the version 1 modules but
-overlap in name.  I'm planning to release version 1.08 as a final
-swansong for the version 1.* dynasty.  This will relocate all version
-1 modules to Template::v1::* so that they can continue to be used
-without getting in version 2+'s way.
+Enjoy!
+A
 
-Please Read
------------
 
-The Changes file contains most of the interesting detail about the
-major differences between version 1 and 2, including new features and
-so on.  Until the documentation is complete, this is the best source
-of information, even though it is itsefl incomplete or sketchy in
-places.  The TODO file is a total mess and includes TODONE stuff that
-should be in the Changes file.  It'll get cleaned up RSN.
 
-Enjoy
-A   
 
