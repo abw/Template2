@@ -295,3 +295,66 @@ ok
 ok
 ok
 
+
+-- test --
+[% USE String 'foo < bar' filter='html' -%]
+[% String %]
+-- expect --
+foo &lt; bar
+
+-- test --
+[% USE String 'foo bar' filter='uri' -%]
+[% String %]
+-- expect --
+foo%20bar
+
+-- test --
+[% USE String 'foo bar' filters='uri' -%]
+[% String %]
+-- expect --
+foo%20bar
+
+-- test --
+[% USE String '   foo bar    ' filters=['trim' 'uri'] -%]
+[[% String %]]
+-- expect --
+[foo%20bar]
+
+-- test --
+[% USE String '   foo bar    ' filter='trim, uri' -%]
+[[% String %]]
+-- expect --
+[foo%20bar]
+
+-- test --
+[% USE String '   foo bar    ' filters='trim, uri' -%]
+[[% String %]]
+-- expect --
+[foo%20bar]
+
+-- test --
+[% USE String 'foo bar' filters={ replace=['bar', 'baz'],
+				  trim='', uri='' } -%]
+[[% String %]]
+-- expect --
+[foo%20baz]
+
+-- test --
+[% USE String 'foo bar' filters=[ 'replace', ['bar', 'baz'],
+				  'trim', 'uri' ] -%]
+[[% String %]]
+-- expect --
+[foo%20baz]
+
+-- test --
+[% USE String 'foo bar' -%]
+[% String %]
+[% String.filter('uri') %]
+[% String.filter('replace', 'bar', 'baz') %]
+[% String.output_filter('uri') -%]
+[% String %]
+-- expect --
+foo bar
+foo%20bar
+foo baz
+foo%20bar
