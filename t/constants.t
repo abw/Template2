@@ -140,7 +140,9 @@ my $engines = [ tt1 => $tt1, tt2 => $tt2, tt3 => $tt3 ];
 my $vars = {
     col => {
 	user => 'red',
+	luza => 'blue',
     },
+    constants => $constants,
 };
 
 test_expect(\*DATA, $engines, $vars);
@@ -200,3 +202,11 @@ col  [% const.col.${const.fave} %]
 -- expect --
 fave back
 col  orange
+
+-- test --
+-- use tt2 --
+-- name defer references --
+[% "$key\n" FOREACH key = constants.col.keys.sort %]
+-- expect --
+back
+text
