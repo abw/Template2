@@ -105,11 +105,11 @@ sub fetch {
     # call the new() method on the factory object or class name
     eval {
 	if (ref $factory eq 'CODE') {
-	    $plugin = &$factory(@$args)
+	    defined( $plugin = &$factory(@$args) )
 		|| die "$name plugin failed\n";
 	}
 	else {
-	    $plugin = $factory->new(@$args)
+	    defined( $plugin = $factory->new(@$args) )
 		|| die "$name plugin failed: ", $factory->error(), "\n";
 	}
     };
