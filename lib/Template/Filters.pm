@@ -28,10 +28,11 @@ require 5.004;
 
 use strict;
 use base qw( Template::Base );
-use vars qw( $VERSION $DEBUG $FILTERS );
+use vars qw( $VERSION $DEBUG $FILTERS $URI_ESCAPES );
 use Template::Constants;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+
 
 #------------------------------------------------------------------------
 # standard filters, defined in one of the following forms:
@@ -45,7 +46,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $FILTERS = {
     # static filters 
-#    'html'       => \&html_filter,
+    'uri'        => \&uri_filter,
     'html_para'  => \&html_paragraph,
     'html_break' => \&html_break,
     'upper'      => sub { uc $_[0] },
@@ -195,23 +196,26 @@ sub _dump {
 #========================================================================
 
 #------------------------------------------------------------------------
-# html_filter()                                         [% FILTER html %]
+# uri_filter()                                           [% FILTER uri %]
 #
-# NOTE: html filter is now dynamic to allow 'entity' option.
+# URI escape a string.  This code is borrowed from Gisle Aas' URI::Escape
+# module.  For something so simple, I can't see any validation in making
+# the user install the URI modules just for this, so we cut and paste.
 #
-# Convert any '<', '>' or '&' characters to the HTML equivalents, '&lt;',
-# '&gt;' and '&amp;', respectively.
+# URI::Escape is Copyright 1995-2000 Gisle Aas.
 #------------------------------------------------------------------------
 
-sub html_filter_not_used {
+sub uri_filter {
     my $text = shift;
-    for ($text) {
-	s/&/&amp;/g;
-	s/</&lt;/g;
-	s/>/&gt;/g;
-#	s/'/&apos;/g;
-	s/"/&quot;/g;
-    }
+
+    # construct and cache a lookup table for escapes (faster than
+    # doing a sprintf() for every character in every string each 
+    # time)
+    $URI_ESCAPES ||= {
+	map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
+    };
+    
+    $text =~ s/([^;\/?:@&=+\$,A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/g;
     $text;
 }
 
@@ -562,7 +566,7 @@ sub latex_filter_factory
             # do on other OSs
             #
             my $LaTeX_arg = "\\nonstopmode\\input{$texDoc}";
-            $LaTeX_arg = "'$LaTeX_arg'" if ( $^O !~ /win/i );
+            $LaTeX_arg = "'$LaTeX_arg'" if ( $^O ne 'MSWin32' );
             if ( system("$LaTeXPath $LaTeX_arg"
                    . " 1>$devnull 2>$devnull 0<$devnull") ) {
                 my $texErrs = "";
@@ -960,6 +964,25 @@ output:
     <br>
     Mary had a little lamb.
 
+=head2 uri
+
+This filter URI escapes the input text, converting any characters 
+outside of the permitted URI character set (as defined by RFC 2396)
+into a C<%nn> hex escape.
+
+    [% 'my file.html' | uri %]
+
+output:
+
+    my%20file.html
+
+Note that URI escaping isn't always enough when generating hyperlinks in
+an HTML document.  The C<&> character, for example, is valid in a URI and
+will not be escaped by the URI filter.  In this case you should also filter
+the text through the 'html' filter.
+
+    <a href="[% filename | uri | html %]">click here</a>
+
 =head2 indent(pad)
 
 Indents the text block by a fixed pad string or width.  The 'pad' argument
@@ -1208,8 +1231,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.28, distributed as part of the
-Template Toolkit version 2.05, released on 11 September 2001.
+2.29, distributed as part of the
+Template Toolkit version 2.05b, released on 21 September 2001.
 
 =head1 COPYRIGHT
 

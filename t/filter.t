@@ -836,3 +836,28 @@ mat
 ++Hello World++
 Hello World
 
+-- test --
+[% "my file.html" FILTER uri %]
+-- expect --
+my%20file.html
+
+-- test --
+[% "my<file & your>file.html" FILTER uri %]
+-- expect --
+my%3Cfile%20&%20your%3Efile.html
+
+-- test --
+[% "my<file & your>file.html" | uri | html %]
+-- expect --
+my%3Cfile%20&amp;%20your%3Efile.html
+
+-- test --
+[% "guitar&amp;file.html" | uri %]
+-- expect --
+guitar&amp;file.html
+
+-- test --
+[% "guitar&amp;file.html" | uri | html %]
+-- expect --
+guitar&amp;amp;file.html
+

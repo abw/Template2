@@ -18,7 +18,26 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.05a - 21 Sep 2001                     ## DEVELOPER RELEASE ##
+# Version 2.05b - 21 Sep 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied a patch from Chris Nandor to bring the XS stash in line with
+  the regular Perl stash wrt accepting defined but empty keys.  See
+  http://www.tt2.org/pipermail/templates/2001-September/?????.html
+
+* Applied a patch from Craig Barratt to fix a bug 
+  Template::Provider which manifests itself by barfing when caching is
+  turned off.
+
+* Updated Template::Manual::Internals to include information about 
+  how to prepare patches and other useful information for potential
+  TT hackers.
+
+* Added the 'uri' filter for URI escaping text.
+
+
+#------------------------------------------------------------------------
+# Version 2.05a - 12 Sep 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch from Chris Nandor to use 'MSWin32' as a specific O/S
@@ -31,9 +50,6 @@
   hashes.  Regular set/get/default should work as expected, but at 
   present intermediate hashes are not auto-vivified on assignment,
   e.g. [% these.dont.get.created.in.XS.but.do.in.the.perl.stash = 10 %] 
-  Also applied a patch from Chris to bring the XS stash in line with
-  the regular Perl stash wrt accepting defined but empty keys.  See
-  http://www.tt2.org/pipermail/templates/2001-September/?????.html
 
 * Applied a patch from Craig to fix a bug in Template::Provider which
   manifests itself by barfing when caching is turned off.
