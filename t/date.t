@@ -61,6 +61,13 @@ my $params = {
     date_calc => $got_date_calc,
 };
 
+# force second to rollover so that we reliably see any tests failing.
+# lesson learnt from 2.07b where I broke the Date plugin's handling of a
+# 'time' parameter, but which didn't immediately come to light because the
+# script could run before the second rolled over and not expose the bug
+
+sleep 1;
+
 test_expect(\*DATA, { POST_CHOMP => 1 }, $params);
  
 
