@@ -30,6 +30,9 @@
 * added WRAPPER configuration item, documentation and tests.  Also added 
   'wrapper' configuration item to ttree.
 
+* applied patch from Axel Gerstmair to fix File::Spec and File::Temp
+  versions in Makefile.PL
+
 
 #------------------------------------------------------------------------
 # Version 2.09 - April 23rd 2003
