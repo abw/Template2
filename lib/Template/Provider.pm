@@ -36,7 +36,7 @@ package Template::Provider;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $ERROR $DOCUMENT $STAT_TTL );
+use vars qw( $VERSION $DEBUG $ERROR $DOCUMENT $STAT_TTL $MAX_DIRS );
 use base qw( Template::Base );
 use Template::Config;
 use Template::Constants;
@@ -51,6 +51,9 @@ $DOCUMENT = 'Template::Document' unless defined $DOCUMENT;
 
 # maximum time between performing stat() on file to check staleness
 $STAT_TTL = 1 unless defined $STAT_TTL;
+
+# maximum number of directories in an INCLUDE_PATH, to prevent runaways
+$MAX_DIRS = 64 unless defined $MAX_DIRS;
 
 use constant PREV   => 0;
 use constant NAME   => 1;
@@ -240,8 +243,9 @@ sub paths {
     my $self   = shift;
     my @ipaths = @{ $self->{ INCLUDE_PATH } };
     my (@opaths, $dpaths, $dir);
+    my $count = $MAX_DIRS;
     
-    while (@ipaths) {
+    while (@ipaths && --$count) {
 	$dir = shift @ipaths || next;
 
 	# $dir can be a sub or object ref which returns a reference
@@ -266,6 +270,8 @@ sub paths {
 	    push(@opaths, $dir);
 	}
     }
+    return $self->error("INCLUDE_PATH exceeds $MAX_DIRS directories")
+	if @ipaths;
 
     return \@opaths;
 }
@@ -1024,6 +1030,62 @@ On Win32 systems, a little extra magic is invoked, ignoring delimiters
 that have ':' followed by a '/' or '\'.  This avoids confusion when using
 directory names like 'C:\Blah Blah'.
 
+When specified as a list, the INCLUDE_PATH path can contain elements 
+which dynamically generate a list of INCLUDE_PATH directories.  These 
+generator elements can be specified as a reference to a subroutine or 
+an object which implements a paths() method.
+
+    my $provider = Template::Provider->new({
+        INCLUDE_PATH => [ '/usr/local/templates', 
+                          \&incpath_generator, 
+			  My::IncPath::Generator->new( ... ) ],
+    });
+
+Each time a template is requested and the INCLUDE_PATH examined, the
+subroutine or object method will be called.  A reference to a list of
+directories should be returned.  Generator subroutines should report
+errors using die().  Generator objects should return undef and make an
+error available via its error() method.
+
+For example:
+
+    sub incpath_generator {
+
+	# ...some code...
+	
+	if ($all_is_well) {
+	    return \@list_of_directories;
+	}
+	else {
+	    die "cannot generate INCLUDE_PATH...\n";
+	}
+    }
+
+or:
+
+    package My::IncPath::Generator;
+
+    # Template::Base (or Class::Base) provides error() method
+    use Template::Base;
+    use base qw( Template::Base );
+
+    sub paths {
+	my $self = shift;
+
+	# ...some code...
+
+        if ($all_is_well) {
+	    return \@list_of_directories;
+	}
+	else {
+	    return $self->error("cannot generate INCLUDE_PATH...\n");
+	}
+    }
+
+    1;
+
+
+
 
 
 =item DELIMITER
@@ -1305,7 +1367,7 @@ the new value.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+Andy Wardley E<lt>abw@andywardley.comE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
@@ -1314,8 +1376,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.55, distributed as part of the
-Template Toolkit version 2.07b, released on 07 July 2002.
+2.57, distributed as part of the
+Template Toolkit version 2.07c, released on 08 July 2002.
 
 =head1 COPYRIGHT
 
