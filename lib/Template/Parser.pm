@@ -1268,7 +1268,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.26, distributed as part of the
+2.27, distributed as part of the
 Template Toolkit version 2.04d, released on 29 August 2001.
 
  

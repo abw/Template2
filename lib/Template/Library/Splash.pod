@@ -18,7 +18,7 @@
 #   modify it under the same terms as Perl itself.
 #
 # REVISION
-#   2.19
+#   2.20
 #
 #========================================================================
 
@@ -1004,7 +1004,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.19, distributed as part of the
+2.20, distributed as part of the
 Template Toolkit version 2.04d, released on 29 August 2001.
 
 =head1 COPYRIGHT
