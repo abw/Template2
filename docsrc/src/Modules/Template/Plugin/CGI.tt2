@@ -35,3 +35,17 @@ constructor:
     [% USE cgiprm = CGI('uid=abw&name=Andy+Wardley') %]
     [% cgiprm.param('uid') %]
 
+=head1 METHODS
+
+In addition to all the methods supported by the CGI module, this
+plugin defines the following.
+
+=head2 params()
+
+This method returns a reference to a hash of all the CGI parameters.
+Any parameters that have multiple values will be returned as lists.
+
+    [% USE CGI('user=abw&item=foo&item=bar') %]
+
+    [% CGI.params.user %]            # abw
+    [% CGI.params.item.join(', ') %] # foo, bar
