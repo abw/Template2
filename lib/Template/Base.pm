@@ -28,6 +28,7 @@ require 5.004;
 
 use strict;
 use vars qw( $VERSION );
+use Template::Constants;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -65,7 +66,8 @@ sub new {
 
     my $self = bless {
 	map { ($_ => shift @args) } @$argnames,
-	_ERROR  => ''
+	_ERROR  => '',
+        DEBUG   => 0,
     }, $class;
 
     return $self->_init($cfg) ? $self : $class->error($self->error);
@@ -120,6 +122,21 @@ sub DEBUG {
     my $self = shift;
     print STDERR "DEBUG: ", @_;
 }
+
+sub debug {
+    my $self = shift;
+    my $msg  = join('', @_);
+    my ($pkg, $file, $line) = caller();
+
+    unless ($msg =~ /\n$/) {
+	$msg .= ($self->{ DEBUG } & Template::Constants::DEBUG_CALLER)
+		 ? " at $file line $line\n"
+		 : "\n";
+    }
+
+    print STDERR "[$pkg] $msg";
+}
+
 
 1;
 
