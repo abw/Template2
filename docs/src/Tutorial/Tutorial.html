@@ -1,0 +1,781 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Tutorial'
+        page = 'Tutorial'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='INTRODUCTION';
+	INCLUDE tocitem title='GENERATING STATIC PAGES';
+	INCLUDE tocitem title='DYNAMIC CONTENT GENERATION VIA CGI SCRIPT';
+	INCLUDE tocitem title='DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER';
+	INCLUDE tocitem title='USING PLUGINS TO EXTEND FUNCTIONALITY';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This tutorial document provides a introduction to the Template Toolkit
+and demonstrates some of the typical ways it may be used for
+generating web content.  It covers the generation of static pages from
+templates using the [% ttlink('Template::Tools::tpage', 'tpage') -%] and 
+[% ttlink('Template::Tools::ttree', 'ttree') -%] scripts and then goes on to
+show dynamic content generation using CGI scripts and Apache/mod_perl
+handlers.
+</p>
+<p>
+Various features of the Template Toolkit are introduced and described 
+briefly and explained by use of example.  For further information,
+see [% ttlink('Template') -%], [% ttlink('Template::Manual') -%] and the various sections within
+it.  e.g.
+</p>
+<pre>    perldoc Template			# Template.pm module usage
+    perldoc Template::Manual	        # index to manual
+    perldoc Template::Manual::Config    # e.g. configuration options</pre>
+<p>
+The documentation is now also distributed in HTML format (or rather,
+in the form of HTML templates).  See the 'docs' sub-directory of the 
+distribution for further information on building the HTML documentation.
+</p>
+<p>
+If you're already reading this as part of the HTML documentation, then
+you don't need to worry about all that.  You can have a seat, sit back.
+ back and enjoy the rest of the tutorial...
+</p>
+[%- END %]
+[% WRAPPER section
+    title='INTRODUCTION'
+-%]<p>
+The Template Toolkit is a set of Perl modules which collectively
+implement a template processing system.  In this context, a template
+is a text document containing special markup tags called 'directives'.
+A directive is an instruction for the template processor to perform
+some action and substitute the result into the document in place of
+the original directive.  Directives include those to define or insert
+a variable value, iterate through a list of values (FOREACH), declare
+a conditional block (IF/UNLESS/ELSE), include and process another template
+file (INCLUDE) and so on.
+</p>
+<p>
+In all other respects, the document is a plain text file and may
+contain any other content (e.g. HTML, XML, RTF, LaTeX, etc).  Directives
+are inserted in the document within the special markup tags which are
+'[% tt_start_tag %]' and '[% tt_end_tag %]' by default, but can be changed via the module
+configuration options.  Here's an example of an HTML document with
+additional Template Toolkit directives.
+</p>
+<pre>   [% tt_start_tag %] INCLUDE header
+      title = 'This is an HTML example'
+   [% tt_end_tag %]</pre>
+<pre>   &lt;h1&gt;Some Interesting Links&lt;/h1&gt;</pre>
+<pre>   [% tt_start_tag %] webpages = [
+         { url =&gt; 'http://foo.org', title =&gt; 'The Foo Organsiation' }
+         { url =&gt; 'http://bar.org', title =&gt; 'The Bar Organsiation' }
+      ]
+   [% tt_end_tag %]</pre>
+<pre>   Links:
+   &lt;ul&gt;
+   [% tt_start_tag %] FOREACH link = webpages [% tt_end_tag %]
+      &lt;li&gt;&lt;a href=&quot;[% tt_start_tag %] link.url [% tt_end_tag %]&quot;&gt;[% tt_start_tag %] link.title [% tt_end_tag %]&lt;/a&gt;
+   [% tt_start_tag %] END [% tt_end_tag %]
+   &lt;/ul&gt;</pre>
+<pre>   [% tt_start_tag %] INCLUDE footer [% tt_end_tag %]</pre>
+<p>
+This example shows how the INCLUDE directive is used to load and process 
+separate 'header' and 'footer' template files, including the output in 
+the current document.  These files might look like this:
+</p>
+<p>
+header:
+</p>
+<pre>    &lt;html&gt;
+    &lt;head&gt;
+    &lt;title&gt;[% tt_start_tag %] title [% tt_end_tag %]&lt;/title&gt;
+    &lt;/head&gt;
+    
+    &lt;body bgcolor=&quot;#ffffff&quot;&gt;</pre>
+<p>
+footer:
+</p>
+<pre>    &lt;hr&gt;</pre>
+<pre>    &lt;center&gt;
+    &amp;copy; Copyright 2000 Me, Myself, I
+    &lt;/center&gt;</pre>
+<pre>    &lt;/body&gt;
+    &lt;/html&gt;</pre>
+<p>
+The example also uses the FOREACH directive to iterate through the 
+'webpages' list to build a table of links.  In this example, we have
+defined this list within the template to contain a number of hash references,
+each containing a 'url' and 'title' member.  The FOREACH directive 
+iterates through the list, aliasing 'link' to each item (hash ref).
+The <b>[% tt_start_tag %] link.url [% tt_end_tag %]</b> and <b>[% tt_start_tag %] link.title [% tt_end_tag %]</b> directives then access
+the individual values in the hash and insert them into the document.
+</p>
+<p>
+The following sections show other ways in which data can be defined for
+use in a template.  
+</p>
+[%- END %]
+[% WRAPPER section
+    title='GENERATING STATIC PAGES'
+-%]<p>
+Having created a template file we can now process it to generate some
+real output.  The quickest and easiest way to do this is to use the 
+<file>tpage</file> script.  This is provided as part of the Template Toolkit and
+should be installed in your usual Perl bin directory.
+</p>
+<p>
+Assuming you saved your template file as 'mypage.html', you would run
+the command:
+</p>
+<pre>    tpage mypage.html</pre>
+<p>
+This will process the template file, sending the output to STDOUT
+(i.e.  whizzing past you on the screen).  You may want to redirect the
+output to a file but be careful not to specify the same name as the
+template file, or you'll overwrite it.  You may want to use one prefix
+for your templates such as '.atml' (for 'Another Template Markup
+Language', perhaps?) and the regular '.html' for the output files
+(assuming you're creating HTML, that is).  Alternatively, you might
+redirect the output to another directory. e.g.
+</p>
+<pre>    tpage mypage.atml &gt; mypage.html
+    tpage templates/mypage.html &gt; html/mypage.html</pre>
+<p>
+The <b>tpage</b> script is very basic and only really intended to give you
+an easy way to process a template without having to write any Perl code.
+A much more flexible tool is <b>ttree</b>, described below, but for now let's
+look at the output generated by processing the above example (some 
+whitespace removed for brevity):
+</p>
+<pre>    &lt;html&gt;
+    &lt;head&gt;
+    &lt;title&gt;This is an HTML example&lt;/title&gt;
+    &lt;/head&gt;
+    
+    &lt;body bgcolor=&quot;#ffffff&quot;&gt;
+    
+    &lt;h1&gt;Some Interesting Links&lt;/h1&gt;
+    
+    Links:
+    &lt;ul&gt;
+       &lt;li&gt;&lt;a href=&quot;http://foo.org&quot;&gt;The Foo Organsiation&lt;/a&gt;
+       &lt;li&gt;&lt;a href=&quot;http://bar.org&quot;&gt;The Bar Organsiation&lt;/a&gt;
+    &lt;/ul&gt;
+    
+    &lt;hr&gt;
+    
+    &lt;center&gt;
+    &amp;copy; Copyright 2000 Me, Myself, I
+    &lt;/center&gt;
+    
+    &lt;/body&gt;
+    &lt;/html&gt;</pre>
+<p>
+The <file>header</file> and <file>footer</file> template files have been included (assuming
+you created them and they're in the current directory) and the link data 
+has been built into an HTML list.
+</p>
+<p>
+The <file>ttree</file> script, also distributed as part of the Template Toolkit,
+provides a more flexible way to process template documents.  The first
+time you run the script, it will ask you if it should create a
+configuration file, usually called '.ttreerc' in your home directory.
+Answer 'y' to have it create the file.
+</p>
+<p>
+The <file>ttree</file> documentation describes how you can change the location
+of this file and also explains the syntax and meaning of the various
+options in the file.  Comments are written to the sample configuration
+file which should also help.
+</p>
+<pre>    perldoc ttree
+    ttree -h</pre>
+<p>
+In brief, the configuration file describes the directories in which
+template files are to be found (src), where the corresponding output
+should be written to (dest), and any other directories (lib) that may
+contain template files that you plan to INCLUDE into your source
+documents.  You can also specify processing options (such as 'verbose'
+and 'recurse') and provide regular expression to match files that you
+don't want to process (ignore, accept) or should be copied instead of
+processed (copy).
+</p>
+<p>
+An example <file>.ttreerc</file> file is shown here:
+</p>
+<p>
+$HOME/.ttreerc:
+    verbose 
+    recurse
+</p>
+<pre>    # this is where I keep other ttree config files
+    cfg = ~/.ttree</pre>
+<pre>    src  = ~/websrc/src
+    lib  = ~/websrc/lib
+    dest = ~/public_html/test</pre>
+<pre>    ignore = \b(CVS|RCS)\b
+    ignore = ^#</pre>
+<p>
+You can create many different configuration files and store them
+in the directory specified in the 'cfg' option, shown above.  You then
+add the <code>'-f filename'</code> option to <file>ttree</file> to have it read that file.
+</p>
+<p>
+When you run the script, it compares all the files in the 'src' directory
+(including those in sub-directories if the 'recurse' option is set), with
+those in the 'dest' directory.  If the destination file doesn't exist or
+has an earlier modification time than the corresponding source file, then 
+the source will be processed with the output written to the destination 
+file.  The <code>'-a'</code> option forces all files to be processed, regardless of 
+modification times.
+</p>
+<p>
+The script <i>doesn't</i> process any of the files in the 'lib' directory,
+but it does add it to the INCLUDE_PATH for the template processor so
+that it can locate these files via an INCLUDE or PROCESS directive.
+Thus, the 'lib' directory is an excellent place to keep template elements
+such as header, footers, etc., that aren't complete documents in their
+own right.
+</p>
+<p>
+You can also specify various Template Toolkit options from the configuration
+file.  Consult the <b>ttree</b> documentation and help summary (<code>'ttree -h'</code>)
+for full details.  e.g.
+</p>
+<p>
+$HOME/.ttreerc:
+    pre_process = config
+    interpolate
+    post_chomp
+</p>
+<p>
+The 'pre_process' option allows you to specify a template file which
+should be processed before each file.  Unsurprisingly, there's also a
+'post_process' option to add a template after each file.  In the
+fragment above, we have specified that the 'config' template should be
+used as a prefix template.  We can create this file in the 'lib'
+directory and use it to define some common variables, including those
+web page links we defined earlier and might want to re-use in other
+templates.  We could also include an HTML header, title, or menu bar
+in this file which would then be prepended to each and every template
+file, but for now we'll keep all that in a separate 'header' file.
+</p>
+<p>
+$lib/config:
+</p>
+<pre>    [% tt_start_tag %] root     = '~/abw'
+       home     = &quot;$root/index.html&quot;
+       images   = &quot;$root/images&quot;
+       email    = 'abw@kfs.org'
+       graphics = 1
+       webpages = [
+         { url =&gt; 'http://foo.org', title =&gt; 'The Foo Organsiation' }
+         { url =&gt; 'http://bar.org', title =&gt; 'The Bar Organsiation' }
+       ]
+    [% tt_end_tag %]</pre>
+<p>
+Assuming you've created or copied the 'header' and 'footer' files from the 
+earlier example into your 'lib' directory, you can now start to create 
+web pages like the following in your 'src' directory and process them 
+with <file>ttree</file>.
+</p>
+<p>
+$src/newpage.html:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE header
+       title = 'Another Template Toolkit Test Page'
+    [% tt_end_tag %]</pre>
+<pre>    &lt;a href=&quot;[% tt_start_tag %] home [% tt_end_tag %]&quot;&gt;Home&lt;/a&gt;
+    &lt;a href=&quot;mailto:[% tt_start_tag %] email [% tt_end_tag %]&quot;&gt;Email&lt;/a&gt;</pre>
+<pre>    [% tt_start_tag %] IF graphics [% tt_end_tag %]
+    &lt;img src=&quot;[% tt_start_tag %] images [% tt_end_tag %]/logo.gif&quot; align=right width=60 height=40&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] INCLUDE footer [% tt_end_tag %]</pre>
+<p>
+Here we've shown how pre-defined variables can be used as flags to
+enable certain feature (e.g. 'graphics') and to specify common items
+such as an email address and URL's for the home page, images directory
+and so on.  This approach allows you to define these values once so
+that they're consistent across all pages and can easily be changed to 
+new values.
+</p>
+<p>
+When you run <b>ttree</b>, you should see output similar to the following
+(assuming you have the verbose flag set).
+</p>
+<pre>  ttree 1.14 (Template Toolkit version 1.02a)</pre>
+<pre>        Source: /home/abw/websrc/src
+   Destination: /home/abw/public_html/test
+  Include Path: [ /home/abw/websrc/lib ]
+        Ignore: [ \b(CVS|RCS)\b, ^# ]
+          Copy: [  ]
+        Accept: [ * ]</pre>
+<pre>    + newpage.html</pre>
+<p>
+The '+' before 'newpage.html' shows that the file was processed, with
+the output being written to the destination directory.  If you run the
+same command again, you'll see the following line displayed instead
+showing a '-' and giving a reason why the file wasn't processed.
+</p>
+<pre>    - newpage.html                     (not modified)</pre>
+<p>
+It has detected a 'newpage.html' in the destination directory which is
+more recent than that in the source directory and so hasn't bothered
+to waste time re-processing it.  To force all files to be processed,
+use the <code>'-a'</code> option.  You can also specify one or more filenames as
+command line arguments to <file>ttree</file>:
+</p>
+<pre>    tpage newpage.html</pre>
+<p>
+This is what the destination page looks like.
+</p>
+<p>
+$dest/newpage.html:
+</p>
+<pre>    &lt;html&gt;
+    &lt;head&gt;
+    &lt;title&gt;Another Template Toolkit Test Page&lt;/title&gt;
+    &lt;/head&gt;
+    
+    &lt;body bgcolor=&quot;#ffffff&quot;&gt;
+        
+    &lt;a href=&quot;~/abw/index.html&quot;&gt;Home&lt;/a&gt;
+    &lt;a href=&quot;mailto:abw@kfs.org&quot;&gt;Email me&lt;/a&gt;</pre>
+<pre>    &lt;img src=&quot;~/abw/images/logo.gif&quot; align=right width=60 height=40&gt;
+        
+    &lt;hr&gt;
+    
+    &lt;center&gt;
+    &amp;copy; Copyright 2000 Me, Myself, I
+    &lt;/center&gt;
+    
+    &lt;/body&gt;
+    &lt;/html&gt;</pre>
+<p>
+You can add as many documents as you like to the 'src' directory and
+<file>ttree</file> will apply the same process to them all.  In this way, it is
+possible to build an entire tree of static content for a web site with
+a single command.  The added benefit is that you can be assured of
+consistency in links, header style, or whatever else you choose to
+implement in terms of common templates elements or variables.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='DYNAMIC CONTENT GENERATION VIA CGI SCRIPT'
+-%]<p>
+The [% ttlink('Template', 'Template') -%] module provides a simple front-end to the Template 
+Toolkit for use in CGI scripts and Apache/mod_perl handlers.  Simply
+'use' the Template module, create an object instance with the new()
+method and then call the process() method on the object, passing the
+name of the template file as a parameter.  The second parameter passed
+is a reference to a hash array of variables that we want made available
+to the template:
+</p>
+<pre>    #!/usr/bin/perl -w</pre>
+<pre>    use strict;
+    use Template;</pre>
+<pre>    my $file = 'src/greeting.html';
+    my $vars = {
+       message  =&gt; &quot;Hello World\n&quot;
+    };</pre>
+<pre>    my $template = Template-&gt;new();</pre>
+<pre>    $template-&gt;process($file, $vars)
+	|| die &quot;Template process failed: &quot;, $template-&gt;error(), &quot;\n&quot;;</pre>
+<p>
+So that our scripts will work with the same template files as our earlier
+examples, we'll can add some configuration options to the constructor to 
+tell it about our environment:
+</p>
+<pre>    my $template-&gt;new({
+	# where to find template files
+	INCLUDE_PATH =&gt; '/home/abw/websrc/src:/home/abw/websrc/lib',
+	# pre-process lib/config to define any extra values
+	PRE_PROCESS  =&gt; 'config',
+    });</pre>
+<p>
+Note that here we specify the 'config' file as a PRE_PROCESS option.
+This means that the templates we process can use the same global
+variables defined earlier for our static pages.  We don't have to
+replicate their definitions in this script.  However, we can supply
+additional data and functionality specific to this script via the hash
+of variables that we pass to the process() method.
+</p>
+<p>
+These entries in this hash may contain simple text or other values,
+references to lists, others hashes, sub-routines or objects.  The Template
+Toolkit will automatically apply the correct procedure to access these 
+different types when you use the variables in a template.
+</p>
+<p>
+Here's a more detailed example to look over.  Amongst the different
+template variables we define in <code>'$vars'</code>, we create a reference to a
+CGI object and a 'get_user_projects' sub-routine.
+</p>
+<pre>    #!/usr/bin/perl -w</pre>
+<pre>    use strict;
+    use Template;
+    use CGI;</pre>
+<pre>    $| = 1;
+    print &quot;Content-type: text/html\n\n&quot;;</pre>
+<pre>    my $file = 'userinfo.html';
+    my $vars = {
+        'version'  =&gt; 3.14,
+	'days'     =&gt; [ qw( mon tue wed thu fri sat sun ) ],
+	'worklist' =&gt; \&amp;get_user_projects,
+        'cgi'      =&gt; CGI-&gt;new(),
+	'me'       =&gt; {
+            'id'     =&gt; 'abw',
+            'name'   =&gt; 'Andy Wardley',
+	},
+    };</pre>
+<pre>    sub get_user_projects {
+	my $user = shift;
+	my @projects = ...   # do something to retrieve data
+	return \@projects;
+    }</pre>
+<pre>    my $template = Template-&gt;new({
+	INCLUDE_PATH =&gt; '/home/abw/websrc/src:/home/abw/websrc/lib',
+	PRE_PROCESS  =&gt; 'config',
+    });</pre>
+<pre>    $template-&gt;process($userinfo, $vars)
+	|| die $template-&gt;error();</pre>
+<p>
+Here's a sample template file that we might create to build the output
+for this script.
+</p>
+<p>
+$src/userinfo.html:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE header
+       title = 'Template Toolkit CGI Test'
+    [% tt_end_tag %]</pre>
+<pre>    &lt;a href=&quot;mailto:[% tt_start_tag %] email [% tt_end_tag %]&quot;&gt;Email [% tt_start_tag %] me.name [% tt_end_tag %]&lt;/a&gt;</pre>
+<pre>    &lt;p&gt;This is version [% tt_start_tag %] version [% tt_end_tag %]&lt;/p&gt;</pre>
+<pre>    &lt;h3&gt;Projects&lt;/h3&gt;
+    &lt;ul&gt;
+    [% tt_start_tag %] FOREACH project = worklist(me.id) [% tt_end_tag %]
+       &lt;li&gt; &lt;a href=&quot;[% tt_start_tag %] project.url [% tt_end_tag %]&quot;&gt;[% tt_start_tag %] project.name [% tt_end_tag %]&lt;/a&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]
+    &lt;/ul&gt;</pre>
+<pre>    [% tt_start_tag %] INCLUDE footer [% tt_end_tag %]</pre>
+<p>
+This example shows how we've separated the Perl implementation (code) from 
+the presentation (HTML) which not only makes them easier to maintain in 
+isolation, but also allows the re-use of existing template elements
+such as headers and footers, etc.  By using template to create the 
+output of your CGI scripts, you can give them the same consistency 
+as your static pages built via [% ttlink('Template::Tools::ttree', 'ttree') -%] or 
+other means.
+</p>
+<p>
+Furthermore, we can modify our script so that it processes any one of a
+number of different templates based on some condition.  A CGI script to
+maintain a user database, for example, might process one template to
+provide an empty form for new users, the same form with some default 
+values set for updating an existing user record, a third template for
+listing all users in the system, and so on.  You can use any Perl 
+functionality you care to write to implement the logic of your 
+application and then choose one or other template to generate the 
+desired output for the application state.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER'
+-%]<p>
+<b>NOTE:</b> the Apache::Template module is now available from CPAN
+and provides a simple and easy to use Apache/mod_perl interface to the
+Template Toolkit.  It's only in it's first release (0.01) at the time
+of writing and it currently only offers a fairly basic facility, but
+it implements most, if not all of what is described below, and it
+avoids the need to write your own handler.  However, in many cases,
+you'll want to write your own handler to customise processing for your
+own need, and this section will show you how to get started.
+</p>
+<p>
+The Template module can be used in a similar way from an Apache/mod_perl
+handler.  Here's an example of a typical Apache <file>httpd.conf</file> file:
+</p>
+<pre>    PerlModule CGI;
+    PerlModule Template
+    PerlModule MyOrg::Apache::User</pre>
+<pre>    PerlSetVar websrc_root   /home/abw/websrc</pre>
+<pre>    &lt;Location /user/bin&gt;
+        SetHandler     perl-script
+        PerlHandler    MyOrg::Apache::User
+    &lt;/Location&gt;</pre>
+<p>
+This defines a location called '/user/bin' to which all requests will
+be forwarded to the handler() method of the MyOrg::Apache::User
+module.  That module might look something like this:
+</p>
+<pre>    package MyOrg::Apache::User;
+    
+    use strict;
+    use vars qw( $VERSION );
+    use Apache::Constants qw( :common );
+    use Template qw( :template );
+    use CGI;
+    
+    $VERSION = 1.59;
+    
+    sub handler {
+    	my $r = shift;</pre>
+<pre>    	my $websrc = $r-&gt;dir_config('websrc_root')
+    	    or return fail($r, SERVER_ERROR,
+    			   &quot;'websrc_root' not specified&quot;);</pre>
+<pre>    	my $template = Template-&gt;new({ 
+    	    INCLUDE_PATH  =&gt; &quot;$websrc/src/user:$websrc/lib&quot;,
+    	    PRE_PROCESS   =&gt; 'config',
+    	    OUTPUT        =&gt; $r,     # direct output to Apache request
+    	});
+    
+    	my $params = {
+    	    uri     =&gt; $r-&gt;uri,
+    	    cgi     =&gt; CGI-&gt;new,
+    	};
+    
+    	# use the path_info to determine which template file to process
+    	my $file = $r-&gt;path_info;
+    	$file =~ s[^/][];
+    
+    	$r-&gt;content_type('text/html');
+    	$r-&gt;send_http_header;
+    	
+    	$template-&gt;process($file, $params) 
+    	    || return fail($r, SERVER_ERROR, $template-&gt;error());
+    
+    	return OK;
+    }
+    
+    sub fail {
+    	my ($r, $status, $message) = @_;
+    	$r-&gt;log_reason($message, $r-&gt;filename);
+    	return $status;
+    }</pre>
+<p>
+The handler accepts the request and uses it to determine the 'websrc_root'
+value from the config file.  This is then used to define an INCLUDE_PATH
+for a new Template object.  The URI is extracted from the request and a 
+CGI object is created.  These are both defined as template variables.
+</p>
+<p>
+The name of the template file itself is taken from the PATH_INFO element
+of the request.  In this case, it would comprise the part of the URL 
+coming after '/user/bin',  e.g for '/user/bin/edit', the template file
+would be 'edit' located in &quot;$websrc/src/user&quot;.  The headers are sent 
+and the template file is processed.  All output is sent directly to the
+print() method of the Apache request object.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='USING PLUGINS TO EXTEND FUNCTIONALITY'
+-%]<p>
+As we've already shown, it is possible to bind Perl data and functions
+to template variables when creating dynamic content via a CGI script
+or Apache/mod_perl process.  The Template Toolkit also supports a
+plugin interface which allows you define such additional data and/or
+functionality in a separate module and then load and use it as
+required with the USE directive.
+</p>
+<p>
+The main benefit to this approach is that you can load the extension into
+any template document, even those that are processed &quot;statically&quot; by 
+<file>tpage</file> or <file>ttree</file>.  You <i>don't</i> need to write a Perl wrapper to 
+explicitly load the module and make it available via the stash.
+</p>
+<p>
+Let's demonstrate this principle using the DBI plugin written by Simon
+Matthews &lt;sam@knowledgepool.com&gt;.  You can create this
+template in your 'src' directory and process it using <file>ttree</file> to see
+the results.  Of course, this example relies on the existence of the
+appropriate SQL database but you should be able to adapt it to your
+own resources, or at least use it as a demonstrative example of what's
+possible.
+</p>
+<pre>    [% tt_start_tag %] INCLUDE header
+       title = 'User Info'
+    [% tt_end_tag %]
+    
+    [% tt_start_tag %] USE DBI('dbi:mSQL:mydbname') [% tt_end_tag %]
+    
+    &lt;table border=0 width=&quot;100%&quot;&gt;
+    &lt;tr&gt;
+      &lt;th&gt;User ID&lt;/th&gt; 
+      &lt;th&gt;Name&lt;/th&gt;  
+      &lt;th&gt;Email&lt;/th&gt;
+    &lt;/tr&gt;
+    
+    [% tt_start_tag %] FOREACH user = DBI.query('SELECT * FROM user ORDER BY id') [% tt_end_tag %]
+    &lt;tr&gt;
+      &lt;td&gt;[% tt_start_tag %] user.id [% tt_end_tag %]&lt;/td&gt; 
+      &lt;td&gt;[% tt_start_tag %] user.name [% tt_end_tag %]&lt;/td&gt; 
+      &lt;td&gt;[% tt_start_tag %] user.email [% tt_end_tag %]&lt;/td&gt;
+    &lt;/tr&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]
+    
+    &lt;/table&gt;
+    
+    [% tt_start_tag %] INCLUDE footer [% tt_end_tag %]</pre>
+<p>
+A plugin is simply a Perl module in a known location and conforming to 
+a known standard such that the Template Toolkit can find and load it 
+automatically.  You can create your own plugin by inheriting from the 
+<file>Template::Plugin</file> module.
+</p>
+<p>
+Here's an example which defines some data items ('foo' and 'people')
+and also an object method ('bar').  We'll call the plugin 'FooBar' for
+want of a better name and create it in the 'MyOrg::Template::Plugin::FooBar'
+package.  We've added a 'MyOrg' to the regular 'Template::Plugin::*' package
+to avoid any conflict with existing plugins.
+</p>
+<p>
+You can create a module stub using the Perl utlity <file>h2xs</file>:
+</p>
+<pre>    h2xs -A -X -n MyOrg::Template::Plugin::FooBar</pre>
+<p>
+This will create a directory structure representing the package name
+along with a set of files comprising your new module.  You can then 
+edit FooBar.pm to look something like this:
+</p>
+<pre>    package MyOrg::Template::Plugin::FooBar;</pre>
+<pre>    use Template::Plugin;
+    use vars qw( $VERSION );
+    use base qw( Template::Plugin );</pre>
+<pre>    $VERSION = 1.23;</pre>
+<pre>    sub new {
+        my ($class, $context, @params) = @_;</pre>
+<pre>	bless {
+	    _CONTEXT =&gt; $context,
+            foo      =&gt; 25,
+            people   =&gt; [ 'tom', 'dick', 'harry' ],
+	}, $class;
+    }</pre>
+<pre>    sub bar {
+	my ($self, @params) = @_;
+        # ...do something...	
+	return $some_value;
+    }</pre>
+<p>
+The plugin constructor new() receives the class name as the first
+parameter, as is usual in Perl, followed by a reference to something
+called a Template::Context object.  You don't need to worry too much
+about this at the moment, other than to know that it's the main
+processing object for the Template Toolkit.  It provides access to the
+functionality of the processor and some plugins may need to
+communicate with it.  We don't at this stage, but we'll save the
+reference anyway in the '_CONTEXT' member.  The leading underscore is
+a convention which indicates that this item is private and the
+Template Toolkit won't attempt to access this member.  The other
+members defined, 'foo' and 'people' are regular data items which will be
+made available to templates using this plugin.  Following the context
+reference are passed any additional parameters specified with the 
+USE directive, such as the data source parameter, 'dbi:mSQL:mydbname', 
+that we used in the earlier DBI example.
+</p>
+<p>
+If you used <file>h2xs</file> to create the module stub then you'll already 
+have a Makefile.PL and you can incite the familiar incantation to 
+build and install it.  Don't forget to add some tests to test.pl!
+</p>
+<pre>    perl Makefile.PL
+    make
+    make test
+    make install</pre>
+<p>
+If you don't or can't install it to the regular place for your Perl 
+modules (perhaps because you don't have the required privileges) then
+you can set the PERL5LIB environment variable to specify another location.
+If you're using <file>ttree</file> then you can add the following line to your 
+configuration file instead.  This has the effect of add '/path/to/modules' 
+to the @INC array to a similar end.
+</p>
+<p>
+$HOME/.ttreerc:
+</p>
+<pre>    perl5lib = /path/to/modules</pre>
+<p>
+One further configuration item must be added to inform the toolkit of
+the new package name we have adopted for our plugins:
+</p>
+<p>
+$HOME/.ttreerc:
+</p>
+<pre>    plugin_base = 'MyOrg::Template::Plugin'</pre>
+<p>
+If you're writing Perl code to control the Template modules directly,
+then this value can be passed as a configuration parameter when you 
+create the module.
+</p>
+<pre>    use Template;</pre>
+<pre>    my $template = Template-&gt;new({ 
+	PLUGIN_BASE =&gt; 'MyOrg::Template::Plugin' 
+    });</pre>
+<p>
+Now we can create a template which uses this plugin:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE header
+       title = 'FooBar Plugin Test'
+    [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] USE FooBar [% tt_end_tag %]</pre>
+<pre>    Some values available from this plugin:
+      [% tt_start_tag %] FooBar.foo [% tt_end_tag %] [% tt_start_tag %] FooBar.bar [% tt_end_tag %]</pre>
+<pre>    The users defined in the 'people' list:
+    [% tt_start_tag %] FOREACH uid = FooBar.people [% tt_end_tag %]
+      * [% tt_start_tag %] uid [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] INCLUDE footer [% tt_end_tag %]</pre>
+<p>
+The 'foo', 'bar' and 'people' items of the FooBar plugin are
+automatically resolved to the appropriate data items or method calls
+on the underlying object.
+</p>
+<p>
+Using this approach, it is possible to create application
+functionality in a single module which can then be loaded and used on
+demand in any template.  The simple interface between template
+directives and plugin objects allows complex, dynamic content to be
+built from a few simple template documents without knowing anything
+about the underlying implementation.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+
+

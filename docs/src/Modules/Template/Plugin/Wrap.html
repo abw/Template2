@@ -1,0 +1,110 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_Wrap'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE wrap [% tt_end_tag %]</pre>
+<pre>    # call wrap subroutine
+    [% tt_start_tag %] wrap(mytext, width, initial_tab,  subsequent_tab) [% tt_end_tag %]</pre>
+<pre>    # or use wrap FILTER
+    [% tt_start_tag %] mytext FILTER wrap(width, initital_tab, subsequent_tab) [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This plugin provides an interface to the Text::Wrap module which 
+provides simple paragraph formatting.
+</p>
+<p>
+It defines a 'wrap' subroutine which can be called, passing the input
+text and further optional parameters to specify the page width (default:
+72), and tab characters for the first and subsequent lines (no defaults).
+</p>
+<pre>    [% tt_start_tag %] USE wrap [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] text = BLOCK [% tt_end_tag %]
+    First, attach the transmutex multiplier to the cross-wired 
+    quantum homogeniser.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] wrap(text, 40, '* ', '  ') [% tt_end_tag %]</pre>
+<p>
+Output:
+</p>
+<pre>    * First, attach the transmutex
+      multiplier to the cross-wired quantum
+      homogeniser.</pre>
+<p>
+It also registers a 'wrap' filter which accepts the same three optional 
+arguments but takes the input text directly via the filter input.
+</p>
+<pre>    [% tt_start_tag %] FILTER bullet = wrap(40, '* ', '  ') -[% tt_end_tag %]
+    First, attach the transmutex multiplier to the cross-wired quantum
+    homogeniser.
+    [% tt_start_tag %]- END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FILTER bullet -[% tt_end_tag %]
+    Then remodulate the shield to match the harmonic frequency, taking 
+    care to correct the phase difference.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Output:
+</p>
+<pre>    * First, attach the transmutex
+      multiplier to the cross-wired quantum
+      homogeniser.</pre>
+<pre>    * Then remodulate the shield to match
+      the harmonic frequency, taking 
+      care to correct the phase difference.</pre>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+The Text::Wrap module was written by David Muir Sharnoff
+&lt;muir@idiom.com&gt; with help from Tim Pierce and many
+others.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Text::Wrap', 'Text::Wrap') -%]
+</p>
+[%- END %]
+
+

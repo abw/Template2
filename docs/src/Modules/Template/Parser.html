@@ -1,0 +1,486 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Parser'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='PUBLIC METHODS'
+                         subs=['new(\%params)', 'parse($text)'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    use Template::Parser;</pre>
+<pre>    $parser   = Template::Parser-&gt;new(\%config);
+    $template = $parser-&gt;parse($text)
+        || die $parser-&gt;error(), &quot;\n&quot;;</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Template::Parser module implements a LALR(1) parser and associated methods
+for parsing template documents into Perl code.  
+</p>
+[%- END %]
+[% WRAPPER section
+    title='PUBLIC METHODS'
+-%][% WRAPPER subsection
+   title = 'new(\%params)'
+-%]<p>
+The new() constructor creates and returns a reference to a new 
+Template::Parser object.  A reference to a hash may be supplied as a 
+parameter to provide configuration values.  These may include:
+</p>
+
+<ul>
+
+<li><b>START_TAG, END_TAG</b><br>
+<p>
+The START_TAG and END_TAG options are used to specify character
+sequences or regular expressions that mark the start and end of a
+template directive.  The default values for START_TAG and END_TAG are
+'[% tt_start_tag %]' and '[% tt_end_tag %]' respectively, giving us the familiar directive style:
+</p>
+<pre>    [% tt_start_tag %] example [% tt_end_tag %]</pre>
+<p>
+Any Perl regex characters can be used and therefore should be escaped
+(or use the Perl <code>'quotemeta'</code> function) if they are intended to
+represent literal characters.
+</p>
+<pre>    my $parser = Template::Parser-&gt;new({ 
+  	START_TAG =&gt; quotemeta('&lt;+'),
+  	END_TAG   =&gt; quotemeta('+&gt;'),
+    });</pre>
+<p>
+example:
+</p>
+<pre>    &lt;+ INCLUDE foobar +&gt;</pre>
+<p>
+The TAGS directive can also be used to set the START_TAG and END_TAG values
+on a per-template file basis.
+</p>
+<pre>    [% tt_start_tag %] TAGS &lt;+ +&gt; [% tt_end_tag %]</pre>
+
+
+
+<li><b>TAG_STYLE</b><br>
+<p>
+The TAG_STYLE option can be used to set both START_TAG and END_TAG
+according to pre-defined tag styles.  
+</p>
+<pre>    my $parser = Template::Parser-&gt;new({ 
+  	TAG_STYLE =&gt; 'star',
+    });</pre>
+<p>
+Available styles are:
+</p>
+<pre>    template    [% tt_start_tag %] ... [% tt_end_tag %]               (default)
+    template1   [% tt_start_tag %] ... [% tt_end_tag %] or %% ... %%  (TT version 1)
+    metatext    %% ... %%               (Text::MetaText)
+    star        [* ... *]               (TT alternate)
+    php         &lt;? ... ?&gt;               (PHP)
+    asp         &lt;% ... %&gt;               (ASP)
+    mason       &lt;% ...  &gt;               (HTML::Mason)
+    html        &lt;!-- ... --&gt;            (HTML comments)</pre>
+<p>
+Any values specified for START_TAG and/or END_TAG will over-ride
+those defined by a TAG_STYLE.  
+</p>
+<p>
+The TAGS directive may also be used to set a TAG_STYLE
+</p>
+<pre>    [% tt_start_tag %] TAGS html [% tt_end_tag %]
+    &lt;!-- INCLUDE header --&gt;</pre>
+
+
+
+<li><b>PRE_CHOMP, POST_CHOMP</b><br>
+<p>
+Anything outside a directive tag is considered plain text and is
+generally passed through unaltered (but see the INTERPOLATE option).
+This includes all whitespace and newlines characters surrounding
+directive tags.  Directives that don't generate any output will leave
+gaps in the output document.
+</p>
+<p>
+Example:
+</p>
+<pre>    Foo
+    [% tt_start_tag %] a = 10 [% tt_end_tag %]
+    Bar</pre>
+<p>
+Output:
+</p>
+<pre>    Foo</pre>
+<pre>    Bar</pre>
+<p>
+The PRE_CHOMP and POST_CHOMP options can help to clean up some of this
+extraneous whitespace.  Both are disabled by default.
+</p>
+<pre>    my $parser = Template::Parser-&gt;new({
+	PRE_CHOMP  =&gt; 1,
+	POST_CHOMP =&gt; 1,
+    });</pre>
+<p>
+With PRE_CHOMP set to 1, the newline and whitespace preceding a directive
+at the start of a line will be deleted.  This has the effect of 
+concatenating a line that starts with a directive onto the end of the 
+previous line.
+</p>
+<pre> 	Foo &lt;----------.
+ 		       |
+    ,---(PRE_CHOMP)----'
+    |
+    `-- [% tt_start_tag %] a = 10 [% tt_end_tag %] --.
+ 		       |
+    ,---(POST_CHOMP)---'
+    |
+    `-&gt; Bar</pre>
+<p>
+With POST_CHOMP set to 1, any whitespace after a directive up to and
+including the newline will be deleted.  This has the effect of joining
+a line that ends with a directive onto the start of the next line.
+</p>
+<p>
+If PRE_CHOMP or POST_CHOMP is set to 2, then instead of removing all
+the whitespace, the whitespace will be collapsed to a single space.
+This is useful for HTML, where (usually) a contiguous block of
+whitespace is rendered the same as a single space.
+</p>
+<p>
+You may use the CHOMP_NONE, CHOMP_ALL, and CHOMP_COLLAPSE constants
+from the Template::Constants module to deactivate chomping, remove
+all whitespace, or collapse whitespace to a single space.
+</p>
+<p>
+PRE_CHOMP and POST_CHOMP can be activated for individual directives by
+placing a '-' immediately at the start and/or end of the directive.
+</p>
+<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]
+       [% tt_start_tag %]- user -[% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The '-' characters activate both PRE_CHOMP and POST_CHOMP for the one
+directive '[% tt_start_tag %]- name -[% tt_end_tag %]'.  Thus, the template will be processed as if
+written:
+</p>
+<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %][% tt_start_tag %] user [% tt_end_tag %][% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Note that this is the same as if PRE_CHOMP and POST_CHOMP were set
+to CHOMP_ALL; the only way to get the CHOMP_COLLAPSE behavior is
+to set PRE_CHOMP or POST_CHOMP accordingly.  If PRE_CHOMP or POST_CHOMP
+is already set to CHOMP_COLLAPSE, using '-' will give you CHOMP_COLLAPSE
+behavior, not CHOMP_ALL behavior.
+</p>
+<p>
+Similarly, '+' characters can be used to disable PRE_CHOMP or
+POST_CHOMP (i.e.  leave the whitespace/newline intact) options on a
+per-directive basis.
+</p>
+<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]
+    User: [% tt_start_tag %] user +[% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+With POST_CHOMP enabled, the above example would be parsed as if written:
+</p>
+<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]User: [% tt_start_tag %] user [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+
+<li><b>INTERPOLATE</b><br>
+<p>
+The INTERPOLATE flag, when set to any true value will cause variable 
+references in plain text (i.e. not surrounded by START_TAG and END_TAG)
+to be recognised and interpolated accordingly.  
+</p>
+<pre>    my $parser = Template::Parser-&gt;new({ 
+  	INTERPOLATE =&gt; 1,
+    });</pre>
+<p>
+Variables should be prefixed by a '$' to identify them.  Curly braces
+can be used in the familiar Perl/shell style to explicitly scope the
+variable name where required.
+</p>
+<pre>    # INTERPOLATE =&gt; 0
+    &lt;a href=&quot;http://[% tt_start_tag %] server [% tt_end_tag %]/[% tt_start_tag %] help [% tt_end_tag %]&quot;&gt;
+    &lt;img src=&quot;[% tt_start_tag %] images [% tt_end_tag %]/help.gif&quot;&gt;&lt;/a&gt;
+    [% tt_start_tag %] myorg.name [% tt_end_tag %]
+  
+    # INTERPOLATE =&gt; 1
+    &lt;a href=&quot;http://$server/$help&quot;&gt;
+    &lt;img src=&quot;$images/help.gif&quot;&gt;&lt;/a&gt;
+    $myorg.name
+  
+    # explicit scoping with {  }
+    &lt;img src=&quot;$images/${icon.next}.gif&quot;&gt;</pre>
+<p>
+Note that a limitation in Perl's regex engine restricts the maximum length
+of an interpolated template to around 32 kilobytes or possibly less.  Files
+that exceed this limit in size will typically cause Perl to dump core with
+a segmentation fault.  If you routinely process templates of this size 
+then you should disable INTERPOLATE or split the templates in several 
+smaller files or blocks which can then be joined backed together via 
+PROCESS or INCLUDE.
+</p>
+
+
+
+<li><b>ANYCASE</b><br>
+<p>
+By default, directive keywords should be expressed in UPPER CASE.  The 
+ANYCASE option can be set to allow directive keywords to be specified
+in any case.
+</p>
+<pre>    # ANYCASE =&gt; 0 (default)
+    [% tt_start_tag %] INCLUDE foobar [% tt_end_tag %]	# OK
+    [% tt_start_tag %] include foobar [% tt_end_tag %]        # ERROR
+    [% tt_start_tag %] include = 10   [% tt_end_tag %]        # OK, 'include' is a variable</pre>
+<pre>    # ANYCASE =&gt; 1
+    [% tt_start_tag %] INCLUDE foobar [% tt_end_tag %]	# OK
+    [% tt_start_tag %] include foobar [% tt_end_tag %]	# OK
+    [% tt_start_tag %] include = 10   [% tt_end_tag %]        # ERROR, 'include' is reserved word</pre>
+<p>
+One side-effect of enabling ANYCASE is that you cannot use a variable
+of the same name as a reserved word, regardless of case.  The reserved
+words are currently:
+</p>
+<pre>        GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER 
+    IF UNLESS ELSE ELSIF FOR FOREACH WHILE SWITCH CASE
+    USE PLUGIN FILTER MACRO PERL RAWPERL BLOCK META
+    TRY THROW CATCH FINAL NEXT LAST BREAK RETURN STOP 
+    CLEAR TO STEP AND OR NOT MOD DIV END</pre>
+<p>
+The only lower case reserved words that cannot be used for variables,
+regardless of the ANYCASE option, are the operators:
+</p>
+<pre>    and or not mod div</pre>
+
+
+
+<li><b>V1DOLLAR</b><br>
+<p>
+In version 1 of the Template Toolkit, an optional leading '$' could be placed
+on any template variable and would be silently ignored.
+</p>
+<pre>    # VERSION 1
+    [% tt_start_tag %] $foo [% tt_end_tag %]       ===  [% tt_start_tag %] foo [% tt_end_tag %]
+    [% tt_start_tag %] $hash.$key [% tt_end_tag %] ===  [% tt_start_tag %] hash.key [% tt_end_tag %]</pre>
+<p>
+To interpolate a variable value the '${' ... '}' construct was used.
+Typically, one would do this to index into a hash array when the key
+value was stored in a variable.
+</p>
+<p>
+example:
+</p>
+<pre>    my $vars = {
+	users =&gt; {
+	    aba =&gt; { name =&gt; 'Alan Aardvark', ... },
+	    abw =&gt; { name =&gt; 'Andy Wardley', ... },
+            ...
+	},
+	uid =&gt; 'aba',
+        ...
+    };</pre>
+<pre>    $template-&gt;process('user/home.html', $vars)
+	|| die $template-&gt;error(), &quot;\n&quot;;</pre>
+<p>
+'user/home.html':
+</p>
+<pre>    [% tt_start_tag %] user = users.${uid} [% tt_end_tag %]     # users.aba
+    Name: [% tt_start_tag %] user.name [% tt_end_tag %]         # Alan Aardvark</pre>
+<p>
+This was inconsistent with double quoted strings and also the
+INTERPOLATE mode, where a leading '$' in text was enough to indicate a
+variable for interpolation, and the additional curly braces were used
+to delimit variable names where necessary.  Note that this use is
+consistent with UNIX and Perl conventions, among others.
+</p>
+<pre>    # double quoted string interpolation
+    [% tt_start_tag %] name = &quot;$title ${user.name}&quot; [% tt_end_tag %]</pre>
+<pre>    # INTERPOLATE = 1
+    &lt;img src=&quot;$images/help.gif&quot;&gt;&lt;/a&gt;
+    &lt;img src=&quot;$images/${icon.next}.gif&quot;&gt;</pre>
+<p>
+For version 2, these inconsistencies have been removed and the syntax
+clarified.  A leading '$' on a variable is now used exclusively to
+indicate that the variable name should be interpolated
+(e.g. subsituted for its value) before being used.  The earlier example
+from version 1:
+</p>
+<pre>    # VERSION 1
+    [% tt_start_tag %] user = users.${uid} [% tt_end_tag %]
+    Name: [% tt_start_tag %] user.name [% tt_end_tag %]</pre>
+<p>
+can now be simplified in version 2 as:
+</p>
+<pre>    # VERSION 2
+    [% tt_start_tag %] user = users.$uid [% tt_end_tag %]
+    Name: [% tt_start_tag %] user.name [% tt_end_tag %]</pre>
+<p>
+The leading dollar is no longer ignored and has the same effect of
+interpolation as '${' ... '}' in version 1.  The curly braces may
+still be used to explicitly scope the interpolated variable name
+where necessary.
+</p>
+<p>
+e.g.
+</p>
+<pre>    [% tt_start_tag %] user = users.${me.id} [% tt_end_tag %]
+    Name: [% tt_start_tag %] user.name [% tt_end_tag %]</pre>
+<p>
+The rule applies for all variables, both within directives and in
+plain text if processed with the INTERPOLATE option.  This means that
+you should no longer (if you ever did) add a leading '$' to a variable
+inside a directive, unless you explicitly want it to be interpolated.
+</p>
+<p>
+One obvious side-effect is that any version 1 templates with variables
+using a leading '$' will no longer be processed as expected.  Given
+the following variable definitions,
+</p>
+<pre>    [% tt_start_tag %] foo = 'bar'
+       bar = 'baz'
+    [% tt_end_tag %]</pre>
+<p>
+version 1 would interpret the following as:
+</p>
+<pre>    # VERSION 1
+    [% tt_start_tag %] $foo [% tt_end_tag %] =&gt; [% tt_start_tag %] GET foo [% tt_end_tag %] =&gt; bar</pre>
+<p>
+whereas version 2 interprets it as:
+</p>
+<pre>    # VERSION 2
+    [% tt_start_tag %] $foo [% tt_end_tag %] =&gt; [% tt_start_tag %] GET $foo [% tt_end_tag %] =&gt; [% tt_start_tag %] GET bar [% tt_end_tag %] =&gt; baz</pre>
+<p>
+In version 1, the '$' is ignored and the value for the variable 'foo' is 
+retrieved and printed.  In version 2, the variable '$foo' is first interpolated
+to give the variable name 'bar' whose value is then retrieved and printed.
+</p>
+<p>
+The use of the optional '$' has never been strongly recommended, but
+to assist in backwards compatibility with any version 1 templates that
+may rely on this &quot;feature&quot;, the V1DOLLAR option can be set to 1
+(default: 0) to revert the behaviour and have leading '$' characters
+ignored.
+</p>
+<pre>    my $parser = Template::Parser-&gt;new({
+	V1DOLLAR =&gt; 1,
+    });</pre>
+
+
+
+<li><b>GRAMMAR</b><br>
+<p>
+The GRAMMAR configuration item can be used to specify an alternate
+grammar for the parser.  This allows a modified or entirely new
+template language to be constructed and used by the Template Toolkit.
+</p>
+<p>
+Source templates are compiled to Perl code by the Template::Parser
+using the Template::Grammar (by default) to define the language
+structure and semantics.  Compiled templates are thus inherently
+&quot;compatible&quot; with each other and there is nothing to prevent any
+number of different template languages being compiled and used within
+the same Template Toolkit processing environment (other than the usual
+time and memory constraints).
+</p>
+<p>
+The Template::Grammar file is constructed from a YACC like grammar
+(using Parse::YAPP) and a skeleton module template.  These files are
+provided, along with a small script to rebuild the grammar, in the
+'parser' sub-directory of the distribution.  You don't have to know or
+worry about these unless you want to hack on the template language or
+define your own variant.  There is a README file in the same directory
+which provides some small guidance but it is assumed that you know
+what you're doing if you venture herein.  If you grok LALR parsers,
+then you should find it comfortably familiar.
+</p>
+<p>
+By default, an instance of the default Template::Grammar will be
+created and used automatically if a GRAMMAR item isn't specified.
+</p>
+<pre>    use MyOrg::Template::Grammar;</pre>
+<pre>    my $parser = Template::Parser-&gt;new({ 
+       	GRAMMAR = MyOrg::Template::Grammar-&gt;new();
+    });</pre>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'parse($text)'
+-%]<p>
+The parse() method parses the text passed in the first parameter and
+returns a reference to a Template::Document object which contains the
+compiled representation of the template text.  On error, undef is
+returned.
+</p>
+<p>
+Example:
+</p>
+<pre>    $doc = $parser-&gt;parse($text)
+	|| die $parser-&gt;error();</pre>
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+<pre> </pre>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+<p>
+The original Template::Parser module was derived from a standalone
+parser generated by version 0.16 of the Parse::Yapp module.  The
+following copyright notice appears in the Parse::Yapp documentation.
+</p>
+<pre>    The Parse::Yapp module and its related modules and shell
+    scripts are copyright (c) 1998 Francois Desarmenien,
+    France. All rights reserved.</pre>
+<pre>    You may use and distribute them under the terms of either
+    the GNU General Public License or the Artistic License, as
+    specified in the Perl README file.</pre>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%], [% ttlink('Template::Grammar', 'Template::Grammar') -%], [% ttlink('Template::Directive', 'Template::Directive') -%]
+</p>
+[%- END %]
+
+

@@ -1,0 +1,302 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Test'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='HISTORY';
+	INCLUDE tocitem title='BUGS / KNOWN &quot;FEATURES&quot;';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    use Template::Test;
+   
+    $Template::Test::DEBUG = 0;   # set this true to see each test running
+    $Template::Test::EXTRA = 2;   # 2 extra tests follow test_expect()...</pre>
+<pre>    # ok() can be called any number of times before test_expect
+    ok( $true_or_false )</pre>
+<pre>    # test_expect() splits $input into individual tests, processes each 
+    # and compares generated output against expected output
+    test_expect($input, $template, \%replace );</pre>
+<pre>    # $input is text or filehandle (e.g. DATA section after __END__)
+    test_expect( $text );
+    test_expect( \*DATA );</pre>
+<pre>    # $template is a Template object or configuration hash
+    my $template_cfg = { ... };
+    test_expect( $input, $template_cfg );
+    my $template_obj = Template-&gt;new($template_cfg);
+    test_expect( $input, $template_obj );</pre>
+<pre>    # $replace is a hash reference of template variables
+    my $replace = {
+	a =&gt; 'alpha',
+	b =&gt; 'bravo'
+    };
+    test_expect( $input, $template, $replace );</pre>
+<pre>    # ok() called after test_expect should be declared in $EXTRA (2)
+    ok( $true_or_false )   
+    ok( $true_or_false )   </pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Template::Test module defines the test_expect() and other related
+subroutines which can be used to automate test scripts for the
+Template Toolkit.  See the numerous tests in the 't' sub-directory of
+the distribution for examples of use.
+</p>
+<p>
+The test_expect() subroutine splits an input document into a number
+of separate tests, processes each one using the Template Toolkit and
+then compares the generated output against an expected output, also
+specified in the input document.  It generates the familiar &quot;ok/not
+ok&quot; output compatible with Test::Harness.
+</p>
+<p>
+The test input should be specified as a text string or a reference to
+a filehandle (e.g. GLOB or IO::Handle) from which it can be read.  In 
+particular, this allows the test input to be placed after the __END__
+marker and read via the DATA filehandle.
+</p>
+<pre>    use Template::Test;</pre>
+<pre>    test_expect(\*DATA);</pre>
+<pre>    __END__
+    # this is the first test (this is a comment)
+    -- test --
+    blah blah blah [% tt_start_tag %] foo [% tt_end_tag %]
+    -- expect --
+    blah blah blah value_of_foo</pre>
+<pre>    # here's the second test (no surprise, so is this)
+    -- test --
+    more blah blah [% tt_start_tag %] bar [% tt_end_tag %]
+    -- expect --
+    more blah blah value_of_bar</pre>
+<p>
+Blank lines between test sections are generally ignored.  Any line starting
+with '#' is treated as a comment and is ignored.
+</p>
+<p>
+The second and third parameters to test_expect() are optional.  The second
+may be either a reference to a Template object which should be used to 
+process the template fragments, or a reference to a hash array containing
+configuration values which should be used to instantiate a new Template
+object.
+</p>
+<pre>    # pass reference to config hash
+    my $config = {
+	INCLUDE_PATH =&gt; '/here/there:/every/where',
+	POST_CHOMP   =&gt; 1,
+    };
+    test_expect(\*DATA, $config);</pre>
+<pre>    # or create Template object explicitly
+    my $template = Template-&gt;new($config);
+    test_expect(\*DATA, $template);</pre>
+<p>
+The third parameter may be used to reference a hash array of template
+variable which should be defined when processing the tests.  This is
+passed to the Template process() method.
+</p>
+<pre>    my $replace = {
+	a =&gt; 'alpha',
+	b =&gt; 'bravo',
+    };</pre>
+<pre>    test_expect(\*DATA, $config, $replace);</pre>
+<p>
+The second parameter may be left undefined to specify a default Template
+configuration.
+</p>
+<pre>    test_expect(\*DATA, undef, $replace);</pre>
+<p>
+For testing the output of different Template configurations, a
+reference to a list of named Template objects also may be passed as
+the second parameter.
+</p>
+<pre>    my $tt1 = Template-&gt;new({ ... });
+    my $tt2 = Template-&gt;new({ ... });
+    my @tts = [ one =&gt; $tt1, two =&gt; $tt1 ];
+   
+The first object in the list is used by default.  Other objects may be 
+switched in with the '-- use $name --' marker.  This should immediately 
+follow a '-- test --' line.  That object will then be used for the rest 
+of the test, or until a different object is selected.</pre>
+<pre>    -- test --
+    -- use one --
+    [% tt_start_tag %] blah [% tt_end_tag %]
+    -- expect --
+    blah, blah</pre>
+<pre>    -- test --
+    still using one...
+    -- expect --
+    ...</pre>
+<pre>    -- test --
+    -- use two --
+    [% tt_start_tag %] blah [% tt_end_tag %]
+    -- expect --
+    blah, blah, more blah</pre>
+<p>
+The test_expect() sub counts the number of tests, and then calls ntests() 
+to generate the familiar &quot;1..$ntests\n&quot; test harness line.  Each 
+test defined generates two test numbers.  The first indicates 
+that the input was processed without error, and the second that the 
+output matches that expected. 
+</p>
+<p>
+Additional test may be run before test_expect() by calling ok().
+These test results are cached until ntests() is called and the final
+number of tests can be calculated.  Then, the &quot;1..$ntests&quot; line is 
+output, along with &quot;ok $n&quot; / &quot;not ok $n&quot; lines for each of the cached
+test result.  Subsequent calls to ok() then generate an output line 
+immediately.
+</p>
+<pre>    my $something = SomeObject-&gt;new();
+    ok( $something );
+    
+    my $other = AnotherThing-&gt;new();
+    ok( $other );</pre>
+<pre>    test_expect(\*DATA);</pre>
+<p>
+If any tests are to follow after test_expect() is called then these 
+should be pre-declared by setting the $EXTRA package variable.  This
+value (default: 0) is added to the grand total calculated by ntests().
+The results of the additional tests are also registered by calling ok().
+</p>
+<pre>    $Template::Test::EXTRA = 2;</pre>
+<pre>    # can call ok() any number of times before test_expect()
+    ok( $did_that_work );             
+    ok( $make_sure );
+    ok( $dead_certain ); </pre>
+<pre>    # &lt;some&gt; number of tests...
+    test_expect(\*DATA, $config, $replace);
+    
+    # here's those $EXTRA tests
+    ok( defined $some_result &amp;&amp; ref $some_result eq 'ARRAY' );
+    ok( $some_result-&gt;[0] eq 'some expected value' );</pre>
+<p>
+If you don't want to call test_expect() at all then you can call
+ntests($n) to declare the number of tests and generate the test 
+header line.  After that, simply call ok() for each test passing 
+a true or false values to indicate that the test passed or failed.
+</p>
+<pre>    ntests(2);
+    ok(1);
+    ok(0);</pre>
+<p>
+If you're really lazy, you can just call ok() and not bother declaring
+the number of tests at all.  All tests results will be cached until the
+end of the script and then printed in one go before the program exits.
+</p>
+<pre>    ok( $x );
+    ok( $y );</pre>
+<p>
+You can identify only a specific part of the input file for testing
+using the '-- start --' and '-- stop --' markers.  Anything before the 
+first '-- start --' is ignored, along with anything after the next 
+'-- stop --' marker.
+</p>
+<pre>    -- test --
+    this is test 1 (not performed)
+    -- expect --
+    this is test 1 (not performed)</pre>
+<pre>    -- start --</pre>
+<pre>    -- test --
+    this is test 2
+    -- expect --
+    this is test 2
+ 
+    -- stop --</pre>
+<pre>    ...</pre>
+<p>
+For historical reasons and general utility, the module also defines a
+'callsign' subroutine which returns a hash mapping a..z to their phonetic 
+alphabet equivalent (e.g. radio callsigns).  This is used by many
+of the test scripts as a &quot;known source&quot; of variable values.
+</p>
+<pre>    test_expect(\*DATA, $config, callsign());</pre>
+<p>
+A banner() subroutine is also provided which prints a simple banner
+including any text passed as parameters, if $DEBUG is set.
+</p>
+<pre>    banner('Testing something-or-other');</pre>
+<p>
+example output:
+</p>
+<pre>    #------------------------------------------------------------
+    # Testing something-or-other (27 tests completed)
+    #------------------------------------------------------------</pre>
+<p>
+The $DEBUG package variable can be set to enable debugging mode.
+</p>
+<p>
+The $PRESERVE package variable can be set to stop the test_expect()
+from converting newlines in the output and expected output into
+the literal strings '\n'. 
+</p>
+[%- END %]
+[% WRAPPER section
+    title='HISTORY'
+-%]<p>
+This module started its butt-ugly life as the t/texpect.pl script.  It
+was cleaned up to became the Template::Test module some time around
+version 0.29.  It underwent further cosmetic surgery for version 2.00
+but still retains some rear-end resemblances.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='BUGS / KNOWN &quot;FEATURES&quot;'
+-%]<p>
+Imports all methods by default.  This is generally a Bad Thing, but
+this module is only used in test scripts (i.e. at build time) so a) we
+don't really care and b) it saves typing.
+</p>
+<p>
+The line splitter may be a bit dumb, especially if it sees lines like
+-- this -- that aren't supposed to be special markers.  So don't do that.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%]
+</p>
+[%- END %]
+
+

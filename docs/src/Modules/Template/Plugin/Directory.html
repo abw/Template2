@@ -1,0 +1,253 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_Directory'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='TODO';
+	INCLUDE tocitem title='AUTHORS';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE dir = Directory(dirpath) [% tt_end_tag %]</pre>
+<pre>    # files returns list of regular files
+    [% tt_start_tag %] FOREACH file = dir.files [% tt_end_tag %]
+       [% tt_start_tag %] file.name [% tt_end_tag %] [% tt_start_tag %] file.path [% tt_end_tag %] ...
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # dirs returns list of sub-directories
+    [% tt_start_tag %] FOREACH subdir = dir.dirs [% tt_end_tag %]
+       [% tt_start_tag %] subdir.name [% tt_end_tag %] [% tt_start_tag %] subdir.path [% tt_end_tag %] ...
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # list returns both interleaved in order
+    [% tt_start_tag %] FOREACH item = dir.list [% tt_end_tag %]
+       [% tt_start_tag %] IF item.isdir [% tt_end_tag %]
+	  Directory: [% tt_start_tag %] item.name [% tt_end_tag %]
+       [% tt_start_tag %] ELSE 
+          File: [% tt_start_tag %] item.name [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # define a VIEW to display dirs/files
+    [% tt_start_tag %] VIEW myview [% tt_end_tag %]
+       [% tt_start_tag %] BLOCK file [% tt_end_tag %]
+       File: [% tt_start_tag %] item.name [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>       [% tt_start_tag %] BLOCK directory [% tt_end_tag %]
+       Directory: [% tt_start_tag %] item.name [% tt_end_tag %] 
+       [% tt_start_tag %] item.content(myview) | indent -[% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # display directory content using view
+    [% tt_start_tag %] myview.print(dir) [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This Template Toolkit plugin provides a simple interface to directory
+listings.  It is derived from the Template::Plugin::File module and
+uses Template::Plugin::File object instances to represent files within
+a directory.  Sub-directories within a directory are represented by
+further Template::Plugin::Directory instances.
+</p>
+<p>
+The constructor expects a directory name as an argument.
+</p>
+<pre>    [% tt_start_tag %] USE dir = Directory('/tmp') [% tt_end_tag %]</pre>
+<p>
+It then provides access to the files and sub-directories contained within 
+the directory.
+</p>
+<pre>    # regular files (not directories)
+    [% tt_start_tag %] FOREACH file = dir.files [% tt_end_tag %]
+       [% tt_start_tag %] file.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # directories only
+    [% tt_start_tag %] FOREACH file = dir.dirs [% tt_end_tag %]
+       [% tt_start_tag %] file.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # files and/or directories
+    [% tt_start_tag %] FOREACH file = dir.list [% tt_end_tag %]
+       [% tt_start_tag %] file.name [% tt_end_tag %] ([% tt_start_tag %] file.isdir ? 'directory' : 'file' [% tt_end_tag %])
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] USE Directory('foo/baz') [% tt_end_tag %]</pre>
+<p>
+The plugin constructor will throw a 'Directory' error if the specified
+path does not exist, is not a directory or fails to stat() (see
+[% ttlink('Template::Plugin::File') -%]).  Otherwise, it will scan the directory and
+create lists named 'files' containing files, 'dirs' containing
+directories and 'list' containing both files and directories combined.
+The 'nostat' option can be set to disable all file/directory checks
+and directory scanning.
+</p>
+<p>
+Each file in the directory will be represented by a
+Template::Plugin::File object instance, and each directory by another
+Template::Plugin::Directory.  If the 'recurse' flag is set, then those
+directories will contain further nested entries, and so on.  With the
+'recurse' flag unset, as it is by default, then each is just a place
+marker for the directory and does not contain any further content
+unless its scan() method is explicitly called.  The 'isdir' flag can
+be tested against files and/or directories, returning true if the item
+is a directory or false if it is a regular file.
+</p>
+<pre>    [% tt_start_tag %] FOREACH file = dir.list [% tt_end_tag %]
+       [% tt_start_tag %] IF file.isdir [% tt_end_tag %]
+          * Directory: [% tt_start_tag %] file.name [% tt_end_tag %]
+       [% tt_start_tag %] ELSE [% tt_end_tag %]
+          * File: [% tt_start_tag %] file.name [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+This example shows how you might walk down a directory tree, displaying 
+content as you go.  With the recurse flag disabled, as is the default, 
+we need to explicitly call the scan() method on each directory, to force
+it to lookup files and further sub-directories contained within. 
+</p>
+<pre>    [% tt_start_tag %] USE dir = Directory(dirpath) [% tt_end_tag %]
+    * [% tt_start_tag %] dir.path [% tt_end_tag %]
+    [% tt_start_tag %] INCLUDE showdir [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] BLOCK showdir -[% tt_end_tag %]
+      [% tt_start_tag %] FOREACH file = dir.list -[% tt_end_tag %]
+        [% tt_start_tag %] IF file.isdir -[% tt_end_tag %]
+        * [% tt_start_tag %] file.name [% tt_end_tag %]
+          [% tt_start_tag %] file.scan -[% tt_end_tag %]
+	  [% tt_start_tag %] INCLUDE showdir dir=file FILTER indent(4) -[% tt_end_tag %]
+        [% tt_start_tag %] ELSE -[% tt_end_tag %]
+        - [% tt_start_tag %] f.name [% tt_end_tag %]
+        [% tt_start_tag %] END -[% tt_end_tag %]
+      [% tt_start_tag %] END -[% tt_end_tag %]
+     [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+This example is adapted (with some re-formatting for clarity) from
+a test in <file>t/directry.t</file> which produces the following output:
+</p>
+<pre>    * test/dir
+    	- file1
+    	- file2
+    	* sub_one
+    	    - bar
+    	    - foo
+    	* sub_two
+    	    - waz.html
+    	    - wiz.html
+    	- xyzfile</pre>
+<p>
+The 'recurse' flag can be set (disabled by default) to cause the
+constructor to automatically recurse down into all sub-directories,
+creating a new Template::Plugin::Directory object for each one and 
+filling it with any further content.  In this case there is no need
+to explicitly call the scan() method.
+</p>
+<pre>    [% tt_start_tag %] USE dir = Directory(dirpath, recurse=1) [% tt_end_tag %]
+       ...</pre>
+<pre>        [% tt_start_tag %] IF file.isdir -[% tt_end_tag %]
+        * [% tt_start_tag %] file.name [% tt_end_tag %]
+	  [% tt_start_tag %] INCLUDE showdir dir=file FILTER indent(4) -[% tt_end_tag %]
+        [% tt_start_tag %] ELSE -[% tt_end_tag %]
+           ...</pre>
+<p>
+From version 2.01, the Template Toolkit provides support for views.
+A view can be defined as a VIEW ... END block and should contain 
+BLOCK definitions for files ('file') and directories ('directory').
+</p>
+<pre>    [% tt_start_tag %] VIEW myview [% tt_end_tag %]
+    [% tt_start_tag %] BLOCK file [% tt_end_tag %]
+       - [% tt_start_tag %] item.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]
+    
+    [% tt_start_tag %] BLOCK directory [% tt_end_tag %]
+       * [% tt_start_tag %] item.name [% tt_end_tag %]
+         [% tt_start_tag %] item.content(myview) FILTER indent [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Then the view print() method can be called, passing the
+Directory object as an argument.
+</p>
+<pre>    [% tt_start_tag %] USE dir = Directory(dirpath, recurse=1) [% tt_end_tag %]
+    [% tt_start_tag %] myview.print(dir) [% tt_end_tag %]</pre>
+<p>
+When a directory is presented to a view, either as [% tt_start_tag %] myview.print(dir) [% tt_end_tag %]
+or [% tt_start_tag %] dir.present(view) [% tt_end_tag %], then the 'directory' BLOCK within the 'myview' 
+VIEW is processed, with the 'item' variable set to alias the Directory object.
+</p>
+<pre>    [% tt_start_tag %] BLOCK directory [% tt_end_tag %]
+       * [% tt_start_tag %] item.name [% tt_end_tag %]
+         [% tt_start_tag %] item.content(myview) FILTER indent [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The directory name is first printed and the content(view) method is
+then called to present each item within the directory to the view.
+Further directories will be mapped to the 'directory' block, and files
+will be mapped to the 'file' block.
+</p>
+<p>
+With the recurse option disabled, as it is by default, the 'directory'
+block should explicitly call a scan() on each directory.
+</p>
+<pre>    [% tt_start_tag %] VIEW myview [% tt_end_tag %]
+    [% tt_start_tag %] BLOCK file [% tt_end_tag %]
+       - [% tt_start_tag %] item.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]
+    
+    [% tt_start_tag %] BLOCK directory [% tt_end_tag %]
+       * [% tt_start_tag %] item.name [% tt_end_tag %]
+	 [% tt_start_tag %] item.scan [% tt_end_tag %]
+         [% tt_start_tag %] item.content(myview) FILTER indent [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] USE dir = Directory(dirpath) [% tt_end_tag %]
+    [% tt_start_tag %] myview.print(dir) [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='TODO'
+-%]<p>
+Might be nice to be able to specify accept/ignore options to catch
+a subset of files.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHORS'
+-%]<p>
+Michael Stevens &lt;michael@etla.org&gt; wrote the original Directory plugin
+on which this is based.  Andy Wardley &lt;abw@kfs.org&gt; split it into 
+separate File and Directory plugins, added some extra code and documentation
+for VIEW support, and made a few other minor tweaks.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+<pre> </pre>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::File', 'Template::Plugin::File') -%], [% ttlink('Template::View', 'Template::View') -%]
+</p>
+[%- END %]
+
+

@@ -1,0 +1,85 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_XML_XPath'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='PRE-REQUISITES';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHORS';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    # load plugin and specify XML file to parse
+    [% tt_start_tag %] USE xpath = XML.XPath(xmlfile) [% tt_end_tag %]
+    [% tt_start_tag %] USE xpath = XML.XPath(file =&gt; xmlfile) [% tt_end_tag %]
+    [% tt_start_tag %] USE xpath = XML.XPath(filename =&gt; xmlfile) [% tt_end_tag %]</pre>
+<pre>    # load plugin and specify XML text to parse
+    [% tt_start_tag %] USE xpath = XML.XPath(xmltext) [% tt_end_tag %]
+    [% tt_start_tag %] USE xpath = XML.XPath(xml =&gt; xmltext) [% tt_end_tag %]
+    [% tt_start_tag %] USE xpath = XML.XPath(text =&gt; xmltext) [% tt_end_tag %]</pre>
+<pre>    # then call any XPath methods (see XML::XPath docs)
+    [% tt_start_tag %] FOREACH page = xpath.findnodes('/html/body/page') [% tt_end_tag %]
+       [% tt_start_tag %] page.getAttribute('title') [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='PRE-REQUISITES'
+-%]<p>
+This plugin requires that the XML::Parser and XML::XPath modules be 
+installed.  These are available from CPAN:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/XML</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This is a Template Toolkit plugin interfacing to the XML::XPath module.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHORS'
+-%]<p>
+This plugin module was written by Andy Wardley &lt;abw@kfs.org&gt;.
+</p>
+<p>
+The XML::XPath module is by Matt Sergeant &lt;matt@sergeant.org&gt;.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('XML::XPath', 'XML::XPath') -%], [% ttlink('XML::Parser', 'XML::Parser') -%]
+</p>
+[%- END %]
+
+

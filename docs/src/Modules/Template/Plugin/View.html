@@ -1,0 +1,77 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_View'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE view(
+	    prefix = 'splash/'		# template prefix/suffix
+	    suffix = '.tt2'		
+	    bgcol  = '#ffffff'		# and any other variables you 
+	    style  = 'Fancy HTML'       # care to define as view metadata,
+	    items  = [ foo, bar.baz ]	# including complex data and
+	    foo    = bar ? baz : x.y.z  # expressions
+    [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] view.title [% tt_end_tag %]			# access view metadata</pre>
+<pre>    [% tt_start_tag %] view.header(title = 'Foo!') [% tt_end_tag %]	# view &quot;methods&quot; process blocks or
+    [% tt_start_tag %] view.footer [% tt_end_tag %]			# templates with prefix/suffix added</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This plugin module creates Template::View objects.  Views are an
+experimental feature and are subject to change in the near future.
+In the mean time, please consult [% ttlink('Template::View') -%] for further info.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::View', 'Template::View') -%]
+</p>
+[%- END %]
+
+

@@ -1,0 +1,92 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_CGI'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE CGI [% tt_end_tag %]
+    [% tt_start_tag %] CGI.param('parameter') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] USE things = CGI [% tt_end_tag %]
+    [% tt_start_tag %] things.param('name') [% tt_end_tag %]
+    
+    # see CGI docs for other methods provided by the CGI object</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This is a very simple Template Toolkit Plugin interface to the CGI module.
+A CGI object will be instantiated via the following directive:
+</p>
+<pre>    [% tt_start_tag %] USE CGI [% tt_end_tag %]</pre>
+<p>
+CGI methods may then be called as follows:
+</p>
+<pre>    [% tt_start_tag %] CGI.header [% tt_end_tag %]
+    [% tt_start_tag %] CGI.param('parameter') [% tt_end_tag %]</pre>
+<p>
+An alias can be used to provide an alternate name by which the object should
+be identified.
+</p>
+<pre>    [% tt_start_tag %] USE mycgi = CGI [% tt_end_tag %]
+    [% tt_start_tag %] mycgi.start_form [% tt_end_tag %]
+    [% tt_start_tag %] mycgi.popup_menu({ Name   =&gt; 'Color'
+			  Values =&gt; [ 'Green' 'Black' 'Brown' ] }) [% tt_end_tag %]</pre>
+<p>
+Parenthesised parameters to the USE directive will be passed to the plugin 
+constructor:
+    
+    [% tt_start_tag %] USE cgiprm = CGI('uid=abw&amp;name=Andy+Wardley') [% tt_end_tag %]
+    [% tt_start_tag %] cgiprm.param('uid') [% tt_end_tag %]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('CPAN::CGI', 'CPAN::CGI') -%]
+</p>
+[%- END %]
+
+

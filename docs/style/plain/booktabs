@@ -1,0 +1,6 @@
+[%  INCLUDE html/menu
+	buttons = booktabs
+	select  = book.name
+	left    = 0
+        right   = 0
+-%]

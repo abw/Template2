@@ -1,0 +1,150 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_Date'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHORS';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE date [% tt_end_tag %]</pre>
+<pre>    # use current time and default format
+    [% tt_start_tag %] date.format [% tt_end_tag %]</pre>
+<pre>    # specify time as seconds since epoch or 'h:m:s d-m-y' string
+    [% tt_start_tag %] date.format(960973980) [% tt_end_tag %]
+    [% tt_start_tag %] date.format('4:20:36 21/12/2000') [% tt_end_tag %]</pre>
+<pre>    # specify format
+    [% tt_start_tag %] date.format(mytime, '%H:%M:%S') [% tt_end_tag %]</pre>
+<pre>    # specify locale
+    [% tt_start_tag %] date.format(date.now, '%a %d %b %y', 'en_GB') [% tt_end_tag %]</pre>
+<pre>    # named parameters 
+    [% tt_start_tag %] date.format(mytime, format = '%H:%M:%S') [% tt_end_tag %]
+    [% tt_start_tag %] date.format(locale = 'en_GB') [% tt_end_tag %]
+    [% tt_start_tag %] date.format(time   = date.now, 
+		   format = '%H:%M:%S', 
+                   locale = 'en_GB) [% tt_end_tag %]
+   
+    # specify default format to plugin
+    [% tt_start_tag %] USE date(format = '%H:%M:%S', locale = 'de_DE') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] date.format [% tt_end_tag %]
+    ...</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Date plugin provides an easy way to generate formatted time and date
+strings by delegating to the POSIX strftime() routine.  
+</p>
+<p>
+The plugin can be loaded via the familiar USE directive.
+</p>
+<pre>    [% tt_start_tag %] USE date [% tt_end_tag %]</pre>
+<p>
+This creates a plugin object with the default name of 'date'.  An alternate
+name can be specified as such:
+</p>
+<pre>    [% tt_start_tag %] USE myname = date [% tt_end_tag %]</pre>
+<p>
+The plugin provides the format() method which accepts a time value, a
+format string and a locale name.  All of these parameters are optional
+with the current system time, default format ('%H:%M:%S %d-%b-%Y') and
+current locale being used respectively, if undefined.  Default values
+for the time, format and/or locale may be specified as named parameters 
+in the USE directive.
+</p>
+<pre>    [% tt_start_tag %] USE date(format = '%a %d-%b-%Y', locale = 'fr_FR') [% tt_end_tag %]</pre>
+<p>
+When called without any parameters, the format() method returns a string
+representing the current system time, formatted by strftime() according 
+to the default format and for the default locale (which may not be the
+current one, if locale is set in the USE directive).
+</p>
+<pre>    [% tt_start_tag %] date.format [% tt_end_tag %]</pre>
+<p>
+The plugin allows a time/date to be specified as seconds since the epoch,
+as is returned by time().
+</p>
+<pre>    File last modified: [% tt_start_tag %] date.format(filemod_time) [% tt_end_tag %]</pre>
+<p>
+The time/date can also be specified as a string of the form 'h:m:s d/m/y'.
+Any of the characters : / - or space may be used to delimit fields.
+</p>
+<pre>    [% tt_start_tag %] USE day = date(format =&gt; '%A', locale =&gt; 'en_GB') [% tt_end_tag %]
+    [% tt_start_tag %] day.format('4:20:00 9-13-2000') [% tt_end_tag %]  </pre>
+<p>
+Output:
+</p>
+<pre>    Tuesday</pre>
+<p>
+A format string can also be passed to the format() method, and a locale
+specification may follow that.
+</p>
+<pre>    [% tt_start_tag %] date.format(filemod, '%d-%b-%Y') [% tt_end_tag %]
+    [% tt_start_tag %] date.format(filemod, '%d-%b-%Y', 'en_GB') [% tt_end_tag %]</pre>
+<p>
+Any or all of these parameters may be named.  Positional parameters
+should always be in the order ($time, $format, $locale).
+</p>
+<pre>    [% tt_start_tag %] date.format(format =&gt; '%H:%M:%S') [% tt_end_tag %]
+    [% tt_start_tag %] date.format(time =&gt; filemod, format =&gt; '%H:%M:%S') [% tt_end_tag %]
+    [% tt_start_tag %] date.format(mytime, format =&gt; '%H:%M:%S') [% tt_end_tag %]
+    [% tt_start_tag %] date.format(mytime, format =&gt; '%H:%M:%S', locale =&gt; 'fr_FR') [% tt_end_tag %]
+    ...etc...</pre>
+<p>
+The now() method returns the current system time in seconds since the 
+epoch.  
+</p>
+<pre>    [% tt_start_tag %] date.format(date.now, '%A') [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='AUTHORS'
+-%]<p>
+Thierry-Michel Barral &lt;kktos@electron-libre.com&gt; wrote the original
+plugin.
+</p>
+<p>
+Andy Wardley &lt;abw@cre.canon.co.uk&gt; provided some minor
+fixups/enhancements, a test script and documentation.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+<pre> </pre>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<p>
+Copyright (C) 2000 Thierry-Michel Barral, Andy Wardley.
+</p>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('CPAN::POSIX', 'CPAN::POSIX') -%]
+</p>
+[%- END %]
+
+

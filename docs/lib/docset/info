@@ -1,0 +1,6 @@
+#========================================================================
+Generating docs for: [% docset.name %] ([% docset.id %])
+[%- IF verbose %]
+    title: [% docset.title %]
+    about: [% docset.about %]
+[%- END -%]

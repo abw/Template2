@@ -1,0 +1,271 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_DBI'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='OBJECT METHODS'
+                         subs=['connect($data_source, $username, $password)', 'query($sql)', 'prepare($sql)', 'execute(@args)', 'do($sql)', 'quote($value, $type)', 'disconnect()'];
+	INCLUDE tocitem title='PRE-REQUISITES';
+	INCLUDE tocitem title='AUTHORS';
+	INCLUDE tocitem title='HISTORY';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    # use positional arguments...
+    [% tt_start_tag %] USE DBI('dbi:driver:database', 'username', 'password') [% tt_end_tag %]</pre>
+<pre>    # ...or named parameters...
+    [% tt_start_tag %] USE DBI(data_source = 'dbi:driver:database',
+               username    = 'username', 
+               password    = 'password') [% tt_end_tag %]</pre>
+<pre>    # ...or call connect() explicitly
+    [% tt_start_tag %] USE DBI [% tt_end_tag %]
+    [% tt_start_tag %] DBI.connect(dsn, user, pass) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH item = DBI.query( 'SELECT rows FROM table' ) [% tt_end_tag %]
+       Here's some row data: [% tt_start_tag %] item.field [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] query = DBI.prepare('SELECT * FROM user WHERE manager = ?') [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH user = query.execute('sam') [% tt_end_tag %]
+       ...
+    [% tt_start_tag %] FOREACH user = query.execute('abw') [% tt_end_tag %]
+       ...</pre>
+<pre>    [% tt_start_tag %] IF DBI.do(&quot;DELETE FROM users WHERE uid = 'sam'&quot;) [% tt_end_tag %]
+       Oh No!  The user was deleted!
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This Template Toolkit plugin module provides an interface to the Perl
+DBI/DBD modules, allowing you to integrate SQL queries into your template
+documents.
+</p>
+<p>
+A DBI plugin object can be created as follows:
+</p>
+<pre>    [% tt_start_tag %] USE DBI [% tt_end_tag %]</pre>
+<p>
+This creates an uninitialised DBI object.  You can then open a connection
+to a database using the connect() method.
+</p>
+<pre>    [% tt_start_tag %] DBI.connect('dbi:driver:database', 'username', 'password') [% tt_end_tag %]</pre>
+<p>
+The DBI connection can be opened when the plugin is created by passing
+arguments to the constructor, called from the USE directive.
+</p>
+<pre>    [% tt_start_tag %] USE DBI('dbi:driver:database', 'username', 'password') [% tt_end_tag %]</pre>
+<p>
+You can also use named parameters to provide the data source connection 
+string, user name and password.
+</p>
+<pre>    [% tt_start_tag %] USE DBI(data_source =&gt; 'dbi:driver:database',
+               username    =&gt; 'username',
+               password    =&gt; 'password')  [% tt_end_tag %]</pre>
+<p>
+Lazy Template hackers may prefer to use 'dsn' or 'connect' as a shorthand
+form of the 'data_source' parameter, and 'user' and 'pass' as shorthand
+forms of 'username' and 'password', respectively.
+</p>
+<pre>    [% tt_start_tag %] USE DBI(connect =&gt; 'dbi:driver:database',
+               user    =&gt; 'username',
+               pass    =&gt; 'password')  [% tt_end_tag %]</pre>
+<p>
+Any additional DBI attributes can be specified as named parameters.
+The 'PrintError' attribute defaults to 0 unless explicitly set true.
+</p>
+<pre>    [% tt_start_tag %] USE DBI(dsn, user, pass, ChopBlanks=1) [% tt_end_tag %]</pre>
+<p>
+Methods can then be called on the plugin object using the familiar dotted
+notation:
+</p>
+<pre>    [% tt_start_tag %] FOREACH item = DBI.query( 'SELECT rows FROM table' ) [% tt_end_tag %]
+       Here's some row data: [% tt_start_tag %] item.field [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+See [% ttlink('OBJECT METHODS') -%] below for further details of the methods available.
+</p>
+<p>
+An alternate variable name can be provided for the plugin as per regular
+Template Toolkit syntax:
+</p>
+<pre>    [% tt_start_tag %] USE mydb = DBI('dbi:driver:database','username','password') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH item = mydb.query( 'SELECT rows FROM table' ) [% tt_end_tag %]
+       ...</pre>
+<p>
+You can also specify the DBI plugin name in lower case if you prefer:
+</p>
+<pre>    [% tt_start_tag %] USE dbi(dsn, user, pass) [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH item = dbi.query( 'SELECT rows FROM table' ) [% tt_end_tag %]
+       ...</pre>
+<p>
+The disconnect() method can be called to explicitly disconnect the
+current database, but this generally shouldn't be necessary as it is
+called automatically when the plugin goes out of scope.  You can call
+connect() at any time to open a connection to another database.  The
+previous connection will be closed automatically.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='OBJECT METHODS'
+-%][% WRAPPER subsection
+   title = 'connect($data_source, $username, $password)'
+-%]<p>
+Establishes a database connection.  This method accepts both positional 
+and named parameter syntax.  e.g. 
+</p>
+<pre>    [% tt_start_tag %] DBI.connect(data_source, username, password) [% tt_end_tag %]
+    [% tt_start_tag %] DBI.connect(data_source = 'dbi:driver:database'
+                   username    = 'foo' 
+                   password    = 'bar' ) [% tt_end_tag %]</pre>
+<p>
+The connect method allows you to connect to a data source explicitly.
+It can also be used to reconnect an exisiting object to a different
+data source.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'query($sql)'
+-%]<p>
+This method submits an SQL query to the database and creates an iterator 
+object to return the results.  This may be used directly in a FOREACH 
+directive as shown below.  Data is automatically fetched a row at a time
+from the query result set as required for memory efficiency.
+</p>
+<pre>    [% tt_start_tag %] FOREACH row = DBI.query('select * from users') [% tt_end_tag %]
+       Each [% tt_start_tag %] row.whatever [% tt_end_tag %] can be processed here
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'prepare($sql)'
+-%]<p>
+Prepare a query for later execution.  This returns a compiled query
+object (of the Template::Plugin::DBI::Query class) on which the
+execute() method can subsequently be called.
+</p>
+<pre>    [% tt_start_tag %] query = DBI.prepare('SELECT * FROM users WHERE id = ?') [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'execute(@args)'
+-%]<p>
+Execute a previously prepared query.  This method should be called on
+the query object returned by the prepare() method.  Returns an
+iterator object which can be used directly in a FOREACH directive.
+</p>
+<pre>    [% tt_start_tag %] query = DBI.prepare('SELECT * FROM users WHERE manager = ?') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH user = query.execute('sam') [% tt_end_tag %]
+       [% tt_start_tag %] user.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH user = query.execute('sam') [% tt_end_tag %]
+       [% tt_start_tag %] user.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'do($sql)'
+-%]<p>
+The do() method executes a sql statement from which no records are
+returned.  It will return true if the statement was successful
+</p>
+<pre>    [% tt_start_tag %] IF DBI.do(&quot;DELETE FROM users WHERE uid = 'sam'&quot;) [% tt_end_tag %]
+       The user was successfully deleted.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'quote($value, $type)'
+-%]<p>
+Calls the quote() method on the underlying DBI handle to quote the value
+specified in the appropriate manner for its type.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'disconnect()'
+-%]<p>
+Disconnects the current database.
+</p>
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='PRE-REQUISITES'
+-%]<p>
+Perl 5.005, Template-Toolkit 2.00, DBI 1.02
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHORS'
+-%]<p>
+The DBI plugin was written by Simon A Matthews,
+&lt;sam@knowledgepool.com&gt;, with contributions from Andy Wardley
+&lt;abw@kfs.org&gt;.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='HISTORY'
+-%]
+<ul>
+
+<li><b>1.01  2000/11/03  abw</b><br>
+<p>
+Modified connect method to pass all named arguments to DBI.  e.g.
+</p>
+<pre>    [% tt_start_tag %] USE DBI(dsn, user, pass, ChopBlanks=1) [% tt_end_tag %]</pre>
+
+
+
+<li><b>1.02  2000/11/14  abw</b><br>
+<p>
+Added prev() and next() methods to Template::Plugin::DBI:Iterator to
+return the previous and next items in the iteration set or undef if
+not available.
+</p>
+
+
+
+<li><b>1.03  2000/11/31  sam</b><br>
+<p>
+Added _connect method to Plugin::DBI for backwards compatability with code 
+from version 1 of Template that subclassed the plugin
+</p>
+<p>
+Changed the new method on the DBI plugin so that it checks to see if it is
+being called by a subclassed object.  
+</p>
+<p>
+Fixed the return value in the DBI plugin when connect is called more than
+once in the lifetime of the plugin.
+</p>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<p>
+Copyright (C) 1999-2000 Simon Matthews.  All Rights Reserved
+</p>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('CPAN::DBI', 'CPAN::DBI') -%]
+</p>
+[%- END %]
+
+

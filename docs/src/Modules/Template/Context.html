@@ -1,0 +1,644 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Context'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='METHODS'
+                         subs=['new(\%params) ', 'template($name) ', 'plugin($name, \@args)', 'filter($name, \@args, $alias)', 'process($template, \%vars)', 'include($template, \%vars)', 'throw($error_type, $error_message, \$output)', 'catch($exception, \$output)', 'define_block($name, $block)', 'define_filter($name, \&amp;filter, $is_dynamic)', 'localise(\%vars)', 'delocalise()', 'visit(\%blocks)', 'leave()', 'reset()', 'AUTOLOAD'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    use Template::Context;</pre>
+<pre>    # constructor
+    $context = Template::Context-&gt;new(\%config)
+	|| die $Template::Context::ERROR;</pre>
+<pre>    # fetch (load and compile) a template
+    $template = $context-&gt;template($template_name);</pre>
+<pre>    # fetch (load and instantiate) a plugin object
+    $plugin = $context-&gt;plugin($name, \@args);</pre>
+<pre>    # fetch (return or create) a filter subroutine
+    $filter = $context-&gt;filter($name, \@args, $alias);</pre>
+<pre>    # process/include a template, errors are thrown via die()
+    $output = $context-&gt;process($template, \%vars);
+    $output = $context-&gt;include($template, \%vars);</pre>
+<pre>    # raise an exception via die()
+    $context-&gt;throw($error_type, $error_message, \$output_buffer);</pre>
+<pre>    # catch an exception, clean it up and fix output buffer
+    $exception = $context-&gt;catch($exception, \$output_buffer);</pre>
+<pre>    # save/restore the stash to effect variable localisation
+    $new_stash = $context-&gt;localise(\%vars);
+    $old_stash = $context-&gt;delocalise();</pre>
+<pre>    # add new BLOCK or FILTER definitions
+    $context-&gt;define_block($name, $block);
+    $context-&gt;define_filter($name, \&amp;filtersub, $is_dynamic);</pre>
+<pre>    # reset context, clearing any imported BLOCK definitions
+    $context-&gt;reset();</pre>
+<pre>    # methods for accessing internal items
+    $stash     = $context-&gt;stash();
+    $tflag     = $context-&gt;trim();
+    $epflag    = $context-&gt;eval_perl();
+    $providers = $context-&gt;templates();
+    $providers = $context-&gt;plugins();
+    $providers = $context-&gt;filters();
+    ...</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Template::Context module defines an object class for representing
+a runtime context in which templates are processed.  It provides an
+interface to the fundamental operations of the Template Toolkit
+processing engine through which compiled templates (i.e. Perl code
+constructed from the template source) can process templates, load
+plugins and filters, raise exceptions and so on.
+</p>
+<p>
+A default Template::Context object is created by the Template module.
+Any Template::Context options may be passed to the Template new()
+constructor method and will be forwarded to the Template::Context
+constructor.
+</p>
+<pre>    use Template;
+    
+    my $template = Template-&gt;new({
+	TRIM      =&gt; 1,
+	EVAL_PERL =&gt; 1,
+	BLOCKS    =&gt; {
+	    header =&gt; 'This is the header',
+	    footer =&gt; 'This is the footer',
+	},
+    });</pre>
+<p>
+Similarly, the Template::Context constructor will forward all configuration
+parameters onto other default objects (e.g. Template::Provider, Template::Plugins,
+Template::Filters, etc.) that it may need to instantiate.
+</p>
+<pre>    $context = Template::Context-&gt;new({
+	INCLUDE_PATH =&gt; '/home/abw/templates', # provider option
+	TAG_STYLE    =&gt; 'html',                # parser option
+    });</pre>
+<p>
+A Template::Context object (or subclass/derivative) can be explicitly
+instantiated and passed to the Template new() constructor method as 
+the CONTEXT item.
+</p>
+<pre>    use Template;
+    use Template::Context;</pre>
+<pre>    my $context  = Template::Context-&gt;new({ TRIM =&gt; 1 });
+    my $template = Template-&gt;new({ CONTEXT =&gt; $context });</pre>
+<p>
+The Template module uses the Template::Config context() factory method
+to create a default context object when required.  The
+$Template::Config::CONTEXT package variable may be set to specify an
+alternate context module.  This will be loaded automatically and its
+new() constructor method called by the context() factory method when
+a default context object is required.
+</p>
+<pre>    use Template;</pre>
+<pre>    $Template::Config::CONTEXT = 'MyOrg::Template::Context';</pre>
+<pre>    my $template = Template-&gt;new({
+	EVAL_PERL   =&gt; 1,
+	EXTRA_MAGIC =&gt; 'red hot',  # your extra config items
+	...
+    });</pre>
+[%- END %]
+[% WRAPPER section
+    title='METHODS'
+-%][% WRAPPER subsection
+   title = 'new(\%params) '
+-%]<p>
+The new() constructor method is called to instantiate a Template::Context
+object.  Configuration parameters may be specified as a HASH reference or
+as a list of (name =&gt; value) pairs.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	INCLUDE_PATH =&gt; 'header',
+	POST_PROCESS =&gt; 'footer',
+    });</pre>
+<pre>    my $context = Template::Context-&gt;new( EVAL_PERL =&gt; 1 );</pre>
+<p>
+The new() method returns a Template::Context object (or sub-class) or
+undef on error.  In the latter case, a relevant error message can be
+retrieved by the error() class method or directly from the
+$Template::Context::ERROR package variable.
+</p>
+<pre>    my $context = Template::Context-&gt;new(\%config)
+	|| die Template::Context-&gt;error();</pre>
+<pre>    my $context = Template::Context-&gt;new(\%config)
+	|| die $Template::Context::ERROR;</pre>
+<p>
+The following configuration items may be specified.
+</p>
+
+<ul>
+
+<li><b>VARIABLES, PRE_DEFINE</b><br>
+<p>
+The VARIABLES option (or PRE_DEFINE - they're equivalent) can be used
+to specify a hash array of template variables that should be used to
+pre-initialise the stash when it is created.  These items are ignored
+if the STASH item is defined.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	VARIABLES =&gt; {
+	    title   =&gt; 'A Demo Page',
+	    author  =&gt; 'Joe Random Hacker',
+	    version =&gt; 3.14,
+	},
+    };</pre>
+<p>
+or
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	PRE_DEFINE =&gt; {
+	    title   =&gt; 'A Demo Page',
+	    author  =&gt; 'Joe Random Hacker',
+	    version =&gt; 3.14,
+	},
+    };</pre>
+
+
+
+<li><b>BLOCKS</b><br>
+<p>
+The BLOCKS option can be used to pre-define a default set of template 
+blocks.  These should be specified as a reference to a hash array 
+mapping template names to template text, subroutines or Template::Document
+objects.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	BLOCKS =&gt; {
+	    header  =&gt; 'The Header.  [% tt_start_tag %] title [% tt_end_tag %]',
+	    footer  =&gt; sub { return $some_output_text },
+	    another =&gt; Template::Document-&gt;new({ ... }),
+	},
+    }); </pre>
+
+
+
+<li><b>TRIM</b><br>
+<p>
+The TRIM option can be set to have any leading and trailing whitespace 
+automatically removed from the output of all template files and BLOCKs.
+</p>
+<p>
+By example, the following BLOCK definition
+</p>
+<pre>    [% tt_start_tag %] BLOCK foo [% tt_end_tag %]
+    Line 1 of foo
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+will be processed is as &quot;\nLine 1 of foo\n&quot;.  When INCLUDEd, the surrounding
+newlines will also be introduced.
+</p>
+<pre>    before 
+    [% tt_start_tag %] INCLUDE foo [% tt_end_tag %]
+    after</pre>
+<p>
+output:
+    before
+</p>
+<pre>    Line 1 of foo</pre>
+<pre>    after</pre>
+<p>
+With the TRIM option set to any true value, the leading and trailing
+newlines (which count as whitespace) will be removed from the output 
+of the BLOCK.
+</p>
+<pre>    before
+    Line 1 of foo
+    after</pre>
+<p>
+The TRIM option is disabled (0) by default.
+</p>
+
+
+
+<li><b>EVAL_PERL</b><br>
+<p>
+This flag is used to indicate if PERL and/or RAWPERL blocks should be
+evaluated.  By default, it is disabled and any PERL or RAWPERL blocks
+encountered will raise exceptions of type 'perl' with the message
+'EVAL_PERL not set'.  Note however that any RAWPERL blocks should
+always contain valid Perl code, regardless of the EVAL_PERL flag.  The
+parser will fail to compile templates that contain invalid Perl code
+in RAWPERL blocks and will throw a 'file' exception.
+</p>
+<p>
+When using compiled templates (see 
+[% ttlink('Template::Manual::Config/Caching_and_Compiling_Options', 'COMPILE_EXT') -%] and 
+[% ttlink('Template::Manual::Config/Caching_and_Compiling_Options', 'COMPILE_DIR') -%]),
+the EVAL_PERL has an affect when the template is compiled, and again
+when the templates is subsequently processed, possibly in a different
+context to the one that compiled it.
+</p>
+<p>
+If the EVAL_PERL is set when a template is compiled, then all PERL and
+RAWPERL blocks will be included in the compiled template.  If the 
+EVAL_PERL option isn't set, then Perl code will be generated which 
+<b>always</b> throws a 'perl' exception with the message 'EVAL_PERL not
+set' <b>whenever</b> the compiled template code is run.
+</p>
+<p>
+Thus, you must have EVAL_PERL set if you want your compiled templates
+to include PERL and RAWPERL blocks.
+</p>
+<p>
+At some point in the future, using a different invocation of the
+Template Toolkit, you may come to process such a pre-compiled
+template.  Assuming the EVAL_PERL option was set at the time the
+template was compiled, then the output of any RAWPERL blocks will be
+included in the compiled template and will get executed when the
+template is processed.  This will happen regardless of the runtime
+EVAL_PERL status.
+</p>
+<p>
+Regular PERL blocks are a little more cautious, however.  If the 
+EVAL_PERL flag isn't set for the <i>current</i> context, that is, the 
+one which is trying to process it, then it will throw the familiar 'perl'
+exception with the message, 'EVAL_PERL not set'.
+</p>
+<p>
+Thus you can compile templates to include PERL blocks, but optionally
+disable them when you process them later.  Note however that it is 
+possible for a PERL block to contain a Perl &quot;BEGIN { # some code }&quot;
+block which will always get run regardless of the runtime EVAL_PERL
+status.  Thus, if you set EVAL_PERL when compiling templates, it is
+assumed that you trust the templates to Do The Right Thing.  Otherwise
+you must accept the fact that there's no bulletproof way to prevent 
+any included code from trampling around in the living room of the 
+runtime environment, making a real nuisance of itself if it really
+wants to.  If you don't like the idea of such uninvited guests causing
+a bother, then you can accept the default and keep EVAL_PERL disabled.
+</p>
+
+
+
+<li><b>RECURSION</b><br>
+<p>
+The template processor will raise a file exception if it detects
+direct or indirect recursion into a template.  Setting this option to 
+any true value will allow templates to include each other recursively.
+</p>
+
+
+
+<li><b>LOAD_TEMPLATES</b><br>
+<p>
+The LOAD_TEMPLATE option can be used to provide a reference to a list
+of Template::Provider objects or sub-classes thereof which will take
+responsibility for loading and compiling templates.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	LOAD_TEMPLATES =&gt; [
+    	    MyOrg::Template::Provider-&gt;new({ ... }),
+    	    Template::Provider-&gt;new({ ... }),
+	],
+    });</pre>
+<p>
+When a PROCESS, INCLUDE or WRAPPER directive is encountered, the named
+template may refer to a locally defined BLOCK or a file relative to
+the INCLUDE_PATH (or an absolute or relative path if the appropriate
+ABSOLUTE or RELATIVE options are set).  If a BLOCK definition can't be
+found (see the Template::Context template() method for a discussion of
+BLOCK locality) then each of the LOAD_TEMPLATES provider objects is
+queried in turn via the fetch() method to see if it can supply the
+required template.  Each provider can return a compiled template, an
+error, or decline to service the request in which case the
+responsibility is passed to the next provider.  If none of the
+providers can service the request then a 'not found' error is
+returned.  The same basic provider mechanism is also used for the 
+INSERT directive but it bypasses any BLOCK definitions and doesn't
+attempt is to parse or process the contents of the template file.
+</p>
+<p>
+This is an implementation of the 'Chain of Responsibility'
+design pattern as described in 
+&quot;Design Patterns&quot;, Erich Gamma, Richard Helm, Ralph Johnson, John 
+Vlissides), Addision-Wesley, ISBN 0-201-63361-2, page 223
+.
+</p>
+<p>
+If LOAD_TEMPLATES is undefined, a single default provider will be
+instantiated using the current configuration parameters.  For example,
+the Template::Provider INCLUDE_PATH option can be specified in the Template::Context configuration and will be correctly passed to the provider's
+constructor method.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	INCLUDE_PATH =&gt; '/here:/there',
+    });</pre>
+
+
+
+<li><b>LOAD_PLUGINS</b><br>
+<p>
+The LOAD_PLUGINS options can be used to specify a list of provider
+objects (i.e. they implement the fetch() method) which are responsible
+for loading and instantiating template plugin objects.  The
+Template::Content plugin() method queries each provider in turn in a
+&quot;Chain of Responsibility&quot; as per the template() and filter() methods.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	LOAD_PLUGINS =&gt; [
+    	    MyOrg::Template::Plugins-&gt;new({ ... }),
+    	    Template::Plugins-&gt;new({ ... }),
+	],
+    });</pre>
+<p>
+By default, a single Template::Plugins object is created using the 
+current configuration hash.  Configuration items destined for the 
+Template::Plugins constructor may be added to the Template::Context 
+constructor.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	PLUGIN_BASE =&gt; 'MyOrg::Template::Plugins',
+	LOAD_PERL   =&gt; 1,
+    });</pre>
+
+
+
+<li><b>LOAD_FILTERS</b><br>
+<p>
+The LOAD_FILTERS option can be used to specify a list of provider
+objects (i.e. they implement the fetch() method) which are responsible
+for returning and/or creating filter subroutines.  The
+Template::Context filter() method queries each provider in turn in a
+&quot;Chain of Responsibility&quot; as per the template() and plugin() methods.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	LOAD_FILTERS =&gt; [
+    	    MyTemplate::Filters-&gt;new(),
+    	    Template::Filters-&gt;new(),
+	],
+    });</pre>
+<p>
+By default, a single Template::Filters object is created for the
+LOAD_FILTERS list.
+</p>
+
+
+
+<li><b>STASH</b><br>
+<p>
+A reference to a Template::Stash object or sub-class which will take
+responsibility for managing template variables.  
+</p>
+<pre>    my $stash = MyOrg::Template::Stash-&gt;new({ ... });
+    my $context = Template::Context-&gt;new({
+	STASH =&gt; $stash,
+    });</pre>
+<p>
+If unspecified, a default stash object is created using the VARIABLES
+configuration item to initialise the stash variables.  These may also
+be specified as the PRE_DEFINE option for backwards compatibility with 
+version 1.
+</p>
+<pre>    my $context = Template::Context-&gt;new({
+	VARIABLES =&gt; {
+	    id    =&gt; 'abw',
+	    name  =&gt; 'Andy Wardley',
+	},
+    };</pre>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'template($name) '
+-%]<p>
+Returns a compiled template by querying each of the LOAD_TEMPLATES providers
+(instances of Template::Provider, or sub-class) in turn.  
+</p>
+<pre>    $template = $context-&gt;template('header');</pre>
+<p>
+On error, a Template::Exception object of type 'file' is thrown via
+die().  This can be caught by enclosing the call to template() in an
+eval block and examining $@.
+</p>
+<pre>    eval {
+	$template = $context-&gt;template('header');
+    };
+    if ($@) {
+	print &quot;failed to fetch template: $@\n&quot;;
+    }</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'plugin($name, \@args)'
+-%]<p>
+Instantiates a plugin object by querying each of the LOAD_PLUGINS
+providers.  The default LOAD_PLUGINS provider is a Template::Plugins
+object which attempts to load plugin modules, according the various
+configuration items such as PLUGIN_BASE, LOAD_PERL, etc., and then
+instantiate an object via new().  A reference to a list of constructor
+arguments may be passed as the second parameter.  These are forwarded
+to the plugin constructor.
+</p>
+<p>
+Returns a reference to a plugin (which is generally an object, but
+doesn't have to be).  Errors are thrown as Template::Exception objects
+of type 'plugin'.
+</p>
+<pre>    $plugin = $context-&gt;plugin('DBI', 'dbi:msql:mydbname');</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'filter($name, \@args, $alias)'
+-%]<p>
+Instantiates a filter subroutine by querying the LOAD_FILTERS providers.
+The default LOAD_FILTERS providers is a Template::Filters object.
+Additional arguments may be passed by list reference along with an
+optional alias under which the filter will be cached for subsequent
+use.  The filter is cached under its own $name if $alias is undefined.
+Subsequent calls to filter($name) will return the cached entry, if
+defined.  Specifying arguments bypasses the caching mechanism and
+always creates a new filter.  Errors are thrown as Template::Exception
+objects of typre 'filter'.
+</p>
+<pre>    # static filter (no args)
+    $filter = $context-&gt;filter('html');</pre>
+<pre>    # dynamic filter (args) aliased to 'padright'
+    $filter = $context-&gt;filter('format', '%60s', 'padright');</pre>
+<pre>    # retrieve previous filter via 'padright' alias
+    $filter = $context-&gt;filter('padright');</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'process($template, \%vars)'
+-%]<p>
+Processes a template named or referenced by the first parameter and returns
+the output generated.  An optional reference to a hash array may be passed
+as the second parameter, containing variable definitions which will be set
+before the template is processed.  The template is processed in the current
+context, with no localisation of variables performed.   Errors are thrown
+as Template::Exception objects via die().  
+</p>
+<pre>    $output = $context-&gt;process('header', { title =&gt; 'Hello World' });</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'include($template, \%vars)'
+-%]<p>
+Similar to process() above, but using localised variables.  Changes made to
+any variables will only persist until the include() method completes.
+</p>
+<pre>    $output = $context-&gt;include('header', { title =&gt; 'Hello World' });</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'throw($error_type, $error_message, \$output)'
+-%]<p>
+Raises an exception in the form of a Template::Exception object by
+calling die().  This method may be passed a reference to an existing
+Template::Exception object; a single value containing an error message
+which is used to instantiate a Template::Exception of type 'undef'; or
+a pair of values representing the exception type and info from which a
+Template::Exception object is instantiated.  e.g.
+</p>
+<pre>    $context-&gt;throw($exception);
+    $context-&gt;throw(&quot;I'm sorry Dave, I can't do that&quot;);
+    $context-&gt;throw('denied', &quot;I'm sorry Dave, I can't do that&quot;);</pre>
+<p>
+The optional third parameter may be a reference to the current output
+buffer.  This is then stored in the exception object when created,
+allowing the catcher to examine and use the output up to the point at
+which the exception was raised.
+</p>
+<pre>    $output .= 'blah blah blah';
+    $output .= 'more rhubarb';
+    $context-&gt;throw('yack', 'Too much yacking', \$output);</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'catch($exception, \$output)'
+-%]<p>
+Catches an exception thrown, either as a reference to a
+Template::Exception object or some other value.  In the latter case,
+the error string is promoted to a Template::Exception object of
+'undef' type.  This method also accepts a reference to the current
+output buffer which is passed to the Template::Exception constructor,
+or is appended to the output buffer stored in an existing
+Template::Exception object, if unique (i.e. not the same reference).
+By this process, the correct state of the output buffer can be
+reconstructed for simple or nested throws.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'define_block($name, $block)'
+-%]<p>
+Adds a new block definition to the internal BLOCKS cache.  The first 
+argument should contain the name of the block and the second a reference
+to a Template::Document object or template sub-routine, or template text
+which is automatically compiled into a template sub-routine.  Returns
+a true value (the sub-routine or Template::Document reference) on 
+success or undef on failure.  The relevant error message can be 
+retrieved by calling the error() method.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'define_filter($name, \&amp;filter, $is_dynamic)'
+-%]<p>
+Adds a new filter definition by calling the store() method on each of
+the LOAD_FILTERS providers until accepted (in the usual case, this is
+accepted straight away by the one and only Template::Filters
+provider).  The first argument should contain the name of the filter
+and the second a reference to a filter subroutine.  The optional 
+third argument can be set to any true value to indicate that the 
+subroutine is a dynamic filter factory.  Returns a true value or
+throws a 'filter' exception on error.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'localise(\%vars)'
+-%]<p>
+Clones the stash to create a context with localised variables.  Returns a 
+reference to the newly cloned Template::Stash object which is also stored
+internally.
+</p>
+<pre>    $stash = $context-&gt;localise();</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'delocalise()'
+-%]<p>
+Restore the stash to its state prior to localisation.
+</p>
+<pre>    $stash = $context-&gt;delocalise();</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'visit(\%blocks)'
+-%]<p>
+This method is called by Template::Document objects immediately before
+they process their content.  It is called to register any local BLOCK
+definitions with the context object so that they may be subsequently
+delivered on request.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'leave()'
+-%]<p>
+Compliment to visit(), above.  Called by Template::Document objects 
+immediately after they process their content.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'reset()'
+-%]<p>
+Clears the local BLOCKS cache of any BLOCK definitions.  Any initial set of
+BLOCKS specified as a configuration item to the constructor will be reinstated.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'AUTOLOAD'
+-%]<p>
+An AUTOLOAD method provides access to context configuration items.
+</p>
+<pre>    $stash     = $context-&gt;stash();
+    $tflag     = $context-&gt;trim();
+    $epflag    = $context-&gt;eval_perl();
+    ...</pre>
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%], [% ttlink('Template::Document', 'Template::Document') -%], [% ttlink('Template::Exception', 'Template::Exception') -%], [% ttlink('Template::Filters', 'Template::Filters') -%], [% ttlink('Template::Plugins', 'Template::Plugins') -%], [% ttlink('Template::Provider', 'Template::Provider') -%], [% ttlink('Template::Service', 'Template::Service') -%], [% ttlink('Template::Stash', 'Template::Stash') -%]
+</p>
+[%- END %]
+
+

@@ -1,0 +1,143 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'FAQ'
+        page = 'FAQ'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='DESCRIPTION'
+                         subs=['General Questions', 'Language', 'Plugins', 'Extending the Template Toolkit', 'Miscellaneous'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This is the Frequently Asked Questions list for the Template Toolkit.
+More accurately, it's a very thin placeholder for where the FAQ will
+soon be.
+</p>
+[% WRAPPER subsection
+   title = 'General Questions'
+-%]
+<ul>
+
+<li><b>Why is the sky blue?</b><br>
+<p>
+Something to do with refraction.
+</p>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'Language'
+-%]
+<ul>
+
+<li><b>Why doesn't [% tt_start_tag %] a = b IF c [% tt_end_tag %] work as expected?</b><br>
+<p>
+Because the parser interprets it as [% tt_start_tag %] a = (b IF c) [% tt_end_tag %].
+</p>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'Plugins'
+-%]
+<ul>
+
+<li><b>Using the Table plugin, how do I order the data to go across rather than down?</b><br>
+<p>
+Order the data into rows:
+</p>
+<pre>     Steve     Karen     Jeff
+     Brooklyn  Nantucket Fairfax
+     NY        MA        VA
+ 
+    [% tt_start_tag %] USE table(data, rows=3) [% tt_end_tag %]
+ 
+Then ask for each column
+ 
+    [% tt_start_tag %] FOREACH column = table.cols [% tt_end_tag %]
+ 
+And then print each item in the column going across the output rows
+ 
+    [% tt_start_tag %] FOREACH item = column [% tt_end_tag %]
+	&lt;td&gt;[% tt_start_tag %] item [% tt_end_tag %]&lt;/td&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'Extending the Template Toolkit'
+-%]
+<ul>
+
+<li><b>Can I serve templates from a database?</b><br>
+<p>
+Short answer: yes, Chris Nandor has done this for Slash.  You need to 
+subclass Template::Provider.  See the mailing list archives for further
+info.
+</p>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'Miscellaneous'
+-%]
+<ul>
+
+<li><b>Can I have another cup of coffee?</b><br>
+<p>
+No, I think you've hhhaadd ennnough alllrready.
+</p>
+
+
+</ul>
+
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+
+

@@ -1,0 +1,144 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Manual'
+        page = 'Refs'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='DESCRIPTION'
+                         subs=['Resources', 'Projects'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This section provides references to external modules, projects and
+other resources related to the Template Toolkit.
+</p>
+[% WRAPPER subsection
+   title = 'Resources'
+-%]<p>
+The Template Toolkit web site contains the latest information, news and 
+other resources.
+</p>
+<pre>    http://www.template-toolkit.org/</pre>
+<p>
+A mailing list exists for up-to-date information on the Template Toolkit
+and for following and contributing to the development process.  To 
+subscribe, send an email to
+</p>
+<pre>    templates-request@template-toolkit.org</pre>
+<p>
+with the message 'subscribe' in the body.  You can also use the web 
+interface to subscribe or browse the archives:
+</p>
+<pre>    http://www.template-toolkit.org/mailman/listinfo/templates</pre>
+<p>
+The <file>tpage</file> and <file>ttree</file> scripts are distributed and installed along
+with the Template Toolkit.  The <file>tpage</file> script simply processes named 
+files or STDIN if unspecified, using a default Template object.  The 
+<file>ttree</file> script can be used to process entire directory trees of templates,
+allowing large content systems such as web sites to be rebuilt from a 
+single command or configuration file.
+</p>
+<pre>    perldoc tpage
+    perldoc ttree</pre>
+<p>
+The <file>Template::Tutorial</file> document provides an introduction to the Template
+Toolkit and shows some typical examples of usage.
+</p>
+<pre>    perldoc Template::Tutorial</pre>
+<p>
+You may also like to consult the paper 'Building and Managing Web Systems
+with the Template Toolkit' and accompanying slides from the presentation
+at the 4th Perl Conference.  These are available from the Template
+Toolkit web site:
+</p>
+<pre>    http://www.template-toolkit.org/docs.html</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'Projects'
+-%]<p>
+There are a number of other projects related to the Template Toolkit.
+</p>
+
+<ul>
+
+<li><b>OpenInteract</b><br>
+<p>
+OpenInteract is a robust web application framework built to run under
+Apache and mod_perl using the Template Toolkit as a foundation.
+</p>
+<pre>    http://www.openinteract.org/</pre>
+
+
+
+<li><b>Apache::Template</b><br>
+<p>
+This is an Apache/mod_perl interface to the Template Toolkit.  Available
+from CPAN in the directory:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/Apache/</pre>
+
+
+
+<li><b>AxKit::Template</b><br>
+<p>
+AxKit is Matt Sergeant's Apache XML Delivery Toolkit.  AxKit::Template
+provides an interface between AxKit and the Template Toolkit.  Available
+from CPAN in the directory:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/Apache/</pre>
+
+
+
+<li><b>Slashcode</b><br>
+<p>
+Slashcode is the code which runs Slashdot.  Version 2 uses the
+Template Toolkit for generating the user interface from database
+driven template.
+</p>
+<pre>    http://slashcode.org/</pre>
+
+
+</ul>
+
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+
+

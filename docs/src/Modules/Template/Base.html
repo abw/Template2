@@ -1,0 +1,120 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Base'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='PUBLIC METHODS'
+                         subs=['new(\%config)', 'error($msg)'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    package Template::MyModule;
+    use base qw( Template::Base );</pre>
+<pre>    sub _init {
+	my ($self, $config) = @_;
+	$self-&gt;{ doodah } = $config-&gt;{ doodah }
+	    || return $self-&gt;error(&quot;No 'doodah' specified&quot;);
+	return $self;
+    }</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+Base class module which implements a constructor and error reporting 
+functionality for various Template Toolkit modules.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='PUBLIC METHODS'
+-%][% WRAPPER subsection
+   title = 'new(\%config)'
+-%]<p>
+Constructor method which accepts a reference to a hash array or a list 
+of <code>'name =&gt; value'</code> parameters which are folded into a hash.  The 
+_init() method is then called, passing the configuration hash and should
+return true/false to indicate success or failure.  A new object reference
+is returned, or undef on error.  Any error message raised can be examined
+via the error() class method or directly via the package variable ERROR
+in the derived class.
+</p>
+<pre>    my $module = Template::MyModule-&gt;new({ ... })
+        || die Template::MyModule-&gt;error(), &quot;\n&quot;;</pre>
+<pre>    my $module = Template::MyModule-&gt;new({ ... })
+        || die &quot;constructor error: $Template::MyModule::ERROR\n&quot;;</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'error($msg)'
+-%]<p>
+May be called as an object method to get/set the internal _ERROR member
+or as a class method to get/set the $ERROR variable in the derived class's
+package.
+</p>
+<pre>    my $module = Template::MyModule-&gt;new({ ... })
+        || die Template::MyModule-&gt;error(), &quot;\n&quot;;</pre>
+<pre>    $module-&gt;do_something() 
+	|| die $module-&gt;error(), &quot;\n&quot;;</pre>
+<p>
+When called with parameters (multiple params are concatenated), this
+method will set the relevant variable and return undef.  This is most
+often used within object methods to report errors to the caller.
+</p>
+<pre>    package Template::MyModule;</pre>
+<pre>    ...</pre>
+<pre>    sub foobar {
+	my $self = shift;
+	...
+	return $self-&gt;error('some kind of error...')
+	    if $some_condition;
+	...
+    }</pre>
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%]
+</p>
+[%- END %]
+
+

@@ -1,0 +1,1672 @@
+[% META book = 'Release'
+        page = 'Changes'
+%]
+<pre>
+#========================================================================
+#
+# Changes 
+#
+# DESCRIPTION
+#   Revision history for the Template Toolkit version 2.01, detailing
+#   significant changes between versions, most recent first.  Some 
+#   way down the file you'll find a section detailing major changes from 
+#   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
+#   look out for when upgrading between major versions.
+#
+# AUTHOR
+#   Andy Wardley   &lt;abw@kfs.org&gt;
+#
+#------------------------------------------------------------------------
+# $Id$
+#========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.01 - 
+#------------------------------------------------------------------------
+
+* New Makefile.PL offers to install optional libraries, images, build
+  HTML docs, examples, etc.  Adds 'tt2_install', 'tt2_html_docs' and
+  'tt2_examples' as Makefile targets if requested.  These then get run
+  as part of &quot;make install&quot;.
+
+* Added the various template libraries in the 'templates' directory.
+  The 'html' library implements some generally useful HTML elements.
+  The 'pod/html' libraray contains some templates for converting POD to
+  HTML, used in building the TT2 HTML documentation, for example.  The
+  'ps' library contains templates defining a few useful marks and other 
+  procedures for generating PostScript pages.  The 'splash' directory
+  contains templates for the &quot;Splash!&quot; library which implements a 
+  widget set for building stylish HTML user interfaces.  
+
+* Added a host of example pages in the 'examples' directory which 
+  demonstrate use of the above libraries.
+
+* Added an 'images' directory to contain the small images used to build
+  up the Splash! interface components.
+
+* Added the 'docs' directory containing templates and library elements
+  for building the TT2 documentation as HTML pages.
+
+* Totally re-organised the documentation, splitting the long user manual
+  into separate Template::Manual::* pages, adding the Template::FAQ, 
+  Template::Internals, and various other changes.  All POD and HTML
+  documentation is built from the same sources in the form of another
+  set of templates, POD files, XML files, scripts, etc., distributed 
+  separately as the 'docsrc' bundle, and available from the web site.
+  The POD documentation now gets glued onto the end of the .pm
+  modules and only creates separate .pod files for those manual pages
+  that don't have equivalent modules (e.g. Template::FAQ, etc.)
+  NOTE: this might mean that existing .pod files from earlier versions
+  of TT might mask documentation in newer .pm files... 
+
+* Added the Template::View module, the VIEW directive and the View
+  plugin which can be used collectively to create dynamic views.  This
+  is a very powerful tool which fulfills a number of requirements and
+  makes possible a number of things that have previously been messy,
+  difficult or not possible.  Views are primarily collections of
+  templates.  You can define BLOCKs within a view and they remain
+  local to it, but can be called from outside the view.  This is still
+  very experimental.  Things are likely to change.  See
+  Template::Views for (incomplete) documentation and take a look at
+  t/view.t for examples.
+
+    [% tt_start_tag %] VIEW fancy_html
+	    prefix = 'splash/'		# template prefix/suffix
+	    suffix = '.tt2'		
+	    bgcol  = '#ffffff'		# and any other variables you 
+	    style  = 'Fancy HTML'       # care to define as view metadata,
+	    items  = [ foo, bar.baz ]	# including complex data and
+	    foo    = bar ? baz : x.y.z  # expressions
+    [% tt_end_tag %]
+
+	[% tt_start_tag %] BLOCK header [% tt_end_tag %]		# define &quot;private&quot; view blocks
+	   Title: [% tt_start_tag %] title [% tt_end_tag %]
+	[% tt_start_tag %] END [% tt_end_tag %]
+
+    [% tt_start_tag %] END [% tt_end_tag %]				# end of VIEW definition
+
+    [% tt_start_tag %] v = fancy_html [% tt_end_tag %]		# view is a regular object ref, re-
+    [% tt_start_tag %] mycode(v) [% tt_end_tag %]			# assign it, pass it around, etc.
+
+    [% tt_start_tag %] v.title [% tt_end_tag %]			# access view metadata
+
+    [% tt_start_tag %] v.header(title = 'Foo!') [% tt_end_tag %]	# view &quot;methods&quot; process blocks or
+    [% tt_start_tag %] v.footer [% tt_end_tag %]			# templates with prefix/suffix added
+					# =&gt; [% tt_start_tag %] INCLUDE splash/footer.tt2 [% tt_end_tag %]
+
+* Added the facility to specify multiple templates within a PROCESS,
+  INCLUDE, INSERT or WRAPPER directive.  For all but WRAPPER, the 
+  templates are processed in the order specified.
+
+    [% tt_start_tag %] PROCESS config + header + menu [% tt_end_tag %]
+    [% tt_start_tag %] INCLUDE section/break + html/titlebar
+         title='A New Section'
+    [% tt_end_tag %]
+    [% tt_start_tag %] WRAPPER edge + box + titlebar [% tt_end_tag %]
+       ...
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+  Multiple WRAPPER templates get processed in reverse order to create 
+  the correct nesting effect.  In the example above, the enclosed block
+  is processed and passed to 'titlebar' which wraps it and passes the 
+  output to 'header' which wraps it and passes the output to 'box', which 
+  wraps it and passes the output to 'edge' which wraps it and returns the
+  output.  Thus the specification order is outermost to innermost, but 
+  they are actually processed from the inside out.
+
+* Templates specified to INCLUDE, PROCESS, WRAPPER and INSERT can now
+  be given a prefix (delimited by ':', as in &quot;file:blahblah.txt&quot; or 
+  &quot;http://www.tt2.org/index.html&quot;, for example) which maps them to a
+  particular template provider or providers.  A PREFIX_MAP
+  configuration option can be specified as a hash array mapping prefix
+  names to a reference to a list of providers.  For convenience, you 
+  can also specify the argument as a string of integers, delimited by
+  any non-numerical sequence, to indicate indices into the LOAD_TEMPLATES
+  provider list.  e.g.
+
+    my $template = Template-&gt;new({
+	LOAD_TEMPLATES =&gt; [ $foo, $bar, $baz, $wiz ],
+	PREFIX_MAP =&gt; {
+	    src =&gt; '0, 2',	# $foo and $baz
+	    lib =&gt; '1, 2',	# $bar and $baz
+	    all =&gt; '0, 1, 2',	# $foo, $bar and $baz
+	}
+    });
+
+  Thus [% tt_start_tag %] INCLUDE src:hello.tt2 [% tt_end_tag %] indicates the 'hello.tt2' template
+  to be provided by $foo or $baz, [% tt_start_tag %] INCLUDE lib:hello.tt2 [% tt_end_tag %] is mapped
+  to $bar and $baz, [% tt_start_tag %] INCLUDE all:hello.tt2 [% tt_end_tag %] can be provided by 
+  $foo, $bar or $baz, and the default [% tt_start_tag %] INCLUDE hello.tt2 [% tt_end_tag %] is
+  mapped to the entire LOAD_TEMPLATES list: $foo, $bar, $baz and $wiz.
+  This is initially useful for things like ttree which would like a way
+  to differentiate between templates in one place and templates in 
+  another.  It can also be used, of course, to provider special providers
+  for certain file type, as in http://fetch.some.file.com/blah/blah/...
+
+* Fixed the parser to accept expressions on the right hand side of 
+  parameter definitions for INCLUDE, etc.  e.g.
+
+    [% tt_start_tag %] INCLUDE header
+         title = my_title or your_title or default_title
+         bgcol = (style == 'dark' ? '#000000' : '#ffffff')
+    [% tt_end_tag %]
+
+* Added the PLUGIN_FACTORY configuration option to Template::Plugins
+  to allow class names or object prototypes to be specified for plugins.
+  No module loading is attempted, unlike the existing PLUGINS which 
+  assumes entries are module names which it tries to load.  This may
+  change in a future release (ideally by integration with PLUGINS) so
+  it remains undocumented for now.
+
+    package My::Plugin;
+    ...
+
+    package main;
+
+    my $tt = Template-&gt;new({
+	PLUGIN_FACTORY =&gt; {
+	    plugin1 =&gt; 'My::Plugin',	    # class name
+	    plugin2 =&gt;  My::Plugin-&gt;new(),   # prototype obj
+	},
+    });
+
+* Added the File and Directory plugins which blossomed from the
+  Directory plugin written by Michael Stevens and posted to the
+  mailing list.  Many thanks to him for donating the code.  These give
+  you access to files and directories on your filesystem and also
+  allow you to create representations of abstract files/dirs.
+
+  WARNING: recognise that this gives the author of any templates you
+  run access to information about your filesystem.  We assume that the
+  author of your templates is you or someone you trust to have access
+  to that kind of information.  If you're running &quot;untrusted&quot;
+  templates (we assume you know what you're doing) then you'll very
+  probably want to disable these plugins.  Alas there is no easy way
+  to disable plugins at the moment other than deleting them or writing
+  null or error throwing plugins to mask them.  Making this easier is
+  a TODO.
+
+* Added the Pod plugin which uses the Pod::POM module to parse a Pod
+  file or text string and build an object model.  You can then walk 
+  it and present it in different ways using templates.  Great for 
+  building HTML documentation from Pod and unsurprisingly used to 
+  build the new TT2 docs.
+
+* Applied a patch from Chris Nandor to add a new feature to the
+  PRE_CHOMP and POST_CHOMP options.  When set to 1, they continue to
+  act as before.  When set to 2, all whitespace is collapsed into a
+  single space.  CHOMP_NONE, CHOMP_ALL and CHOMP_COLLAPSE are 
+  defined in Template::Constants and can be imported as the :chomp
+  tagset, for those who want them.
+
+* Applied a patch from Doug Steinwand to fix a problem in
+  Template::Provider which would server stale templates if the
+  modification time of the files went backwards.  In addition, it now
+  uses the $Template::Provider::STAT_TTL (time to live) variable
+  (default: 1) to determine how often to stat the files to check for
+  changes.
+
+* Applied a patch from Vivek Khera which fixes a memory leak in the 
+  MACRO directive, prevalent when using TT under mod_perl.  Also added 
+  t/leak.t to test that memory is properly freed and circular references
+  broken by the delocalisation of the stash.  All seems to work as expected
+  including plugins that contain context references, MACRO definitions, 
+  and so on (but note that this is the test suite run from the command
+  line, and doesn't explicitly test under mod_perl...)
+
+* Applied a patch from Axel Gerstmair to fix a bug in PERL blocks
+  and fitlers which caused references to the context and stash to be
+  kept in global package variables.  This meant they stayed alive for
+  far too long.  Added a couple of tests to t/leak.t to check this now 
+  works OK.
+
+* Fixed a bug in the parser triggered by [% tt_start_tag %] CATCH DEFAULT [% tt_end_tag %].  Thanks
+  to Vivek Khera for reporting the problem.  This also fixes a problem
+  reported by Thierry-Michel Barral which was causing bare 'CATCH'
+  blocks to not catch errors and instead pollute STDERR.
+
+* Fixed another bug in the parser preventing double quoted META attributes
+  from containing single quotes, e.g. [% tt_start_tag %] META title=&quot;C'est un test&quot; [% tt_end_tag %].
+  Thanks to Philippe Bruhat for reporting the problem.
+
+* Added the 'indent' filter to indent a block by prefixing each line with
+  a specified string, or a number of spaces when the argument is numerical.
+
+* Added the 'trim' filter to remove leading/trailing whitespace and 
+  'collapse' filter to additionally collapse multiple whitespace characters
+  to a single space.
+
+* Added escapes for ' (&amp;apos;) and &quot; (&amp;quot;) to the html filter, thanks 
+  to Lyle Brooks and Vivek Khera.  Then, having done that, I removed
+  the &amp;apos; escape because my browser didn't recognise &amp;apos; as a 
+  valid entity.  What's going on here?  Need to check the HTML spec...
+
+* Added tag style 'star' of the form [* ... *]
+
+* Changed the Template::Stash get() and set() methods to accept a 
+  compound variables as a single parameter and automatically convert
+  it to an array.  Note that it doesn't correctly handle arguments
+  to dotted elements (e.g. foo(10).bar(20), but does mean that you can 
+  now write $stash-&gt;get('foo.bar.baz') instead of the more laborious
+  $stash-&gt;get(['foo', 0, 'bar', 0, 'baz', 0]).
+
+* Fixed a bug in Template::Stash which was raising an error when an 
+  element on the left hand side of a '.' evaluated to a defined, but 
+  empty value.
+
+* Fixed an obscure bug in Template::Stash which occurred when calling 
+  a scalar method on a value which contained a valid and visible object 
+  package name.  e.g. [% tt_start_tag %] name = 'Foo::Bar'; name.baz() [% tt_end_tag %] called
+  Foo::Bar-&gt;baz().
+
+* Fixed a bug in the Template::Stash 'replace' virtual method which 
+  returned the original string when the replace string was specified 
+  empty.   [% tt_start_tag %] var = 'foo99'; var.replace('foo', '') [% tt_end_tag %] now correctly 
+  returns '99' instead of the original string 'foo99'.  Thanks to 
+  Tryggve Johannesson and Jeremy Wadsack for reporting the problem.
+
+* Added magical handling of the 'import' variable to stash clone() and
+  update methods.  This implements the V1 functionality whereby you can
+  write [% tt_start_tag %] INCLUDE foo import=myhash [% tt_end_tag %].  Note that 'import' is lower case,
+  (V1 was upper case IMPORT) as in V2 it is in keeping with the virtual 
+  hash method (e.g. same as myhash.import(another.hash)).  Thanks to 
+  Brian Cooper for raising the issue.
+
+* Yet another change to Template::Stash.  Objects which are blessed 
+  arrays will now honour virtual array methods if the object doesn't
+  otherwise implement a particular method.  For example, you can now
+  write [% tt_start_tag %] USE Datafile(...) [% tt_end_tag %] and then [% tt_start_tag %] Datafile.size [% tt_end_tag %].  The 
+  '.size' now works as virtual method on the blessed ARRAY which 
+  consitutes the Datafile object.  Thanks to Keith Murphy for 
+  identifying the problem.
+
+* Fixed another obscure bug, this time in Template::Parser which wasn't 
+  chomping the final newline in the input string.  Thanks to Paul 
+  Makepeace for reporting the problem.
+
+* Removed some old &quot;delegate-to-another-object&quot; code from Template::Plugin,
+  including a nasty AUTOLOAD method which prevented derived objects from 
+  acting as transparent hashes.  If delegative functionality is required 
+  then it should be implemented as Template::Plugin::Delegate (and may
+  well be in the fullness of time).
+
+* Fixed a whole bunch of typos and spellos thanks to patches from Leon,
+  Paul Sharpe and Robert McArthur.
+
+  
+#------------------------------------------------------------------------
+# Version 2.00  1st December 2000
+#------------------------------------------------------------------------
+
+* Added the repeat(n), search(pattern) and replace(search, replace)
+  virtual methods for scalars, and fixed a warning in the split()
+  method raised when an attempt was made to split an undefined value.
+
+* Changed the THROW directive to accept multiple parameters which 
+  become named items of the 'error.info' item, thanks to a suggestion
+  from Piers Cawley.  Positional arguments can be addressed as 
+  [% tt_start_tag %] error.info.n [% tt_end_tag %] or as a list as [% tt_start_tag %] error.info.args [% tt_end_tag %].  Named 
+  parameters can be accessed as [% tt_start_tag %] error.info.name [% tt_end_tag %].
+  e.g. 
+    [% tt_start_tag %] TRY [% tt_end_tag %]
+    [% tt_start_tag %] THROW foo 'one' 2 three=3.14 [% tt_end_tag %],
+    [% tt_start_tag %] CATCH [% tt_end_tag %]
+       [% tt_start_tag %] error.type [% tt_end_tag %]        # foo
+       [% tt_start_tag %] error.info.0 [% tt_end_tag %]      # one
+       [% tt_start_tag %] error.info.1 [% tt_end_tag %]      # 2
+       [% tt_start_tag %] error.info.three [% tt_end_tag %]  # 3.14
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+* Moved the definition of Template::TieString from Template::Directive
+  into Template::Config (for now) to ensure that its definition is 
+  visible even if the Template::Parser, and through it, the
+  Template::Directive module, haven't been loaded.  This fixes the 
+  bug causing the error &quot;Can't locate object method &quot;TIEHANDLE&quot; 
+  via package Template::String...&quot; raised when using EVAL_PERL with 
+  compiled templates only.  In this case, the parser wasn't getting
+  loaded (because it had no templates to parse, them all being pre-
+  compiled) and the Template::TieString defintion wasn't visible to 
+  the EVAL_PERL blocks that require it.  Added a test to t/compile3.t.
+  Thanks to Igor Vylusko for reporting the problem.
+
+* Changed the Template::Directive Perl generator for EVAL_PERL blocks
+  to generate code to first test the EVAL_PERL option in the runtime
+  context and throw a 'perl error - EVAL_PERL not set' exception if
+  unset.  Thus the behaviour for EVAL_PERL when using compiled templates 
+  is now: if the EVAL_PERL option isn't set in the _compiling_ context, 
+  then Perl code will be generated which *always* throws an exception
+  'perl error - EVAL_PERL not set'.  If EVAL_PERL is set, then it will
+  generate code which tests the EVAL_PERL option in the _running_ 
+  context (which may not be the same context that compiled it), and 
+  throws the same error is the option is not set.  Note that [% tt_start_tag %] RAWPERL [% tt_end_tag %]
+  blocks are added verbatim to the generated code if the EVAL_PERL
+  option is set in the compiling context and no runtime check for 
+  EVAL_PERL is made.  Similarly, [% tt_start_tag %] PERL [% tt_end_tag %] blocks could contain a
+  Perl BEGIN block, e.g. &quot;BEGIN { # subterfuge code here }&quot; which 
+  will always get executed at runtime, regardless of any runtime 
+  EVAL_PERL option.  Thanks to Randal Schwartz for raising this issue.
+
+* Fixed an obscure bug in WRAPPER which was causing some variables to 
+  have apparently strange values when within the block content.  This
+  was due to the content being formed into a closure which was called
+  from within the WRAPPER template, possibly after some variable values
+  had been changed.  e.g.
+    [% tt_start_tag %] title = &quot;foo&quot; [% tt_end_tag %]
+    [% tt_start_tag %] WRAPPER outer title=&quot;bar&quot; [% tt_end_tag %]
+       The title is [% tt_start_tag %] title [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]
+  Here, the 'outer' template should be called with a 'title' value of 
+  'bar' but with 'content' set to 'The title is foo'.  Previously, 
+  the content would have been processed from within the 'outer' template,
+  resulting in a 'content' value of 'The title is bar'.  The behaviour is
+  now correct.
+
+* Filter failures are now raised as 'filter' exception types, instead
+  of 'undef'.
+
+* Applied a patch from Simon Matthews to fix some minor bugs in the 
+  DBI plugin:
+
+  - Added _connect method to Plugin::DBI for backwards compatability with 
+    code from version 1 of Template that subclassed the plugin
+
+  - Changed the new mothod on the DBI plugin so that it checks to see if 
+    it is being called by a subclassed object.  
+
+  - Fixed the return value in the DBI plugin when connect is called more 
+    than once in the lifetime of the plugin
+
+* Removed a dubious looking chomp() from Template::Plugins which may
+  have caused abject stringification of any error object throw by a 
+  failed plugin constructor.  Thanks to Piers Cawley for finding the 
+  devious culprit.
+
+* Changed ttree to not offer to create a ~/.ttreerc file if it doesn't
+  exist when the user has specified a '-f file' on the command line.
+  Thanks to Michael Stevens for raising the issue.
+
+* Added the match($result, $expect) subroutine to Template::Test.
+
+* Modified the final test of wrap.t to strip any trailing whitespace from
+  the output due to a problem with Text::Wrap under 5.005_02.  Thanks to
+  Rob Stone for reporting the problem.
+
+* Added documentation for DEBUG options and stderr filter.  Thanks to
+  Piers Cawley for spotting the omission.
+
+
+#------------------------------------------------------------------------
+# Version 2.00-rc2  14th November 2000
+#------------------------------------------------------------------------
+
+* Added the 'prev' and 'next' methods to Template::Iterator and 
+  Template::Plugin::DBI::Iterator to return the previous and next 
+  items from the data set.
+
+* Added the 'sort' and 'nsort' virtual methods for hash arrays, 
+  thanks to a patch provided by Leon Brocard.
+
+* Various fixes to DBI plugin, configuration and test:- modified
+  Makefile.PL to prompt for DBI DSN specific to user's DBD; changed
+  DBI plugin to accept DBI attributes (e.g. ChopBlanks) as named
+  parameters to connect method; fixed t/dbi.t to not munge 'user'
+  variable in final test; added 'ChopBlanks' attributes to satisfy
+  tests under certain DBD's (e.g.  Pg).  Thanks to Jonas Liljegren and
+  Chris Nandor for their efforts in finding, testing and fixing the
+  problems.
+
+* Modified the XML::DOM plugin to work with XML::DOM version 1.27
+  which now uses blessed array references instead of hashes as the 
+  underlying data types.  Changed Makefile.PL and t/dom.t to require
+  version 1.27 or later.
+
+* Changed the Template::Iterator module to *NOT* automatically expand
+  the contents of blessed ARRAY objects to construct the iteration data
+  set.  The previous behaviour caused problems with modules such as 
+  XML::DOM where a single object passed to the iterator constructor
+  would be expanded into a list of the member data, rather than being
+  treated as a single item list containing that one object.  A blessed
+  ARRAY reference can now provide the as_list() method which the
+  iterator constructor will call to return list data.
+
+* Fixed a bug in Template::Provider to ensure that template metadata 
+  (e.g. name, modtime, etc.) is written to compiled template files.
+  Thanks to Steven Hetland for reporting the problem.
+
+* Changed the Template::Directive::template() generator method to 
+  raise an error if a context reference isn't passed to a template 
+  subroutine as the first argument.
+
+* Fixed t/autoformat.t to use locale dependant numerical formatting.
+  Note that versions of Perl prior to 5.6.0 still have problems and 
+  will cause t/autoform.t tests 23 and 25 to fail under locales that 
+  use a decimal separator other than '.'.  The Makefile.PL will issue
+  a warning in such cases.  Thanks to Jonas Liljegren for reporting 
+  the problem.
+
+* Applied a patch from Leon Brocard which corrects the behaviour of 
+  the URL plugin to join parameters with '&amp;amp;' instead of '&amp;'.
+
+* Fixed a bug in the AUTOLOAD method of the Template::Plugin base 
+  class which caused warnings about not finding _DELEGATE pseudo-hash
+  method under Perl 5.6.0.
+
+* Various minor documentation fixes, thanks to Henrik Edlund and Leon
+  Brocard.
+
+
+#------------------------------------------------------------------------
+# Version 2.00-rc1  1st November 2000
+#------------------------------------------------------------------------
+
+* Added the push(), pop(), unshift() and shift() virtual list methods
+  and fixed the parser to allow empty lists to be created (also fixed
+  the parser to prevent warnings being raised by empty hashes).
+  Updated test scripts and documentation to include examples.  Thanks
+  to Stas Beckman for raising the issue.
+
+* Incorporated the DBI plugin module, written by Simon Matthews.  This 
+  features a major reorganisation of the code, fixes a few bugs, removes
+  some lava flow, and has improved documentation and test script.
+
+* Updated the Makefile.PL to prompt for DBI test parameters, check for
+  external modules (and in particular, versions which may cause problems)
+  and various other niceties.  Also updated the README and TODO files.
+
+* Rewrote the XML::DOM plugin, fixing the memory leakage problems and 
+  adding the toTemplate() method and friends, as provided by Simon 
+  Matthews.  Note that it's quite easy to send Perl into a deep
+  recursive loop via the childrenToTemplate() and allChildrenToTemplate()
+  methods due to a misfeature added by abw.  This will be fixed in a 
+  future release and may result in behavioural changes to the
+  *children* methods,  so don't rely on them too heavily for now.
+
+* Incorporated the Dumper plugin from Simon Matthews which interfaces to
+  the Data::Dumper module.
+
+* Fixed a bug in the Datafile plugin which was causing the last data field 
+  to be ignored.  Credit due (yet again!) to Simon Matthews for finding 
+  the missing chomp().
+
+* Fixed a bug in Template::Directive which was generating a 'Useless use 
+  of scalar ref constructor in void context...' for empty BLOCK 
+  definitions.
+
+* Added the Wrap and Autoformat plugins which interface to Text::Wrap
+  and Text::Autoformat respectively.  Thanks to Robert McArthur for the 
+  original Autoformat plugin code.
+
+* Added the XML::XPath plugin, test script and documentation.
+
+* Fixed a bug in the Template::Service module which was using any 
+  non-word characters to delimit lists of PRE/POST_PROCESS files.
+  A value such as 'config, header.html' would be interpreted as 
+  [ 'config', 'header', 'html' ].  It now uses the DELIMITER value
+  which is ':' by default, e.g. PRE_PROCESS =&gt; 'config:header.html'
+  is interpreted as [ 'config', 'header.html' ].
+
+* Fixed a bug in the parser grammar which was failing to correctly 
+  identify compound variables that contained two or more consecutive
+  numbers.  For example, the variable [% tt_start_tag %] pi.3.14 [% tt_end_tag %] was being interpreted 
+  as 'pi' . '3.14', instead of 'pi' . '3' . '14'.
+
+* Further modified parser to accept single quoted BLOCK names that would
+  otherwise choke on 'illegal' characters.  e.g. [% tt_start_tag %] BLOCK 'foo bar' [% tt_end_tag %]
+
+* Changed the Template::Context::template() method to always throw an
+  exception when a template can't be found instead of simply setting
+  an internal error string.  Modified other Template::Context and
+  Template::Service methods to expect this behaviour and act
+  accordingly.  The visible impact of this is that the Template
+  error() method will now always return an exception object.
+  Previously there were certain cases where a plain error string would
+  have been returned.
+
+* Change the ROOT_OPS, SCALAR_OPS, HASH_OPS and LIST_OPS virtual
+  method tables in Template::Stash to incorporate any existing defined
+  values.  Previously, you had to 'use Template::Stash' before
+  defining any new virtual methods to prevent them being overwritten
+  when Template::Stash was subsequently loaded.  Thanks to Chris
+  Nandor for identifying the problem and suggesting a fix.
+
+* Changed BREAK directive to LAST to keep it in line with Perl (don't
+  know why I originally chose 'BREAK' - must have had my C head on at
+  the time).  BREAK is still supported as an alias for LAST.
+
+* Renamed the Template::Iterator number() method to count(), although
+  number() is still supported for backwards compatability.  The DBI 
+  plugin used count() instead of number() (an oversight, I think) but I 
+  decided that count() was the better name (shorter and more obvious).
+  Also changed internal Template::Iterator counter variables to UPPER
+  CASE to allow AUTOLOAD to be more easily reused by derived iterators
+  such as the one for the DBI plugin.
+
+* The Template::Plugin module is now derived from Template::Base.  The
+  only significant ramification of this is that plugins should now
+  call the error() method on failure in preference to fail().  The
+  fail() method is still supported and delegates on to error(), but it
+  raises a deprecation warning.
+
+* Fixed a bug in the Table plugin which caused an &quot;undefined variable...&quot;
+  warning to be emitted when an empty list was provided.
+
+* Renamed 'evalperl' filter to 'perl', something that previously
+  couldn't be done (before ANYCASE) due to 'perl' clashing with 'PERL'
+  reserved word.  'evalperl' is still provided for backwards
+  compatability.  Also added 'evaltt' as an alias for the 'eval'
+  filter and 'file' as an alias for 'redirect' (which I claimed to 
+  have done back in beta 3 but obviously hadn't). 
+
+* Fixed a bug in the perl/evalperl filter which was causing a stash
+  reference to be bound in a closure that could later become
+  invalidated.  This could lead to variables not getting/setting their
+  correct values in subsequent calls to the same filter.
+
+* Documented the problem identified by Chris Winters where an IF 
+  used as a side-effect to an implied SET directive doesn't behave as
+  expected.  A directive of the form  [% tt_start_tag %] foo = 'bar' IF condition [% tt_end_tag %]
+  should be written explicitly as [% tt_start_tag %] SET foo = 'bar' IF condition [% tt_end_tag %]
+
+* Documented the 32k size limit (or typically less) for templates when 
+  the INTERPOLATE option is set.
+
+#------------------------------------------------------------------------
+# Version 2.00 beta 5  14th September 2000
+#------------------------------------------------------------------------
+
+* Added define_filter($name, \&amp;filter, $is_dynamic) method to
+  Template::Context to allow additional filters to be defined at any
+  time.  Arguments are as per the FILTERS configuration option.
+  These filters persist for the lifetime of the processor.
+
+* Changed the Template::Context filter() method to accept a code 
+  reference as the filter name and use it as the filter sub.  This 
+  allows filters to be bound to template variables which are then 
+  used as:
+
+    [% tt_start_tag %] FILTER $myfilter [% tt_end_tag %]
+
+  There is one catch, however.  TT will automatically call a subroutine
+  bound to a variable when evaluated.  Thus you must wrap your filter
+  sub in another sub: $stash-&gt;set('foo', sub { \&amp;myfilter }); or bless
+  it into some class (any class) to fool TT into thinking it's not a 
+  subroutine ref: $stash-&gt;set('bar', bless \&amp;myfilter, 'any_old_name');
+
+* Updated documentation for FILTER directive and FILTERS option to 
+  reflect the above changes.
+
+* Fixed Template::Document to run cleanly with taint checking enabled.
+  Unfortunately, this has been achieved by blindly untainting the
+  generated template Perl code before calling eval().  Given that
+  we're reading template source from external files, I don't think
+  there's any way to do reliable taint check anyway.  But thankfully
+  we can trust the parser to generate &quot;safe&quot; code unless EVAL_PERL is
+  enabled in which case all bets are off anyway.
+
+* Updated XML::DOM plugin to include changes made by Thierry-Michel 
+  Barral to accept configuration options for XML::Parser.
+
+* Fixed a bug in the Table plugin which caused the first item to be
+  repeated n times when n items was less than a specified number of
+  columns.  Thanks to Andrew Williams for finding and fixing this
+  bug.
+
+* The Template::Tutorial document really is included in the
+  distribution this time.  Honest.
+
+
+#------------------------------------------------------------------------
+# Version 2.00 beta 4  12th September 2000
+#------------------------------------------------------------------------
+
+* Added the PROCESS config option which allows a template or templates
+  to be specified which is/are processed instead of the template
+  passed as an argument to the Template process() method.  The
+  original template is available as the 'template' variable and can be
+  processed by calling INCLUDE or PROCESS as [% tt_start_tag %] INCLUDE $template [% tt_end_tag %].
+
+* Changed what was the CASE option to now be enabled by default, and
+  then changed the name of the option to ANYCASE to make it more
+  obvious as to what it did.  You must now specify directive keywords
+  (INCLUDE, FOREACH, IF, etc) in UPPER CASE only, or enable the
+  ANYCASE option to revert to the previous behaviour of recognising
+  keywords in any case.  With the increase in reserved words in
+  version 2, there is more chance of collision with variable names.
+  It's a real pain not being able to have a variable called 'next', an
+  exception called 'perl', etc., because there's a reserved word of
+  the same name.  Thus, keywords are now UPPER CASE only by default,
+  neatly side-stepping the problem.
+
+* Changed the PERL directive so that output is generated by calling
+  print() instead of using the final value in the block.  Implemented
+  by tying STDOUT to an output buffer based on a patch sent in by
+  Chuck Adams.
+
+    new:                      old:
+      [% tt_start_tag %] PERL [% tt_end_tag %]                [% tt_start_tag %] PERL [% tt_end_tag %]
+         print &quot;foo\n&quot;;            my $output = &quot;foo\n&quot;;
+         ...                       ...
+         print &quot;bar\n&quot;;            $output .= &quot;bar\n&quot;;
+      [% tt_start_tag %] END [% tt_end_tag %]			   $output;
+                                [% tt_start_tag %] END [% tt_end_tag %]
+
+* The IMPORT directive and magical IMPORT variable have been replaced 
+  with a general purpose virtual hash method, import().
+
+    [% tt_start_tag %] hash1.import(hash2) [% tt_end_tag %]   # was &quot;hash1.IMPORT = hash2&quot;
+    [% tt_start_tag %] import(hash1) [% tt_end_tag %]	        # was &quot;IMPORT hash1&quot; or &quot;IMPORT = hash1&quot;
+
+* Modified the Template::Filters provider to examine the FILTERS
+  package hash reference (changed name from STD_FILTERS) each time a
+  filter is requested rather than copying them at construction time.
+  This allows new filters to be added on-the-fly.  See t/filter.t for
+  examples and Template::Filters for more info.
+  
+* Added the 'nsort' list method which sorts items using a numerical 
+  value sort rather than an alpha sort. 
+
+    [% tt_start_tag %] data = [ 1, 5, 10, 11 ] [% tt_end_tag %]
+    [% tt_start_tag %] data.sort.join(', ')  [% tt_end_tag %]     # 1, 10, 11, 5
+    [% tt_start_tag %] data.nsort.join(', ') [% tt_end_tag %]     # 1, 5, 10, 11  
+
+* Added 'div' operator to provider integer division (e.g. 'a div b' =&gt;
+  'int(a / b)' and 'mod' which is identical to '%' but added for backwards
+  compatibility with V1.
+
+* Changed the (undocumented) FORNEXT directive to NEXT and documented it.
+
+* Fixed a bug in the persistant caching mechanism in Template::Provider
+  which was failing to write compiled template files for source templates
+  specifed in the form [% tt_start_tag %] INCLUDE foo/bar [% tt_end_tag %].  Intermediate directories 
+  (like 'foo' in this example) weren't being created and the disk write 
+  was failing.  Thanks to Simon Matthews for identifying this problem.
+
+* Fixed an obscure bug in the Template::Stash which was ignoring the
+  last element in a compound variable when followed by an empty 
+  argument list.  e.g. [% tt_start_tag %] cgi.param() [% tt_end_tag %] would be treated as [% tt_start_tag %] cgi [% tt_end_tag %].
+  Also fixed the DEBUG option so that undefined variables cause 'undef'
+  exceptions to be raised.  Thanks to Jonas Liljegren for reporting the 
+  problems.
+
+* Added the reference operator, '\' which allows a &quot;reference&quot; to 
+  another variable to be taken.  The implementation creates a closure
+  around the referenced variable which, when called, will return the 
+  actual variable value.  It is really a form of lazy evaluation, rather
+  than genuine reference taking, but it looks and smells almost the same.
+  Primarily, it is useful for allowing sub-routine references to be 
+  passed to another sub-routine.  This is currently undocumented 
+  because I'm not sure about the validity of adding it, but see t/refs.t 
+  for examples for now.
+
+* Changed parser to automatically unescape any escaped characters in 
+  double quoted strings except for \n and \$.  This permits strings to
+  be constructed that include tag characters.  e.g.
+
+    [% tt_start_tag %] directive = &quot;[\% INSERT thing %\]&quot; [% tt_end_tag %]
+
+* Fixed a bug in the use of the 'component' variable when the current
+  component is a sub-routine rather than a Template::Document.
+
+* Added the '--define var=val' option to tpage to allow template 
+  variables to be defined from the command line.  Added support to
+  ttree for various new Template configuration options.
+
+* Added $Template::Test::PRESERVE package variable which can be set to 
+  prevent newlines in test output from being automatically mangled to
+  literal '\n'.
+
+* Completed and corrected all knows bugs in the documentation which
+  now weighs in at around 100 pages for the Template.pm module alone.
+  The POD documentation should now be installed by default.  The
+  Template::Tutorial document is once again included in the
+  distribution.
+
+
+#------------------------------------------------------------------------
+# Version 2.00 beta 3  10th August 2000
+#------------------------------------------------------------------------
+
+* Added the WRAPPER directive to include another template, passing the 
+  enclosing block as the 'content' variable.  e.g.
+
+  somefile:                    mytable:
+    [% tt_start_tag %] WRAPPER mytable [% tt_end_tag %]        &lt;table&gt;
+       blah blah blah            [% tt_start_tag %] content [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]                    &lt;/table&gt;
+
+  This is equivalent to:
+
+    [% tt_start_tag %] content = BLOCK [% tt_end_tag %]
+       blah blah blah
+    [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] INCLUDE mytable [% tt_end_tag %]
+
+* Added the [% tt_start_tag %] INSERT file [% tt_end_tag %] directive to insert the contents of a disk
+  file without processing any of the content.  Looks for the file in the
+  INCLUDE_PATH and honours the ABSOLUTE and RELATIVE flags.  Added the
+  insert($file) method to Template::Context which calls the new 
+  load($file) method in Template::Provider which loads the file text
+  without compiling it.
+
+* Added the DEFAULT configuration option which allows you to specify a 
+  default template which should be used whenever a named template 
+  cannot be found.  This is ignored for templates specified with absolute
+  or relative filenames, or as references to an input filehandle or text.
+
+* Added a FORNEXT directive to step on to the next iteration of a
+  FOREACH loop, as suggested/requested by Jo Ellen Wisnosky.  I chose
+  FORNEXT rather than simply NEXT because 'next' is a very common
+  variable name but I'm open to better suggestions.  Perhaps CASE
+  should be set by default to prevent variable conflict?  This might
+  change.
+
+* Reorganised the Template::Filters modules and changed the calling 
+  convention for requesting filters via the fetch() method.  This now
+  expects a reference to the calling Template::Context object as the
+  third parameter (after filter name and reference to a list of arguments).
+  Static filter sub-routines are returned as before and the context has
+  no effect.  Dynamic filter factories (denoted by a $is_dynamic flag
+  in the FILTER_FACTORY table) are called to create a filter sub-routine
+  (closure) for each request.  The context is now passed as the first
+  parameter, followed by the expansion of any arguments.  Filter 
+  factories should return a sub-routine or (undef, $error) on error.
+
+* Added several new filters:
+  - 'stderr' prints the output to STDERR (i.e. for generating output 
+    in the Apache logfile, for example).  e.g. [% tt_start_tag %] message | stderr [% tt_end_tag %]
+
+  - 'file' is the equivalent of the version 1 redirect() filter which 
+    writes the output to a new file, relative to OUTPUT_PATH.  Throws
+    a 'file' exception if OUTPUT_PATH is not set.  There should perhaps 
+    be some other way to disable this without relying on OUTPUT_PATH.
+
+  - 'eval' evaluates the input as a template and processes it.  Proposed
+    by Simon Matthews for times when you might be returning templates 
+    fragments from a database, for example.  e.g. [% tt_start_tag %] dirtext | eval [% tt_end_tag %]
+
+  - 'evalperl' evaluate the input as Perl code, as suggested by Jonas
+    Liligren. Requires the EVAL_PERL option to be set and will throw a 
+    'perl' error if not (see later item).  e.g. [% tt_start_tag %] perlcode | evalperl [% tt_end_tag %]
+
+* Fixed a bug in Template::Provider which was mangling the metadata items
+  for the template name and modification time.  The [% tt_start_tag %] template.name [% tt_end_tag %] 
+  and [% tt_start_tag %] template.modtime [% tt_end_tag %] variables now work as expected.
+
+* Added 'component' variable, similar to 'template', but which references 
+  the current template component file or block, rather than the top-level 
+  template.  Of course, these may be one and the same if you're not nesting
+  any templates.
+
+* Template::Provider now reports errors raised when re-compiling 
+  modified templates rather than ignoring them, thanks to a patch from
+  Perrin Harkins.
+
+* Fixed Template::Context to recognise the RECURSION option once more,
+  thanks to a patch from Rafael Kitover.
+
+* Overloaded &quot;&quot; stringification of Template::Exception to call as_string(),
+  again thanks to Rafael.  In a catch block you can now simply say 
+  [% tt_start_tag %] error [% tt_end_tag %] as well as the more explicit  [% tt_start_tag %] error.type [% tt_end_tag %] and/or 
+  [% tt_start_tag %] error.info [% tt_end_tag %].
+
+* Changed Template module (via Template::Service) to return the
+  exception raised rather than a pre-stringified form.  This allows
+  you to test the type() and/or info() if you want, or just print it
+  and rely on the automatic stringification mentioned above to format
+  it as expected.  Note that the top-level process($file) method
+  returns a string rather than an exception if $file can't be found.
+  This is a bug, or a possible &quot;gotcha&quot; at the very least, and should
+  get fixed some time soon.  For now, test that the error is a
+  reference before attempting to call info() or type().
+
+* Fixed a bug preventing literal newlines from being used in strings.
+  Thanks to Simon Matthews for bringing it to my attention by calling 
+  my hotel room at the Perl Conference and saying &quot;Hello?  Is that the 
+  Template Toolkit Helpdesk?  I have a bug to report...&quot;  :-) 
+  (I fixed it on his laptop a few minutes later - good service, eh?)
+
+* Changed Template::Parser to not compile PERL or RAWPERL blocks if
+  EVAL_PERL is not set.  Previously they were compiled but switched out
+  at runtime.  This was erroneous as rogue BEGIN { } blocks could still
+  be executed, as noted by Randal Schwartz.  Any PERL or RAWPERL blocks
+  encountered when EVAL_PERL is disabled will now cause a 'perl' exception
+  to be thrown. 
+
+* Added a define_block($name, $block) option to Template::Context to 
+  add a definition to the local BLOCKS cache.  $block can be a reference
+  to a template sub-routine or Template::Document object or template 
+  text which is first compiled.
+
+* Any other errors thrown in a PERL blocks (assuming EVAL_PERL set)
+  are now left unchanged.  Previously, these were converted to 'perl'
+  exceptions which prevented exceptions of other kinds being throw
+  from within Perl code.
+
+* Applied a patch from Chris Dean to fix a bug in the list 'sort' 
+  method which was converting a single element list into a hash.  The
+  sort now does nothing unless there's &gt; 1 elements in the list.
+
+* Changed Template::Stash set() method to append the assigned value to
+  the end of any arguments specified, rather than prepending it to the 
+  front.  e.g. The foo() method called by [% tt_start_tag %] myobj.foo(x, y) = z [% tt_end_tag %] now
+  receives arguments as foo(x, y, z) instead of foo(z, x, y).
+
+* Changed Template::Base::error() to accept a reference (e.g. exception)
+  as the first parameter.  In this case, no attempt is made to 
+  concatenate (and thereby stringify) the arguments.
+
+* Added a direct stash() accessor method to Template::Context rather 
+  than relying on the slower AUTOLOAD method.
+
+* Added an iterator() method to Template::Config to require
+  Template::Iterator and instantiate an iterator, and changed
+  generated code for FOREACH to call this factory method.  This fixes
+  a bug with pre-compiled (i.e persistant) templates which were
+  failing if Template::Iterator wasn't already loaded.  Thanks to Doug
+  Steinwand, Rafael Kitover and Jonas Lilegren who all identified the
+  problem and hounded me until I fixed it.  :-)
+ 
+* Fixed a problem with persistant templates not being reloaded due to 
+  the %INC hash.  This caused 1 to be returned from require() instead 
+  of the compiled template.
+
+* Added ABSOLUTE and RELATIVE options to tpage by default.
+
+* Applied various documentation and test patches from Leon Brocard.
+  Fixed docs to quote dotted exception types to prevent string
+  concatenation, as noted by Randal Schwartz.  Generally added a 
+  whole lot more documentation.
+
+#------------------------------------------------------------------------
+# Version 2.00 beta 2   14th July 2000
+#------------------------------------------------------------------------
+
+* Added COMPILE_DIR option.  This allows you to specify a separate 
+  directory in which compiled templates should be written.  The COMPILE_DIR
+  is used as a root directory and each of the INCLUDE_PATH elements is 
+  created below that point.  e.g. the following options
+
+    COMPILE_DIR  =&gt; '/tmp/ttcache', 
+    INCLUDE_PATH =&gt; '/user/foo/bar:/usr/share/templates',
+
+  would create the following cache directories:
+
+    /tmp/ttcache/user/foo/bar
+    /tmp/ttcache/usr/share/templates
+
+  Templates originating from source files in the INCLUDE_PATH are thus 
+  written in their compiled form (i.e. Perl) to the relevant COMPILE_DIR
+  directory.  The COMPILE_EXT option may also be used in conjunction with
+  COMPILE_DIR to append a filename extension to all compiled files.
+  
+* Fixed memory leaks caused by the huge circular reference that is the 
+  Template::Provider's linked list of cache slots.  Added a DESTROY method 
+  which walks the list and explicitly breaks the chains (i.e. the NEXT/PREV
+  links), thus allowing the compiled Template::Document objects to be 
+  correctly destroyed and their memory repooled.  Thanks to Perrin Harkins
+  for spotting the problem.
+
+* Added a work-around in Template::Stash _dotop() to the problem of the 
+  CGI module denying membership of the UNIVERSAL class on subsequent calls
+  to UNIVERSAL::isa($cgi, 'UNIVERSAL').  It works correctly the first time,
+  but returns false for all subsequent calls.  Changed this generic
+  &quot;is-an-object&quot; test to UNIVERSAL::can($cgi, 'can') on the suggestion
+  of Drew Taylor who identified the problem.
+
+* Added t/macro.t to test MACRO directive, t/compile4.t and t/compile5.t
+  to test the COMPILE_DIR option.
+
+* More complete documentation, but not yet fully complete.
+
+
+#------------------------------------------------------------------------
+# Version 2.00 beta 1   10th July 2000
+#------------------------------------------------------------------------
+
+* Template::Context include()/process() now works with raw CODE refs.
+
+* Template.pm now prefixes OUTPUT with the OUTPUT_PATH when OUTPUT
+  is a file name.
+
+* Cleaned up Template::Iterator.  Now derived from Template::Base.
+  Removed ACTION and ORDER now that they are supported as list pseudo
+  methods in the Stash LIST_OPS.
+
+* Fixed bug in Provider preventing updated files from being automatically
+  reloaded.  Thanks to Perrin Harkins who provided the patch.
+
+* Fixed bug in Template::Plugin::Datafile which was preventing a comment
+  from being placed on the first line of the file.
+
+* Fixed bug in parse grammer preventing commas in a META list
+
+* Added cache persistance by writing real Perl to file (rather than
+  the previous Data::Dumper dump of the opcode tree).  Had to
+  re-organise a bunch of code around the parser/provider/document.  
+  Activated by COMPILE_EXT configuration item.
+
+* Added a work-around in Template::Stash to the problem of CGI disclaiming
+  membership of the UNIVERSAL class after the first method call.
+
+* Added AUTO_RESET option which is enabled by default.  Disable this 
+  (AUTO_RESET =&gt; 0) for block persistance across service invocations.
+
+* Fixed \@ quoting (and others) in Directive thanks to Perrin Harkins 
+  who reported the bug and Chuck Adams who provided a patch.
+
+* Added Date plugin and test, as provided by Thierry-Michel Barral.
+
+* Integrated changes to Template::Test from version 1.07 and beyond.  Now 
+  supports -- process -- option in expect, mainly for use of t/date.t et al.
+
+* Integrated new upper and lower filters from 1.08, and '|' alias for FILTER
+  from 1.07.
+
+* Added new directive.t test to test chomping and comments.
+
+* BLOCKS can now be defined as template text which gets automatically 
+  compiled into a Template::Document object.
+
+* Integrated XML plugins and tests from version 1.07
+
+* Fixed TRIM option to work with all BLOCKs and templates.  Moved TRIMing
+  operation into context process() and include() methods.  Also changed
+  service to call $context-&gt;process($template) rather than call the sub/
+  doc itself, thus ensuring that the output can get TRIMmed.
+
+* Updated Template::Plugin.pm
+
+* Added '--define' option to ttree.
+
+* Integrated various plugins and filters from v1.07
+
+* Moved Template::Utils::output into Template.pm?) and got rid of
+  Template::Utils altogether.
+
+* Fixed bug in Context filter() provider method which wasn't caching 
+  filters with args.
+
+* [% tt_start_tag %] CASE DEFAULT [% tt_end_tag %] is now an alias for [% tt_start_tag %] CASE [% tt_end_tag %] (the default case),
+  in consistency with [% tt_start_tag %] CATCH DEFAULT [% tt_end_tag %] / [% tt_start_tag %] CATCH [% tt_end_tag %]
+
+
+#------------------------------------------------------------------------
+# Version 2.00 alpha 1
+#------------------------------------------------------------------------
+
+* first public alpha release of Version 2.00
+ 
+
+
+#========================================================================
+#                           VERSION 2.00
+#------------------------------------------------------------------------
+# The following list outlines the major differences between version 1.*
+# and version 2.00 of the Template Toolkit. 
+#========================================================================
+
+New Language Features
+---------------------
+
+* New SWITCH / CASE statement.  SWITCH takes an expression, CASE takes
+  a value or list of values to match.  CASE may also be left blank or
+  written as [% tt_start_tag %] CASE default [% tt_end_tag %] to specify a default match.  Only one
+  CASE matches, there is no drop-through between CASE statements.
+  
+    [% tt_start_tag %] SWITCH myvar [% tt_end_tag %]
+    [% tt_start_tag %] CASE value1 [% tt_end_tag %]
+       ...
+    [% tt_start_tag %] CASE [ value2 value3 ] [% tt_end_tag %]   # multiple values to match
+       ...
+    [% tt_start_tag %] CASE myhash.keys [% tt_end_tag %]         # ditto
+       ...
+    [% tt_start_tag %] CASE [% tt_end_tag %]                     # default, or [% tt_start_tag %] CASE default [% tt_end_tag %]
+       ...
+    [% tt_start_tag %] END [% tt_end_tag %]
+  
+* New TRY / CATCH / FINAL construct for fully functional, nested
+  exception handling.  The block following the TRY is executed and
+  output if no exceptions are throw.  Otherwise, the relevant CATCH
+  block is executed.  CATCH types are hierarchical (e.g 'foo' catches
+  'foo.bar') or the CATCH type may be left blank or specified as [% tt_start_tag %]
+  CATCH default [% tt_end_tag %] to provide a default handler.  The contents of a
+  FINAL block, if specified, will be processed last of all, regardless
+  of the result (except an uncaught exception which is throw upwards
+  to any enclosing TRY block).
+  
+    [% tt_start_tag %] TRY [% tt_end_tag %]
+       ...blah...blah...
+       [% tt_start_tag %] CALL somecode [% tt_end_tag %]	  # may throw an exception
+       ...etc...
+       [% tt_start_tag %] INCLUDE someblock [% tt_end_tag %]    # may have a [% tt_start_tag %] THROW ... [% tt_end_tag %] directive
+       ...and so on...
+    [% tt_start_tag %] CATCH file [% tt_end_tag %]		  # catch system-generated 'file' exception 
+       ...
+    [% tt_start_tag %] CATCH DBI [% tt_end_tag %]		  # catch 'DBI' or 'DBI.*'
+       ...
+    [% tt_start_tag %] CATCH [% tt_end_tag %]	                  # catch anything else
+       ...
+    [% tt_start_tag %] FINAL [% tt_end_tag %]		          # optional
+       All done!
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+* New CLEAR directive to clear the current output buffer.  This is typically 
+  used in a CATCH block to clear the output of a failed TRY block.  Any output
+  generated in a TRY block up to the point that an exception was thrown will
+  be output by default.  The [% tt_start_tag %] CLEAR [% tt_end_tag %] directive in a catch block clears
+  this output from the TRY block.
+
+    [% tt_start_tag %] TRY [% tt_end_tag %]
+       blah blah blah, this is the current output block
+       [% tt_start_tag %] THROW some.error 'Danger Will Robinson!' [% tt_end_tag %]
+       not reached...
+    [% tt_start_tag %] CATCH [% tt_end_tag %]
+       [% tt_start_tag %] # at this point, the output block contains the 'blah blah...' line
+          # up to the point where the THROW occured, but we don't want it
+          CLEAR
+       [% tt_end_tag %]
+       Here we can add some more text if we want...
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+  In general, the CLEAR directive clears the current output from the
+  template or enclosing block.
+
+* New META directive allowing you to define metadata items for your
+  templates.  These are attached to the compiled template and wrapped
+  up as a Template::Document object.  The 'template' variable is a
+  reference to the current parent document and metadata items may be
+  accessed directly.  Of particular note is the fact that the
+  'template' variable is correctly defined for all PRE_PROCESS and
+  POST_PROCESS headers.  Thus, your headers and footers can access
+  items from the main template (e.g. title, author, section, keywords,
+  flags, etc) and display them or act accordingly.
+  
+  mytemplate:
+    [% tt_start_tag %] META 
+       title     = 'This is a Test'
+       author    = 'Andy Wardley'
+       copyright = &quot;2000, Andy Wardley&quot; 
+    [% tt_end_tag %]
+  
+    &lt;h1&gt;[% tt_start_tag %] template.title [% tt_end_tag %]&lt;/h1&gt;
+    blah blah
+  
+  header:   (a PRE_PROCESS template)
+    &lt;html&gt;
+    &lt;head&gt;&lt;title&gt;[% tt_start_tag %] template.title [% tt_end_tag %]&lt;/title&gt;&lt;/head&gt;
+    &lt;body&gt;
+  
+  footer:  (a POST_PROCESS template)
+    &lt;hr&gt;
+    &amp;copy; Copyright [% tt_start_tag %] template.copyright or '2000, MyCompany' [% tt_end_tag %]
+
+* New RAWPERL ... END block directive allows you to write raw Perl
+  code which is integrated intact and unsullied into the destination
+  template sub-routine.  The existing PERL ... END directive continues
+  to be supported, offering runtime evaluation of a block which may
+  contain other template directives, etc, which are first evaluated
+  (e.g. PERL...END processes the block and filters the output into
+  Perl evaluation at runtime).
+
+* New INSERT directive which inserts the contents of a file without 
+  processing it.
+
+* New WRAPPER directive which processes the following block into the
+  'content' variable and then INCLUDEs the named file.
+
+    [% tt_start_tag %] WRAPPER table [% tt_end_tag %]
+       blah blah blah
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+    [% tt_start_tag %] BLOCK table [% tt_end_tag %]
+    &lt;table&gt;
+    [% tt_start_tag %] content [% tt_end_tag %]
+    &lt;/table&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+* Comments now only extend to the end of the current line.
+
+    [% tt_start_tag %] # this is a comment
+       a = 10
+       # so is this
+       b = 20
+    [% tt_end_tag %]
+
+  Placing the '#' character immediately inside the directive will comment
+  out the entire directive
+
+    [% tt_start_tag %]# entire directive
+        is ignored
+    [% tt_end_tag %]
+
+* The TAGS directive can now be used to switch tag styles by name.
+  Several new tag styles are defined (e.g. html, asp, php, mason).
+
+    [% tt_start_tag %] TAGS html [% tt_end_tag %]
+    &lt;!-- INCLUDE header --&gt;
+
+* The output from any directive or block can now be captured and assigned to 
+  a variable.
+
+    [% tt_start_tag %] htext = INCLUDE header [% tt_end_tag %]
+    [% tt_start_tag %] btext = BLOCK [% tt_end_tag %]
+       blah blah
+       [% tt_start_tag %] x [% tt_end_tag %] [% tt_start_tag %] y [% tt_end_tag %] [% tt_start_tag %] z [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]
+  
+    # you can even assign the output of loops, conditions, etc.
+    [% tt_start_tag %] numbers = FOREACH n = [2, 3, 5, 7, 11, 13] [% tt_end_tag %]
+       blah blah [% tt_start_tag %] n [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+* The handling of complex expressions has been improved, permitting
+  basic directives to contain logical shortcut operators, etc.  All 
+  binary operators now have the same precedence rules as Perl.
+
+    [% tt_start_tag %] foo or bar [% tt_end_tag %]             # GET foo, or bar if foo is false (0/undef)
+    [% tt_start_tag %] CALL func1 and func2 [% tt_end_tag %]   # func2 only called if func1 returns true
+    [% tt_start_tag %] name = user.id or cgi.param('id') [% tt_end_tag %].
+
+* A new &quot;x ? y : z&quot; operation is provided as a shorthand for
+  &quot;if x then y else z&quot;
+
+    [% tt_start_tag %] foo = bar ? baz : qux [% tt_end_tag %]
+
+* A leading '$' on a variable is now used to indicate pre-interpolation
+  of that element.  This simplifies the syntax and makes it consistent
+  with double-quoted string interpolation and text block interpolation
+  via the INTERPOLATE flag.  If you've been relying on the version 1
+  &quot;feature&quot; that ignores the leading '$' then you'll need to change your
+  templates to remove the '$' characters (except where you really want 
+  them) or set the V1DOLLAR flag to 1 to revert to the version 1 
+  behaviour.  See the 'Gotchas' section below for more details.
+
+    # version 1
+    [% tt_start_tag %] hash.${key} [% tt_end_tag %]  [% tt_start_tag %] hash.${complex.key} [% tt_end_tag %]
+
+    # version 2
+    [% tt_start_tag %] hash.$key [% tt_end_tag %]    [% tt_start_tag %] hash.${complex.key} [% tt_end_tag %]
+
+* Various new pseudo-methods have been added for inspecting and manipulating
+  data.  The full list now looks something like this:
+
+      [% tt_start_tag %] var.defined [% tt_end_tag %]               # variable is defined
+      [% tt_start_tag %] var.length [% tt_end_tag %]                # length of string
+      [% tt_start_tag %] var.split(delim, limit) [% tt_end_tag %]   # split string as Perl does
+
+      [% tt_start_tag %] hash.keys [% tt_end_tag %]                 # return list of hash keys
+      [% tt_start_tag %] hash.values [% tt_end_tag %]               # ditto hash values
+      [% tt_start_tag %] hash.each [% tt_end_tag %]                 # ditto keys and values
+      [% tt_start_tag %] hash.import(hash2) [% tt_end_tag %]        # merge hash2 into hash
+
+      [% tt_start_tag %] list.size [% tt_end_tag %]                 # number of items in list
+      [% tt_start_tag %] list.max [% tt_end_tag %]                  # last item number (size - 1)
+      [% tt_start_tag %] list.first [% tt_end_tag %]                # first item    
+      [% tt_start_tag %] list.last [% tt_end_tag %]                 # last item
+      [% tt_start_tag %] list.push(item) [% tt_end_tag %]	      # add item to end
+      [% tt_start_tag %] list.pop [% tt_end_tag %]		      # remove item from end
+      [% tt_start_tag %] list.unshift(item) [% tt_end_tag %]	      # add item to front
+      [% tt_start_tag %] list.shift [% tt_end_tag %]	              # remove item from front
+      [% tt_start_tag %] list.reverse [% tt_end_tag %]              # return reversed order
+      [% tt_start_tag %] list.sort(field) [% tt_end_tag %]          # return alpha sorted order
+      [% tt_start_tag %] list.nsort(field) [% tt_end_tag %]         # return numerical sorted order
+      [% tt_start_tag %] list.join(joint) [% tt_end_tag %]          # return items joined into single string
+
+
+Configuration Options
+---------------------
+
+* Template blocks may be pre-defined using the new BLOCKS option.  These
+  may be specified as template text or as references to sub-routines or
+  Template::Document objects.
+
+    my $template = Template-&gt;new({
+	BLOCKS =&gt; {
+	    header =&gt; '&lt;html&gt;&lt;head&gt;&lt;title&gt;[% tt_start_tag %] title [% tt_end_tag %]&lt;/title&gt;&lt;/head&gt;&lt;body&gt;',
+	    footer =&gt; '&lt;/body&gt;&lt;/html&gt;',
+	    funky  =&gt; sub { blah_blah($blah); return $some_text },
+	}
+    });
+
+* Automatic error handling can be provided with the ERROR option.  This
+  allows you to specify a single template or hash array of templates which
+  should be used in the case of an uncaught exception being raised in the
+  a template.  In other words, if something in one of your templates
+  throws a 'dbi' error then you can define an ERROR template to catch
+  this.  The original template output is discarded and the ERROR template
+  processed in its place.  PRE_PROCESS and POST_PROCESS templates (e.g.
+  header and footers) are left intact.  This provides a particularly 
+  useful high-level error handling abstraction where you simply create
+  templates to handle particular exceptions and provide the mapping 
+  through the ERROR hash.
+
+    my $template = Template-&gt;new({
+	ERROR =&gt; {
+	    dbi        =&gt; 'error/database.html',   # DBI error
+	    'user.pwd' =&gt; 'error/badpasswd.html',  # invalid user password
+	    user       =&gt; 'user/index.html',	   # general 'user' handler
+	    default    =&gt; 'error/error.html',      # default error template
+	}
+    });
+
+* The INCLUDE_PATH is now fully dynamic and can be changed at any time.
+  The new Template::Provider which manages the loading of template files
+  will correctly adapt to chahges in the INCLUDE_PATH and act accordingly.
+
+* The LOAD_TEMPLATES option allows you to specify a list of one or more
+  Template::Provider object which will take responsibility for loading
+  templates.  Each provider can have it's own INCLUDE_PATH, caching
+  options (e.g CACHE_SIZE) and so on.  You can sub-class the
+  Template::Provider module to allow templates to be loaded from a
+  database, for example, and then define your new provider in the
+  LOAD_TEMPLATES list.  The providers are queried in order as a &quot;Chain 
+  of Responsiblity&quot;.  Each may return a compiled template, raise an
+  error, or decline to serve the template and pass control onto the
+  next provider in line.
+
+* The CACHE_SIZE option defines a maximum number of templates that will
+  be cached by the provider.  It is undefined by default, causing all
+  templates to be cached.  A value of 0 disables caching altogether while
+  a positive integer defines a maximum limit.  The cache (now built into
+  Template::Provider) is much smarter and will automatically reload and
+  compile modified source templates.
+
+* The Template::Provider cache can write compiled templates (e.g. Perl code)
+  to disk to create a persistant cache.  The COMPILE_EXT may be used to 
+  specify a filename extension (e.g. '.ttc') which is used to create
+  compiled template files.  These compiled template files 
+  can then be reloaded on subsequent invocations using via Perl's 
+  require() (which is about as fast as it can get).  The Template::Parser 
+  and Template::Grammar modules are loaded on demand, so if all templates
+  have been pre-compiled then the modules don't get loaded at all.  This 
+  is a big win, given that Template::Grammar is the biggy.
+
+* The ABSOLUTE and RELATIVE options are now used to enable the loading of
+  template files (via INCLUDE or PROCESS) that are specifies with absolute
+  (e.g. /tmp/somefile) or relative (e.g. ../tmp/another) filenames.  Both
+  are disabled by default.
+
+* The LOAD_PLUGINS option is similar to LOAD_TEMPLATES but allows you
+  to specify one or more plugin providers.  These take responsibility
+  for loading and instantiating plugins.  The Template::Plugins module
+  is the default provider and multiplexes requests out to other
+  Template::Plugin::* plugin modules.  Loading of plugins has been
+  simplified and improved in general The PLUGINS option can be used to
+  map plugin names to specific modules and PLUGIN_BASE can map plugins
+  into particular namespaces.  The LOAD_PERL option can be used to
+  load (almost) any regular Perl module and use it as a plugin.
+
+* The LOAD_FILTERS option is similar to LOAD_TEMPLATES and LOAD_PLUGINS, 
+  allowing one or more custom providers to be specified for providing
+  filters.  The Template::Filters module is the default provider here.
+
+* The TOLERANT option can be used to tailor the behaviour of providers
+  (e.g. Template::Provider, Template::Plugins, Template::Filters) when
+  they encounter an error.  By default, providers are not TOLERANT (0)
+  and will report all failures as errors.  When TOLERANT is set to 1,
+  they will ignore errors and return STATUS_DECLINED to give the next
+  provider a chance to deliver a valid resource.
+
+* The INTERPOLATE option is now automatically disabled within PERL and 
+  RAWPERL blocks to prevent Perl $variables from being interpreted as 
+  template variables.
+
+    # INTERPOLATE = 1
+    This $var will get interpolated...
+    [% tt_start_tag %] PERL [% tt_end_tag %]
+       # but these won't
+       my $foo = 'some value';
+       my $bar = 'another value';
+       # etc...
+    [% tt_start_tag %] END [% tt_end_tag %]
+    now we're interpolating variables again, like $var
+
+* Added the TRIM option to automatically removed leading and trailing 
+  whitespace from the output of templates and BLOCKs.
+
+* The CASE option has now been obsoleted and replaces by the ANYCASE 
+  option.  See comments elsewhere in this document ('Gotchas' below and 
+  notes for 2.00 beta 4) for further details.
+
+
+Templates Compiled to Perl Code
+-------------------------------
+
+Templates are now compiled to Perl code, with credit and respect due
+to Doug Steinwand for providing an implementation around which the
+new parser was built.  This brings a number of important benefits:
+
+* Speed and Memory Efficiency
+
+  Version 1 used a list of opcodes to represent directives and
+  lower-level operations.  These were evaluated by the hideously
+  contrived, and darkly sinister Template::Context::_evaluate()
+  method.  In version 2, all templates are parsed and rebuilt as Perl
+  code.  This is then evaluated and stored as a reference to a Perl
+  sub-routine which can then be executed and re-executed significantly
+  faster and with far less memory overhead.
+
+* Persistance.
+
+  Once a template has been compiled to Perl code it can be saved to
+  disk as a &quot;compiled template&quot; by defining the COMPILE_EXT option.
+  This allows you to specify a filename extension (e.g. '.ttc') which
+  is added to the template filename and used to create a new file
+  containg the Perl code.  Next time you use the template, even if
+  you've shut down your program/server/computer in the mean time, the
+  compiled template is there in a file as Perl code and is simply
+  require()d and executed.  It all happens significantly faster
+  because there's no Template::Parser to run.  In fact, if all your
+  templates are &quot;compiled&quot; on disk then the Template::Parser and
+  Template::Grammar modules won't even be loaded, further reducing
+  startup time and memory consumption (the grammar file, in particular
+  is rather large).  The Template::Provider module handles the
+  loading, caching and persistance of templates, and will examine file
+  timestamps and re-compiled modified templates as required.
+
+* Flexibility.  
+
+  Because &quot;compiled templates&quot; are now nothing more than Perl
+  sub-routines, you can use anyone or anything to generate them and
+  run them all under the same roof.  Different parser back-ends can
+  generate Perl code optimised for speed or functionality, for
+  example.  Or different parsers can compile different template
+  languages (PHP, ASP, Mason, roll-your-own, etc.) and run them
+  alongside regular templates.  Or if you don't trust a parser, you
+  can even write your own Perl code and have your templates execute as
+  fast as the code you can write.
+
+
+Other Enhancements and Internal Features
+----------------------------------------
+
+* Templates (i.e. sub-routines) now return their generated output,
+  rather than sending it to $context-&gt;output().  This speeds things 
+  up and makes the code simpler, as well as allowing greater 
+  flexibility in how template sub-routines can work.
+
+* Exceptions are now raised via Perl's die() and caught by an
+  enclosing eval { } block.  Again, this simplifies the code generated
+  and improves runtime efficiency.  The [% tt_start_tag %] RETURN [% tt_end_tag %] and [% tt_start_tag %] STOP [% tt_end_tag %]
+  directives are now implemented as special case exceptions which are
+  caught in the appropriate place and handled accordingly.
+
+* Local named BLOCK definitions are better behaved and don't permanently
+  mask any real files.  BLOCK definitions remain local to the template in 
+  which they're defined, although they can be accessed from templates 
+  INCLUDEd or PROCESSed from within.  The PROCESS directive will export 
+  defined BLOCKs to the caller (as with variables) whereas INCLUDE will
+  keep them &quot;private&quot;.
+
+* The Template::Stash object now encapsulates all the magical variable
+  resolution code.  Both simple and compound variables can be accessed
+  or updated using the get() and set() methods, with all variable binding
+  magic happening automatically.
+
+* The Template::Context object is now greatly simplified.  This acts
+  as a general interface to the Template Toolkit functionality, being
+  a collection of the various other modules that actually implement
+  the functionality (e.g. Template::Stash, Template::Provider,
+  Template::Document, Template::Plugins, etc.)
+
+* The Template::Provider object provides a general facility for
+  retrieving templates from disk (or other source), and if necessary
+  compiling via a call to a Template::Parser helper object.  Multiple
+  Template::Provider objects may be chained together, each with their
+  own caching options, and so on.
+
+* The Template::Parser object now compiles template text into Perl
+  code and then evaluates it into a sub-routine reference using Perl's
+  eval().  This is then wrapped up into a Template::Document object,
+  including any metadata items and/or additional named BLOCKs defined
+  in the input template.
+
+* The Template::Document object is a thin wrapper around a compiled
+  template sub-routine.  It provides a process() method for processing
+  the template and a blocks() method for returning a reference to the
+  hash array of any additional named BLOCKs defined in the original
+  template text.  An AUTOLOAD method returns values of metadata items,
+  allowing a Template::Document reference to be used as the 'template'
+  variable.
+
+* The Template::Service module provides a high-level service for
+  processing templates, allowing PRE_PROCESS and POST_PROCESS templates
+  to be specified along with an ERROR handling hash.
+
+* The Template::Base module defines a common base class for many of
+  the toolkit modules.  It implements shared functionality such as a
+  constructor, error reporting and handling, etc.  Modules are now
+  much easier to sub-class, all using separate new() and _init()
+  methods.
+
+* The Template::Config module provides methods for loading and
+  instantiating different Template Toolkit modules.  Using this
+  factory-based approach makes it far easier to change the default
+  object class for a specific part of the toolkit.  e.g.
+
+      use Template;
+      use Template::Config;
+
+      $Template::Config::PARSER = 'MyOrg::Template::MyParser';
+
+      # $tt object will create and use a MyOrg::Template::MyParser 
+      # object as PARSER
+      my $tt = Template-&gt;new({ ... })
+
+* The Template::Test module has been enhanced to make it easier to test
+  more advanced TT features.  You can now define multiple TT processors
+  and switch between them for different test with the '-- use name --'
+  directive.  Also added the '-- process --' directive which can be
+  added after '-- expect --' to hav the expected output processed by
+  TT before comparison.
+
+* The Template module remains, as it ever was, a simple front-end to
+  the Template Toolkit.  This creates a single Template::Service to
+  which it delegates control for processing templates.  Output is
+  returned according to the OUTPUT options specified for the module
+  and/or any output option passed explicitly to the process() method.
+
+
+New Filters
+-----------
+
+* 'upper' and 'lower' filters perform case folding of text.
+
+* 'eval' can be used to evaluate Template Toolkit directives at runtime.
+
+* 'perl' evaluates Perl code if (and only if) the EVAL_PERL flag is set.
+
+* 'stderr' is a simple filter to STDERR.
+
+* 'file' is a new alias for the 'redirect' filter.  The OUTPUT_PATH option
+  must be set.
+
+
+New Plugins
+-----------
+
+* The DBI plugin is now distributed with the Template Toolkit.
+
+* The Date plugin formats dates and times via the POSIX strftime() sub.
+
+* The Iterator plugin provides access to the Template::Iterator module.
+
+* The Dumper plugin provides an interface to the Data::Dumper module.
+
+* The Wrap and Autoformat plugins interface to the Text::Wrap and 
+  Text::Autoformat modules respectively.
+
+* The XML::DOM and XML::XPath plugins provide interfaces to the relevant
+  XML modules.
+
+
+Utility Scripts
+---------------
+
+* Added the '--define var=val' option to ttree.
+
+
+Gotchas
+-------
+
+Things that have changed between version 1 and 2 that might catch you 
+out.  
+
+* Bare CATCH blocks are no longer permitted and must be explicitly
+  scoped with a matching TRY.  In most cases, this simply means adding
+  a [% tt_start_tag %] TRY [% tt_end_tag %] to the start of any templates that define CATCH blocks,
+  and ensuring that the CATCH blocks are moved to the end of the file
+  (or relevant place).
+
+       # version 1 - no longer supported
+       blah blah blah...some error occurs
+
+       [% tt_start_tag %] CATCH some_kind_of_error [% tt_end_tag %]
+          handler template...
+       [% tt_start_tag %] END [% tt_end_tag %]
+
+       # version 2
+       [% tt_start_tag %] TRY [% tt_end_tag %]
+       blah blah blah...some error occurs...
+
+       [% tt_start_tag %] CATCH some_kind_of_error [% tt_end_tag %]
+          handler template...
+       [% tt_start_tag %] END [% tt_end_tag %]
+
+  Also be aware that this may change the expected output in case of
+  errors.  By default, all output in the TRY block up to the point of
+  error will be returned, with the relevant catch block, and then and
+  further template output appended.  You can use [% tt_start_tag %] CLEAR [% tt_end_tag %] within a
+  CATCH block to clear the output from the TRY block, if you prefer.
+  TRY blocks can be nested indefinately.
+
+* The ERROR directive is no longer supported.  It was very ill-defined
+  anyway and serves no purpose that can't be acheived by defining
+  custom filters, error handlers bound to template variables, or
+  whatever.  I haven't implemented any special error or logging
+  facilities, other than the general purpose exception handling, but
+  welcome any thoughts on what or if anything else is needed.
+
+* The ERROR option is also different.  It could previously be used
+  to specify an error handling sub-routine, but is no longer required
+  (see previous point).  The ERROR option in version 2 is used to 
+  define a map of error types to template names for automatic 
+  redirection for error handling.
+
+* The current exception caught in a catch block is now aliased to the
+  variable 'error' rather than 'e'.  This is much more logical, IMHO,
+  and was only prevented previously by 'error' being a reserved word.
+  Note that 'e' is still defined, in addition to 'error'.  This may be
+  deprecated at some point in the future.
+
+* The use of a leading '$' on variables is no longer optional, and
+  should only be used to explicitly to indicate interpolatation of a
+  variable name.  Most of the time you *don't* want to do this, so
+  leave the '$' off.  This represent a slight shift away from the
+  (optional) Perlness of the language, but I think it's a necessary
+  step to improve the clarity and consistency of the language.
+
+    As previously discussed on the mailing list, in interpolated text
+  (i.e. a &quot;double quoted&quot; string or regular template text with
+  INTERPOLATE set), both '$foo' or '${foo}' are interpolated as the
+  value of the variable 'foo'.  This is good because it is a de-facto
+  standard, consistent with Perl, shell, etc.  But inside a directive,
+  [% tt_start_tag %] $foo [% tt_end_tag %] and [% tt_start_tag %] ${foo} [% tt_end_tag %] mean different things, the first being
+  equivalent to [% tt_start_tag %] foo [% tt_end_tag %] or [% tt_start_tag %] GET foo [% tt_end_tag %] (the leading '$' is
+  ignored) but the second actually fetching a variable whose name is
+  stored in the variable 'foo'.  In other words, '${foo}' interpolates
+  to the value of foo ('bar', say) and then this is used as the
+  parameter to GET (which itself is optional).  Thus, in this case, [% tt_start_tag %]
+  ${foo} [% tt_end_tag %] is [% tt_start_tag %] GET ${foo} [% tt_end_tag %] is [% tt_start_tag %] GET bar [% tt_end_tag %].
+
+  This makes more sense if you look at the common example of
+  accesing an entry from a hash array using the value of an variable
+  as the key (e.g. $hash-&gt;{ $key }).  In version 1, the leading '$' on
+  variables is ignored, meaning that the following are NOT identical.
+
+      # version 1
+      [% tt_start_tag %] hash.$key   [% tt_end_tag %]     # ERROR - '$' ignored =&gt; [% tt_start_tag %] hash.key [% tt_end_tag %]
+      [% tt_start_tag %] hash.${key} [% tt_end_tag %]     # OK - '$key' is interpolated first
+
+  It gets more confusing if you excercise your right to add optional
+  leading '$'s in other places (which is one reason why I've always
+  suggested against their use).
+
+      # version 1 - same as above
+      [% tt_start_tag %] $hash.$key   [% tt_end_tag %]
+      [% tt_start_tag %] $hash.${key} [% tt_end_tag %]
+
+  In particular, that last example should demonstrate the
+  inconsistency.  Unlike interpolated text, '$...' and '${...}' are
+  not treated the same and '$hash' is not interpolate while '${key}'
+  is.  The only consistent solution I can see to this is to make both
+  '$xxx' and '${xxx}' indicate interpolation in all cases, so that's
+  what I've done.  In version 2, the syntax becomes a lot clearer and
+  aligns more closely to a markup language than a programming
+  language.  I think this is a Good Thing, but let me know what you
+  think...
+
+  Here's the Version 2 summary, assuming INTERPOLATE is set.
+
+      # version 2
+      my name is $name
+      my name is $user.name
+      my name is ${user.name}
+
+
+      [% tt_start_tag %] GET name [% tt_end_tag %]                 [% tt_start_tag %] name [% tt_end_tag %]
+      [% tt_start_tag %] GET user.name [% tt_end_tag %]            [% tt_start_tag %] user.name [% tt_end_tag %]
+      [% tt_start_tag %] GET people.fred [% tt_end_tag %]          [% tt_start_tag %] people.fred [% tt_end_tag %]
+      [% tt_start_tag %] GET people.$name        [% tt_end_tag %]  [% tt_start_tag %] people.$name [% tt_end_tag %]
+      [% tt_start_tag %] GET people.${user.name} [% tt_end_tag %]  [% tt_start_tag %] people.${user.name} [% tt_end_tag %]
+
+      [% tt_start_tag %] INCLUDE header 
+         title = &quot;Home Page for $name&quot;
+      [% tt_end_tag %]
+      [% tt_start_tag %] INCLUDE header
+         title = &quot;Home Page for $user.name&quot;
+      [% tt_end_tag %]
+      [% tt_start_tag %] INCLUDE header
+         title = &quot;Home Page for ${user.name}&quot;
+      [% tt_end_tag %]
+
+* Changed default TAG_STYLE to only recognise [% tt_start_tag %] ... [% tt_end_tag %] and not the MetaText
+  compatability %% ... %% style.  Set TAG_STYLE =&gt; 'template1' to accept both,
+  or 'metatext' for just %% ... %%
+
+* Changed how error/return values should be returned from user code.
+  All errors should be thrown via one of the following:
+
+    die $error_msg;
+    die Template::Exception-&gt;new($type, $info);
+    $context-&gt;throw($msg);
+    $context-&gt;throw($type, $info);
+    $context-&gt;throw($exception);
+
+* USERDIR and USERBLOCK are not supported (they were experimental and 
+  undocumented, anyway)
+
+* $Template::Directive::While::MAXITER is now 
+  $Template::Directive::WHILE_MAX and may change again.
+
+* into() filter is now obsolete.  You can now simply assign the output of
+  another directive or block to a variable.
+
+    [% tt_start_tag %] x = INCLUDE foo [% tt_end_tag %]
+    [% tt_start_tag %] y = BLOCK [% tt_end_tag %]
+       blah blah blah 
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+* The CASE option has been removed and replaced with the ANYCASE option
+  which is the logical opposite.  Directive keywords should now be UPPER
+  CASE by default and the ANYCASE option can be enabled to revert to 
+  the previous behaviour of accept keywords in any case.
+
+* The IMPORT directive and magical variable have been removed and 
+  replaced by a general purpose virtual hash method, import().
+  [% tt_start_tag %] IMPORT myhash [% tt_end_tag %] should now be written [% tt_start_tag %] import(myhash) [% tt_end_tag %]
+  and [% tt_start_tag %] myhash.IMPORT = another.hash [% tt_end_tag %] should be written as
+  [% tt_start_tag %] myhash.import(another.hash) [% tt_end_tag %]
+
+
+</pre>

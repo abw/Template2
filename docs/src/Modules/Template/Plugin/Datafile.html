@@ -1,0 +1,112 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_Datafile'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='BUGS';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE mydata = datafile('/path/to/datafile') [% tt_end_tag %]
+    [% tt_start_tag %] USE mydata = datafile('/path/to/datafile', delim = '|') [% tt_end_tag %]
+   
+    [% tt_start_tag %] FOREACH record = mydata [% tt_end_tag %]
+       [% tt_start_tag %] record.this [% tt_end_tag %]  [% tt_start_tag %] record.that [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This plugin provides a simple facility to construct a list of hash 
+references, each of which represents a data record of known structure,
+from a data file.
+</p>
+<pre>    [% tt_start_tag %] USE datafile(filename) [% tt_end_tag %]</pre>
+<p>
+A absolute filename must be specified (for this initial implementation at 
+least - in a future version it might also use the INCLUDE_PATH).  An 
+optional 'delim' parameter may also be provided to specify an alternate
+delimiter character.
+</p>
+<pre>    [% tt_start_tag %] USE userlist = datafile('/path/to/file/users')     [% tt_end_tag %]
+    [% tt_start_tag %] USE things   = datafile('items', delim = '|') [% tt_end_tag %]</pre>
+<p>
+The format of the file is intentionally simple.  The first line
+defines the field names, delimited by colons with optional surrounding
+whitespace.  Subsequent lines then defines records containing data
+items, also delimited by colons.  e.g.
+</p>
+<pre>    id : name : email : tel
+    abw : Andy Wardley : abw@cre.canon.co.uk : 555-1234
+    neilb : Neil Bowers : neilb@cre.canon.co.uk : 555-9876</pre>
+<p>
+Each line is read, split into composite fields, and then used to 
+initialise a hash array containing the field names as relevant keys.
+The plugin returns a blessed list reference containing the hash 
+references in the order as defined in the file.
+</p>
+<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]
+       [% tt_start_tag %] user.id [% tt_end_tag %]: [% tt_start_tag %] user.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The first line of the file <b>must</b> contain the field definitions.
+After the first line, blank lines will be ignored, along with comment
+line which start with a '#'.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='BUGS'
+-%]<p>
+Should handle file names relative to INCLUDE_PATH.
+Doesn't permit use of ':' in a field.  Some escaping mechanism is required.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%]
+</p>
+[%- END %]
+
+

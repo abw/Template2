@@ -1,0 +1,321 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Manual'
+        page = 'Plugins'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This section lists the standard plugins which can be used to extend the
+runtime functionality of the Template Toolkit. The plugins are
+distributed with the Template Toolkit but may required additional
+modules from CPAN.
+</p>
+
+<ul>
+
+<li><b>Autoformat</b><br>
+<p>
+The Autoformat plugin is an interface to Damian Conway's Text::Autoformat 
+Perl module which provides advanced text wrapping and formatting.  See
+[% ttlink('Template::Plugin::Autoformat') -%] and [% ttlink('Text::Autoformat') -%] for further 
+details.
+</p>
+<pre>    [% tt_start_tag %] USE autoformat(left=10, right=20) [% tt_end_tag %]
+    [% tt_start_tag %] autoformat(mytext) [% tt_end_tag %]	    # call autoformat sub
+    [% tt_start_tag %] mytext FILTER autoformat [% tt_end_tag %]  # or use autoformat filter</pre>
+<p>
+The Text::Autoformat module is available from CPAN:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/Text/</pre>
+
+
+
+<li><b>CGI</b><br>
+<p>
+The CGI plugin is a wrapper around Lincoln Stein's 
+&lt;lstein@genome.wi.mit.edu&gt; CGI.pm module.  The plugin is 
+distributed with the Template Toolkit (see [% ttlink('Template::Plugin::CGI') -%])
+and the CGI module itself is distributed with recent versions Perl,
+or is available from CPAN.
+</p>
+<pre>    [% tt_start_tag %] USE CGI [% tt_end_tag %]
+    [% tt_start_tag %] CGI.param('param_name') [% tt_end_tag %]
+    [% tt_start_tag %] CGI.start_form [% tt_end_tag %]
+    [% tt_start_tag %] CGI.popup_menu( Name   =&gt; 'color', 
+                       Values =&gt; [ 'Green', 'Brown' ] ) [% tt_end_tag %]
+    [% tt_start_tag %] CGI.end_form [% tt_end_tag %]</pre>
+
+
+
+<li><b>Datafile</b><br>
+<p>
+Provides an interface to data stored in a plain text file in a simple
+delimited format.  The first line in the file specifies field names
+which should be delimiter by any non-word character sequence.
+Subsequent lines define data using the same delimiter as int he first
+line.  Blank lines and comments (lines starting '#') are ignored.  See
+[% ttlink('Template::Plugin::Datafile') -%] for further details.
+</p>
+<p>
+/tmp/mydata:
+</p>
+<pre>    # define names for each field
+    id : email : name : tel
+    # here's the data
+    fred : fred@here.com : Fred Smith : 555-1234
+    bill : bill@here.com : Bill White : 555-5678</pre>
+<p>
+example:
+</p>
+<pre>    [% tt_start_tag %] USE userlist = datafile('/tmp/mydata') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]
+       [% tt_start_tag %] user.name [% tt_end_tag %] ([% tt_start_tag %] user.id [% tt_end_tag %])
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+
+<li><b>Date</b><br>
+<p>
+The Date plugin provides an easy way to generate formatted time and date
+strings by delegating to the POSIX strftime() routine.   See
+[% ttlink('Template::Plugin::Date') -%] and [% ttlink('POSIX') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE date [% tt_end_tag %]
+    [% tt_start_tag %] date.format [% tt_end_tag %]		# current time/date</pre>
+<pre>    File last modified: [% tt_start_tag %] date.format(template.modtime) [% tt_end_tag %]</pre>
+
+
+
+<li><b>Directory</b><br>
+<p>
+The Directory plugin provides a simple interface to a directory and
+the files within it.  See [% ttlink('Template::Plugin::Directory') -%] for further
+details.
+</p>
+<pre>    [% tt_start_tag %] USE dir = Directory('/tmp') [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH file = dir.files [% tt_end_tag %]
+	# all the plain files in the directory
+    [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH file = dir.dirs [% tt_end_tag %]
+	# all the sub-directories
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+
+<li><b>DBI</b><br>
+<p>
+The DBI plugin, developed by Simon Matthews
+&lt;sam@knowledgepool.com&gt;, brings the full power of Tim Bunce's
+&lt;Tim.Bunce@ig.co.uk&gt; database interface module (DBI) to your
+templates.  See [% ttlink('Template::Plugin::DBI') -%] and [% ttlink('DBI') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE DBI('dbi:driver:database', 'user', 'pass') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH user = DBI.query( 'SELECT * FROM users' ) [% tt_end_tag %]
+       [% tt_start_tag %] user.id [% tt_end_tag %] [% tt_start_tag %] user.name [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The DBI and relevant DBD modules are available from CPAN:
+</p>
+<pre>  http://www.cpan.org/modules/by-module/DBI/</pre>
+
+
+
+<li><b>Dumper</b><br>
+<p>
+The Dumper plugin provides an interface to the Data::Dumper module.  See
+[% ttlink('Template::Plugin::Dumper') -%] and [% ttlink('Data::Dumper') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE dumper(indent=0, pad=&quot;&lt;br&gt;&quot;) [% tt_end_tag %]
+    [% tt_start_tag %] dumper.dump(myvar, yourvar) [% tt_end_tag %]</pre>
+
+
+
+<li><b>File</b><br>
+<p>
+The File plugin provides a general abstraction for files and can be
+used to fetch information about specific files within a filesystem.
+See [% ttlink('Template::Plugin::File') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE File('/tmp/foo.html') [% tt_end_tag %]
+    [% tt_start_tag %] File.name [% tt_end_tag %]     # foo.html
+    [% tt_start_tag %] File.dir [% tt_end_tag %]      # /tmp
+    [% tt_start_tag %] File.mtime [% tt_end_tag %]    # modification time</pre>
+
+
+
+<li><b>Format</b><br>
+<p>
+The Format plugin provides a simple way to format text according to a
+printf()-like format.   See [% ttlink('Template::Plugin::Format') -%] for further 
+details.
+</p>
+<pre>    [% tt_start_tag %] USE bold = format('&lt;b&gt;%s&lt;/b&gt;') [% tt_end_tag %]
+    [% tt_start_tag %] bold('Hello') [% tt_end_tag %]</pre>
+
+
+
+<li><b>Iterator</b><br>
+<p>
+The Iterator plugin provides a way to create a Template::Iterator
+object to iterate over a data set.  An iterator is created
+automatically by the FOREACH directive and is aliased to the 'loop'
+variable.  This plugin allows an iterator to be explicitly created
+with a given name, or the default plugin name, 'iterator'.  See
+[% ttlink('Template::Plugin::Iterator') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE iterator(list, args) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH item = iterator [% tt_end_tag %]
+       [% tt_start_tag %] '&lt;ul&gt;' IF iterator.first [% tt_end_tag %]
+       &lt;li&gt;[% tt_start_tag %] item [% tt_end_tag %]
+       [% tt_start_tag %] '&lt;/ul&gt;' IF iterator.last [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+
+<li><b>Table</b><br>
+<p>
+The Table plugin allows you to format a list of data items into a 
+virtual table by specifying a fixed number of rows or columns, with 
+an optional overlap.  See [% ttlink('Template::Plugin::Table') -%] for further 
+details.
+</p>
+<pre>    [% tt_start_tag %] USE table(list, rows=10, overlap=1) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH item = table.col(3) [% tt_end_tag %]
+       [% tt_start_tag %] item [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+
+<li><b>URL</b><br>
+<p>
+The URL plugin provides a simple way of constructing URLs from a base
+part and a variable set of parameters.  See [% ttlink('Template::Plugin::URL') -%]
+for further details.
+</p>
+<pre>    [% tt_start_tag %] USE mycgi = url('/cgi-bin/bar.pl', debug=1) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] mycgi [% tt_end_tag %]
+       # ==&gt; /cgi/bin/bar.pl?debug=1</pre>
+<pre>    [% tt_start_tag %] mycgi(mode='submit') [% tt_end_tag %]
+       # ==&gt; /cgi/bin/bar.pl?mode=submit&amp;debug=1</pre>
+
+
+
+<li><b>Wrap</b><br>
+<p>
+The Wrap plugin uses the Text::Wrap module by David Muir Sharnoff 
+&lt;muir@idiom.com&gt; (with help from Tim Pierce and many many others)
+to provide simple paragraph formatting.  See [% ttlink('Template::Plugin::Wrap') -%]
+and [% ttlink('Text::Wrap') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE wrap [% tt_end_tag %]
+    [% tt_start_tag %] wrap(mytext, 40, '* ', '  ') [% tt_end_tag %]	# use wrap sub
+    [% tt_start_tag %] mytext FILTER wrap(40) -[% tt_end_tag %]	# or wrap FILTER</pre>
+<p>
+The Text::Wrap module is available from CPAN:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/Text/</pre>
+
+
+
+<li><b>XML::DOM</b><br>
+<p>
+The XML::DOM plugin gives access to the XML Document Object Module via
+Clark Cooper &lt;cooper@sch.ge.com&gt; and Enno Derksen's 
+&lt;enno@att.com&gt; XML::DOM module.  See [% ttlink('Template::Plugin::XML::DOM') -%] 
+and [% ttlink('XML::DOM') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE dom = XML.DOM [% tt_end_tag %]
+    [% tt_start_tag %] doc = dom.parse(filename) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH node = doc.getElementsByTagName('CODEBASE') [% tt_end_tag %]
+       * [% tt_start_tag %] node.getAttribute('href') [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The plugin requires the XML::DOM module, available from CPAN:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
+
+
+
+<li><b>XML::XPath</b><br>
+<p>
+The XML::XPath plugin provides an interface to Matt Sergeant's
+&lt;matt@sergeant.org&gt; XML::XPath module.  See 
+[% ttlink('Template::Plugin::XML::XPath') -%] and [% ttlink('XML::XPath') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE xpath = XML.XPath(xmlfile) [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH page = xpath.findnodes('/html/body/page') [% tt_end_tag %]
+       [% tt_start_tag %] page.getAttribute('title') [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The plugin requires the XML::XPath module, available from CPAN:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
+
+
+
+<li><b>XML::RSS</b><br>
+<p>
+The XML::RSS plugin is a simple interface to Jonathan Eisenzopf's
+&lt;eisen@pobox.com&gt; XML::RSS module.  A RSS (Rich Site Summary)
+file is typically used to store short news 'headlines' describing
+different links within a site.  This plugin allows you to parse RSS
+files and format the contents accordingly using templates.  
+See [% ttlink('Template::Plugin::XML::RSS') -%] and [% ttlink('XML::RSS') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE news = XML.RSS(filename) [% tt_end_tag %]
+   
+    [% tt_start_tag %] FOREACH item = news.items [% tt_end_tag %]
+       &lt;a href=&quot;[% tt_start_tag %] item.link [% tt_end_tag %]&quot;&gt;[% tt_start_tag %] item.title [% tt_end_tag %]&lt;/a&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The XML::RSS module is available from CPAN:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+
+

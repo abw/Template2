@@ -1,0 +1,101 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Exception'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    use Template::Exception;</pre>
+<pre>    my $exception = Template::Exception-&gt;new($type, $info);
+    $type = $exception-&gt;type;
+    $info = $exception-&gt;info;
+    ($type, $info) = $exception-&gt;type_info;</pre>
+<pre>    print $exception-&gt;as_string();</pre>
+<pre>    $handler = $exception-&gt;select_handler(\@candidates);</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Template::Exception module defines an object class for
+representing exceptions within the template processing life cycle.
+Exceptions can be raised by modules within the Template Toolkit, or
+can be generated and returned by user code bound to template
+variables.
+</p>
+<p>
+Exceptions can be raised in a template using the THROW directive,
+</p>
+<pre>    [% tt_start_tag %] THROW user.login 'no user id: please login' [% tt_end_tag %]</pre>
+<p>
+or by calling the throw() method on the current Template::Context object,
+</p>
+<pre>    $context-&gt;throw('user.passwd', 'Incorrect Password');
+    $context-&gt;throw('Incorrect Password');    # type 'undef'</pre>
+<p>
+or from Perl code by calling die() with a Template::Exception object,
+</p>
+<pre>    die Template::Exception-&gt;new('user.denied', 'Invalid User ID');</pre>
+<p>
+or by simply calling die() with an error string.  This is
+automagically caught and converted to an  exception of 'undef'
+type which can then be handled in the usual way.
+</p>
+<pre>    die &quot;I'm sorry Dave, I can't do that&quot;;</pre>
+<p>
+Each exception is defined by its type and a information component
+(e.g. error message).  The type can be any identifying string and may
+contain dotted components (e.g. 'foo', 'foo.bar', 'foo.bar.baz').
+Exception types are considered to be hierarchical such that 'foo.bar'
+would be a specific type of the more general 'foo' type.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%], [% ttlink('Template::Context', 'Template::Context') -%]
+</p>
+[%- END %]
+
+

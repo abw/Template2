@@ -1,0 +1,140 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_URL'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE url('/cgi-bin/foo.pl') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] url(debug = 1, id = 123) [% tt_end_tag %]
+       # ==&gt; /cgi/bin/foo.pl?debug=1&amp;amp;id=123</pre>
+<pre>    [% tt_start_tag %] USE mycgi = url('/cgi-bin/bar.pl', mode='browse', debug=1) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] mycgi [% tt_end_tag %]
+       # ==&gt; /cgi/bin/bar.pl?mode=browse&amp;amp;debug=1</pre>
+<pre>    [% tt_start_tag %] mycgi(mode='submit') [% tt_end_tag %]
+       # ==&gt; /cgi/bin/bar.pl?mode=submit&amp;amp;debug=1</pre>
+<pre>    [% tt_start_tag %] mycgi(debug='d2 p0', id='D4-2k[4]') [% tt_end_tag %]
+       # ==&gt; /cgi-bin/bar.pl?mode=browse&amp;amp;debug=d2%20p0&amp;amp;id=D4-2k%5B4%5D</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The URL plugin can be used to construct complex URLs from a base stem 
+and a hash array of additional query parameters.
+</p>
+<p>
+The constructor should be passed a base URL and optionally, a hash array
+reference of default parameters and values.  Used from with a Template
+Documents, this would look something like the following:
+</p>
+<pre>    [% tt_start_tag %] USE url('http://www.somewhere.com/cgi-bin/foo.pl') [% tt_end_tag %]
+    [% tt_start_tag %] USE url('/cgi-bin/bar.pl', mode='browse') [% tt_end_tag %]
+    [% tt_start_tag %] USE url('/cgi-bin/baz.pl', mode='browse', debug=1) [% tt_end_tag %]</pre>
+<p>
+When the plugin is then called without any arguments, the default base
+and parameters are returned as a formatted query string.  
+</p>
+<pre>    [% tt_start_tag %] url [% tt_end_tag %]</pre>
+<p>
+For the above three examples, these will produce the following outputs:
+</p>
+<pre>    http://www.somewhere.com/cgi-bin/foo.pl
+    /cgi-bin/bar.pl?mode=browse
+    /cgi-bin/baz.pl?mode=browse&amp;amp;debug=1</pre>
+<p>
+Additional parameters may be also be specified:
+</p>
+<pre>    [% tt_start_tag %] url(mode='submit', id='wiz') [% tt_end_tag %]</pre>
+<p>
+Which, for the same three examples, produces:
+</p>
+<pre>    http://www.somewhere.com/cgi-bin/foo.pl?mode=submit&amp;amp;id=wiz
+    /cgi-bin/bar.pl?mode=browse&amp;amp;id=wiz
+    /cgi-bin/baz.pl?mode=browse&amp;amp;debug=1&amp;amp;id=wiz</pre>
+<p>
+A new base URL may also be specified as the first option:
+</p>
+<pre>    [% tt_start_tag %] url('/cgi-bin/waz.pl', test=1) [% tt_end_tag %]</pre>
+<p>
+producing
+</p>
+<pre>    /cgi-bin/waz.pl?test=1
+    /cgi-bin/waz.pl?mode=browse&amp;amp;test=1
+    /cgi-bin/waz.pl?mode=browse&amp;amp;debug=1&amp;amp;test=1</pre>
+<p>
+The ordering of the parameters is non-deterministic due to fact that 
+Perl's hashes themselves are unordered.  This isn't a problem as the 
+ordering of CGI parameters is insignificant (to the best of my knowledge).
+All values will be properly escaped thanks to some code borrowed from
+Lincoln Stein's CGI.pm.  e.g.
+</p>
+<pre>    [% tt_start_tag %] USE url('/cgi-bin/woz.pl') [% tt_end_tag %]
+    [% tt_start_tag %] url(name=&quot;Elrich von Benjy d'Weiro&quot;) [% tt_end_tag %]</pre>
+<p>
+Here the spaces and &quot;'&quot; character are escaped in the output:
+</p>
+<pre>    /cgi-bin/woz.pl?name=Elrich%20von%20Benjy%20d%27Weiro</pre>
+<p>
+Alternate name may be provided for the plugin at construction time
+as per regular Template Toolkit syntax.
+</p>
+<pre>    [% tt_start_tag %] USE mycgi = url('cgi-bin/min.pl') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] mycgi(debug=1) [% tt_end_tag %]</pre>
+<p>
+Note that in the following line, additional parameters are seperated
+by '&amp;amp;', while common usage on the Web is to just use '&amp;'. '&amp;amp;'
+is actually the Right Way to do it. See this URL for more information:
+http://ppewww.ph.gla.ac.uk/~flavell/www/formgetbyurl.html
+</p>
+<pre>    /cgi-bin/waz.pl?mode=browse&amp;amp;debug=1&amp;amp;test=1</pre>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%]
+</p>
+[%- END %]
+
+

@@ -1,0 +1,134 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Tools'
+        page = 'ttree'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    ttree [options] [files]</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The <file>ttree</file> script is used to process entire directory trees containing
+template files.  The resulting output from processing each file is then 
+written to a corresponding file in a destination directory.  The script
+compares the modification times of source and destination files (where
+they already exist) and processes only those files that have been modified.
+In other words, it is the equivalent of 'make' for the Template Toolkit.
+</p>
+<p>
+It supports a number of options which can be used to configure
+behaviour, define locations and set Template Toolkit options.  The
+script first reads the <file>.ttreerc</file> configuration file in the HOME
+directory, or an alternative file specified in the TTREERC environment
+variable.  Then, it processes any command line arguments, including
+any additional configuration files specified via the <b>-f</b> (file) option.
+</p>
+<p>
+A typical <file>.ttreerc</file> file might look like this:
+</p>
+<pre>    src    = /home/abw/websrc/doc
+    dest   = /home/abw/public_html
+    lib    = /home/abw/websrc/lib
+    lib    = /usr/local/templates/lib
+    cfg    = /home/abw/.ttree
+    ignore = \b(CVS|RCS)\b
+    ignore = ^#
+    copy   = \.(gif|png)$ 
+    accept = \.[ah]tml$</pre>
+<p>
+The <b>src</b> option indicates a directory containing the template files
+to be processed.  A list of files may be specified on the command line
+and each will be processed in turn, writing the generated output to a
+corresponding file in the <b>dest</b> directory.  If no files are
+explicitly named then all files in the <b>src</b> directory will be
+processed.  The <b>-r</b> (recurse) option will also cause sub-directories
+to be searched for files.  A source file is only processed if it has a
+later modification time than any corresponding destination file.
+Files will always be processed, regardless of modification times, if
+they are named explicitly on the command line, or the <b>-a</b> (all)
+option is used.
+</p>
+<p>
+The <b>lib</b> option may be specified any number of times to indicate
+directories in which the Template Toolkit should look for other
+template files (INCLUDE_PATH) that it may need to INCLUDE or PROCESS,
+but don't represent complete documents that should be processed in
+their own right (e.g. headers, footers, menu).  The <b>cfg</b> directory
+specifies the location of additional configuration files that may be
+loaded via the <b>-f</b> option.  
+</p>
+<p>
+The <b>ignore</b>, <b>copy</b> and <b>accept</b> options are used to specify Perl
+regexen to filter file names.  Files that match any of the <b>ignore</b>
+options will not be processed.  Remaining files that match any of the
+<b>copy</b> regexen will be copied to the destination directory.  Remaining
+files that then match any of the <b>accept</b> criteria are then processed
+via the Template Toolkit.  If no <b>accept</b> parameter is specified then 
+all files will be accepted for processing if not already copied or
+ ignored.
+</p>
+<p>
+Additional options may be used to set Template Toolkit parameters.
+For example:
+</p>
+<pre>   interpolate        
+   post_chomp         
+   pre_process  = header
+   post_process = footer
+   perl5lib     = /home/abw/lib/perl5</pre>
+<p>
+See <b>ttree --help</b> for a summary of options.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Tools::tpage', 'tpage') -%]
+</p>
+[%- END %]
+
+

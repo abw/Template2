@@ -1,0 +1,159 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Config'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='PUBLIC METHODS'
+                         subs=['load($module)', 'parser(\%config)', 'provider(\%config)', 'plugins(\%config)', 'filters(\%config)', 'stash(\%vars)', 'context(\%config)', 'service(\%config)', 'instdir($dir)'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    use Template::Config;</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This module implements various methods for loading and instantiating
+other modules that comprise the Template Toolkit.  It provides a consistent
+way to create toolkit components and allows custom modules to be used in 
+place of the regular ones.
+</p>
+<p>
+Package variables such as $STASH, $SERVICE, $CONTEXT, etc., contain
+the default module/package name for each component (Template::Stash,
+Template::Service and Template::Context, respectively) and are used by
+the various factory methods (stash(), service() and context()) to load
+the appropriate module.  Changing these package variables will cause
+subsequent calls to the relevant factory method to load and instantiate
+an object from the new class.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='PUBLIC METHODS'
+-%][% WRAPPER subsection
+   title = 'load($module)'
+-%]<p>
+Load a module via require().  Any occurences of '::' in the module name
+are be converted to '/' and '.pm' is appended.  Returns 1 on success
+or undef on error.  Use $class-&gt;error() to examine the error string.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'parser(\%config)'
+-%]<p>
+Instantiate a new parser object of the class whose name is denoted by
+the package variable $PARSER (default: Template::Parser).  Returns
+a reference to a newly instantiated parser object or undef on error.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'provider(\%config)'
+-%]<p>
+Instantiate a new template provider object (default: Template::Provider).
+Returns an object reference or undef on error, as above.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'plugins(\%config)'
+-%]<p>
+Instantiate a new plugins provider object (default: Template::Plugins).
+Returns an object reference or undef on error, as above.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'filters(\%config)'
+-%]<p>
+Instantiate a new filter provider object (default: Template::Filters).
+Returns an object reference or undef on error, as above.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'stash(\%vars)'
+-%]<p>
+Instantiate a new stash object (default: Template::Templates) using the 
+contents of the optional hash array passed by parameter as initial variable
+definitions.  Returns an object reference or undef on error, as above.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'context(\%config)'
+-%]<p>
+Instantiate a new template context object (default: Template::Context).
+Returns an object reference or undef on error, as above.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'service(\%config)'
+-%]<p>
+Instantiate a new template service object (default: Template::Service).
+Returns an object reference or undef on error, as above.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'instdir($dir)'
+-%]<p>
+Returns the root directory of the Template Toolkit installation under
+which optional components are installed.  Any relative directory specified
+as an argument will be appended to the returned directory.
+</p>
+<pre>    # e.g. returns '/usr/local/tt2'
+    my $ttroot = Template::Config-&gt;instdir()
+	|| die &quot;$Template::Config::ERROR\n&quot;;</pre>
+<pre>    # e.g. returns '/usr/local/tt2/templates'
+    my $template = Template::Config-&gt;instdir('templates')
+	|| die &quot;$Template::Config::ERROR\n&quot;;</pre>
+<p>
+Returns undef and sets $Template::Config::ERROR appropriately if the 
+optional components of the Template Toolkit have not been installed.
+</p>
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%]
+</p>
+[%- END %]
+
+

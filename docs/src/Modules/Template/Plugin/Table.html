@@ -1,0 +1,214 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Plugin_Table'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    [% tt_start_tag %] USE table(list, rows=n, cols=n, overlap=n, pad=0) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH item = table.row(n) [% tt_end_tag %]
+       [% tt_start_tag %] item [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH item = table.col(n) [% tt_end_tag %]
+       [% tt_start_tag %] item [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH row = table.rows [% tt_end_tag %]
+       [% tt_start_tag %] FOREACH item = row [% tt_end_tag %]
+          [% tt_start_tag %] item [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH col = table.cols [% tt_end_tag %]
+       [% tt_start_tag %] col.first [% tt_end_tag %] - [% tt_start_tag %] col.last [% tt_end_tag %] ([% tt_start_tag %] col.size [% tt_end_tag %] entries)
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Table plugin allows you to format a list of data items into a 
+virtual table.  When you create a Table plugin via the USE directive,
+simply pass a list reference as the first parameter and then specify 
+a fixed number of rows or columns.
+</p>
+<pre>    [% tt_start_tag %] USE Table(list, rows=5) [% tt_end_tag %]
+    [% tt_start_tag %] USE table(list, cols=5) [% tt_end_tag %]</pre>
+<p>
+The 'Table' plugin name can also be specified in lower case as shown
+in the second example above.  You can also specify an alternative variable
+name for the plugin as per regular Template Toolkit syntax.
+</p>
+<pre>    [% tt_start_tag %] USE mydata = table(list, rows=5) [% tt_end_tag %]</pre>
+<p>
+The plugin then presents a table based view on the data set.  The data
+isn't actually reorganised in any way but is available via the row(),
+col(), rows() and cols() as if formatted into a simple two dimensional
+table of n rows x n columns.  Thus, if our sample 'alphabet' list
+contained the letters 'a' to 'z', the above USE directives would
+create plugins that represented the following views of the alphabet.
+</p>
+<pre>    [% tt_start_tag %] USE table(alphabet, ... [% tt_end_tag %]</pre>
+<pre>    rows=5                  cols=5
+    a  f  k  p  u  z        a  g  m  s  y
+    b  g  l  q  v           b  h  n  t  z
+    c  h  m  r  w           c  i  o  u
+    d  i  n  s  x           d  j  p  v
+    e  j  o  t  y           e  k  q  w
+                            f  l  r  x</pre>
+<p>
+We can request a particular row or column using the row() and col() 
+methods.
+</p>
+<pre>    [% tt_start_tag %] USE table(alphabet, rows=5) [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH item = table.row(0) [% tt_end_tag %]
+       # [% tt_start_tag %] item [% tt_end_tag %] set to each of [ a f k p u z ] in turn
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH item = table.col(2) [% tt_end_tag %]
+       # [% tt_start_tag %] item [% tt_end_tag %] set to each of [ m n o p q r ] in turn
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Data in rows is returned from left to right, columns from top to
+bottom.  The first row/column is 0.  By default, rows or columns that
+contain empty values will be padded with the undefined value to fill
+it to the same size as all other rows or columns.  For example, the
+last row (row 4) in the first example would contain the values [ e j o
+t y undef ]. The Template Toolkit will safely accept these undefined
+values and print a empty string.  You can also use the IF directive to
+test if the value is set.
+</p>
+<pre>   [% tt_start_tag %] FOREACH item = table.row(4) [% tt_end_tag %]
+      [% tt_start_tag %] IF item [% tt_end_tag %]
+         Item: [% tt_start_tag %] item [% tt_end_tag %]
+      [% tt_start_tag %] END [% tt_end_tag %]
+   [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+You can explicitly disable the 'pad' option when creating the plugin to 
+returned shortened rows/columns where the data is empty.
+</p>
+<pre>   [% tt_start_tag %] USE table(alphabet, cols=5, pad=0) [% tt_end_tag %]
+   [% tt_start_tag %] FOREACH item = table.col(4) [% tt_end_tag %]
+      # [% tt_start_tag %] item [% tt_end_tag %] set to each of 'y z'
+   [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The rows() method returns all rows/columns in the table as a reference
+to a list of rows (themselves list references).  The row() methods
+when called without any arguments calls rows() to return all rows in
+the table.
+</p>
+<p>
+Ditto for cols() and col().
+</p>
+<pre>    [% tt_start_tag %] USE table(alphabet, cols=5) [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH row = table.rows [% tt_end_tag %]
+       [% tt_start_tag %] FOREACH item = row [% tt_end_tag %]
+          [% tt_start_tag %] item [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The Template Toolkit provides the first(), last() and size() methods
+that can be called on list references to return the first/last entry
+or the number of entried.  The following example shows how we might 
+use this to provide an alphabetical index split into 3 even parts.
+</p>
+<pre>    [% tt_start_tag %] USE table(alphabet, cols=3, pad=0) [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH group = table.col [% tt_end_tag %]
+       [ [% tt_start_tag %] group.first [% tt_end_tag %] - [% tt_start_tag %] group.last [% tt_end_tag %] ([% tt_start_tag %] group.size [% tt_end_tag %] letters) ]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+This produces the following output:
+</p>
+<pre>    [ a - i (9 letters) ]
+    [ j - r (9 letters) ]
+    [ s - z (8 letters) ]</pre>
+<p>
+We can also use the general purpose join() list method which joins 
+the items of the list using the connecting string specified.
+</p>
+<pre>    [% tt_start_tag %] USE table(alphabet, cols=5) [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH row = table.rows [% tt_end_tag %]
+       [% tt_start_tag %] row.join(' - ') [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Data in the table is ordered downwards rather than across but can easily
+be transformed on output.  For example, to format our data in 5 columns
+with data ordered across rather than down, we specify 'rows=5' to order
+the data as such:
+</p>
+<pre>    a  f  .  .
+    b  g  .
+    c  h
+    d  i
+    e  j</pre>
+<p>
+and then iterate down through each column (a-e, f-j, etc.) printing
+the data across.
+</p>
+<pre>    a  b  c  d  e
+    f  g  h  i  j
+    .  .
+    .</pre>
+<p>
+In addition to a list reference, the Table plugin constructor may be 
+passed a reference to a Template::Iterator object or subclass thereof.
+The get_all() method is first called on the iterator to return all 
+remaining items.  These are then available via the usual Table interface.
+</p>
+<pre>    [% tt_start_tag %] USE DBI(dsn,user,pass) -[% tt_end_tag %]</pre>
+<pre>    # query() returns an iterator
+    [% tt_start_tag %] results = DBI.query('SELECT * FROM alphabet ORDER BY letter') [% tt_end_tag %]
+    
+    # pass into Table plugin
+    [% tt_start_tag %] USE table(results, rows=8 overlap=1 pad=0) -[% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH row = table.cols -[% tt_end_tag %]
+       [% tt_start_tag %] row.first.letter [% tt_end_tag %] - [% tt_start_tag %] row.last.letter [% tt_end_tag %]:
+          [% tt_start_tag %] row.join(', ') [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Plugin', 'Template::Plugin') -%]
+</p>
+[%- END %]
+
+

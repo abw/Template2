@@ -1,0 +1,350 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Manual'
+        page = 'Filters'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+This section lists all the standard filters distributed with the
+Template Toolkit for post-processing output.
+</p>
+
+<ul>
+
+<li><b>format(format)</b><br>
+<p>
+The 'format' filter takes a format string as a parameter (as per
+printf()) and formats each line of text accordingly.
+</p>
+<pre>    [% tt_start_tag %] FILTER format('&lt;!-- %-40s --&gt;') [% tt_end_tag %]
+    This is a block of text filtered 
+    through the above format.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    &lt;!-- This is a block of text filtered        --&gt;
+    &lt;!-- through the above format.               --&gt;</pre>
+
+
+
+<li><b>upper</b><br>
+<p>
+Folds the input to UPPER CASE.
+</p>
+<pre>    [% tt_start_tag %] &quot;hello world&quot; | FILTER upper [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    HELLO WORLD</pre>
+
+
+
+<li><b>lower</b><br>
+<p>
+Folds the input to lower case.
+</p>
+<pre>    [% tt_start_tag %] &quot;Hello World&quot; | FILTER lower [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    hello world</pre>
+
+
+
+<li><b>trim</b><br>
+<p>
+Trims any leading or trailing whitespace from the input text.  Particularly 
+useful in conjunction with INCLUDE, PROCESS, etc., having the same effect
+as the TRIM configuration option.
+</p>
+<pre>    [% tt_start_tag %] INCLUDE myfile | trim [% tt_end_tag %]</pre>
+
+
+
+<li><b>collapse</b><br>
+<p>
+Collapse any whitespace sequences in the input text into a single space.
+Leading and trailing whitespace (which would be reduced to a single space)
+is removed, as per trim.
+</p>
+<pre>    [% tt_start_tag %] FILTER collapse [% tt_end_tag %]</pre>
+<pre>       The   cat</pre>
+<pre>       sat    on</pre>
+<pre>       the   mat</pre>
+<pre>    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    The cat sat on the mat</pre>
+
+
+
+<li><b>html</b><br>
+<p>
+Converts the characters '&lt;', '&gt;' and '&amp;' to '&amp;lt;', '&amp;gt;' and
+'&amp;amp', respectively, protecting them from being interpreted as
+representing HTML tags or entities.
+</p>
+<pre>    [% tt_start_tag %] FILTER html [% tt_end_tag %]
+    Binary &quot;&lt;=&gt;&quot; returns -1, 0, or 1 depending on...
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    Binary &quot;&amp;lt;=&amp;gt;&quot; returns -1, 0, or 1 depending on...</pre>
+
+
+
+<li><b>html_para</b><br>
+<p>
+This filter formats a block of text into HTML paragraphs.  A sequence of 
+two or more newlines is used as the delimiter for paragraphs which are 
+then wrapped in HTML &lt;p&gt;...&lt;/p&gt; tags.
+</p>
+<pre>    [% tt_start_tag %] FILTER html_para [% tt_end_tag %]
+    The cat sat on the mat.</pre>
+<pre>    Mary had a little lamb.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    &lt;p&gt;
+    The cat sat on the mat.
+    &lt;/p&gt;</pre>
+<pre>    &lt;p&gt;
+    Mary had a little lamb.
+    &lt;/p&gt;</pre>
+
+
+
+<li><b>html_break</b><br>
+<p>
+Similar to the html_para filter described above, but uses the HTML tag
+sequence &lt;br&gt;&lt;br&gt; to join paragraphs.
+</p>
+<pre>    [% tt_start_tag %] FILTER html_break [% tt_end_tag %]
+    The cat sat on the mat.</pre>
+<pre>    Mary had a little lamb.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    The cat sat on the mat.
+    &lt;br&gt;
+    &lt;br&gt;
+    Mary had a little lamb.</pre>
+
+
+
+<li><b>indent(pad)</b><br>
+<p>
+Indents the text block by a fixed pad string or width.  The 'pad' argument
+can be specified as a string, or as a numerical value to indicate a pad
+width (spaces).  Defaults to 4 spaces if unspecified.
+</p>
+<pre>    [% tt_start_tag %] FILTER indent('ME&gt; ') [% tt_end_tag %]
+    blah blah blah
+    cabbages, rhubard, onions
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    ME&gt; blah blah blah
+    ME&gt; cabbages, rhubard, onions</pre>
+
+
+
+<li><b>truncate(length)</b><br>
+<p>
+Truncates the text block to the length specified, or a default length of
+32.  Truncated text will be terminated with '...' (i.e. the '...' falls
+inside the required length, rather than appending to it).
+</p>
+<pre>    [% tt_start_tag %] FILTER truncate(21) [% tt_end_tag %]
+    I have much to say on this matter that has previously 
+    been said on more than one occasion.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    I have much to say...</pre>
+
+
+
+<li><b>repeat(iterations)</b><br>
+<p>
+Repeats the text block for as many iterations as are specified (default: 1).
+</p>
+<pre>    [% tt_start_tag %] FILTER repeat(3) [% tt_end_tag %]
+    We want more beer and we want more beer,
+    [% tt_start_tag %] END [% tt_end_tag %]
+    We are the more beer wanters!</pre>
+<p>
+output:
+</p>
+<pre>    We want more beer and we want more beer,
+    We want more beer and we want more beer,
+    We want more beer and we want more beer,
+    We are the more beer wanters!</pre>
+
+
+
+<li><b>remove(string) </b><br>
+<p>
+Searches the input text for any occurrences of the specified string and 
+removes them.  A Perl regular expression may be specified as the search 
+string.
+</p>
+<pre>    [% tt_start_tag %] &quot;The  cat  sat  on  the  mat&quot; FILTER remove('\s+') [% tt_end_tag %]</pre>
+<p>
+output: 
+</p>
+<pre>    Thecatsatonthemat</pre>
+
+
+
+<li><b>replace(search, replace) </b><br>
+<p>
+Similar to the remove filter described above, but taking a second parameter
+which is used as a replacement string for instances of the search string.
+</p>
+<pre>    [% tt_start_tag %] &quot;The  cat  sat  on  the  mat&quot; | replace('\s+', '_') [% tt_end_tag %]</pre>
+<p>
+output: 
+</p>
+<pre>    The_cat_sat_on_the_mat</pre>
+
+
+
+<li><b>redirect(file)</b><br>
+<p>
+The 'redirect' filter redirects the output of the block into a separate
+file, specified relative to the OUTPUT_PATH configuration item.
+</p>
+<pre>    [% tt_start_tag %] FOREACH user = myorg.userlist [% tt_end_tag %]
+       [% tt_start_tag %] FILTER redirect(&quot;users/${user.id}.html&quot;) [% tt_end_tag %]
+          [% tt_start_tag %] INCLUDE userinfo [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+or more succinctly, using side-effect notation:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE userinfo 
+         FILTER redirect(&quot;users/${user.id}.html&quot;)
+	   FOREACH user = myorg.userlist 
+    [% tt_end_tag %]</pre>
+<p>
+A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
+</p>
+
+
+
+<li><b>eval(template_text)</b><br>
+<p>
+The 'eval' filter evaluates the block as template text, processing
+any directives embedded within it.  This allows template variables to
+contain template fragments, or for some method to be provided for
+returning template fragments from an external source such as a
+database, which can then be processed in the template as required.
+</p>
+<pre>    my $vars  = {
+	fragment =&gt; &quot;The cat sat on the [% tt_start_tag %] place [% tt_end_tag %]&quot;,
+    };
+    $template-&gt;process($file, $vars);</pre>
+<p>
+The following example:
+</p>
+<pre>    [% tt_start_tag %] fragment | eval [% tt_end_tag %]</pre>
+<p>
+is therefore equivalent to 
+</p>
+<pre>    The cat sat on the [% tt_start_tag %] place [% tt_end_tag %]</pre>
+<p>
+The 'evaltt' filter is provided as an alias for 'eval'.
+</p>
+
+
+
+<li><b>perl(perlcode)</b><br>
+<p>
+The 'perl' filter evaluates the block as Perl code.  The EVAL_PERL
+option must be set to a true value or a 'perl' exception will be
+thrown.
+</p>
+<pre>    [% tt_start_tag %] my_perl_code | perl [% tt_end_tag %]</pre>
+<p>
+In most cases, the [% tt_start_tag %] PERL [% tt_end_tag %] ... [% tt_start_tag %] END [% tt_end_tag %] block should suffice for 
+evaluating Perl code, given that template directives are processed 
+before being evaluate as Perl.  Thus, the previous example could have
+been written in the more verbose form:
+</p>
+<pre>    [% tt_start_tag %] PERL [% tt_end_tag %]
+    [% tt_start_tag %] my_perl_code [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+as well as
+</p>
+<pre>    [% tt_start_tag %] FILTER perl [% tt_end_tag %]
+    [% tt_start_tag %] my_perl_code [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The 'evalperl' filter is provided as an alias for 'perl' for backwards
+compatibility.
+</p>
+
+
+
+<li><b>stderr</b><br>
+<p>
+The stderr filter prints the output generating by the enclosing block to
+STDERR 
+</p>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+
+

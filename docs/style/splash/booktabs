@@ -1,0 +1,4 @@
+[%  INCLUDE splash/tabset
+	tabs   = booktabs
+	select = book.name
+-%]

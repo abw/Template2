@@ -1,0 +1,356 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Library'
+        page = 'HTML'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='DESCRIPTION'
+                         subs=['Headers, Footers and Pages', 'Tables, Bars and Boxes'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+<b>NOTE:</b> This documentation is incomplete and may be incorrect
+in places. 
+</p>
+<p>
+The 'html' template library is distributed as part of the Template
+Toolkit.  It can be found in the 'templates' sub-directory of the
+installation directory.
+</p>
+<pre>    use Template;</pre>
+<pre>    my $tt2 = Template-&gt;new({
+	INCLUDE_PATH =&gt; '/usr/local/tt2/templates',
+    });</pre>
+<p>
+For a portable way to determine the installation 'templates' directory,
+you can use the <code>'Template::Config-&gt;instdir()'</code> class method.
+</p>
+<pre>    use Template;</pre>
+<pre>    my $tt2 = Template-&gt;new({
+	INCLUDE_PATH =&gt; Template::Config-&gt;instdir('templates'),
+    });</pre>
+<p>
+You should now be able to access the html library as, for example:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE html/header [% tt_end_tag %]</pre>
+<p>
+Note that some of the more basic elements don't give you much more
+than the raw HTML tags.  In many cases you might be well advised to
+stick to regular HTML rather than complicating matters by the use
+of template elements.
+</p>
+<p>
+e.g.
+</p>
+<pre>    &lt;table&gt;
+      . . .
+    &lt;/table&gt;</pre>
+<p>
+vs
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/table [% tt_end_tag %]
+       . . .
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+However, the use of template elements to generate the underlying HTML
+does have some important benefits, particularly as the constructs start
+to get more complicated and more magical.
+</p>
+<p>
+See the example in the 'examples' sub-directory of the distribution
+directory for further examples and enlightenment on using this library.
+</p>
+[% WRAPPER subsection
+   title = 'Headers, Footers and Pages'
+-%]
+<ul>
+
+<li><b>header</b><br>
+<p>
+The 'header' element generates the regular header required as the 
+pre-amble for an HTML document.  That is, everything from the initial
+&lt;html&gt; to the opening &lt;body&gt;.
+</p>
+<pre>    [% tt_start_tag %] INCLUDE html/header
+         title = 'This is a Test'
+	 bgcol = '#ffffff'
+    [% tt_end_tag %]</pre>
+<p>
+Additional header items can be provided by explicitly setting the 'headers'
+variable, e.g.
+</p>
+<pre>    [% tt_start_tag %] headers = BLOCK [% tt_end_tag %]
+    &lt;META name=&quot;description&quot; content=&quot;Template Toolkit&quot;&gt;
+    &lt;META name=&quot;REVISIT-AFTER&quot; content=&quot;14 days&quot;&gt;	
+    &lt;META name=&quot;keywords&quot; content=&quot;Templates, Web, ...etc...&quot;&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] INCLUDE html/header
+	 title = 'This is a Test'
+	 bgcol = '#ffffff'
+    [% tt_end_tag %]</pre>
+
+
+
+<li><b>footer</b><br>
+<p>
+The 'footer' element generates the terminating &lt;/body&gt; and
+&lt;/html&gt; element to balance the header.
+</p>
+<pre>    [% tt_start_tag %] PROCESS html/header [% tt_end_tag %]</pre>
+<pre>    ...page content here...</pre>
+<pre>    [% tt_start_tag %] PROCESS html/footer [% tt_end_tag %]</pre>
+
+
+
+<li><b>page</b><br>
+<p>
+The 'page' element combines the 'html/header' and 'html/footer' elements.
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/page [% tt_end_tag %]</pre>
+<pre>    ...page content here...</pre>
+<pre>    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Page content should be defined in the 'content' variable (e.g. via WRAPPER).
+Additional HTML headers should be defined in the 'headers' variable.
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/page
+        headers = '&lt;META name=&quot;keywords&quot; content=&quot;foo, bar, ...&quot;&gt;'
+    [% tt_end_tag %]</pre>
+<pre>    ...page content here...</pre>
+<pre>    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'Tables, Bars and Boxes'
+-%]
+<ul>
+
+<li><b>table</b><br>
+<p>
+A basic element for creating HTML tables.
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/table pad=10 space=4 col='#404040' [% tt_end_tag %]
+       &lt;tr&gt;
+	&lt;td&gt;Hello&lt;/td&gt; &lt;td&gt;World&lt;/td&gt;
+       &lt;/tr&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The following variables may be defined:
+</p>
+
+<ul>
+
+<li><b>border</b><br>
+<p>
+Set the border width (default: 0)
+</p>
+
+
+
+<li><b>col</b><br>
+<p>
+Set the background colour (default: none).
+</p>
+
+
+
+<li><b>width</b><br>
+<p>
+Set a fixed table width.
+</p>
+
+
+
+<li><b>pad</b><br>
+<p>
+Set the cellpadding.
+</p>
+
+
+
+<li><b>space</b><br>
+<p>
+Set the cellspacing.
+</p>
+
+
+
+<li><b>content</b><br>
+<p>
+Content for the box.  Supplied automatically if used via WRAPPER.
+</p>
+
+
+</ul>
+
+
+
+
+<li><b>row</b><br>
+<p>
+A basic element for creating HTML table rows.
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/table [% tt_end_tag %]
+       [% tt_start_tag %] WRAPPER html/row [% tt_end_tag %]
+	&lt;td&gt;Hello&lt;/td&gt; &lt;td&gt;World&lt;/td&gt;
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The following variables may be defined:
+</p>
+
+<ul>
+
+<li><b>col</b><br>
+<p>
+Set the background colour (default: none).
+</p>
+
+
+
+<li><b>valign</b><br>
+<p>
+Set the vertical alignment.
+</p>
+
+
+
+<li><b>rowspan</b><br>
+<p>
+Specify the number of rows to span.
+</p>
+
+
+
+<li><b>content</b><br>
+<p>
+Content for the box.  Supplied automatically if used via WRAPPER.
+</p>
+
+
+</ul>
+
+
+
+
+<li><b>cell</b><br>
+<p>
+A basic element for creating HTML table cells.
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/table [% tt_end_tag %]
+       [% tt_start_tag %] WRAPPER html/row [% tt_end_tag %]
+	  [% tt_start_tag %] INCLUDE html/cell 
+		FOREACH content = ['Hello', 'World'] [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The following variables may be defined:
+</p>
+
+<ul>
+
+<li><b>col</b><br>
+<p>
+Set the background colour (default: none).
+</p>
+
+
+
+<li><b>align</b><br>
+<p>
+Set the horizontal alignment.
+</p>
+
+
+
+<li><b>colspan</b><br>
+<p>
+Specify the number of columns to span.
+</p>
+
+
+
+<li><b>content</b><br>
+<p>
+Content for the cell.  Supplied automatically if used via WRAPPER.
+</p>
+
+
+</ul>
+
+
+
+
+<li><b>bar</b><br>
+<p>
+The bar element is a wrapping of html/table + html/row.
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/bar [% tt_end_tag %]
+       &lt;td&gt;Foo&lt;/td&gt;  &lt;td&gt;Bar&lt;/td&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+
+<li><b>box</b><br>
+<p>
+The box element is a wrapping of html/table + html/row + html/cell
+</p>
+<pre>    [% tt_start_tag %] WRAPPER html/box [% tt_end_tag %]
+       Hello World!
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+
+</ul>
+
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template::Library::Splash', 'Template::Library::Splash') -%]
+</p>
+[%- END %]
+
+

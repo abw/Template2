@@ -1,0 +1,111 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Constants'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='EXPORTABLE TAG SETS';
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    use Template::Constants qw( :status :error :all );</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Template::Constants modules defines, and optionally exports into the
+caller's namespace, a number of constants used by the Template package.
+</p>
+<p>
+Constants may be used by specifying the Template::Constants package 
+explicitly:
+</p>
+<pre>    use Template::Constants;</pre>
+<pre>    print Template::Constants::STATUS_DECLINED;</pre>
+<p>
+Constants may be imported into the caller's namespace by naming them as 
+options to the <code>'use Template::Constants'</code> statement:
+</p>
+<pre>    use Template::Constants qw( STATUS_DECLINED );</pre>
+<pre>    print STATUS_DECLINED;</pre>
+<p>
+Alternatively, one of the following tagset identifiers may be specified
+to import sets of constants; :status, :error, :all.
+</p>
+<pre>    use Template::Constants qw( :status );</pre>
+<pre>    print STATUS_DECLINED;</pre>
+<p>
+See [% ttlink('Exporter') -%] for more information on exporting variables.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='EXPORTABLE TAG SETS'
+-%]<p>
+The following tag sets and associated constants are defined: 
+</p>
+<pre>  :status
+    STATUS_OK                 # no problem, continue
+    STATUS_RETURN             # ended current block then continue (ok)
+    STATUS_STOP               # controlled stop (ok) 
+    STATUS_DONE               # iterator is all done (ok)
+    STATUS_DECLINED           # provider declined to service request (ok)
+    STATUS_ERROR              # general error condition (not ok)</pre>
+<pre>  :error
+    ERROR_RETURN              # return a status code (e.g. 'stop')
+    ERROR_FILE                # file error: I/O, parse, recursion
+    ERROR_UNDEF               # undefined variable value used
+    ERROR_PERL                # error in [% tt_start_tag %] PERL [% tt_end_tag %] block</pre>
+<pre>  :chomp                      # for PRE_CHOMP and POST_CHOMP
+    CHOMP_NONE                # do not remove whitespace
+    CHOMP_ALL                 # remove whitespace
+    CHOMP_COLLAPSE            # collapse whitespace to a single space</pre>
+<pre>  :all         All the above constants.</pre>
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%], [% ttlink('CPAN::Exporter', 'CPAN::Exporter') -%]
+</p>
+[%- END %]
+
+

@@ -1,0 +1,33 @@
+[%  # docset/maker
+    #
+    # ARGS: xdocset - an XML DOM node to a docset element
+    #       xcontent(xnode, name) - MACRO to fetch name element from node
+
+    # setup docset data
+    id   = xdocset.id;
+    name = xdocset.name or id;
+    docset = {
+	id    = id
+        name  = name
+	title = xdocset.title or name
+	about = xdocset.about or xcontent(xdocset, 'about')
+	intro = xcontent(xdocset, 'intro')
+	books = [ ]
+    };
+
+    # status info
+    PROCESS docset/info | stderr UNLESS quiet;
+
+    # process all books in docset
+    FOREACH xbook = xdocset.getElementsByTagName('book');
+	PROCESS book/maker;
+        docset.books.push(book);
+    END;
+
+    # generate configuration templates for the docset
+    PROCESS docset/config;
+
+    # generate index page...
+    PROCESS docset/index | redirect("$dir.html.src/index.html");
+
+-%]

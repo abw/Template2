@@ -1,0 +1,354 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/download/ and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Provider'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title='SYNOPSIS';
+	INCLUDE tocitem title='DESCRIPTION';
+	INCLUDE tocitem title='PUBLIC METHODS'
+                         subs=['new(\%options) ', 'fetch($name)', 'store($name, $template)', 'include_path(\@newpath))'];
+	INCLUDE tocitem title='AUTHOR';
+	INCLUDE tocitem title='VERSION';
+	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title='SEE ALSO';
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title='SYNOPSIS'
+-%]<pre>    $provider = Template::Provider-&gt;new(\%options);</pre>
+<pre>    ($template, $error) = $provider-&gt;fetch($name);</pre>
+[%- END %]
+[% WRAPPER section
+    title='DESCRIPTION'
+-%]<p>
+The Template::Provider is used to load, parse, compile and cache template
+documents.  This object may be sub-classed to provide more specific 
+facilities for loading, or otherwise providing access to templates.
+</p>
+<p>
+The Template::Context objects maintain a list of Template::Provider 
+objects which are polled in turn (via fetch()) to return a requested
+template.  Each may return a compiled template, raise an error, or 
+decline to serve the reqest, giving subsequent providers a chance to
+do so.
+</p>
+<p>
+This is the &quot;Chain of Responsiblity&quot; pattern.  See 'Design Patterns' for
+further information.
+</p>
+<p>
+This documentation needs work.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='PUBLIC METHODS'
+-%][% WRAPPER subsection
+   title = 'new(\%options) '
+-%]<p>
+Constructor method which instantiates and returns a new Template::Provider
+object.  The optional parameter may be a hash reference containing any of
+the following items:
+</p>
+
+<ul>
+
+<li><b>INCLUDE_PATH</b><br>
+<p>
+The INCLUDE_PATH is used to specify one or more directories in which
+template files are located.  When a template is requested that isn't
+defined locally as a BLOCK, each of the INCLUDE_PATH directories is
+searched in turn to locate the template file.  Multiple directories
+can be specified as a reference to a list or as a single string where
+each directory is delimited by ':'. The DELIMITER option can be set
+to redefine the delimiter value.
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+        INCLUDE_PATH =&gt; '/usr/local/templates',
+    });
+  
+    my $provider = Template::Provider-&gt;new({
+        INCLUDE_PATH =&gt; '/usr/local/templates:/tmp/my/templates',
+    });
+  
+    my $provider = Template::Provider-&gt;new({
+        INCLUDE_PATH =&gt; [ '/usr/local/templates', 
+                          '/tmp/my/templates' ],
+    });</pre>
+
+
+
+<li><b>DELIMITER</b><br>
+<p>
+Used to provide an alternative delimiter character sequence for 
+separating paths specified in the INCLUDE_PATH.  May be useful for 
+operating systems that permit the use of ':' in file names.
+</p>
+<pre>    # tolerate Silly Billy's file system conventions
+    my $provider = Template::Provider-&gt;new({
+	DELIMITER    =&gt; ' ',
+        INCLUDE_PATH =&gt; 'C:/HERE/NOW D:/THERE/THEN',
+    });</pre>
+<pre>    # better solution: install Linux!  :-)</pre>
+
+
+
+<li><b>ABSOLUTE</b><br>
+<p>
+The ABSOLUTE flag is used to indicate if templates specified with
+absolute filenames (e.g. '/foo/bar') should be processed.  It is
+disabled by default and any attempt to load a template by such a
+name will cause a 'file' exception to be raised.
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	ABSOLUTE =&gt; 1,
+    });</pre>
+<pre>    # this is why it's disabled by default
+    [% tt_start_tag %] INSERT /etc/passwd [% tt_end_tag %]</pre>
+
+
+
+<li><b>RELATIVE</b><br>
+<p>
+The RELATIVE flag is used to indicate if templates specified with
+filenames relative to the current directory (e.g. './foo/bar' or
+'../../some/where/else') should be loaded.  It is also disabled by
+default, and will raise a 'file' error if such template names are
+encountered.  
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	RELATIVE =&gt; 1,
+    });</pre>
+<pre>    [% tt_start_tag %] INCLUDE ../logs/error.log [% tt_end_tag %]</pre>
+
+
+
+<li><b>DEFAULT</b><br>
+<p>
+The DEFAULT option can be used to specify a default template which should 
+be used whenever a specified template can't be found in the INCLUDE_PATH.
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	DEFAULT =&gt; 'notfound.html',
+    });</pre>
+<p>
+If a non-existant template is requested through the Template process()
+method, or by an INCLUDE, PROCESS or WRAPPER directive, then the
+DEFAULT template will instead be processed, if defined.  Note that the
+DEFAULT template is not used when templates are specified with
+absolute or relative filenames, or as a reference to a input file
+handle or text string.
+</p>
+
+
+
+<li><b>CACHE_SIZE</b><br>
+<p>
+The Template::Provider module caches compiled templates to avoid the need
+to re-parse template files or blocks each time they are used.  The CACHE_SIZE
+option is used to limit the number of compiled templates that the module
+should cache.
+</p>
+<p>
+By default, the CACHE_SIZE is undefined and all compiled templates are
+cached.  When set to any positive value, the cache will be limited to
+storing no more than that number of compiled templates.  When a new
+template is loaded and compiled and the cache is full (i.e. the number
+of entries == CACHE_SIZE), the least recently used compiled template
+is discarded to make room for the new one.
+</p>
+<p>
+The CACHE_SIZE can be set to 0 to disable caching altogether.
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	CACHE_SIZE =&gt; 64,   # only cache 64 compiled templates
+    });</pre>
+<pre>    my $provider = Template::Provider-&gt;new({
+	CACHE_SIZE =&gt; 0,   # don't cache any compiled templates
+    });</pre>
+
+
+
+<li><b>COMPILE_EXT</b><br>
+<p>
+From version 2 onwards, the Template Toolkit has the ability to
+compile templates to Perl code and save them to disk for subsequent
+use (i.e. cache persistence).  The COMPILE_EXT option may be
+provided to specify a filename extension for compiled template files.
+It is undefined by default and no attempt will be made to read or write 
+any compiled template files.
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	COMPILE_EXT =&gt; '.ttc',
+    });</pre>
+<p>
+If COMPILE_EXT is defined (and COMPILE_DIR isn't, see below) then compiled
+template files with the COMPILE_EXT extension will be written to the same
+directory from which the source template files were loaded.
+</p>
+<p>
+Compiling and subsequent reuse of templates happens automatically
+whenever the COMPILE_EXT or COMPILE_DIR options are set.  The Template
+Toolkit will automatically reload and reuse compiled files when it 
+finds them on disk.  If the corresponding source file has been modified
+since the compiled version as written, then it will load and re-compile
+the source and write a new compiled version to disk.  
+</p>
+<p>
+This form of cache persistence offers significant benefits in terms of 
+time and resources required to reload templates.  Compiled templates can
+be reloaded by a simple call to Perl's require(), leaving Perl to handle
+all the parsing and compilation.  This is a Good Thing.
+</p>
+
+
+
+<li><b>COMPILE_DIR</b><br>
+<p>
+The COMPILE_DIR option is used to specify an alternate directory root
+under which compiled template files should be saved.  
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	COMPILE_DIR =&gt; '/tmp/ttc',
+    });</pre>
+<p>
+The COMPILE_EXT option may also be specified to have a consistent file
+extension added to these files.  
+</p>
+<pre>    my $provider1 = Template::Provider-&gt;new({
+	COMPILE_DIR =&gt; '/tmp/ttc',
+	COMPILE_EXT =&gt; '.ttc1',
+    });</pre>
+<pre>    my $provider2 = Template::Provider-&gt;new({
+	COMPILE_DIR =&gt; '/tmp/ttc',
+	COMPILE_EXT =&gt; '.ttc2',
+    });</pre>
+<p>
+When COMPILE_EXT is undefined, the compiled template files have the
+same name as the original template files, but reside in a different
+directory tree.
+</p>
+<p>
+Each directory in the INCLUDE_PATH is replicated in full beneath the 
+COMPILE_DIR directory.  This example:
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	COMPILE_DIR  =&gt; '/tmp/ttc',
+	INCLUDE_PATH =&gt; '/home/abw/templates:/usr/share/templates',
+    });</pre>
+<p>
+would create the following directory structure:
+</p>
+<pre>    /tmp/ttc/home/abw/templates/
+    /tmp/ttc/usr/share/templates/</pre>
+<p>
+Files loaded from different INCLUDE_PATH directories will have their
+compiled forms save in the relevant COMPILE_DIR directory.
+</p>
+
+
+
+<li><b>TOLERANT</b><br>
+<p>
+The TOLERANT flag is used by the various Template Toolkit provider
+modules (Template::Provider, Template::Plugins, Template::Filters) to
+control their behaviour when errors are encountered.  By default, any
+errors are reported as such, with the request for the particular
+resource (template, plugin, filter) being denied and an exception
+raised.  When the TOLERANT flag is set to any true values, errors will
+be silently ignored and the provider will instead return
+STATUS_DECLINED.  This allows a subsequent provider to take
+responsibility for providing the resource, rather than failing the
+request outright.  If all providers decline to service the request,
+either through tolerated failure or a genuine disinclination to
+comply, then a '&lt;resource&gt; not found' exception is raised.
+</p>
+
+
+
+<li><b>PARSER</b><br>
+<p>
+The Template::Parser module implements a parser object for compiling
+templates into Perl code which can then be executed.  A default object
+of this class is created automatically and then used by the
+Template::Provider whenever a template is loaded and requires 
+compilation.  The PARSER option can be used to provide a reference to 
+an alternate parser object.
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+	PARSER =&gt; MyOrg::Template::Parser-&gt;new({ ... }),
+    });</pre>
+
+
+</ul>
+
+[%- END %]
+[% WRAPPER subsection
+   title = 'fetch($name)'
+-%]<p>
+Returns a compiled template for the name specified.  If the template 
+cannot be found then (undef, STATUS_DECLINED) is returned.  If an error
+occurs (e.g. read error, parse error) then ($error, STATUS_ERROR) is 
+returned, where $error is the error message generated.  If the TOLERANT
+flag is set the the method returns (undef, STATUS_DECLINED) instead of
+returning an error.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'store($name, $template)'
+-%]<p>
+Stores the compiled template, $template, in the cache under the name, 
+$name.  Susbequent calls to fetch($name) will return this template in
+preference to any disk-based file.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'include_path(\@newpath))'
+-%]<p>
+Accessor method for the INCLUDE_PATH setting.  If called with an
+argument, this method will replace the existing INCLUDE_PATH with
+the new value.
+</p>
+[%- END %]
+[%- END %]
+[% WRAPPER section
+    title='AUTHOR'
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title='VERSION'
+-%]<p>
+Template Toolkit version 2.01, released on 28th March 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='COPYRIGHT'
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title='SEE ALSO'
+-%]<p>
+[% ttlink('Template', 'Template') -%], [% ttlink('Template::Parser', 'Template::Parser') -%], [% ttlink('Template::Context', 'Template::Context') -%]
+</p>
+[%- END %]
+
+
