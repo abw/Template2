@@ -34,8 +34,9 @@ $Template::Test::EXTRA = 1;     # ensure redirected file is created
 #$Template::Parser::DEBUG = 1;
 #$Template::Directive::PRETTY = 1;
 
+
 #------------------------------------------------------------------------
-# quick hack to allow STDERR to be tied to a variable.
+# hack to allow STDERR to be tied to a variable.
 # (I'm really surprised there isn't a standard module which does this)
 #------------------------------------------------------------------------
 
@@ -50,6 +51,11 @@ sub PRINT {
     $$self .= join('', @_);
 }
 
+
+
+#------------------------------------------------------------------------
+# now for the main event...
+#------------------------------------------------------------------------
 
 package main;
 
@@ -69,7 +75,7 @@ my $params = {
     'text'   => 'The cat sat on the mat',
     outfile  => $file,
     stderr   => sub { $stderr },
-    despace  => bless \&despace, 'anything',
+    despace  => bless(\&despace, 'anything'),
 };
 my $filters = {
     'nonfilt'    => 'nonsense',
@@ -908,3 +914,5 @@ Foobar
 [% 'FOOBAR' | lcfirst %]
 -- expect --
 fOOBAR
+
+
