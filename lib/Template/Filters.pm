@@ -104,6 +104,11 @@ sub fetch {
     my ($self, $name, $args, $context) = @_;
     my ($factory, $is_dynamic, $filter, $error);
 
+    $self->debug("fetch($name, ", 
+                 defined $args ? ('[ ', join(', ', @$args), ' ]') : '<no args>', ', ',
+                 defined $context ? $context : '<no context>', 
+                 ')') if $self->{ DEBUG };
+
     # allow $name to be specified as a reference to 
     # a plugin filter object;  any other ref is 
     # assumed to be a coderef and hence already a filter;
@@ -174,6 +179,9 @@ sub fetch {
 
 sub store {
     my ($self, $name, $filter) = @_;
+
+    $self->debug("store($name, $filter)") if $self->{ DEBUG };
+
     $self->{ FILTERS }->{ $name } = $filter;
     return 1;
 }
@@ -194,6 +202,9 @@ sub _init {
 
     $self->{ FILTERS  } = $params->{ FILTERS } || { };
     $self->{ TOLERANT } = $params->{ TOLERANT }  || 0;
+    $self->{ DEBUG    } = ( $params->{ DEBUG } || 0 )
+                          & Template::Constants::DEBUG_FILTERS;
+
 
     return $self;
 }
