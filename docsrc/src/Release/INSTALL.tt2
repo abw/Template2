@@ -10,45 +10,7 @@
 QUICK INSTALL
 -------------
 
-The latest version of the Template Toolkit can be retrieved from:
-
-    http://www.cpan.org/modules/by-module/Template/
-
-Fetch and install AppConfig 1.52 if you don't already have it installed.
-Available from CPAN in:
-
-    http://www.cpan.org/authors/Andy_Wardley/
-
-The following modules are optional.  If you have them installed then 
-you will be able to access them via the appropriate Template Toolkit 
-plugins.  If you don't have them and don't want them, then there's no
-need to install them.  They're all available from CPAN if you do.
-
-    Text::Autoformat 1.03+
-    DBI 1.14+ (and relevant DBD drivers)
-    GD 1.32+
-    GD::Text 0.80+
-    GD::Graph 1.33+
-    GD::Graph3d 0.55+
-    Pod::POM 0.1+
-    XML::Parser 2.23+
-    XML::DOM 1.27+ (in libxml-enno)
-    XML::RSS 0.9+ 
-    XML::XPath 1.00+
-
-To install the Template Toolkit:
-
-    tar zxf Template-Toolkit-[* tt.version *].tar.gz
-    cd Template-Toolkit-[* tt.version *]
-    perl Makefile.PL
-    make
-    make test
-    make install    
-
-The Makefile.PL will prompt for additional configuration options,
-including the installation of optional template libraries, HTML
-documentation and examples.  You can safely answer 'n' to all of these
-questions for a quick and basic installation.  
+[* PROCESS misc/install %]
 
 For further details, see the sections below on CONFIGURATION, BUILDING
 AND TESTING, and INSTALLATION.
