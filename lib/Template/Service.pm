@@ -106,6 +106,7 @@ sub process {
     }
 
     $context->delocalise();
+    delete $params->{ template };
 
     if ($error) {
 #	$error = $error->as_string if ref $error;
