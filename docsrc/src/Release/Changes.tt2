@@ -40,6 +40,9 @@
   passed to the handler's ident() method.  Modified the ident()
   method of Template::Namespace::Constants to expect and remove it.
 
+* Added the 'unique' list virtual method to cull multiple identical
+  items from a list.
+
 
 #------------------------------------------------------------------------
 # Version 2.07b - July 7th 2002                   ## DEVELOPER RELEASE ##
