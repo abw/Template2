@@ -25,7 +25,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.11b - 7th Januray 2004                ## DEVELOPER RELEASE ##
+# Version 2.11b - 7th January 2004                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied patch from Myk Melez to ensure the 'component' variable 
