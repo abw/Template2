@@ -24,6 +24,19 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.08a - August nth 2002                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Totally re-implemented the handling of the DEBUG parameter.  Added 
+  DEBUG_* constants to Template::Constants which can be used to enable
+  different debugging options and messages.
+
+* Added skip_all($reason) to Template::Test and fixed up a whole bunch
+  of tests to use it.  Also made other minor fixes to the tests to run
+  nicely (or bail politely) under Perl 5.8.0
+
+
+#------------------------------------------------------------------------
 # Version 2.08 - July 30th 2002
 #------------------------------------------------------------------------
 
