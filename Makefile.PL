@@ -54,8 +54,7 @@ available on your system.
 
 EOF
 
-foreach my $mods ( Text::Wrap,
-		   Text::Autoformat,
+foreach my $mods ( Text::Autoformat,
 		   [ XML::DOM   => \&check_dom   ],
 		   [ XML::RSS   => \&check_rss   ],
 		   [ XML::XPath => \&check_xpath ],
