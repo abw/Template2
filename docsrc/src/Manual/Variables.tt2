@@ -769,7 +769,7 @@ useful module which returns values this way.
 
 If only a single item is returned from a subroutine then the 
 Template Toolkit assumes it meant to return a single item (rather
-than a list of 1 items) and leaves it well alone, returning the
+than a list of 1 item) and leaves it well alone, returning the
 single value as it is.  If you're executing a database query, 
 for example, you might get 1 item returned, or perhaps many 
 items which are then folded into a list.
@@ -792,8 +792,8 @@ only get one item returned.  For example:
     [% something.reverse.join(', ') %]
 
 Note that this is very much a last-ditch behaviour.  If the single
-item return is an object with a 'first' method, then that will be
-called, as expected, in preference to the list virtual method.
+item return is an object with a 'first' method, for example, then that
+will be called, as expected, in preference to the list virtual method.
 
 =head2 Compound Variables
 
