@@ -9,7 +9,7 @@
   #   documentation for the Template Toolkit is built.
 -%]
 [% META book = 'Modules'
-        page = 'Plugin_Format'
+        page = 'Plugin_Procedural'
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
@@ -35,40 +35,56 @@
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
     title="SYNOPSIS"
--%]<pre>    [% tt_start_tag %] USE format [% tt_end_tag %]
-    [% tt_start_tag %] commented = format('# %s') [% tt_end_tag %]
-    [% tt_start_tag %] commented('The cat sat on the mat') [% tt_end_tag %]
-    
-    [% tt_start_tag %] USE bold = format('&lt;b&gt;%s&lt;/b&gt;') [% tt_end_tag %]
-    [% tt_start_tag %] bold('Hello') [% tt_end_tag %]</pre>
+-%]<pre>    package Template::Plugin::LWPSimple;
+    use base qw(Template::Plugin::Procedural);
+    use LWP::Simple;  # exports 'get'
+    1;</pre>
+<pre>    [% tt_start_tag %] USE LWPSimple [% tt_end_tag %]
+    [% tt_start_tag %] LWPSimple.get(&quot;http://www.tt2.org/&quot;) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
     title="DESCRIPTION"
 -%]<p>
-The format plugin constructs sub-routines which format text according to
-a printf()-like format string.
+<b>Template::Plugin::Procedural</b> is a base class for Template Toolkit
+plugins that causes defined subroutines to be called directly rather
+than as a method.  Essentially this means that subroutines will not
+receive the class name or object as its first argument.
+</p>
+<p>
+This is most useful when creating plugins for modules that normally
+work by exporting subroutines that do not expect such additional
+arguments.
+</p>
+<p>
+Despite the fact that subroutines will not be called in an OO manner,
+inheritance still function as normal.  A class that uses
+<b>Template::Plugin::Procedural</b> can be subclassed and both subroutines
+defined in the subclass and subroutines defined in the original class
+will be available to the Template Toolkit and will be called without
+the class/object argument.
 </p>
 [%- END %]
 [% WRAPPER section
     title="AUTHOR"
 -%]<p>
-Andy Wardley &lt;abw@andywardley.com&gt;
+Mark Fowler &lt;mark@twoshortplanks.com&gt;
 </p>
 <p>
-[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+[% ttlink('http://www.twoshortplanks.com', 'http://www.twoshortplanks.com') -%]
 </p>
 [%- END %]
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.57, distributed as part of the
+1.04, distributed as part of the
 Template Toolkit version 2.09, released on 23 April 2003.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
+-%]<p>
+Copyright (C) 2002 Mark Fowler &lt;mark@twoshortplanks.com&gt;
+</p>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -77,7 +93,7 @@ modify it under the same terms as Perl itself.
 [% WRAPPER section
     title="SEE ALSO"
 -%]<p>
-[% ttlink('Template::Plugin', 'Template::Plugin') -%]
+[% ttlink('Template', 'Template') -%], [% ttlink('Template::Plugin', 'Template::Plugin') -%]
 </p>
 [%- END %]
 
