@@ -994,8 +994,7 @@ sub debug {
     my $hash = shift @$args;
     $args  = join(', ', @$file, @$args);
     $args .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
-#    print STDERR "factory debug($args)\n";
-    return "$OUTPUT \$context->debug($args); ## DEBUG ##"; 
+    return "$OUTPUT \$context->debugging($args); ## DEBUG ##"; 
 }
 
 
