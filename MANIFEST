@@ -1,4 +1,6 @@
 Changes
+HACKING
+INSTALL
 MANIFEST
 Makefile.PL
 README
@@ -96,6 +98,8 @@ docs/src/Modules/Template/Stash/XS.html
 docs/src/Modules/Template/Test.html
 docs/src/Modules/index.html
 docs/src/Release/Changes.html
+docs/src/Release/HACKING.html
+docs/src/Release/INSTALL.html
 docs/src/Release/README.html
 docs/src/Release/TODO.html
 docs/src/Release/index.html

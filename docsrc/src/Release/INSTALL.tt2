@@ -3,14 +3,14 @@
 
                               Version [* tt.version *]
 
-                              [* tt.release *]
+                             [* tt.release *]
 
 [* INCLUDE misc/copymid -*]
 
 QUICK INSTALL
 -------------
 
-[* PROCESS misc/install %]
+[* PROCESS misc/install *]
 
 For further details, see the sections below on CONFIGURATION, BUILDING
 AND TESTING, and INSTALLATION.

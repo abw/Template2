@@ -3,7 +3,7 @@
 
                               Version [* tt.version *]
 
-                              [* tt.release *]
+                             [* tt.release *]
 
 [* INCLUDE misc/copymid -*]
 
@@ -228,6 +228,9 @@ to know more about how it all works, then you might like to have a look
 at the following:
 
     perldoc Template::Manual::Internals
+
+This document also contains important information for people wishing
+to hack on the Template Toolkit.
 
 The final bit of good news is that there is now a FAQ for the Template
 Toolkit.

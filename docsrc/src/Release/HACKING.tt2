@@ -3,7 +3,7 @@
 
                               Version [* tt.version *]
 
-                              [* tt.release *]
+                             [* tt.release *]
 
 [* INCLUDE misc/copymid -*]
 

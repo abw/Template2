@@ -940,9 +940,11 @@
         <intro>
 	  This section contains the release notes for the Template Toolkit.
         </intro>
-        <page id="README" about="General information and installation guide"/>
+        <page id="README"  about="General information"/>
+        <page id="INSTALL" about="Installation and configuration guide"/>
         <page id="Changes" about="Change history"/>
-        <page id="TODO" about="Known bugs, planned features, etc."/>
+        <page id="TODO"    about="Known bugs, planned features, etc."/>
+        <page id="HACKING" about="Pointers for people wishing to hack on TT"/>
     </book>
 
 </docset>
