@@ -378,6 +378,7 @@ sub _fetch {
 	if ($compiled && -f $compiled && (stat($name))[9] <= (stat($compiled))[9]) {
 	    $data = $self->_load_compiled($compiled);
 	    $error = $self->error() unless $data;
+	    $self->store($name, $data) unless $error;
 	}
 	else {
 	    ($data, $error) = $self->_load($name);
@@ -608,44 +609,48 @@ sub _refresh {
     # if it's more than $STAT_TTL seconds since we last performed a 
     # stat() on the file then we need to do it again and see if the file
     # time has changed
-    if ( (time - $slot->[ STAT ]) > $STAT_TTL &&
-	 stat $slot->[ NAME ] && (stat(_))[9] != $slot->[ LOAD ]) {
-
-	print STDERR "refreshing cache file ", $slot->[ NAME ], "\n"
-	    if $DEBUG;
-
+    if ( (time - $slot->[ STAT ]) > $STAT_TTL && stat $slot->[ NAME ] ) {
 	$slot->[ STAT ] = time;
-	($data, $error) = $self->_load($slot->[ NAME ], 
-				       $slot->[ DATA ]->{ name });
-	($data, $error) = $self->_compile($data)
-	    unless $error;
 
-	unless ($error) {
-	    $slot->[ DATA ] = $data->{ data };
-	    $slot->[ LOAD ] = $data->{ time };
+	if ( (stat(_))[9] != $slot->[ LOAD ]) {
+
+	    print STDERR "refreshing cache file ", $slot->[ NAME ], "\n"
+		if $DEBUG;
+	    
+	    ($data, $error) = $self->_load($slot->[ NAME ],
+					   $slot->[ DATA ]->{ name });
+	    ($data, $error) = $self->_compile($data)
+		unless $error;
+
+	    unless ($error) {
+		$slot->[ DATA ] = $data->{ data };
+		$slot->[ LOAD ] = $data->{ time };
+	    }
 	}
     }
 
-    # remove existing slot from usage chain...
-    if ($slot->[ PREV ]) {
-	$slot->[ PREV ]->[ NEXT ] = $slot->[ NEXT ];
+    unless( $self->{ HEAD } == $slot ) {
+	# remove existing slot from usage chain...
+	if ($slot->[ PREV ]) {
+	    $slot->[ PREV ]->[ NEXT ] = $slot->[ NEXT ];
+	}
+	else {
+	    $self->{ HEAD } = $slot->[ NEXT ];
+	}
+	if ($slot->[ NEXT ]) {
+	    $slot->[ NEXT ]->[ PREV ] = $slot->[ PREV ];
+	}
+	else {
+	    $self->{ TAIL } = $slot->[ PREV ];
+	}
+	
+	# ..and add to start of list
+	$head = $self->{ HEAD };
+	$head->[ PREV ] = $slot if $head;
+	$slot->[ PREV ] = undef;
+	$slot->[ NEXT ] = $head;
+	$self->{ HEAD } = $slot;
     }
-    else {
-	$self->{ HEAD } = $slot->[ NEXT ];
-    }
-    if ($slot->[ NEXT ]) {
-	$slot->[ NEXT ]->[ PREV ] = $slot->[ PREV ];
-    }
-    else {
-	$self->{ TAIL } = $slot->[ PREV ];
-    }
-    
-    # ..and add to start of list
-    $head = $self->{ HEAD };
-    $head->[ PREV ] = $slot if $head;
-    $slot->[ PREV ] = undef;
-    $slot->[ NEXT ] = $head;
-    $self->{ HEAD } = $slot;
 
     return ($data, $error);
 }
