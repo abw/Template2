@@ -54,6 +54,7 @@ $SCALAR_OPS = {
     'list'    => sub { [ $_[0] ] },
     'hash'    => sub { { value => $_[0] } },
     'length'  => sub { length $_[0] },
+    'size'    => sub { return 1 },
     'defined' => sub { return 1 },
     'repeat'  => sub { 
         my ($str, $count) = @_;
@@ -75,6 +76,12 @@ $SCALAR_OPS = {
 #       eval "\$str =~ s$search$replaceg";
         return $str;
     },
+    'match' => sub {
+        my ($str, $search) = @_;
+        return $str unless defined $str and defined $search;
+        my @matches = ($str =~ /$search/);
+        return @matches ? \@matches : '';
+    },
     'split'   => sub { 
         my ($str, $split, @args) = @_;
         $str = '' unless defined $str;
@@ -90,6 +97,7 @@ $HASH_OPS = {
                       $hash->{ $item };
                   },
     'hash'   => sub { $_[0] },
+    'size'   => sub { scalar keys %{$_[0]} },
     'keys'   => sub { [ keys   %{ $_[0] } ] },
     'values' => sub { [ values %{ $_[0] } ] },
     'each'   => sub { [        %{ $_[0] } ] },
@@ -141,7 +149,10 @@ $LIST_OPS = {
         return $field                       # Schwartzian Transform 
             ?  map  { $_->[0] }             # for case insensitivity
                sort { $a->[1] cmp $b->[1] }
-               map  { [ $_, lc $_->{ $field } ] } 
+               map  { [ $_, lc(ref($_) eq 'HASH' 
+			       ? $_->{ $field } : 
+			       UNIVERSAL::can($_, $field)
+			       ? $_->$field() : $_) ] } 
                @$list 
             :  map  { $_->[0] }
                sort { $a->[1] cmp $b->[1] }
@@ -154,7 +165,10 @@ $LIST_OPS = {
         return $field                       # Schwartzian Transform 
             ?  map  { $_->[0] }             # for case insensitivity
                sort { $a->[1] <=> $b->[1] }
-               map  { [ $_, lc $_->{ $field } ] } 
+               map  { [ $_, lc(ref($_) eq 'HASH' 
+			       ? $_->{ $field } : 
+			       UNIVERSAL::can($_, $field)
+			       ? $_->$field() : $_) ] } 
                @$list 
             :  map  { $_->[0] }
                sort { $a->[1] <=> $b->[1] }
@@ -818,8 +832,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.48, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.49, distributed as part of the
+Template Toolkit version 2.06d, released on 22 January 2002.
 
 =head1 COPYRIGHT
 
