@@ -96,5 +96,7 @@
 
 [* PROCESS dir/tags *]
 
+[* PROCESS dir/debug *]
+
 =back
 
