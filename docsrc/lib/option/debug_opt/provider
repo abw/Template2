@@ -1,1 +1,2 @@
-Enables general debugging messages for the Template::Provider module.
+Enables general debugging messages for the
+L<Template::Provider|Template::Provider> module.

@@ -1,1 +1,2 @@
-Enables general debugging messages for the Template::Plugins module.
+Enables general debugging messages for the
+L<Template::Plugins|Template::Plugins> module.

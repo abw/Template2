@@ -1,1 +1,2 @@
-Enables general debugging messages for the Template::Service module.
+Enables general debugging messages for the
+L<Template::Service|Template::Service> module.
