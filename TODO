@@ -2,6 +2,8 @@
 # PENDING TODO ITEMS
 #------------------------------------------------------------------------
 
+* document FILTER aliases
+
 * URL plugin may be incorrect in not escaping certain characters such as 
   '&'.  I need to check the standards, or wait for someone more 
   knowledgeable in these matters to fix it for me, or otherwise give it 
