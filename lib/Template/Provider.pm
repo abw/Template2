@@ -22,7 +22,6 @@
 #   modify it under the same terms as Perl itself.
 #
 # TODO:
-#   * fix stash persistance
 #   * optional provider prefix (e.g. 'http:')
 #   * fold ABSOLUTE and RELATIVE test cases into one regex?
 #
@@ -138,6 +137,68 @@ sub store {
     });
 }
 
+
+#------------------------------------------------------------------------
+# load($name)
+#
+# Load a template without parsing/compiling it, suitable for use with 
+# the INSERT directive.  There's some duplication with fetch() and at
+# some point this could be reworked to integrate them a little closer.
+#------------------------------------------------------------------------
+
+sub load {
+    my ($self, $name) = @_;
+    my ($data, $error);
+    my $path = $name;
+
+    if ($name =~ m[^/]) {
+	# absolute paths (starting '/') allowed if ABSOLUTE set
+	$error = "$name: absolute paths are not allowed (set ABSOLUTE option)" 
+	    unless $self->{ ABSOLUTE };
+    }
+    elsif ($name =~ m[^\.+/]) {
+	# anything starting "./" is relative to cwd, allowed if RELATIVE set
+	$error = "$name: relative paths are not allowed (set RELATIVE option)"
+	    unless $self->{ RELATIVE };
+    }
+    else {
+      INCPATH: {
+	# otherwise, it's a file name relative to INCLUDE_PATH
+	foreach my $dir (@{ $self->{ INCLUDE_PATH } }) {
+	    $path = "$dir/$name";
+	    last INCPATH
+		if -f $path;
+	}
+	undef $path;	    # not found
+      }
+    }
+
+    if (defined $path && ! $error) {
+	local $/ = undef;    # slurp files in one go
+	local *FH;
+	if (open(FH, $path)) {
+	    $data = <FH>;
+	    close(FH);
+	}
+	else {
+	    $error = "$name: $!";
+	}
+    }
+
+    if ($error) {
+	return $self->{ TOLERANT } 
+	    ? (undef, Template::Constants::STATUS_DECLINED)
+	    : ($error, Template::Constants::STATUS_ERROR);
+    }
+    elsif (! defined $path) {
+	return (undef, Template::Constants::STATUS_DECLINED);
+    }
+    else {
+	return ($data, Template::Constants::STATUS_OK);
+    }
+}
+
+ 
 
 #------------------------------------------------------------------------
 # include_path(\@newpath)
