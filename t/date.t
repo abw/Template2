@@ -49,26 +49,43 @@ my $params = {
     daystr  => &POSIX::strftime($format->{ timeday }, @ltime),
     defstr  => &POSIX::strftime($format->{ default }, @ltime),
     now     => sub { 
-	&POSIX::strftime(shift || $format->{ default }, localtime(time));
+        &POSIX::strftime(shift || $format->{ default }, localtime(time));
     },
-    nowloc  => sub { my ($time, $format, $locale) = @_;
-	my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
-
-        # some systems expect locales to have a particular suffix
-        for my $suffix ('', @Template::Plugin::Date::LOCALE_SUFFIX) {
-            my $try_locale = $locale.$suffix;
-	    my $setlocale = &POSIX::setlocale(&POSIX::LC_ALL, $try_locale);
-            if (defined $setlocale && $try_locale eq $setlocale) {
-                $locale = $try_locale;
-                last;
-            }
-        }
-	my $datestr = &POSIX::strftime($format, localtime($time));
-	&POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
-	return $datestr;
-    },
-    date_calc => $got_date_calc,
+    time_locale => \&time_locale,
+    date_locale => \&date_locale,    
+    date_calc   => $got_date_calc,
 };
+
+sub time_locale { 
+    my ($time, $format, $locale) = @_;
+    my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
+    
+    # some systems expect locales to have a particular suffix
+    for my $suffix ('', @Template::Plugin::Date::LOCALE_SUFFIX) {
+        my $try_locale = $locale.$suffix;
+	    my $setlocale = &POSIX::setlocale(&POSIX::LC_ALL, $try_locale);
+        if (defined $setlocale && $try_locale eq $setlocale) {
+            $locale = $try_locale;
+            last;
+        }
+    }
+    my $datestr = &POSIX::strftime($format, localtime($time));
+    &POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
+    return $datestr;
+}
+
+sub date_locale {
+    my ($time, $format, $locale) = @_;
+    my @date = (split(/(?:\/| |:|-)/, $time))[2,1,0,3..5];
+    return (undef, Template::Exception->new('date',
+                   "bad time/date string:  expects 'h:m:s d:m:y'  got: '$time'"))
+        unless @date >= 6 && defined $date[5];
+    $date[4] -= 1;     # correct month number 1-12 to range 0-11
+    $date[5] -= 1900;  # convert absolute year to years since 1900
+    $time = &POSIX::mktime(@date);
+    return time_locale($time, $format, $locale);
+}
+
 
 # force second to rollover so that we reliably see any tests failing.
 # lesson learnt from 2.07b where I broke the Date plugin's handling of a
@@ -162,8 +179,8 @@ In French, today's day is: [% french.format +%]
 
 -- expect --
 -- process --
-In English, today's day is: [% nowloc(time, '%A', 'en_GB') +%]
-In French, today's day is: [% nowloc(time, '%A', 'fr_FR') +%]
+In English, today's day is: [% time_locale(time, '%A', 'en_GB') +%]
+In French, today's day is: [% time_locale(time, '%A', 'fr_FR') +%]
 
 -- test --
 [% USE english = date(format => '%A') %]
@@ -175,8 +192,8 @@ In French, today's day is:
 
 -- expect --
 -- process --
-In English, today's day is: [% nowloc(time, '%A', 'en_GB') +%]
-In French, today's day is: [% nowloc(time, '%A', 'fr_FR') +%]
+In English, today's day is: [% time_locale(time, '%A', 'en_GB') +%]
+In French, today's day is: [% time_locale(time, '%A', 'fr_FR') +%]
 
 -- test --
 [% USE date %]
@@ -190,12 +207,9 @@ In French, today's day is: [% nowloc(time, '%A', 'fr_FR') +%]
 [% USE day = date(format => '%A', locale => 'en_GB') %]
 [% day.format('4:20:00 13-9-2000') %]
 
-
 -- expect --
 -- process --
-[% # 4:20:00 9-13-2000 equals 968818800 seconds since the epoch
-   nowloc(968818800, '%A', 'en_GB')
-%]
+[% date_locale('4:20:00 13-9-2000', '%A', 'en_GB') %]
 
 
 -- test --
