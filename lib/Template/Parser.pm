@@ -688,16 +688,17 @@ sub _parse {
 		    ($text, $line, $token) = @$token;
 		    if (ref $token) {
 			if ($info->{ DEBUG } && ! $in_string) {
-			    # is this gnarly or what?  we're pushing
-			    # parse tokens to make it look like the author
-			    # added a DEBUG directive like this:
-			    # [% DEBUG dir line='20' text='INCLUDE foo' %]
-			    # before each directive.  Cunning eh?
+                            # - - - - - - - - - - - - - - - - - - - - - - - - -
+			    # This is gnarly.  Look away now if you're easily
+                            # frightened.  We're pushing parse tokens onto the
+                            # pending list to simulate a DEBUG directive like so:
+			    # [% DEBUG msg line='20' text='INCLUDE foo' %]
+                            # - - - - - - - - - - - - - - - - - - - - - - - - -
 			    my $dtext = $text;
 			    $dtext =~ s[(['\\])][\\$1]g;
 			    unshift(@$tokens, 
 				    DEBUG   => 'DEBUG',
-				    IDENT   => 'dir',
+				    IDENT   => 'msg',
 				    IDENT   => 'line',
 				    ASSIGN  => '=',
 				    LITERAL => "'$line'",
