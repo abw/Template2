@@ -9,32 +9,39 @@ print STDERR "\a";
 
 eval "use Template";
 unless ($@) {
-    warn(<<EOF);
+    warn(<<EOF) unless $Template::VERSION =~ /^2/;
 IMPORTANT NOTE:
 
     Version $Template::VERSION of the Template Toolkit detected.
 
-    This installation will most likely trash that version and render
-    it totally useless.  You probably don't want that to happen right
-    now, so please ensure that you install this beta release into a
-    separate directory.  These co-existance problems will be solved
-    for version 2.00 proper.
+    If you install these modules you will totally screw up your
+    Version $Template::VERSION installation.  If you're ready to take
+    the plunge and aren't relying too heavily on any of the "features"
+    that have changed from version 1.xx to 2.xx (see Changes file),
+    then go ahead.  Be bold.  See the Changes file for a summary of
+    all the great new things for you to play with, and the issues that
+    you might need to attend to.
 
-    If you are suitably wise and have issued the appropriate command 
-    line incantation to ensure that this bundle is installed to a safe
-    location, e.g.
+    You might then decide to re-install Version $Template::VERSION to a different
+    location in case you ever need it, e.g.
 
-	perl Makefile.PL LIB=/some/other/place
+        perl Makefile.PL PREFIX=/some/where/else
 
-    then we apologise.  This script is too dumb to recognise the fact
-    and must issue this tedious warning regardless.
+    Remember to add "use lib '/some/where/else'" to your Perl scripts
+    that want to use Version 1.07, and also to the V1 'tpage' and
+    'ttree' scripts (in /some/where/else/bin) so that they continue to
+    use the right versions of the modules.
+
+    Alternatively, you can install this Version 2.00 beta to a
+    different location and follow the strategy outlined above, or not
+    "make install" it at all.
 
 EOF
 }
 
 warn(<<EOF);
-    This is beta code.  Please read the README and Changes files for 
-    details of the current status.
+    This is stable beta code.  Please read the README and Changes files 
+    for details of the current status.
 
 EOF
 
@@ -70,10 +77,4 @@ echo "Building documentation for version \$(VERSION)" ;           \\
 \$(PERL) bin/ttree -f ./docs/ttree.cfg -a;                        \\
 EOF
 }
-
-
-# Could add these before/after call to ttree to write-protect output docs
-# to prevent accidental editing.  Better to edit the source files...
-# \$(CHMOD) 644 docs/pod/*.pod;                                     \\
-# \$(CHMOD) 444 docs/pod/*.pod;                                     \\
 
