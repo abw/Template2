@@ -38,7 +38,7 @@ use Exporter;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0;
 @ISA     = qw( Exporter );
-@EXPORT  = qw( ntests ok match flush test_expect callsign banner );
+@EXPORT  = qw( ntests ok is match flush test_expect callsign banner );
 @EXPORT_OK = ( 'assert' );
 %EXPORT_TAGS = ( all => [ @EXPORT_OK, @EXPORT ] );
 $| = 1;
@@ -49,6 +49,7 @@ $PRESERVE = 0	 # don't mangle newlines in output/expect
 
 my @results = ();
 my ($ntests, $ok_count);
+*is = \&match;
 
 sub END {
     # ensure flush() is called to print any cached results 
@@ -74,14 +75,15 @@ sub ntests {
     $ntests += $EXTRA + scalar @results;	 
     $ok_count = 1;
     print "1..$ntests\n";
+    # flush cached results
     foreach my $pre_test (@results) {
-	ok($pre_test);
+	ok(@$pre_test);
     }
 }
 
 
 #------------------------------------------------------------------------
-# ok($truth)
+# ok($truth, $msg)
 #
 # Tests the value passed for truth and generates an "ok $n" or "not ok $n"
 # line accordingly.  If ntests() hasn't been called then we cached 
@@ -89,19 +91,24 @@ sub ntests {
 #------------------------------------------------------------------------
 
 sub ok {
-    my $result = shift;
+    my ($ok, $msg) = @_;
 
-    if ($ok_count) {
-	print "not " unless $result;
-	print "ok $ok_count\n";
-	++$ok_count;
+    # cache results if ntests() not yet called
+    unless ($ok_count) {
+	push(@results, [ $ok, $msg ]);
+	return $ok;
+    }
+
+    $msg = defined $msg ? " - $msg" : '';
+    if ($ok) {
+	print "ok ", $ok_count++, "$msg\n";
     }
     else {
-	# haven't started counting tests yet, so buffer it for later
-	push(@results, $result);
+	print STDERR "FAILED $ok_count: $msg\n" if defined $msg;
+	print "not ok ", $ok_count++, "$msg\n";
     }
-    return $result;
 }
+
 
 
 #------------------------------------------------------------------------
@@ -122,24 +129,23 @@ sub assert {
     die $err;
 }
 
-
 #------------------------------------------------------------------------
 # match( $result, $expect )
 #------------------------------------------------------------------------
 
 sub match {
-    my ($result, $expect) = @_;
+    my ($result, $expect, $msg) = @_;
     my $count = $ok_count ? $ok_count : scalar @results + 1;
 
     # force stringification of $result to avoid 'no eq method' overload errors
     $result = "$result" if ref $result;	   
 
     if ($result eq $expect) {
-	return ok(1);
+	return ok(1, $msg);
     }
     else {
 	print STDERR "FAILED $count:\n  expect: [$expect]\n  result: [$result]\n";
-	return ok(0);
+	return ok(0, $msg);
     }
 }
 
@@ -189,6 +195,7 @@ sub test_expect {
     my ($src, $tproc, $params) = @_;
     my ($input, @tests);
     my ($output, $expect, $match);
+    my $count = 0;
     my $ttprocs;
 
     # read input text
@@ -218,7 +225,7 @@ sub test_expect {
     ntests(3 + scalar(@tests) * 2);
 
     # first test is that Template loaded OK, which it did
-    ok(1);
+    ok(1, 'running test_expect()');
 
     # optional second param may contain a Template reference or a HASH ref
     # of constructor options, or may be undefined
@@ -239,13 +246,15 @@ sub test_expect {
     # otherwise, we assume it's a Template reference
 
     # test: template processor created OK
-    ok($tproc);
+    ok($tproc, 'template processor is engaged');
 
     # third test is that the input read ok, which it did
-    ok(1);
+    ok(1, 'input read and split into ' . scalar @tests . ' tests');
 
     # the remaining tests are defined in @tests...
     foreach $input (@tests) {
+	$count++;
+
 	# split input by a line like "-- expect --"
 	($input, $expect) = 
 	    split(/^\s*--\s*expect\s*--\s*\n/im, $input);
@@ -271,12 +280,13 @@ sub test_expect {
 	$tproc->process(\$input, $params, \$output) || do {
 	    warn "Template process failed: ", $tproc->error(), "\n";
 	    # report failure and automatically fail the expect match
-	    ok(0); ok(0);
+	    ok(0, "template test $count process FAILED: " . subtext($input));
+	    ok(0, '(obviously did not match expected)');
 	    next;
 	};
 
 	# processed OK
-	ok(1);
+	ok(1, "template test $count processed OK: " . subtext($input));
 
 	# another hack: if the '-- expect --' section starts with 
 	# '-- process --' then we process the expected output 
@@ -291,7 +301,8 @@ sub test_expect {
 		warn("Template process failed (expect): ", 
 		     $tproc->error(), "\n");
 		# report failure and automatically fail the expect match
-		ok(0);
+		ok(0, "failed to process expected output ["
+		     . subtext($expect) . ']');
 		next;
 	    };
 	    $expect = $out;
@@ -317,7 +328,7 @@ sub test_expect {
 		   $copyi, $copye, $copyo);
 	}
 
-	ok($match);
+	ok($match, $match ? "matched expected" : "did not match expected");
     };
 }
 
@@ -352,6 +363,13 @@ sub banner {
 }
 
 
+sub subtext {
+    my $text = shift;
+    $text =~ s/\s*$//sg;
+    $text = substr($text, 0, 32) . '...' if length $text > 32;
+    $text =~ s/\n/\\n/g;
+    return $text;
+}
 
 
 1;
@@ -639,8 +657,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.44, distributed as part of the
-Template Toolkit version 2.06f, released on 13 March 2002.
+2.45, distributed as part of the
+Template Toolkit version 2.06g, released on 15 April 2002.
 
 =head1 COPYRIGHT
 
