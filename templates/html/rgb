@@ -27,6 +27,7 @@
 	blood   => '#800000'
 	scarlet => '#c04040'
 	rose    => '#f08080'
+	orange  => '#fe7202'
 
 	# greens
 	leaf   => '#006400'

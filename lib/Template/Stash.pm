@@ -96,7 +96,7 @@ $HASH_OPS = {
     'list'   => sub { my ($hash, $what) = @_;  $what ||= '';
                       return ($what eq 'keys')   ? [   keys %$hash ]
                            : ($what eq 'values') ? [ values %$hash ]
-                           : ($what eq 'each')   ? [ values %$hash ]
+                           : ($what eq 'each')   ? [        %$hash ]
                            : [ map { { key => $_ , value => $hash->{ $_ } } }
                                keys %$hash ];
                 },
@@ -491,7 +491,7 @@ sub _dotop {
 	if (($value = $LIST_OPS->{ $item }) && ! $lvalue) {
 	    @result = &$value($root, @$args);		    ## @result
 	}
-	elsif ($item =~ /^\d+$/) {
+	elsif ($item =~ /^-?\d+$/) {
 	    $value = $root->[$item];
 	    return $value unless ref $value eq 'CODE';	    ## RETURN
 	    @result = &$value(@$args);			    ## @result
@@ -605,7 +605,7 @@ sub _assign {
 	return ($root->{ $item } = $value)			## RETURN
 	    unless $default && $root->{ $item };
     }
-    elsif ($rootref eq 'ARRAY' && $item =~ /^\d+$/) {
+    elsif ($rootref eq 'ARRAY' && $item =~ /^-?\d+$/) {
 	# or set a list item by index number
 	return ($root->[$item] = $value)			## RETURN
 	    unless $default && $root->{ $item };
@@ -810,8 +810,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.29, distributed as part of the
-Template Toolkit version 2.04d, released on 29 August 2001.
+2.30, distributed as part of the
+Template Toolkit version 2.04e, released on 06 September 2001.
 
 =head1 COPYRIGHT
 

@@ -202,6 +202,9 @@ sub content {
     my $output = '';
     foreach my $node (@{ $self->getChildNodes }) {
 	$output .= $node->present($view);
+
+# abw test passing args, Aug 2001
+#	$output .= $view->print($node);
     }
     return $output;
 }
@@ -798,7 +801,7 @@ library.
 =head1 VERSION
 
 2.6, distributed as part of the
-Template Toolkit version 2.04d, released on 29 August 2001.
+Template Toolkit version 2.04e, released on 06 September 2001.
 
 
 

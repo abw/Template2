@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.04d, detailing
+#   Revision history for the Template Toolkit version 2.04e, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -15,6 +15,41 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.04e - 06 Sep 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed bug in 'list' entry in $HASH_OPS in both Template/Stash.pm and 
+  Template/Stash/Context.pm to return '%$hash' instead of 'values %$hash'.
+  Thanks to Craig Barrett for reporting the problem.
+
+* Applied a patch from Craig to Stash.pm and Stash/Context.pm to 
+  accept negative integers as array indices, counting back from the
+  end of the list as in Perl.  This brings it into line with the new
+  XS Stash.
+  http://www.tt2.org/pipermail/templates/2001-August/001493.html
+  
+* And another patch from Craig to allow $var and ${var} to be used as
+  keys in hashes.  
+  http://www.tt2.org/pipermail/templates/2001-August/001410.html
+
+* Modified Template::Plugins fetch() method to accept $factory as a
+  code reference.  Then changed _load() to return a closure for
+  regular Perl modules loaded (via LOAD_PERL option) which, which
+  called by fetch(), removes the first argument, the $context
+  reference, which the non-plugin module won't be expecting.  This
+  fixes the problem reported (and also fixed but in a slightly
+  different way) by Lyle Brooks, here in these messages:
+  http://www.tt2.org/pipermail/templates/2001-August/001397.html
+  http://www.tt2.org/pipermail/templates/2001-August/001406.html
+
+* Removed the eq, ne, gt, lt, ge and ne operators added in 2.04d.  Given
+  that they can (and did) break code that had existing variables with 
+  those names, I decided it was best to strip them out again and think
+  more carefully about adding them to an official release.  Hence they're
+  not going to be in 2.05.
+
 
 #------------------------------------------------------------------------
 # Version 2.04d - 29 Aug 2001                     ## DEVELOPER RELEASE ##
