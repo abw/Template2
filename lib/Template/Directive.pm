@@ -34,15 +34,25 @@ package Template::Directive;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $PRETTY $WHILE_MAX );
+use Template::Base;
 use Template::Constants;
 use Template::Exception;
+
+use base qw( Template::Base );
+use vars qw( $VERSION $DEBUG $PRETTY $WHILE_MAX );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $WHILE_MAX = 1000 unless defined $WHILE_MAX;
 $PRETTY    = 0 unless defined $PRETTY;
 my $OUTPUT = '$output .= ';
+
+
+sub _init {
+    my ($self, $config) = @_;
+    $self->{ NAMESPACE } = $config->{ NAMESPACE };
+    return $self;
+}
 
 
 sub pad {
@@ -174,6 +184,20 @@ sub quoted {
 sub ident {
     my ($class, $ident) = @_;
     return "''" unless @$ident;
+    my $ns;
+
+    # does the first element of the identifier have a NAMESPACE
+    # handler defined?
+    if (ref $class && @$ident > 2 && ($ns = $class->{ NAMESPACE })) {
+	my $key = $ident->[0];
+	$key =~ s/^'(.+)'$/$1/s;
+	if ($ns = $ns->{ $key }) {
+	    # discard first node indicating namespace
+	    splice(@$ident, 0, 2);
+	    return $ns->ident($ident);
+	}
+    }
+	
     if (scalar @$ident <= 2 && ! $ident->[1]) {
         $ident = $ident->[0];
     }
