@@ -7,8 +7,9 @@ select STDOUT;
 my $DBI_CONFIG_FILE = 't/dbi_test.cfg';
 
 print <<EOF;
-Template Toolkit Version 2.00
------------------------------
+
+                    Template Toolkit Version 2.00
+                    =============================
 EOF
 
 #------------------------------------------------------------------------
@@ -18,8 +19,9 @@ EOF
 eval "use Template";
 unless ($@ or $Template::VERSION =~ /^2/) {
     warn(<<EOF);
-IMPORTANT NOTE:
 
+IMPORTANT NOTE:
+---------------
     You have version $Template::VERSION of the Template Toolkit installed.
 
     There are some minor incompatabilities between version 1.* and 2.*
