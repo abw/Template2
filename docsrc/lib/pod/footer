@@ -3,7 +3,7 @@
    PROCESS misc/copyright;
    PROCESS misc/seealso
       seealso = page.seealso
--%]
++%]
 
 =cut
 
