@@ -26,6 +26,7 @@ $^W = 1;
 $Template::Test::DEBUG = 0;
 $Template::Parser::DEBUG = 0;
 
+
 my $counter  = 0;
 my $params   = {
     'yes'    => 1,
@@ -325,3 +326,14 @@ mega: 106
 2 2
 3 3
 
+
+-- stop -- 
+# this is for testing the lt operator which isn't enabled by default.
+-- test --
+[% IF 'one' lt 'two' -%]
+one is less than two
+[% ELSE -%]
+ERROR!
+[% END -%]
+-- expect --
+one is less than two
