@@ -533,3 +533,26 @@ Mithrandir, Olorin, Incanus
 -- expect --
 d: 2
 e: 3
+
+
+# these tests check that the incorrect precedence in the parser has now
+# been fixed, thanks to Craig Barrat.
+-- test --
+[%  1 || 0 && 0  # should be 1 || (0&&0), not (1||0)&&0 %]
+-- expect --
+1
+
+-- test --
+[%  1 + !0 + 1  # should be 1 + (!0) + 0, not 1 + !(0 + 1) %]
+-- expect --
+3
+
+-- test --
+[% "x" _ "y" == "y"; ','  # should be ("x"_"y")=="y", not "x"_("y"=="y") %]
+-- expect --
+,
+
+-- test --
+[% "x" _ "y" == "xy"      # should be ("x"_"y")=="xy", not "x"_("y"=="xy") %]
+-- expect --
+1

@@ -15,9 +15,6 @@
 		INCLUDE tocitem 
 			title = 'DESCRIPTION';
 		INCLUDE tocitem 
-			title = 'General Questions'
- 			subs  = [ 'Why is the sky blue?' ];
-		INCLUDE tocitem 
 			title = 'Template Toolkit Language'
  			subs  = [ 'Why doesn\'t $tt_start_tag a = b IF c $tt_end_tag work as expected?' ];
 		INCLUDE tocitem 
@@ -27,8 +24,10 @@
 		INCLUDE tocitem 
 			title = 'Extending the Template Toolkit'
  			subs  = [ 'Can I serve templates from a database?',
-			          'Can I fetch templates via http?',
-			          'Miscellaneous' ];
+			          'Can I fetch templates via http?' ];
+		INCLUDE tocitem 
+			title = 'Miscellaneous'
+ 			subs  = [ 'How can I configure variables on a per-request basis?' ];
 		INCLUDE tocitem 
 			title = 'AUTHOR';
 		INCLUDE tocitem 
@@ -45,15 +44,6 @@ This is the Frequently Asked Questions list for the Template Toolkit.
 More accurately, it's a very thin placeholder for where the FAQ will
 soon be.
 </p>
-[%- END %]
-[% WRAPPER section
-    title='General Questions'
--%][% WRAPPER subsection
-   title = 'Why is the sky blue?'
--%]<p>
-Something to do with refraction.
-</p>
-[%- END %]
 [%- END %]
 [% WRAPPER section
     title='Template Toolkit Language'
@@ -95,12 +85,12 @@ And then print each item in the column going across the output rows
 [% WRAPPER subsection
    title = 'Accessing Cookies'
 -%]<p>
-Jeff Boes &lt;boes@nexcerpt.com&gt; writes:
+Jeff Boes &lt;boes@nexcerpt.com&gt; asks:
 </p>
 <pre>    Does anyone have a quick-n-dirty approach to accessing 
     cookies from templates? </pre>
 <p>
-Jonas Liljegren replies:
+Jonas Liljegren answers:
 </p>
 <pre>    [% tt_start_tag %] USE CGI [% tt_end_tag %]
     
@@ -207,17 +197,81 @@ pointers on how to acheive this using existing modules:
      
     Craig</pre>
 [%- END %]
-[% WRAPPER subsection
-   title = 'Miscellaneous'
--%]
-<ul>
-
-<li><b>Can I have another cup of coffee?</b><br>
-<p>
-No, I think you've hhhaadd ennnough alllrready.
+[%- END %]
+[% WRAPPER section
+    title='Miscellaneous'
+-%][% WRAPPER subsection
+   title = 'How can I configure variables on a per-request basis?'
+-%]<p>
+One easy way to acheive this is to define a single PRE_PROCESS template which
+loads in other configuration files based on variables defined or other 
+conditions.
 </p>
-
-</ul>
+<p>
+For example, my setup usually looks something like this:
+</p>
+<pre>    PRE_PROCESS =&gt; 'config/main'</pre>
+<p>
+config/main:
+</p>
+<pre>    [% tt_start_tag %]  DEFAULT  style   = 'text'
+                 section =  template.section or 'home';</pre>
+<pre>        PROCESS  config/site
+              +  config/urls
+              +  config/macros
+              + &quot;config/style/$style&quot;
+              + &quot;config/section/$section&quot;
+              + ...
+    [% tt_end_tag %]</pre>
+<p>
+This allows me to set a single 'style' variable to control which config
+file gets pre-processed to set my various style options (colours, img paths,
+etc).  For example:
+</p>
+<p>
+config/style/basic:
+</p>
+<pre>    [% tt_start_tag %]  style = {
+	    name = style    # save existing 'style' var as 'style.name'</pre>
+<pre>	    # define various other style variables....
+            col = {
+		back =&gt; '#ffffff'
+		text =&gt; '#000000'
+		# ...etc...
+	    }</pre>
+<pre>	    logo = {
+		# ...etc...
+	    }</pre>
+<pre>	    # ...etc...
+	}
+    [% tt_end_tag %]</pre>
+<p>
+Each source template can declare which section it's in via a META
+directive:
+</p>
+<pre>  [% tt_start_tag %] META
+       title   = 'General Information'
+       section = 'info'
+  [% tt_end_tag %]</pre>
+<pre>  ...</pre>
+<p>
+This controls which section configuration file gets loaded to set various
+other variables for defining the section title, menu, etc.
+</p>
+<p>
+config/section/info:
+</p>
+<pre>    [% tt_start_tag %]  section = {
+	    name   = section  # save 'section' var as 'section.name'
+	    title  = 'Information'
+	    menu   = [ ... ]
+	    # ...etc...
+	}
+    [% tt_end_tag %]</pre>
+<p>
+This illustrates the basic principal but you can extend it to perform
+pretty much any kind of per-document initialisation that you require.
+</p>
 [%- END %]
 [%- END %]
 [% WRAPPER section
@@ -232,8 +286,8 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.34, distributed as part of the
-Template Toolkit version 2.06a, released on 19 November 2001.
+2.35, distributed as part of the
+Template Toolkit version 2.06b, released on 29 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section

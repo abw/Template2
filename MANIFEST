@@ -61,6 +61,7 @@ docs/src/Modules/Template/Plugin/Date.html
 docs/src/Modules/Template/Plugin/Directory.html
 docs/src/Modules/Template/Plugin/Dumper.html
 docs/src/Modules/Template/Plugin/File.html
+docs/src/Modules/Template/Plugin/Filter.html
 docs/src/Modules/Template/Plugin/Format.html
 docs/src/Modules/Template/Plugin/GD/Constants.html
 docs/src/Modules/Template/Plugin/GD/Graph/area.html
@@ -81,6 +82,7 @@ docs/src/Modules/Template/Plugin/GD/Text/Wrap.html
 docs/src/Modules/Template/Plugin/HTML.html
 docs/src/Modules/Template/Plugin/Iterator.html
 docs/src/Modules/Template/Plugin/Pod.html
+docs/src/Modules/Template/Plugin/String.html
 docs/src/Modules/Template/Plugin/Table.html
 docs/src/Modules/Template/Plugin/URL.html
 docs/src/Modules/Template/Plugin/View.html
@@ -396,6 +398,7 @@ lib/Template/Plugin/Date.pm
 lib/Template/Plugin/Directory.pm
 lib/Template/Plugin/Dumper.pm
 lib/Template/Plugin/File.pm
+lib/Template/Plugin/Filter.pm
 lib/Template/Plugin/Format.pm
 lib/Template/Plugin/GD/Constants.pm
 lib/Template/Plugin/GD/Graph/area.pm
@@ -416,6 +419,7 @@ lib/Template/Plugin/GD/Text/Wrap.pm
 lib/Template/Plugin/HTML.pm
 lib/Template/Plugin/Iterator.pm
 lib/Template/Plugin/Pod.pm
+lib/Template/Plugin/String.pm
 lib/Template/Plugin/Table.pm
 lib/Template/Plugin/URL.pm
 lib/Template/Plugin/View.pm
@@ -508,6 +512,8 @@ t/stash-xs.t
 t/stash.t
 t/stashc.t
 t/stop.t
+t/strcat.t
+t/string.t
 t/switch.t
 t/table.t
 t/tags.t

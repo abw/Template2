@@ -28,7 +28,7 @@ require 5.004;
 
 use strict;
 use base qw( Template::Base );
-use vars qw( $VERSION $DEBUG $FILTERS $URI_ESCAPES );
+use vars qw( $VERSION $DEBUG $FILTERS $URI_ESCAPES $PLUGIN_FILTER );
 use Template::Constants;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -75,6 +75,8 @@ $FILTERS = {
     'latex'      => [ \&latex_filter_factory,    1 ],
 };
 
+# name of module implementing plugin filters
+$PLUGIN_FILTER = 'Template::Plugin::Filter';
 
 
 #========================================================================
@@ -99,11 +101,27 @@ sub fetch {
     my ($self, $name, $args, $context) = @_;
     my ($factory, $is_dynamic, $filter, $error);
 
-    # retrieve the filter factory
-    return (undef, Template::Constants::STATUS_DECLINED)
-	unless ($factory = $self->{ FILTERS }->{ $name }
-			|| $FILTERS->{ $name });
+    # allow $name to be specified as a reference to 
+    # a plugin filter object;  any other ref is 
+    # assumed to be a coderef and hence already a filter;
+    # non-refs are assumed to be regular name lookups
 
+    if (ref $name) {
+	if (UNIVERSAL::isa($name, $PLUGIN_FILTER)) {
+	    $factory = $name->factory()
+		|| return $self->error($name->error());
+	}
+	else {
+	    return $name;
+	}
+    }
+    else {
+	return (undef, Template::Constants::STATUS_DECLINED)
+	    unless ($factory = $self->{ FILTERS }->{ $name }
+		    || $FILTERS->{ $name });
+    }
+
+    # factory can be an [ $code, $dynamic ] or just $code
     if (ref $factory eq 'ARRAY') {
 	($factory, $is_dynamic) = @$factory;
     }
@@ -1231,8 +1249,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.37, distributed as part of the
-Template Toolkit version 2.06a, released on 19 November 2001.
+2.38, distributed as part of the
+Template Toolkit version 2.06b, released on 29 November 2001.
 
 =head1 COPYRIGHT
 
@@ -1244,4 +1262,4 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template|Template>, L<Template::Context|Template::Context>
+L<Template|Template>, L<Template::Context|Template::Context>, L<Template::Manual::Filters|Template::Manual::Filters>

@@ -46,6 +46,7 @@
 %left COMMA
 %left AND OR
 %left NOT
+%left CAT
 %left DOT
 %left CMPOP
 %left BINOP
@@ -350,10 +351,11 @@ expr:	    expr BINOP expr	    { "$_[1] $_[2] $_[3]"                 }
 	|   expr DIV expr	    { "int($_[1] / $_[3])"                }
 	|   expr MOD expr	    { "$_[1] % $_[3]"                     }
 	|   expr CMPOP expr	    { "$_[1] $CMPOP{ $_[2] } $_[3]"       }
-	|   expr AND expr	    { "($_[1]) && ($_[3])"                }
-	|   expr OR expr	    { "($_[1]) || ($_[3])"                }
-	|   NOT expr		    { "!($_[2])"                          }
-	|   expr '?' expr ':' expr  { "(($_[1]) ? ($_[3]) : ($_[5]))"     }
+	|   expr CAT expr	    { "$_[1]  . $_[3]"                    }
+	|   expr AND expr	    { "$_[1] && $_[3]"                    }
+	|   expr OR expr	    { "$_[1] || $_[3]"                    }
+	|   NOT expr		    { "! $_[2]"                           }
+	|   expr '?' expr ':' expr  { "$_[1] ? $_[3] : $_[5]"             }
 	|   '(' assign ')'	    { $factory->assign(@{$_[2]})          }
 	|   '(' expr ')'	    { "($_[2])"                           }
 	|   term		

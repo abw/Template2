@@ -123,6 +123,34 @@ See L<Template::Plugin::File> for further details.
     [% File.dir %]      # /tmp
     [% File.mtime %]    # modification time
 
+=head2 Filter
+
+This module implements a base class plugin which can be subclassed
+to easily create your own modules that define and install new filters.
+
+    package MyOrg::Template::Plugin::MyFilter;
+
+    use Template::Plugin::Filter;
+    use base qw( Template::Plugin::Filter );
+
+    sub filter {
+	my ($self, $text) = @_;
+
+	# ...mungify $text...
+
+	return $text;
+    }
+
+    # now load it...
+    [% USE MyFilter %]
+
+    # ...and use the returned object as a filter
+    [% FILTER $MyFilter %]
+      ...
+    [% END %]
+
+See L<Template::Plugin::Filter> for further details.
+
 =head2 Format
 
 The Format plugin provides a simple way to format text according to a
@@ -283,6 +311,35 @@ L<Template::Plugin::Iterator> for further details.
        [% '</ul>' IF iterator.last %]
     [% END %]
 
+=head2 Pod
+
+This plugin provides an interface to the L<Pod::POD|Pod::POD> module
+which parses POD documents into an internal object model which can
+then be traversed and presented through the Template Toolkit.
+
+    [% USE Pod(podfile) %]
+
+    [% FOREACH head1 = Pod.head1;
+	 FOREACH head2 = head1/head2;
+	   ...
+         END;
+       END
+    %]
+
+=head2 String
+
+The String plugin implements an object-oriented interface for 
+manipulating strings.  See L<Template::Plugin::String> for further 
+details.
+
+    [% USE String 'Hello' %]
+    [% String.append(' World') %]
+
+    [% msg = String.new('Another string') %]
+    [% msg.replace('string', 'text') %]
+
+    The string "[% msg %]" is [% msg.length %] characters long.
+
 =head2 Table
 
 The Table plugin allows you to format a list of data items into a 
@@ -343,21 +400,6 @@ The plugin requires the XML::DOM module, available from CPAN:
 
     http://www.cpan.org/modules/by-module/XML/
 
-=head2 XML::XPath
-
-The XML::XPath plugin provides an interface to Matt Sergeant's
-E<lt>matt@sergeant.orgE<gt> XML::XPath module.  See 
-L<Template::Plugin::XML::XPath> and L<XML::XPath> for further details.
-
-    [% USE xpath = XML.XPath(xmlfile) %]
-    [% FOREACH page = xpath.findnodes('/html/body/page') %]
-       [% page.getAttribute('title') %]
-    [% END %]
-
-The plugin requires the XML::XPath module, available from CPAN:
-
-    http://www.cpan.org/modules/by-module/XML/
-
 =head2 XML::RSS
 
 The XML::RSS plugin is a simple interface to Jonathan Eisenzopf's
@@ -376,4 +418,56 @@ See L<Template::Plugin::XML::RSS> and L<XML::RSS> for further details.
 The XML::RSS module is available from CPAN:
 
     http://www.cpan.org/modules/by-module/XML/
+
+=head2 XML::Simple
+
+This plugin implements an interface to the L<XML::Simple|XML::Simple>
+module.
+
+    [% USE xml = XML.Simple(xml_file_or_text) %]
+
+    [% xml.head.title %]
+
+See L<Template::Plugin::XML::Simple> for further details.
+
+=head2 XML::Style
+
+This plugin defines a filter for performing simple stylesheet based 
+transformations of XML text.  
+
+    [% USE xmlstyle 
+           table = { 
+               attributes = { 
+                   border      = 0
+                   cellpadding = 4
+                   cellspacing = 1
+               }
+           }
+    %]
+
+    [% FILTER xmlstyle %]
+    <table>
+    <tr>
+      <td>Foo</td> <td>Bar</td> <td>Baz</td>
+    </tr>
+    </table>
+    [% END %]
+
+See L<Template::Plugin::XML::Style> for further details.
+
+=head2 XML::XPath
+
+The XML::XPath plugin provides an interface to Matt Sergeant's
+E<lt>matt@sergeant.orgE<gt> XML::XPath module.  See 
+L<Template::Plugin::XML::XPath> and L<XML::XPath> for further details.
+
+    [% USE xpath = XML.XPath(xmlfile) %]
+    [% FOREACH page = xpath.findnodes('/html/body/page') %]
+       [% page.getAttribute('title') %]
+    [% END %]
+
+The plugin requires the XML::XPath module, available from CPAN:
+
+    http://www.cpan.org/modules/by-module/XML/
+
 

@@ -265,7 +265,7 @@
 	      name="Template::Filters"
 	      about="Post-processing filters for template blocks"
 	      module="1"
-	      seealso="Template, Template::Context"/>
+	      seealso="Template, Template::Context, Template::Manual::Filters"/>
 
 	<!-- Template::Iterator -->
 	<page id="Iterator" 
@@ -402,6 +402,14 @@
 	      seealso="Template::Plugin, Template::Plugin::Directory, 
 		       Template::View"
 	      nofoot="1"/>
+
+	<!-- Template::Plugin::Filter -->
+	<page id="Plugin_Filter" 
+	      name="Template::Plugin::Filter"
+	      about="Base class for plugin filters"
+	      module="1"
+	      seealso="Template::Plugin, Template::Filters, Template::Manual::Filters" 
+	      />
 
 	<!-- Template::Plugin::Format -->
 	<page id="Plugin_Format" 
@@ -789,6 +797,13 @@
 	      about="Plugin interface to Pod::POM (Pod Object Model)"
 	      module="1"
 	      seealso="Template::Plugin, Pod::POM"/>
+
+	<!-- Template::Plugin::String -->
+	<page id="Plugin_String" 
+	      name="Template::Plugin::String"
+	      about="Object oriented interface for string manipulation"
+	      module="1"
+	      seealso="Template::Plugin"/>
 
 	<!-- Template::Plugin::Table -->
 	<page id="Plugin_Table" 

@@ -84,6 +84,7 @@ $LEXTABLE = {
     '!'       => 'NOT',
     '|'	      => 'FILTER',
     '.'       => 'DOT',
+    '_'       => 'CAT',
     '..'      => 'TO',
 #    ':'       => 'MACRO',
     '='       => 'ASSIGN',

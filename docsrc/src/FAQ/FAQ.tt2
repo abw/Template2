@@ -3,11 +3,6 @@
 
 [* USE wrap; page.intro | wrap(72) *]
 
-=head1 General Questions
-
-=head2 Why is the sky blue?
-
-Something to do with refraction.
 
 =head1 Template Toolkit Language
 
@@ -20,6 +15,7 @@ Because the parser interprets it as
 Do this instead:
 
     [% SET a = b IF c %]
+
 
 =head1 Plugins
 
@@ -45,16 +41,17 @@ And then print each item in the column going across the output rows
 
 =head2 Accessing Cookies
 
-Jeff Boes E<lt>boes@nexcerpt.comE<gt> writes:
+Jeff Boes E<lt>boes@nexcerpt.comE<gt> asks:
 
     Does anyone have a quick-n-dirty approach to accessing 
     cookies from templates? 
 
-Jonas Liljegren replies:
+Jonas Liljegren answers:
 
     [% USE CGI %]
     
     <p>The value is [% CGI.cookie('cookie_name') | html %]
+
 
 =head1 Extending the Template Toolkit
 
@@ -153,13 +150,80 @@ pointers on how to acheive this using existing modules:
      
     Craig
 
-=head2 Miscellaneous
+=head1 Miscellaneous
 
-=over 4
+=head2 How can I configure variables on a per-request basis?
 
-=item Can I have another cup of coffee?
+One easy way to acheive this is to define a single PRE_PROCESS template which
+loads in other configuration files based on variables defined or other 
+conditions.
 
-No, I think you've hhhaadd ennnough alllrready.
+For example, my setup usually looks something like this:
 
-=back
+    PRE_PROCESS => 'config/main'
+
+config/main:
+
+    [%  DEFAULT  style   = 'text'
+                 section =  template.section or 'home';
+
+        PROCESS  config/site
+              +  config/urls
+              +  config/macros
+              + "config/style/$style"
+              + "config/section/$section"
+              + ...
+    %]
+
+This allows me to set a single 'style' variable to control which config
+file gets pre-processed to set my various style options (colours, img paths,
+etc).  For example:
+
+config/style/basic:
+
+    [%  style = {
+	    name = style    # save existing 'style' var as 'style.name'
+
+	    # define various other style variables....
+            col = {
+		back => '#ffffff'
+		text => '#000000'
+		# ...etc...
+	    }
+
+	    logo = {
+		# ...etc...
+	    }
+
+	    # ...etc...
+	}
+    %]
+
+Each source template can declare which section it's in via a META
+directive:
+
+  [% META
+       title   = 'General Information'
+       section = 'info'
+  %]
+
+  ...
+
+This controls which section configuration file gets loaded to set various
+other variables for defining the section title, menu, etc.
+
+config/section/info:
+
+    [%  section = {
+	    name   = section  # save 'section' var as 'section.name'
+	    title  = 'Information'
+	    menu   = [ ... ]
+	    # ...etc...
+	}
+    %]
+
+This illustrates the basic principal but you can extend it to perform
+pretty much any kind of per-document initialisation that you require.
+
+
 

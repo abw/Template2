@@ -24,6 +24,7 @@
 			          'DBI',
 			          'Dumper',
 			          'File',
+			          'Filter',
 			          'Format',
 			          'GD::Image, GD::Polygon, GD::Constants',
 			          'GD::Text, GD::Text::Align, GD::Text::Wrap',
@@ -32,12 +33,16 @@ ts, GD::Graph::area, GD::Graph::mixed, GD::Graph::pie',
 			          'GD::Graph::bars3d, GD::Graph::lines3d, GD::Graph::pie3d',
 			          'HTML',
 			          'Iterator',
+			          'Pod',
+			          'String',
 			          'Table',
 			          'URL',
 			          'Wrap',
 			          'XML::DOM',
-			          'XML::XPath',
-			          'XML::RSS' ];
+			          'XML::RSS',
+			          'XML::Simple',
+			          'XML::Style',
+			          'XML::XPath' ];
 		INCLUDE tocitem 
 			title = 'AUTHOR';
 		INCLUDE tocitem 
@@ -185,6 +190,30 @@ See [% ttlink('Template::Plugin::File') -%] for further details.
     [% tt_start_tag %] File.name [% tt_end_tag %]     # foo.html
     [% tt_start_tag %] File.dir [% tt_end_tag %]      # /tmp
     [% tt_start_tag %] File.mtime [% tt_end_tag %]    # modification time</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'Filter'
+-%]<p>
+This module implements a base class plugin which can be subclassed
+to easily create your own modules that define and install new filters.
+</p>
+<pre>    package MyOrg::Template::Plugin::MyFilter;</pre>
+<pre>    use Template::Plugin::Filter;
+    use base qw( Template::Plugin::Filter );</pre>
+<pre>    sub filter {
+	my ($self, $text) = @_;</pre>
+<pre>	# ...mungify $text...</pre>
+<pre>	return $text;
+    }</pre>
+<pre>    # now load it...
+    [% tt_start_tag %] USE MyFilter [% tt_end_tag %]</pre>
+<pre>    # ...and use the returned object as a filter
+    [% tt_start_tag %] FILTER $MyFilter [% tt_end_tag %]
+      ...
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+See [% ttlink('Template::Plugin::Filter') -%] for further details.
+</p>
 [%- END %]
 [% WRAPPER subsection
    title = 'Format'
@@ -358,6 +387,34 @@ with a given name, or the default plugin name, 'iterator'.  See
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
+   title = 'Pod'
+-%]<p>
+This plugin provides an interface to the [% ttlink('Pod::POD', 'Pod::POD') -%] module
+which parses POD documents into an internal object model which can
+then be traversed and presented through the Template Toolkit.
+</p>
+<pre>    [% tt_start_tag %] USE Pod(podfile) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FOREACH head1 = Pod.head1;
+	 FOREACH head2 = head1/head2;
+	   ...
+         END;
+       END
+    [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'String'
+-%]<p>
+The String plugin implements an object-oriented interface for 
+manipulating strings.  See [% ttlink('Template::Plugin::String') -%] for further 
+details.
+</p>
+<pre>    [% tt_start_tag %] USE String 'Hello' [% tt_end_tag %]
+    [% tt_start_tag %] String.append(' World') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] msg = String.new('Another string') [% tt_end_tag %]
+    [% tt_start_tag %] msg.replace('string', 'text') [% tt_end_tag %]</pre>
+<pre>    The string &quot;[% tt_start_tag %] msg [% tt_end_tag %]&quot; is [% tt_start_tag %] msg.length [% tt_end_tag %] characters long.</pre>
+[%- END %]
+[% WRAPPER subsection
    title = 'Table'
 -%]<p>
 The Table plugin allows you to format a list of data items into a 
@@ -418,22 +475,6 @@ The plugin requires the XML::DOM module, available from CPAN:
 <pre>    http://www.cpan.org/modules/by-module/XML/</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'XML::XPath'
--%]<p>
-The XML::XPath plugin provides an interface to Matt Sergeant's
-&lt;matt@sergeant.org&gt; XML::XPath module.  See 
-[% ttlink('Template::Plugin::XML::XPath') -%] and [% ttlink('XML::XPath') -%] for further details.
-</p>
-<pre>    [% tt_start_tag %] USE xpath = XML.XPath(xmlfile) [% tt_end_tag %]
-    [% tt_start_tag %] FOREACH page = xpath.findnodes('/html/body/page') [% tt_end_tag %]
-       [% tt_start_tag %] page.getAttribute('title') [% tt_end_tag %]
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<p>
-The plugin requires the XML::XPath module, available from CPAN:
-</p>
-<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
-[%- END %]
-[% WRAPPER subsection
    title = 'XML::RSS'
 -%]<p>
 The XML::RSS plugin is a simple interface to Jonathan Eisenzopf's
@@ -453,6 +494,60 @@ The XML::RSS module is available from CPAN:
 </p>
 <pre>    http://www.cpan.org/modules/by-module/XML/</pre>
 [%- END %]
+[% WRAPPER subsection
+   title = 'XML::Simple'
+-%]<p>
+This plugin implements an interface to the [% ttlink('XML::Simple', 'XML::Simple') -%]
+module.
+</p>
+<pre>    [% tt_start_tag %] USE xml = XML.Simple(xml_file_or_text) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] xml.head.title [% tt_end_tag %]</pre>
+<p>
+See [% ttlink('Template::Plugin::XML::Simple') -%] for further details.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'XML::Style'
+-%]<p>
+This plugin defines a filter for performing simple stylesheet based 
+transformations of XML text.  
+</p>
+<pre>    [% tt_start_tag %] USE xmlstyle 
+           table = { 
+               attributes = { 
+                   border      = 0
+                   cellpadding = 4
+                   cellspacing = 1
+               }
+           }
+    [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] FILTER xmlstyle [% tt_end_tag %]
+    &lt;table&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Foo&lt;/td&gt; &lt;td&gt;Bar&lt;/td&gt; &lt;td&gt;Baz&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;/table&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+See [% ttlink('Template::Plugin::XML::Style') -%] for further details.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = 'XML::XPath'
+-%]<p>
+The XML::XPath plugin provides an interface to Matt Sergeant's
+&lt;matt@sergeant.org&gt; XML::XPath module.  See 
+[% ttlink('Template::Plugin::XML::XPath') -%] and [% ttlink('XML::XPath') -%] for further details.
+</p>
+<pre>    [% tt_start_tag %] USE xpath = XML.XPath(xmlfile) [% tt_end_tag %]
+    [% tt_start_tag %] FOREACH page = xpath.findnodes('/html/body/page') [% tt_end_tag %]
+       [% tt_start_tag %] page.getAttribute('title') [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The plugin requires the XML::XPath module, available from CPAN:
+</p>
+<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
+[%- END %]
 [%- END %]
 [% WRAPPER section
     title='AUTHOR'
@@ -466,7 +561,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06a, released on 19 November 2001.
+Template Toolkit version 2.06b, released on 29 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section

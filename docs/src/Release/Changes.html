@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.06a, detailing
+#   Revision history for the Template Toolkit version 2.06b, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -19,6 +19,37 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.06b - 29th November 2001              ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Added the Template::Plugin::Filter module to make plugin filters 
+  easier to write and rewrote the Template::Plugin::XML::Style to use
+  it.
+
+* Added the Template::Plugin::String module which provides a nice
+  object oriented approach to string manipulation.  
+
+* Added the '_' string concatenation operator.  [% tt_start_tag %] foo = bar _ baz [% tt_end_tag %]
+
+* Applied Craig's suggested fixes to the parser to correct potential
+  precendence problems and added tests to the test suite.  See:
+  http://tt2.org/pipermail/templates/2001-November/002138.html
+
+* Applied Leon's patch to Template::Service to delete the 'template'
+  entry added to the variable hash at the end of processing.
+
+* Fixed an obscured bug/oversight in Template::Plugins which tested
+  generated plugin objects for truth rather than definedness to see if
+  the plugin returned was valid.  This can cause problems if your 
+  object has an overloaded stringification operator which gets called
+  (but shouldn't) and could return an untrue (but correct) value.
+
+* Added the assert() subroutine to Template::Test.
+
+* Added some more content to the FAQ.
+  
 
 #------------------------------------------------------------------------
 # Version 2.06a - 19th November 2001              ## DEVELOPER RELEASE ##

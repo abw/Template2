@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.06a
+                              Version 2.06b
 
-                             19 November 2001
+                             29 November 2001
 
         Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
@@ -43,8 +43,8 @@ need to install them.  They're all available from CPAN if you do.
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.06a.tar.gz
-    cd Template-Toolkit-2.06a
+    tar zxf Template-Toolkit-2.06b.tar.gz
+    cd Template-Toolkit-2.06b
     perl Makefile.PL
     make
     make test
@@ -336,7 +336,7 @@ VERSION COMPATABILITY
 ---------------------
 
 In terms of the template language and features available, versions
-2.01 through to 2.06a should be fully backwardly compatible with 
+2.01 through to 2.06b should be fully backwardly compatible with 
 version 2.00.  
 
 Version 2.00 is backwardly compatible with version 1 in all but a few

@@ -143,3 +143,54 @@ __END__
 </ul>
 </p>
 
+#------------------------------------------------------------------------
+# test use of plugin filter via variable
+#------------------------------------------------------------------------
+
+-- test --
+[% USE xmlstyle foo = { element = 'bar' } -%]
+[% FILTER $xmlstyle -%]
+<foo>The foo</foo>
+[%- END %]
+-- expect --
+<bar>The foo</bar>
+
+-- test --
+[% USE xmlstyle foo = { element = 'bar' } -%]
+[% FILTER $xmlstyle bar = { element = 'baz' } -%]
+<foo>The foo</foo>
+<bar>The bar</bar>
+[%- END %]
+-- expect --
+<bar>The foo</bar>
+<baz>The bar</baz>
+
+-- test --
+[% USE zap = xmlstyle foo = { element = 'bar' } -%]
+[% FILTER $zap bar = { element = 'baz' } -%]
+<foo>The foo</foo>
+<bar>The bar</bar>
+[%- END %]
+-- expect --
+<bar>The foo</bar>
+<baz>The bar</baz>
+
+-- test --
+[% USE zap = xmlstyle foo = { element = 'bar' } -%]
+[% FILTER $zap 'blaml' bar = { element = 'baz' } -%]
+<foo>The foo</foo>
+<bar>The bar</bar>
+[%- END %]
+-- expect --
+<bar>The foo</bar>
+<baz>The bar</baz>
+
+-- test --
+[% USE xmlstyle 'zap' -%]
+[% FILTER zap bar = { element = 'baz' } -%]
+<foo>The foo</foo>
+<bar>The bar</bar>
+[%- END %]
+-- expect --
+<foo>The foo</foo>
+<baz>The bar</baz>

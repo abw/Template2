@@ -200,6 +200,12 @@ Plugin providing information about files
 
 
 
+=item L<Template::Plugin::Filter|Template::Plugin::Filter>
+
+Base class for plugin filters
+
+
+
 =item L<Template::Plugin::Format|Template::Plugin::Format>
 
 Plugin to create formatting functions
@@ -320,6 +326,12 @@ Plugin interface to Pod::POM (Pod Object Model)
 
 
 
+=item L<Template::Plugin::String|Template::Plugin::String>
+
+Object oriented interface for string manipulation
+
+
+
 =item L<Template::Plugin::Table|Template::Plugin::Table>
 
 Plugin to present data in a table
@@ -389,7 +401,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.06a, released on 19 November 2001.
+Template Toolkit version 2.06b, released on 29 November 2001.
 
 =head1 COPYRIGHT
 
