@@ -26,7 +26,6 @@ package Template::Namespace::Constants;
 use strict;
 use Template::Base;
 use Template::Config;
-use Template::Stash;
 use Template::Exception;
 
 use base qw( Template::Base );
