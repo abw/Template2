@@ -33,6 +33,8 @@
 * Applied a patch from Tatsuhiko Miyagawa to Template::Constants to 
   replace 'our' perl5.6isms.
 
+* Added the Template::Plugin::Procedural module for creating plugins that
+  use subroutines rather than method calls.
 
 #------------------------------------------------------------------------
 # Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
