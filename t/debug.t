@@ -21,14 +21,10 @@ use Template::Test qw( :all );
 use Template::Parser;
 use Template::Directive;
 
-no warnings;
-
 my $DEBUG = grep(/-d/, @ARGV);
 #$Template::Parser::DEBUG = $DEBUG;
 $Template::Directive::Pretty = $DEBUG;
 $Template::Test::PRESERVE = 1;
-
-use warnings;
 
 my $dir   = -d 't' ? 't/test' : 'test';
 

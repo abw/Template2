@@ -17,7 +17,6 @@
 #========================================================================
 
 use strict;
-use warnings;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Stash;

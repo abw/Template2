@@ -23,6 +23,7 @@ $^W = 1;
 
 my $config = {
     INCLUDE_PATH => -d 't' ? 't/test/src' : 'test/src',
+    EVAL_PERL => 1,
     TRIM => 1,
 };
 
@@ -152,3 +153,13 @@ two: 2[The Title] -> one: 2[The Title]
 [% number(1234567) %]
 -- expect --
 1,234,567
+
+-- test --
+-- name perl macro --
+[% MACRO triple(n) PERL %]
+    my $n = $stash->get('n');
+    print $n * 3;
+[% END -%]
+[% triple(10) %]
+-- expect --
+30
