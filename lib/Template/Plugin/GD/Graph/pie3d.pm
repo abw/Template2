@@ -117,7 +117,7 @@ The GD::Graph3d module was written by Jeremy Wadsack. The GD::Graph module was w
 
 =head1 VERSION
 
-1.52, distributed as part of the
+1.53, distributed as part of the
 Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
@@ -133,6 +133,7 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template::Plugin|Template::Plugin>, L<Template::Plugin::GD|Template::Plugin::GD>, L<Template::Plugin::GD::Graph::lines|Template::Plugin::GD::Graph::lines>, L<Template::Plugin::GD::Graph::lines3d|Template::Plugin::GD::Graph::lines3d>, L<Template::Plugin::GD::Graph::bars|Template::Plugin::GD::Graph::bars>, L<Template::Plugin::GD::Graph::bars3d|Template::Plugin::GD::Graph::bars3d>, L<Template::Plugin::GD::Graph::points|Template::Plugin::GD::Graph::points>, L<Template::Plugin::GD::Graph::linespoints|Template::Plugin::GD::Graph::linespoints>, L<Template::Plugin::GD::Graph::area|Template::Plugin::GD::Graph::area>, L<Template::Plugin::GD::Graph::mixed|Template::Plugin::GD::Graph::mixed>, L<Template::Plugin::GD::Graph::pie|Template::Plugin::GD::Graph::pie>, L<GD::Graph|GD::Graph>, L<GD::Graph3d|GD::Graph3d>
+
 =cut
 
 # Local Variables:

@@ -57,29 +57,27 @@ sub new {
 
     # evaluate Perl code in $block to create sub-routine reference if necessary
     unless (ref $block) {
-	local $SIG{__WARN__} = \&catch_warnings;
-	$COMPERR = '';
+        local $SIG{__WARN__} = \&catch_warnings;
+        $COMPERR = '';
 
-	# DON'T LOOK NOW! - blindly untainting can make you go blind!
-	$block =~ /(.*)/s;
-	$block = $1;
-
-	$block = eval $block;
-#	$COMPERR .= "[$@]" if $@;
-#	return $class->error($COMPERR)
-	return $class->error($@)
-	    unless defined $block;
+        # DON'T LOOK NOW! - blindly untainting can make you go blind!
+        $block =~ /(.*)/s;
+        $block = $1;
+        
+        $block = eval $block;
+        return $class->error($@)
+            unless defined $block;
     }
 
     # same for any additional BLOCK definitions
     @$defblocks{ keys %$defblocks } = 
-	# MORE BLIND UNTAINTING - turn away if you're squeamish
-	map { 
-	    ref($_) 
-		? $_ 
-		: ( /(.*)/s && eval($1) or return $class->error($@) )
-	} values %$defblocks;
-
+        # MORE BLIND UNTAINTING - turn away if you're squeamish
+        map { 
+            ref($_) 
+                ? $_ 
+                : ( /(.*)/s && eval($1) or return $class->error($@) )
+            } values %$defblocks;
+    
     bless {
         %$metadata,
         _BLOCK     => $block,
@@ -468,7 +466,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.68, distributed as part of the
+2.69, distributed as part of the
 Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
@@ -482,6 +480,7 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Parser|Template::Parser>
+
 =cut
 
 # Local Variables:

@@ -144,7 +144,7 @@ L<http://www.twoshortplanks.com|http://www.twoshortplanks.com>
 
 =head1 VERSION
 
-1.08, distributed as part of the
+1.09, distributed as part of the
 Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
@@ -158,6 +158,7 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Plugin|Template::Plugin>
+
 =cut
 
 # Local Variables:

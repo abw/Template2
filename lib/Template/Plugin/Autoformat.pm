@@ -224,7 +224,7 @@ module (in his copious spare time :-) which does all the clever stuff.
 
 =head1 VERSION
 
-2.61, distributed as part of the
+2.62, distributed as part of the
 Template Toolkit version 2.12, released on 12 January 2004.
 
 

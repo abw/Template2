@@ -155,7 +155,7 @@ The GD::Text module was written by Martien Verbruggen.
 
 =head1 VERSION
 
-1.52, distributed as part of the
+1.53, distributed as part of the
 Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
@@ -171,6 +171,7 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template::Plugin|Template::Plugin>, L<Template::Plugin::GD|Template::Plugin::GD>, L<Template::Plugin::GD::Text::Align|Template::Plugin::GD::Text::Align>, L<GD|GD>, L<GD::Text::Wrap|GD::Text::Wrap>
+
 =cut
 
 # Local Variables:
