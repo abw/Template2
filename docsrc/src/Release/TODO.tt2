@@ -19,11 +19,6 @@
 # Miscellaneous
 #------------------------------------------------------------------------
 
-* Errors thrown via the Error module are not correctly caught.  I looked
-  at this briefly but the problem wasn't immediately obvious and needs some
-  more considered investigation.  There are also problems with CGI::Carp
-  throwing errors that don't get properly caught.
-
 * The 'eval' filter leaks memory, as reported by Colin Johnson.  The
   filter subroutine created contains a reference to the context and then
   gets cached in the FILTER_CACHE item of the context.  Hey presto -
