@@ -565,9 +565,6 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 	    svp = av_fetch(array, 0, FALSE);
 	    if (svp && (*svp != &PL_sv_undef)) {
 		return result;
-	    } else if (len > 1 && (svp = av_fetch(array, 1, FALSE)) &&
-			(*svp != &PL_sv_undef)) {
-		die_object(*svp);
 	    }
 	}
     } 

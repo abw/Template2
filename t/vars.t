@@ -80,6 +80,7 @@ my $params = {
     'people'   => sub { return qw( Tom Dick Larry ) },
     'gee'      =>  'g',
     "letter$a" => "'$a'",
+    'yankee'   => \&yankee,
     _private   => 123,
 
     # don't define a 'z' - DEFAULT test relies on its non-existance
@@ -119,6 +120,13 @@ sub belief {
     my $b = join(' and ', @beliefs);
     $b = '<nothing>' unless length $b;
     return "Oh I believe in $b.";
+}
+
+sub yankee {
+    my $a = [];
+    $a->[1] = { a => 1 };
+    $a->[3] = { a => 2 };
+    return $a;
 }
 
 __DATA__
@@ -275,6 +283,16 @@ after
 
 -- expect --
 before
+
+-- test --
+[% FOREACH k = yankee -%]
+[% loop.count %]. [% IF k; k.a; ELSE %]undef[% END %]
+[% END %]
+-- expect --
+1. undef
+2. 1
+3. undef
+4. 2
 
 
 #------------------------------------------------------------------------
