@@ -24,6 +24,35 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.09c - 29th April 2003                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* applied patch from Ivan Kurmanov <kurmanov@openlib.org> to XPath plugin
+  to add handling for comments.
+
+* modified grammar to allow 'IN' as an alternate for '=' in FOREACH 
+  directives, thus allowing [% FOREACH item IN [ foo, bar, baz ] %]
+  http://template-toolkit.org/pipermail/templates/2003-April/004519.html
+
+* changed test for PROCESS option in Template::Service init from 'exists' 
+  to 'defined' so that PROCESS set to undef Does The Right Thing.
+  http://template-toolkit.org/pipermail/templates/2003-April/004536.html
+
+* changed Template::process() method to accept a hash reference or list
+  of output options following any filename.  This can now be used to 
+  explicitly set binary mode (or not) for the output of a file.  Also
+  changed Template::_output() method to expect a reference to text rather 
+  than a duplicated text string (for efficiency) and also the new hash 
+  reference of options.  Also changed the redirect and stdout filters
+  accordingly.
+
+* disabled the mandatory binmode setting on all files created under 
+  MSWin32.  See previous item for details on how binmode can now be 
+  set explicitly, or link below for description of problem.
+  http://template-toolkit.org/pipermail/templates/2003-April/004499.html
+
+
+#------------------------------------------------------------------------
 # Version 2.09b - 24th April 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
