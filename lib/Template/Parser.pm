@@ -70,6 +70,7 @@ my $TAG_STYLE   = {
     'mason'     => [ '<%',     '>'      ],
     'asp'       => [ '<%',     '%>'     ],
     'php'       => [ '<\?',    '\?>'    ],
+    'star'      => [ '\[\*',   '\*\]'   ],
 };
 
 
@@ -227,7 +228,7 @@ sub split_text {
 	    $chomp = ($1 && $1 eq '+') ? 0 : ($1 || $postchomp);
 
 	    # only chomp newline if it's not the last character
-	    $chomp and $text =~ s/^[ \t]*\n(.|\n)/$1/
+	    $chomp and $text =~ s/^[ \t]*\n(.|\n|$)/$1/
 		   and $postlines++;
 	}
 

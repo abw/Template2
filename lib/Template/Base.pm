@@ -44,11 +44,29 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 sub new {
     my $class = shift;
-    my $params = (@_ && UNIVERSAL::isa($_[0], 'HASH')) ? shift : { @_ };
-    my $self = bless { 
-	_ERROR => '',
+    my ($argnames, @args, $arg, $cfg);
+#    $class->error('');		# always clear package $ERROR var?
+
+    {	no strict qw( refs );
+	$argnames = \@{"$class\::BASEARGS"} || [ ];
+    }
+
+    # shift off all mandatory args, returning error if undefined or null
+    foreach $arg (@$argnames) {
+	return $class->error("no $arg specified")
+	    unless ($cfg = shift);
+	push(@args, $cfg);
+    }
+
+    # fold all remaining args into a hash, or use provided hash ref
+    $cfg  = ref $_[0] eq 'HASH' ? shift : { @_ };
+
+    my $self = bless {
+	map { ($_ => shift @args) } @$argnames,
+	_ERROR  => ''
     }, $class;
-    return $self->_init($params) ? $self : $class->error($self->error);
+
+    return $self->_init($cfg) ? $self : $class->error($self->error);
 }
 
 

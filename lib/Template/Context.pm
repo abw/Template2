@@ -194,6 +194,21 @@ sub filter {
 
 
 #------------------------------------------------------------------------
+# view(\%coonfig)
+# 
+# Create a new Template::View bound to this context.
+#------------------------------------------------------------------------
+
+sub view {
+    my $self = shift;
+    require Template::View;
+    return Template::View->new($self, @_)
+	|| $self->throw(&Template::Constants::ERROR_VIEW, 
+			$Template::View::ERROR);
+}
+
+
+#------------------------------------------------------------------------
 # process($template, \%params)    [% PROCESS template   var = val, ... %]
 #
 # Processes the template named or referenced by the first parameter.
@@ -333,7 +348,6 @@ sub insert {
 
     $self->throw(Template::Constants::ERROR_FILE, "$file: not found");
 }
-
 
 #------------------------------------------------------------------------
 # throw($type, $info, \$output)          [% THROW errtype "Error info" %]

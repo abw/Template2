@@ -53,6 +53,7 @@ $FILTERS = {
     'stderr'     => sub { print STDERR @_; return '' },
 
     # dynamic filters
+    'indent'     => [ \&indent_filter_factory,   1 ],
     'format'     => [ \&format_filter_factory,   1 ],
     'truncate'   => [ \&truncate_filter_factory, 1 ],
     'repeat'     => [ \&repeat_filter_factory,   1 ],
@@ -239,6 +240,26 @@ sub html_break  {
 #========================================================================
 
 #------------------------------------------------------------------------
+# indent_filter_factory($pad)                    [% FILTER indent(pad) %]
+#
+# Create a filter to indent text by a fixed pad string or when $pad is
+# numerical, a number of space. 
+#------------------------------------------------------------------------
+
+sub indent_filter_factory {
+    my ($context, $pad) = @_;
+    $pad = 4 unless defined $pad;
+    $pad = ' ' x $pad if $pad =~ /^\d+$/;
+
+    return sub {
+	my $text = shift;
+	$text = '' unless defined $text;
+	$text =~ s/^/$pad/mg;
+	return $text;
+    }
+}
+
+#------------------------------------------------------------------------
 # format_filter_factory()                     [% FILTER format(format) %]
 #
 # Create a filter to format text according to a printf()-like format
@@ -385,7 +406,8 @@ sub redirect_filter_factory {
     my ($context, $file) = @_;
     my $outpath = $context->config->{ OUTPUT_PATH };
 
-    return (undef, Template::Exception->new('file', 'OUTPUT_PATH is not set'))
+    return (undef, Template::Exception->new('redirect', 
+					    'OUTPUT_PATH is not set'))
 	unless $outpath;
 
     sub {
@@ -393,11 +415,14 @@ sub redirect_filter_factory {
 	my $outpath = $context->config->{ OUTPUT_PATH }
 	    || return '';
 	$outpath .= "/$file";
-	local *FP;
-	open(FP, ">$outpath") 
-	    || die Template::Exception->new('file', "$file: $!");
-	print FP $text;
-	close(FP);
+#	local *FP;
+#	open(FP, ">$outpath") 
+#	    || die Template::Exception->new('file', "$file: $!");
+#	print FP $text;
+#	close(FP);
+        my $error = Template::_output($outpath, $text);
+	die Template::Exception->new('redirect', $error)
+	    if $error;
 	return '';
     }
 }

@@ -446,22 +446,29 @@ sub _dotop {
     # doesn't appear to work with CGI, returning true for the first call
     # and false for all subsequent calls. 
 
-    elsif (UNIVERSAL::can($root, 'can')) {
+    elsif (ref($root) && UNIVERSAL::can($root, 'can')) {
 
 	# if $root is a blessed reference (i.e. inherits from the 
 	# UNIVERSAL object base class) then we call the item as a method.
 	# If that fails then we try to fallback on HASH behaviour if 
 	# possible.
+#	print STDERR "about to call $root->$item()\n";
 	eval { @result = $root->$item(@$args); };	    
 
+#	print STDERR "err: [$@]\nres: [@result]\n";
 	if ($@ && UNIVERSAL::isa($root, 'HASH') 
 	       && defined($value = $root->{ $item })) {
 	    return $value unless ref $value eq 'CODE';	    ## RETURN
 	    @result = &$value(@$args);
 	}
 	elsif ($@) {
+#	    print STDERR "failing now\n";
 	    @result = (undef, $@);
 	}
+#	else {
+#	    local $" = ', ';
+#	    print STDERR "seemingly OK: [@result]\n";
+#	}
     }
     elsif (($value = $SCALAR_OPS->{ $item }) && ! $lvalue) {
 
@@ -471,8 +478,11 @@ sub _dotop {
 
 	@result = &$value($root, @$args);		    ## @result
     }
-    else {
+    elsif ($self->{ _DEBUG }) {
 	die "don't know how to access [ $root ].$item\n";   ## DIE
+    }
+    else {
+	@result = ();
     }
 
     # fold multiple return items into a list unless first item is undef

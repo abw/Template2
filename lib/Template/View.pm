@@ -16,12 +16,10 @@
 #   modify it under the same terms as Perl itself.
 #
 # TODO
-#  * allow 'type' to be specified to print to force type evaluation
-#  * promote 'file' errors to 'view' errors?
-#  * 'trybare' option
-#  * should we map reference types to templates or to methods?  Perhaps
-#    Template::View should do the former and Template::Visitor the 
-#    latter?
+#  * allowing print to have a hash ref as final args will cause problems
+#    if you do this: [% view.print(hash1, hash2, hash3) %].  Current
+#    work-around is to do [% view.print(hash1); view.print(hash2); 
+#    view.print(hash3) %] or [% view.print(hash1, hash2, hash3, { }) %]
 #
 # REVISION
 #   $Id$
@@ -33,71 +31,102 @@ package Template::View;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $AUTOLOAD $MAP );
+use vars qw( $VERSION $DEBUG $AUTOLOAD @BASEARGS $MAP );
 use base qw( Template::Base );
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG = 0 unless defined $DEBUG;
+$VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$DEBUG    = 0 unless defined $DEBUG;
+@BASEARGS = qw( context );
 $MAP = {
     HASH    => 'hash',
     ARRAY   => 'list',
     TEXT    => 'text',
-    default => 'default',
+    default => '',
 };
     
 
 #------------------------------------------------------------------------
-# new($context, \%config)
+# _init(\%config)
+#
+# Initialisation method called by the Template::Base class new() 
+# constructor.  $self->{ context } has already been set, by virtue of
+# being named in @BASEARGS.  Remaining config arguments are presented 
+# as a hash reference.
 #------------------------------------------------------------------------
 
-sub new {
-    my ($class, $context, $config) = @_;
-    $config ||= { };
+sub _init {
+    my ($self, $config) = @_;
 
-    return $class->error('no view context')
-	unless $context;
-
-    return $class->error('invalid table parameters, expecting a hash')
-	unless ref $config eq 'HASH';
-
-    # generate table mapping types of object that we might be asked 
-    # to print() to template names
-    my $map = $config->{ map };
-    if (ref $map eq 'HASH') {
-	$map = {
-	    %$MAP,
-	    %$map,
-	};
-    }
-    elsif ($map) {
-	$map = {
-	    default => $map,
-	};
-    }
-    else {
-	$map = {
-	    %$MAP,
-	}
-    }
+    # move 'context' somewhere more private
+    $self->{ _CONTEXT } = $self->{ context };
+    delete $self->{ context };
     
-    # name presentation method which printed objects might provide
-    my $method = $config->{ method };
-    $method = 'present' unless defined $method;
+    # generate table mapping object types to templates
+    my $map = $config->{ map } || { };
+    $map->{ default } = $config->{ default } unless defined $map->{ default };
+    $self->{ map } = {
+	%$MAP,
+	%$map,
+    };
 
-    bless {
-	_CONTEXT    => $context,
-	_ERROR      => '',
-	prefix      => $config->{ prefix      } || '',
-	suffix      => $config->{ suffix      } || '',
-	default     => $config->{ default     } || '',
-	notfound    => $config->{ notfound    } || '',
-	item        => $config->{ item        } || 'item',
-	view_prefix => $config->{ view_prefix } || 'view_',
-	view_naked  => defined $config->{ view_naked } 
-		             ? $config->{ view_naked } : 1,
-	method      => $method,
-	map         => $map,
-    }, $class;
+    # name of presentation method which printed objects might provide
+    $self->{ method } = defined $config->{ method } 
+	                      ? $config->{ method } : 'present';
+    
+    # copy remaining config items from $config or set defaults
+    foreach my $arg (qw( prefix suffix notfound )) {
+	$self->{ $arg } = $config->{ $arg } || '';
+    }
+
+    # name of data itemused by view()
+    $self->{ item } = $config->{ item } || 'item';
+
+    # map methods of form ${include_prefix}_foobar() to include('foobar')?
+    $self->{ include_prefix } = $config->{ include_prefix } || 'include_';
+    # what about mapping foobar() to include('foobar')?
+    $self->{ include_naked  } = defined $config->{ include_naked } 
+			              ? $config->{ include_naked } : 1;
+
+    # map methods of form ${view_prefix}_foobar() to include('foobar')?
+    $self->{ view_prefix } = $config->{ view_prefix } || 'view_';
+    # what about mapping foobar() to view('foobar')?
+    $self->{ view_naked  } = $config->{ view_naked  } || 0;
+
+    return $self;
+}
+
+
+#------------------------------------------------------------------------
+# clone(\%config)
+#
+# Cloning method which takes a copy of $self and then applies to it any 
+# modifications specified in the $config hash passed as an argument.
+# Configuration items may also be specified as a list of "name => $value"
+# arguments.  Returns a reference to the cloned Template::View object.
+#------------------------------------------------------------------------
+
+sub clone {
+    my $self   = shift;
+    my $clone  = bless { %$self }, ref $self;
+    my $config = ref $_[0] eq 'HASH' ? shift : { @_ };
+
+    # merge maps
+    $clone->{ map } = {
+	%{ $self->{ map } },
+	%{ $config->{ map } || { } },
+    };
+
+    # "map => { default=>'xxx' }" can be specified as "default => 'xxx'"
+    $clone->{ map }->{ default } = $config->{ default }
+        if defined $config->{ default };
+
+    # update any remaining args
+    foreach my $arg (qw( prefix suffix notfound item method 
+			 include_prefix view_prefix view_naked )) {
+	$clone->{ $arg } = $config->{ $arg } if defined $config->{ $arg };
+    }
+
+    return $clone;
 }
 
 
@@ -105,25 +134,33 @@ sub new {
 # print(@items, ..., \%config)
 #
 # Prints @items in turn by mapping each to an approriate template using 
-# the internal 'map' hash.  May otherwise call a present() method on the
-# item, or use default templates, etc.  The final argument may be a 
-# reference to a hash array providing local overrides to the internal
-# defaults for various items (prefix, suffix, etc.)
+# the internal 'map' hash.  If an entry isn't found and the item is an 
+# object that implements the method named in the internal 'method' item,
+# (default: 'present'), then the method will be called passing a reference
+# to $self, against which the presenter method may make callbacks (e.g. 
+# to view_item()).  If the presenter method isn't implemented, then the 
+# 'default' map entry is consulted and used if defined.  The final argument 
+# may be a reference to a hash array providing local overrides to the internal
+# defaults for various items (prefix, suffix, etc).  In the presence
+# of this parameter, a clone of the current object is first made, applying
+# any configuration updates, and control is then delegated to it.
 #------------------------------------------------------------------------
 
 sub print {
     my $self   = shift;
-    my $cfg    = ((scalar @_ > 1) && (ref $_[-1] eq 'HASH')) ? pop(@_) : { };
-    my $method = $cfg->{ method } || $self->{ method };
-    my $map    = $self->{ map };
+
+    # if final config hash is specified then create a clone and delegate to it
+    # NOTE: potential problem when called print(\%data_hash1, \%data_hash2);
+    if ((scalar @_ > 1) && (ref $_[-1] eq 'HASH')) {
+	my $cfg = pop @_;
+	my $clone = $self->clone($cfg)
+	    || return;
+	return $clone->print(@_) 
+	    || $self->error($clone->error());
+    }
     my ($item, $type, $template, $present);
-
-    # merge any additional 'map' entries into the default mapping table
-    $map = {
-	%$map,
-	%{ $cfg->{ map } },
-    } if ref $cfg->{ map } eq 'HASH';
-
+    my $method = $self->{ method };
+    my $map = $self->{ map };
     my $output = '';
     
     # print each argument
@@ -145,13 +182,13 @@ sub print {
 		$output .= $present;
 		next;					## NEXT
 	    }
-	    elsif (! ($template = $cfg->{ default } || $self->{ default })) {
+	    elsif (! ($template = $map->{ default })) {
 		# default not defined, so construct template name from type
 		($template = $type) =~ s/\W+/_/g;
 	    }
 	}
-	$self->DEBUG("Presenting view '", $template || '', "'\n") if $DEBUG;
-	$output .= $self->view($template, { $self->{ item }, $item }, $cfg)
+	$self->DEBUG("printing view '", $template || '', "', $item\n") if $DEBUG;
+	$output .= $self->view($template, $item)
 	    if $template;
     }
     return $output;
@@ -159,35 +196,60 @@ sub print {
 
 
 #------------------------------------------------------------------------
-# view($template, \%vars, \%cfg)
+# view($template, $item, \%vars)
 #
-# Present a template, $template, mapped according to the current prefix,
-# suffix, default, etc., using $vars as a hash reference to variable 
-# definitions and $cfg providing any local overrides to the internal
-# defaults (e.g. to use a different suffix just this once, etc.)
+# Wrapper around include() which expects a template name, $template,
+# followed by a data item, $item, and optionally, a further hash array
+# of template variables.  The $item is added as an entry to the $vars
+# hash (which is created empty if not passed as an argument) under the
+# name specified by the internal 'item' member, which is appropriately
+# 'item' by default.  Thus an external object present() method can
+# callback against this object method, simply passing a data item to
+# be displayed.  The external object doesn't have to know what the
+# view expects the item to be called in the $vars hash.
 #------------------------------------------------------------------------
 
 sub view {
-    my ($self, $template, $vars, $cfg) = @_;
+    my ($self, $template, $item) = splice(@_, 0, 3);
+    my $vars = ref $_[0] eq 'HASH' ? shift : { @_ };
+    $vars->{ $self->{ item } } = $item if defined $item;
+    $self->include($template, $vars);
+}
+
+
+#------------------------------------------------------------------------
+# include($template, \%vars)
+#
+# INCLUDE a template, $template, mapped according to the current prefix,
+# suffix, default, etc., where $vars is an optional hash reference 
+# containing template variable definitions.  If the template isn't found
+# then the method will default to any 'notfound' template, if defined 
+# as an internal item.
+#------------------------------------------------------------------------
+
+sub include {
+    my ($self, $template, $vars) = @_;
     my $context = $self->{ _CONTEXT };
     return $context->throw(Template::Constants::ERROR_VIEW,
 			   "no view template specified")
 	unless $template;
 
     $vars = { } unless ref $vars eq 'HASH';
-    $cfg  = { } unless ref $cfg eq 'HASH';
 
-    my $notfound = $cfg->{ notfound } || $self->{ notfound };
+    my $notfound = $self->{ notfound };
     my $error;
 
-    $template = $self->template_name($template, $cfg);
+    # try the named template
+    $template = $self->template_name($template);
     $self->DEBUG("looking for $template\n") if $DEBUG;
     eval { $template = $context->template($template) };
+
+    # try the 'notfound' template (if defined) if that failed
     if (($error = $@) && $notfound) {
-	$notfound = $self->template_name($notfound, $cfg);
-	$self->DEBUG("not found, looking for $notfound\n") 
-	    if $DEBUG;
+	$notfound = $self->template_name($notfound);
+	$self->DEBUG("not found, looking for $notfound\n") if $DEBUG;
 	eval { $template = $context->template($notfound) };
+
 	return $context->throw(Template::Constants::ERROR_VIEW, $error)
 	    if $@;	# return first error
     }
@@ -197,11 +259,51 @@ sub view {
 	return $context->throw(Template::Constants::ERROR_VIEW, $error);
     }
 
-    $vars->{ view } = $self;
+    $vars->{ view } ||= $self;
     $context->include( $template, $vars );
 }
 
 
+#------------------------------------------------------------------------
+# template($template)
+#
+# Returns a compiled template for the specified template name, according
+# to the current configuration parameters.
+#------------------------------------------------------------------------
+
+sub template {
+    my ($self, $template) = @_;
+    my $context = $self->{ _CONTEXT };
+    return $context->throw(Template::Constants::ERROR_VIEW,
+			   "no view template specified")
+	unless $template;
+
+    my $notfound = $self->{ notfound };
+    my $error;
+
+    # try the named template
+    $template = $self->template_name($template);
+    $self->DEBUG("looking for $template\n") if $DEBUG;
+    eval { $template = $context->template($template) };
+
+    # try the 'notfound' template (if defined) if that failed
+    if (($error = $@) && $notfound) {
+	$notfound = $self->template_name($notfound);
+	$self->DEBUG("not found, looking for $notfound\n") if $DEBUG;
+	eval { $template = $context->template($notfound) };
+
+	return $context->throw(Template::Constants::ERROR_VIEW, $error)
+	    if $@;	# return first error
+    }
+    elsif ($error) {
+	$self->DEBUG("no 'notfound'\n") 
+	    if $DEBUG;
+	return $context->throw(Template::Constants::ERROR_VIEW, $error);
+    }
+    return $template;
+}
+
+    
 #------------------------------------------------------------------------
 # template_name($template)
 #
@@ -210,13 +312,9 @@ sub view {
 #------------------------------------------------------------------------
 
 sub template_name {
-    my ($self, $template, $cfg) = @_;
-    $template = ( defined $cfg->{ prefix } 
-			    ? $cfg->{ prefix } : $self->{ prefix } )
-		  . $template
-		  . ( defined $cfg->{ suffix }
-			    ? $cfg->{ suffix } : $self->{ suffix } )
-		      if $template;
+    my ($self, $template) = @_;
+    $template = $self->{ prefix } . $template . $self->{ suffix }
+	if $template;
 
     $self->DEBUG("template name: $template\n") if $DEBUG;
     return $template;
@@ -224,14 +322,33 @@ sub template_name {
 
 
 #------------------------------------------------------------------------
+# default($val)
+#
+# Special case accessor to retrieve/update 'default' as an alias for 
+# '$map->{ default }'.
+#------------------------------------------------------------------------
+
+sub default {
+    my $self = shift;
+    return @_ ? ($self->{ map }->{ default } = shift) 
+	      :  $self->{ map }->{ default };
+}
+
+
+#------------------------------------------------------------------------
 # AUTOLOAD
 #
-# Returns/updates public internal data items (i.e. not prefixed '_' or 
+
+# Returns/updates public internal data items (i.e. not prefixed '_' or
 # '.') or presents a view if the method matches the view_prefix item,
-# e.g. view_foo(...) => view('foo', ...).  If that fails then the 
-# entire method name will be used as the name of a template to present
-# iff the view_naked parameter is set (default: 0).  Otherwise, a
-# 'view' exception is raised reporting the error "no such view member: ?"
+# e.g. view_foo(...) => view('foo', ...).  Similarly, the
+# include_prefix is used, if defined, to map include_foo(...) to
+# include('foo', ...).  If that fails then the entire method name will
+# be used as the name of a template to include iff the include_named
+# parameter is set (default: 1).  Last attempt is to match the entire
+# method name to a view() call, iff view_naked is set.  Otherwise, a
+# 'view' exception is raised reporting the error "no such view member:
+# $method".
 #------------------------------------------------------------------------
 
 sub AUTOLOAD {
@@ -252,6 +369,10 @@ sub AUTOLOAD {
 	$self->DEBUG("returning view($item)\n") if $DEBUG;
 	return $self->view($item, @_);
     }
+    elsif ($item =~ s/^$self->{ include_prefix }//) {
+	$self->DEBUG("returning include($item)\n") if $DEBUG;
+	return $self->include($item, @_);
+    }
     elsif ($self->{ view_naked }) {
 	$self->DEBUG("returning naked view($item)\n") if $DEBUG;
 	return $self->view($item, @_);
@@ -263,7 +384,6 @@ sub AUTOLOAD {
 }
 
 
-
 1;
 
 
@@ -271,48 +391,47 @@ __END__
 
 =head1 NAME
 
-Template::View - 
+Template::View - customised view of a template processing context
 
 =head1 SYNOPSIS
 
-    [% USE view( prefix     => 'my_', 
-		 suffix     => '.tt',
-		 notfound   => 'no_such_file' 
-		 view_naked => 1 ) %]
+    [% USE view( prefix        => 'my_', 
+		 suffix        => '.tt2',
+		 notfound      => 'no_such_file' %]
 
-    # get/set various options
-    prefix: [% view.prefix %]
-    [% view.suffix = 'tt2' %]
+    # include template mapped to view prefix, suffix, etc.
+    [% view.include( 'header', title => 'The Header Title' ) %]
 
-    # present views mapped to specific templates
-    [% view.view( 'header', title => 'The Header Title' ) %]
-	    # => [% INCLUDE my_header.tt2 title = 'The Header Title' %]
+    # shorter form of above
+    [% view.include_header( title => 'The Header Title' ) %]
 
-    [% view.view_header( title => 'The Header Title' ) %]
-	    # shorter form of above
-
+    # very short form of above ('include_naked' option, set by default)
     [% view.header( title => 'The Header Title' ) %]
-	    # very short form of above (requires view_naked option)
 
-    [% view.no_such_file() %]
-	    # => [% INCLUDE no_such_file %]
+    # fallback on the 'notfound' template ('my_no_such_file.tt2')
+    [% view.include('missing') %]
+    [% view.include_missing %]
+    [% view.missing %]
 
-    # use default mapping to print test, hash, list, etc.
-    [% view.print("some text") %]
-    [% view.print({ alpha => 'a', bravo => 'b' }) %]
-    [% view.print([ 'charlie', 'delta' ]) %]
+    # print() includes a template relevant to argument type
+    [% view.print("some text") %]     # type=TEXT, template='text'
 
-    # define BLOCKs to present different types (plus current prefix/suffix)
-    [% BLOCK my_text.tt2 %]
+    [% BLOCK my_text.tt2 %]	      # 'text' with prefix/suffix
        Text: [% item %]
     [% END %]
 
-    [% BLOCK my_list.tt2 %]
-       list: [% item.join(', ') %]
+    # now print() a hash ref, mapped to 'hash' template
+    [% view.print(my_hash_ref) %]     # type=HASH, template='hash'
+
+    [% BLOCK my_hash.tt2 %]	      # 'hash' with prefix/suffix
+       hash keys: [% item.keys.sort.join(', ')
     [% END %]
 
-    [% BLOCK my_hash.tt2 %]
-       hash keys: [% item.keys.sort.join(', ')
+    # now print() a list ref, mapped to 'list' template
+    [% view.print(my_list_ref) %]     # type=ARRAY, template='list'
+
+    [% BLOCK my_list.tt2 %]	      # 'list' with prefix/suffix
+       list: [% item.join(', ') %]
     [% END %]
 
     # print() maps 'My::Object' to 'My_Object'
@@ -322,24 +441,19 @@ Template::View -
        [% item.this %], [% item.that %]
     [% END %]
 
-    # update object -> template mapping table
-    [% view.map('My::Object' => 'obj') %]
+    # update mapping table
+    [% view.map.ARRAY = 'my_list_template' %]
+    [% view.map.TEXT  = 'my_text_block'    %]
 
-    [% view.print(myobj) %]
-
-    [% BLOCK my_obj.tt2 %]
-       [% item.this %], [% item.that %]
-    [% END %]
 
     # change prefix, suffix, item name, etc.
-    [% view.print(myobj, item='thing', prefix='', suffix='') %]
-
-    [% BLOCK obj %]
-       [% thing.this %], [% thing.that %]
-    [% END %]
-
+    [% view.prefix = 'your_' %]
+    [% view.default = 'anyobj' %]
+    ...
 
 =head1 DESCRIPTION
+
+TODO
 
 =head1 METHODS
 
@@ -486,9 +600,15 @@ template names where they don't match the view_prefix.  Defaults to 0.
 
     [% view.header() %]			# => view('header')
 
+=back
+
 =head2 print( $obj1, $obj2, ... \%config)
 
+TODO
+
 =head2 view( $template, \%vars, \%config );
+
+TODO
 
 =head1 AUTHOR
 

@@ -130,7 +130,7 @@ sub fail {
 # object.  
 #------------------------------------------------------------------------
 
-sub AUTOLOAD {
+sub OLD_AUTOLOAD {
     my $self     = shift;
     my $method   = $AUTOLOAD;
 
@@ -142,7 +142,7 @@ sub AUTOLOAD {
 	return $delegate->$method(@_);
     }
     my ($pkg, $file, $line) = caller();
-    warn "no such '$method' method called on $self at $file line $line\n";
+#    warn "no such '$method' method called on $self at $file line $line\n";
     return undef;
 }
 
