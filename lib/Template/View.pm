@@ -44,7 +44,7 @@ $MAP = {
     default => '',
 };
 
-#$DEBUG = 1;    
+$DEBUG = 0;    
 
 #------------------------------------------------------------------------
 # _init(\%config)
@@ -202,11 +202,11 @@ sub print {
     # if final config hash is specified then create a clone and delegate to it
     # NOTE: potential problem when called print(\%data_hash1, \%data_hash2);
     if ((scalar @_ > 1) && (ref $_[-1] eq 'HASH')) {
-	my $cfg = pop @_;
-	my $clone = $self->clone($cfg)
-	    || return;
-	return $clone->print(@_) 
-	    || $self->error($clone->error());
+        my $cfg = pop @_;
+        my $clone = $self->clone($cfg)
+            || return;
+        return $clone->print(@_) 
+            || $self->error($clone->error());
     }
     my ($item, $type, $template, $present);
     my $method = $self->{ method };
@@ -215,45 +215,43 @@ sub print {
     
     # print each argument
     foreach $item (@_) {
-	my $newtype;
-
-	if (! ($type = ref $item)) {
-	    # non-references are TEXT
-	    $type = 'TEXT';
-	    $template = $map->{ $type };
-	}
-	elsif (! defined ($template = $map->{ $type })) {
-	    # no specific map entry for object, maybe it implements a 
-	    # 'present' (or other) method?
-#	    $self->DEBUG("determining if $item can $method\n") if $DEBUG;
-	    if ( $method && UNIVERSAL::can($item, $method) ) {
-		$self->DEBUG("Calling \$item->$method\n") if $DEBUG;
-		$present = $item->$method($self);	## call item method
-		# undef returned indicates error, note that we expect 
-		# $item to have called error() on the view
-		return unless defined $present;
-		$output .= $present;
-		next;					## NEXT
-	    }   
-	    elsif ( UNIVERSAL::isa($item, 'HASH' ) 
-		   && defined($newtype = $item->{$method})
-		   && defined($template = $map->{"$method=>$newtype"})) {
-	    }
-	    elsif ( defined($newtype)
-		 && defined($template = $map->{"$method=>*"}) ) {
-		$template =~ s/\*/$newtype/;
+        my $newtype;
+        
+        if (! ($type = ref $item)) {
+            # non-references are TEXT
+            $type = 'TEXT';
+            $template = $map->{ $type };
+        }
+        elsif (! defined ($template = $map->{ $type })) {
+            # no specific map entry for object, maybe it implements a 
+            # 'present' (or other) method?
+            if ( $method && UNIVERSAL::can($item, $method) ) {
+                $present = $item->$method($self);	## call item method
+                # undef returned indicates error, note that we expect 
+                # $item to have called error() on the view
+                return unless defined $present;
+                $output .= $present;
+                next;					## NEXT
+            }   
+            elsif ( UNIVERSAL::isa($item, 'HASH' ) 
+                    && defined($newtype = $item->{$method})
+                    && defined($template = $map->{"$method=>$newtype"})) {
+            }
+            elsif ( defined($newtype)
+                    && defined($template = $map->{"$method=>*"}) ) {
+                $template =~ s/\*/$newtype/;
             }    
-	    elsif (! ($template = $map->{ default }) ) {
-		# default not defined, so construct template name from type
-		($template = $type) =~ s/\W+/_/g;
-	    }
-	}
+            elsif (! ($template = $map->{ default }) ) {
+                # default not defined, so construct template name from type
+                ($template = $type) =~ s/\W+/_/g;
+            }
+        }
 #	else {
 #	    $self->DEBUG("defined map type for $type: $template\n");
 #	}
-	$self->DEBUG("printing view '", $template || '', "', $item\n") if $DEBUG;
-	$output .= $self->view($template, $item)
-	    if $template;
+        $self->DEBUG("printing view '", $template || '', "', $item\n") if $DEBUG;
+        $output .= $self->view($template, $item)
+            if $template;
     }
     return $output;
 }
