@@ -844,6 +844,15 @@
 	      module="1"
 	      seealso="Template::Plugin, CPAN::Pod::POM"/>
 
+	<!-- Template::Procedural -->
+	<page id="Plugin_Procedural" 
+	      name="Template::Plugin::Procedural"
+	      about="Base class for procedural plugins"
+	      module="1"
+	      seealso="Template, Template::Plugin"
+	      author="mark" 
+	      copyright="2002"/>
+
 	<!-- Template::Plugin::String -->
 	<page id="Plugin_String" 
 	      name="Template::Plugin::String"
