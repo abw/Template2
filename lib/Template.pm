@@ -41,11 +41,6 @@ use File::Path;
 $VERSION     = '2.13';
 $ERROR       = '';
 $DEBUG       = 0;
-
-# we used to default to binary mode for all win32 files but that make
-# line endings strange, so we're turning it off and letting users set
-# it explicitly as an argument to process()
-# $BINMODE     = ($^O eq 'MSWin32') ? 1 : 0;
 $BINMODE     = 0 unless defined $BINMODE;
 
 # preload all modules if we're running under mod_perl
@@ -196,7 +191,10 @@ sub _output {
             ($error = $@) =~ s/ at \S+ line \d+\n?$//;
         }
         elsif (open(FP, ">$where")) { 
-            binmode FP if $options->{ binmode };
+            # binmode option can be 1 or a specific layer, e.g. :utf8
+            my $bm = $options->{ binmode };
+            if ($bm == 1) { binmode FP      }
+            elsif ($bm)   { binmode FP, $bm }
             print FP $$textref;
             close FP;
         }
