@@ -3,7 +3,7 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.01, containing
+#   TODO list for the Template Toolkit version 2.02, containing
 #   known bugs, limitations, planned enhancements, long term visions 
 #   and a few whacky ideas.
 #
@@ -72,6 +72,9 @@
   so that a 'derived' component could call on the 'super' component.  
   This is something that is hacked in as part of the VIEW feature, but
   should be properly added as a facility.
+
+* The issue of CGI::Carp throwing non-reference error might need closer
+  investigation.
 
 
 #------------------------------------------------------------------------

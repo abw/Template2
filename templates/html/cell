@@ -10,5 +10,5 @@
     [%- IF col %] bgcolor="[% col %]"[% END %]
     [%- IF colspan %] colspan="[% colspan %]"[% END %]
     [%- IF  align %] align="[% align %]"[% END %]>
-[% content %]
+[%- content -%]
 </td>

@@ -1,0 +1,8 @@
+   docsrc/bin/ttmkdocs \
+&& docsrc/bin/ttpodglu \
+&& perl Makefile.PL    \
+&& make                \
+&& make test           \
+&& make dist           \
+&& echo "All done"
+

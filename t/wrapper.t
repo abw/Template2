@@ -177,4 +177,12 @@ outer [[% title %]]: [% content %]
 -- expect --
 outer [bar]: The title is foo
 
+-- test--
+[% BLOCK a; "<a>$content</a>"; END; 
+   BLOCK b; "<b>$content</b>"; END;
+   BLOCK c; "<c>$content</c>"; END;
+   WRAPPER a + b + c; 'FOO'; END;
+%]
+-- expect --
+<a><b><c>FOO</c></b></a>
 

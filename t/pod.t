@@ -25,6 +25,12 @@ $Template::Test::DEBUG = 0;
 $Template::Test::PRESERVE = 1;
 #$Template::View::DEBUG = 1;
 
+eval "use Pod::POM";
+if ($@) {
+    print "1..0\n";
+    exit(0);
+}
+
 my $config = {
     INCLUDE_PATH => 'templates:../templates',
 #    RELATIVE     => 1,

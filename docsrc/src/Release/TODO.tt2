@@ -74,6 +74,9 @@
   This is something that is hacked in as part of the VIEW feature, but
   should be properly added as a facility.
 
+* The issue of CGI::Carp throwing non-reference error might need closer
+  investigation.
+
 
 #------------------------------------------------------------------------
 # Documentation

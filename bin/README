@@ -2,8 +2,8 @@
 # Template Toolkit - bin/
 #========================================================================
 
-This directory contains the 'tpage' and 'ttree' template processing 
-scripts.  These will be installed automatically by a 'make install'
+This directory contains the 'tpage' and 'ttree' template processing
+scripts.  These will be installed automatically by a 'make install'.
 
 'tpage' is a simple script interface to the Template module.  You 
 can specify one or more filenames on the command line which will be 
@@ -32,4 +32,13 @@ Examples:
    ttree -v -r
    ttree -src ~/tmp/templates -dest ~/public_html/test
    trree -f config
+
+The 'tt2inst' and 'gifsplash' scripts are run at 'make install' time
+(to install TT2 optional components, and to generate the Splash! GIFs,
+respectively) but are not installed themselves.
+
+
+
+
+
 

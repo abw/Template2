@@ -438,7 +438,7 @@ __END__
 #   templates.  Any changes you make here may be lost.
 # 
 #   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/download/ and contains all
+#   from http://www.template-toolkit.org/docs.html and contains all
 #   the source templates, XML files, scripts, etc., from which the
 #   documentation for the Template Toolkit is built.
 #------------------------------------------------------------------------

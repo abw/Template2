@@ -4,7 +4,7 @@
   #   templates.  Any changes you make here may be lost.
   # 
   #   The 'docsrc' documentation source bundle is available for download
-  #   from http://www.template-toolkit.org/download/ and contains all
+  #   from http://www.template-toolkit.org/docs.html and contains all
   #   the source templates, XML files, scripts, etc., from which the
   #   documentation for the Template Toolkit is built.
 -%]
@@ -27,9 +27,10 @@
 [% WRAPPER section
     title='DESCRIPTION'
 -%]<p>
-<b>NOTE:</b> This documentation is incomplete and may be incorrect in
-places.  Also note that the Splash! library is subject to evolve
-in future versions and may be subject to change.
+<b>NOTE:</b> This documentation is incomplete, incorrect and outdated.
+The Splash! library is still evolving and subject to change.  See
+the examples for a much more recent and accurate demonstration of
+use.
 </p>
 [% WRAPPER subsection
    title = 'Introduction'
@@ -130,23 +131,13 @@ things you might like to tweak.
 [% WRAPPER subsection
    title = 'Colours'
 -%]<p>
-The Splash! library defines a small selection of named colours.  Each
-different colour scheme requires a number of small images (primarily
-rounded corners) which are used to build the user interface
-components.  These are located in the 'images/splash' directory
-beneath the installation directory.  More colour schemes will likely
-become available in the near future (but probably distributed
-separately).  Currently the fully supported colours are:
-</p>
-<pre>    aqua, bud, leaf, lilac, marine, mauve and mint</pre>
-<p>
-The 'rgb' hash defined by in the html/rgb template is imported as the
-'splash.rgb' hash.  You can use some of the additional colours to
-specify background colours, etc, although they're not all fully 
-supported for general use (i.e. there currently aren't the required
-images to go with them for the rounded corners).  e.g.
+The Splash! library uses the colours defined in the html/rgb template.
+The 'rgb' hash defined therein is imported as the 'splash.rgb' hash.
 </p>
 <pre>    [% tt_start_tag %] INCLUDE splash/box col='grey75' [% tt_end_tag %]</pre>
+<p>
+See the examples for further enlightenment on using colour.
+</p>
 [%- END %]
 [% WRAPPER subsection
    title = 'Style'
@@ -1136,7 +1127,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.01, released on 30th March 2001.
+Template Toolkit version 2.02, released on 4th March 2001.
 </p>
 [%- END %]
 [% WRAPPER section

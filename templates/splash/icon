@@ -1,6 +1,13 @@
-[%  INCLUDE splash/button + splash.text
-	style   = splash.style.default
-	bold    = 1
-	content = splash.name
-	link    = splash.homepage
--%]
+[%  # splash.icon: one of the splash image components
+    SET
+        default = splash.style.default
+    ;
+    DEFAULT 
+        style = default
+        col   = style.col.icon or default.col.icon
+    ;
+%]
+[%- IF link %]<a href="[% link %]">[% END -%]
+<img src="[% splash.images %]/[% col %]/[% img or 'dot' %].[% splash.imgtype %]"
+width="[% splash.imgsize %]" height="[% splash.imgsize %]" border="0">
+[%- IF link %]</a>[% END %]

@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.01
+                              Version 2.02
 
-                            30th March 2001
+                             4th March 2001
 
         Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
@@ -38,8 +38,8 @@ need to install them.  They're all available from CPAN if you do.
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.01.tar.gz
-    cd Template-Toolkit-2.01
+    tar zxf Template-Toolkit-2.02.tar.gz
+    cd Template-Toolkit-2.02
     perl Makefile.PL
     make
     make test
@@ -91,9 +91,10 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
-The long-awaited version 2.01 is the biggest, baddest and phattest
-version yet.  Here's a quick summary of what's new in version 2.01
-compared to 2.00.  See the Changes file for more details.
+Version 2.02 follows shortly on the heels of version 2.01, fixing up
+some of the minor installation bugs and other problems that came to
+light.  Here's a quick summary of what's new since version 2.00.
+See the Changes file for more details.
 
 Documentation
 
@@ -269,19 +270,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.01.
+where <version> represents the current version number, e.g. 2.02.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    tar zxf Template-Toolkit-2.01.tar.gz
+    tar zxf Template-Toolkit-2.02.tar.gz
 or
-    gunzip Template-Toolkit-2.01.tar.gz
-    tar xf Template-Toolkit-2.01.tar
+    gunzip Template-Toolkit-2.02.tar.gz
+    tar xf Template-Toolkit-2.02.tar
 
 You can then 'cd' into the directory created,
 
-    cd Template-Toolkit-2.01
+    cd Template-Toolkit-2.02
 
 and perform the usual Perl installation procedure:
 
@@ -356,11 +357,9 @@ installation directory.
     Template Toolkit installation directory [/usr/local/tt2] 
 
 This should be a directory entirely separate from anything to do with
-your Perl installation.  The default value assumes a particular Unix
-flavour to your operating system (I wouldn't like to guess what the
-appropriate defaults should be on other platforms - suggestions
-welcome).  Other typical values might be '/opt/tt2',
-'/home/yourid/tt2', 'C:/Program Files/tt2', etc.
+your Perl installation.  If your operating system is Unix or Win32 
+then you should get some kind of sensible default.  Suggestions 
+welcome for the correct values on other platforms.
 
 The Splash! template library uses a number of very small images to
 build user interface components.  These will be installed (when you
@@ -375,14 +374,21 @@ you plan to use.
 
     URL base for TT2 images? [/tt2/images] 
 
-The default is '/tt2/images', but other typical values might be
-'/images/tt2', '/~yourid/tt2/images' or even something like
-'http://www.yourhost.org/images/tt2'.  If you haven't got a clue then
-it's probably best to accept the default and worry about it later when
-you get to the INSTALLATION section.  If you don't plan to use the
-Splash! library then you don't need to worry about this at all.  You
-can accept the default, or type in a silly message to bring some small
-amusement to an otherwise dull process.
+If you're installing on a Windows machine then the default value
+will be based on the installation directory specified above.  This 
+should allow you to browse the documentation and any other Splash!
+files you create, with the images being accessed in the browser via
+the filesystem.
+
+On other platforms, we assume you'll be delivering the images via a
+web server and the default will be '/tt2/images'.  Other typical
+values might be '/images/tt2', '/~yourid/tt2/images' or even something
+like 'http://www.yourhost.org/images/tt2'.  If you haven't got a clue
+then it's probably best to accept the default and worry about it later
+when you get to the INSTALLATION section.  If you don't plan to use
+the Splash! library then you don't need to worry about this at all.
+You can accept the default, or type in a silly message to bring some
+small amusement to an otherwise dull process.
 
 The modules comprising the Template Toolkit contain comprehensive POD
 documentation which can be browsed using 'perldoc' or 'man' (if your
@@ -458,13 +464,17 @@ This is available from Microsoft's web site.
 The 'make test' command runs the test scripts in the 't' subdirectory.
 There are known to be a few failures under certain conditions:
 
+  * The File and Directory plugins use the 'getpwuid' function which isn't
+    supported on Win32 (and other?) platforms.  Hence, the t/file.t and
+    t/directry.t tests will fail.
+
+  * Other known problems on Win32 systems: t/compile5.t and t/provider.t
+    will fail some tests due to the stupid author making silly 
+    assumptions about file systems.
+
   * The Text::Autoformat plugin may fail on tests 23 and 25 with
     versions of Perl prior to 5.6.0 when using a locale which has a
     decimal separator other than '.'.
-
-  * A small number of tests (XML::XPath for one) may fail on Win32
-    platforms (and elsewhere?) due to the stupid author making silly
-    assumptions about filesystems and error message.  To be fixed RSN.
 
 You can set the TEST_VERBOSE flag when running 'make test' to see the
 results of the individual tests:
@@ -507,6 +517,13 @@ ensure that the images URL base you specified during the configuration
 correctly maps onto the 'images' subdirectory of the installation.  If
 you built the HTML documentation then you'll also want to make that
 available via your web server.
+
+If you're installing in a Win32 machine and accepted the default
+values above then you should already be able to browse the HTML
+documentation and examples via the browser and have it display
+correctly.  Otherwise, you'll need to tweak the web server
+configuration, create links to the files or copy them to where the web
+server can find them.
 
 If you're using Apache then you might do something like this in the
 httpd.conf (in the <IfModule mod_alias.c> section, and here assumes
@@ -582,16 +599,18 @@ different image URL.  Alternately, you can fix the value in the
 'templates/splash/config' file (under the installation directory)
 and rebuild the documentation and/or examples.
 
-The Makefile generated by Makefile.PL contains 3 additional targets:
-tt2_install, tt2_html_docs and tt2_examples (but only if you selected
-the appropriate options).  These are run automatically as part of the
-"make install" (you can do "make pure_install" or "make doc_install"
-instead of "make install" to just get the Perl module or regular
-documentation installation by itself).  You can also run them manually
-if you want to re-install the additional components, rebuild the
-documentation or the examples at some later date:
+The Makefile generated by Makefile.PL contains 4 additional targets:
+tt2_install, tt2_splash, tt2_html_docs and tt2_examples (but only if
+you selected the appropriate options).  These are run automatically as
+part of the "make install" (you can do "make pure_install" or "make
+doc_install" instead of "make install" to just get the Perl module or
+regular documentation installation by itself).  You can also run them
+manually if you want to re-install the additional components, generate
+the Splash! images, rebuild the documentation or the examples at some
+later date:
 
     make tt2_install
+    make tt2_splash
     make tt2_html_docs
     make tt2_examples
 

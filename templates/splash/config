@@ -8,8 +8,7 @@
 
 	# URL prefix to Splash images 
 	# NOTE: this is set by the Makefile.PL at installation time
-	images  = '/tt2/images/splash2'
-	images  = '/~abw/tt2d/images/splash'
+	images  = '/tt2/images/splash'
 
 	style = {
 	    default = {
@@ -25,6 +24,7 @@
 		    edge => 'lilac'   # edging strip
 		    fill => 'white'   # fill (e.g. panels)
 		    text => 'black'   # text
+		    icon => 'black'   # icons
 		}
 
 		font = {
@@ -36,6 +36,7 @@
 		tab = {
 		    locate = 'right'		# tab location on box 
 		    align  = 'center'		# text alignment
+		    limit  = 9                  # max number before scroll
 		}
 
 		button = {

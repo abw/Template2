@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.01, detailing
+#   Revision history for the Template Toolkit version 2.02, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -19,6 +19,51 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.02 - 4th April 2001
+#------------------------------------------------------------------------
+
+* Updated various components of the Splash! library, cleaned up some
+  ugliness (a little) and revised the examples.  Documentation in
+  Template::Library::Splash is now hopelessly out of date but examples
+  are more comprehensive.
+
+* Fixed problems with Splash! images displaying the &quot;wrong&quot; colour on
+  certain systems.  It appears to be the case that this was automatic
+  gamma correction at work, an otherwise very cool feature of PNG
+  files.  Alas it broke things here so we've switched to GIF files.
+  Also made an improvement to the way of generating and using the
+  images.  By using simple transparency and doing away with the
+  anti-aliasing it's possible to support any foreground colour for a
+  set of images in a background colour.  One set of black images now
+  distributed with TT and these are blown into many colours during 
+  installation.
+
+* Updated Makefile.PL: supplies more intelligent defaults for Win32
+  system; now adds 'recurse' and 'verbose' options to generated ttree.cfg
+  files to fix bug whereby docs weren't generated, thanks to a patch 
+  from Leon Brocard; added test for File::Spec 0.82 or greater (Leon
+  and Doug Steinwand); added Makefile target for tt2_splash to generate
+  Splash! image files using bin/gifsplash script.  Updated README to 
+  reflect changes.
+
+* Removed test for platform specific error messages from t/xpath.t
+  Removed warning from README that this test would fail.  Thanks 
+  again to Leon for the patch.
+
+* Applied another patch from Leon to fix Template::Base.pm to avoid
+  &quot;Use of uninitialized value...&quot; warnings.
+
+* Applied yet more patches from Leon to add &quot;use Template::Plugin&quot; or
+  something similar to the File, Directory and View plugins.  'use
+  base' doesn't work as advertised (e.g. in ensuring the module is
+  loaded) in older versions of Perl.
+
+* Fixed t/leak.t to only run one particular test if Perl version is 
+  5.6.0 or greater.  Test fails on earlier versions due to destructors
+  being called in a different order.
+
 
 #------------------------------------------------------------------------
 # Version 2.01 - 30th March 2001
@@ -283,6 +328,15 @@
 * Fixed another obscure bug, this time in Template::Parser which wasn't 
   chomping the final newline in the input string.  Thanks to Paul 
   Makepeace for reporting the problem.
+
+* Finally identified the cause of an error occasionally being reported
+  by Template::Service when is thrown a non-reference exception.  It
+  appears to be a problem interacting with CGI::Carp.  For now, it's
+  fixed and tolerated in Template::Service (but could possibly do with
+  a better long term solution?).  Thanks to Jo Walsh, Trond Michelson,
+  and I'm sure several others who reported this and helped to track
+  the problem down (and also fixing the confess() bug I introduced
+  when I added the tracer code.  D'Oh!)
 
 * Removed some old &quot;delegate-to-another-object&quot; code from Template::Plugin,
   including a nasty AUTOLOAD method which prevented derived objects from 

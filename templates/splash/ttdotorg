@@ -1,0 +1,3 @@
+<a href="http://www.template-toolkit.org/"><img
+src="[% splash.images.replace('splash$', 'ttdotorg.gif') # ugly hack %]"
+width="110" height="60" border="0"></a>

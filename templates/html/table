@@ -12,5 +12,5 @@
        [%- IF width %] width="[% width %]"[% END %]
        [%- IF pad.defined %] cellpadding="[% pad %]"[% END %]
        [%- IF space.defined %] cellspacing="[% space %]"[% END %]>
-[% content %]
+[%- content -%]
 </table>

@@ -14,10 +14,19 @@ my $TT_EXAMPLES     = 'y';
 my $TT_DOCS_CFG     = 'docs/ttree.cfg';
 my $TT_EXAMPLE_CFG  = 'examples/ttree.cfg';
 
+my $WIN32 = ($^O =~ /win/i);
+my $FLAVOUR = $WIN32 ? 'Win32' : 'Unix';
+
+if ($WIN32) {
+    $TT_INST_ROOT = 'C:/Program Files/Template Toolkit 2';
+}
+
 print <<EOF;
 
                     Template Toolkit Version 2.01
                     =============================
+
+Using $FLAVOUR defaults.
 EOF
 
 #------------------------------------------------------------------------
@@ -64,6 +73,20 @@ from CPAN:
 
 EOF
 }
+
+eval "use File::Spec";
+if ($@ or $File::Spec::VERSION < 0.82) {
+    die(<<EOF);
+
+The Template Toolkit requires that the File::Spec module (version 0.82
+or later) first be installed.  This is used by the File plugin.  It is
+available from CPAN:
+
+    http://search.cpan.org/search?dist=File-Spec
+
+EOF
+}
+
 
 #------------------------------------------------------------------------
 # detect additional modules required by plugins (just for fun)
@@ -131,13 +154,12 @@ if (prompt('Do you want to install these components?', 'y') =~ /^y/i) {
     print <<EOF;
 
 You can chose any directory for the installation of the additional
-Template Toolkit components.  The proposed default, $TT_INST_ROOT,
-assumes a Unix flavour to your operating system (suggestions for suitable
-defaults for other platforms welcome), but something like '/home/abw/tt2'
-or 'C:/Program Files/tt2' may be more appropriate and would be equally valid.
+Template Toolkit components.  The proposed default assumes a $FLAVOUR
+flavour to your operating system (suggestions for suitable defaults
+for other platforms welcome).
 
 EOF
-    $TT_INST_ROOT = prompt('Template Toolkit installation directory',
+    $TT_INST_ROOT = prompt('Installation directory',
 			   $TT_INST_ROOT);
 }
 else {
@@ -152,6 +174,7 @@ fix_file('lib/Template/Config.pm', '$INSTDIR', $TT_INST_ROOT);
 #------------------------------------------------------------------------
 
 if ($TT_INST_ROOT) {
+
     print <<EOF;
 
 The Splash! template library uses a number of (very) small images to
@@ -159,6 +182,24 @@ build user interface components.  These will be installed into the
 directory:
 
     $TT_INST_ROOT/images  
+EOF
+
+    if ($WIN32) {
+	# default images value for Win32 to browse via file system
+	$TT_IMAGES = "$TT_INST_ROOT/images";
+
+	print <<EOF;
+
+If you want to use the Splash! library then you'll need to make sure
+you can access these images via your browser.  If you want to deliver
+pages via a web server then you'll need to specify the URL that can be
+use to access these images.  In the general case you can accept the
+default and access the images via the filesystem.
+
+EOF
+    }
+    else {
+	print <<EOF;
 
 If you want to use the Splash! library then you'll need to copy these
 images, define an alias (e.g. in the httpd.conf) or create a symbolic
@@ -174,6 +215,7 @@ accept the default below and read the Template::Library::Splash
 manpage at your leisure to find out more).
 
 EOF
+    }
 
     $TT_IMAGES = prompt('URL base for TT2 images?', $TT_IMAGES);
     $TT_IMAGES =~ s[/$][]g;	# just in case
@@ -257,6 +299,8 @@ $style_cfg
 pre_process  = config
 pre_process  = header
 post_process = footer
+recurse
+verbose
 EOF
     close(FP);
 
@@ -299,7 +343,8 @@ dest = $TT_INST_ROOT/examples/html
 lib  = $TT_INST_ROOT/examples/lib
 lib  = $TT_INST_ROOT/templates
 pre_process = config
-ignore = ^(CVS|RCS)\$
+recurse
+verbose
 EOF
 
     close(FP);
@@ -319,14 +364,19 @@ sub postamble {
 tt2_install ::
 	@$(PERL) bin/tt2inst -v $(TT_INST_ROOT)
 
+tt2_splash ::
+	@$(PERL) -I lib bin/gifsplash -v
+
 EOF
     $amble .=<<EOF if $TT_BUILD_DOCS;
 tt2_html_docs ::
 	\@\$(PERL) bin/ttree -v -f \$(TT_INST_ROOT)/$TT_DOCS_CFG
+
 EOF
     $amble .=<<EOF if $TT_EXAMPLES;
 tt2_examples ::
 	\@\$(PERL) bin/ttree -v -f \$(TT_INST_ROOT)/$TT_EXAMPLE_CFG
+
 EOF
     return $amble;
 }
@@ -334,7 +384,7 @@ EOF
 sub install {
     my $class = shift;
     my $basic = $class->SUPER::install(@_);
-    my $add   = 'tt2_install';
+    my $add   = 'tt2_install tt2_splash';
     $add .= ' tt2_html_docs' if $TT_BUILD_DOCS;
     $add .= ' tt2_examples' if $TT_EXAMPLES;
     $basic =~ s/^(install\s+::\s+.*)$/$1 $add/m

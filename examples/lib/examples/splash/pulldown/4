@@ -1,0 +1,8 @@
+[% splash.style.default.col.text = 'black' %]
+
+[% PROCESS splash/pulldown 
+           select = 3 
+           width  = '50%'
+           align  = 'right'
+	   space  = 6
+%]

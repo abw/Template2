@@ -9,20 +9,7 @@ for the Splash! library.  The most important item is 'splash.images'
 which defines the URL prefix for the [% splash.bold %] images.  If 
 this value is wrong, you'll notice that your interface elements don't
 have smooth, rounded corners but empty, square chunks of broken image
-links. 
-</p>
-
-</p>
-Afer that, everything is pretty much a matter of personal taste.  You
-can change the default colours but beware that some colours don't have
-the requisite images yet, so check the images directory first and see
-what's available.  I'll be adding more colours just as soon as I get a
-round tuit.  I'll also try to remember to stick the Photoshop source
-file up on the <a href="[% splash.homepage %]">web site</a> for anyone
-who wants to help out with making image files.  A GIMP Script-Fu 
-script would be really nice to automate this if anyone has the 
-requisite skills and a spare moment...  I've got a GIMP book I'm 
-still trying to find time to read... :-)
+links.  Afer that, everything is pretty much a matter of personal taste.
 </p>
 
 <p>
@@ -36,9 +23,9 @@ does something like this:
 [% TAGS star %]
 [* WRAPPER source -*]
 [% PROCESS splash/config;
-   splash.images       = '/~abw/tt2/splash/images'
-   splash.select.col   = 'leaf'
-   splash.unselect.col = 'bud'
+   splash.images                 = '/~abw/tt2/splash/images'
+   splash.style.default.col.fore = 'green75'
+   splash.style.select.col.fore  = 'green50'
 %]
 [*- END *]
 [* TAGS tt2 *]

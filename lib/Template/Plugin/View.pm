@@ -25,6 +25,7 @@ package Template::Plugin::View;
 require 5.004;
 
 use strict;
+use Template::Plugin;
 use vars qw( $VERSION );
 use base qw( Template::Plugin );
 
@@ -58,7 +59,7 @@ __END__
 #   templates.  Any changes you make here may be lost.
 # 
 #   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/download/ and contains all
+#   from http://www.template-toolkit.org/docs.html and contains all
 #   the source templates, XML files, scripts, etc., from which the
 #   documentation for the Template Toolkit is built.
 #------------------------------------------------------------------------
@@ -97,7 +98,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 30th March 2001.
+Template Toolkit version 2.02, released on 4th March 2001.
 
 =head1 COPYRIGHT
 

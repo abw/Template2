@@ -2,6 +2,7 @@
      title = "$docset.title $book.name";
 -%]
 
+
 <h1>[% title %]</h1>
 <h2>[% page.title or page.name %]</h2>
 

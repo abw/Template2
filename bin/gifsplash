@@ -1,0 +1,132 @@
+#!/usr/bin/perl -w                                         # -*- perl -*-
+#
+# gifsplash  (bin/gifsplash)
+#
+# This script explodes the set of black images distributed with the
+# Template Toolkit (images/splash/black/*) into the colours specified
+# in the html/rgb template (templates/html/rgb).  It is run at "make
+# install" time and operates on the TT2 installation directory.  Note
+# that the main loop uns in template space where there is convenient
+# access to the RGB definitions.
+#
+#  
+
+use strict;
+use Template;
+use Getopt::Std;
+
+my $PROGRAM = 'gifsplash';
+my $VERSION = 0.02;
+my $MASKDIR = 'black';
+
+
+my $args = { };
+getopts('vs:d:i:h', $args);
+usage() if $args->{ h };
+my ($verbose, $src, $dest, $inst) = @$args{ qw( v s d i ) };
+
+$inst ||= Template::Config->instdir()
+      || die "Cannot determine Template Toolkit installation directory\n";
+
+$src  ||= "$inst/images/splash/$MASKDIR";
+$dest ||= "$inst/images/splash";
+
+if ($verbose) {
+    print STDERR <<EOF;
+Weaving the Rainbow: blowing colour into Splash! GIFs
+   src: $src
+  dest: $dest/*
+EOF
+}
+
+my $tt = Template->new( 
+    INCLUDE_PATH => "$inst/templates",
+    PRE_PROCESS  => 'html/rgb',
+    OUTPUT_PATH  => $dest,
+);
+
+my $vars = {
+    gifs    => load_gifs($src),
+    colour  => \&colour_gif,
+    verbose => $verbose,
+};    
+my $out;
+
+$tt->process(\*DATA, $vars, \$out)
+    || die $tt->error(), "\n";
+
+
+#------------------------------------------------------------------------
+
+sub load_gifs {
+    my $gifdir = shift;
+    my (@files, $gifs);
+    local (*DIR, *GIF);
+    local $" = ', ';
+    local $/ = undef;
+
+    opendir(DIR, $gifdir) || die "$gifdir: $!";
+    @files = grep { /\.gif$/ } readdir(DIR);
+    closedir DIR;
+
+    print STDERR "Found ", scalar @files, " GIF files\n" if $verbose;
+
+    foreach my $f (@files) {
+	open(GIF, "$gifdir/$f") || die "$gifdir/$f: $!\n";
+	$gifs->{ $f } = <GIF>;
+	close(GIF);
+    }
+
+    return $gifs;
+}
+
+sub colour_gif {
+    my ($gif, $r, $g, $b) = @_;
+
+    unless (defined $g) {
+	($r, $g, $b) = make_rgb($r);
+    }
+
+    # the first and only RGB entry in the colour table runs from 
+    # bytes 13 to 15
+    vec($gif, 13, 8) = $r;
+    vec($gif, 14, 8) = $g;
+    vec($gif, 15, 8) = $b;
+
+    return $gif;
+}
+
+sub make_rgb {
+    my $rgbhash = shift;
+    $rgbhash =~ /^\#?(..)(..)(..)$/;
+    return map { hex($_) } ($1, $2, $3);
+}
+
+sub usage {
+    print STDERR <<EOF;
+$PROGRAM: colorise source GIFs to create Splash! colour sets
+
+usage: $PROGRAM [options]
+    -s /src/dir    source directory
+    -d /dest/dir   destination directory
+    -i /tt2/dir    TT2 installation directory
+    -v             verbose mode
+    -h             this help
+EOF
+    exit();
+}
+
+
+#------------------------------------------------------------------------
+__END__
+[%  "  " | stderr IF verbose;
+    FOREACH col = rgb.keys; 
+	"\n  " | stderr IF verbose and ! loop.count % 8;
+	NEXT IF rgb.${col}.keys;
+	"$col, " | stderr IF verbose;
+	FOREACH gifname = gifs.keys;
+   	    colour(gifs.$gifname, rgb.$col) | redirect("$col/$gifname");
+	END;
+    END;
+    "\n" | stderr IF verbose;
+%]

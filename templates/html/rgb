@@ -7,6 +7,22 @@
 	grey75 => '#c0c0c0'
 	white  => '#ffffff'
 
+	red    => '#ff0000'  
+	red25  => '#400000'
+	red50  => '#800000'
+	red75  => '#c00000'
+
+	green   => '#00ff00'  
+	green25 => '#004000'
+	green50 => '#008000'
+	green75 => '#00c000'
+
+	blue    => '#0000ff'  
+	blue25  => '#000040'
+	blue50  => '#000080'
+	blue75  => '#0000c0'
+
+	# v0.01 cols follow
 	# reds
 	blood   => '#800000'
 	scarlet => '#c04040'
@@ -31,27 +47,27 @@
     }
 
     # sets of dark/mid/light colours
-    rgb.grey = {
+    rgb.shade.grey = {
 	dark   => rgb.grey25,
 	mid    => rgb.grey50,
 	light  => rgb.grey75,
     }
-    rgb.red = {
-	dark   => rgb.blood,
-	mid    => rgb.scarlet,
-	light  => rgb.rose,
+    rgb.shade.red = {
+	dark   => rgb.red25,
+	mid    => rgb.red50,
+	light  => rgb.red75,
     }
-    rgb.green = {
-	dark   => rgb.leaf,
-	mid    => rgb.bud,
-	light  => rgb.mint,
+    rgb.shade.green = {
+	dark   => rgb.green25,
+	mid    => rgb.green50,
+	light  => rgb.green75,
     }
-    rgb.blue = {
-	dark   => rgb.navy,
-	mid    => rgb.marine,
-	light  => rgb.aqua,
+    rgb.shade.blue = {
+	dark   => rgb.blue25,
+	mid    => rgb.blue50,
+	light  => rgb.blue75,
     }
-    rgb.lavender = {
+    rgb.shade.lavender = {
 	dark   => rgb.purple,
 	mid    => rgb.mauve,
 	light  => rgb.lilac,

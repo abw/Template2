@@ -27,6 +27,7 @@
 		config   = 'Config'
 		colours  = 'Colours'
 		text     = 'Text'
+		icon     = 'Icons'
 		button   = 'Buttons'
 		bar      = 'Bars'
 		menu     = 'Menus'
@@ -41,7 +42,7 @@
 		tabsbox  = 'Boxes with Tab Sets'
 		dropbox  = 'Button Bar with Descending Panel'
 	    }
-	    order = [ 'index', 'config', 'colours', 'text', 'button', 'bar', 
+	    order = [ 'index', 'config', 'colours', 'text', 'icon', 'button', 'bar', 
 		      'menu', 'menubar', 'pulldown', 'tab', 'frame', 'panel', 
 		      'box', 'tabbox', 'tabset', 'tabsbox', 'dropbox' ] 
     	}

@@ -90,6 +90,7 @@ my $ttvars = {
     holler => sub { Holler->new(@_) },
     trace  => sub { $Holler::TRACE },
     clear  => \&Holler::clear,
+    post56 => ( $^V && eval '$^V ge v5.6.0' ),
 };
 
 test_expect(\*DATA, $ttcfg, $ttvars);
@@ -201,8 +202,15 @@ Goodbye destroyed
         USE holler('macro plugin'); 
     END 
 -%]
-[% clear; leak; trace %]
+[% IF post56;
+	clear; leak; trace;
+    ELSE;
+       "Perl version < 5.6.0, skipping this test";
+    END
+-%]
 -- expect --
+-- process --
+[% IF post56 -%]
 <leak1>
 </leak1>
 <leak2>
@@ -213,6 +221,9 @@ macro plugin created
 Hello destroyed
 Goodbye destroyed
 macro plugin destroyed
+[% ELSE -%]
+Perl version < 5.6.0, skipping this test
+[% END -%]
 
 -- test --
 [% PERL %]

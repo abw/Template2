@@ -1,0 +1,35 @@
+[% # splash/pull: menu as a vertical sequence of buttons
+   # ARGS:
+   #	buttons = [
+   #	    { link => 'page1.html', text => 'First Page' },
+   #	    { link => 'page2.html', text => 'Second Page' },
+   #	      ...
+   #	],
+   #	select	    # item to select in range 1..n (0: none)
+
+    SET
+        default = splash.style.default
+    ;
+    DEFAULT 
+        style = default
+        space = style.space or default.space
+        pad   = style.pad   or default.pad
+    ;
+-%]
+<!-- tt2.splash.pulldown -->
+[%  WRAPPER html/table col=0;
+	FOREACH button = buttons;
+	    WRAPPER html/row + html/cell width = width ? '100%' : 0, col=0;
+		style = (select == loop.count or select == button.text) 
+			         ? splash.style.select : splash.style.default;
+		WRAPPER splash/button
+		        width = width ? '100%' : 0;
+			INCLUDE splash/text 
+				content = button.text
+				link    = button.link;
+		END;
+	    END;
+	END;
+    END
+%]
+<!-- /tt2.splash.pulldown -->

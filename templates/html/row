@@ -9,5 +9,5 @@
     [%- IF col %] bgcolor="[% col %]"[% END %]
     [%- IF rowspan %] rowspan="[% rowspan %]"[% END %]
     [%- IF valign %] valign="[% valign %]"[% END %]>
-[% content %]
+[%- content -%]
 </tr>

@@ -29,7 +29,7 @@
 #   templates.  Any changes you make here may be lost.
 # 
 #   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/download/ and contains all
+#   from http://www.template-toolkit.org/docs.html and contains all
 #   the source templates, XML files, scripts, etc., from which the
 #   documentation for the Template Toolkit is built.
 #------------------------------------------------------------------------
@@ -112,7 +112,7 @@ Please let me know if you think anyone is missing from this list.
   Jonas Liljegren           <jonas@paranormal.se>
   Paul Makepeace            <Paul.Makepeace@realprogrammers.com>
   Simon Matthews            <sam@knowledgepool.com>
-  Robert McArthur           ...
+  Robert McArthur           <mcarthur@dstc.edu.au>
   Craig McLane              <mclanec@oxy.edu>     
   Leslie Michael Orchard    <deus_x@ninjacode.com>
   Eugene Miretskiy          <eugene@invision.net>
@@ -135,7 +135,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 30th March 2001.
+Template Toolkit version 2.02, released on 4th March 2001.
 
 =head1 COPYRIGHT
 

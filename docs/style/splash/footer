@@ -7,12 +7,14 @@
 -%]
 </div>
 
-[% INCLUDE splash/button 
-	select=1 
-	width='100%'
-        link=tt_homepage 
+[% WRAPPER splash/button + splash/text
+	style = splash.style.select
+	width = '100%'
+        link  = tt_homepage 
         align='center'
-        content=tt_homepage
+    ; 
+    tt_homepage;
+    END;
 %]
 
 [% PROCESS html/footer %]
