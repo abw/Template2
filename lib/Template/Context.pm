@@ -36,7 +36,7 @@ use Template::Constants;
 use Template::Exception;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG_FORMAT = "\n## line \$line : [% \$text %] ##\n";
+$DEBUG_FORMAT = "\n## \$file line \$line : [% \$text %] ##\n";
 
 
 #========================================================================
@@ -636,12 +636,10 @@ sub debug {
     if (@args) {
 	if ($args[0] =~ /^on|1$/i) {
 	    $self->{ DEBUG } = 1;
-#	    print STDERR "context turning debug ON\n";
 	    pop(@args);
 	}
 	elsif ($args[0] =~ /^off|0$/i) {
 	    $self->{ DEBUG } = 0;
-#	    print STDERR "context turning debug OFF\n";
 	    pop(@args);
 	}
     }
