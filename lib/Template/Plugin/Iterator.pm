@@ -83,7 +83,7 @@ with a given name.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+Andy Wardley E<lt>abw@andywardley.comE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
@@ -92,8 +92,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.47, distributed as part of the
-Template Toolkit version 2.07b, released on 07 July 2002.
+2.48, distributed as part of the
+Template Toolkit version 2.07c, released on 09 July 2002.
 
 =head1 COPYRIGHT
 

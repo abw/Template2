@@ -7,7 +7,7 @@
 #   other resources related to the Template Toolkit.
 #
 # AUTHOR
-#   Andy Wardley  <abw@kfs.org>
+#   Andy Wardley  <abw@andywardley.com>
 #
 # COPYRIGHT
 #   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
@@ -120,11 +120,26 @@ driven template.
 
     http://slashcode.org/
 
+=item OpenFrame
+
+OpenFrame is an open source application framework for distributed
+media applications. It ships with a generator for the Template
+Toolkit.
+
+    http://openframe.fotango.com/
+
+=item PCMT
+
+PCMT is the Personal Content Management Toolkit. It uses the Template
+Toolkit as the presentation engine.
+
+    http://pcmt.sf.net/
+
 =back
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+Andy Wardley E<lt>abw@andywardley.comE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
@@ -133,7 +148,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07b, released on 07 July 2002.
+Template Toolkit version 2.07c, released on 09 July 2002.
 
 =head1 COPYRIGHT
 

@@ -155,8 +155,8 @@ The GD::Text module was written by Martien Verbruggen.
 
 =head1 VERSION
 
-1.40, distributed as part of the
-Template Toolkit version 2.07b, released on 07 July 2002.
+1.41, distributed as part of the
+Template Toolkit version 2.07c, released on 09 July 2002.
 
 =head1 COPYRIGHT
 

@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.07b, detailing
+#   Revision history for the Template Toolkit version 2.07c, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,29 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.07c - July 9th 2002                   ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in Date plugin introduced in last version which caused
+  it to ignore the 'time' parameter.
+
+* Modified INCLUDE_PATH handling in Template::Provider to accept a 
+  reference to a subroutine or object implementing a paths() method
+  as an element in the list.  This is then called to return a 
+  dynamically generated path.  Documented and tested.
+
+* Changed the implementation of the NAMESPACE calling code to leave
+  the namespace prefix intact on the ident list which then gets 
+  passed to the handler's ident() method.  Modified the ident()
+  method of Template::Namespace::Constants to expect and remove it.
+
+* Added the 'unique' list virtual method to cull multiple identical
+  items from a list (darren)
+
+* Modified the OUTPUT option to accept a reference to a list (darren)
+
 
 #------------------------------------------------------------------------
 # Version 2.07b - July 7th 2002                   ## DEVELOPER RELEASE ##

@@ -326,6 +326,55 @@ On Win32 systems, a little extra magic is invoked, ignoring delimiters
 that have ':' followed by a '/' or '\'.  This avoids confusion when using
 directory names like 'C:\Blah Blah'.
 </p>
+<p>
+When specified as a list, the INCLUDE_PATH path can contain elements 
+which dynamically generate a list of INCLUDE_PATH directories.  These 
+generator elements can be specified as a reference to a subroutine or 
+an object which implements a paths() method.
+</p>
+<pre>    my $template = Template-&gt;new({
+        INCLUDE_PATH =&gt; [ '/usr/local/templates', 
+                          \&amp;incpath_generator, 
+			  My::IncPath::Generator-&gt;new( ... ) ],
+    });</pre>
+<p>
+Each time a template is requested and the INCLUDE_PATH examined, the
+subroutine or object method will be called.  A reference to a list of
+directories should be returned.  Generator subroutines should report
+errors using die().  Generator objects should return undef and make an
+error available via its error() method.
+</p>
+<p>
+For example:
+</p>
+<pre>    sub incpath_generator {</pre>
+<pre>	# ...some code...
+	
+	if ($all_is_well) {
+	    return \@list_of_directories;
+	}
+	else {
+	    die &quot;cannot generate INCLUDE_PATH...\n&quot;;
+	}
+    }</pre>
+<p>
+or:
+</p>
+<pre>    package My::IncPath::Generator;</pre>
+<pre>    # Template::Base (or Class::Base) provides error() method
+    use Template::Base;
+    use base qw( Template::Base );</pre>
+<pre>    sub paths {
+	my $self = shift;</pre>
+<pre>	# ...some code...</pre>
+<pre>        if ($all_is_well) {
+	    return \@list_of_directories;
+	}
+	else {
+	    return $self-&gt;error(&quot;cannot generate INCLUDE_PATH...\n&quot;);
+	}
+    }</pre>
+<pre>    1;</pre>
 
 <li><b>DELIMITER</b><br>
 <p>
@@ -859,7 +908,8 @@ working directory if not specified absolutely); a file handle
 (e.g. GLOB or IO::Handle) opened for writing; a reference to a text
 string to which the output is appended (the string isn't cleared); a
 reference to a subroutine which is called, passing the output text as
-an argument; or as a reference to any object that supports the print()
+an argument; as a reference to an array, onto which the content will be
+push()ed; or as a reference to any object that supports the print()
 method.  This latter option includes the Apache::Request object which
 is passed as the argument to Apache/mod_perl handlers.
 </p>
@@ -891,7 +941,13 @@ example 4 (subroutine):
 	OUTPUT =&gt; \&amp;output,
     });</pre>
 <p>
-example 5 (Apache/mod_perl handler):
+example 5 (array reference):
+</p>
+<pre>    my $template = Template-&gt;new({
+	OUTPUT =&gt; \@output,
+    })</pre>
+<p>
+example 6 (Apache/mod_perl handler):
 </p>
 <pre>    sub handler {
 	my $r = shift;</pre>
@@ -908,6 +964,7 @@ above argument types.
 <pre>    $t-&gt;process($file, $vars, &quot;/tmp/foo&quot;);
     $t-&gt;process($file, $vars, &quot;bar&quot;);
     $t-&gt;process($file, $vars, \*MYGLOB);
+    $t-&gt;process($file, $vars, \@output); 
     $t-&gt;process($file, $vars, $r);  # Apache::Request
     ...</pre>
 
@@ -977,11 +1034,12 @@ option must be set for the DEBUG directive to have any effect.
 This template fragment would generate the following output:
 </p>
 <pre>    ## input text line 1 : [% tt_start_tag %] foo = 'World' [% tt_end_tag %] ##
-    Hello World
-      
+    Hello World</pre>
+<p>
 It is anticipated that a future version of the Template Toolkit will
 support allow the different debugging options to be enabled or
-disabled individually.</pre>
+disabled individually.
+</p>
 
 <li><b>DEBUG_FORMAT</b><br>
 <p>
@@ -1653,7 +1711,7 @@ created and used automatically if a GRAMMAR item isn't specified.
 [% WRAPPER section
     title="AUTHOR"
 -%]<p>
-Andy Wardley &lt;abw@kfs.org&gt;
+Andy Wardley &lt;abw@andywardley.com&gt;
 </p>
 <p>
 [% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
@@ -1662,7 +1720,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07b, released on 07 July 2002.
+Template Toolkit version 2.07c, released on 09 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -1365,6 +1365,20 @@ Accessor method for the INCLUDE_PATH setting.  If called with an
 argument, this method will replace the existing INCLUDE_PATH with
 the new value.
 
+=head2 paths()
+
+This method generates a copy of the INCLUDE_PATH list.  Any elements in the
+list which are dynamic generators (e.g. references to subroutines or objects
+implementing a paths() method) will be called and the list of directories 
+returned merged into the output list.
+
+It is possible to provide a generator which returns itself, thus sending
+this method into an infinite loop.  To detect and prevent this from happening,
+the C<$MAX_DIRS> package variable, set to 64 by default, limits the maximum
+number of paths that can be added to, or generated for the output list.  If
+this number is exceeded then the method will immediately return an error 
+reporting as much.
+
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@andywardley.comE<gt>
@@ -1376,8 +1390,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.57, distributed as part of the
-Template Toolkit version 2.07c, released on 08 July 2002.
+2.58, distributed as part of the
+Template Toolkit version 2.07c, released on 09 July 2002.
 
 =head1 COPYRIGHT
 

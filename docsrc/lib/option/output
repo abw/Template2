@@ -12,7 +12,7 @@ working directory if not specified absolutely); a file handle
 (e.g. GLOB or IO::Handle) opened for writing; a reference to a text
 string to which the output is appended (the string isn't cleared); a
 reference to a subroutine which is called, passing the output text as
-an argument; as a refernce to an array, onto which the content will be
+an argument; as a reference to an array, onto which the content will be
 push()ed; or as a reference to any object that supports the print()
 method.  This latter option includes the Apache::Request object which
 is passed as the argument to Apache/mod_perl handlers.

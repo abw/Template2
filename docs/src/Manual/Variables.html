@@ -741,6 +741,20 @@ Removes the first/last item from the list and returns it.
 <pre>    [% tt_start_tag %] first = mylist.shift [% tt_end_tag %]
     [% tt_start_tag %] last  = mylist.pop   [% tt_end_tag %]</pre>
 
+<li><b>unique</b><br>
+<p>
+Returns a list of the unique elements in a list, in the same order
+as in the list itself.
+</p>
+<pre>    [% tt_start_tag %] mylist = [ 1, 2, 3, 2, 3, 4, 1, 4, 3, 4, 5 ] [% tt_end_tag %]
+    [% tt_start_tag %] numbers = mylist.unique [% tt_end_tag %]</pre>
+<p>
+While this can be explicitly sorted, it is not required that the list
+be sorted before the unique elements pulled out (unlike the Unix
+command line utility).
+</p>
+<pre>    [% tt_start_tag %] numbers = mylist.unique.sort [% tt_end_tag %]</pre>
+
 </ul>
 <p>
 The following example demonstrates how an empty list ('folk') can be 
@@ -1180,7 +1194,7 @@ variable.
 [% WRAPPER section
     title="AUTHOR"
 -%]<p>
-Andy Wardley &lt;abw@kfs.org&gt;
+Andy Wardley &lt;abw@andywardley.com&gt;
 </p>
 <p>
 [% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
@@ -1189,7 +1203,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07b, released on 07 July 2002.
+Template Toolkit version 2.07c, released on 09 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

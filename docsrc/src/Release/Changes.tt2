@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.07c - July  th 2002                   ## DEVELOPER RELEASE ##
+# Version 2.07c - July 9th 2002                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in Date plugin introduced in last version which caused
@@ -41,7 +41,9 @@
   method of Template::Namespace::Constants to expect and remove it.
 
 * Added the 'unique' list virtual method to cull multiple identical
-  items from a list.
+  items from a list (darren)
+
+* Modified the OUTPUT option to accept a reference to a list (darren)
 
 
 #------------------------------------------------------------------------
