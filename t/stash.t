@@ -64,7 +64,7 @@ match( $stash->get('bar.buz'), 100 );
 
 my $ttlist = [
     'default' => Template->new(),
-    'warn'    => Template->new(DEBUG => 1),
+    'warn'    => Template->new(DEBUG => 1, DEBUG_FORMAT => ''),
 ];
 
 test_expect(\*DATA, $ttlist, $data);

@@ -91,6 +91,7 @@ my $template = Template->new({
 
 my $ttdebug = Template->new({
     DEBUG => 1,
+    DEBUG_FORMAT => '',
 });
 
 test_expect(\*DATA, [ default => $template, debug => $ttdebug ], $params);
@@ -599,6 +600,7 @@ last outer
 4,1,1
 4,2,1
 4,4,1
+
 -- test --
 [%
     LAST FOREACH k = [ 1 .. 4];
