@@ -84,7 +84,11 @@ sub format {
 		    : ($params->{ locale } || $self->{ locale });
     my (@date, $datestr);
 
-    unless ($time =~ /^\d+$/) {
+    if ($time =~ /^\d+$/) {
+	# $time is now in seconds since epoch
+	@date = (localtime($time))[0..6];
+    }
+    else {
 	# if $time is numeric, then we assume it's seconds since the epoch
 	# otherwise, we try to parse it as a 'H:M:S D:M:Y' string
 	@date = (split(/(?:\/| |:|-)/, $time))[2,1,0,3..5];
@@ -93,11 +97,9 @@ sub format {
 	    unless @date >= 6 && defined $date[5];
 	$date[4] -= 1;     # correct month number 1-12 to range 0-11
 	$date[5] -= 1900;  # convert absolute year to years since 1900
-	$time = &POSIX::mktime(@date);
+	$time = &POSIX::mktime(@date, 0, 0, 0);
     }
     
-    # $time is now in seconds since epoch
-    @date = (localtime($time))[0..6];
 
     if ($locale) {
 	# format the date in a specific locale, saving and subsequently
@@ -280,7 +282,7 @@ fixups/enhancements, a test script and documentation.
 
 =head1 VERSION
 
-2.21, distributed as part of the
+2.22, distributed as part of the
 Template Toolkit version 2.04e, released on 06 September 2001.
 
 
