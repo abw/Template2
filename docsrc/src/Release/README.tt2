@@ -795,8 +795,8 @@ VERSION COMPATABILITY
 ---------------------
 
 In terms of the template language and features available, versions
-2.01 through to [* tt.version *] should be fully backwardly 
-compatible with version 2.00.  
+2.01 through to [* tt.version *] should be fully backwardly compatible with 
+version 2.00.  
 
 Version 2.00 is backwardly compatible with version 1 in all but a few
 minor areas.  The 'Changes' file details all the visible changes

@@ -802,12 +802,9 @@ Toolkit, please contact the author.
 VERSION COMPATABILITY
 ---------------------
 
-In language and feature terms, versions 2.03, 2.02 and 2.01 should be
-fully backwardly compatible with version 2.00.  Internally, the only
-significant difference is that the Template::Plugin base class no
-longer implements an AUTOLOAD method.  If you've written a plugin
-derived from the base class that relies on it (probably a bad idea
-anyway), then you'll need to add an AUTOLOAD of your own.
+In terms of the template language and features available, versions
+2.01 through to 2.05 should be fully backwardly 
+compatible with version 2.00.  
 
 Version 2.00 is backwardly compatible with version 1 in all but a few
 minor areas.  The 'Changes' file details all the visible changes

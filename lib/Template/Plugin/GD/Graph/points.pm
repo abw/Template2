@@ -119,7 +119,7 @@ The GD::Graph module was written by Martien Verbruggen.
 
 =head1 VERSION
 
-1.15, distributed as part of the
+1.16, distributed as part of the
 Template Toolkit version 2.05, released on 11 September 2001.
 
 =head1 COPYRIGHT
