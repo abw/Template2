@@ -22,7 +22,7 @@ use Template::Test;
 use Template::Plugin::HTML;
 $^W = 1;
 
-our $DEBUG = grep(/-d/, @ARGV);
+my $DEBUG = grep(/-d/, @ARGV);
 $Template::Test::DEBUG =  $DEBUG;
 $Template::Test::PRESERVE = $DEBUG;
 
