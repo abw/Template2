@@ -46,6 +46,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $ROOT_OPS = {
     'inc'  => sub { local $^W = 0; my $item = shift; ++$item }, 
     'dec'  => sub { local $^W = 0; my $item = shift; --$item }, 
+#    import => \&hash_import,
     defined $ROOT_OPS ? %$ROOT_OPS : (),
 };
 
@@ -110,11 +111,7 @@ $HASH_OPS = {
                 },
     'exists'  => sub { exists $_[0]->{ $_[1] } },
     'defined' => sub { defined $_[0]->{ $_[1] } },
-    'import'  => sub { my ($hash, $imp) = @_;
-                      $imp = {} unless ref $imp eq 'HASH';
-                      @$hash{ keys %$imp } = values %$imp;
-                      return '';
-                  },
+    'import'  => \&hash_import,
     'sort'    => sub {
         my ($hash) = @_;
         [ sort { lc $hash->{$a} cmp lc $hash->{$b} } (keys %$hash) ];
@@ -184,6 +181,13 @@ $LIST_OPS = {
     },
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
+
+sub hash_import { 
+    my ($hash, $imp) = @_;
+    $imp = {} unless ref $imp eq 'HASH';
+    @$hash{ keys %$imp } = values %$imp;
+    return '';
+}
 
 
 #========================================================================
@@ -466,6 +470,7 @@ sub update {
 sub _dotop {
     my ($self, $root, $item, $args, $lvalue) = @_;
     my $rootref = ref $root;
+    my $atroot  = ($rootref eq __PACKAGE__);
     my ($value, @result);
 
     $args ||= [ ];
@@ -479,7 +484,7 @@ sub _dotop {
     return undef
 	unless defined($root) and defined($item) and $item !~ /^[\._]/;
 
-    if ($rootref eq __PACKAGE__ || $rootref eq 'HASH') {
+    if ($atroot || $rootref eq 'HASH') {
 
 	# if $root is a regular HASH or a Template::Stash kinda HASH (the 
 	# *real* root of everything).  We first lookup the named key 
@@ -495,13 +500,15 @@ sub _dotop {
 	    # we create an intermediate hash if this is an lvalue
 	    return $root->{ $item } = { };		    ## RETURN
 	}
-	elsif ($value = $HASH_OPS->{ $item }) {
+	# ugly hack: only allow import vmeth to be called on root stash
+	elsif (($value = $HASH_OPS->{ $item })
+	       && ! $atroot || $item eq 'import') {
 	    @result = &$value($root, @$args);		    ## @result
 	}
-       elsif ( ref $item eq 'ARRAY' ) {
-             # hash slice
-             return [@$root{@$item}];                       ## RETURN
-       }
+	elsif ( ref $item eq 'ARRAY' ) {
+	    # hash slice
+	    return [@$root{@$item}];                       ## RETURN
+	}
     }
     elsif ($rootref eq 'ARRAY') {
 
@@ -839,8 +846,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.50, distributed as part of the
-Template Toolkit version 2.06e, released on 12 March 2002.
+2.51, distributed as part of the
+Template Toolkit version 2.06f, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

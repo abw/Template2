@@ -45,7 +45,11 @@ sub new {
 sub make_formatter {
     my $format = shift;
     $format = '%s' unless defined $format;
-    return sub { return sprintf($format, @_); }
+    return sub { 
+	my @args = @_;
+	push(@args, '') unless @args;
+	return sprintf($format, @args); 
+    }
 }
 
 
@@ -94,8 +98,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.40, distributed as part of the
-Template Toolkit version 2.06e, released on 12 March 2002.
+2.41, distributed as part of the
+Template Toolkit version 2.06f, released on 12 March 2002.
 
 =head1 COPYRIGHT
 
