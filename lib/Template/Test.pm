@@ -29,7 +29,7 @@ package Template::Test;
 require 5.004;
 
 use strict;
-use vars qw( @ISA @EXPORT $VERSION $DEBUG $EXTRA $loaded %callsign);
+use vars qw( @ISA @EXPORT $VERSION $DEBUG $EXTRA $PRESERVE $loaded %callsign);
 use Template qw( :template );
 use Exporter;
 
@@ -39,7 +39,9 @@ $DEBUG   = 0;
 @EXPORT  = qw( ntests ok flush test_expect callsign banner );
 $| = 1;
 
-$EXTRA = 0;   # any extra tests to come after test_expect() 
+$EXTRA    = 0;   # any extra tests to come after test_expect()
+$PRESERVE = 0	 # don't mangle newlines in output/expect
+    unless defined $PRESERVE;
 
 my @results = ();
 my ($ntests, $ok_count);
@@ -261,9 +263,11 @@ sub test_expect {
 		unless $match;
 
 	    my ($copyi, $copye, $copyo) = ($input, $expect, $output);
-	    foreach ($copyi, $copye, $copyo) {
-		s/\n/\\n/g;
-	    };
+	    unless ($PRESERVE) {
+		foreach ($copyi, $copye, $copyo) {
+		    s/\n/\\n/g;
+		}
+	    }
 	    printf(" input: [%s]\nexpect: [%s]\noutput: [%s]\n", 
 		   $copyi, $copye, $copyo);
 	}

@@ -2,6 +2,15 @@
 # KNOWN BUGS AND/OR LIMITATIONS
 #------------------------------------------------------------------------
 
+* fix end of Changes (gotchas)
+
+* references are required!
+
+* empty hashes cause parser error.
+
+* complex filenames don't all intermediates paths constructed
+  use File::Basename on $compiled in _compile()
+
 * The .pod form of the documentation doesn't get installed properly
   because it lives in docs/pod instead of lib.  The man pages should
   get built and installed OK, which is fine as long as you have 'man'

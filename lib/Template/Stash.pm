@@ -187,21 +187,20 @@ sub get {
     my ($root, $result);
     $root = $self;
 
-    if (ref $ident) {
+    if (ref $ident eq 'ARRAY') {
 	my $size = $#$ident;
 
 	# if $ident is a list reference, then we evaluate each item in the 
 	# identifier against the previous result, using the root stash 
 	# ($self) as the first implicit 'result'...
 
-	foreach (my $i = 0; $i < $size; $i += 2) {
+	foreach (my $i = 0; $i <= $size; $i += 2) {
 	    $result = $self->_dotop($root, @$ident[$i, $i+1]);
 	    last unless defined $result;
 	    $root = $result;
 	}
     }
     else {
-	# ...otherwise, $ident is a string and we can call _dotop() once
 	$result = $self->_dotop($root, $ident, $args);
     }
 
@@ -231,7 +230,7 @@ sub set {
     $root = $self;
 
     ELEMENT: {
-	if (ref $ident) {
+	if (ref $ident eq 'ARRAY') {
 	    # a compound identifier may contain multiple elements (e.g. 
 	    # foo.bar.baz) and we must first resolve all but the last, 
 	    # using _dotop() with the $lvalue flag set which will create 
@@ -248,7 +247,6 @@ sub set {
 				     $value, $default);
 	}
 	else {
-	    # if $ident is a simple variable name then we just call _assign()
 	    $result = $self->_assign($root, $ident, 0, $value, $default);
 	}
     }
@@ -305,8 +303,8 @@ sub _dotop {
     $args ||= [ ];
     $lvalue ||= 0;
 
-#    print STDERR "_dotop(root=$root, item=$item, args=[@$args])\n"
-#	if $DEBUG;
+    print STDERR "_dotop(root=$root, item=$item, args=[@$args])\n"
+	if $DEBUG;
 
     # return undef without an error if either side of the dot is unviable
     # or if an attempt is made to access a private member, starting _ or .
@@ -365,9 +363,8 @@ sub _dotop {
 	# UNIVERSAL object base class) then we call the item as a method.
 	# If that fails then we try to fallback on HASH behaviour if 
 	# possible.
-
 	eval { @result = $root->$item(@$args); };	    
-	    
+
 	if ($@ && UNIVERSAL::isa($root, 'HASH') 
 	       && defined($value = $root->{ $item })) {
 	    return $value unless ref $value eq 'CODE';	    ## RETURN

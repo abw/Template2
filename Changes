@@ -13,6 +13,27 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.00 beta 4  
+#------------------------------------------------------------------------
+
+* Fixed an obscure bug in the Template::Stash which was ignoring the
+  last element in a compound variable when followed by an empty 
+  argument list.  e.g. [% cgi.param() %] would be treated as [% cgi %].
+  Thanks to Jonas Liljegren for reporting the problem.
+
+* Changes parser to automatically unescape any escaped characters in 
+  double quoted strings except for \n and \$.  This permits strings to
+  be constructed that include tag characters.  e.g.
+
+    [% directive = "[\% INSERT thing %\]" %]
+
+* Added $Template::Test::PRESERVE package variable which can be set to 
+  prevent newlines in test output from being automatically mangled to
+  literal '\n'.
+
+* Fixed various documentation problems, e.g. OUTPUT_PATH
+
+#------------------------------------------------------------------------
 # Version 2.00 beta 3  10th August 2000
 #------------------------------------------------------------------------
 
@@ -899,5 +920,6 @@ out.
 * $Template::Directive::While::MAXITER is now 
   $Template::Directive::WHILE_MAX and may change again.
 
+* into() filter is obsolete, replaced by ***TODO***
 
 

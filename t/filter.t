@@ -514,6 +514,22 @@ FILTER [[% dir | eval %]]
 [% a %] blah blah [% b %]
 FILTER [alpha blah blah bravo]
 
+-- start --
+-- test -- 
+[% TRY %]
+[% dir = "[\% FOREACH a = { 1 2 3 } %\]a: [\% a %\]\n[\% END %\]" %]
+[% dir | eval %]
+[% CATCH %]
+error: [[% error.type %]] [[% error.info %]]
+[% END %]
+-- expect --
+a: 1
+a: 2
+a: 3
+
+-- stop --
+
+
 -- test --
 nothing
 [% TRY;

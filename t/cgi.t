@@ -22,7 +22,9 @@ use Template;
 use Template::Test;
 $^W = 1;
 
-#$Template::Parser::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
+#$Template::Parser::PRETTY = 1;
+#$Template::Stash::DEBUG = 1;
 
 eval "use CGI";
 if ($@) {
@@ -30,27 +32,55 @@ if ($@) {
     exit(0);
 }
 
-test_expect(\*DATA);
+my $cgi = CGI->new('');
+$cgi = join("\n", $cgi->checkbox_group(
+		-name     => 'words',
+                -values   => [ 'eenie', 'meenie', 'minie', 'moe' ],
+	        -defaults => [ 'eenie', 'meenie' ],
+)); 
+
+
+test_expect(\*DATA, undef, { cgicheck => $cgi });
 
 __END__
 -- test --
-[% USE cgi = CGI('id=abw&name=Andy+Wardley') -%]
-name: [% cgi.param('name') %]
+[% USE cgi = CGI('id=abw&name=Andy+Wardley'); global.cgi = cgi -%]
+name: [% global.cgi.param('name') %]
+-- expect --
+name: Andy Wardley
 
-[% FOREACH x = cgi.checkbox_group(
+-- test --
+name: [% global.cgi.param('name') %]
+
+-- expect --
+name: Andy Wardley
+
+-- test --
+[% FOREACH key = global.cgi.param.sort -%]
+   * [% key %] : [% global.cgi.param(key) %]
+[% END %]
+-- expect --
+   * id : abw
+   * name : Andy Wardley
+
+-- test --
+[% FOREACH key = global.cgi.param().sort -%]
+   * [% key %] : [% global.cgi.param(key) %]
+[% END %]
+-- expect --
+   * id : abw
+   * name : Andy Wardley
+
+-- test --
+[% FOREACH x = global.cgi.checkbox_group(
 		name     => 'words'
                 values   => [ 'eenie', 'meenie', 'minie', 'moe' ]
 	        defaults => [ 'eenie', 'meenie' ] )   -%]
 [% x %]
 [% END %]
-name: [% cgi.param('name') %]
 
 -- expect --
-name: Andy Wardley
+-- process --
+[% cgicheck %]
 
-<INPUT TYPE="checkbox" NAME="words" VALUE="eenie" CHECKED>eenie
-<INPUT TYPE="checkbox" NAME="words" VALUE="meenie" CHECKED>meenie
-<INPUT TYPE="checkbox" NAME="words" VALUE="minie">minie
-<INPUT TYPE="checkbox" NAME="words" VALUE="moe">moe
 
-name: Andy Wardley

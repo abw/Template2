@@ -413,7 +413,8 @@ sub tokenise_directive {
 		    # unescape " and \ but leave \$ escaped so that 
 		    # interpolate_text() doesn't incorrectly treat it
 		    # as a variable reference
-		    $token =~ s/\\([\\"])/$1/g;
+#		    $token =~ s/\\([\\"])/$1/g;
+		    $token =~ s/\\([^\$n])/$1/g;
 		    $token =~ s/\\n/\n/g;
 		    push(@tokens, ('"') x 2,
 				  @{ $self->interpolate_text($token) },

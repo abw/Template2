@@ -24,7 +24,10 @@ use Template::Parser;
 $^W = 1;
 
 #$Template::Test::DEBUG = 0;
-#$Template::Parser::DEBUG = 0;
+#$Template::Test::PRESERVE = 0;
+$Template::Stash::DEBUG = 1;
+$Template::Parser::DEBUG = 1;
+$Template::Parser::PRETTY = 1;
 
 my $p2 = Template::Parser->new({
     START_TAG => '\[\*',
@@ -50,7 +53,10 @@ my $tt = [
     tt4 => Template->new(PARSER => $p4),
 ];
 
-test_expect(\*DATA, $tt, &callsign());
+my $replace = &callsign;
+$replace->{ alist } = [ 'foo', 0, 'bar', 0 ];
+
+test_expect(\*DATA, $tt, $replace);
 
 __DATA__
 #------------------------------------------------------------------------
@@ -156,3 +162,44 @@ SQL: [% sql %]
 SQL: 
      SELECT *
      FROM table
+
+-- test --
+[% a = "\a\b\c\ndef" -%]
+a: [% a %]
+-- expect --
+a: abc
+def
+
+-- test --
+[% a = "\f\o\o"
+   b = "a is '$a'"
+   c = "b is \$100"
+-%]
+a: [% a %]  b: [% b %]  c: [% c %]
+
+-- expect --
+a: foo  b: a is 'foo'  c: b is $100
+
+-- test --
+[% tag = {
+      a => "[\%"
+      z => "%\]"
+   }
+   quoted = "[\% INSERT foo %\]"
+-%]
+A directive looks like: [% tag.a %] INCLUDE foo [% tag.z %]
+The quoted value is [% quoted %]
+
+-- expect --
+A directive looks like: [% INCLUDE foo %]
+The quoted value is [% INSERT foo %]
+
+-- start --
+
+-- test --
+alist: [% $alist %]
+-- expect --
+alist: ??
+
+-- test --
+[% foo.bar.baz %]

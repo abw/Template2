@@ -59,13 +59,15 @@ my $tproc = Template->new({
     DEFAULT      => 'default',
 });
 
+my $incpath = [ "$dir/src", '/nowhere' ];
 my $tt_reset = Template->new({ 
     INTERPOLATE  => 1,
-    INCLUDE_PATH => "$dir/src:$dir/lib",
+    INCLUDE_PATH => $incpath,
     TRIM         => 1,
     RECURSION    => 1,
     DEFAULT      => 'bad_default',
 });
+$incpath->[1] = "$dir/lib";
 
 # we want to process 'metadata' directly so that the correct top-level
 # 'template' reference is set instead of 'input text'

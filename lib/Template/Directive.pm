@@ -208,7 +208,7 @@ sub args {
     push(@$args, '{ ' . join(', ', @$hash) . ' }')
 	if @$hash;
 
-    return '' unless @$args;
+    return '0' unless @$args;
     return '[ ' . join(', ', @$args) . ' ]';
 }
 
