@@ -73,10 +73,11 @@ EOF
 }
 
 my $pod  = "$root/docsrc/pod";
+my $txt  = "$root/docsrc/txt";
 my $lib  = "$root/lib";
 my $bin  = "$root/bin";
 my $back = $args->{ b };
-$back = '.bak' unless defined $back;
+#$back = '.bak' unless defined $back;
 
 chdir($pod) || die "$root: $!\n";
 
@@ -88,11 +89,16 @@ find({
 glu_file("Template/Tools/tpage.pod", "$bin/tpage");
 glu_file("Template/Tools/ttree.pod", "$bin/ttree");
 
+foreach my $f (qw( README Changes TODO )) {
+    copy("$txt/$f", "$root/$f") || die "$txt/$f: $!\n";
+}
 
 #------------------------------------------------------------------------
 
 sub wanted {
     return if -d;
+
+    return if /\bCVS\b/;
 
     s[^\./(.*?)\.pod$][$1] || do {
 	warn "ignoring non-POD file: $_\n" unless $args->{ q };
