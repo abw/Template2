@@ -38,7 +38,7 @@ use File::Path;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.11a';
+$VERSION     = '2.12';
 $ERROR       = '';
 $DEBUG       = 0;
 
@@ -65,7 +65,7 @@ sub process {
     my ($output, $error);
     my $options = (@opts == 1) && UNIVERSAL::isa($opts[0], 'HASH')
         ? shift(@opts) : { @opts };
-
+    
     $options->{ binmode } = $BINMODE 
         unless defined $options->{ binmode };
 
@@ -76,20 +76,20 @@ sub process {
     $output = $self->{ SERVICE }->process($template, $vars);
     
     if (defined $output) {
-	$outstream ||= $self->{ OUTPUT };
-	unless (ref $outstream) {
-	    my $outpath = $self->{ OUTPUT_PATH };
-	    $outstream = "$outpath/$outstream" if $outpath;
-	}	
-
-	# send processed template to output stream, checking for error
-	return ($self->error($error))
-	    if ($error = &_output($outstream, \$output, $options));
-
-	return 1;
+        $outstream ||= $self->{ OUTPUT };
+        unless (ref $outstream) {
+            my $outpath = $self->{ OUTPUT_PATH };
+            $outstream = "$outpath/$outstream" if $outpath;
+        }	
+        
+        # send processed template to output stream, checking for error
+        return ($self->error($error))
+            if ($error = &_output($outstream, \$output, $options));
+        
+        return 1;
     }
     else {
-	return $self->error($self->{ SERVICE }->error);
+        return $self->error($self->{ SERVICE }->error);
     }
 }
 
@@ -134,20 +134,20 @@ sub _init {
     my $debug = $config->{ DEBUG };
     $config->{ DEBUG } = Template::Constants::debug_flags($self, $debug)
         || return if defined $debug && $debug !~ /^\d+$/;
-        
+    
     # prepare a namespace handler for any CONSTANTS definition
     if (my $constants = $config->{ CONSTANTS }) {
-	my $ns  = $config->{ NAMESPACE } ||= { };
-	my $cns = $config->{ CONSTANTS_NAMESPACE } || 'constants';
-	$constants = Template::Config->constants($constants)
-	    || return $self->error(Template::Config->error);
-	$ns->{ $cns } = $constants;
+        my $ns  = $config->{ NAMESPACE } ||= { };
+        my $cns = $config->{ CONSTANTS_NAMESPACE } || 'constants';
+        $constants = Template::Config->constants($constants)
+            || return $self->error(Template::Config->error);
+        $ns->{ $cns } = $constants;
     }
-
+    
     $self->{ SERVICE } = $config->{ SERVICE }
-	|| Template::Config->service($config)
-	|| return $self->error(Template::Config->error);
-
+        || Template::Config->service($config)
+        || return $self->error(Template::Config->error);
+    
     $self->{ OUTPUT      } = $config->{ OUTPUT } || \*STDOUT;
     $self->{ OUTPUT_PATH } = $config->{ OUTPUT_PATH };
 
@@ -166,47 +166,47 @@ sub _output {
     
     # call a CODE reference
     if (($reftype = ref($where)) eq 'CODE') {
-	&$where($$textref);
+        &$where($$textref);
     }
     # print to a glob (such as \*STDOUT)
     elsif ($reftype eq 'GLOB') {
-	print $where $$textref;
+        print $where $$textref;
     }   
     # append output to a SCALAR ref
     elsif ($reftype eq 'SCALAR') {
-	$$where .= $$textref;
+        $$where .= $$textref;
     }
     # push onto ARRAY ref
     elsif ($reftype eq 'ARRAY') {
-	push @$where, $$textref;
+        push @$where, $$textref;
     }
     # call the print() method on an object that implements the method
     # (e.g. IO::Handle, Apache::Request, etc)
     elsif (UNIVERSAL::can($where, 'print')) {
-	$where->print($$textref);
+        $where->print($$textref);
     }
     # a simple string is taken as a filename
     elsif (! $reftype) {
-	local *FP;
-	# make destination directory if it doesn't exist
-	my $dir = dirname($where);
-	eval { mkpath($dir) unless -d $dir; };
-	if ($@) {
-	    # strip file name and line number from error raised by die()
-	    ($error = $@) =~ s/ at \S+ line \d+\n?$//;
-	}
-	elsif (open(FP, ">$where")) { 
-	    binmode FP if $options->{ binmode };
-	    print FP $$textref;
-	    close FP;
-	}
-	else {
-	    $error  = "$where: $!";
-	}
+        local *FP;
+        # make destination directory if it doesn't exist
+        my $dir = dirname($where);
+        eval { mkpath($dir) unless -d $dir; };
+        if ($@) {
+            # strip file name and line number from error raised by die()
+            ($error = $@) =~ s/ at \S+ line \d+\n?$//;
+        }
+        elsif (open(FP, ">$where")) { 
+            binmode FP if $options->{ binmode };
+            print FP $$textref;
+            close FP;
+        }
+        else {
+            $error  = "$where: $!";
+        }
     }
     # give up, we've done our best
     else {
-	$error = "output_handler() cannot determine target type ($where)\n";
+        $error = "output_handler() cannot determine target type ($where)\n";
     }
 
     return $error;
@@ -938,7 +938,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.11, released on 06 January 2004.
+Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
 
@@ -948,3 +948,13 @@ Template Toolkit version 2.11, released on 06 January 2004.
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
+
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
+#
+# vim: expandtab shiftwidth=4:
