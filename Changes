@@ -17,15 +17,20 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.00 beta 4  12th September 2000
+# Version 2.00 beta 5  14th September 2000
 #------------------------------------------------------------------------
+
+* Added define_filter($name, \&filter, $is_dynamic) method to
+  Template::Context to allow additional filters to be defined at any
+  time.  Arguments are as per the FILTERS configuration option.
+  These filters persist for the lifetime of the processor.
 
 * Changed the Template::Context filter() method to accept a code 
   reference as the filter name and use it as the filter sub.  This 
   allows filters to be bound to template variables which are then 
   used as:
 
-   [% FILTER $myfilter %]
+    [% FILTER $myfilter %]
 
   There is one catch, however.  TT will automatically call a subroutine
   bound to a variable when evaluated.  Thus you must wrap your filter
@@ -33,7 +38,28 @@
   it into some class (any class) to fool TT into thinking it's not a 
   subroutine ref: $stash->set('bar', bless \&myfilter, 'any_old_name');
 
-* Template::Tutorial
+* Updated documentation for FILTER directive and FILTERS option to 
+  reflect the above changes.
+
+* Fixed Template::Document to run cleanly with taint checking enabled.
+  Unfortunately, this has been achieved by blindly untainting the
+  generated template Perl code before calling eval().  Given that
+  we're reading template source from external files, I don't think
+  there's any way to do reliable taint check anyway.  But thankfully
+  we can trust the parser to generate "safe" code unless EVAL_PERL is
+  enabled in which case all bets are off anyway.
+
+* Updated XML::DOM plugin to include changes made by Thierry-Michel 
+  Barral to accept configuration options for XML::Parser.
+
+* Fixed a bug in the Table plugin which caused the first item to be
+  repeated n times when n items was less than a specified number of
+  columns.  Thanks to Andrew Williams for finding and fixing this
+  bug.
+
+* The Template::Tutorial document really is included in the
+  distribution this time.  Honest.
+
 
 #------------------------------------------------------------------------
 # Version 2.00 beta 4  12th September 2000

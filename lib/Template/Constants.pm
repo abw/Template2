@@ -50,10 +50,12 @@ use constant ERROR_RETURN    =>  'return'; # return a status code
 use constant ERROR_FILE      =>  'file';   # file error: I/O, parse, recursion
 use constant ERROR_UNDEF     =>  'undef';  # undefined variable value used
 use constant ERROR_PERL      =>  'perl';   # error in [% PERL %] block
+use constant ERROR_FILTER    =>  'filter'; # filter error
 
 my @STATUS   = qw( STATUS_OK STATUS_RETURN STATUS_STOP STATUS_DONE
 		   STATUS_DECLINED STATUS_ERROR );
-my @ERROR    = qw( ERROR_FILE ERROR_UNDEF ERROR_PERL ERROR_RETURN );
+my @ERROR    = qw( ERROR_FILE ERROR_UNDEF ERROR_PERL ERROR_RETURN
+		   ERROR_FILTER );
 
 @EXPORT_OK   =   ( @STATUS, @ERROR );
 %EXPORT_TAGS = (

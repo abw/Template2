@@ -89,6 +89,7 @@ sub new {
 	if ($size < $cols) {
 	    $cols = $size;
 	    $rows = 1;
+	    $coloff = 1;
 	}
 	else {
 	    $coloff = int ($size / $cols) 

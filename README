@@ -1,15 +1,17 @@
 
-             Template Toolkit Version 2.00 Beta Release 4
+             Template Toolkit Version 2.00 Beta Release 5
 
-                         12th September 2000
+                         14th September 2000
 
 
-This is the fourth (and almost certainly, final) beta release of
-Version 2.00 of the Perl Template Toolkit.  It is fully-featured,
-reliable and all known bugs have been fixed (but see the TODO list for
-a few outstanding issues and minor "features").  The Changes file
-details changes from the last beta release, and versions before that.
-It also includes the major changes from Version 1.xx to 2.00.
+This is the fifth beta release of version 2.00 of the Perl Template
+Toolkit.  Barring any major problems, this really will be the last
+beta release before version 2.00 proper (I know I said that for beta
+4, but I really mean it this time).  It is fully-featured, reliable
+and all known bugs have been fixed (but see the TODO list for a few
+outstanding issues and minor "features").  The Changes file details
+changes from the last beta release, and versions before that.  It also
+includes the major changes from Version 1.xx to 2.00.
 
 Installation is as you might expect:
 
@@ -39,6 +41,7 @@ The documentation is now complete in all its 100+ page glory.
 Any errors, inaccuracies or omissions are bugs and should be reported
 to the overworked and underpaid author who really needs to take a
 vacation.  8-)
+
 
 Enjoy
 A

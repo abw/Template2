@@ -128,7 +128,21 @@ sub fetch {
     else {
 	return $filter;
     }
+}
 
+
+#------------------------------------------------------------------------
+# store($name, \&filter)
+#
+# Stores a new filter in the internal FILTERS hash.  The first parameter
+# is the filter name, the second a reference to a subroutine or 
+# array, as per the standard $FILTERS entries.
+#------------------------------------------------------------------------
+
+sub store {
+    my ($self, $name, $filter) = @_;
+    $self->{ FILTERS }->{ $name } = $filter;
+    return 1;
 }
 
 
@@ -178,7 +192,7 @@ sub _dump {
 
 sub html_filter {
     my $text = shift;
-    foreach ($text) {
+    for ($text) {
 	s/&/&amp;/g;
 	s/</&lt;/g;
 	s/>/&gt;/g;

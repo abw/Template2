@@ -130,3 +130,11 @@ a b c d e f g h
 h i j k l m n o 
 o p q r s t u v 
 v w x y z 
+
+-- test --
+[% USE table([1,3,5], cols=5) %]
+[% FOREACH t = table.rows %]
+[% t.join(', ') %]
+[% END %]
+-- expect --
+1, 3, 5

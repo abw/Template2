@@ -6,12 +6,13 @@ select STDOUT;
 
 warn(<<EOF);
 
-    Template Toolkit Version 2.00 beta 4
+    Template Toolkit Version 2.00 beta 5
     ------------------------------------
 
-    This is stable beta code and a release candidate for Version 2.00 
-    proper.  Please read the README file and consult the Changes and 
-    TODO files for further information.
+    This is rock-solid and ready-to-rumble beta code, and is the final
+    release candidate for Version 2.00 proper.  Please read the README
+    file and consult the Changes and TODO files for further
+    information.
 
 EOF
 
@@ -28,19 +29,7 @@ unless ($@) {
     Version $Template::VERSION installation.  If you're ready to take
     the plunge and aren't relying too heavily on any of the "features"
     that have changed from version 1.xx to 2.xx then go ahead, be
-    bold.  The Changes file contains details of visible changes from
-    versions 1.xx and 2.xx beta releases and highlights some issues
-    that you you might need to attend to.  The TODO file contains
-    details of the (very few) known bugs, problems, limitations, etc.
-
-    If you want to install the Template Toolkit to an alternate 
-    directory when you can do it like this:
-
-        perl Makefile.PL PREFIX=/some/where/else
-
-    Remember to add "use lib '/some/where/else'" to your Perl scripts
-    so that they can find and load the relevant modules.
-
+    bold.  See the README file for further details.
 EOF
 }
 

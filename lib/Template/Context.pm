@@ -179,7 +179,7 @@ sub filter {
 
     # alias defaults to name if undefined
     $alias = $name
-	unless defined $alias;
+	unless defined($alias) or ref($name);
 
 #    print STDERR "adding filter $filter to cache as $alias\n"
 #	if $DEBUG;
@@ -489,6 +489,28 @@ sub define_block {
 	|| return undef
 	    unless ref $block;
     $self->{ BLOCKS }->{ $name } = $block;
+}
+
+
+#------------------------------------------------------------------------
+# define_filter($name, $filter, $is_dynamic)
+#
+# Adds a new FILTER definition to the local FILTER_CACHE.
+#------------------------------------------------------------------------
+
+sub define_filter {
+    my ($self, $name, $filter, $is_dynamic) = @_;
+    my ($result, $error);
+    $filter = [ $filter, 1 ] if $is_dynamic;
+
+    foreach my $provider (@{ $self->{ LOAD_FILTERS } }) {
+	($result, $error) = $provider->store($name, $filter);
+	return 1 unless $error;
+	$self->throw(&Template::Constants::ERROR_FILTER, $result)
+	    if $error == &Template::Constants::STATUS_ERROR;
+    }
+    $self->throw(&Template::Constants::ERROR_FILTER, 
+		 "FILTER providers declined to store filter $name");
 }
 
 

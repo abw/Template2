@@ -3,7 +3,9 @@
 #------------------------------------------------------------------------
 
 * URL plugin may be incorrect in not escaping certain characters such as 
-  '&'.  
+  '&'.  I need to check the standards, or wait for someone more 
+  knowledgeable in these matters to fix it for me, or otherwise give it 
+  a clean bill of health (hint, hint :-).
 
 * XML::Simple plugin (I wrote this once already but my laptop died and 
   took it with it).  An XML::XPath plugin would also be nice.  Both are
@@ -19,14 +21,16 @@
   added a wonderfully powerful to_template() method.  Will integrate
   his changes before V2 proper.
 
-* DBI plugin, also by Simon Matthews, will be distributed with V2.  
-  Makefile.PL will need some hacking to incorporate DBI testing options.
+* DBI plugin, also by Simon Matthews, will be distributed with V2 proper,
+  or some time shortly afterwards.  Makefile.PL will need some hacking to 
+  incorporate DBI testing options. 
 
 * Document the TT internals and describe how, where and why to hack on
   them.
 
 * The documentation should be broken up into smaller chunks (or 
   published as a book!).  An HTML/XML version will also be forthcoming.
+
 
 #------------------------------------------------------------------------
 # KNOWN BUGS AND/OR LIMITATIONS
@@ -38,7 +42,7 @@
   template ($file) can't be found, rather than an exception.  This
   should be changed so that an exception is returned whatever.  The
   fix is fairly simple, but requires a careful examination of the code
-  as there may be many places in which this happens.
+  as there may be several places where this kind of thing happens.
 
 * Filters and plugins cache may bloat.  Perhaps reset() should accept
   flags to clear BLOCKS, PLUGINS, FILTERS, etc?  I need to check this.
@@ -82,9 +86,6 @@
   able to track down the problem then so much the better.  The test suite
   is well organised and fairly pleasant to work with these days so please
   don't be afraid to go digging for answers (this means you, Perrin  :-)
-
-* The XML::RSS plugin test may generate warnings (but passes all tests)
-  under Perl 5.6
 
 
 #------------------------------------------------------------------------
