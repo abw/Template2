@@ -17,12 +17,11 @@
 
 use strict;
 use lib qw( ./lib ../lib );
-use Template::Test qw( :all );
+use Test::More tests => 28;
 $^W = 1;
 
 # just testing
 ok(1);
-exit();
 
 use Template::Map;
 
@@ -32,16 +31,67 @@ use Template::Map;
 #$Template::Directive::PRETTY = 1;
 $Template::Test::PRESERVE = 1;
 
+#------------------------------------------------------------------------
+package Some::Kind::Of::Noodle;
+sub new { bless { }, $_[0] }
+sub TT_name { return 'noodle' }
+#------------------------------------------------------------------------
 
-my $map = Template::Map->new();
-assert( $map );
+package main;
 
-my $res = $map->map('foo');
-assert( $res );
-assert( ref $res eq 'ARRAY' );
-match( scalar @$res, 1 );
-match( $res->[0], 'foo' );
+my $pkg = 'Template::Map';
+my $map = $pkg->new() || die $pkg->error();
+ok( $map, 'created a default map' );
+is( $map->name('foo'), 'text', "'foo' is text" );
+is( $map->name(['foo']), 'list', "['foo'] is list" );
+is( $map->name({ foo => 'bar' }), 'hash', "{ foo => 'bar' } is hash" );
+is( $map->name(bless { }, 'Thingy'), 'Thingy', 'Thingy is a Thingy' );
+is( $map->name(Some::Kind::Of::Noodle->new()), 'noodle', 'some noodles' );
 
+
+$map = $pkg->new( map => { TEXT  => 'string', 
+                           ARRAY => 'array',
+                           'Some::Kind::Of::Noodle' => 'egg_noodle',
+                           'Foo::Bar' => 'fubar' } ) || die $pkg->error();
+
+ok( $map, 'created a custom map' );
+is( $map->name('foo'), 'string', "'foo' is string" );
+is( $map->name(['foo']), 'array', "['foo'] is array" );
+is( $map->name({ foo => 'bar' }), 'hash', "{ foo => 'bar' } is still a hash" );
+is( $map->name(bless { }, 'Thingy'), 'Thingy', 'Thingy is a Thingy' );
+is( $map->name(bless { }, 'Foo::Bar'), 'fubar', 'Foo::Bar is fubar' );
+is( $map->name(Some::Kind::Of::Noodle->new()), 'egg_noodle', 'egg noodle' );
+
+
+my $names = $map->names('foo') || die $map->error();
+ok( $names, 'got names for foo' );
+is( ref $names, 'ARRAY', 'an array' );
+is( scalar @$names, 1, 'one item in array' );
+is( $names->[0], 'foo', 'name is foo' );
+
+$map = $pkg->new( format => 'x/%s.tt' );
+$names = $map->names('foo') || die $map->error();
+ok( $names, 'got format names for foo' );
+is( $names->[0], 'x/foo.tt', 'first name is x/foo.tt' );
+
+$map = $pkg->new( format => [ 'x/%s.tt', 'y/%s.tt' ] );
+$names = $map->names('bar') || die $map->error();
+ok( $names, 'got names for bar' );
+is( $names->[0], 'x/bar.tt', 'first name is x/bar.tt' );
+is( $names->[1], 'y/bar.tt', 'second name is y/bar.tt' );
+
+$map = $pkg->new( prefix => 'z/', suffix => '.tt' );
+$names = $map->names('baz') || die $map->error();
+ok( $names, 'got names for baz' );
+is( $names->[0], 'z/baz.tt', 'name is z/baz.tt' );
+
+$map = $pkg->new( default => 'pong' );
+$names = $map->names('ping') || die $map->error();
+ok( $names, 'got names for ping' );
+is( $names->[0], 'ping', 'ping' );
+is( $names->[1], 'pong', 'pong' );
+
+__END__
 
 $map = Template::Map->new( default => 'bar' );
 assert( $map );
