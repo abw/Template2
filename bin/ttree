@@ -85,8 +85,9 @@ my $ucttopts = {
     keys %ttopts,
 };
 
-# special case
-$ucttopts->{ RECURSION } = $recurse if defined $recurse;
+# special case  # what special case is that then?
+                # I'm commenting this out -- abw 2002/12/05
+#$ucttopts->{ RECURSION } = $recurse if defined $recurse;
 
 #@ucttopts{ map { uc } keys %ttopts } = values %ttopts;
 
