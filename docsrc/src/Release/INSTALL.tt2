@@ -44,13 +44,13 @@ all available from CPAN, should be installed:
 
     Plugin		Requires
     ------              --------
-    Autoformat	        Text::Autoformat 1.03+
-    DBI			DBI 1.14+ and relevant DBD drivers
+    Autoformat          Text::Autoformat 1.03+
+    DBI                 DBI 1.14+ and relevant DBD drivers
     GD                  GD 1.32+
     GD::Text            GD::Text 0.80+
     GD::Graph           GD::Graph 1.33+
     GD::Graph::lines3d  GD::Graph3d 0.55+
-    Pod	                Pod::POM 0.1+
+    Pod                 Pod::POM 0.1+
     XML::DOM            XML::DOM 1.27+   (requires XML::Parser 2.23+)
     XML::RSS            XML::RSS 0.9+    (ditto)
     XML::XPath          XML::XPath 1.00+ (ditto)
