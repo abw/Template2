@@ -579,7 +579,7 @@ sub stdout_filter_factory {
 
     sub {
         my $text = shift;
-        binmode STDOUT if $options->{ $binmode };
+        binmode(STDOUT) if $options->{ binmode };
         print STDOUT $text;
         return '';
     }
