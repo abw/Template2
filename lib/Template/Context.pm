@@ -75,7 +75,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 sub template {
     my ($self, $name) = @_;
     my ($prefix, $blocks, $defblocks, $provider, $template, $error);
-    my $providers;
+    my ($shortname, $providers);
 
     # references to Template::Document (or sub-class) objects objects, or
     # CODE references are assumed to be pre-compiled templates and are
@@ -83,6 +83,8 @@ sub template {
     return $name
 	if UNIVERSAL::isa($name, 'Template::Document')
 	    || ref($name) eq 'CODE';
+
+    $shortname = $name;
 
     unless (ref $name) {
 	# we first look in the BLOCKS hash for a BLOCK that may have 
@@ -99,14 +101,12 @@ sub template {
 
 	# now it's time to ask the providers, so we look to see if any 
 	# prefix is specified to indicate the desired provider set.
-	$prefix = undef;
-
 	if ($^O eq 'MSWin32') {
 	    # let C:/foo through
-	    $prefix = $1 if $name =~ s/^(\w{2,})://o;
+	    $prefix = $1 if $shortname =~ s/^(\w{2,})://o;
 	}
 	else {
-	    $prefix = $1 if $name =~ s/^(\w+)://;
+	    $prefix = $1 if $shortname =~ s/^(\w+)://;
 	}
 
 	if (defined $prefix) {
@@ -123,7 +123,7 @@ sub template {
     # handle references to files, text, etc., as well as templates
     # reference by name
     foreach my $provider (@$providers) {
-	($template, $error) = $provider->fetch($name, $prefix);
+	($template, $error) = $provider->fetch($shortname, $prefix);
 	return $template unless $error;
 	if ($error == Template::Constants::STATUS_ERROR) {
 	    $self->throw($template) if ref $template;
@@ -384,12 +384,14 @@ sub insert {
     my $files = ref $file eq 'ARRAY' ? $file : [ $file ];
 
     FILE: foreach $file (@$files) {
+	my $name = $file;
+
 	if ($^O eq 'MSWin32') {
 	    # let C:/foo through
-	    $prefix = $1 if $file =~ s/^(\w{2,})://o;
+	    $prefix = $1 if $name =~ s/^(\w{2,})://o;
 	}
 	else {
-	    $prefix = $1 if $file =~ s/^(\w+)://;
+	    $prefix = $1 if $name =~ s/^(\w+)://;
 	}
 
 	if (defined $prefix) {
@@ -403,7 +405,7 @@ sub insert {
 	}
 
 	foreach my $provider (@$providers) {
-	    ($text, $error) = $provider->load($file);
+	    ($text, $error) = $provider->load($name, $prefix);
 	    next FILE unless $error;
 	    if ($error == Template::Constants::STATUS_ERROR) {
 		$self->throw($text) if ref $text;
