@@ -589,7 +589,7 @@ FILTER [alpha blah blah bravo]
 error: [[% error.type %]] [[% error.info %]]
 [% END %]
 -- expect --
-error: [file] [parse error: input text line 1: unexpected token (1)
+error: [file] [parse error - input text line 1: unexpected token (1)
   [% FOREACH a = { 1 2 3 } %]]
 
 
