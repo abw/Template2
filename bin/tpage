@@ -34,7 +34,7 @@ if (grep /^--?h(elp)?/, @ARGV) {
 my $vars = { };
 my ($var, $val);
 
-while ($ARGV[0] && $ARGV[0] =~ /--?d(efine)?/) {
+while ($ARGV[0] && $ARGV[0] =~ /^--?d(efine)?/) {
     shift(@ARGV);
     die "--define expect a 'variable=value' argument\n" 
 	unless defined ($var = shift(@ARGV));
