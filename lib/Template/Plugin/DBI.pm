@@ -391,9 +391,15 @@ use vars qw( $DEBUG );
 
 sub new {
     my ($class, $sth, $params) = @_;
+
+    my $rows = $sth->rows();
+
     my $self = bless { 
 	_STH => $sth,
+	SIZE => $rows,
+	MAX  => $rows - 1,
     }, $class;
+
     
     return $self;
 }
@@ -417,12 +423,6 @@ sub get_first {
 
     # support 'number' as an alias for 'count' for backwards compatability
     $self->{ NUMBER  } = 0;
-
-    # NOTE: 'size' and 'max' should also be supported.  This should 
-    # probably trigger a get_all() to determine the size of the result
-    # set, but for now it's unsupported
-    $self->{ SIZE   } = 'unknown';
-    $self->{ MAX    } = 'unknown';
 
     print STDERR "get_first() called\n" if $DEBUG;
 
@@ -575,10 +575,12 @@ Making an automagical database connection using DBI_DSN environment variable:
 
 Making database queries:
 
+    # single step query
     [% FOREACH user = DBI.query('SELECT * FROM users') %]
        [% user.uid %] blah blah [% user.name %] etc. etc.
     [% END %]
 
+    # two stage prepare/execute
     [% query = DBI.prepare('SELECT * FROM users WHERE uid = ?') %]
 
     [% FOREACH user = query.execute('sam') %]
@@ -735,8 +737,36 @@ can use a separate prepare/execute cycle.
        ...
     [% END %]
 
-You can use the do() method to execute non-SELECT statements like 
-this:
+The query() and execute() methods return an iterator object which
+manages the result set returned.  You can save a reference to the
+iterator and access methods like size() to determine the number of
+rows returned by a query.
+
+    [% users = DBI.query('SELECT * FROM users') %]
+    [% users.size %] records returned
+
+or even
+
+    [% DBI.query('SELECT * FROM users').size %]
+
+When used within a FOREACH loop, the iterator is always aliased to the 
+special C<loop> variable.  This makes it possible to do things like this:
+
+    [% FOREACH user = DBI.query('SELECT * FROM users') %]
+       [% loop.count %]/[% loop.size %]: [% user.name %]
+    [% END %]
+
+to generate a result set of the form:
+
+    1/3: Jerry Garcia
+    2/3: Kurt Cobain
+    3/3: Freddie Mercury
+
+See L<Template::Iterator> for further details on iterators and the
+methods that they implement.
+
+The DBI plugin also provides the do() method to execute non-SELECT
+statements like this:
 
     [% IF DBI.do("DELETE FROM users WHERE uid = '$uid'") %]
        The user '[% uid %]' was successfully deleted.
