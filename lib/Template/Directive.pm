@@ -80,7 +80,7 @@ $block
     } };
     if (\$@) {
         \$error = \$context->catch(\$@, \\\$output);
-	die \$error unless \$error->type eq 'return';
+        die \$error unless \$error->type eq 'return';
     }
 
     return \$output;
@@ -145,8 +145,8 @@ sub textblock {
 sub text {
     my ($class, $text) = @_;
     for ($text) {
-	s/(["\$\@\\])/\\$1/g;
-	s/\n/\\n/g;
+        s/(["\$\@\\])/\\$1/g;
+        s/\n/\\n/g;
     }
     return '"' . $text . '"';
 }
@@ -175,10 +175,10 @@ sub ident {
     my ($class, $ident) = @_;
     return "''" unless @$ident;
     if (scalar @$ident <= 2 && ! $ident->[1]) {
-	$ident = $ident->[0];
+        $ident = $ident->[0];
     }
     else {
-	$ident = '[' . join(', ', @$ident) . ']';
+        $ident = '[' . join(', ', @$ident) . ']';
     }
     return "\$stash->get($ident)";
 }
@@ -191,10 +191,10 @@ sub identref {
     my ($class, $ident) = @_;
     return "''" unless @$ident;
     if (scalar @$ident <= 2 && ! $ident->[1]) {
-	$ident = $ident->[0];
+        $ident = $ident->[0];
     }
     else {
-	$ident = '[' . join(', ', @$ident) . ']';
+        $ident = '[' . join(', ', @$ident) . ']';
     }
     return "\$stash->getref($ident)";
 }
@@ -208,12 +208,12 @@ sub assign {
     my ($class, $var, $val, $default) = @_;
 
     if (ref $var) {
-	if (scalar @$var == 2 && ! $var->[1]) {
-	    $var = $var->[0];
-	}
-	else {
-	    $var = '[' . join(', ', @$var) . ']';
-	}
+        if (scalar @$var == 2 && ! $var->[1]) {
+            $var = $var->[0];
+        }
+        else {
+            $var = '[' . join(', ', @$var) . ']';
+        }
     }
     $val .= ', 1' if $default;
     return "\$stash->set($var, $val)";
@@ -228,7 +228,7 @@ sub args {
     my ($class, $args) = @_;
     my $hash = shift @$args;
     push(@$args, '{ ' . join(', ', @$hash) . ' }')
-	if @$hash;
+        if @$hash;
 
     return '0' unless @$args;
     return '[ ' . join(', ', @$args) . ' ]';
@@ -241,10 +241,10 @@ sub args {
 sub filenames {
     my ($class, $names) = @_;
     if (@$names > 1) {
-	$names = '[ ' . join(', ', @$names) . ' ]';
+        $names = '[ ' . join(', ', @$names) . ' ]';
     }
     else {
-	$names = shift @$names;
+        $names = shift @$names;
     }
     return $names;
 }
@@ -279,7 +279,7 @@ sub set {
     my ($class, $setlist) = @_;
     my $output;
     while (my ($var, $val) = splice(@$setlist, 0, 2)) {
-	$output .= &assign($class, $var, $val) . ";\n";
+        $output .= &assign($class, $var, $val) . ";\n";
     }
     chomp $output;
     return $output;
@@ -294,7 +294,7 @@ sub default {
     my ($class, $setlist) = @_;  
     my $output;
     while (my ($var, $val) = splice(@$setlist, 0, 2)) {
-	$output .= &assign($class, $var, $val, 1) . ";\n";
+        $output .= &assign($class, $var, $val, 1) . ";\n";
     }
     chomp $output;
     return $output;
@@ -361,13 +361,13 @@ sub if {
     my $output = "if ($expr) {\n$block\n}\n";
 
     foreach my $elsif (@else) {
-	($expr, $block) = @$elsif;
-	$block = pad($block, 1) if $PRETTY;
-	$output .= "elsif ($expr) {\n$block\n}\n";
+        ($expr, $block) = @$elsif;
+        $block = pad($block, 1) if $PRETTY;
+        $output .= "elsif ($expr) {\n$block\n}\n";
     }
     if (defined $else) {
-	$else = pad($else, 1) if $PRETTY;
-	$output .= "else {\n$else\n}\n";
+        $else = pad($else, 1) if $PRETTY;
+        $output .= "else {\n$else\n}\n";
     }
 
     return $output;
@@ -387,17 +387,17 @@ sub foreach {
 
     my ($loop_save, $loop_set, $loop_restore, $setiter);
     if ($target) {
-	$loop_save    = 'eval { $oldloop = ' . &ident($class, ["'loop'"]) . ' }';
-	$loop_set     = "\$stash->{'$target'} = \$value";
-	$loop_restore = "\$stash->set('loop', \$oldloop)";
+        $loop_save    = 'eval { $oldloop = ' . &ident($class, ["'loop'"]) . ' }';
+        $loop_set     = "\$stash->{'$target'} = \$value";
+        $loop_restore = "\$stash->set('loop', \$oldloop)";
     }
     else {
-	$loop_save    = '$stash = $context->localise()';
-#	$loop_set     = "\$stash->set('import', \$value) "
-#	                . "if ref \$value eq 'HASH'";
-	$loop_set     = "\$stash->get(['import', [\$value]]) "
-	                . "if ref \$value eq 'HASH'";
-	$loop_restore = '$stash = $context->delocalise()';
+        $loop_save    = '$stash = $context->localise()';
+#       $loop_set     = "\$stash->set('import', \$value) "
+#                       . "if ref \$value eq 'HASH'";
+        $loop_set     = "\$stash->get(['import', [\$value]]) "
+                        . "if ref \$value eq 'HASH'";
+        $loop_restore = '$stash = $context->delocalise()';
     }
     $block = pad($block, 3) if $PRETTY;
 
@@ -409,19 +409,19 @@ do {
     my \$list = $list;
     
     unless (UNIVERSAL::isa(\$list, 'Template::Iterator')) {
-	\$list = Template::Config->iterator(\$list)
-	    || die \$Template::Config::ERROR, "\\n"; 
+        \$list = Template::Config->iterator(\$list)
+            || die \$Template::Config::ERROR, "\\n"; 
     }
 
     (\$value, \$error) = \$list->get_first();
     $loop_save;
     \$stash->set('loop', \$list);
     eval {
-LOOP:	while (! \$error) {
-	    $loop_set;
+LOOP:   while (! \$error) {
+            $loop_set;
 $block;
-	    (\$value, \$error) = \$list->get_next();
-	}
+            (\$value, \$error) = \$list->get_next();
+        }
     };
     $loop_restore;
     die \$@ if \$@;
@@ -459,7 +459,7 @@ sub wrapper {
 #    print STDERR "wrapper([@$file], { @$hash })\n";
 
     return $class->multi_wrapper($file, $hash, $block)
-	if @$file > 1;
+        if @$file > 1;
     $file = shift @$file;
 
     $block = pad($block, 1) if $PRETTY;
@@ -495,7 +495,7 @@ $OUTPUT do {
     my \$output = '';
 $block
     foreach ($file) {
-	\$output = \$context->include(\$_$hash); 
+        \$output = \$context->include(\$_$hash); 
     }
     \$output;
 };
@@ -545,10 +545,10 @@ sub switch {
     $default = pop @case;
 
     foreach $case (@case) {
-	$match = $case->[0];
-	$block = $case->[1];
-	$block = pad($block, 1) if $PRETTY;
-	$caseblock .= <<EOF;
+        $match = $case->[0];
+        $block = $case->[1];
+        $block = pad($block, 1) if $PRETTY;
+        $caseblock .= <<EOF;
 \$match = $match;
 \$match = [ \$match ] unless ref \$match eq 'ARRAY';
 if (grep(/^\$result\$/, \@\$match)) {
@@ -559,7 +559,7 @@ EOF
     }
 
     $caseblock .= $default
-	if defined $default;
+        if defined $default;
     $caseblock = pad($caseblock, 2) if $PRETTY;
 
 return <<EOF;
@@ -594,30 +594,30 @@ sub try {
     $block = pad($block, 2) if $PRETTY;
     $final = pop @catch;
     $final = "# FINAL\n" . ($final ? "$final\n" : '')
-	   . 'die $error if $error;' . "\n" . '$output;';
+           . 'die $error if $error;' . "\n" . '$output;';
     $final = pad($final, 1) if $PRETTY;
 
     $n = 0;
     foreach $catch (@catch) {
-	$match = $catch->[0] || do {
-	    $default ||= $catch->[1];
-	    next;
-	};
-	$mblock = $catch->[1];
-	$mblock = pad($mblock, 1) if $PRETTY;
-	push(@$handlers, "'$match'");
-	$catchblock .= $n++ 
-	    ? "elsif (\$handler eq '$match') {\n$mblock\n}\n" 
-	       : "if (\$handler eq '$match') {\n$mblock\n}\n";
+        $match = $catch->[0] || do {
+            $default ||= $catch->[1];
+            next;
+        };
+        $mblock = $catch->[1];
+        $mblock = pad($mblock, 1) if $PRETTY;
+        push(@$handlers, "'$match'");
+        $catchblock .= $n++ 
+            ? "elsif (\$handler eq '$match') {\n$mblock\n}\n" 
+               : "if (\$handler eq '$match') {\n$mblock\n}\n";
     }
     $catchblock .= "\$error = 0;";
     $catchblock = pad($catchblock, 3) if $PRETTY;
     if ($default) {
-	$default = pad($default, 1) if $PRETTY;
-	$default = "else {\n    # DEFAULT\n$default\n    \$error = '';\n}";
+        $default = pad($default, 1) if $PRETTY;
+        $default = "else {\n    # DEFAULT\n$default\n    \$error = '';\n}";
     }
     else {
-	$default = '# NO DEFAULT';
+        $default = '# NO DEFAULT';
     }
     $default = pad($default, 2) if $PRETTY;
 
@@ -633,7 +633,7 @@ $block
     };
     if (\$@) {
         \$error = \$context->catch(\$@, \\\$output);
-	die \$error if \$error->type =~ /^return|stop\$/;
+        die \$error if \$error->type =~ /^return|stop\$/;
         \$stash->set('error', \$error);
         \$stash->set('e', \$error);
         if (defined (\$handler = \$error->select_handler($handlers))) {
@@ -657,26 +657,26 @@ sub throw {
     my ($type, $args) = @$nameargs;
     my $hash = shift(@$args);
     my $info = shift(@$args);
-    $type = shift @$type;	    # uses same parser production as INCLUDE
-				    # etc., which allow multiple names
-				    # e.g. INCLUDE foo+bar+baz
+    $type = shift @$type;           # uses same parser production as INCLUDE
+                                    # etc., which allow multiple names
+                                    # e.g. INCLUDE foo+bar+baz
 
     if (! $info) {
-	$args = "$type, undef";
+        $args = "$type, undef";
     }
     elsif (@$hash || @$args) {
-	local $" = ', ';
-	my $i = 0;
-	$args = "$type, { args => [ " 
-	      . join(', ', $info, @$args) 
-	      . ' ], '
-	      . join(', ', 
-		     (map { "'" . $i++ . "' => $_" } ($info, @$args)),
-		     @$hash)
-	      . ' }';
+        local $" = ', ';
+        my $i = 0;
+        $args = "$type, { args => [ " 
+              . join(', ', $info, @$args) 
+              . ' ], '
+              . join(', ', 
+                     (map { "'" . $i++ . "' => $_" } ($info, @$args)),
+                     @$hash)
+              . ' }';
     }
     else {
-	$args = "$type, $info";
+        $args = "$type, $info";
     }
     
     return "\$context->throw($args, \\\$output);";
@@ -728,13 +728,13 @@ sub stop {
 sub use {
     my ($class, $lnameargs) = @_;
     my ($file, $args, $alias) = @$lnameargs;
-    $file = shift @$file;	# same production rule as INCLUDE
+    $file = shift @$file;       # same production rule as INCLUDE
     $alias ||= $file;
     $args = &args($class, $args);
     $file .= ", $args" if $args;
 #    my $set = &assign($class, $alias, '$plugin'); 
     return "# USE\n"
-	 . "\$stash->set($alias,\n"
+         . "\$stash->set($alias,\n"
          . "            \$context->plugin($file));";
 }
 
@@ -747,15 +747,15 @@ sub view {
     my ($class, $nameargs, $block, $defblocks) = @_;
     my ($name, $args) = @$nameargs;
     my $hash = shift @$args;
-    $name = shift @$name;	# same production rule as INCLUDE
+    $name = shift @$name;       # same production rule as INCLUDE
     $block = pad($block, 1) if $PRETTY;
 
     if (%$defblocks) {
-	$defblocks = join(",\n", map { "'$_' => $defblocks->{ $_ }" }
-				keys %$defblocks);
-	$defblocks = pad($defblocks, 1) if $PRETTY;
-	$defblocks = "{\n$defblocks\n}";
-	push(@$hash, "'blocks'", $defblocks);
+        $defblocks = join(",\n", map { "'$_' => $defblocks->{ $_ }" }
+                                keys %$defblocks);
+        $defblocks = pad($defblocks, 1) if $PRETTY;
+        $defblocks = "{\n$defblocks\n}";
+        push(@$hash, "'blocks'", $defblocks);
     }
     $hash = @$hash ? '{ ' . join(', ', @$hash) . ' }' : '';
 
@@ -833,8 +833,8 @@ sub no_perl {
 sub rawperl {
     my ($class, $block, $line) = @_;
     for ($block) {
-	s/^\n+//;
-	s/\n+$//;
+        s/^\n+//;
+        s/\n+$//;
     }
     $block = pad($block, 1) if $PRETTY;
     $line = $line ? " (starting line $line)" : '';
@@ -858,7 +858,7 @@ sub filter {
     $name = shift @$name;
     $args = &args($class, $args);
     $args = $args ? "$args, $alias" : ", undef, $alias"
-	if $alias;
+        if $alias;
     $name .= ", $args" if $args;
     $block = pad($block, 1) if $PRETTY;
  
@@ -886,12 +886,12 @@ sub capture {
     my ($class, $name, $block) = @_;
 
     if (ref $name) {
-	if (scalar @$name == 2 && ! $name->[1]) {
-	    $name = $name->[0];
-	}
-	else {
-	    $name = '[' . join(', ', @$name) . ']';
-	}
+        if (scalar @$name == 2 && ! $name->[1]) {
+            $name = $name->[0];
+        }
+        else {
+            $name = '[' . join(', ', @$name) . ']';
+        }
     }
     $block = pad($block, 1) if $PRETTY;
 
@@ -917,13 +917,13 @@ sub macro {
     $block = pad($block, 2) if $PRETTY;
 
     if ($args) {
-	my $nargs = scalar @$args;
-	$args = join(', ', map { "'$_'" } @$args);
-	$args = $nargs > 1 
-	    ? "\@args{ $args } = splice(\@_, 0, $nargs)"
-	    : "\$args{ $args } = shift";
+        my $nargs = scalar @$args;
+        $args = join(', ', map { "'$_'" } @$args);
+        $args = $nargs > 1 
+            ? "\@args{ $args } = splice(\@_, 0, $nargs)"
+            : "\$args{ $args } = shift";
 
-	return <<EOF;
+        return <<EOF;
 
 # MACRO
 \$stash->set('$ident', sub {
@@ -946,7 +946,7 @@ EOF
 
     }
     else {
-	return <<EOF;
+        return <<EOF;
 
 # MACRO
 \$stash->set('$ident', sub {
@@ -963,6 +963,16 @@ $block
 });
 EOF
     }
+}
+
+
+sub debug {
+    my ($class, $nameargs) = @_;
+    my ($file, $args) = @$nameargs;
+    my $hash = shift @$args;
+    $args  = join(', ', @$file, @$args);
+    $args .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
+    return "$OUTPUT \$context->debug($args); ## DEBUG ##"; 
 }
 
 
