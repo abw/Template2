@@ -266,7 +266,7 @@ DBI error - data source not defined
 
 -- test --
 [% USE dbi -%]
-[% dbi.connect(short, user, pass) -%]
+[% dbi.connect(short, user, pass ChopBlanks=1) -%]
 [% FOREACH user = dbi.query("SELECT name FROM usr WHERE id='abw'") -%]
 * [% user.name %]
 [% END %]
