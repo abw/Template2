@@ -136,7 +136,7 @@ output:
     Mary had a little lamb.
     </p>
 
-=head2 html_break
+=head2 html_break / html_para_break
 
 Similar to the html_para filter described above, but uses the HTML tag
 sequence E<lt>brE<gt>E<lt>brE<gt> to join paragraphs.
@@ -153,6 +153,22 @@ output:
     <br>
     <br>
     Mary had a little lamb.
+
+=head2 html_line_break
+
+This filter replaces any newlines with E<lt>brE<gt> HTML tags,
+thus preserving the line breaks of the original text in the 
+HTML output.
+
+    [% FILTER html_line_break %]
+    The cat sat on the mat.
+    Mary had a little lamb.
+    [% END %]
+
+output:
+
+    The cat sat on the mat.<br>
+    Mary had a little lamb.<br>
 
 =head2 uri
 
@@ -263,7 +279,7 @@ or more succinctly, using side-effect notation:
 
 A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
 
-=head2 eval(template_text)
+=head2 eval / evaltt
 
 The 'eval' filter evaluates the block as template text, processing
 any directives embedded within it.  This allows template variables to
@@ -286,7 +302,7 @@ is therefore equivalent to
 
 The 'evaltt' filter is provided as an alias for 'eval'.
 
-=head2 perl(perlcode)
+=head2 perl / evalperl
 
 The 'perl' filter evaluates the block as Perl code.  The EVAL_PERL
 option must be set to a true value or a 'perl' exception will be
