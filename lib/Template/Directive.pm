@@ -794,7 +794,7 @@ $block
 
     \$stash->set('view', \$oldv);
     \$view->seal();
-    \$output;
+#    \$output;     # not used - commented out to avoid warning
 };
 EOF
 }
