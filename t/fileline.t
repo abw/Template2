@@ -49,8 +49,10 @@ my $vars = {
     },
 };
 
+my $tt2err = Template->new({ INCLUDE_PATH => $dir });
+my $tt2not = Template->new({ INCLUDE_PATH => $dir, FILE_INFO => 0 });
 
-test_expect(\*DATA, { INCLUDE_PATH => $dir }, $vars);
+test_expect(\*DATA, [ err => $tt2err, not => $tt2not ], $vars);
 
 __DATA__
 -- test --
@@ -67,7 +69,6 @@ file: input text
 line: 3
 warn: Argument "" isn't numeric in addition (+)
 
--- start --
 -- test --
 [% INCLUDE warning -%]
 file: [% file.chunk(-16).last %]
@@ -79,4 +80,17 @@ Hello
 World
 file: test/lib/warning
 line: 2
+warn: Argument "" isn't numeric in addition (+)
+
+-- test --
+-- use not --
+[% INCLUDE warning -%]
+file: [% file.chunk(-16).last %]
+line: [% line %]
+warn: [% warn %]
+-- expect --
+Hello
+World
+file: (eval 8)
+line: 10
 warn: Argument "" isn't numeric in addition (+)
