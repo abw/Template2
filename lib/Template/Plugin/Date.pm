@@ -63,14 +63,16 @@ sub now {
 # format($time)
 # format($time, $format)
 # format($time, $format, $locale)
+# format($time, $format, $locale, $gmt_flag)
 # format(\%named_params);
 # 
 # Returns a formatted time/date string for the specified time, $time, 
-# (or the current system time if unspecified) using the $format and
-# $locale values specified as arguments or internal values set defined
-# at construction time).  Any or all of the arguments may be specified
-# as named parameters which get passed as a hash array reference as 
-# the final argument.
+# (or the current system time if unspecified) using the $format, $locale,
+# and $gmt values specified as arguments or internal values set defined
+# at construction time).  Specifying a Perl-true value for $gmt will
+# override the local time zone and force the output to be for GMT.
+# Any or all of the arguments may be specified as named parameters which 
+# get passed as a hash array reference as the final argument.
 # ------------------------------------------------------------------------
 
 sub format {
@@ -82,11 +84,17 @@ sub format {
 		    : ($params->{ format } || $self->{ format } || $FORMAT);
     my $locale = @_ ? shift(@_)
 		    : ($params->{ locale } || $self->{ locale });
+    my $gmt = @_ ? shift(@_)
+            : ($params->{ gmt } || $self->{ gmt });
     my (@date, $datestr);
 
     if ($time =~ /^\d+$/) {
 	# $time is now in seconds since epoch
-	@date = (localtime($time))[0..6];
+        my $convfunc = &localtime;
+        if ($gmt) {
+            $convfunc = &gmtime;
+        }
+        @date = (&$convfunc($time))[0..6];
     }
     else {
 	# if $time is numeric, then we assume it's seconds since the epoch
@@ -252,6 +260,15 @@ specification may follow that.
     [% date.format(filemod, '%d-%b-%Y') %]
     [% date.format(filemod, '%d-%b-%Y', 'en_GB') %]
 
+A fourth parameter allows you to force output in GMT, in the case of 
+seconds-since-the-epoch input:
+
+    [% date.format(filemod, '%d-%b-%Y', 'en_GB', 1) %]
+
+Note that in this case, if the local time is not GMT, then also specifying
+'%Z' (time zone) in the format parameter will lead to an extremely 
+misleading result.
+
 Any or all of these parameters may be named.  Positional parameters
 should always be in the order ($time, $format, $locale).
 
@@ -259,6 +276,7 @@ should always be in the order ($time, $format, $locale).
     [% date.format(time => filemod, format => '%H:%M:%S') %]
     [% date.format(mytime, format => '%H:%M:%S') %]
     [% date.format(mytime, format => '%H:%M:%S', locale => 'fr_FR') %]
+    [% date.format(mytime, format => '%H:%M:%S', gmt => 1) %]
     ...etc...
 
 The now() method returns the current system time in seconds since the 
