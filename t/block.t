@@ -50,8 +50,6 @@ This is the original block1
 -- expect --
 This is the original block1
 start of blockdef
-
-
 end of blockdef
 This is the original block1
 
@@ -66,8 +64,6 @@ This is the original block1
 -- expect --
 This is the original block1
 start of blockdef
-
-
 end of blockdef
 This is block 1, defined in blockdef, a is alpha
 

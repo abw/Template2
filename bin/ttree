@@ -27,6 +27,7 @@
 #
 #========================================================================
 
+use lib qw( /home/abw/templates/src/Template2/lib );
 use strict;
 use Template;
 use AppConfig qw( :expand );

@@ -65,8 +65,9 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 # any enclosing Template::Documents that we're visiting (e.g. we've
 # been called via an INCLUDE and we want to access a BLOCK defined in
 # the template that INCLUDE'd us).  If nothing is defined, then we
-# iterate through the TEMPLATES providers list as a chain-of-command
-# asking each object to fetch() the template if it can.
+# iterate through the TEMPLATES providers list as a 'chain of 
+# responsibility' (see Design Patterns) asking each object to fetch() 
+# the template if it can.
 #
 # Returns the compiled template.  On error, undef is returned and 
 # the internal ERROR value (read via error()) is set to contain an
@@ -414,7 +415,7 @@ sub leave {
 
 
 #------------------------------------------------------------------------
-# reset(\%blocks)
+# reset_blocks(\%blocks)
 # 
 # Reset the state of the internal BLOCKS hash to clear any BLOCK 
 # definitions imported via the PROCESS directive.  A hash reference
@@ -422,7 +423,7 @@ sub leave {
 # used to re-initialise it.
 #------------------------------------------------------------------------
 
-sub reset {
+sub reset_blocks {
     my ($self, $blocks) = @_;
     $self->{ BLKSTACK } = [ ];
     $self->{ BLOCKS   } = { $blocks ? %$blocks : () };

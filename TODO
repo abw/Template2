@@ -1,3 +1,11 @@
+Pending
+-------
+
+* cvs add t/test/src/incblock for t/include.t
+
+Fix
+---
+
 * Fix Plugin.pm
 
 * Change ttree to have knowledge of new config options

@@ -59,7 +59,7 @@ sub process {
     my ($name, $output, $procout, $error);
 
     # clear any BLOCK definitions back to the known default if 
-    $context->reset($self->{ BLOCKS })
+    $context->reset_blocks($self->{ BLOCKS })
 	if $self->{ AUTO_RESET };
 
     # pre-request compiled template from context so that we can alias it 
@@ -198,7 +198,7 @@ sub context {
 
 sub _init {
     my ($self, $config) = @_;
-    my ($item, $data);
+    my ($item, $data, $context, $block, $blocks);
 
     # coerce PRE_PROCESS and POST_PROCESS to arrays if necessary, 
     # by splitting on non-word characters
@@ -209,13 +209,30 @@ sub _init {
         $self->{ $item } = $data;
     }
     
-    $self->{ ERROR      } = $config->{ ERROR   };
-    $self->{ BLOCKS     } = $config->{ BLOCKS  } || { };
-    $self->{ CONTEXT    } = $config->{ CONTEXT }
+    $self->{ ERROR      } = $config->{ ERROR };
+    $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
+			    ? $config->{ AUTO_RESET } : 1;
+
+    $context = $self->{ CONTEXT } = $config->{ CONTEXT }
         || Template::Config->context($config)
 	|| return $self->error(Template::Config->error);
-    $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
-			          ? $config->{ AUTO_RESET } : 1;
+
+    # compile any template BLOCKS specified as text
+    $blocks = $config->{ BLOCKS } || { };
+    $self->{ BLOCKS } = { 
+	map {
+	    $block = $blocks->{ $_ };
+	    $block = $context->template(\$block)
+		|| return $self->error("BLOCK $_: ", $context->error())
+		    unless ref $block;
+	    ($_ => $block);
+	} 
+	keys %$blocks
+    };
+
+    # call context reset_blocks() to install defined BLOCKS
+    $context->reset_blocks($self->{ BLOCKS }) 
+	if %$blocks;
 
     return $self;
 }
