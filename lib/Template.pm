@@ -56,8 +56,17 @@ Template::Config->preload() if $ENV{ MOD_PERL };
 #------------------------------------------------------------------------
 
 sub process {
-    my ($self, $template, $vars, $outstream) = @_;
+    my ($self, $template, $vars, $outstream, @opts) = @_;
     my ($output, $error);
+    my $options = (@opts == 1) && UNIVERSAL::isa($opts[0], 'HASH')
+        ? shift(@opts) : { @opts };
+
+    $options->{ binmode } = $BINMODE 
+        unless defined $options->{ binmode };
+
+    # we're using this for testing in t/output.t and t/filter.t so 
+    # don't remove it if you don't want tests to fail...
+    $self->DEBUG("set binmode\n") if $DEBUG && $options->{ binmode };
 
     $output = $self->{ SERVICE }->process($template, $vars);
     
@@ -70,7 +79,7 @@ sub process {
 
 	# send processed template to output stream, checking for error
 	return ($self->error($error))
-	    if ($error = &_output($outstream, $output, $BINMODE));
+	    if ($error = &_output($outstream, \$output, $options));
 
 	return 1;
     }
@@ -146,30 +155,30 @@ sub _init {
 #------------------------------------------------------------------------
 
 sub _output {
-    my ($where, $text, $binmode) = @_;
+    my ($where, $textref, $options) = @_;
     my $reftype;
     my $error = 0;
     
     # call a CODE reference
     if (($reftype = ref($where)) eq 'CODE') {
-	&$where($text);
+	&$where($$textref);
     }
     # print to a glob (such as \*STDOUT)
     elsif ($reftype eq 'GLOB') {
-	print $where $text;
+	print $where $$textref;
     }   
     # append output to a SCALAR ref
     elsif ($reftype eq 'SCALAR') {
-	$$where .= $text;
+	$$where .= $$textref;
     }
     # push onto ARRAY ref
     elsif ($reftype eq 'ARRAY') {
-	push @$where, $text;
+	push @$where, $$textref;
     }
     # call the print() method on an object that implements the method
     # (e.g. IO::Handle, Apache::Request, etc)
     elsif (UNIVERSAL::can($where, 'print')) {
-	$where->print($text);
+	$where->print($$textref);
     }
     # a simple string is taken as a filename
     elsif (! $reftype) {
@@ -182,8 +191,8 @@ sub _output {
 	    ($error = $@) =~ s/ at \S+ line \d+\n?$//;
 	}
 	elsif (open(FP, ">$where")) { 
-	    binmode FP if $binmode;
-	    print FP $text;
+	    binmode FP if $options->{ binmode };
+	    print FP $$textref;
 	    close FP;
 	}
 	else {

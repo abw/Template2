@@ -73,7 +73,7 @@ folded into a hash array by the constructor.
     my $tt = Template->new(INCLUDE_PATH => '/tmp', POST_CHOMP => 1)
 	|| die $Template::ERROR, "\n";
 
-=head2 process($template, \%vars, $output)
+=head2 process($template, \%vars, $output, %options)
 
 The process() method is called to process a template.  The first
 parameter indicates the input template as one of: a filename relative
@@ -151,6 +151,21 @@ In an Apache/mod_perl handler:
 
 	return OK;
     }
+
+After the optional third output argument can come an optional
+reference to a hash or a list of (name, value) pairs providing further
+options for the output.  The only option currently supported is
+"binmode" which, when set to any true value will ensure that files
+created (but not any existing file handles passed) will be set to
+binary mode.
+
+    # either: hash reference of options
+    $tt->process($infile, $vars, $outfile, { binmode => 1 })
+        || die $tt->error(), "\n";
+
+    # or: list of name, value pairs
+    $tt->process($infile, $vars, $outfile, binmode => 1)
+        || die $tt->error(), "\n";
 
 The OUTPUT configuration item can be used to specify a default output 
 location other than \*STDOUT.  The OUTPUT_PATH specifies a directory
