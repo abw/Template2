@@ -1,0 +1,481 @@
+[% TAGS star -%]
+
+=head1 DESCRIPTION
+
+[* USE wrap; page.intro | wrap(72) *]
+
+=head2 Scalar Virtual Methods
+
+=over 4 
+
+=item defined
+
+Returns true if the value is defined.
+
+    [% user = get_user(uid) IF uid.defined %]
+
+=item length
+
+Returns the length of the string representation of the item:
+
+    [% IF password.length < 8 %]
+       Password too short, dumbass!
+    [% END %]
+
+=item repeat(n)
+
+Repeat the string a specified number of times.
+
+    [% name = 'foo' %]
+    [% name.repeat(3) %]		# foofoofoo
+
+=item replace(search, replace)
+
+Outputs the string with all instances of the first argument (specified
+as a Perl regular expression) with the second.
+
+    [% name = 'foo, bar & baz' %]
+    [% name.replace('\W+', '_') %]    # foo_bar_baz
+
+=item match(pattern)
+
+Performs a regular expression match on the string using the pattern
+passed as an argument.  If the pattern matches the string then the
+method returns a reference to a list of any strings captured within
+parenthesis in the pattern.
+
+    [% name = 'Larry Wall' %]
+    [% matches = name.match('(\w+) (\w+)') %]
+    [% matches.1 %], [% matches.0 %]		# Wall, Larry
+
+If the pattern does not match then the method returns false, rather
+than returning an empty list which Perl and the Template Toolkit both
+consider to be a true value.  This allows you to write expression like
+this.
+
+    [% "We're not worthy!" IF name.match('Larry Wall') %]
+
+    [% IF (matches = name.match('(\w+) (\w+)')) %]
+       pattern matches: [% matches.join(', ') %]
+    [% ELSE %]
+       pattern does not match
+    [% END %]
+
+=item search(pattern)
+
+Performs a similar function to 'match' but simply returns true if the 
+string matches the regular expression pattern passed as an argument.
+
+    [% name = 'foo bar baz' %]
+    [% name.search('bar') ? 'bar' : 'no bar' %]	    # bar
+
+This virtual method is now deprecated in favour of 'match'.  Move along
+now, there's nothing more to see here.
+
+=item split(pattern)
+
+Calls Perl's split() function to split a string into a list of
+strings.
+
+    [% FOREACH dir = mypath.split(':') %]
+       [% dir %]
+    [% END %]
+
+=item chunk(size)
+
+Splits the value into a list of chunks of a certain size.
+
+    [% ccard_no = "1234567824683579";
+       ccard_no.chunk(4).join
+    %]
+
+Output:
+
+    1234 5678 2468 3579
+
+If the size is specified as a negative number then the text will
+be chunked from right-to-left.  This gives the correct grouping 
+for numbers, for example.
+
+    [% number = 1234567;
+       number.chunk(-3).join(',')
+    %]
+
+Output:
+
+    1,234,567
+
+=item list
+
+Return the value as a single element list.  This can be useful if you
+have a variable which may contain a single item or a list and you want
+to treat them equally.  The 'list' method can be called against a list
+reference and will simply return the original reference, effectively
+a no-op.
+
+    [% thing.list.size %]  # thing can be a scalar or a list
+
+=item hash 
+
+Return the value as a hash reference containing a single entry with
+the key 'value' indicating the original scalar value.  As with the 
+'hash' virtual method, this is generally used to help massage data
+into different formats.
+
+=item size
+
+Always returns 1 for scalar values.  This method is provided for 
+consistency with the hash and list size methods.
+
+=back
+
+
+=head2 Hash Virtual Methods
+
+=over 4
+
+=item keys, values, each
+
+The regular hash operators returning lists of keys, values or both.
+Note how we use a '$' prefix on the 'key' variable in this example to
+have it interpolated (i.e. replaced with its value) before use.
+
+    [% FOREACH key = product.keys %]
+       [% key %] => [% product.$key %]
+    [% END %]
+
+=item sort, nsort
+
+Return a list of the keys, sorted alphabetically (sort) or numerically
+(nsort) according to the corresponding values in the hash.
+
+    [% FOREACH n = phones.sort %]
+       [% phones.$n %] is [% n %],
+    [% END %]
+
+=item import
+
+The import method can be called on a hash array to import the contents
+of another hash array.
+
+    [% hash1 = {
+	   foo => 'Foo',
+           bar => 'Bar',
+       }
+       hash2 = {
+           wiz => 'Wiz',
+           woz => 'Woz',
+       }
+    %]
+
+    [% hash1.import(hash2) %]
+    [% hash1.wiz %]			# Wiz
+
+You can also call the import() method by itself to import a hash array
+into the current namespace hash.
+
+    [% user = { id => 'lwall', name => 'Larry Wall' } %]
+    [% import(user) %]
+    [% id %]: [% name %]		# lwall: Larry Wall
+
+=item defined, exists
+
+Returns a true or false value if an item in the hash denoted by the key
+passed as an argument is defined or exists, respectively.
+
+    [% hash.defined('somekey') ? 'yes' : 'no' %]
+    [% hash.exists('somekey') ? 'yes' : 'no' %]
+
+=item size
+
+Returns the number of key =E<gt> value pairs in the hash.
+
+=item item
+
+Returns an item from the hash using a key passed as an argument.
+
+    [% hash.item('foo') %]  # same as hash.foo
+
+=item list
+
+Returns the contents of the hash in list form.  An argument can be
+passed to indicate the desired items required in the list: 'keys' to
+return a list of the keys (same as hash.keys), 'values' to return a
+list of the values (same as hash.values), or 'each' to return as list
+of (key, value) pairs (same as hash.each).  When called without an
+argument it returns a list of hash references each containing a 'key'
+and 'value' item representing 
+
+=back
+
+
+=head2 List Virtual Methods
+
+=over 4
+
+=item first, last
+
+Returns the first/last item in the list.  The item is not removed from the 
+list.
+
+    [% results.first %] to [% results.last %]
+
+=item size, max
+
+Returns the size of a list (number of elements) and the maximum 
+index number (size - 1), respectively.
+
+    [% results.size %] search results matched your query
+
+=item reverse
+
+Returns the items of the list in reverse order.
+
+    [% FOREACH s = scores.reverse %]
+       ...
+    [% END %]
+
+=item join
+
+Joins the items in the list into a single string, using Perl's join 
+function.
+
+    [% items.join(', ') %]
+
+=item grep
+
+Returns a list of the items in the list that match a regular expression
+pattern.
+
+    [% FOREACH directory.files.grep('\.txt$') %]
+       ...
+    [% END %]
+
+=item sort, nsort
+
+Returns the items in alpha (sort) or numerical (nsort) order.
+
+    [% library = books.sort %]
+
+An argument can be provided to specify a search key.  Where an item in 
+the list is a hash reference, the search key will be used to retrieve a 
+value from the hash which will then be used as the comparison value.
+Where an item is an object which implements a method of that name, the
+method will be called to return a comparison value.
+
+    [% library = books.sort('author') %]
+
+In the example, the 'books' list can contains hash references with 
+an 'author' key or objects with an 'author' method.
+
+=item unshift(item), push(item)
+
+Adds an item to the start/end of a list.
+
+    [% mylist.unshift('prev item') %]
+    [% mylist.push('next item')    %]
+
+=item shift, pop
+
+Removes the first/last item from the list and returns it.
+
+    [% first = mylist.shift %]
+    [% last  = mylist.pop   %]
+
+=item unique
+
+Returns a list of the unique elements in a list, in the same order
+as in the list itself.
+
+    [% mylist = [ 1, 2, 3, 2, 3, 4, 1, 4, 3, 4, 5 ] %]
+    [% numbers = mylist.unique %]
+
+While this can be explicitly sorted, it is not required that the list
+be sorted before the unique elements pulled out (unlike the Unix
+command line utility).
+
+    [% numbers = mylist.unique.sort %]
+
+=item merge
+
+Returns a list composed of zero or more other lists:
+
+    [% list_one = [ 1 2 3 ];
+       list_two = [ 4 5 6 ];
+       list_three = [ 7 8 9 ];
+       list_four = list_one.merge(list_two, list_three);
+    %]
+
+The original lists are not modified.
+
+=item slice(from, to)
+
+Returns a slice of items in the list between the bounds passed as
+arguments.  If the second argument, 'to', isn't specified, then it
+defaults to the last item in the list.  The original list is not 
+modified.
+
+    [% first_three = list.slice(0,2) %]
+
+    [% last_three  = list.slice(-3, -1) %]
+
+=item splice(offset, length, list)
+
+Behaves just like Perl's splice() function allowing you to selectively
+remove and/or replace elements in a list.  It removes 'length' items
+from the list, starting at 'offset' and replaces them with the items
+in 'list'.
+
+   [% play_game = [ 'play', 'scrabble' ];
+      ping_pong = [ 'ping', 'pong' ];
+      redundant = play_game.splice(1, 1, ping_pong);
+
+      redundant.join;     # scrabble
+      play_game.join;     # play ping pong
+   %]
+
+The method returns a list of the items removed by the splice.
+You can use the CALL directive to ignore the output if you're
+not planning to do anything with it.
+
+    [% CALL play_game.splice(1, 1, ping_pong) %]
+
+As well as providing a reference to a list of replacement values,
+you can pass in a list of items.
+
+   [% CALL list.splice(-1, 0, 'foo', 'bar') %]
+
+Be careful about passing just one item in as a replacement value.
+If it is a reference to a list then the contents of the list will
+be used.  If it's not a list, then it will be treated as a single 
+value.  You can use square brackets around a single item if you 
+need to be explicit:
+
+  [% # push a single item, an_item
+     CALL list.splice(-1, 0, an_item);
+
+     # push the items from another_list
+     CALL list.splice(-1, 0, another_list);
+
+     # push a reference to another_list
+     CALL list.splice(-1, 0, [ another_list ]);
+  %]
+
+=back
+
+The following example demonstrates how an empty list ('folk') can be 
+populated with formatted strings by using the push() method in conjunction
+with a FOREACH loop.  The resultant list can then be printed using join.
+
+    [% # define some initial data
+       people   => [ 
+           { id => 'tom',   name => 'Tom'     },
+	   { id => 'dick',  name => 'Richard' },
+           { id => 'larry', name => 'Larry'   },
+       ]
+
+       # define an empty list that list methods can be called against
+       folk = [] 
+    -%]
+
+    [% folk.push("<a href=\"${person.id}.html\">$person.name</a>")
+         FOREACH person = people.sort('name') -%]
+    [% folk.join(",\n") %]
+
+Output:
+
+    <a href="larry.html">Larry</a>,
+    <a href="dick.html">Richard</a>,
+    <a href="tom.html">Tom</a>
+
+You can define your own virtual methods for scalars, lists and hash
+arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
+and $HASH_OPS are references to hash arrays that define these virtual
+methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
+hash/list reference as the first item.  SCALAR_OPS are subroutines
+that accept a scalar value as the first item.  Any other arguments
+specified when the method is called will be passed to the subroutine.
+
+    # load Template::Stash to make method tables visible
+    use Template::Stash;
+
+    # define list method to return new list of odd numbers only
+    $Template::Stash::LIST_OPS->{ odd } = sub {
+	my $list = shift;
+	return [ grep { $_ % 2 } @$list ];
+    };
+
+template:
+
+    [% primes = [ 2, 3, 5, 7, 9 ] %]
+    [% primes.odd.join(', ') %]		# 3, 5, 7, 9
+
+See also the examples in the t/vmeth.t test script.
+
+=head2 Automagic Promotion of Scalar to List for Virtual Methods
+
+In addition to the scalar virtual methods listed in the previous
+section, you can also call any list virtual method against a scalar.
+The item will be automagically promoted to a single element list and
+the appropriate list virtual method will be called.  
+
+One particular benefit of this comes when calling subroutines or
+object methods that return a list of items, rather than the 
+preferred reference to a list of items.  In this case, the 
+Template Toolkit automatically folds the items returned into
+a list.
+
+The upshot is that you can continue to use existing Perl modules or
+code that returns lists of items, without having to refactor it
+just to keep the Template Toolkit happy (by returning references
+to list).  Class::DBI module is just one example of a particularly 
+useful module which returns values this way.
+
+If only a single item is returned from a subroutine then the 
+Template Toolkit assumes it meant to return a single item (rather
+than a list of 1 item) and leaves it well alone, returning the
+single value as it is.  If you're executing a database query, 
+for example, you might get 1 item returned, or perhaps many 
+items which are then folded into a list.
+
+The FOREACH directive will happily accept either a list or a single
+item which it will treat as a list.  So it's safe to write directives
+like this, where we assume that 'something' is bound to a subroutine
+which might return 1 or more items:
+
+    [% FOREACH item = something %]
+       ...
+    [% END %]
+
+The automagic promotion of scalars to single item lists means 
+that you can also use list virtual methods safely, even if you
+only get one item returned.  For example:
+
+    [% something.first   %]
+    [% something.join    %]
+    [% something.reverse.join(', ') %]
+
+Note that this is very much a last-ditch behaviour.  If the single
+item return is an object with a 'first' method, for example, then that
+will be called, as expected, in preference to the list virtual method.
+
+=head2 Compound Variables
+
+Compound 'dotted' variables may contain any number of separate
+elements.  Each element may evaluate to any of the permitted variable
+types and the processor will then correctly use this value to evaluate
+the rest of the variable.  Arguments may be passed to any of the
+intermediate elements.
+
+    [% myorg.people.sort('surname').first.fullname %]
+
+Intermediate variables may be used and will behave entirely as expected.
+
+    [% sorted = myorg.people.sort('surname') %]
+    [% sorted.first.fullname %]
+
+This simplified dotted notation has the benefit of hiding the
+implementation details of your data.  For example, you could implement
+a data structure as a hash array one day and then change it to an
+object the next without requiring any change to the templates.
+
