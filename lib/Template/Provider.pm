@@ -12,10 +12,10 @@
 #   deliver it.   See 'Design Patterns' for further details.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -96,38 +96,38 @@ sub fetch {
     my ($data, $error);
 
     if (ref $name) {
-	# $name can be a reference to a scalar, GLOB or file handle
-	($data, $error) = $self->_load($name);
-	($data, $error) = $self->_compile($data)
-	    unless $error;
-	$data = $data->{ data }
+        # $name can be a reference to a scalar, GLOB or file handle
+        ($data, $error) = $self->_load($name);
+        ($data, $error) = $self->_compile($data)
+            unless $error;
+        $data = $data->{ data }
 	    unless $error;
     }
     elsif (File::Spec->file_name_is_absolute($name)) {
-	# absolute paths (starting '/') allowed if ABSOLUTE set
-	($data, $error) = $self->{ ABSOLUTE } 
+        # absolute paths (starting '/') allowed if ABSOLUTE set
+        ($data, $error) = $self->{ ABSOLUTE } 
 	    ? $self->_fetch($name) 
-	    : $self->{ TOLERANT } 
+            : $self->{ TOLERANT } 
 		? (undef, Template::Constants::STATUS_DECLINED)
-		: ("$name: absolute paths are not allowed (set ABSOLUTE option)",
-		   Template::Constants::STATUS_ERROR);
+            : ("$name: absolute paths are not allowed (set ABSOLUTE option)",
+               Template::Constants::STATUS_ERROR);
     }
     elsif ($name =~ m[^\.+/]) {
-	# anything starting "./" is relative to cwd, allowed if RELATIVE set
-	($data, $error) = $self->{ RELATIVE } 
+        # anything starting "./" is relative to cwd, allowed if RELATIVE set
+        ($data, $error) = $self->{ RELATIVE } 
 	    ? $self->_fetch($name) 
-	    : $self->{ TOLERANT } 
+            : $self->{ TOLERANT } 
 		? (undef, Template::Constants::STATUS_DECLINED)
-		: ("$name: relative paths are not allowed (set RELATIVE option)",
-		   Template::Constants::STATUS_ERROR);
+            : ("$name: relative paths are not allowed (set RELATIVE option)",
+               Template::Constants::STATUS_ERROR);
     }
     else {
-	# otherwise, it's a file name relative to INCLUDE_PATH
-	($data, $error) = $self->{ INCLUDE_PATH } 
+        # otherwise, it's a file name relative to INCLUDE_PATH
+        ($data, $error) = $self->{ INCLUDE_PATH } 
 	    ? $self->_fetch_path($name) 
-	    : (undef, Template::Constants::STATUS_DECLINED);
+            : (undef, Template::Constants::STATUS_DECLINED);
     }
-
+    
 #    $self->_dump_cache() 
 #	if $DEBUG > 1;
 
@@ -144,8 +144,8 @@ sub fetch {
 sub store {
     my ($self, $name, $data) = @_;
     $self->_store($name, {
-	data => $data,
-	load => 0,
+        data => $data,
+        load => 0,
     });
 }
 
@@ -164,52 +164,52 @@ sub load {
     my $path = $name;
 
     if (File::Spec->file_name_is_absolute($name)) {
-	# absolute paths (starting '/') allowed if ABSOLUTE set
-	$error = "$name: absolute paths are not allowed (set ABSOLUTE option)" 
-	    unless $self->{ ABSOLUTE };
+        # absolute paths (starting '/') allowed if ABSOLUTE set
+        $error = "$name: absolute paths are not allowed (set ABSOLUTE option)" 
+            unless $self->{ ABSOLUTE };
     }
     elsif ($name =~ m[^\.+/]) {
-	# anything starting "./" is relative to cwd, allowed if RELATIVE set
-	$error = "$name: relative paths are not allowed (set RELATIVE option)"
-	    unless $self->{ RELATIVE };
+        # anything starting "./" is relative to cwd, allowed if RELATIVE set
+        $error = "$name: relative paths are not allowed (set RELATIVE option)"
+            unless $self->{ RELATIVE };
     }
     else {
       INCPATH: {
-	  # otherwise, it's a file name relative to INCLUDE_PATH
-	  my $paths = $self->paths()
-	      || return ($self->error(), Template::Constants::STATUS_ERROR);
+          # otherwise, it's a file name relative to INCLUDE_PATH
+          my $paths = $self->paths()
+              || return ($self->error(), Template::Constants::STATUS_ERROR);
 
-	  foreach my $dir (@$paths) {
-	      $path = "$dir/$name";
-	      last INCPATH
-		  if -f $path;
-	  }
-	  undef $path;	    # not found
+          foreach my $dir (@$paths) {
+              $path = "$dir/$name";
+              last INCPATH
+                  if -f $path;
+          }
+          undef $path;	    # not found
       }
     }
 
     if (defined $path && ! $error) {
-	local $/ = undef;    # slurp files in one go
-	local *FH;
-	if (open(FH, $path)) {
-	    $data = <FH>;
-	    close(FH);
-	}
-	else {
-	    $error = "$name: $!";
-	}
+        local $/ = undef;    # slurp files in one go
+        local *FH;
+        if (open(FH, $path)) {
+            $data = <FH>;
+            close(FH);
+        }
+        else {
+            $error = "$name: $!";
+        }
     }
-
+    
     if ($error) {
-	return $self->{ TOLERANT } 
-	    ? (undef, Template::Constants::STATUS_DECLINED)
-	    : ($error, Template::Constants::STATUS_ERROR);
+        return $self->{ TOLERANT } 
+            ? (undef, Template::Constants::STATUS_DECLINED)
+            : ($error, Template::Constants::STATUS_ERROR);
     }
     elsif (! defined $path) {
-	return (undef, Template::Constants::STATUS_DECLINED);
+        return (undef, Template::Constants::STATUS_DECLINED);
     }
     else {
-	return ($data, Template::Constants::STATUS_OK);
+        return ($data, Template::Constants::STATUS_OK);
     }
 }
 
@@ -246,29 +246,29 @@ sub paths {
     my $count = $MAX_DIRS;
     
     while (@ipaths && --$count) {
-	$dir = shift @ipaths || next;
-
-	# $dir can be a sub or object ref which returns a reference
-	# to a dynamically generated list of search paths.
-	
-	if (ref $dir eq 'CODE') {
-	    eval { $dpaths = &$dir() };
-	    if ($@) {
-		chomp $@;
-		return $self->error($@);
-	    }
-	    unshift(@ipaths, @$dpaths);
-	    next;
-	}
-	elsif (UNIVERSAL::can($dir, 'paths')) {
-	    $dpaths = $dir->paths() 
-		|| return $self->error($dir->error());
-	    unshift(@ipaths, @$dpaths);
-	    next;
-	}
-	else {
-	    push(@opaths, $dir);
-	}
+        $dir = shift @ipaths || next;
+        
+        # $dir can be a sub or object ref which returns a reference
+        # to a dynamically generated list of search paths.
+        
+        if (ref $dir eq 'CODE') {
+            eval { $dpaths = &$dir() };
+            if ($@) {
+                chomp $@;
+                return $self->error($@);
+            }
+            unshift(@ipaths, @$dpaths);
+            next;
+        }
+        elsif (UNIVERSAL::can($dir, 'paths')) {
+            $dpaths = $dir->paths() 
+                || return $self->error($dir->error());
+            unshift(@ipaths, @$dpaths);
+            next;
+        }
+        else {
+            push(@opaths, $dir);
+        }
     }
     return $self->error("INCLUDE_PATH exceeds $MAX_DIRS directories")
 	if @ipaths;
@@ -293,10 +293,10 @@ sub DESTROY {
 
     $slot = $self->{ HEAD };
     while ($slot) {
-	$next = $slot->[ NEXT ];
-	undef $slot->[ PREV ];
-	undef $slot->[ NEXT ];
-	$slot = $next;
+        $next = $slot->[ NEXT ];
+        undef $slot->[ PREV ];
+        undef $slot->[ NEXT ];
+        $slot = $next;
     }
     undef $self->{ HEAD };
     undef $self->{ TAIL };
@@ -330,12 +330,12 @@ sub _init {
 
     # coerce INCLUDE_PATH to an array ref, if not already so
     $path = [ split(/$dlim/, $path) ]
-	unless ref $path eq 'ARRAY';
-
+        unless ref $path eq 'ARRAY';
+    
     # don't allow a CACHE_SIZE 1 because it breaks things and the 
     # additional checking isn't worth it
     $size = 2 
-	if defined $size && ($size == 1 || $size < 0);
+        if defined $size && ($size == 1 || $size < 0);
 
     if (defined ($debug = $params->{ DEBUG })) {
         $self->{ DEBUG } = $debug & ( Template::Constants::DEBUG_PROVIDER
@@ -346,16 +346,16 @@ sub _init {
     }
 
     if ($self->{ DEBUG }) {
-	local $" = ', ';
-	$self->debug("creating cache of ", 
-	      defined $size ? $size : 'unlimited',
-	      " slots for [ @$path ]");
+        local $" = ', ';
+        $self->debug("creating cache of ", 
+                     defined $size ? $size : 'unlimited',
+                     " slots for [ @$path ]");
     }
-
+    
     # create COMPILE_DIR and sub-directories representing each INCLUDE_PATH
     # element in which to store compiled files
     if ($cdir) {
-
+        
 # Stas' hack
 #        # this is a hack to solve the problem with INCLUDE_PATH using
 #	 # relative dirs
@@ -368,14 +368,14 @@ sub _init {
 #	 $cdir .= "/".join "/",('hack') x $segments if $segments;
 #
 
-	require File::Path;
-	foreach my $dir (@$path) {
-	    next if ref $dir;
-	    my $wdir = $dir;
+        require File::Path;
+        foreach my $dir (@$path) {
+            next if ref $dir;
+            my $wdir = $dir;
             $wdir =~ s[:][]g if $^O eq 'MSWin32';
-	    $wdir =~ /(.*)/;  # untaint
-	    &File::Path::mkpath(File::Spec->catfile($cdir, $1));
-	}
+            $wdir =~ /(.*)/;  # untaint
+            &File::Path::mkpath(File::Spec->catfile($cdir, $1));
+        }
     }
 
     $self->{ LOOKUP       } = { };
@@ -416,42 +416,43 @@ sub _fetch {
     my $compiled = $self->_compiled_filename($name);
 
     if (defined $size && ! $size) {
-	# caching disabled so load and compile but don't cache
-	if ($compiled && -f $compiled && (stat($name))[9] <= (stat($compiled))[9]) {
-	    $data = $self->_load_compiled($compiled);
-	    $error = $self->error() unless $data;
-	}
-	else {
-	    ($data, $error) = $self->_load($name);
-	    ($data, $error) = $self->_compile($data, $compiled)
-		unless $error;
-	    $data = $data->{ data }
-	    unless $error;
-	}
+        # caching disabled so load and compile but don't cache
+        if ($compiled && -f $compiled 
+            && (stat($name))[9] <= (stat($compiled))[9]) {
+            $data = $self->_load_compiled($compiled);
+            $error = $self->error() unless $data;
+        }
+        else {
+            ($data, $error) = $self->_load($name);
+            ($data, $error) = $self->_compile($data, $compiled)
+                unless $error;
+            $data = $data->{ data }
+            unless $error;
+        }
     }
     elsif ($slot = $self->{ LOOKUP }->{ $name }) {
-	# cached entry exists, so refresh slot and extract data
-	($data, $error) = $self->_refresh($slot);
-	$data = $slot->[ DATA ]
-	    unless $error;
+        # cached entry exists, so refresh slot and extract data
+        ($data, $error) = $self->_refresh($slot);
+        $data = $slot->[ DATA ]
+            unless $error;
     }
     else {
-	# nothing in cache so try to load, compile and cache
-	if ($compiled && -f $compiled && (stat($name))[9] <= (stat($compiled))[9]) {
-	    $data = $self->_load_compiled($compiled);
-	    $error = $self->error() unless $data;
-	    $self->store($name, $data) unless $error;
-	}
-	else {
-	    ($data, $error) = $self->_load($name);
-	    ($data, $error) = $self->_compile($data, $compiled)
-		unless $error;
-	    $data = $self->_store($name, $data)
-		unless $error;
-	}
-
+        # nothing in cache so try to load, compile and cache
+        if ($compiled && -f $compiled 
+            && (stat($name))[9] <= (stat($compiled))[9]) {
+            $data = $self->_load_compiled($compiled);
+            $error = $self->error() unless $data;
+            $self->store($name, $data) unless $error;
+        }
+        else {
+            ($data, $error) = $self->_load($name);
+            ($data, $error) = $self->_compile($data, $compiled)
+                unless $error;
+            $data = $self->_store($name, $data)
+                unless $error;
+        }
     }
-
+    
     return ($data, $error);
 }
 
@@ -479,73 +480,73 @@ sub _fetch_path {
 
     INCLUDE: {
 
-	# the template may have been stored using a non-filename name
-	if ($caching && ($slot = $self->{ LOOKUP }->{ $name })) {
-	    # cached entry exists, so refresh slot and extract data
-	    ($data, $error) = $self->_refresh($slot);
-	    $data = $slot->[ DATA ] 
-		unless $error;
-	    last INCLUDE;
-	}
-
-	$paths = $self->paths() || do {
-	    $error = Template::Constants::STATUS_ERROR;
-	    $data  = $self->error();
-	    last INCLUDE;
-	};
-
-	# search the INCLUDE_PATH for the file, in cache or on disk
-	foreach $dir (@$paths) {
-	    $path = "$dir/$name";
-            $path =~ s[//][/]g;
-
-	    $self->debug("searching path: $path\n") if $self->{ DEBUG };
-
-	    if ($caching && ($slot = $self->{ LOOKUP }->{ $path })) {
-		# cached entry exists, so refresh slot and extract data
-		($data, $error) = $self->_refresh($slot);
-		$data = $slot->[ DATA ]
-		    unless $error;
-		last INCLUDE;
-	    }
-	    elsif (-f $path) {
-		$compiled = $self->_compiled_filename($path)
-		    if $compext || $compdir;
-
-		if ($compiled && -f $compiled && (stat($path))[9] <= (stat($compiled))[9]) {
-		    if ($data = $self->_load_compiled($compiled)) {
-			# store in cache
-			$data  = $self->store($path, $data);
-			$error = Template::Constants::STATUS_OK;
-			last INCLUDE;
-		    }
-		    else {
-			warn($self->error(), "\n");
-		    }
-		}
-		# $compiled is set if an attempt to write the compiled 
-		# template to disk should be made
-
-		($data, $error) = $self->_load($path, $name);
-		($data, $error) = $self->_compile($data, $compiled)
-		    unless $error;
-		$data = $self->_store($path, $data)
-		    unless $error || ! $caching;
+        # the template may have been stored using a non-filename name
+        if ($caching && ($slot = $self->{ LOOKUP }->{ $name })) {
+            # cached entry exists, so refresh slot and extract data
+            ($data, $error) = $self->_refresh($slot);
+            $data = $slot->[ DATA ] 
+                unless $error;
+            last INCLUDE;
+        }
+        
+        $paths = $self->paths() || do {
+            $error = Template::Constants::STATUS_ERROR;
+            $data  = $self->error();
+            last INCLUDE;
+        };
+        
+        # search the INCLUDE_PATH for the file, in cache or on disk
+        foreach $dir (@$paths) {
+            $path = File::Spec->catfile($dir, $name);
+            
+            $self->debug("searching path: $path\n") if $self->{ DEBUG };
+            
+            if ($caching && ($slot = $self->{ LOOKUP }->{ $path })) {
+                # cached entry exists, so refresh slot and extract data
+                ($data, $error) = $self->_refresh($slot);
+                $data = $slot->[ DATA ]
+                    unless $error;
+                last INCLUDE;
+            }
+            elsif (-f $path) {
+                $compiled = $self->_compiled_filename($path)
+                    if $compext || $compdir;
+                
+                if ($compiled && -f $compiled 
+                    && (stat($path))[9] <= (stat($compiled))[9]) {
+                    if ($data = $self->_load_compiled($compiled)) {
+                        # store in cache
+                        $data  = $self->store($path, $data);
+                        $error = Template::Constants::STATUS_OK;
+                        last INCLUDE;
+                    }
+                    else {
+                        warn($self->error(), "\n");
+                    }
+                }
+                # $compiled is set if an attempt to write the compiled 
+                # template to disk should be made
+                
+                ($data, $error) = $self->_load($path, $name);
+                ($data, $error) = $self->_compile($data, $compiled)
+                    unless $error;
+                $data = $self->_store($path, $data)
+                    unless $error || ! $caching;
                 $data = $data->{ data } if ! $caching;
-		# all done if $error is OK or ERROR
-		last INCLUDE if ! $error 
-		    || $error == Template::Constants::STATUS_ERROR;
-	    }
-	}
-	# template not found, so look for a DEFAULT template
-	my $default;
-	if (defined ($default = $self->{ DEFAULT }) && $name ne $default) {
-	    $name = $default;
-	    redo INCLUDE;
-	}
-	($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
+                # all done if $error is OK or ERROR
+                last INCLUDE if ! $error 
+                    || $error == Template::Constants::STATUS_ERROR;
+            }
+        }
+        # template not found, so look for a DEFAULT template
+        my $default;
+        if (defined ($default = $self->{ DEFAULT }) && $name ne $default) {
+            $name = $default;
+            redo INCLUDE;
+        }
+        ($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
     } # INCLUDE
-
+    
     return ($data, $error);
 }
 
@@ -580,8 +581,8 @@ sub _load_compiled {
     delete $INC{ $file };
     eval { $compiled = require $file; };
     return $@
-	 ? $self->error("compiled template $compiled: $@")
-	 : $compiled;
+        ? $self->error("compiled template $compiled: $@")
+        : $compiled;
 }
 
 
@@ -615,52 +616,52 @@ sub _load {
                  ')') if $self->{ DEBUG };
 
     LOAD: {
-	if (ref $name eq 'SCALAR') {
-	    # $name can be a SCALAR reference to the input text...
-	    $data = {
-		name => defined $alias ? $alias : 'input text',
-		text => $$name,
-		time => $now,
-		load => 0,
-	    };
-	}
-	elsif (ref $name) {
-	    # ...or a GLOB or file handle...
-	    my $text = <$name>;
-	    $data = {
-		name => defined $alias ? $alias : 'input file handle',
-		text => $text,
-		time => $now,
-		load => 0,
-	    };
-	}
-	elsif (-f $name) {
-	    if (open(FH, $name)) {
-		my $text = <FH>;
-		$data = {
-		    name => $alias,
+        if (ref $name eq 'SCALAR') {
+            # $name can be a SCALAR reference to the input text...
+            $data = {
+                name => defined $alias ? $alias : 'input text',
+                text => $$name,
+                time => $now,
+                load => 0,
+            };
+        }
+        elsif (ref $name) {
+            # ...or a GLOB or file handle...
+            my $text = <$name>;
+            $data = {
+                name => defined $alias ? $alias : 'input file handle',
+                text => $text,
+                time => $now,
+                load => 0,
+            };
+        }
+        elsif (-f $name) {
+            if (open(FH, $name)) {
+                my $text = <FH>;
+                $data = {
+                    name => $alias,
                     path => $name,
-		    text => $text,
-		    time => (stat $name)[9],
-		    load => $now,
-		};
-	    }
-	    elsif ($tolerant) {
-		($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
-	    }
-	    else {
-		$data  = "$alias: $!";
-		$error = Template::Constants::STATUS_ERROR;
-	    }
-	}
-	else {
-	    ($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
-	}
+                    text => $text,
+                    time => (stat $name)[9],
+                    load => $now,
+                };
+            }
+            elsif ($tolerant) {
+                ($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
+            }
+            else {
+                $data  = "$alias: $!";
+                $error = Template::Constants::STATUS_ERROR;
+            }
+        }
+        else {
+            ($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
+        }
     }
-
+    
     $data->{ path } = $data->{ name }
         if $data and ! defined $data->{ path };
-
+    
     return ($data, $error);
 }
 
@@ -688,48 +689,48 @@ sub _refresh {
     # stat() on the file then we need to do it again and see if the file
     # time has changed
     if ( (time - $slot->[ STAT ]) > $STAT_TTL && stat $slot->[ NAME ] ) {
-	$slot->[ STAT ] = time;
+        $slot->[ STAT ] = time;
 
-	if ( (stat(_))[9] != $slot->[ LOAD ]) {
-
-	    $self->debug("refreshing cache file ", $slot->[ NAME ]) 
+        if ( (stat(_))[9] != $slot->[ LOAD ]) {
+            
+            $self->debug("refreshing cache file ", $slot->[ NAME ]) 
                 if $self->{ DEBUG };
-	    
-	    ($data, $error) = $self->_load($slot->[ NAME ],
-					   $slot->[ DATA ]->{ name });
-	    ($data, $error) = $self->_compile($data)
-		unless $error;
-
-	    unless ($error) {
-		$slot->[ DATA ] = $data->{ data };
-		$slot->[ LOAD ] = $data->{ time };
-	    }
-	}
+            
+            ($data, $error) = $self->_load($slot->[ NAME ],
+                                           $slot->[ DATA ]->{ name });
+            ($data, $error) = $self->_compile($data)
+                unless $error;
+            
+            unless ($error) {
+                $slot->[ DATA ] = $data->{ data };
+                $slot->[ LOAD ] = $data->{ time };
+            }
+        }
     }
-
+    
     unless( $self->{ HEAD } == $slot ) {
-	# remove existing slot from usage chain...
-	if ($slot->[ PREV ]) {
-	    $slot->[ PREV ]->[ NEXT ] = $slot->[ NEXT ];
-	}
-	else {
-	    $self->{ HEAD } = $slot->[ NEXT ];
-	}
-	if ($slot->[ NEXT ]) {
-	    $slot->[ NEXT ]->[ PREV ] = $slot->[ PREV ];
-	}
-	else {
-	    $self->{ TAIL } = $slot->[ PREV ];
-	}
-	
-	# ..and add to start of list
-	$head = $self->{ HEAD };
-	$head->[ PREV ] = $slot if $head;
-	$slot->[ PREV ] = undef;
-	$slot->[ NEXT ] = $head;
-	$self->{ HEAD } = $slot;
+        # remove existing slot from usage chain...
+        if ($slot->[ PREV ]) {
+            $slot->[ PREV ]->[ NEXT ] = $slot->[ NEXT ];
+        }
+        else {
+            $self->{ HEAD } = $slot->[ NEXT ];
+        }
+        if ($slot->[ NEXT ]) {
+            $slot->[ NEXT ]->[ PREV ] = $slot->[ PREV ];
+        }
+        else {
+            $self->{ TAIL } = $slot->[ PREV ];
+        }
+        
+        # ..and add to start of list
+        $head = $self->{ HEAD };
+        $head->[ PREV ] = $slot if $head;
+        $slot->[ PREV ] = undef;
+        $slot->[ NEXT ] = $head;
+        $self->{ HEAD } = $slot;
     }
-
+    
     return ($data, $error);
 }
 
@@ -758,42 +759,42 @@ sub _store {
     $self->debug("_store($name, $data)") if $self->{ DEBUG };
 
     if (defined $size && $self->{ SLOTS } >= $size) {
-	# cache has reached size limit, so reuse oldest entry
-
-	$self->debug("reusing oldest cache entry (size limit reached: $size)\nslots: $self->{ SLOTS }") if $self->{ DEBUG };
-
-	# remove entry from tail of list
-	$slot = $self->{ TAIL };
-	$slot->[ PREV ]->[ NEXT ] = undef;
-	$self->{ TAIL } = $slot->[ PREV ];
-	
-	# remove name lookup for old node
-	delete $self->{ LOOKUP }->{ $slot->[ NAME ] };
-
-	# add modified node to head of list
-	$head = $self->{ HEAD };
-	$head->[ PREV ] = $slot if $head;
-	@$slot = ( undef, $name, $data, $load, $head, time );
-	$self->{ HEAD } = $slot;
-
-	# add name lookup for new node
-	$self->{ LOOKUP }->{ $name } = $slot;
+        # cache has reached size limit, so reuse oldest entry
+        
+        $self->debug("reusing oldest cache entry (size limit reached: $size)\nslots: $self->{ SLOTS }") if $self->{ DEBUG };
+        
+        # remove entry from tail of list
+        $slot = $self->{ TAIL };
+        $slot->[ PREV ]->[ NEXT ] = undef;
+        $self->{ TAIL } = $slot->[ PREV ];
+        
+        # remove name lookup for old node
+        delete $self->{ LOOKUP }->{ $slot->[ NAME ] };
+        
+        # add modified node to head of list
+        $head = $self->{ HEAD };
+        $head->[ PREV ] = $slot if $head;
+        @$slot = ( undef, $name, $data, $load, $head, time );
+        $self->{ HEAD } = $slot;
+        
+        # add name lookup for new node
+        $self->{ LOOKUP }->{ $name } = $slot;
     }
     else {
-	# cache is under size limit, or none is defined
-
-	$self->debug("adding new cache entry") if $self->{ DEBUG };
-
-	# add new node to head of list
-	$head = $self->{ HEAD };
-	$slot = [ undef, $name, $data, $load, $head, time ];
-	$head->[ PREV ] = $slot if $head;
-	$self->{ HEAD } = $slot;
-	$self->{ TAIL } = $slot unless $self->{ TAIL };
-
-	# add lookup from name to slot and increment nslots
-	$self->{ LOOKUP }->{ $name } = $slot;
-	$self->{ SLOTS }++;
+        # cache is under size limit, or none is defined
+        
+        $self->debug("adding new cache entry") if $self->{ DEBUG };
+        
+        # add new node to head of list
+        $head = $self->{ HEAD };
+        $slot = [ undef, $name, $data, $load, $head, time ];
+        $head->[ PREV ] = $slot if $head;
+        $self->{ HEAD } = $slot;
+        $self->{ TAIL } = $slot unless $self->{ TAIL };
+        
+        # add lookup from name to slot and increment nslots
+        $self->{ LOOKUP }->{ $name } = $slot;
+        $self->{ SLOTS }++;
     }
 
     return $data;
@@ -826,66 +827,66 @@ sub _compile {
         if $self->{ DEBUG };
 
     my $parser = $self->{ PARSER } 
-	||= Template::Config->parser($self->{ PARAMS })
-	||  return (Template::Config->error(), Template::Constants::STATUS_ERROR);
+        ||= Template::Config->parser($self->{ PARAMS })
+        ||  return (Template::Config->error(), Template::Constants::STATUS_ERROR);
 
     # discard the template text - we don't need it any more
     delete $data->{ text };   
-
+    
     # call parser to compile template into Perl code
     if ($parsedoc = $parser->parse($text, $data)) {
 
-	$parsedoc->{ METADATA } = { 
-	    'name'    => $data->{ name },
-	    'modtime' => $data->{ time },
-	    %{ $parsedoc->{ METADATA } },
-	};
-	
-	# write the Perl code to the file $compfile, if defined
-	if ($compfile) {
-	    my $basedir = &File::Basename::dirname($compfile);
-	    $basedir =~ /(.*)/;
-	    $basedir = $1;
-	    &File::Path::mkpath($basedir) unless -d $basedir;
-
-	    my $docclass = $self->{ DOCUMENT };
-	    $error = 'cache failed to write '
-		    . &File::Basename::basename($compfile)
-		    . ': ' . $docclass->error()
-		unless $docclass->write_perl_file($compfile, $parsedoc);
- 
-	    # set atime and mtime of newly compiled file, don't bother
-	    # if time is undef
-	    if (!defined($error) && defined $data->{ time }) {
-		my ($cfile) = $compfile =~ /^(.+)$/s or do {
-		    return("invalid filename: $compfile", 
-			      Template::Constants::STATUS_ERROR);
-		};
-
-		my ($ctime) = $data->{ time } =~ /^(\d+)$/;
-		unless ($ctime || $ctime eq 0) {
-		    return("invalid time: $ctime", 
-			      Template::Constants::STATUS_ERROR);
-		}
- 		utime($ctime, $ctime, $cfile);
-	    }
-	}
-
-	unless ($error) {
-	    return $data				        ## RETURN ##
-		if $data->{ data } = $DOCUMENT->new($parsedoc);
-	    $error = $Template::Document::ERROR;
-	}
+        $parsedoc->{ METADATA } = { 
+            'name'    => $data->{ name },
+            'modtime' => $data->{ time },
+            %{ $parsedoc->{ METADATA } },
+        };
+        
+        # write the Perl code to the file $compfile, if defined
+        if ($compfile) {
+            my $basedir = &File::Basename::dirname($compfile);
+            $basedir =~ /(.*)/;
+            $basedir = $1;
+            &File::Path::mkpath($basedir) unless -d $basedir;
+            
+            my $docclass = $self->{ DOCUMENT };
+            $error = 'cache failed to write '
+                . &File::Basename::basename($compfile)
+                . ': ' . $docclass->error()
+                unless $docclass->write_perl_file($compfile, $parsedoc);
+            
+            # set atime and mtime of newly compiled file, don't bother
+            # if time is undef
+            if (!defined($error) && defined $data->{ time }) {
+                my ($cfile) = $compfile =~ /^(.+)$/s or do {
+                    return("invalid filename: $compfile", 
+                           Template::Constants::STATUS_ERROR);
+                };
+                
+                my ($ctime) = $data->{ time } =~ /^(\d+)$/;
+                unless ($ctime || $ctime eq 0) {
+                    return("invalid time: $ctime", 
+                           Template::Constants::STATUS_ERROR);
+                }
+                utime($ctime, $ctime, $cfile);
+            }
+        }
+        
+        unless ($error) {
+            return $data				        ## RETURN ##
+                if $data->{ data } = $DOCUMENT->new($parsedoc);
+            $error = $Template::Document::ERROR;
+        }
     }
     else {
-	$error = Template::Exception->new( 'parse', "$data->{ name } " .
+        $error = Template::Exception->new( 'parse', "$data->{ name } " .
                                            $parser->error() );
     }
-
+    
     # return STATUS_ERROR, or STATUS_DECLINED if we're being tolerant
     return $self->{ TOLERANT } 
-	? (undef, Template::Constants::STATUS_DECLINED)
-	: ($error,  Template::Constants::STATUS_ERROR)
+        ? (undef, Template::Constants::STATUS_DECLINED)
+        : ($error,  Template::Constants::STATUS_ERROR)
 }
 
 
@@ -907,14 +908,14 @@ sub _dump {
     my $output = "[Template::Provider] {\n";
     my $format = "    %-16s => %s\n";
     my $key;
-
+    
     $output .= sprintf($format, 'INCLUDE_PATH', 
-		       '[ ' . join(', ', @{ $self->{ INCLUDE_PATH } }) . ' ]');
+                       '[ ' . join(', ', @{ $self->{ INCLUDE_PATH } }) . ' ]');
     $output .= sprintf($format, 'CACHE_SIZE', $size);
-
+    
     foreach $key (qw( ABSOLUTE RELATIVE TOLERANT DELIMITER
-		      COMPILE_EXT COMPILE_DIR )) {
-	$output .= sprintf($format, $key, $self->{ $key });
+                      COMPILE_EXT COMPILE_DIR )) {
+        $output .= sprintf($format, $key, $self->{ $key });
     }
     $output .= sprintf($format, 'PARSER', $parser);
 
@@ -922,14 +923,14 @@ sub _dump {
     local $" = ', ';
     my $lookup = $self->{ LOOKUP };
     $lookup = join('', map { 
-	sprintf("    $format", $_, defined $lookup->{ $_ }
-		? ('[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
-			       @{ $lookup->{ $_ } }) . ' ]') : '<undef>');
+        sprintf("    $format", $_, defined $lookup->{ $_ }
+                ? ('[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
+                               @{ $lookup->{ $_ } }) . ' ]') : '<undef>');
     } sort keys %$lookup);
     $lookup = "{\n$lookup    }";
     
     $output .= sprintf($format, LOOKUP => $lookup);
-
+    
     $output .= '}';
     return $output;
 }
