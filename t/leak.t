@@ -20,7 +20,7 @@
 #========================================================================
 
 use strict;
-use lib qw( ../lib );
+use lib qw( ./lib ../lib );
 use Template::Test;
 $^W = 1;
 
@@ -213,4 +213,39 @@ macro plugin created
 Hello destroyed
 Goodbye destroyed
 macro plugin destroyed
+
+-- test --
+[% PERL %]
+    Holler->clear();
+    my $h = Holler->new('perl');
+    $stash->set( h => $h );
+[% END -%]
+[% trace %]
+-- expect --
+perl created
+
+-- test --
+[% BLOCK x; PERL %]
+    Holler->clear();
+    my $h = Holler->new('perl');
+    $stash->set( h => $h );
+[% END; END -%]
+[% x; trace %]
+-- expect --
+perl created
+perl destroyed
+
+-- test --
+[% MACRO y PERL %]
+    Holler->clear();
+    my $h = Holler->new('perl macro');
+    $stash->set( h => $h );
+[% END -%]
+[% y; trace %]
+-- expect --
+perl macro created
+perl macro destroyed
+
+
+
 

@@ -22,7 +22,7 @@ use vars qw( $DEBUG );
 use Template::Test;
 use Template::Config;
 
-ntests(42);
+ntests(44);
 $DEBUG = 0;
 $Template::Config::DEBUG = 0;
 
@@ -217,3 +217,28 @@ ok( $value eq 'bar' );
  
 ($value, $error) = $iterator->get_next();
 ok( $value eq 'baz' );
+
+
+#------------------------------------------------------------------------
+# instdir
+#------------------------------------------------------------------------
+
+my $idir = Template::Config->instdir();
+
+if ($Template::Config::INSTDIR) {
+    ok( $idir eq $Template::Config::INSTDIR );
+}
+else {
+    ok(  ! defined($idir) 
+	&& $Template::Config::ERROR eq 'no installation directory' );
+}
+
+my $tdir = Template::Config->instdir('templates');
+
+if ($Template::Config::INSTDIR) {
+    ok( $tdir eq "$Template::Config::INSTDIR/templates" );
+}
+else {
+    ok(  ! defined($tdir) 
+	&& $Template::Config::ERROR eq 'no installation directory' );
+}

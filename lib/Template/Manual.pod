@@ -4,8 +4,7 @@
 #
 # DESCRIPTION
 #   This is the comprehensive user guide and reference manual for the
-#   Template Toolkit. For convenience, it is split into the following
-#   sections.
+#   Template Toolkit.
 #
 # AUTHOR
 #   Andy Wardley  <abw@kfs.org>
@@ -41,8 +40,7 @@ Template::Manual - User guide and reference manual for the Template Toolkit
 =head1 DESCRIPTION
 
 This is the comprehensive user guide and reference manual for the
-Template Toolkit. For convenience, it is split into the following
-sections.
+Template Toolkit.
 
 =over 4
 
@@ -147,7 +145,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 9th March 2000.
+Template Toolkit version 2.01, released on 28th March 2001.
 
 =head1 COPYRIGHT
 

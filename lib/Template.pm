@@ -866,7 +866,7 @@ Define new tag style or characters (default: [% %]).
 =item COMMENTS
 
 Ignored and deleted.
- 
+
     [% # this is a comment to the end of line
        foo = 'bar'
     %]
@@ -885,7 +885,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 9th March 2000.
+Template Toolkit version 2.01, released on 28th March 2001.
 
 =head1 COPYRIGHT
 

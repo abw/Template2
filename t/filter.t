@@ -18,6 +18,7 @@
 
 use strict;
 use lib qw( ./lib ../lib );
+use Template::Filters;
 use Template qw( :status );
 use Template::Parser;
 use Template::Test;
@@ -818,4 +819,32 @@ on the mat
    text | indent('> ') | indent('+') %]
 -- expect --
 +> The cat sat on the mat
+
+-- test --
+<<[% FILTER trim %]
+   
+          
+The cat sat
+on the
+mat
+
+
+[% END %]>>
+-- expect --
+<<The cat sat
+on the
+mat>>
+
+-- test --
+<<[% FILTER collapse %]
+   
+          
+The    cat     sat
+on    the
+mat
+
+
+[% END %]>>
+-- expect --
+<<The cat sat on the mat>>
 

@@ -1,17 +1,15 @@
 #============================================================= -*-Perl-*-
 #
-# Template::Plugin::Iterator
+# Template::Plugin::XML::Simple
 #
 # DESCRIPTION
-#
-#   Plugin to create a Template::Iterator from a list of items and optional
-#   configuration parameters.
+#   Template Toolkit plugin interfacing to the XML::Simple.pm module.
 #
 # AUTHOR
 #   Andy Wardley   <abw@kfs.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2001 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -22,27 +20,46 @@
 #
 #============================================================================
 
-package Template::Plugin::Iterator;
+package Template::Plugin::XML::Simple;
 
 require 5.004;
 
 use strict;
-use vars qw( $VERSION );
-use base qw( Template::Plugin );
 use Template::Plugin;
-use Template::Iterator;
+use XML::Simple;
+
+use base qw( Template::Plugin );
+use vars qw( $VERSION );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
+
 #------------------------------------------------------------------------
-# new($context, \@data, \%args)
+# new($context, $file_or_text, \%config)
 #------------------------------------------------------------------------
 
 sub new {
     my $class   = shift;
     my $context = shift;
-    Template::Iterator->new(@_);
+    my $input   = shift;
+    my $args    = ref $_[-1] eq 'HASH' ? pop(@_) : { };
+
+    XMLin($input, %$args);
 }
+
+
+
+#------------------------------------------------------------------------
+# _throw($errmsg)
+#
+# Raise a Template::Exception of type XML.XPath via die().
+#------------------------------------------------------------------------
+
+sub _throw {
+    my ($self, $error) = @_;
+    die Template::Exception->new('XML.XPath', $error);
+}
+
 
 1;
 
@@ -62,30 +79,31 @@ __END__
 
 =head1 NAME
 
-Template::Plugin::Iterator - Plugin to create iterators (Template::Iterator)
+Template::Plugin::XML::Simple - Plugin interface to XML::Simple
 
 =head1 SYNOPSIS
 
-    [% USE iterator(list, args) %]
-
-    [% FOREACH item = iterator %]
-       [% '<ul>' IF iterator.first %]
-       <li>[% item %]
-       [% '</ul>' IF iterator.last %]
-    [% END %]
+    # load plugin and specify XML file to parse
+    [% USE xml = XML.Simple(xml_file_or_text) %]
 
 =head1 DESCRIPTION
 
-The iterator plugin provides a way to create a Template::Iterator object 
-to iterate over a data set.  An iterator is implicitly automatically by the
-FOREACH directive.  This plugin allows the iterator to be explicitly created
-with a given name.
+This is a Template Toolkit plugin interfacing to the XML::Simple module.
 
-=head1 AUTHOR
+=head1 PRE-REQUISITES
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+This plugin requires that the XML::Parser and XML::Simple modules be 
+installed.  These are available from CPAN:
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+    http://www.cpan.org/modules/by-module/XML
+
+=head1 AUTHORS
+
+This plugin wrapper module was written by Andy Wardley
+E<lt>abw@kfs.orgE<gt>.
+
+The XML::Simple module which implements all the core functionality 
+was written by Grant McLean E<lt>grantm@web.co.nzE<gt>.
 
 =head1 VERSION
 
@@ -101,6 +119,5 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template::Plugin|Template::Plugin>, L<Template::Iterator|Template::Iterator>
-
+L<Template::Plugin|Template::Plugin>, L<XML::Simple|XML::Simple>, L<XML::Parser|XML::Parser>
 

@@ -1,51 +1,45 @@
-#============================================================= -*-Perl-*-
-#
-# Template::Plugin::Format
+#==============================================================================
+# 
+# Template::Plugin::Pod
 #
 # DESCRIPTION
-#
-#   Simple Template Toolkit Plugin which creates formatting functions.
+#  Pod parser and object model.
 #
 # AUTHOR
 #   Andy Wardley   <abw@kfs.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 2000 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
-package Template::Plugin::Format;
+package Template::Plugin::Pod;
 
 require 5.004;
 
 use strict;
-use vars qw( @ISA $VERSION );
+use vars qw( $VERSION );
 use base qw( Template::Plugin );
-use Template::Plugin;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
+use Pod::POM;
+
+#------------------------------------------------------------------------
+# new($context, \%config)
+#------------------------------------------------------------------------
 
 sub new {
-    my ($class, $context, $format) = @_;;
-    return defined $format
-	? make_formatter($format)
-	: \&make_formatter;
-}
+    my $class = shift;
+    my $context = shift;
 
-
-sub make_formatter {
-    my $format = shift;
-    $format = '%s' unless defined $format;
-    return sub { return sprintf($format, @_); }
+    Pod::POM->new(@_);
 }
 
 
@@ -67,21 +61,22 @@ __END__
 
 =head1 NAME
 
-Template::Plugin::Format - Plugin to create formatting functions
+Template::Plugin::Pod - Plugin interface to Pod::POM (Pod Object Model)
 
 =head1 SYNOPSIS
 
-    [% USE format %]
-    [% commented = format('# %s') %]
-    [% commented('The cat sat on the mat') %]
-    
-    [% USE bold = format('<b>%s</b>') %]
-    [% bold('Hello') %]
+    [% USE Pod(podfile) %]
+
+    [% FOREACH head1 = Pod.head1;
+	 FOREACH head2 = head1/head2;
+	   ...
+         END;
+       END
+    %]
 
 =head1 DESCRIPTION
 
-The format plugin constructs sub-routines which format text according to
-a printf()-like format string.
+This plugin is an interface to the Pod::POM module.
 
 =head1 AUTHOR
 
@@ -103,6 +98,6 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template::Plugin|Template::Plugin>
+L<Template::Plugin|Template::Plugin>, L<Pod::POM|Pod::POM>
 
 

@@ -39,9 +39,31 @@ Template::Library::HTML - Template library for basic HTML pages
 
 =head1 DESCRIPTION
 
+B<NOTE:> This documentation is incomplete and may be incorrect
+in places. 
+
 The 'html' template library is distributed as part of the Template
 Toolkit.  It can be found in the 'templates' sub-directory of the
-distribution directory.
+installation directory.
+
+    use Template;
+
+    my $tt2 = Template->new({
+	INCLUDE_PATH => '/usr/local/tt2/templates',
+    });
+
+For a portable way to determine the installation 'templates' directory,
+you can use the C<Template::Config-E<gt>instdir()> class method.
+
+    use Template;
+
+    my $tt2 = Template->new({
+	INCLUDE_PATH => Template::Config->instdir('templates'),
+    });
+
+You should now be able to access the html library as, for example:
+
+    [% INCLUDE html/header %]
 
 Note that some of the more basic elements don't give you much more
 than the raw HTML tags.  In many cases you might be well advised to
@@ -82,17 +104,19 @@ E<lt>htmlE<gt> to the opening E<lt>bodyE<gt>.
 	 bgcol = '#ffffff'
     %]
 
-Additional header items can be provided by explicitly setting the 'content'
-variable, or by use of the WRAPPER directive.
+Additional header items can be provided by explicitly setting the 'headers'
+variable, e.g.
 
-    [% WRAPPER html/header
-	 title = 'This is a Test'
-	 bgcol = '#ffffff'
-    %]
+    [% headers = BLOCK %]
     <META name="description" content="Template Toolkit">
     <META name="REVISIT-AFTER" content="14 days">	
     <META name="keywords" content="Templates, Web, ...etc...">
     [% END %]
+
+    [% INCLUDE html/header
+	 title = 'This is a Test'
+	 bgcol = '#ffffff'
+    %]
 
 =item footer
 
@@ -110,7 +134,7 @@ E<lt>/htmlE<gt> element to balance the header.
 The 'page' element combines the 'html/header' and 'html/footer' elements.
 
     [% WRAPPER html/page %]
-    
+
     ...page content here...
 
     [% END %]
@@ -253,10 +277,6 @@ The box element is a wrapping of html/table + html/row + html/cell
        Hello World!
     [% END %]
 
-=item panel
-
-TODO 
-
 =back
 
 =head1 AUTHOR
@@ -267,7 +287,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 9th March 2000.
+Template Toolkit version 2.01, released on 28th March 2001.
 
 =head1 COPYRIGHT
 

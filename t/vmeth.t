@@ -284,3 +284,16 @@ foo_bar_baz
 %]
 -- expect --
 99
+
+
+-- stop --
+
+-- test --
+[% var = 'foo'; var.replace('f(o+)$', 'b$1') %]
+-- expect --
+boo
+
+-- test --
+[% var = 'foo|bar/baz'; var.replace('(fo+)|(bar)(.*)$', '[ $1 | $2 | $3 ]') %]
+-- expect --
+[ foo | bar | ]

@@ -34,7 +34,6 @@ use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG    = 0 unless defined $DEBUG;
 $ERROR    = '';
-$INSTDIR  = '';
 $CONTEXT  = 'Template::Context';
 $FILTERS  = 'Template::Filters';
 $ITERATOR = 'Template::Iterator';
@@ -43,6 +42,9 @@ $PLUGINS  = 'Template::Plugins';
 $PROVIDER = 'Template::Provider';
 $SERVICE  = 'Template::Service';
 $STASH    = 'Template::Stash';
+
+# the following is set at installation time by the Makefile.PL 
+$INSTDIR  = '/usr/local/tt2';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -342,6 +344,23 @@ Returns an object reference or undef on error, as above.
 
 Instantiate a new template service object (default: Template::Service).
 Returns an object reference or undef on error, as above.
+
+=head2 instdir($dir)
+
+Returns the root directory of the Template Toolkit installation under
+which optional components are installed.  Any relative directory specified
+as an argument will be appended to the returned directory.
+
+    # e.g. returns '/usr/local/tt2'
+    my $ttroot = Template::Config->instdir()
+	|| die "$Template::Config::ERROR\n";
+
+    # e.g. returns '/usr/local/tt2/templates'
+    my $template = Template::Config->instdir('templates')
+	|| die "$Template::Config::ERROR\n";
+
+Returns undef and sets $Template::Config::ERROR appropriately if the 
+optional components of the Template Toolkit have not been installed.
 
 =head1 AUTHOR
 

@@ -114,5 +114,25 @@ mid
 pre
 mid
 
+-- test --
+[% a = "C'est un test"; a %]
+-- expect --
+C'est un test
 
+-- test --
+[% META title = "C'est un test" -%]
+[% component.title -%]
+-- expect --
+C'est un test
 
+-- test --
+[% META title = 'C\'est un autre test' -%]
+[% component.title -%]
+-- expect --
+C'est un autre test
+
+-- test --
+[% META title = "C'est un \"test\"" -%]
+[% component.title -%]
+-- expect --
+C'est un "test"

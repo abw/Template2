@@ -388,8 +388,8 @@ sub perl_filter_factory {
 
     return sub {
 	my $text = shift;
-	$Template::Perl::context = $context;
-	$Template::Perl::stash = $stash;
+	local($Template::Perl::context) = $context;
+	local($Template::Perl::stash)   = $stash;
 	my $out = eval <<EOF;
 package Template::Perl; 
 \$stash = \$context->stash(); 
@@ -420,11 +420,6 @@ sub redirect_filter_factory {
 	my $outpath = $context->config->{ OUTPUT_PATH }
 	    || return '';
 	$outpath .= "/$file";
-#	local *FP;
-#	open(FP, ">$outpath") 
-#	    || die Template::Exception->new('file', "$file: $!");
-#	print FP $text;
-#	close(FP);
         my $error = Template::_output($outpath, $text);
 	die Template::Exception->new('redirect', $error)
 	    if $error;
@@ -673,7 +668,7 @@ output:
 
 Folds the input to lower case.
 
-    [% "Hello World" | FILTER upper %]
+    [% "Hello World" | FILTER lower %]
 
 output:
 
@@ -915,7 +910,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 9th March 2000.
+Template Toolkit version 2.01, released on 28th March 2001.
 
 =head1 COPYRIGHT
 

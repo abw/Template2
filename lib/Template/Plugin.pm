@@ -360,11 +360,11 @@ MyClient object, primed to communicate with the creating MyServer.
 
 =head1 Template::Plugin Delegation
 
-As of version 2.01, the Template::Plugin module no provides an
-AUTOLOAD method to delegate to other objects or classes.  This 
-was a badly designed featured that caused more trouble than good.
-You can easily add your own AUTOLOAD method to perform delegation
-if you require this kind of functionality.
+As of version 2.01, the Template::Plugin module no longer provides an
+AUTOLOAD method to delegate to other objects or classes.  This was a
+badly designed featured that caused more trouble than good.  You can
+easily add your own AUTOLOAD method to perform delegation if you
+require this kind of functionality.
 
 =head1 AUTHOR
 
@@ -374,7 +374,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 9th March 2000.
+Template Toolkit version 2.01, released on 28th March 2001.
 
 =head1 COPYRIGHT
 

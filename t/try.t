@@ -616,3 +616,31 @@ up error - feeling sick
 -- expect --
 up error - feeling sick
 
+-- test --
+[% TRY; THROW food 'cabbage'; CATCH DEFAULT; "caught $e.info"; END %]
+-- expect --
+caught cabbage
+
+
+-- test --
+[%  TRY; 
+	THROW food 'cabbage'; 
+     CATCH food; 
+	"caught food: $e.info\n";
+     CATCH DEFAULT;
+	"caught default: $e.info";
+     END
+ %]
+-- expect --
+caught food: cabbage
+
+-- test --
+[% TRY;
+     PROCESS no_such_file;
+   CATCH;
+     "error: $error\n";
+   END;
+%]
+-- expect --
+error: file error - no_such_file: not found
+
