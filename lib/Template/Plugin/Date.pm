@@ -117,7 +117,8 @@ sub format {
         # some systems expect locales to have a particular suffix
         for my $suffix ('', @LOCALE_SUFFIX) {
             my $try_locale = $locale.$suffix;
-            if ($try_locale eq &POSIX::setlocale(&POSIX::LC_ALL, $try_locale)) {
+	    my $setlocale = &POSIX::setlocale(&POSIX::LC_ALL, $try_locale);
+            if (defined $setlocale && $try_locale eq $setlocale) {
                 $locale = $try_locale;
                 last;
             }
