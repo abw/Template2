@@ -61,4 +61,7 @@
     tt_start_tag = "<b>[\%"
     tt_end_tag   = "%\]</b>";
     tt_homepage  = 'http://www.template-toolkit.org/';
+
+    SET splash.style.select.col.fore = splash_fg IF splash_fg;
+    SET splash.style.default.col.fore = splash_bg IF splash_bg;
 -%]

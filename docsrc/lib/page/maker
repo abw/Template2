@@ -9,7 +9,17 @@
     pod  = xpage.podfile 
       or ( book.prefix ? "$book.prefix/${file}${ext}"
     		       : "${file}${ext}" );
-    
+
+    IF xpage.module;
+	PERL
+-%]
+my $mod = $stash->get('name');
+my $ver = eval "require $mod; \$$mod\::VERSION;";
+$stash->set('modver' => $ver);
+[%-
+	END;
+    END;
+
     page = {
     	id      = id
     	name    = name
@@ -18,6 +28,8 @@
     	author  = xpage.author or 'abw'
     	nofoot  = xpage.nofoot
     	seealso = xpage.seealso
+        module  = xpage.module
+	version = modver
     	podfile = pod
     	podname = pod.replace('\/', '::').replace('\.pod$', '')
 	about   = xpage.about or xcontent(xpage, 'about')

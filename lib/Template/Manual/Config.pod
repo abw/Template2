@@ -339,8 +339,7 @@ template files are located.  When a template is requested that isn't
 defined locally as a BLOCK, each of the INCLUDE_PATH directories is
 searched in turn to locate the template file.  Multiple directories
 can be specified as a reference to a list or as a single string where
-each directory is delimited by ':'. The DELIMITER option can be set
-to redefine the delimiter value.
+each directory is delimited by ':'.
 
     my $template = Template->new({
         INCLUDE_PATH => '/usr/local/templates',
@@ -355,22 +354,39 @@ to redefine the delimiter value.
                           '/tmp/my/templates' ],
     });
 
+On Win32 systems, a little extra magic is invoked, ignoring delimiters
+that have ':' followed by a '/' or '\'.  This avoids confusion when using
+directory names like 'C:\Blah Blah'.
 
 
 
 =item DELIMITER
 
 Used to provide an alternative delimiter character sequence for 
-separating paths specified in the INCLUDE_PATH.  May be useful for 
-operating systems that permit the use of ':' in file names.
+separating paths specified in the INCLUDE_PATH.  The default
+value for DELIMITER is ':'.
 
     # tolerate Silly Billy's file system conventions
     my $template = Template->new({
-	DELIMITER    => ' ',
-        INCLUDE_PATH => 'C:/HERE/NOW D:/THERE/THEN',
+	DELIMITER    => '; ',
+        INCLUDE_PATH => 'C:/HERE/NOW; D:/THERE/THEN',
     });
 
     # better solution: install Linux!  :-)
+
+On Win32 systems, the default delimiter is a little more intelligent,
+splitting paths only on ':' characters that aren't followed by a '/'.
+This means that the following should work as planned, splitting the 
+INCLUDE_PATH into 2 separate directories, C:/foo and C:/bar.
+
+    # on Win32 only
+    my $template = Template->new({
+	INCLUDE_PATH => 'C:/Foo:C:/Bar'
+    });
+
+However, if you're using Win32 then it's recommended that you
+explicitly set the DELIMITER character to something else (e.g. ';')
+rather than rely on this subtle magic.
 
 
 
@@ -388,6 +404,13 @@ name will cause a 'file' exception to be raised.
 
     # this is why it's disabled by default
     [% INSERT /etc/passwd %]
+
+On Win32 systems, the regular expression for matching absolute 
+pathnames is tweaked slightly to also detect filenames that start
+with a driver letter and colon, such as:
+
+    C:/Foo/Bar
+
 
 
 
@@ -1043,6 +1066,27 @@ would create the following directory structure:
 Files loaded from different INCLUDE_PATH directories will have their
 compiled forms save in the relevant COMPILE_DIR directory.
 
+On Win32 platforms a filename may by prefixed by a drive letter and
+colon.  e.g.
+
+    C:/My Templates/header
+
+The colon will be silently stripped from the filename when it is added
+to the COMPILE_DIR value(s) to prevent illegal filename being generated.
+Any colon in COMPILE_DIR elements will be left intact.  For example:
+
+    # Win32 only
+    my $template = Template->new({
+	DELIMITER    => ';',
+	COMPILE_DIR  => 'C:/TT2/Cache',
+	INCLUDE_PATH => 'C:/TT2/Templates;D:/My Templates',
+    });
+
+This would create the following cache directories:
+
+    C:/TT2/Cache/C/TT2/Templates
+    C:/TT2/Cache/D/My Templates
+
 
 =back
 
@@ -1601,7 +1645,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT
 

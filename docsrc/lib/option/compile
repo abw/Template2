@@ -75,3 +75,24 @@ would create the following directory structure:
 
 Files loaded from different INCLUDE_PATH directories will have their
 compiled forms save in the relevant COMPILE_DIR directory.
+
+On Win32 platforms a filename may by prefixed by a drive letter and
+colon.  e.g.
+
+    C:/My Templates/header
+
+The colon will be silently stripped from the filename when it is added
+to the COMPILE_DIR value(s) to prevent illegal filename being generated.
+Any colon in COMPILE_DIR elements will be left intact.  For example:
+
+    # Win32 only
+    my [* obj *] = [* pkg *]->new({
+	DELIMITER    => ';',
+	COMPILE_DIR  => 'C:/TT2/Cache',
+	INCLUDE_PATH => 'C:/TT2/Templates;D:/My Templates',
+    });
+
+This would create the following cache directories:
+
+    C:/TT2/Cache/C/TT2/Templates
+    C:/TT2/Cache/D/My Templates

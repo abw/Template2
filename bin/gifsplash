@@ -33,7 +33,7 @@ $dest ||= "$inst/images/splash";
 
 if ($verbose) {
     print STDERR <<EOF;
-Weaving the Rainbow: blowing colour into Splash! GIFs
+Weaving the rainbow: blowing colour into Splash! GIFs
    src: $src
   dest: $dest/*
 EOF
@@ -119,14 +119,18 @@ EOF
 
 #------------------------------------------------------------------------
 __END__
-[%  "  " | stderr IF verbose;
+[%  "Bursting into colour...\n  " | stderr IF verbose;
+    n = 0;
     FOREACH col = rgb.keys; 
 	"\n  " | stderr IF verbose and ! loop.count % 8;
 	NEXT IF rgb.${col}.keys;
 	"$col, " | stderr IF verbose;
 	FOREACH gifname = gifs.keys;
-   	    colour(gifs.$gifname, rgb.$col) | redirect("$col/$gifname");
+   	    colour(gifs.$gifname, rgb.$col) | redirect("$col/$gifname", 1);
 	END;
+	n = n + 1;
     END;
-    "\n" | stderr IF verbose;
+    "\nGenerated $n background colours\n\n" | stderr IF verbose;
 %]
+
+

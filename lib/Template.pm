@@ -129,7 +129,7 @@ sub _init {
 #------------------------------------------------------------------------
 
 sub _output {
-    my ($where, $text) = @_;
+    my ($where, $text, $binmode) = @_;
     my $reftype;
     my $error = 0;
     
@@ -161,6 +161,7 @@ sub _output {
 	    ($error = $@) =~ s/ at \S+ line \d+\n?$//;
 	}
 	elsif (open(FP, ">$where")) { 
+	    binmode FP if $binmode;
 	    print FP $text;
 	    close FP;
 	}
@@ -885,7 +886,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT
 

@@ -210,7 +210,7 @@ on which this is based.  Andy Wardley E<lt>abw@kfs.orgE<gt> split it into
 separate File and Directory plugins, added some extra code and documentation
 for VIEW support, and made a few other minor tweaks.
 
-[* PROCESS misc/version *] 
+[* PROCESS misc/version *]
 
 =head1 COPYRIGHT
 
@@ -219,5 +219,3 @@ modify it under the same terms as Perl itself.
 
 [* PROCESS misc/seealso
     seealso=page.seealso *]
-
-

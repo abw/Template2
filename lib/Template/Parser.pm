@@ -1259,7 +1259,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+2.10, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
  
 

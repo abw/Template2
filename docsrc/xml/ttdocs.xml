@@ -201,24 +201,28 @@
 	<page id="Base" 
 	      name="Template::Base"
 	      about="Base class module implementing common functionality"
+	      module="1"
 	      seealso="Template"/>
 
 	<!-- Template::Config -->
 	<page id="Config" 
 	      name="Template::Config" 
 	      about="Factory module for instantiating other TT2 modules"
+	      module="1"
 	      seealso="Template"/>
 
 	<!-- Template::Constants -->
 	<page id="Constants" 
 	      name="Template::Constants"
 	      about="Defines constants for the Template Toolkit"
+	      module="1"
 	      seealso="Template, CPAN::Exporter"/>
 
 	<!-- Template::Context -->
 	<page id="Context" 
 	      name="Template::Context"
 	      about="Runtime context in which templates are processed"
+	      module="1"
 	      seealso="Template, Template::Document, Template::Exception, 
 	          Template::Filters, Template::Plugins, Template::Provider, 
 	          Template::Service, Template::Stash" />
@@ -227,24 +231,28 @@
 	<page id="Document" 
 	      name="Template::Document"
 	      about="Compiled template document object"
+	      module="1"
 	      seealso="Template, Template::Parser" />
 
 	<!-- Template::Exception -->
 	<page id="Exception" 
 	      name="Template::Exception"
 	      about="Exception handling class module"
+	      module="1"
 	      seealso="Template, Template::Context"/>
 
 	<!-- Template::Filters -->
 	<page id="Filters" 
 	      name="Template::Filters"
 	      about="Post-processing filters for template blocks"
+	      module="1"
 	      seealso="Template, Template::Context"/>
 
 	<!-- Template::Iterator -->
 	<page id="Iterator" 
 	      name="Template::Iterator"
 	      about="Data iterator used by the FOREACH directive"
+	      module="1"
 	      seealso="Template"/>
 
 	<!-- Template::Parser -->
@@ -252,24 +260,28 @@
 	      name="Template::Parser"
 	      about="LALR(1) parser for compiling template documents"
 	      seealso="Template, Template::Grammar, Template::Directive"
+	      module="1"
 	      nofoot="1" />
 
 	<!-- Template::Plugin -->
 	<page id="Plugin" 
 	      name="Template::Plugin"
 	      about="Base class for Template Toolkit plugins"
+	      module="1"
 	      seealso="Template, Template::Plugins, Template::Context"/>
 
 	<!-- Template::Plugins -->
 	<page id="Plugins" 
 	      name="Template::Plugins"
 	      about="Plugin provider module"
+	      module="1"
 	      seealso="Template, Template::Plugin, Template::Context"/>
 
 	<!-- Template::Provider -->
 	<page id="Provider" 
 	      name="Template::Provider"
 	      about="Provider module for loading/compiling templates"
+	      module="1"
 	      seealso="Template, Template::Parser, Template::Context"/>
 
 	<!-- Template::Service -->
@@ -277,17 +289,20 @@
 	      name="Template::Service"
 	      about="General purpose template processing service"
 	      seealso="Template, Template::Context"/>
+	      module="1"
 
 	<!-- Template::Stash -->
 	<page id="Stash" 
 	      name="Template::Stash"
 	      about="Magical storage for template variables"
+	      module="1"
 	      seealso="Template, Template::Context"/>
 
 	<!-- Template::Test -->
 	<page id="Test" 
 	      name="Template::Test"
 	      about="Module for automating TT2 test scripts"
+	      module="1"
 	      seealso="Template"/>
 
 	<!-- Template::Plugin::Autoformat -->
@@ -295,12 +310,14 @@
 	      name="Template::Plugin::Autoformat"
 	      about="Interface to Text::Autoformat module"
 	      seealso="Template::Plugin, Text::Autoformat"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::CGI -->
 	<page id="Plugin_CGI" 
 	      name="Template::Plugin::CGI"
 	      about="Interface to the CGI module"
+	      module="1"
 	      seealso="Template::Plugin, CPAN::CGI"/>
 
 	<!-- Template::Plugin::DBI -->
@@ -308,12 +325,14 @@
 	      name="Template::Plugin::DBI"
 	      about="Interface to the DBI module"
 	      seealso="Template::Plugin, CPAN::DBI"
+	      module="1"
               nofoot="1"/>
 
 	<!-- Template::Plugin::Datafile -->
 	<page id="Plugin_Datafile" 
 	      name="Template::Plugin::Datafile"
 	      about="Plugin to construct records from a simple data file"
+	      module="1"
 	      seealso="Template::Plugin"/>
 
 	<!-- Template::Plugin::Date -->
@@ -321,6 +340,7 @@
 	      name="Template::Plugin::Date"
 	      about="Plugin to generate formatted date strings"
 	      seealso="Template::Plugin, CPAN::POSIX"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::Directory -->
@@ -329,6 +349,7 @@
 	      about="Plugin for generating directory listings"
 	      seealso="Template::Plugin, Template::Plugin::File, 
 		       Template::View"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::Dumper -->
@@ -336,12 +357,14 @@
 	      name="Template::Plugin::Dumper"
 	      about="Plugin interface to Data::Dumper"
 	      seealso="Template::Plugin, Data::Dumper"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::File -->
 	<page id="Plugin_File" 
 	      name="Template::Plugin::File"
 	      about="Plugin providing information about files"
+	      module="1"
 	      seealso="Template::Plugin, Template::Plugin::Directory, 
 		       Template::View"
 	      nofoot="1"/>
@@ -350,36 +373,42 @@
 	<page id="Plugin_Format" 
 	      name="Template::Plugin::Format"
 	      about="Plugin to create formatting functions"
+	      module="1"
 	      seealso="Template::Plugin"/>
 
 	<!-- Template::Plugin::Iterator -->
 	<page id="Plugin_Iterator" 
 	      name="Template::Plugin::Iterator"
 	      about="Plugin to create iterators (Template::Iterator)"
+	      module="1"
 	      seealso="Template::Plugin, Template::Iterator"/>
 
 	<!-- Template::Plugin::Pod -->
 	<page id="Plugin_Pod" 
 	      name="Template::Plugin::Pod"
 	      about="Plugin interface to Pod::POM (Pod Object Model)"
+	      module="1"
 	      seealso="Template::Plugin, Pod::POM"/>
 
 	<!-- Template::Plugin::Table -->
 	<page id="Plugin_Table" 
 	      name="Template::Plugin::Table"
 	      about="Plugin to present data in a table"
+	      module="1"
 	      seealso="Template::Plugin"/>
 
 	<!-- Template::Plugin::URL -->
 	<page id="Plugin_URL" 
 	      name="Template::Plugin::URL"
 	      about="Plugin to construct complex URLs"
+	      module="1"
 	      seealso="Template::Plugin"/>
 
 	<!-- Template::Plugin::View -->
 	<page id="Plugin_View" 
 	      name="Template::Plugin::View"
 	      about="Plugin to create views (Template::View)"
+	      module="1"
 	      seealso="Template::Plugin, Template::View"/>
 
 	<!-- Template::Plugin::Wrap -->
@@ -387,6 +416,7 @@
 	      name="Template::Plugin::Wrap"
 	      about="Plugin interface to Text::Wrap"
 	      seealso="Template::Plugin, Text::Wrap"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::XML::DOM -->
@@ -394,6 +424,7 @@
 	      name="Template::Plugin::XML::DOM"
 	      about="Plugin interface to XML::DOM"
 	      seealso="Template::Plugin, XML::DOM, XML::Parser"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::XML::RSS -->
@@ -401,6 +432,7 @@
 	      name="Template::Plugin::XML::RSS"
 	      about="Plugin interface to XML::RSS"
 	      seealso="Template::Plugin, XML::RSS, XML::Parser"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::XML::Simple -->
@@ -408,6 +440,7 @@
 	      name="Template::Plugin::XML::Simple"
 	      about="Plugin interface to XML::Simple"
 	      seealso="Template::Plugin, XML::Simple, XML::Parser"
+	      module="1"
 	      nofoot="1"/>
 
 	<!-- Template::Plugin::XML::XPath -->
@@ -415,6 +448,7 @@
 	      name="Template::Plugin::XML::XPath"
 	      about="Plugin interface to XML::XPath"
 	      seealso="Template::Plugin, XML::XPath, XML::Parser"
+	      module="1"
 	      nofoot="1"/>
     </book>
 

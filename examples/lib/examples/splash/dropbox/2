@@ -1,6 +1,13 @@
+[% title = INCLUDE splash/text 
+     col     = 'white' 
+     bold    = 1
+     content = 'Towns' 
+%]
+
 [% WRAPPER splash/dropbox 
-     title  = "Towns"
      align  = "center"
+     col    = 'scarlet'
+     edge   = 'scarlet'
      fill   = 'grey75'
      pad    = 5
      border = 1

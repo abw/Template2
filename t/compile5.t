@@ -36,7 +36,8 @@ my $ttcfg = {
 };
 
 # check compiled template files exist
-my ($foo, $bar) = map { "$cdir/$dir/src/$_.ttc" } qw( foo complex );
+my ($foo, $bar) = map { $dir =~ s[:][]g if ($^O =~ /win/i);
+			"$cdir/$dir/src/$_.ttc" } qw( foo complex );
 ok( -f $foo );
 ok( -f $bar );
 

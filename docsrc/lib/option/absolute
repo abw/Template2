@@ -18,3 +18,10 @@ name will cause a 'file' exception to be raised.
     # this is why it's disabled by default
     [% INSERT /etc/passwd %]
 
+On Win32 systems, the regular expression for matching absolute 
+pathnames is tweaked slightly to also detect filenames that start
+with a driver letter and colon, such as:
+
+    C:/Foo/Bar
+
+

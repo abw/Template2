@@ -96,7 +96,7 @@ sub fetch {
 	$data = $data->{ data }
 	    unless $error;
     }
-    elsif ($name =~ m[^/]) {
+    elsif (($name =~ m[^/]) || (($^O =~ /win/i) && ($name =~ m[^(\w:)?/]))) {
 	# absolute paths (starting '/') allowed if ABSOLUTE set
 	($data, $error) = $self->{ ABSOLUTE } 
 	    ? $self->_fetch($name) 
@@ -156,7 +156,7 @@ sub load {
     my ($data, $error);
     my $path = $name;
 
-    if ($name =~ m[^/]) {
+    if (($name =~ m[^/]) || (($^O =~ /win/i) && ($name =~ m[^(\w:)?/]))) {
 	# absolute paths (starting '/') allowed if ABSOLUTE set
 	$error = "$name: absolute paths are not allowed (set ABSOLUTE option)" 
 	    unless $self->{ ABSOLUTE };
@@ -264,10 +264,14 @@ sub _init {
     my $path = $params->{ INCLUDE_PATH } || '.';
     my $cdir = $params->{ COMPILE_DIR  } || '';
     my $dlim = $params->{ DELIMITER    };
-    $dlim = ':' unless defined $dlim;
+
+    # tweak delim to ignore C:/
+    unless (defined $dlim) {
+	$dlim = ($^O =~ /win/i) ? ':(?!\\/)' : ':';
+    }
 
     # coerce INCLUDE_PATH to an array ref, if not already so
-    $path = [ split($dlim, $path) ]
+    $path = [ split(/$dlim/, $path) ]
 	unless ref $path eq 'ARRAY';
 
     # don't allow a CACHE_SIZE 1 because it breaks things and the 
@@ -287,7 +291,9 @@ sub _init {
     if ($cdir) {
 	require File::Path;
 	foreach my $dir (@$path) {
-	    &File::Path::mkpath("$cdir/$dir");
+	    my $wdir = $dir;
+	    $wdir =~ s[:][]g if ($^O =~ /win/i);
+	    &File::Path::mkpath("$cdir/$wdir");
 	}
 	# ensure $cdir is terminated with '/' for subsequent path building
 	$cdir .= '/';
@@ -404,7 +410,9 @@ sub _fetch_path {
 	    }
 	    elsif (-f $path) {
 		if ($compext || $compdir) {
-		    $compiled = "$compdir$path$compext";
+		    my $wpath = $path;
+		    $wpath =~ s[:][]g if $^O =~ /win/i;
+		    $compiled = "$compdir$wpath$compext";
 		    $compiled =~ s[//][/]g;
 		}
 		if ($compiled && -f $compiled
@@ -854,8 +862,7 @@ template files are located.  When a template is requested that isn't
 defined locally as a BLOCK, each of the INCLUDE_PATH directories is
 searched in turn to locate the template file.  Multiple directories
 can be specified as a reference to a list or as a single string where
-each directory is delimited by ':'. The DELIMITER option can be set
-to redefine the delimiter value.
+each directory is delimited by ':'.
 
     my $provider = Template::Provider->new({
         INCLUDE_PATH => '/usr/local/templates',
@@ -870,22 +877,39 @@ to redefine the delimiter value.
                           '/tmp/my/templates' ],
     });
 
+On Win32 systems, a little extra magic is invoked, ignoring delimiters
+that have ':' followed by a '/' or '\'.  This avoids confusion when using
+directory names like 'C:\Blah Blah'.
 
 
 
 =item DELIMITER
 
 Used to provide an alternative delimiter character sequence for 
-separating paths specified in the INCLUDE_PATH.  May be useful for 
-operating systems that permit the use of ':' in file names.
+separating paths specified in the INCLUDE_PATH.  The default
+value for DELIMITER is ':'.
 
     # tolerate Silly Billy's file system conventions
     my $provider = Template::Provider->new({
-	DELIMITER    => ' ',
-        INCLUDE_PATH => 'C:/HERE/NOW D:/THERE/THEN',
+	DELIMITER    => '; ',
+        INCLUDE_PATH => 'C:/HERE/NOW; D:/THERE/THEN',
     });
 
     # better solution: install Linux!  :-)
+
+On Win32 systems, the default delimiter is a little more intelligent,
+splitting paths only on ':' characters that aren't followed by a '/'.
+This means that the following should work as planned, splitting the 
+INCLUDE_PATH into 2 separate directories, C:/foo and C:/bar.
+
+    # on Win32 only
+    my $provider = Template::Provider->new({
+	INCLUDE_PATH => 'C:/Foo:C:/Bar'
+    });
+
+However, if you're using Win32 then it's recommended that you
+explicitly set the DELIMITER character to something else (e.g. ';')
+rather than rely on this subtle magic.
 
 
 
@@ -903,6 +927,13 @@ name will cause a 'file' exception to be raised.
 
     # this is why it's disabled by default
     [% INSERT /etc/passwd %]
+
+On Win32 systems, the regular expression for matching absolute 
+pathnames is tweaked slightly to also detect filenames that start
+with a driver letter and colon, such as:
+
+    C:/Foo/Bar
+
 
 
 
@@ -1047,6 +1078,27 @@ would create the following directory structure:
 Files loaded from different INCLUDE_PATH directories will have their
 compiled forms save in the relevant COMPILE_DIR directory.
 
+On Win32 platforms a filename may by prefixed by a drive letter and
+colon.  e.g.
+
+    C:/My Templates/header
+
+The colon will be silently stripped from the filename when it is added
+to the COMPILE_DIR value(s) to prevent illegal filename being generated.
+Any colon in COMPILE_DIR elements will be left intact.  For example:
+
+    # Win32 only
+    my $provider = Template::Provider->new({
+	DELIMITER    => ';',
+	COMPILE_DIR  => 'C:/TT2/Cache',
+	INCLUDE_PATH => 'C:/TT2/Templates;D:/My Templates',
+    });
+
+This would create the following cache directories:
+
+    C:/TT2/Cache/C/TT2/Templates
+    C:/TT2/Cache/D/My Templates
+
 
 
 
@@ -1116,7 +1168,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+2.07, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT
 

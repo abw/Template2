@@ -25,12 +25,40 @@ $Template::Test::DEBUG = 0;
 
 ok(1);
 
+#------------------------------------------------------------------------
+package Stringy;
+
+use overload '""' => \&asString;
+
+sub asString {
+    my $self = shift;
+    return $$self;
+}
+
+sub new {
+    my ($class, $val) = @_;
+    return bless \$val, $class;
+}
+
+#------------------------------------------------------------------------
+package main;
+
 my $tt = [
     basic  => Template->new(),
     interp => Template->new(INTERPOLATE => 1),
 ];
 
-test_expect(\*DATA, $tt, callsign);
+my $vars = callsign();
+
+my $v2 = {
+    ref    => sub { my $a = shift; "$a\[" . ref($a) . ']' },
+    sfoo   => Stringy->new('foo'),
+    sbar   => Stringy->new('bar'),
+};
+
+@$vars{ keys %$v2 } = values %$v2;
+
+test_expect(\*DATA, $tt, $vars);
 
 __DATA__
 -- test --
@@ -136,3 +164,22 @@ C'est un autre test
 [% component.title -%]
 -- expect --
 C'est un "test"
+
+-- test --
+[% sfoo %]/[% sbar %]
+-- expect --
+foo/bar
+
+-- test --
+[%  s1 = "$sfoo"
+    s2 = "$sbar ";
+    s3  = sfoo;
+    ref(s1);
+    '/';
+    ref(s2);
+    '/';
+    ref(s3);
+-%]
+-- expect --
+foo[]/bar []/foo[Stringy]
+

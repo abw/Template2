@@ -216,19 +216,9 @@ The DBI plugin was written by Simon A Matthews,
 -%]
 <ul>
 
-<li><b>1.01  2000/11/03  abw</b><br>
+<li><b>1.04  2001/04/06  abw</b><br>
 <p>
-Modified connect method to pass all named arguments to DBI.  e.g.
-</p>
-<pre>    [% tt_start_tag %] USE DBI(dsn, user, pass, ChopBlanks=1) [% tt_end_tag %]</pre>
-
-
-
-<li><b>1.02  2000/11/14  abw</b><br>
-<p>
-Added prev() and next() methods to Template::Plugin::DBI:Iterator to
-return the previous and next items in the iteration set or undef if
-not available.
+Removed duplicated $VERSION number.
 </p>
 
 
@@ -246,6 +236,23 @@ being called by a subclassed object.
 Fixed the return value in the DBI plugin when connect is called more than
 once in the lifetime of the plugin.
 </p>
+
+
+
+<li><b>1.02  2000/11/14  abw</b><br>
+<p>
+Added prev() and next() methods to Template::Plugin::DBI:Iterator to
+return the previous and next items in the iteration set or undef if
+not available.
+</p>
+
+
+
+<li><b>1.01  2000/11/03  abw</b><br>
+<p>
+Modified connect method to pass all named arguments to DBI.  e.g.
+</p>
+<pre>    [% tt_start_tag %] USE DBI(dsn, user, pass, ChopBlanks=1) [% tt_end_tag %]</pre>
 
 
 </ul>

@@ -100,11 +100,22 @@ sub template {
 
 	# now it's time to ask the providers, so we look to see if any 
 	# prefix is specified to indicate the desired provider set.
-	if ($name =~ s/^(\w+)://o) {
-	    $providers = $self->{ PREFIX_MAP }->{ $1 } 
+	$prefix = undef;
+
+	if ($^O =~ /win/i) {
+	    $prefix = $1	# let C:/foo through
+		if $name =~ s/^(\w{2,})://o;
+	}
+	else {
+	    $prefix = $1 
+		if $name =~ s/^(\w+)://o;
+	}
+
+	if (defined $prefix) {
+	    $providers = $self->{ PREFIX_MAP }->{ $prefix } 
 		|| return $self->throw(Template::Constants::ERROR_FILE,
-				      "no providers for template prefix '$1'");
-#	    print STDERR "prefix identified: $1\n";
+				      "no providers for template prefix '$prefix'");
+#	    print STDERR "prefix identified: $prefix\n";
 	}
     }
     $providers = $self->{ LOAD_TEMPLATES } 
@@ -420,7 +431,7 @@ sub insert {
     my $files = ref $file eq 'ARRAY' ? $file : [ $file ];
 
     FILE: foreach $file (@$files) {
-	if ($file =~ s/^(\w+)://o) {
+	if ($file =~ s/^(\w{2,})://o) {
 	    $providers = $self->{ PREFIX_MAP }->{ $1 } 
 		|| return $self->throw(Template::Constants::ERROR_FILE,
 				      "no providers for file prefix '$1'");
@@ -1404,7 +1415,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+2.13, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT
 

@@ -61,9 +61,11 @@ e.g.
     [% tt_start_tag %] File.mode [% tt_end_tag %]
     ...</pre>
 <p>
-In addition, the 'user' and 'group' items are set to contain the 
-user and group names as returned by calls to getpwuid() and getgrgid()
-for the file 'uid' and 'gid' elements, respectively.  
+In addition, the 'user' and 'group' items are set to contain the user
+and group names as returned by calls to getpwuid() and getgrgid() for
+the file 'uid' and 'gid' elements, respectively.  On Win32 platforms
+on which getpwuid() and getgrid() are not available, these values are
+undefined.
 </p>
 <pre>    [% tt_start_tag %] USE File('/tmp/foo.html') [% tt_end_tag %]
     [% tt_start_tag %] File.uid [% tt_end_tag %]	# e.g. 500
@@ -271,7 +273,8 @@ for VIEW support, and made a few other minor tweaks.
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.02, released on 4th March 2001.
+2.05, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -37,9 +37,11 @@ e.g.
     [% File.mode %]
     ...
 
-In addition, the 'user' and 'group' items are set to contain the 
-user and group names as returned by calls to getpwuid() and getgrgid()
-for the file 'uid' and 'gid' elements, respectively.  
+In addition, the 'user' and 'group' items are set to contain the user
+and group names as returned by calls to getpwuid() and getgrgid() for
+the file 'uid' and 'gid' elements, respectively.  On Win32 platforms
+on which getpwuid() and getgrid() are not available, these values are
+undefined.
 
     [% USE File('/tmp/foo.html') %]
     [% File.uid %]	# e.g. 500

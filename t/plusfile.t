@@ -103,3 +103,4 @@ This is the foo file, a is [% a %]
 [% DEFAULT word = 'qux' -%]
 This is file baz
 The word is '[% word %]'
+

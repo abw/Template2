@@ -19,10 +19,6 @@
 # Miscellaneous
 #------------------------------------------------------------------------
 
-* Fix stringification problem identified by SAM.  Objects that have
-  auto-stringification sometimes don't get properly stringified at the
-  right time.  Need to check with SAM exactly what the problem is.
-
 * The 'eval' filter leaks memory, as reported by Colin Johnson.  The
   filter subroutine created contains a reference to the context and then
   gets cached in the FILTER_CACHE item of the context.  Hey presto -
@@ -30,9 +26,9 @@
   FILTER_CACHE.  Also need to check the plugins cache for similar
   problems.
 
-* default DELIMITER should be defined as a package var somewhere.  It's 
-  currently hardcoded in Template::Parser and Template::Context.  This
-  causes a problem on Win32 machine trying to use explicit paths.
+* The handling of the DELIMITER parameter could be improved.  At the 
+  moments it's hardcoded and hacked to Do The Right Thing for Win32
+  but I'd prefer it to Do The Good Thing.
 
 * If you use 'ttree' with a COMPILE_EXT or COMPILE_DIR option then
   templates in the 'lib' directories will be compiled, but those in
@@ -437,20 +433,18 @@ To include:
 * Clearly define API for different elements, allowing people to write
   apps to the API which run across different conformant widget sets.
 
-* support wider range of colours and general theme elements
+* support themes which define a set of styles
 
-* note that more colours, etc., means more images.  Even though each is
-  tiny, being less than 1k each, they soon add up.  Thus may be wise to
-  move Splash out to a separate distribution.
+* May be wise to move Splash out to a separate distribution.
 
 
 #------------------------------------------------------------------------
 # Test Suite
 #------------------------------------------------------------------------
 
-* t/xpath.t makes some silly platform-dependant assumptions about what
-  kind of error message gets returned when a file isn't found.  Reported
-  by <umun@yahoo.com>.
+* t/file.t and t/directry.t are currently disable on Win32 until I get
+  a chance to fix a couple of minor bugs relating to '/' vs '\' file
+  separators.
 
 
 #------------------------------------------------------------------------

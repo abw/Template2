@@ -356,7 +356,7 @@ sub read_config {
 			   ACTION => sub { 
 			       my ($state, $item, $file) = @_;
 			       $file = $state->cfg . "/$file" 
-				   unless $file =~ /^[\.\/]/;
+				   unless $file =~ /^[\.\/]|(?:\w:)/;
 			       $config->file($file) }  
 			   }
     );
@@ -623,7 +623,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+2.05, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT
 

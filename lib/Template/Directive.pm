@@ -159,7 +159,7 @@ sub text {
 sub quoted {
     my ($class, $items) = @_;
     return '' unless @$items;
-    return $items->[0] if scalar @$items == 1;
+    return ("('' . " . $items->[0] . ')') if scalar @$items == 1;
     return '(' . join(' . ', @$items) . ')';
 #    my $r = '(' . join(' . ', @$items) . ' . "")';
 #    print STDERR "[$r]\n";

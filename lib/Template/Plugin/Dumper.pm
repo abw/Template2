@@ -33,7 +33,7 @@ use Data::Dumper;
 use vars qw( $VERSION $DEBUG $AUTOLOAD );
 use base qw( Template::Plugin );
 
-$VERSION = sprintf("%.02f", (q$Revision$ =~ /(\d+.\d+)/) - 1);
+$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0 unless defined $DEBUG;
 
 #==============================================================================
@@ -159,7 +159,8 @@ Simon Matthews E<lt>sam@knowledgepool.comE<gt>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+0.00, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
  
 

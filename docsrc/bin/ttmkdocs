@@ -86,6 +86,7 @@ my $template = Template->new({
     PREFIX_MAP   => { src => 0, lib => 1, tt => 2 },
     OUTPUT_PATH  => $root,
     PRE_PROCESS  => 'config',
+    EVAL_PERL    => 1,
     FILTERS      => {
 	tt_tags  => \&tt_tags,
     },
@@ -131,6 +132,8 @@ __DATA__
 [%  # PROCESS banner | stderr UNLESS quiet;
     PROCESS help | stderr IF help;
     STOP IF help;
+
+   "Building documentation for Template Toolkit v$tt.version, $tt.release\n" | stderr;
 
     USE dom = XML.DOM;
     xmldom  = dom.parse(xmlfile);

@@ -101,8 +101,8 @@ sub new {
 	    || return $class->throw("$abs: $!");
 	@$self{ @STAT_KEYS } = @stat;
 	unless ($config->{ noid }) {
-	    $self->{ user  } = getpwuid( $self->{ uid }) || $self->{ uid };
-	    $self->{ group } = getgrgid( $self->{ gid }) || $self->{ gid };
+	    $self->{ user  } = eval { &getpwuid( $self->{ uid }) || $self->{ uid } };
+	    $self->{ group } = eval { getgrgid( $self->{ gid }) || $self->{ gid } };
 	}
 	$self->{ isdir } = -d $abs;
     }
@@ -199,9 +199,11 @@ e.g.
     [% File.mode %]
     ...
 
-In addition, the 'user' and 'group' items are set to contain the 
-user and group names as returned by calls to getpwuid() and getgrgid()
-for the file 'uid' and 'gid' elements, respectively.  
+In addition, the 'user' and 'group' items are set to contain the user
+and group names as returned by calls to getpwuid() and getgrgid() for
+the file 'uid' and 'gid' elements, respectively.  On Win32 platforms
+on which getpwuid() and getgrid() are not available, these values are
+undefined.
 
     [% USE File('/tmp/foo.html') %]
     [% File.uid %]	# e.g. 500
@@ -398,7 +400,8 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+2.05, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
 
 

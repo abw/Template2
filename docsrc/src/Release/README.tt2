@@ -429,6 +429,28 @@ generate the plain document style.  This generates a "text-only" HTML
 version, entirely free of graphics and embellished with no more 
 than textual navigatory links.
 
+If you do specify that you want to use the Splash! library then you
+will be prompted to select a colour scheme.
+
+    Which Splash! colour scheme would you like to use to build the
+    documentation?  Acceptable values are:
+
+      Name     Colours
+      -------------------------
+      default  lilac/mauve
+      aqua     aqua/marine
+      blue     grey75/blue75
+      green    grey75/green75
+      grey     grey75/grey50
+      red      grey75/red75
+
+    Enter name of Splash scheme:  [default] 
+
+You can see examples of these different colour schemes at the Template
+Toolkit web site, as above:
+
+    http://www.template-toolkit.org/docs/
+
 See the README in the 'docs' directory for instructions on building the 
 HTML documentation manually and/or customising the templates to your own
 requirements.
@@ -459,20 +481,14 @@ usual manner.
 
     make
 
-If you're installing the Template Toolkit on a Win32 machine, then 
-you should be using 'nmake' or an equivalent (e.g. 'dmake'?) instead.
-This is available from Microsoft's web site.
+If you're installing the Template Toolkit on a Win32 machine, then you
+should be using 'nmake' instead.  This is available from Microsoft's
+ftp site.
+
+    ftp://ftp.microsoft.com/Softlib/MSLFILES/nmake15.exe
 
 The 'make test' command runs the test scripts in the 't' subdirectory.
-There are known to be a few failures under certain conditions:
-
-  * The File and Directory plugins use the 'getpwuid' function which isn't
-    supported on Win32 (and other?) platforms.  Hence, the t/file.t and
-    t/directry.t tests will fail.
-
-  * Other known problems on Win32 systems: t/compile5.t and t/provider.t
-    will fail some tests due to the stupid author making silly 
-    assumptions about file systems.
+There is known to be at least one failures under certain conditions:
 
   * The Text::Autoformat plugin may fail on tests 23 and 25 with
     versions of Perl prior to 5.6.0 when using a locale which has a
@@ -764,14 +780,14 @@ Toolkit, please contact the author.
 VERSION COMPATABILITY
 ---------------------
 
-In language and feature terms, version 2.01 should be fully backwardly
-compatible with version 2.00.  Internally, the only significant difference
-is that the Template::Plugin base class no longer implements an AUTOLOAD
-method.  If you've written a plugin derived from the base class that
-relies on it (probably a bad idea anyway), then you'll need to add an
-AUTOLOAD of your own.
+In language and feature terms, versions 2.02 and 2.01 should be fully
+backwardly compatible with version 2.00.  Internally, the only
+significant difference is that the Template::Plugin base class no
+longer implements an AUTOLOAD method.  If you've written a plugin
+derived from the base class that relies on it (probably a bad idea
+anyway), then you'll need to add an AUTOLOAD of your own.
 
-Version 2 is backwardly compatible with version 1 in all but a few
+Version 2.00 is backwardly compatible with version 1 in all but a few
 minor areas.  The 'Changes' file details all the visible changes
 between version 1 and version 2, including deltas between alphas and
 betas.  Within this file there is a 'Gotchas' section which lists the

@@ -79,5 +79,14 @@
 	END ;
     END;
 
-    PROCESS splash/config
+    PROCESS splash/config;
+
+    IF splash_fg;
+	splash.style.select.col.fore = splash_fg 
+	splash.style.select.col.edge = splash_fg;
+    END;
+    IF splash_bg;
+	splash.style.default.col.fore = splash_bg;
+	splash.style.default.col.edge = splash_bg;
+    END;
 -%]

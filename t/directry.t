@@ -21,6 +21,11 @@ use Template::Test;
 use Cwd;
 $^W = 1;
 
+if ($^O =~ /win/i) {
+    print "1..0\n";
+    exit(0);
+}
+
 #$Template::Test::PRESERVE = 1;
 my $cwd = getcwd();
 my $dir = -d 't' ? 't/test/dir' : 'test/dir';

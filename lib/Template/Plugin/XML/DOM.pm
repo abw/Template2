@@ -655,7 +655,8 @@ library.
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+2.5, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
 
 

@@ -5,28 +5,56 @@ select STDERR;
 $| = 1;
 select STDOUT;
 
+use vars qw( $TT_INST_ROOT $TT_IMAGES $TT_RUN_DBI
+	     $TT_BUILD_DOCS $TT_SPLASH_DOCS $TT_EXAMPLES
+	     $TT_SPLASH_THEME );
+
+$TT_INST_ROOT    = '/usr/local/tt2';
+$TT_IMAGES       = '/tt2/images';
+$TT_RUN_DBI      = 'y';
+$TT_BUILD_DOCS   = 'y';
+$TT_SPLASH_DOCS  = 'y';
+$TT_EXAMPLES     = 'y';
+$TT_SPLASH_THEME = 'default';
+my $TT_SPLASH_FG    = '';
+my $TT_SPLASH_BG    = '';
+
+my $DEFAULTS_FILE   = '.defaults.cfg';
 my $DBI_CONFIG_FILE = 't/dbi_test.cfg';
-my $TT_INST_ROOT    = '/usr/local/tt2';   # should be more platform general
-my $TT_IMAGES       = '/tt2/images';      # and honour existing installation
-my $TT_BUILD_DOCS   = 'y';
-my $TT_SPLASH_DOCS  = 'y';
-my $TT_EXAMPLES     = 'y';
 my $TT_DOCS_CFG     = 'docs/ttree.cfg';
 my $TT_EXAMPLE_CFG  = 'examples/ttree.cfg';
+my $MAKE            = 'make';
 
 my $WIN32 = ($^O =~ /win/i);
 my $FLAVOUR = $WIN32 ? 'Win32' : 'Unix';
+my $DEFAULTS = '';
 
 if ($WIN32) {
     $TT_INST_ROOT = 'C:/Program Files/Template Toolkit 2';
+    $MAKE         = 'nmake';
 }
+
+if (-f $DEFAULTS_FILE) {
+    require $DEFAULTS_FILE;
+    $DEFAULTS = " read from '$DEFAULTS_FILE'";
+}
+
+my $SPLASH_STYLES = {
+    default => [ 'lilac',  'mauve'   ],
+    aqua    => [ 'aqua',   'marine'  ],
+    grey    => [ 'grey75', 'grey50'  ],
+    blue    => [ 'grey75', 'blue75'  ],
+    red     => [ 'grey75', 'red75'   ],
+    green   => [ 'grey75', 'green75' ],
+#    weedz   => [ 'bud',    'leaf'    ],
+};
 
 print <<EOF;
 
-                    Template Toolkit Version 2.01
+                    Template Toolkit Version 2.02
                     =============================
 
-Using $FLAVOUR defaults.
+Using $FLAVOUR defaults$DEFAULTS.
 EOF
 
 #------------------------------------------------------------------------
@@ -75,7 +103,7 @@ EOF
 }
 
 eval "use File::Spec";
-if ($@ or $File::Spec::VERSION < 0.82) {
+if ($@ or $File::Spec::VERSION < 0.8) {
     die(<<EOF);
 
 The Template Toolkit requires that the File::Spec module (version 0.82
@@ -263,10 +291,10 @@ EOF
     if ($TT_BUILD_DOCS) {
 	print <<EOF;
 
-If you want to build the HTML documentation using then the Splash!
-library then you'll need to make sure you correctly defined the URL
-for the Splash!  images above.  Otherwise, answer 'n' to the next
-question to use plain HTML.
+If you want to build the HTML documentation using the Splash! library
+then you'll need to make sure you correctly defined the URL for the
+Splash!  images above.  Otherwise, answer 'n' to the next question to
+use plain HTML.
 
 EOF
 	$TT_SPLASH_DOCS = ( 
@@ -275,8 +303,36 @@ EOF
 	);
 
 	if ($TT_SPLASH_DOCS) {
+	    my $splash_style = '';
+	    print <<EOF;
+
+Which Splash! colour scheme would you like to use to build the
+documentation?  Acceptable values are:
+
+EOF
+	    print "  Name     Colours\n  -------------------------\n";
+	    foreach my $t ('default', 
+			    grep { ! /^default$/ } sort keys %$SPLASH_STYLES) {
+		my $v = $SPLASH_STYLES->{ $t };
+		local $" = '/';
+		printf("  %-8s @$v\n", $t);
+	    } 
+	    print "\n";
+	
+	    while (! $splash_style) {
+		$TT_SPLASH_THEME = prompt("Enter name of colour scheme: ", $TT_SPLASH_THEME);
+		print("! No such scheme\n"), $TT_SPLASH_THEME = 'default'
+		    unless ($splash_style = $SPLASH_STYLES->{ $TT_SPLASH_THEME });
+	    }
+	    ($TT_SPLASH_BG, $TT_SPLASH_FG) = @$splash_style;
+
 	    $style = 'splash';
-	    $style_cfg = "\npre_process  = splash/config";
+	    $style_cfg = <<EOF;
+
+pre_process  = splash/config
+define splash_fg = '$TT_SPLASH_FG'
+define splash_bg = '$TT_SPLASH_BG'
+EOF
 	}
     }
 
@@ -342,6 +398,8 @@ src  = $TT_INST_ROOT/examples/src
 dest = $TT_INST_ROOT/examples/html
 lib  = $TT_INST_ROOT/examples/lib
 lib  = $TT_INST_ROOT/templates
+define splash_fg = '$TT_SPLASH_FG'
+define splash_bg = '$TT_SPLASH_BG'
 pre_process = config
 recurse
 verbose
@@ -349,8 +407,25 @@ EOF
 
     close(FP);
 }
+    #--------------------------------------------------------------------
+    # write configuration defaults to file
+    #--------------------------------------------------------------------
+    open(FP, "> $DEFAULTS_FILE") || die "$DEFAULTS_FILE: $!\n";
+    my ($ttdbi, $ttdocs, $ttsplash, $ttex) = map { $_ ? 'y' : 'n' } 
+	( $TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES );
+    print FP <<EOF;
+\$TT_INST_ROOT    = '$TT_INST_ROOT';
+\$TT_IMAGES       = '$TT_IMAGES';
+\$TT_RUN_DBI      = '$ttdbi';
+\$TT_BUILD_DOCS   = '$ttdocs';
+\$TT_SPLASH_DOCS  = '$ttsplash';
+\$TT_EXAMPLES     = '$ttex';
+\$TT_SPLASH_THEME = '$TT_SPLASH_THEME';
+EOF
+    close(FP);
 
 print "\n";
+
 
 #------------------------------------------------------------------------ 
 # build options and write Makefile
@@ -359,23 +434,23 @@ print "\n";
 package MY;
 
 sub postamble {
-    return '' unless $TT_INST_ROOT;
+    return '' unless $main::TT_INST_ROOT;
     my $amble =<<'EOF';
 tt2_install ::
-	@$(PERL) bin/tt2inst -v $(TT_INST_ROOT)
+	@$(PERL) bin/tt2inst -v "$(TT_INST_ROOT)"
 
 tt2_splash ::
 	@$(PERL) -I lib bin/gifsplash -v
 
 EOF
-    $amble .=<<EOF if $TT_BUILD_DOCS;
+    $amble .=<<EOF if $main::TT_BUILD_DOCS;
 tt2_html_docs ::
-	\@\$(PERL) bin/ttree -v -f \$(TT_INST_ROOT)/$TT_DOCS_CFG
+	\@\$(PERL) bin/ttree -v -f "\$(TT_INST_ROOT)/$TT_DOCS_CFG"
 
 EOF
-    $amble .=<<EOF if $TT_EXAMPLES;
+    $amble .=<<EOF if $main::TT_EXAMPLES;
 tt2_examples ::
-	\@\$(PERL) bin/ttree -v -f \$(TT_INST_ROOT)/$TT_EXAMPLE_CFG
+	\@\$(PERL) bin/ttree -v -f "\$(TT_INST_ROOT)/$TT_EXAMPLE_CFG"
 
 EOF
     return $amble;
@@ -385,18 +460,18 @@ sub install {
     my $class = shift;
     my $basic = $class->SUPER::install(@_);
     my $add   = 'tt2_install tt2_splash';
-    $add .= ' tt2_html_docs' if $TT_BUILD_DOCS;
-    $add .= ' tt2_examples' if $TT_EXAMPLES;
+    $add .= ' tt2_html_docs' if $main::TT_BUILD_DOCS;
+    $add .= ' tt2_examples' if $main::TT_EXAMPLES;
     $basic =~ s/^(install\s+::\s+.*)$/$1 $add/m
-	if $TT_INST_ROOT;
+	if $main::TT_INST_ROOT;
     $basic;
 }
 
 sub constants {
     my $class = shift;
     my $basic = $class->SUPER::constants(@_);
-    $basic = "TT_INST_ROOT = $TT_INST_ROOT\n$basic"
-	if $TT_INST_ROOT;
+    $basic = "TT_INST_ROOT = $main::TT_INST_ROOT\n$basic"
+	if $main::TT_INST_ROOT;
     $basic;
 }
 
@@ -425,11 +500,13 @@ if ($ExtUtils::MakeMaker::VERSION >= 5.43) {
 
 WriteMakefile( %opts );
 
-print <<EOF;
+if ($WIN32) {
+    print <<EOF;
 
-Configuration complete.  You should now run 'make', 'make test' and then
-'make install'.  See the README file for further information.
+Configuration complete.  You should now run '$MAKE', '$MAKE test' and 
+then '$MAKE install'.   See the README file for further information.
 EOF
+}
 
 print <<EOF if $TT_BUILD_DOCS;
 
@@ -553,15 +630,15 @@ sub check_xpath {
 #------------------------------------------------------------------------
 
 sub dbi_config {
-    my ($dsn, $user, $pass, $run);
-    $run = 1;
+    my ($dsn, $user, $pass);
 
     print "[X] version $DBI::VERSION installed, configuring tests\n\n";
 
     if (prompt("Do you want to run the DBI tests?\n" .
 	       "It requires access to an existing test database.",
-	       "y") =~ /y/i) {
+	       $TT_RUN_DBI) =~ /y/i) {
 
+	$TT_RUN_DBI = 1;
 	my ($driver, $dbname);
 	my @drivers = DBI->available_drivers();
 	local $" = ', ';
@@ -607,13 +684,13 @@ EOF
 	$pass = '' unless defined $pass;
     }
     else {
-	$run = 0;
+        $TT_RUN_DBI = 0;
     }
 
     print "\nwriting $DBI_CONFIG_FILE\n";
     open(CFGFILE, ">$DBI_CONFIG_FILE") || die "$DBI_CONFIG_FILE: $!\n";
     print CFGFILE <<EOF;
-\$run  = $run;
+\$run  = $TT_RUN_DBI;
 \$dsn  = '$dsn';
 \$user = '$user';
 \$pass = '$pass';

@@ -408,7 +408,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub redirect_filter_factory {
-    my ($context, $file) = @_;
+    my ($context, $file, $binmode) = @_;
     my $outpath = $context->config->{ OUTPUT_PATH };
 
     return (undef, Template::Exception->new('redirect', 
@@ -420,7 +420,7 @@ sub redirect_filter_factory {
 	my $outpath = $context->config->{ OUTPUT_PATH }
 	    || return '';
 	$outpath .= "/$file";
-        my $error = Template::_output($outpath, $text);
+        my $error = Template::_output($outpath, $text, $binmode);
 	die Template::Exception->new('redirect', $error)
 	    if $error;
 	return '';
@@ -910,7 +910,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 4th March 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT
 
