@@ -238,7 +238,7 @@ sub filter {
 
 
 #------------------------------------------------------------------------
-# view(\%coonfig)
+# view(\%config)
 # 
 # Create a new Template::View bound to this context.
 #------------------------------------------------------------------------
@@ -253,21 +253,24 @@ sub view {
 
 
 #------------------------------------------------------------------------
-# process($template, \%params)    [% PROCESS template   var = val, ... %]
+# process($template, \%params)            [% PROCESS template   var = val, ... %]
+# process($template, \%params, $localize) [% INCLUDE template   var = val, ... %]
 #
 # Processes the template named or referenced by the first parameter.
 # The optional second parameter may reference a hash array of variable
-# definitions.  These are set before the template is processed by calling
-# update() on the stash.  Note that the context is not localised and 
-# these, and any other variables set in the template will retain their
-# new values after this method returns.
+# definitions.  These are set before the template is processed by
+# calling update() on the stash.  Note that, unless the third parameter
+# is true, the context is not localised and these, and any other
+# variables set in the template will retain their new values after this
+# method returns.  The third parameter is in place so that this method
+# can handle INCLUDE calls: the stash will be localized.
 #
 # Returns the output of processing the template.  Errors are thrown
 # as Template::Exception objects via die().  
 #------------------------------------------------------------------------
 
 sub process {
-    my ($self, $template, $params) = @_;
+    my ($self, $template, $params, $localize) = @_;
     my ($trim, $blocks) = @$self{ qw( TRIM BLOCKS ) };
     my (@compiled, $name, $compiled);
     my ($stash, $tblocks, $error, $tmpout);
@@ -280,42 +283,64 @@ sub process {
 	push(@compiled, $self->template($name));
     }
 
-    # update stash with any new parameters passed
-    $self->{ STASH }->update($params);
-    $stash = $self->{ STASH };
-
-    foreach $name (@$template) {
-	$compiled = shift @compiled;
-	my $element = ref $compiled eq 'CODE' 
-	    ? { (name => (ref $name ? '' : $name), modtime => time()) }
-	: $compiled;
-	$stash->set('component', $element);
-	
-	# merge any local blocks defined in the Template::Document into our
-	# local BLOCKS cache
-	@$blocks{ keys %$tblocks } = values %$tblocks
-	    if UNIVERSAL::isa($compiled, 'Template::Document')
-		&& ($tblocks = $compiled->blocks());
-	
-	if (ref $compiled eq 'CODE') {
-	    $tmpout = &$compiled($self);
-	}
-	elsif (ref $compiled) {
-	    $tmpout = $compiled->process($self);
-	}
-	else {
-	    $self->throw('file', 
-			 "invalid template reference: $compiled");
-	}
-	
-	if ($trim) {
-	    for ($tmpout) {
-		s/^\s+//;
-		s/\s+$//;
-	    }
-	}
-	$output .= $tmpout;
+    if ($localize) {
+	# localise the variable stash with any parameters passed
+	$stash = $self->{ STASH } = $self->{ STASH }->clone($params);
+    } else {
+	# update stash with any new parameters passed
+	$self->{ STASH }->update($params);
+	$stash = $self->{ STASH };
     }
+
+    eval {
+	foreach $name (@$template) {
+	    $compiled = shift @compiled;
+	    my $element = ref $compiled eq 'CODE' 
+		? { (name => (ref $name ? '' : $name), modtime => time()) }
+	    : $compiled;
+	    $stash->set('component', $element);
+	    
+		unless ($localize) {
+		    # merge any local blocks defined in the Template::Document
+		    # into our local BLOCKS cache
+		    # dlc: Why does this only occur in process() and not in
+		    # include()?  I've maintained this split, but it makes
+		    # me wonder...
+		    @$blocks{ keys %$tblocks } = values %$tblocks
+			if UNIVERSAL::isa($compiled, 'Template::Document')
+			    && ($tblocks = $compiled->blocks());
+			}
+	    
+	    if (ref $compiled eq 'CODE') {
+		$tmpout = &$compiled($self);
+	    }
+	    elsif (ref $compiled) {
+		$tmpout = $compiled->process($self);
+	    }
+	    else {
+		$self->throw('file', 
+			    "invalid template reference: $compiled");
+	    }
+	    
+	    if ($trim) {
+		for ($tmpout) {
+		    s/^\s+//;
+		    s/\s+$//;
+		}
+	    }
+	    $output .= $tmpout;
+	}
+    };
+    $error = $@;
+    
+    if ($localize) {
+	# ensure stash is delocalised before dying
+	$self->{ STASH } = $self->{ STASH }->declone();
+    }
+
+    $self->throw(ref $error 
+		 ? $error : (Template::Constants::ERROR_FILE, $error))
+	if $error;
     
     return $output;
 }
@@ -337,59 +362,8 @@ sub process {
 
 sub include {
     my ($self, $template, $params) = @_;
-    my $trim = $self->{ TRIM };
-    my (@compiled, $name, $compiled);
-    my ($stash, $error, $tmpout);
-    my $output = '';
-
-    $template = [ $template ] unless ref $template eq 'ARRAY';
-
-    # fetch compiled template for each name specified
-    foreach $name (@$template) {
-	push(@compiled, $self->template($name));
-    }
-
-    # localise the variable stash with any parameters passed
-    $stash = $self->{ STASH } = $self->{ STASH }->clone($params);
-
-    eval {
-	foreach $name (@$template) {
-	    $compiled = shift @compiled;
-	    my $element = ref $compiled eq 'CODE' 
-		? { (name => (ref $name ? '' : $name), modtime => time()) }
-		: $compiled;
-	    $stash->set('component', $element);
-
-	    if (ref $compiled eq 'CODE') {
-		$tmpout = &$compiled($self);
-	    }
-	    elsif (ref $compiled) {
-		$tmpout = $compiled->process($self);
-	    }
-	    else {
-		$self->throw('file', 
-			     "invalid template reference: $compiled");
-	    }
-
-	    if ($trim) {
-		for ($tmpout) {
-		    s/^\s+//;
-		    s/\s+$//;
-		}
-	    }
-	    $output .= $tmpout;
-	}
-    };
-    $error = $@;
-    # ensure stash is delocalised before dying
-    $self->{ STASH } = $self->{ STASH }->declone();
-    $self->throw(ref $error 
-		 ? $error : (Template::Constants::ERROR_FILE, $error))
-	if $error;
-					
-    return $output;
+    return $self->process($template, $params, 'localize me!');
 }
-
 
 #------------------------------------------------------------------------
 # insert($file)
@@ -663,6 +637,7 @@ sub debug {
     my $hash = ref $_[-1] eq 'HASH' ? pop : { };
     my @args = @_;
 
+#    print "*** debug(@args)\n";
     if (@args) {
 	if ($args[0] =~ /^on|1$/i) {
 	    $self->{ DEBUG } = 1;
@@ -805,7 +780,7 @@ sub _init {
     $self->{ TRIM      } = $config->{ TRIM } || 0;
     $self->{ BLKSTACK  } = [ ];
     $self->{ CONFIG    } = $config;
-    $self->{ DEBUG_FORMAT  } = $config->{ DEBUG_FORMAT  };
+    $self->{ DEBUG_FORMAT  } = $config->{ DEBUG_FORMAT };
     $self->{ EXPOSE_BLOCKS } = defined $config->{ EXPOSE_BLOCKS }
                                      ? $config->{ EXPOSE_BLOCKS } 
                                      : 0;
@@ -1475,3 +1450,4 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Document|Template::Document>, L<Template::Exception|Template::Exception>, L<Template::Filters|Template::Filters>, L<Template::Plugins|Template::Plugins>, L<Template::Provider|Template::Provider>, L<Template::Service|Template::Service>, L<Template::Stash|Template::Stash>
+
