@@ -48,7 +48,7 @@ Returns an object reference or undef on error, as above.
 
 =head2 stash(\%vars)
 
-Instantiate a new stash object (default: Template::Templates) using the 
+Instantiate a new stash object (default: Template::Stash) using the 
 contents of the optional hash array passed by parameter as initial variable
 definitions.  Returns an object reference or undef on error, as above.
 
