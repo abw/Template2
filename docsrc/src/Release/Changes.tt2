@@ -23,8 +23,10 @@
 # $Id$
 #========================================================================
 
+* dependency changes to document (visit), context and provider ($DOCUMENT)
+
 #------------------------------------------------------------------------
-# Version 2.10a - 
+# Version 2.10a - 9th October 2003                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied two patches from Axel Gerstmair to fix bugs in Makefile.PL 
@@ -92,8 +94,8 @@
 # Version 2.09c - 29th April 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* applied patch from Ivan Kurmanov <kurmanov@openlib.org> to XPath plugin
-  to add handling for comments.
+* applied patch from Ivan Kurmanov to XPath plugin to add handling for 
+  comments.
 
 * modified grammar to allow 'IN' as an alternate for '=' in FOREACH 
   directives, thus allowing [% FOREACH item IN [ foo, bar, baz ] %]
