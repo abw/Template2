@@ -356,7 +356,8 @@ sub interpolate_text {
 sub tokenise_directive {
     my ($self, $text, $line) = @_;
     my ($token, $uctoken, $type, $lookup);
-    my ($lextable, $case) = @$self{ qw( LEXTABLE CASE ) };
+    my ($lextable, $case, $start, $end) = 
+	@$self{ qw( LEXTABLE CASE START_TAG END_TAG ) };
     my @tokens = ( );
 
     while ($text =~ 
