@@ -542,8 +542,10 @@ t/test/dir/sub_two/waz.html
 t/test/dir/sub_two/wiz.html
 t/test/dir/xyzfile
 t/test/lib/README
+t/test/lib/after
 t/test/lib/badrawperl
 t/test/lib/barfed
+t/test/lib/before
 t/test/lib/blockdef
 t/test/lib/config
 t/test/lib/content
@@ -553,8 +555,11 @@ t/test/lib/footer
 t/test/lib/header
 t/test/lib/header.tt2
 t/test/lib/incblock
+t/test/lib/inner
 t/test/lib/menu
 t/test/lib/one/foo
+t/test/lib/outer
+t/test/lib/process
 t/test/lib/trimme
 t/test/lib/two/bar
 t/test/lib/two/foo
