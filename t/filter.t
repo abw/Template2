@@ -861,3 +861,12 @@ guitar&amp;file.html
 -- expect --
 guitar&amp;amp;file.html
 
+-- test --
+[% 'foobar' | ucfirst %]
+-- expect --
+Foobar
+
+-- test --
+[% 'FOOBAR' | lcfirst %]
+-- expect --
+fOOBAR
