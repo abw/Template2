@@ -32,6 +32,7 @@ use strict;
 use vars qw( $VERSION $ERROR $COMPERR $DEBUG $AUTOLOAD );
 use base qw( Template::Base );
 use Template::Constants;
+use Fcntl qw(O_WRONLY O_CREAT);
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -243,11 +244,11 @@ sub write_perl_file {
 		       } keys %$metadata);
 
     local *CFH;
-    my ($cfile) = $file =~ /^([\w\.\-\/]+)$/ or do {
+    my ($cfile) = $file =~ /^(.+)$/s or do {
 	$ERROR = "invalid filename: $file";
 	return undef;
     };
-    open(CFH, ">$cfile") or do {
+    sysopen(CFH, $cfile, O_CREAT|O_WRONLY) or do {
 	$ERROR = $!;
 	return undef;
     };
@@ -449,8 +450,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.19, distributed as part of the
-Template Toolkit version 2.04, released on 29 June 2001.
+2.20, distributed as part of the
+Template Toolkit version 2.04b, released on 04 August 2001.
 
 =head1 COPYRIGHT
 

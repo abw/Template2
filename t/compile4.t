@@ -37,13 +37,14 @@ my $ttcfg = {
     INCLUDE_PATH => "$dir/src",
     COMPILE_DIR  => $cdir,
     COMPILE_EXT  => '.ttc',
+    ABSOLUTE     => 1,
 };
 
 # delete any existing cache files
 rmtree($cdir) if -d $cdir;
 mkpath($cdir);
 
-test_expect(\*DATA, $ttcfg);
+test_expect(\*DATA, $ttcfg, { root => abs_path($dir) } );
 
 
 __DATA__
@@ -75,3 +76,7 @@ Error: [% error.type %] - [% error.info %]
 This is file baz
 The word is 'wibble'
 
+-- test --
+[% INCLUDE "$root/src/blam" %]
+-- expect --
+This is the blam file

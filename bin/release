@@ -1,6 +1,6 @@
    docsrc/bin/ttmkdocs \
 && docsrc/bin/ttpodglu \
-&& perl Makefile.PL    \
+&& perl Makefile.PL TT_ACCEPT=y \
 && make                \
 && make test           \
 && make dist           \

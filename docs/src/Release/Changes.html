@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.04, detailing
+#   Revision history for the Template Toolkit version 2.04b, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -19,6 +19,55 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.04b - 04 Aug 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in the Makefile.PL which prevented the correct targets 
+  from being added to the generated Makefile to install additional
+  components, build HTML docs, etc. 
+
+* Applied a patch from Chris Nandor to fix a bug introduced by the taint 
+  checks in 2.04 which barfed on ';' in filenames.  Also changes open()
+  to sysopen() in Template::Document for additional security.  See
+  http://www.tt2.org/pipermail/templates/2001-August/001348.html
+
+* Another part of the same pudge patch adds FACTORY as a default value
+  to Template::Parser to allow Template::Directive factory class to 
+  be replaced.
+
+
+#------------------------------------------------------------------------
+# Version 2.04a - 5th July 2001                   ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Changed GD plugin and tests to require GD version 1.20.  See
+  http://www.tt2.org/pipermail/templates/2001-July/001212.html
+
+* Applied Craig's fix for the DBI plugin to correctly destroy a 
+  statement handle to ensure that finish() gets called on it even if the
+  iterator doesn't complete.  See:
+  http://www.tt2.org/pipermail/templates/2001-July/001216.html
+
+* Further to Craig's points in the above post, I added get_all() and 
+  get() to the DBI iterator so that you can now do this:
+
+  [% tt_start_tag %] people = DBI.query(...) [% tt_end_tag %]
+  [% tt_start_tag %] person = people.get [% tt_end_tag %]   # first person
+  [% tt_start_tag %] person = people.get [% tt_end_tag %]   # second person
+  [% tt_start_tag %] FOREACH person = people.get_all [% tt_end_tag %]
+     # third to nth person(s)
+  [% tt_start_tag %] END [% tt_end_tag %]
+
+* Fixed Template::Provider which wasn't saving compiled templates to 
+  disk when specified with an absolute path, as reported by Merlyn.  See
+  http://www.template-toolkit.org/pipermail/templates/2001-July/001213.html
+
+* Updated Makefile.PL to accept various command line args including 
+  TT_ACCEPT to automatically accept all default values and TT_QUIET to
+  shut the file up with all those yackety yack, yack messages.
+
 
 #------------------------------------------------------------------------
 # Version 2.04 - 29th June 2001

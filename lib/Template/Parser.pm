@@ -116,8 +116,8 @@ sub new {
 	V1DOLLAR    => 0,
 	EVAL_PERL   => 0,
 	GRAMMAR     => undef,
-	FACTORY     => undef,
 	_ERROR      => '',
+	FACTORY     => 'Template::Directive',
     }, $class;
 
     # update self with any relevant keys in config
@@ -129,7 +129,6 @@ sub new {
 	require Template::Grammar;
 	Template::Grammar->new();
     };
-    $self->{ FACTORY } ||= 'Template::Directive';
 
 #    # determine START_TAG and END_TAG for specified (or default) TAG_STYLE
 #    $tagstyle = $self->{ TAG_STYLE } || 'default';
@@ -1269,8 +1268,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.23, distributed as part of the
-Template Toolkit version 2.04a, released on 06 July 2001.
+2.24, distributed as part of the
+Template Toolkit version 2.04b, released on 04 August 2001.
 
  
 

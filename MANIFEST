@@ -333,6 +333,7 @@ images/splash/black/brhair.gif
 images/splash/black/diamond.gif
 images/splash/black/dot.gif
 images/splash/black/down.gif
+images/splash/black/horz.gif
 images/splash/black/left.gif
 images/splash/black/minus.gif
 images/splash/black/negbox.gif
@@ -532,6 +533,7 @@ t/test/src/bar/baz
 t/test/src/bar/baz.txt
 t/test/src/baz
 t/test/src/benchmark
+t/test/src/blam
 t/test/src/complex
 t/test/src/evalperl
 t/test/src/foo

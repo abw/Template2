@@ -57,3 +57,10 @@ OK
 [%- END %]
 -- expect --
 &lt; &amp; &gt;
+
+-- test --
+[% FILTER html(entity = 1) -%]
+<foo> &lt;bar> <baz&gt; &lt;boz&gt;
+[%- END %]
+-- expect --
+&lt;foo&gt; &lt;bar&gt; &lt;baz&gt; &lt;boz&gt;
