@@ -70,17 +70,21 @@ block:	    chunks		    { $factory->block($_[1])              }
 
 chunks:	    chunks chunk	    { push(@{$_[1]}, $_[2]) 
 					if defined $_[2]; $_[1]           }
-	|   chunk		    { defined $_[1] ? [ $_[1] ] : [ ]     }
+    |   chunk		    { defined $_[1] ? [ $_[1] ] : [ ]     }
 ;
 
-chunk:	    TEXT		    { $factory->textblock($_[1])          }
-	|   statement ';'           { my $line = ${$_[0]->{LINE}};
-                                      $line =~ s/\-.*$//;
-                                      "#line $line \"$_[0]->{FILEINFO}->[-1]->{path}\"\n$_[1]" }
+chunk:  TEXT             { $factory->textblock($_[1])          }
+    |   statement ';'    { return '' unless $_[1];
+                           my $line = ${$_[0]->{LINE}};
+                           my $info = $_[0]->{FILEINFO}->[-1];
+                           my $file = $info->{ path } || $info->{ name } 
+                              || '(unknown template)';
+                           $line =~ s/\-.*$//; # might be 'n-n'
+                           "#line $line \"$file\"\n$_[1]" }
 ;
 
-statement:  directive      
-	|   defblock
+statement:  directive
+    |   defblock
 	|   anonblock
 	|   capture
 	|   macro
