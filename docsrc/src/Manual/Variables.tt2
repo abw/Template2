@@ -438,6 +438,28 @@ version.
 	},
     };
 
+=head2 Virtual Methods
+
+The Template Toolkit implements a number of "virtual methods" which 
+can be applied to scalars, hashes or lists.  For example:
+
+    [% mylist = [ 'foo', 'bar', 'baz' ] %]
+    [% newlist = mylist.sort %]
+
+Here 'mylist' is a regular reference to a list, and 'sort' is 
+a virtual method that returns a new list of the items in sorted 
+order.  You can chain multiple virtual methods together.  For
+example:
+
+    [% mylist.sort.join(', ') %]
+
+Here the 'join' virtual method is called to join the sorted list into
+a single string, generating the following output:
+
+    bar, baz, foo
+
+See L<Template::Manual::VMethods> for details of all the virtual 
+methods available.
 
 =head2 Variable Interpolation
 
@@ -746,4 +768,24 @@ variable.
     [% END %]
 
 =back
+
+=head2 Compound Variables
+
+Compound 'dotted' variables may contain any number of separate
+elements.  Each element may evaluate to any of the permitted variable
+types and the processor will then correctly use this value to evaluate
+the rest of the variable.  Arguments may be passed to any of the
+intermediate elements.
+
+    [% myorg.people.sort('surname').first.fullname %]
+
+Intermediate variables may be used and will behave entirely as expected.
+
+    [% sorted = myorg.people.sort('surname') %]
+    [% sorted.first.fullname %]
+
+This simplified dotted notation has the benefit of hiding the
+implementation details of your data.  For example, you could implement
+a data structure as a hash array one day and then change it to an
+object the next without requiring any change to the templates.
 
