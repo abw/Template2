@@ -326,6 +326,13 @@ sub process {
             my $element = ref $compiled eq 'CODE' 
                 ? { (name => (ref $name ? '' : $name), modtime => time()) }
 	        : $compiled;
+
+            if (UNIVERSAL::isa($component, 'Template::Document')) {
+                $element->{ caller } = $component->{ name };
+                $element->{ callers } = $component->{ callers } || [];
+                push(@{$element->{ callers }}, $element->{ caller });
+            }
+
             $stash->set('component', $element);
             
             unless ($localize) {
