@@ -88,4 +88,14 @@ name: Andy Wardley
 -- process --
 [% cgicheck %]
 
+-- test --
+[% USE cgi('item=foo&items=one&items=two') -%]
+item: [% cgi.params.item %]
+item: [% cgi.params.item.join(', ') %]
+items: [% cgi.params.items.join(', ') %]
+
+-- expect --
+item: foo
+item: foo
+items: one, two
 
