@@ -12,5 +12,9 @@
 	    name  = 'Dave Cross' 
 	    email = 'dave@dave.org.uk'
 	}
+	darren = {
+	    name  = 'Darren Chamberlain' 
+	    email = 'dlc@users.sourceforge.net'
+	}
     }
 -%]
