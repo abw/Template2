@@ -26,7 +26,31 @@ Multiple conditions may be joined with ELSIF and/or ELSE blocks.
 
 The following conditional and boolean operators may be used:
 
-    == != < <= > >= ! && || and or not
+    == != < <= > >= && || !
+
+In addition, the following operators can be used as aliases for the 
+above.
+
+    eq ne lt le gt ge and or not
+
+In Perl, the first set of operators (C<==>, C<!=>, C<E<lt>>,
+C<E<lt>=>, CE<gt>> and C<E<gt>=>) compare numerically while the second
+set (C<eq>, C<ne>, C<lt>, C<le>, C<gt> and C<ge>) compare in a
+stringwise manner.  For historical reasons, the Template Toolkit has
+always internally converted C<==> and C<!=> to their stringwise
+equivalents C<eq> and C<ne> because it (mostly) works as expected and
+avoids warnings raised by trying to compare non-numerical values.
+
+However, this approach doesn't work so well with the other operators
+because it causes problems when comparing numbers like '0100' and
+'11'.  A stringwise comparison would consider 0100 < 11 which it
+clearly isn't in numerical terms.  So the decision was made to leave
+C<==> and C<!=> mapping to C<eq> and C<ne> as they currently do, but
+to have all the other operators map directly to their Perl equivalents.
+
+In a future version of the Template Toolkit (most probably not until
+v3) this is likely to change so that all operators, including C<==>,
+C<eq>, C<!=> and C<ne> map directly to their Perl counterparts.
 
 Conditions may be arbitrarily complex and are evaluated with the same
 precedence as in Perl.  Parenthesis may be used to explicitly
