@@ -36,6 +36,7 @@
 		frame    = 'Container Frames'
 		panel    = 'Panels'
 		box      = 'Bordered Boxes'
+		hair     = 'Cross-Hair Frames'
 		tab      = 'Single Tabs'
 		tabbox   = 'Tabbed Box'
 		tabset   = 'Set of Tabs'
@@ -44,7 +45,7 @@
 	    }
 	    order = [ 'index', 'config', 'colours', 'text', 'icon', 'button', 'bar', 
 		      'menu', 'menubar', 'pulldown', 'tab', 'frame', 'panel', 
-		      'box', 'tabbox', 'tabset', 'tabsbox', 'dropbox' ] 
+		      'box', 'hair', 'tabbox', 'tabset', 'tabsbox', 'dropbox' ] 
     	}
     	ps = {
     	    name  = 'ps'

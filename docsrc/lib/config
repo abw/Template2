@@ -1,6 +1,6 @@
 [%  USE date;
     tt = {
-	version => '2.03b'
+	version => '2.03'
         release => date.format(format = '%d %B %Y')
     }
     authors = {

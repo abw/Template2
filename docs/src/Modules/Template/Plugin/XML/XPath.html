@@ -12,18 +12,18 @@
         page = 'Plugin_XML_XPath'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='PRE-REQUISITES';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='AUTHORS';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="PRE-REQUISITES";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="AUTHORS";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    # load plugin and specify XML file to parse
     [% tt_start_tag %] USE xpath = XML.XPath(xmlfile) [% tt_end_tag %]
     [% tt_start_tag %] USE xpath = XML.XPath(file =&gt; xmlfile) [% tt_end_tag %]
@@ -36,9 +36,30 @@
     [% tt_start_tag %] FOREACH page = xpath.findnodes('/html/body/page') [% tt_end_tag %]
        [% tt_start_tag %] page.getAttribute('title') [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # define VIEW to present node(s)
+    [% tt_start_tag %] VIEW repview notfound='xmlstring' [% tt_end_tag %]
+       # handler block for a &lt;report&gt;...&lt;/report&gt; element
+       [% tt_start_tag %] BLOCK report [% tt_end_tag %]
+          [% tt_start_tag %] item.content(view) [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>       # handler block for a &lt;section title=&quot;...&quot;&gt;...&lt;/section&gt; element
+       [% tt_start_tag %] BLOCK section [% tt_end_tag %]
+       &lt;h1&gt;[% tt_start_tag %] item.getAttribute('title') [% tt_end_tag %]&lt;/h1&gt;
+       [% tt_start_tag %] item.content(view) [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>       # default template block converts item to string representation
+       [% tt_start_tag %] BLOCK xmlstring; item.toString; END [% tt_end_tag %]
+       
+       # block to generate simple text
+       [% tt_start_tag %] BLOCK text; item; END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # now present node (and children) via view
+    [% tt_start_tag %] repview.print(page) [% tt_end_tag %]</pre>
+<pre>    # or print node content via view
+    [% tt_start_tag %] page.content(repview) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='PRE-REQUISITES'
+    title="PRE-REQUISITES"
 -%]<p>
 This plugin requires that the XML::Parser and XML::XPath modules be 
 installed.  These are available from CPAN:
@@ -46,13 +67,21 @@ installed.  These are available from CPAN:
 <pre>    http://www.cpan.org/modules/by-module/XML</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This is a Template Toolkit plugin interfacing to the XML::XPath module.
 </p>
+<p>
+All methods implemented by the XML::XPath modules are available.  In
+addition, the XML::XPath::Node::Element module implements
+present($view) and content($view) methods method for seamless
+integration with Template Toolkit VIEWs.  The XML::XPath::Node::Text
+module is also adorned with a present($view) method which presents
+itself via the view using the 'text' template.
+</p>
 [%- END %]
 [% WRAPPER section
-    title='AUTHORS'
+    title="AUTHORS"
 -%]<p>
 This plugin module was written by Andy Wardley &lt;abw@kfs.org&gt;.
 </p>
@@ -61,14 +90,14 @@ The XML::XPath module is by Matt Sergeant &lt;matt@sergeant.org&gt;.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -77,7 +106,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('XML::XPath', 'XML::XPath') -%], [% ttlink('XML::Parser', 'XML::Parser') -%]
 </p>

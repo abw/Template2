@@ -3,35 +3,27 @@
 
 [* USE wrap; page.intro | wrap(72) *]
 
-=head2 General Questions
+=head1 General Questions
 
-=over 4
-
-=item Why is the sky blue?
+=head2 Why is the sky blue?
 
 Something to do with refraction.
 
-=back
+=head1 Template Toolkit Language
 
-=head2 Language
+=head2 Why doesn't [% a = b IF c %] work as expected?
 
-=over 4
+Because the parser interprets it as 
 
-=item Why doesn't [% a = b IF c %] work as expected?
-
-Because the parser interprets it as [% a = (b IF c) %].
+    [% a = (b IF c) %]
 
 Do this instead:
 
     [% SET a = b IF c %]
 
-=back
+=head1 Plugins
 
-=head2 Plugins
-
-=over 4
-
-=item Using the Table plugin, how do I order the data to go across rather than down?
+=head2 How do I get the Table plugin to order data across rather than down?
 
 Order the data into rows:
 
@@ -51,21 +43,59 @@ And then print each item in the column going across the output rows
 	<td>[% item %]</td>
     [% END %]
 
-=back
+=head1 Extending the Template Toolkit
 
-=head2 Extending the Template Toolkit
-
-=over 4
-
-=item Can I serve templates from a database?
+=head2 Can I serve templates from a database?
 
 Short answer: yes, Chris Nandor has done this for Slash.  You need to 
 subclass Template::Provider.  See the mailing list archives for further
 info.
 
-=back
+=head2 Can I fetch templates via http?
 
-=item Can I fetch templates via http?
+To do the job properly, you should sublcass Template::Provider to 
+Template::Provider::HTTP and use a PREFIX_MAP option to bind the 
+'http' template prefix to that particular provider (you may want to 
+go digging around in the F<Changes> file around version 2.01 for 
+more info on PREFIX_MAP - it may not be properly documented anywhere
+else...yet!).  e.g. (untested due to lack of existing HTTP Provider
+- patches welcome!).
+
+    use Template::Provider::HTTP;
+
+    my $file = Template::Provider( INCLUDE_PATH => [...] );
+    my $http = Template::Provider::HTTP->new(...);
+    my $tt2  = Template->new({
+	LOAD_TEMPLATES => [ $file, $http ],
+	PREFIX_MAP => {
+	    file    => '0',	# file:foo.html
+	    http    => '1',	# http:foo.html
+	    default => '0',	# foo.html => file:foo.html
+	}
+    });
+
+Now a template specified as:
+
+    [% INCLUDE foo %]
+
+will be served by the 'file' provider (the default).  Otherwise you 
+can explicitly add a prefix:
+
+    [% INCLUDE file:foo.html %]
+    [% INCLUDE http:foo.html %]
+    [% INCLUDE http://www.xyz.com/tt2/header.tt2 %]
+
+This same principal can be used to create a DBI template provider.  e.g.
+
+    [% INCLUDE dbi:foo.html %]
+
+But similarly, alas, we don't yet have a DBI provider as part of the 
+Template Toolkit.  There has been some talk on the mailing list about
+efforts to develop DBI and/or HTTP providers but as yet no-one has 
+stepped forward to take up the challenge...
+
+In the mean time, Craig's post from the mailing list has some useful
+pointers on how to acheive this using existing modules:
 
     To: Adam Theo <adamtheo@theoretic.com> 
     From: Craig Barratt <craig@arraycomm.com>

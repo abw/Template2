@@ -108,7 +108,7 @@ This is the footer, author: albert, version: emc2
 [% CALL bust_it -%]
 [% TRY; INCLUDE complex; CATCH; "$error"; END %]
 -- expect --
-file error - parse error: complex line 19: unexpected end of input
+file error - parse error: complex line 20: unexpected end of input
 
 
 

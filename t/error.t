@@ -30,10 +30,14 @@ my $template = Template->new({
     },
 });
 
+
 ok( ! $template->process('badinc') );
 my $error = $template->error();
 ok( $error );
 ok( ref $error eq 'Template::Exception' );
 ok( $error->type eq 'file' );
 ok( $error->info eq 'nosuchfile: not found' );
+
+
+
 

@@ -14,6 +14,7 @@ use Getopt::Std;
 use File::Find;
 use File::Path;
 use File::Copy;
+use File::Spec;
 use Cwd;
 
 my $PROGRAM  = 'tt2inst';
@@ -43,20 +44,19 @@ foreach my $dir (@INSTDIRS) {
     print STDERR "  + $dir\n"
 	if $verbose;
 
-    find({
-	wanted   => \&install_file,
-	no_chdir => 1,
-    },  $dir);
+    find(\&install_file, $dir);
 }
 
 sub install_file {
-    return if /\bCVS\b/ || m[^docs/html/(?!README)];
+    my $f = $File::Find::name;
+    return if $f =~ /\bCVS\b/ || m[^docs/html/(?!README)];
     if (-d) {
-	my $dir  = "$tt2inst/$_";
+	my $dir  = File::Spec->catfile($tt2inst, $f);
 	mkpath($dir) unless -d $dir;
 	return;
     }
-    copy($_, "$tt2inst/$_") || die "$tt2inst/$_: $!\n";
+    my $dest = File::Spec->catfile($tt2inst, $f);
+    copy($_, $dest) || die "$dest: $!\n";
 }
 
 

@@ -12,17 +12,17 @@
         page = 'Plugin_Date'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='AUTHORS';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="AUTHORS";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    [% tt_start_tag %] USE date [% tt_end_tag %]</pre>
 <pre>    # use current time and default format
     [% tt_start_tag %] date.format [% tt_end_tag %]</pre>
@@ -46,7 +46,7 @@
     ...</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 The Date plugin provides an easy way to generate formatted time and date
 strings by delegating to the POSIX strftime() routine.  
@@ -111,9 +111,15 @@ The now() method returns the current system time in seconds since the
 epoch.  
 </p>
 <pre>    [% tt_start_tag %] date.format(date.now, '%A') [% tt_end_tag %]</pre>
+<p>
+The calc() method can be used to create an interface to the Date::Calc
+module (if installed on your system).
+</p>
+<pre>    [% tt_start_tag %] calc = date.calc [% tt_end_tag %]
+    [% tt_start_tag %] calc.Monday_of_Week(22, 2001).join('/') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='AUTHORS'
+    title="AUTHORS"
 -%]<p>
 Thierry-Michel Barral &lt;kktos@electron-libre.com&gt; wrote the original
 plugin.
@@ -124,14 +130,14 @@ fixups/enhancements, a test script and documentation.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 Copyright (C) 2000 Thierry-Michel Barral, Andy Wardley.
 </p>
@@ -141,7 +147,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('CPAN::POSIX', 'CPAN::POSIX') -%]
 </p>

@@ -12,17 +12,17 @@
         page = 'HTML'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION'
-                         subs=['Headers, Footers and Pages', 'Tables, Bars and Boxes'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="DESCRIPTION"
+                         subs=["Headers, Footers and Pages", "Tables, Bars and Boxes"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 <b>NOTE:</b> This documentation is incomplete and may be incorrect
 in places. 
@@ -76,7 +76,7 @@ See the example in the 'examples' sub-directory of the distribution
 directory for further examples and enlightenment on using this library.
 </p>
 [% WRAPPER subsection
-   title = 'Headers, Footers and Pages'
+   title = "Headers, Footers and Pages"
 -%]
 <ul>
 
@@ -105,7 +105,6 @@ variable, e.g.
     [% tt_end_tag %]</pre>
 
 
-
 <li><b>footer</b><br>
 <p>
 The 'footer' element generates the terminating &lt;/body&gt; and
@@ -114,7 +113,6 @@ The 'footer' element generates the terminating &lt;/body&gt; and
 <pre>    [% tt_start_tag %] PROCESS html/header [% tt_end_tag %]</pre>
 <pre>    ...page content here...</pre>
 <pre>    [% tt_start_tag %] PROCESS html/footer [% tt_end_tag %]</pre>
-
 
 
 <li><b>page</b><br>
@@ -134,12 +132,10 @@ Additional HTML headers should be defined in the 'headers' variable.
 <pre>    ...page content here...</pre>
 <pre>    [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Tables, Bars and Boxes'
+   title = "Tables, Bars and Boxes"
 -%]
 <ul>
 
@@ -164,12 +160,10 @@ Set the border width (default: 0)
 </p>
 
 
-
 <li><b>col</b><br>
 <p>
 Set the background colour (default: none).
 </p>
-
 
 
 <li><b>width</b><br>
@@ -178,12 +172,10 @@ Set a fixed table width.
 </p>
 
 
-
 <li><b>pad</b><br>
 <p>
 Set the cellpadding.
 </p>
-
 
 
 <li><b>space</b><br>
@@ -192,16 +184,12 @@ Set the cellspacing.
 </p>
 
 
-
 <li><b>content</b><br>
 <p>
 Content for the box.  Supplied automatically if used via WRAPPER.
 </p>
 
-
 </ul>
-
-
 
 
 <li><b>row</b><br>
@@ -225,12 +213,10 @@ Set the background colour (default: none).
 </p>
 
 
-
 <li><b>valign</b><br>
 <p>
 Set the vertical alignment.
 </p>
-
 
 
 <li><b>rowspan</b><br>
@@ -239,16 +225,12 @@ Specify the number of rows to span.
 </p>
 
 
-
 <li><b>content</b><br>
 <p>
 Content for the box.  Supplied automatically if used via WRAPPER.
 </p>
 
-
 </ul>
-
-
 
 
 <li><b>cell</b><br>
@@ -273,12 +255,10 @@ Set the background colour (default: none).
 </p>
 
 
-
 <li><b>align</b><br>
 <p>
 Set the horizontal alignment.
 </p>
-
 
 
 <li><b>colspan</b><br>
@@ -287,16 +267,12 @@ Specify the number of columns to span.
 </p>
 
 
-
 <li><b>content</b><br>
 <p>
 Content for the cell.  Supplied automatically if used via WRAPPER.
 </p>
 
-
 </ul>
-
-
 
 
 <li><b>bar</b><br>
@@ -308,7 +284,6 @@ The bar element is a wrapping of html/table + html/row.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>box</b><br>
 <p>
 The box element is a wrapping of html/table + html/row + html/cell
@@ -317,13 +292,11 @@ The box element is a wrapping of html/table + html/row + html/cell
        Hello World!
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 </ul>
-
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -332,14 +305,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -348,7 +321,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Library::Splash', 'Template::Library::Splash') -%]
 </p>

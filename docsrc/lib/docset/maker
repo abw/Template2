@@ -20,6 +20,7 @@
 
     # process all books in docset
     FOREACH xbook = xdocset.getElementsByTagName('book');
+#	NEXT UNLESS xbook.id == 'FAQ';
 	PROCESS book/maker;
         docset.books.push(book);
     END;

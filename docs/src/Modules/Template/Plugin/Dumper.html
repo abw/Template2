@@ -12,25 +12,25 @@
         page = 'Plugin_Dumper'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='METHODS'
-                         subs=['dump()', 'dump_html()'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="METHODS"
+                         subs=["dump()", "dump_html()"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    [% tt_start_tag %] USE Dumper [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] Dumper.dump(variable) [% tt_end_tag %]
     [% tt_start_tag %] Dumper.dump_html(variable) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This is a very simple Template Toolkit Plugin Interface to the Data::Dumper
 module.  A Dumper object will be instantiated via the following directive:
@@ -52,14 +52,14 @@ These options can also be specified in lower case.
 <pre>    [% tt_start_tag %] USE dumper(indent=0, pad=&quot;&lt;br&gt;&quot;) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='METHODS'
+    title="METHODS"
 -%]<p>
 There are two methods supported by the Dumper object.  Each will
 output into the template the contents of the variables passed to the
 object method.
 </p>
 [% WRAPPER subsection
-   title = 'dump()'
+   title = "dump()"
 -%]<p>
 Generates a raw text dump of the data structure(s) passed
 </p>
@@ -68,7 +68,7 @@ Generates a raw text dump of the data structure(s) passed
     [% tt_start_tag %] Dumper.dump(myvar, yourvar) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'dump_html()'
+   title = "dump_html()"
 -%]<p>
 Generates a dump of the data structures, as per dump(), but with the 
 characters &lt;, &gt; and &amp; converted to their equivalent HTML
@@ -79,20 +79,20 @@ entities and newlines converted to &lt;br&gt;.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Simon Matthews &lt;sam@knowledgepool.com&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 Copyright (C) 2000 Simon Matthews All Rights Reserved.
 </p>
@@ -102,7 +102,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Data::Dumper', 'Data::Dumper') -%]
 </p>

@@ -7,7 +7,7 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.02, containing
+#   TODO list for the Template Toolkit version 2.03, containing
 #   known bugs, limitations, planned enhancements, long term visions 
 #   and a few whacky ideas.
 #
@@ -19,8 +19,18 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Pending 2.03
+#------------------------------------------------------------------------
+
+* Added splash hair + images
+
+#------------------------------------------------------------------------
 # Miscellaneous
 #------------------------------------------------------------------------
+
+* Errors thrown via the Error module are not correctly caught.  I looked
+  at this briefly but the problem wasn't immediately obvious and needs some
+  more considered investigation.
 
 * The 'eval' filter leaks memory, as reported by Colin Johnson.  The
   filter subroutine created contains a reference to the context and then
@@ -68,20 +78,19 @@
   no context reference is passed to the sub to allow it to act as a 
   template.
 
-* It would be useful if template components had some notion of inheritance
-  so that a 'derived' component could call on the 'super' component.  
-  This is something that is hacked in as part of the VIEW feature, but
-  should be properly added as a facility.
-
 * The issue of CGI::Carp throwing non-reference error might need closer
   investigation.
 
+* It would be nice if there was an option so that the files generated
+  under the COMPILE_DIR are relative to the INCLUDE_PATH and not absolute.
+  This could cause potential conflicts (e.g. if INCLUDE_PATH changes
+  between sessions and the same files in different INCLUDE_PATH dirs
+  maps to the samed compiled version) but is convenient for those times
+  when you know that's not going to be a problem.
 
 #------------------------------------------------------------------------
 # Documentation
 #------------------------------------------------------------------------
-
-* Add the XML tutorial, kindly donated by Dave Cross.
 
 * Extend the FAQ.
 
@@ -147,6 +156,12 @@
   Template::Stash will automatically load the existing Perl version if
   you don't have a C compiler on your platform (shame on you!).
 
+* And I'm now working on Yet Another Brand New Stash which should 
+  implement all the functionality of Craig's latest patches, rationalise
+  all sorts of stuff, improve debugging, *AND* run slightly faster.
+  Furthermore, the new architecture should be much easier to extend
+  and implement in XS.  Watch the mailing list for further details.
+
 
 #------------------------------------------------------------------------
 # Parser
@@ -195,74 +210,6 @@
 	}
     [% tt_end_tag %]
 
-* Make IF, FOR, WHILE, etc., available in lower case by default (or by
-  configuration option).  I think any constructs like these which map
-  to regular programming language constructs (i.e. can be translated
-  directly to Perl) shouldn't have to stick out like a sore thumb.
-  UPPER CASE should be reserved for DIRECTIVES which actuate a
-  facility feature.  Lower case is used for the very restricted set of
-  reserved words that implement the language framework (if, while,
-  for, else, try, catch, and, or, not, etc.).  FOREACH should probably
-  be a directive as it invokes an iterator (&quot;for&quot; would be a fast
-  implementation which has no 'loop' iterator).  
-
-    [% tt_start_tag %]	for a = [ 1 2 3 ] {
-	    if b == a {
-		INCLUDE foo
-	    }
-	    else {
-		INCLUDE bar
-	    }
-	}
-    [% tt_end_tag %]
-
-* The above point implies a general rule of lower case words being 
-  runtime variables or one of a small number of reserved words, 
-  and UPPER CASE being compile time directives which perform some 
-  rewriting (e.g. code generation).
-
-    [% tt_start_tag %] INCLUDE filename a='b', c='d' [% tt_end_tag %]
-
-  is a compile time directive (UPPER CASE) which calls a sub to do the
-  code generation of:
-
-    $output .= $context-&gt;include('filename', { a =&gt; 'b', c =&gt; 'd' });
-
-  the above directive is therefore also equivalent to:
-
-    [% tt_start_tag %] tt2.include('filename', a='b', c='d') [% tt_end_tag %]
-
-* We might want to tie the above in with namespaces.  This 
-  would permit disambiguation of directives loaded from different
-  facilities.
-
-    [% tt_start_tag %] TT2.INCLUDE ... [% tt_end_tag %]   # UPPER == COMPILE TIME
-    [% tt_start_tag %] SQL.QUERY ... [% tt_end_tag %]
-
-   vs			    # rewritten to...
-
-    [% tt_start_tag %] tt2.include(...) [% tt_end_tag %]  # lower == runtime
-    [% tt_start_tag %] sql.query(...) [% tt_end_tag %]
-
-   What about the DBI plugin (for example):
-
-    [% tt_start_tag %] USE DBI(...) [% tt_end_tag %]
-    [% tt_start_tag %] DBI.query [% tt_end_tag %]
-
-   We can't assume that CAPITAL implies compile time in this case
-   unless we look at the method (i.e. second element) not the first,
-   and that's too  confusing. IMHO.  Maybe use ':' instead as the compile
-   time directive delimiter?
-
-    [% tt_start_tag %] TT2:INCLUDE ... [% tt_end_tag %]
-
-  Or maybe 'TT2' is the universal prefix into which facilties are loaded?
-
-    [% tt_start_tag %] TT2.VIEW.INCLUDE ... [% tt_end_tag %]
-	  =&gt; $view-&gt;include(...) === [% tt_start_tag %] tt2.view.include(...) [% tt_end_tag %]
-    [% tt_start_tag %] TT2.SQL.INCLUDE [% tt_end_tag %]
-	  =&gt; $sql-&gt;include(...) === [% tt_start_tag %] tt2.sql.include(...) [% tt_end_tag %]
-
 * Ability to set different parser options for BLOCK definitions, etc.
 
     [% tt_start_tag %] BLOCK header
@@ -291,8 +238,10 @@
 
     [% tt_start_tag %] INCLUDE back_to_normal [% tt_end_tag %]
 
-  This will require some fairly serious work on the parser.
-  Some experimentation underway, see P2.pm - got half a lexer working.
+  This is likely to be a TT3 feature and I've already got the basic
+  parser for this up and running.  It might get back-pactched into 
+  version 2, otherwise you might have to wait for the first alpha 
+  release of verion 3.
 
 * Note that this might also allow a default view to be set for a BLOCK:
 
@@ -313,7 +262,7 @@
 #------------------------------------------------------------------------
 
 * We need a way to easily enable/disable certain plugins.  This should
-  be addressed by facility provision.
+  be addressed by facility provision.  Probably something for v3.
 
 * The Text::Autoformat module has some problems with versions of Perl
   prior to 5.6.0 when using a locale which has a decimal separator
@@ -335,29 +284,11 @@
   it in terms of the Table plugin.  I think the jury is still out on the
   matter of whether it counts as duplicated functionality.
 
-* The childrenTotemplate() and allChildrenToTemplate() methods of the
-  XML::DOM can send Perl into a deep recursive loop.  In fact, the the
-  XML::DOM module itself seems to be a little unstable in general -
-  I've had to disable one of the tests in t/dom.t which tests the
-  parser creation failing, as it seems to be causing a segfault core
-  dump during global cleanup a the end of the script.  The
-  toTemplate() method and friends will be replaced by the VIEW
-  facility (in some form).  Rather than build functionality into
-  XML::DOM to present a data structure via the TT, it will be the
-  print() method of a VIEW which walks the tree and processes the 
-  appropriate template.  It's difficult to explain simply in a few 
-  words, but suffice it to say that it's very clever, extremely powerful
-  and deceptively easy to use.  Big wins all around.  See next item...
-
-* A related problem to the above is that the XML::XPath plugin doesn't
-  have a toTemplate() method, or something similar, to allow easy
-  conversion of mixed XML content via template elements.  And because
-  of the way that Matt's implemented the XPath module (to cleverly
-  avoid circular references) I'm not sure there's an easy/obvious way
-  to add one.  The solution comes as part of the VIEW model.  A
-  generic PerlSAX -&gt; VIEW interface should be provided, making it
-  possible to easily display XML content from XML::DOM, XML::XPath, or
-  any other SAX compliant source.
+* A more general solution for XML (e.g. DOM, XPath, etc) would be for
+  TT to support a PerlSAX handler which generates the appropriate
+  callbacks to the view.  This should make it possible to easily
+  display XML content from XML::DOM, XML::XPath, or any other SAX
+  compliant source.
 
   Something like this:
 
@@ -439,6 +370,22 @@ To include:
 * support themes which define a set of styles
 
 * May be wise to move Splash out to a separate distribution.
+
+Randal Schwartz highlighted some problems with non-compliant HTML
+being generated.  These include:
+
+* no DOCTYPE declaration (added to html/header)
+
+* ALT attribute missing from many &lt;img&gt; tags
+
+* &lt;font ...&gt;&lt;table&gt;...&lt;/table&gt;&lt;/font&gt; is illegal (not sure where this
+  gets done)
+
+* &lt;tr&gt; shouldn't have HEIGHT attribute
+
+* &lt;H3&gt; block element inside inline element
+
+* &lt;A&gt; not allowed here (not sure)
 
 
 #------------------------------------------------------------------------

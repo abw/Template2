@@ -12,17 +12,17 @@
         page = 'Plugin_Pod'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    [% tt_start_tag %] USE Pod(podfile) [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] FOREACH head1 = Pod.head1;
 	 FOREACH head2 = head1/head2;
@@ -32,13 +32,13 @@
     [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This plugin is an interface to the Pod::POM module.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -47,14 +47,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.05, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.07, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -63,7 +63,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Pod::POM', 'Pod::POM') -%]
 </p>

@@ -12,60 +12,57 @@
         page = 'FAQ'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION'
-                         subs=['General Questions', 'Language', 'Plugins', 'Extending the Template Toolkit', 'Miscellaneous'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="General Questions"
+                         subs=["Why is the sky blue?"];
+	INCLUDE tocitem title="Template Toolkit Language"
+                         subs=["Why doesn't $tt_start_tag a = b IF c $tt_end_tag work as expected?"];
+	INCLUDE tocitem title="Plugins"
+                         subs=["How do I get the Table plugin to order data across rather than down?"];
+	INCLUDE tocitem title="Extending the Template Toolkit"
+                         subs=["Can I serve templates from a database?", "Can I fetch templates via http?", "Miscellaneous"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This is the Frequently Asked Questions list for the Template Toolkit.
 More accurately, it's a very thin placeholder for where the FAQ will
 soon be.
 </p>
-[% WRAPPER subsection
-   title = 'General Questions'
--%]
-<ul>
-
-<li><b>Why is the sky blue?</b><br>
-<p>
+[%- END %]
+[% WRAPPER section
+    title="General Questions"
+-%][% WRAPPER subsection
+   title = "Why is the sky blue?"
+-%]<p>
 Something to do with refraction.
 </p>
-
-
-</ul>
-
 [%- END %]
-[% WRAPPER subsection
-   title = 'Language'
--%]
-<ul>
-
-<li><b>Why doesn't [% tt_start_tag %] a = b IF c [% tt_end_tag %] work as expected?</b><br>
-<p>
-Because the parser interprets it as [% tt_start_tag %] a = (b IF c) [% tt_end_tag %].
+[%- END %]
+[% WRAPPER section
+    title="Template Toolkit Language"
+-%][% WRAPPER subsection
+   title = "Why doesn't $tt_start_tag a = b IF c $tt_end_tag work as expected?"
+-%]<p>
+Because the parser interprets it as 
 </p>
+<pre>    [% tt_start_tag %] a = (b IF c) [% tt_end_tag %]</pre>
 <p>
 Do this instead:
 </p>
 <pre>    [% tt_start_tag %] SET a = b IF c [% tt_end_tag %]</pre>
-
-
-</ul>
-
 [%- END %]
-[% WRAPPER subsection
-   title = 'Plugins'
--%]
-<ul>
-
-<li><b>Using the Table plugin, how do I order the data to go across rather than down?</b><br>
-<p>
+[%- END %]
+[% WRAPPER section
+    title="Plugins"
+-%][% WRAPPER subsection
+   title = "How do I get the Table plugin to order data across rather than down?"
+-%]<p>
 Order the data into rows:
 </p>
 <pre>     Steve     Karen     Jeff
@@ -83,29 +80,110 @@ And then print each item in the column going across the output rows
     [% tt_start_tag %] FOREACH item = column [% tt_end_tag %]
 	&lt;td&gt;[% tt_start_tag %] item [% tt_end_tag %]&lt;/td&gt;
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-
-</ul>
-
 [%- END %]
-[% WRAPPER subsection
-   title = 'Extending the Template Toolkit'
--%]
-<ul>
-
-<li><b>Can I serve templates from a database?</b><br>
-<p>
+[%- END %]
+[% WRAPPER section
+    title="Extending the Template Toolkit"
+-%][% WRAPPER subsection
+   title = "Can I serve templates from a database?"
+-%]<p>
 Short answer: yes, Chris Nandor has done this for Slash.  You need to 
 subclass Template::Provider.  See the mailing list archives for further
 info.
 </p>
-
-
-</ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Miscellaneous'
+   title = "Can I fetch templates via http?"
+-%]<p>
+To do the job properly, you should sublcass Template::Provider to 
+Template::Provider::HTTP and use a PREFIX_MAP option to bind the 
+'http' template prefix to that particular provider (you may want to 
+go digging around in the <file>Changes</file> file around version 2.01 for 
+more info on PREFIX_MAP - it may not be properly documented anywher
+else...yet!).  e.g. (untested due to lack of existing HTTP Provider
+- patches welcome!).
+</p>
+<pre>    use Template::Provider::HTTP;</pre>
+<pre>    my $file = Template::Provider( INCLUDE_PATH =&gt; [...] );
+    my $http = Template::Provider::HTTP-&gt;new(...);
+    my $tt2  = Template-&gt;new({
+	LOAD_TEMPLATES =&gt; [ $file, $http ],
+	PREFIX_MAP =&gt; {
+	    file    =&gt; '0',	# file:foo.html
+	    http    =&gt; '1',	# http:foo.html
+	    default =&gt; '0',	# foo.html =&gt; file:foo.html
+	}
+    });</pre>
+<p>
+Now a template specified as:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE foo [% tt_end_tag %]</pre>
+<p>
+will be served by the 'file' provider (the default).  Otherwise you 
+can explicitly add a prefix:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE file:foo.html [% tt_end_tag %]
+    [% tt_start_tag %] INCLUDE http:foo.html [% tt_end_tag %]
+    [% tt_start_tag %] INCLUDE http://www.xyz.com/tt2/header.tt2 [% tt_end_tag %]</pre>
+<p>
+This same principal can be used to create a DBI template provider.  e.g.
+</p>
+<pre>    [% tt_start_tag %] INCLUDE dbi:foo.html [% tt_end_tag %]</pre>
+<p>
+But similarly, alas, we don't yet have a DBI provider as part of the 
+Template Toolkit.  There has been some talk on the mailing list about
+efforts to develop DBI and/or HTTP providers but as yet no-one has 
+stepped forward to take up the challenge...
+</p>
+<p>
+In the mean time, Craig's post from the mailing list has some useful
+pointers on how to acheive this using existing modules:
+</p>
+<pre>    To: Adam Theo &lt;adamtheo@theoretic.com&gt; 
+    From: Craig Barratt &lt;craig@arraycomm.com&gt;
+    Date: Fri, 18 May 2001 17:06:59 -0700
+      
+    &gt; i was wondering if there is anyway to fetch a file using http:// or
+    &gt; ftp:// and include that?
+      
+    Here's one way.  Set the LOAD_PERL option:
+      
+    	use Template;
+     
+    	my $template = Template-&gt;new({  
+    	    LOAD_PERL =&gt; 1
+    	});  
+    	$template-&gt;process(&quot;example.tt&quot;, { stdout =&gt; *STDOUT })
+    				     || die $template-&gt;error();
+     
+    and then use LWP::UserAgent and HTTP::Request:
+     
+    	[% tt_start_tag %] 
+    	    USE ua = LWP.UserAgent; 
+    	    ua.proxy(&quot;http&quot;, &quot;http://your_proxy/&quot;);
+    	    USE req = HTTP.Request(&quot;GET&quot;, &quot;http://www.cpan.org&quot;);
+    	    ua.request(req).content;
+    	-[% tt_end_tag %]
+     
+    For FTP use Net::FTP:
+     
+    	[% tt_start_tag %]   
+    	    USE ftp = Net.FTP(&quot;ftp.cpan.org&quot;);
+    	    x = ftp.login(&quot;anonymous&quot;, &quot;me@here.there&quot;);
+    	    x = ftp.cwd(&quot;/&quot;);
+    	    x = ftp.get(&quot;welcome.msg&quot;, stdout);
+    	    x = ftp.quit;
+    	-[% tt_end_tag %]
+     
+    Normally ftp.get would write the file into the current directory.
+    Instead we pass stdout as a second argument so that it is written
+    to stdout.  We set stdout to STDOUT in the variables we pass to
+    process. 
+     
+    Craig</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "Miscellaneous"
 -%]
 <ul>
 
@@ -114,13 +192,11 @@ info.
 No, I think you've hhhaadd ennnough alllrready.
 </p>
 
-
 </ul>
-
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -129,14 +205,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

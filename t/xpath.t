@@ -88,3 +88,51 @@ page: The Baz Page
 
 
   This is the bar section, here is some italic text
+
+-- test --
+[% xmltext = BLOCK -%]
+<foo>
+<bar baz="10">
+  <list>
+  <item>one</item>
+  <item>two</item>
+  </list>
+</bar>
+</foo>
+[% END -%]
+[% VIEW xview notfound='xmlstring' -%]
+[% BLOCK foo -%]
+FOO {
+[%- item.content(view) -%]
+}
+[% END -%]
+[% BLOCK bar -%]
+  BAR(baz="[% item.getAttribute('baz') %]") {
+[%- item.content(view) -%]
+}
+[% END -%]
+[% BLOCK list -%]
+  LIST:
+[%- item.content(view) -%]
+[% END -%]
+[% BLOCK item -%]
+    * [% item.content(view) -%]
+[% END -%]
+[% BLOCK xmlstring; item.toString; END %]
+[% BLOCK text; item; END %]
+[% END -%]
+
+[%- USE xpath = XML.XPath(xmltext);
+    foo = xpath.findnodes('/foo');
+    xview.print(foo);
+-%]
+-- expect --
+FOO {
+  BAR(baz="10") {
+    LIST:
+      * one
+      * two
+  
+}
+
+}

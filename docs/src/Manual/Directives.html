@@ -12,22 +12,22 @@
         page = 'Directives'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION'
-                         subs=['Accessing and Updating Template Variables', 'Processing Other Template Files and Blocks', 'Conditional Processing', 'Loop Processing', 'Filters, Plugins, Macros and Perl', 'Exception Handling and Flow Control', 'Miscellaneous'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION"
+                         subs=["Accessing and Updating Template Variables", "Processing Other Template Files and Blocks", "Conditional Processing", "Loop Processing", "Filters, Plugins, Macros and Perl", "Exception Handling and Flow Control", "Miscellaneous"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section provides a reference of all Template Toolkit directives,
 complete with examples of use.
 </p>
 [% WRAPPER subsection
-   title = 'Accessing and Updating Template Variables'
+   title = "Accessing and Updating Template Variables"
 -%]
 <ul>
 
@@ -65,7 +65,6 @@ as an alias for '%' for backwards compatibility with version 1.
     [% tt_start_tag %] 15 mod 6 [% tt_end_tag %]	    # 3</pre>
 
 
-
 <li><b>CALL</b><br>
 <p>
 The CALL directive is similar to GET in evaluating the variable named,
@@ -75,7 +74,6 @@ call but aren't interested in the value returned.
 </p>
 <pre>    [% tt_start_tag %] CALL dbi.disconnect [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] CALL inc_page_counter(page_count) [% tt_end_tag %]</pre>
-
 
 
 <li><b>SET</b><br>
@@ -123,7 +121,6 @@ Simple expressions can also be used, as per GET.
     [% tt_end_tag %]</pre>
 
 
-
 <li><b>DEFAULT</b><br>
 <p>
 The DEFAULT directive is similar to SET but only updates variables 
@@ -149,12 +146,10 @@ undefined variables.
     &lt;/head&gt;</pre>
 <pre>    &lt;body bgcolor=&quot;[% tt_start_tag %] bgcol [% tt_end_tag %]&quot;&gt;</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Processing Other Template Files and Blocks'
+   title = "Processing Other Template Files and Blocks"
 -%]
 <ul>
 
@@ -209,7 +204,6 @@ interpolated into double-quoted strings.
 </p>
 <pre>    [% tt_start_tag %] INSERT legalese.txt + warning.txt [% tt_end_tag %]
     [% tt_start_tag %] INSERT  &quot;$legalese&quot; + warning.txt [% tt_end_tag %]  # requires quoting</pre>
-
 
 
 <li><b>INCLUDE</b><br>
@@ -313,10 +307,35 @@ including then you might prefer to use the PROCESS directive which is
 faster by virtue of not performing any localisation.
 </p>
 <p>
-From version 2.01 onwards, it is possible to specify multiple template
-names within an INCLUDE to have them automatically processed in order.
-The template names (quoted or unquoted names only, no unquoted
-'$variables') should be delimited by '+'.
+From version 2.04 onwards, you can specify dotted variables as &quot;local&quot;
+variables to an INCLUDE directive.  However, be aware that because of
+the localisation issues explained above (if you skipped the previous
+Technical Note above then you might want to go back and read it or
+skip this section too), the variables might not actualy be &quot;local&quot;.
+If the first element of the variable name already references a hash
+array then the variable update will affect the original variable.
+</p>
+<pre>    [% tt_start_tag %] foo = {
+           bar = 'Baz'
+       }
+    [% tt_end_tag %]
+  
+    [% tt_start_tag %] INCLUDE somefile foo.bar='Boz' [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] foo.bar [% tt_end_tag %]	    # Boz</pre>
+<p>
+This behaviour can be a little unpredictable (and may well be improved
+upon in a future version).  If you know what you're doing with it and 
+you're sure that the variables in question are defined (nor not) as you 
+expect them to be, then you can rely on this feature to implement some
+powerful &quot;global&quot; data sharing techniques.  Otherwise, you might prefer
+to steer well clear and always pass simple (undotted) variables as 
+parameters to INCLUDE and other similar directives.
+</p>
+<p>
+If you want to process several templates in one go then you can 
+specify each of their names (quoted or unquoted names only, no unquoted
+'$variables') joined together by '+'.  The INCLUDE directive
+will then process them in order.
 </p>
 <pre>    [% tt_start_tag %] INCLUDE html/header + &quot;site/$header&quot; + site/menu
          title = &quot;My Groovy Web Site&quot;
@@ -330,7 +349,6 @@ n times), but not quite as &quot;safe&quot; because any variable changes in the
 first file will be visible in the second, third and so on.  This
 might be what you want, of course, but then again, it might not.
 </p>
-
 
 
 <li><b>PROCESS</b><br>
@@ -390,7 +408,6 @@ As with INCLUDE, multiple templates can be specified, delimited by
 '+', and are processed in order.
 </p>
 <pre>    [% tt_start_tag %] PROCESS html/header + my/header [% tt_end_tag %]</pre>
-
 
 
 <li><b>WRAPPER</b><br>
@@ -471,7 +488,6 @@ would generate the following output:
 <pre> </pre>
 
 
-
 <li><b>BLOCK</b><br>
 <p>
 The BLOCK ... END construct can be used to define template component
@@ -519,12 +535,10 @@ enclosing block is processed each time the macro is called.
 <pre>    [% tt_start_tag %] locate(animal='cat', place='mat') [% tt_end_tag %]    # The cat sat on the mat
     [% tt_start_tag %] locate(animal='dog', place='log') [% tt_end_tag %]    # The dog sat on the log</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Conditional Processing'
+   title = "Conditional Processing"
 -%]
 <ul>
 
@@ -568,7 +582,6 @@ determine evaluation order.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>SWITCH / CASE</b><br>
 <p>
 The SWITCH / CASE construct can be used to perform a multi-way
@@ -591,12 +604,10 @@ is no drop-through between CASE statements.
     [% tt_start_tag %] END [% tt_end_tag %]
   </pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Loop Processing'
+   title = "Loop Processing"
 -%]
 <ul>
 
@@ -775,7 +786,6 @@ details.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>WHILE</b><br>
 <p>
 The WHILE directive can be used to repeatedly process a template block
@@ -809,12 +819,10 @@ The $Template::Directive::WHILE_MAX variable controls this behaviour
 and can be set to a higher value if necessary.
 </p>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Filters, Plugins, Macros and Perl'
+   title = "Filters, Plugins, Macros and Perl"
 -%]
 <ul>
 
@@ -996,7 +1004,6 @@ their descriptions and examples of use.
 </p>
 
 
-
 <li><b>USE</b><br>
 <p>
 The USE directive can be used to load and initialise &quot;plugin&quot;
@@ -1135,7 +1142,6 @@ following trivial example shows how the IO::File module might be used.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>MACRO</b><br>
 <p>
 The MACRO directive allows you to define a directive or directive block
@@ -1190,7 +1196,6 @@ evaluated each time the macro is called.
        ...content...
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] header [% tt_end_tag %]</pre>
-
 
 
 <li><b>PERL</b><br>
@@ -1261,7 +1266,6 @@ correctly caught by enclosing TRY blocks.
 output:
        error: nothing to live for
 </p>
-
 
 
 <li><b>RAWPERL</b><br>
@@ -1366,12 +1370,10 @@ As with PERL blocks, the $context and $stash references are pre-defined
 and available for use within RAWPERL code. 
 </p>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Exception Handling and Flow Control'
+   title = "Exception Handling and Flow Control"
 -%]
 <ul>
 
@@ -1729,7 +1731,6 @@ or just an $info string to create an exception of 'undef' type.
     $context-&gt;throw('user.passwd', 'Bad Password');</pre>
 
 
-
 <li><b>NEXT</b><br>
 <p>
 The NEXT directive can be used to start the next iteration of a FOREACH 
@@ -1739,7 +1740,6 @@ or WHILE loop.
        [% tt_start_tag %] NEXT IF user.isguest [% tt_end_tag %]
        Name: [% tt_start_tag %] user.name [% tt_end_tag %]    Email: [% tt_start_tag %] user.email [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 
 <li><b>LAST</b><br>
@@ -1754,7 +1754,6 @@ loop.
 <p>
 BREAK can also be used as an alias for LAST.
 </p>
-
 
 
 <li><b>RETURN</b><br>
@@ -1781,7 +1780,6 @@ output:
 <pre>    Before
     This is just half...
     After</pre>
-
 
 
 <li><b>STOP</b><br>
@@ -1811,7 +1809,6 @@ processed successfully according to the directives within it.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>CLEAR</b><br>
 <p>
 The CLEAR directive can be used to clear the output buffer for the current
@@ -1827,12 +1824,10 @@ from a TRY block up to the point where the error occurred.
        [% tt_start_tag %] error [% tt_end_tag %]               # print error string
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Miscellaneous'
+   title = "Miscellaneous"
 -%]
 <ul>
 
@@ -1915,7 +1910,6 @@ The output generated from the above example is:
     &lt;/html&gt;</pre>
 
 
-
 <li><b>TAGS</b><br>
 <p>
 The TAGS directive can be used to set the START_TAG and END_TAG values
@@ -1932,13 +1926,11 @@ The TAGS directive may also be used to set a named TAG_STYLE
 See the TAGS and TAG_STYLE configuration options for further details.
 </p>
 
-
 </ul>
-
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -1947,13 +1939,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

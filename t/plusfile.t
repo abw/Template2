@@ -88,8 +88,7 @@ My content
 -- test --
 [% INSERT foo+bar/baz %]
 -- expect --
-This is the foo file, a is [% a %]
-[% DEFAULT word = 'qux' -%]
+This is the foo file, a is [% a -%][% DEFAULT word = 'qux' -%]
 This is file baz
 The word is '[% word %]'
 
@@ -99,8 +98,7 @@ The word is '[% word %]'
 -%]
 [% INSERT "$file1" + "$file2" %]
 -- expect --
-This is the foo file, a is [% a %]
-[% DEFAULT word = 'qux' -%]
+This is the foo file, a is [% a -%][% DEFAULT word = 'qux' -%]
 This is file baz
 The word is '[% word %]'
 

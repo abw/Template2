@@ -19,6 +19,7 @@
 		pad    = 2
 	    
 		col = {
+		    page => 'lilac'   # page border
 		    back => 'white'   # background
 		    fore => 'lilac'   # foreground (e.g. button)
 		    edge => 'lilac'   # edging strip

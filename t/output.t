@@ -47,7 +47,7 @@ close(FP);
 
 ok( 1 );
 
-ok( $out eq "This is the foo file, a is alpha\n" );
+match( $out, "This is the foo file, a is alpha" );
 
 unlink($file1);
 
@@ -71,7 +71,7 @@ close(FP);
 
 ok( 1 );
 
-ok( $out eq "This is the foo file, a is alpha\n" );
+match( $out, "This is the foo file, a is alpha" );
 
 unlink($file2);
 

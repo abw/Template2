@@ -70,5 +70,5 @@ file error - foo: not found
 -- test --
 [% INSERT src:foo %]
 -- expect --
-This is the foo file, a is [% a %]
+This is the foo file, a is [% a -%]
 

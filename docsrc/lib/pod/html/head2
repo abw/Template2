@@ -1,6 +1,6 @@
 [% TAGS star -%]
 [% WRAPPER subsection
-   title = '[* view.print(item.title) *]'
+   title = "[* vq.print(item.title) *]"
 -%]
 [*- view.print(item.content) -*]
 [%- END %]

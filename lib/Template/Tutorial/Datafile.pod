@@ -5,9 +5,9 @@
 # DESCRIPTION
 #   This tutorial gives an overview of the Template Toolkit, showing in
 #   particular how to use it to read and write data files in various
-#   different formats and styles. It was written by Dave Cross
-#   &lt;dave@dave.org.uk> and first appeared as a lead article at
-#   http://www.perl.com/ earlier in the year (2001).
+#   different formats and styles. It was written by Dave Cross and
+#   first appeared as a lead article at http://www.perl.com/ earlier in
+#   the year (2001).
 #
 # AUTHOR
 #   Dave Cross  <dave@dave.org.uk>
@@ -42,9 +42,11 @@ Template::Tutorial::Datafile - Creating Data Output Files Using the Template Too
 
 =head1 DESCRIPTION
 
-This tutorial gives an overview of the Template Toolkit, showing in 
-particular how to use it to read and write data files in various different
-formats and styles.
+This tutorial gives an overview of the Template Toolkit, showing in
+particular how to use it to read and write data files in various
+different formats and styles. It was written by Dave Cross and first
+appeared as a lead article at http://www.perl.com/ earlier in the year
+(2001).
 
 =head1 Introducing the Template Toolkit
 

@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.02, detailing
+#   Revision history for the Template Toolkit version 2.03, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -15,6 +15,149 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.03 - 
+#------------------------------------------------------------------------
+
+* Added new virtual methods 'item', 'list', 'hash' to each of scalar, 
+  list and hash ops to Do The Right Thing to convert the original value
+  to what the caller wants.  This is based on a patch supplied by Craig
+  Barratt...
+
+* ...which implements a number of new features to the stash, most
+  notably the ability to specify the context in which you want an
+  object method or subroutine to be called in by appending '.list' or
+  '.scalar' to a dotted variable.  e.g. [% cgi.param('foo').scalar %].
+  I haven't folded this patch into the core Stash yet (other than
+  adopting the virtual methods described above) but it's provided as
+  an alternate stash implementation, Template::Stash::Context, which
+  you can create and specify to your Template object via the STASH
+  configuration option.  I'd like to a) benchmark it and b) give
+  people the option of trying it out (and hacking on it?) before
+  integrating the new features into the default stash.
+
+* Applied a patch to add the Latex filter and GD plugin functionality,
+  thanks to the excellent work of Craig Barratt and Richard Tietjen.  
+  In Craig's words:
+
+    Here is a new version of my Latex filter and GD plugin code.
+    (This adds a latex filter that supports PDF, PS and DVI output,
+    plus 16 or so plugins for the GD::* modules, allowing PNG, GIF
+    output.)
+
+    [Includes] Richard Tietjen's changes for the latex filter for WinXX
+    [which] didn't make it into the May 20th version.  The new version
+    includes the correct changes for WinXX and also now has been
+    tested against TexLive and MikTeX on WinXX.
+
+  Craig's patch also included full documentation so you can read all about
+  it in the Manual and Module pages.  In addition, the Makefile.PL now 
+  searches for GD modules and external Latex programs and does some extra
+  user prompting for confirmation of Latex installation/configuration.
+  Not only that, but Craig also managed to roll in a couple of other 
+  minor bug fixes and documention updates.  Nice work!
+
+* Fixed the parser to accept fully dotted up variable assignments in 
+  argument lists, e.g. in INCLUDE, etc.  You can now do this:
+
+  [% INCLUDE html/head
+      html.head.title = 'My Title'
+  %]
+
+  Note however that the assignment to such variables is always "global",
+  even though INCLUDE claims to localise the stash.  Remember that the
+  localisation does not perform a deep copy so the localised copy of 
+  the 'html' variable might just be a copy of the reference to a previously
+  defined hash array.  Thus, you modify the original albeit via a copy
+  of the reference to it.  See INCLUDE section of 
+  Template::Manual::Directives for further details.
+
+* Added 'base' option to Template::View.  This allows one view to inherit
+  from another "base class" view.  If a template isn't defined in a
+  derived view then it automatically asks its base view for it, and so
+  on up the inheritance tree.
+
+    [% VIEW myview.default
+            prefix = 'view/default/';
+       END 
+    %]
+    [% VIEW myview.fancy
+            base   = myview.default
+            prefix = 'view/fancy/';
+       END
+    %]
+
+  In this example, [% myview.fancy.header %] will be resolved as
+  [% INCLUDE view/fancy/header %] or [% INCLUDE view/default/header %]
+  if 'view/fancy/header' doesn't exist.  Variables are also inherited.
+
+* Added the 'sealed' and 'silent' parameters to VIEW to allow view to be
+  optionally unsealed (allow external variable updates/creation) and
+  to silence warnings about attempts to update sealed variables, 
+  respectively.  See the Template::Manual::Views page for more info on
+  this and previosu item.
+
+* Added the HTML plugin for generating (very basic) HTML elements.
+  See the Template::Plugin::HTML documentation.
+
+* Added the present() and content() methods to XML::DOM::Node in the 
+  XML::DOM plugin to make them work harmoniously with VIEWs.  See the 
+  Template::Plugin::XML::DOM documentation for further details.
+
+* Did the same for Template::Plugin::XML::XPath, adding present($view)
+  and content($view) methods to XML::XPath::Node::Element and a
+  present($view) method to XML::XPath::Node::Text.  See the
+  Template::Plugin::XML::DOM documentation for more details.
+
+* Added the calc() method to the Date plugin to return an interface to
+  the Date::Calc module.  e.g.     
+
+    [% USE Date; calc = Date.calc %]
+    [% calc.Monday_of_Week(22, 2001).join('/') %]
+
+* Moved Template::Tutorial to Template::Tutorial::Web and added the 
+  tutorial kindly donated by Dave Cross on generating and using data
+  files with TT as Template::Tutorial::Datafile.  Template::Tutorial
+  is now an index to the tutorials.
+
+* Changed the bin/tt2inst script to no longer use the 'no_chdir' option
+  of the File::Find module which isn't supported in earlier version such
+  as distributed with pre-5.6.0 Perl.  Thanks to a patch from Vivek
+  Khera <khera@kcilink.com>.  Changed Makefile.PL to accept File::Spec
+  version 0.6 or later.
+
+* Applied a patch from Eric Cholet to fix a bug in META data items not
+  correctly escaping ' and \ characters.
+
+* Applied a patch to ttree from Leon Brocard print full path for ignored 
+  files.
+
+* Fixed typo in the ttree help page which incorrectly listed debug
+  mode as '-d' (now '-dbg' as well as '--debug')
+
+* Fixed (hopefully once and for all!) the problem with choming the 
+  final newline in a template.  The last newline is now chomped just 
+  like any other, depending on the POST_CHOMP flag and/or trailing '-'
+  in the directive.  e.g. 
+
+    [% FILTER latex('ps') %]
+       ...
+    [% END -%]
+
+  If you explicitly want a newline then make sure one is added to the 
+  end of the template and don't enable POST_CHOMP or add a trailing '+'
+  in the directive, e.g.
+
+    [% INCLUDE footer +%]
+
+* Made a number of fixes to the HTML generated by the Splash! and HTML
+  libraries to make it conformant with HTML 3.2 specificiation.  Added
+  DOCTYPE to html/header, ALT tags, ... added html/head, html/body and 
+  html/html to do more thorough job using nested variables.  Also added
+  html/config to load HTML plugin.  Full conformance is still an issue,
+  but we're working on it...
+
 
 #------------------------------------------------------------------------
 # Version 2.02 - 6th April 2001
@@ -129,7 +272,8 @@
 * Makefile.PL now saves configuration options in '.defaults.cfg' 
   file, using these values as defaults when run again.
 
-* Removed duplicated $VERSION from DBI plugin.
+* Removed duplicated $VERSION from DBI and XML::DOM plugins, thanks
+  to Jonathan Leffler.
 
 * Updated documentation to reflect new changes.
 

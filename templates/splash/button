@@ -22,8 +22,8 @@
 <!-- tt2.splash.button -->  
 <table bgcolor="[% rgbcol %]"[% IF width %] width="[% width %]"[% END %]
        border="0" cellpadding="0" cellspacing="0">
-  <tr height="[% imgsize %]" valign="top">
-    <td width="[% imgsize %]"><img 
+  <tr valign="top">
+    <td width="[% imgsize %]"><img
         src="[% imgbase %]/tl.[% imgtype %]"
         width="[% imgsize %]" height="[% imgsize %]"></td>
     <td rowspan="2" valign="middle"
@@ -34,7 +34,7 @@
         src="[% imgbase %]/tr.[% imgtype %]" 
         width="[% imgsize %]" height="[% imgsize %]"></td>
   </tr>
-  <tr height="[% imgsize %]" valign="bottom">
+  <tr valign="bottom">
      <td width="[% imgsize %]" align="left"><img 
          src="[% imgbase %]/bl.[% imgtype %]" 
          width="[% imgsize %]" height="[% imgsize %]"></td>

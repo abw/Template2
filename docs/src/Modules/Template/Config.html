@@ -12,23 +12,23 @@
         page = 'Config'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='PUBLIC METHODS'
-                         subs=['load($module)', 'parser(\%config)', 'provider(\%config)', 'plugins(\%config)', 'filters(\%config)', 'stash(\%vars)', 'context(\%config)', 'service(\%config)', 'instdir($dir)'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="PUBLIC METHODS"
+                         subs=["load($module)", "parser(\\%config)", "provider(\\%config)", "plugins(\\%config)", "filters(\\%config)", "stash(\\%vars)", "context(\\%config)", "service(\\%config)", "instdir($dir)"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    use Template::Config;</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This module implements various methods for loading and instantiating
 other modules that comprise the Template Toolkit.  It provides a consistent
@@ -46,9 +46,9 @@ an object from the new class.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='PUBLIC METHODS'
+    title="PUBLIC METHODS"
 -%][% WRAPPER subsection
-   title = 'load($module)'
+   title = "load($module)"
 -%]<p>
 Load a module via require().  Any occurences of '::' in the module name
 are be converted to '/' and '.pm' is appended.  Returns 1 on success
@@ -56,7 +56,7 @@ or undef on error.  Use $class-&gt;error() to examine the error string.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'parser(\%config)'
+   title = "parser(\\%config)"
 -%]<p>
 Instantiate a new parser object of the class whose name is denoted by
 the package variable $PARSER (default: Template::Parser).  Returns
@@ -64,28 +64,28 @@ a reference to a newly instantiated parser object or undef on error.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'provider(\%config)'
+   title = "provider(\\%config)"
 -%]<p>
 Instantiate a new template provider object (default: Template::Provider).
 Returns an object reference or undef on error, as above.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'plugins(\%config)'
+   title = "plugins(\\%config)"
 -%]<p>
 Instantiate a new plugins provider object (default: Template::Plugins).
 Returns an object reference or undef on error, as above.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'filters(\%config)'
+   title = "filters(\\%config)"
 -%]<p>
 Instantiate a new filter provider object (default: Template::Filters).
 Returns an object reference or undef on error, as above.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'stash(\%vars)'
+   title = "stash(\\%vars)"
 -%]<p>
 Instantiate a new stash object (default: Template::Templates) using the 
 contents of the optional hash array passed by parameter as initial variable
@@ -93,21 +93,21 @@ definitions.  Returns an object reference or undef on error, as above.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'context(\%config)'
+   title = "context(\\%config)"
 -%]<p>
 Instantiate a new template context object (default: Template::Context).
 Returns an object reference or undef on error, as above.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'service(\%config)'
+   title = "service(\\%config)"
 -%]<p>
 Instantiate a new template service object (default: Template::Service).
 Returns an object reference or undef on error, as above.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'instdir($dir)'
+   title = "instdir($dir)"
 -%]<p>
 Returns the root directory of the Template Toolkit installation under
 which optional components are installed.  Any relative directory specified
@@ -126,7 +126,7 @@ optional components of the Template Toolkit have not been installed.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -135,14 +135,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.08, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.10, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -151,7 +151,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template', 'Template') -%]
 </p>

@@ -118,7 +118,8 @@ sub template {
 #	    print STDERR "prefix identified: $prefix\n";
 	}
     }
-    $providers = $self->{ LOAD_TEMPLATES } 
+    $providers = $self->{ PREFIX_MAP }->{ default }
+	      || $self->{ LOAD_TEMPLATES }
         unless $providers;
 
     # finally we try the regular template providers which will 
@@ -1418,7 +1419,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.16, distributed as part of the
+2.17, distributed as part of the
 Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT

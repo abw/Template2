@@ -12,23 +12,23 @@
         page = 'Config'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION'
-                         subs=['Template Style and Parsing Options', 'Template Files and Blocks', 'Template Variables', 'Runtime Processing Options', 'Caching and Compiling Options', 'Plugins and Filters', 'Compatibility, Customisation and Extension'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION"
+                         subs=["Template Style and Parsing Options", "Template Files and Blocks", "Template Variables", "Runtime Processing Options", "Caching and Compiling Options", "Plugins and Filters", "Compatibility, Customisation and Extension"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section contains details of all the configuration options that can
 be used to customise the behaviour and extend the features of the
 Template Toolkit.
 </p>
 [% WRAPPER subsection
-   title = 'Template Style and Parsing Options'
+   title = "Template Style and Parsing Options"
 -%]
 <ul>
 
@@ -60,7 +60,6 @@ on a per-template file basis.
 <pre>    [% tt_start_tag %] TAGS &lt;+ +&gt; [% tt_end_tag %]</pre>
 
 
-
 <li><b>TAG_STYLE</b><br>
 <p>
 The TAG_STYLE option can be used to set both START_TAG and END_TAG
@@ -89,7 +88,6 @@ The TAGS directive may also be used to set a TAG_STYLE
 </p>
 <pre>    [% tt_start_tag %] TAGS html [% tt_end_tag %]
     &lt;!-- INCLUDE header --&gt;</pre>
-
 
 
 <li><b>PRE_CHOMP, POST_CHOMP</b><br>
@@ -185,7 +183,6 @@ With POST_CHOMP enabled, the above example would be parsed as if written:
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>TRIM</b><br>
 <p>
 The TRIM option can be set to have any leading and trailing whitespace 
@@ -221,7 +218,6 @@ of the BLOCK.
 <p>
 The TRIM option is disabled (0) by default.
 </p>
-
 
 
 <li><b>INTERPOLATE</b><br>
@@ -261,7 +257,6 @@ PROCESS or INCLUDE.
 </p>
 
 
-
 <li><b>ANYCASE</b><br>
 <p>
 By default, directive keywords should be expressed in UPPER CASE.  The 
@@ -292,12 +287,10 @@ regardless of the ANYCASE option, are the operators:
 </p>
 <pre>    and or not mod div</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Template Files and Blocks'
+   title = "Template Files and Blocks"
 -%]
 <ul>
 
@@ -329,7 +322,6 @@ directory names like 'C:\Blah Blah'.
 </p>
 
 
-
 <li><b>DELIMITER</b><br>
 <p>
 Used to provide an alternative delimiter character sequence for 
@@ -359,7 +351,6 @@ rather than rely on this subtle magic.
 </p>
 
 
-
 <li><b>ABSOLUTE</b><br>
 <p>
 The ABSOLUTE flag is used to indicate if templates specified with
@@ -380,7 +371,6 @@ with a driver letter and colon, such as:
 <pre>    C:/Foo/Bar</pre>
 
 
-
 <li><b>RELATIVE</b><br>
 <p>
 The RELATIVE flag is used to indicate if templates specified with
@@ -393,7 +383,6 @@ encountered.
 	RELATIVE =&gt; 1,
     });</pre>
 <pre>    [% tt_start_tag %] INCLUDE ../logs/error.log [% tt_end_tag %]</pre>
-
 
 
 <li><b>DEFAULT</b><br>
@@ -414,7 +403,6 @@ handle or text string.
 </p>
 
 
-
 <li><b>BLOCKS</b><br>
 <p>
 The BLOCKS option can be used to pre-define a default set of template 
@@ -429,7 +417,6 @@ objects.
 	    another =&gt; Template::Document-&gt;new({ ... }),
 	},
     }); </pre>
-
 
 
 <li><b>AUTO_RESET</b><br>
@@ -450,7 +437,6 @@ is enabled (default), or if the Template::Context reset() method is called.
 </p>
 
 
-
 <li><b>RECURSION</b><br>
 <p>
 The template processor will raise a file exception if it detects
@@ -458,12 +444,10 @@ direct or indirect recursion into a template.  Setting this option to
 any true value will allow templates to include each other recursively.
 </p>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Template Variables'
+   title = "Template Variables"
 -%]
 <ul>
 
@@ -492,12 +476,10 @@ or
 	},
     };</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Runtime Processing Options'
+   title = "Runtime Processing Options"
 -%]
 <ul>
 
@@ -558,7 +540,6 @@ runtime environment, making a real nuisance of itself if it really
 wants to.  If you don't like the idea of such uninvited guests causing
 a bother, then you can accept the default and keep EVAL_PERL disabled.
 </p>
-
 
 
 <li><b>PRE_PROCESS, POST_PROCESS</b><br>
@@ -640,7 +621,6 @@ header:
     &lt;body bgcolor=&quot;[% tt_start_tag %] bgcolor [% tt_end_tag %]&quot;&gt;</pre>
 
 
-
 <li><b>PROCESS</b><br>
 <p>
 The PROCESS option may be set to contain the name(s) of template files
@@ -698,7 +678,6 @@ output:
     &amp;copy; Copyright 2000 Fred Foo
     &lt;/body&gt;
     &lt;/html&gt;</pre>
-
 
 
 <li><b>ERROR</b><br>
@@ -782,7 +761,6 @@ type which can then be handled in the usual way.
 <pre>    die &quot;I'm sorry Dave, I can't do that&quot;;</pre>
 
 
-
 <li><b>OUTPUT</b><br>
 <p>
 Default output location or handler.  This may be specified as one of:
@@ -844,7 +822,6 @@ above argument types.
     ...</pre>
 
 
-
 <li><b>OUTPUT_PATH</b><br>
 <p>
 The OUTPUT_PATH allows a directory to be specified into which output
@@ -870,19 +847,16 @@ and '/tmp/dest/bar.html', respectively.
 </p>
 
 
-
 <li><b>DEBUG</b><br>
 <p>
 The DEBUG option causing any access to an undefined variable to be 
 raised as an 'undef' error.
 </p>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Caching and Compiling Options'
+   title = "Caching and Compiling Options"
 -%]
 <ul>
 
@@ -910,7 +884,6 @@ The CACHE_SIZE can be set to 0 to disable caching altogether.
 <pre>    my $template = Template-&gt;new({
 	CACHE_SIZE =&gt; 0,   # don't cache any compiled templates
     });</pre>
-
 
 
 <li><b>COMPILE_EXT</b><br>
@@ -944,7 +917,6 @@ time and resources required to reload templates.  Compiled templates can
 be reloaded by a simple call to Perl's require(), leaving Perl to handle
 all the parsing and compilation.  This is a Good Thing.
 </p>
-
 
 
 <li><b>COMPILE_DIR</b><br>
@@ -1011,12 +983,10 @@ This would create the following cache directories:
 <pre>    C:/TT2/Cache/C/TT2/Templates
     C:/TT2/Cache/D/My Templates</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Plugins and Filters'
+   title = "Plugins and Filters"
 -%]
 <ul>
 
@@ -1048,7 +1018,6 @@ new() method can be called to instantiate individual plugin objects.
 If the plugin name is not defined in the PLUGINS hash then the PLUGIN_BASE
 and/or LOAD_PERL options come into effect.
 </p>
-
 
 
 <li><b>PLUGIN_BASE</b><br>
@@ -1085,7 +1054,6 @@ example 2:
                        or          Template::Plugin::Foo </pre>
 
 
-
 <li><b>LOAD_PERL</b><br>
 <p>
 If a plugin cannot be loaded using the PLUGINS or PLUGIN_BASE
@@ -1118,7 +1086,6 @@ If a particular Perl module does not conform to the common, but not
 unilateral, new() constructor convention then a simple plugin wrapper
 can be written to interface to it.
 </p>
-
 
 
 <li><b>FILTERS</b><br>
@@ -1211,12 +1178,10 @@ is approximately equivalent to:
 See the FILTER directive for further examples.
 </p>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'Compatibility, Customisation and Extension'
+   title = "Compatibility, Customisation and Extension"
 -%]
 <ul>
 
@@ -1332,7 +1297,6 @@ ignored.
     });</pre>
 
 
-
 <li><b>LOAD_TEMPLATES</b><br>
 <p>
 The LOAD_TEMPLATE option can be used to provide a reference to a list
@@ -1379,7 +1343,6 @@ constructor method.
     });</pre>
 
 
-
 <li><b>LOAD_PLUGINS</b><br>
 <p>
 The LOAD_PLUGINS options can be used to specify a list of provider
@@ -1406,7 +1369,6 @@ constructor.
     });</pre>
 
 
-
 <li><b>LOAD_FILTERS</b><br>
 <p>
 The LOAD_FILTERS option can be used to specify a list of provider
@@ -1427,7 +1389,6 @@ LOAD_FILTERS list.
 </p>
 
 
-
 <li><b>TOLERANT</b><br>
 <p>
 The TOLERANT flag is used by the various Template Toolkit provider
@@ -1445,7 +1406,6 @@ comply, then a '&lt;resource&gt; not found' exception is raised.
 </p>
 
 
-
 <li><b>SERVICE</b><br>
 <p>
 A reference to a Template::Service object, or sub-class thereof, to which
@@ -1455,7 +1415,6 @@ object is automatically created using the current configuration hash.
 <pre>    my $template = Template-&gt;new({
 	SERVICE =&gt; MyOrg::Template::Service-&gt;new({ ... }),
     });</pre>
-
 
 
 <li><b>CONTEXT</b><br>
@@ -1473,7 +1432,6 @@ manages variable definitions via the get() and set() methods.
 <pre>    my $template = Template-&gt;new({
 	CONTEXT =&gt; MyOrg::Template::Context-&gt;new({ ... }),
     });</pre>
-
 
 
 <li><b>STASH</b><br>
@@ -1499,7 +1457,6 @@ version 1.
     };</pre>
 
 
-
 <li><b>PARSER</b><br>
 <p>
 The Template::Parser module implements a parser object for compiling
@@ -1512,7 +1469,6 @@ an alternate parser object.
 <pre>    my $template = Template-&gt;new({
 	PARSER =&gt; MyOrg::Template::Parser-&gt;new({ ... }),
     });</pre>
-
 
 
 <li><b>GRAMMAR</b><br>
@@ -1550,13 +1506,11 @@ created and used automatically if a GRAMMAR item isn't specified.
        	GRAMMAR = MyOrg::Template::Grammar-&gt;new();
     });</pre>
 
-
 </ul>
-
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -1565,13 +1519,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

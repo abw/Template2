@@ -150,7 +150,4 @@ This is the second subsection.  bar-&gt;baz();
 
 <p>
 This is the end.  Beautiful friend, the end.
-
 </p>
-
-

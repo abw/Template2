@@ -2,9 +2,7 @@
 
 =head1 DESCRIPTION
 
-This tutorial gives an overview of the Template Toolkit, showing in 
-particular how to use it to read and write data files in various different
-formats and styles.
+[* USE wrap; page.intro | wrap(72) *]
 
 =head1 Introducing the Template Toolkit
 

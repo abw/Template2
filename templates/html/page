@@ -1,3 +1,5 @@
-[% INCLUDE html/header %]
-[% content %]
-[% PROCESS html/footer %]
+[%  WRAPPER html/html;
+	PROCESS html/head;
+	PROCESS html/body;
+    END;
+-%]

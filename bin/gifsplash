@@ -69,7 +69,14 @@ sub load_gifs {
     @files = grep { /\.gif$/ } readdir(DIR);
     closedir DIR;
 
-    print STDERR "Found ", scalar @files, " GIF files\n" if $verbose;
+    if ($verbose) {
+	my $filenames = '';
+	my @tmpfiles = @files;
+	while (@tmpfiles) {
+	    $filenames .= '  ' . join(', ', splice(@tmpfiles, 0, 6)) . "\n";
+	}
+	print STDERR "Found ", scalar @files, " GIF files:\n$filenames";
+    }
 
     foreach my $f (@files) {
 	open(GIF, "$gifdir/$f") || die "$gifdir/$f: $!\n";

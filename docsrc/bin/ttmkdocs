@@ -88,7 +88,8 @@ my $template = Template->new({
     PRE_PROCESS  => 'config',
     EVAL_PERL    => 1,
     FILTERS      => {
-	tt_tags  => \&tt_tags,
+	tt_tags        => \&tt_tags,
+	tt_quote_tags  => \&tt_quote_tags,
     },
     RECURSION => 1,
 })
@@ -110,6 +111,17 @@ sub tt_tags {
 	s/\[%/[% START_TAG %]/g;
 	s/(?<!\[% START_TAG )%\]/[% tt_end_tag %]/g;
 	s/\[% START_TAG %\]/[% tt_start_tag %]/g;
+    }
+    return $text;
+}
+
+sub tt_quote_tags {
+    my $text = shift;
+    for ($text) {
+	s/\[%/[% START_TAG %]/g;
+	s/(?<!\[% START_TAG )%\]/\$tt_end_tag/g;
+	s/\[% START_TAG %\]/\$tt_start_tag/g;
+	s/(["\\])/\\$1/g;
     }
     return $text;
 }

@@ -12,16 +12,16 @@
         page = 'Internals'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION'
-                         subs=['Outside Looking In', 'Inside Looking Out'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION"
+                         subs=["Outside Looking In", "Inside Looking Out"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This document provides an overview of the internal architecture of the
 Template Toolkit. It is a work in progress and is far from complete,
@@ -31,7 +31,7 @@ anyone wishing to delve into the source code to find out how it all
 works.
 </p>
 [% WRAPPER subsection
-   title = 'Outside Looking In'
+   title = "Outside Looking In"
 -%]<p>
 The <b>Template</b> module is simply a front end module which creates and
 uses a Template::Service and pipes the output wherever you want it to
@@ -178,7 +178,7 @@ code annotations showing a typical invocation sequence.
         </pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Inside Looking Out'
+   title = "Inside Looking Out"
 -%]<p>
 To understand more about what's going on in these lower levels, we
 need to look at what a compiled template looks like.  In fact, a
@@ -352,7 +352,7 @@ counterparts in Perl.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -361,13 +361,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

@@ -22,6 +22,8 @@
 	    view.print(i) FOREACH i = item;
 	END;
     END;
+    VIEW vq base=v prefix='pod/html/quote_';
+    END;
 
     PROCESS toc;
 
@@ -31,15 +33,17 @@
 [%  WRAPPER toc;
 [*  FOREACH sec = pom.head1;
 	subs = []; 
-	title = v.print(sec.title) or sec.title;
+	title = vq.print(sec.title) or sec.title;
 	NEXT IF title == 'NAME';
 	FOREACH sub = sec.head2;
-	    subs.push( v.print(sub.title) );
+#		n = vq.print(sub.title);
+#		"title: [$n]\n" | stderr;
+	    subs.push( vq.print(sub.title) );
 	END;
 -*]
-	INCLUDE tocitem title='[* title *]'
+	INCLUDE tocitem title="[* title *]"
 [*- IF subs.size *]
-                         subs=['[* subs.join("', '")*]']
+                         subs=["[* subs.join('", "')*]"]
 [*- END *];
 [* END -*]
     END

@@ -445,7 +445,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.11, distributed as part of the
+2.12, distributed as part of the
 Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT

@@ -75,6 +75,12 @@ Directory error on /no/such/place
 -- process --
 [% dir %]
 
+-- test --
+[% USE directory(dir) -%]
+[% directory.path %]
+-- expect --
+-- process --
+[% dir %]
 
 -- test --
 [% USE d = Directory(dir) -%]

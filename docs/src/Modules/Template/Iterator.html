@@ -12,23 +12,23 @@
         page = 'Iterator'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='PUBLIC METHODS'
-                         subs=['new($data) ', 'get_first()', 'get_next()', 'get_all()', 'size()', 'max()', 'index()', 'count()', 'first()', 'last()', 'prev()', 'next()'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="PUBLIC METHODS"
+                         subs=["new($data) ", "get_first()", "get_next()", "get_all()", "size()", "max()", "index()", "count()", "first()", "last()", "prev()", "next()"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    my $iter = Template::Iterator-&gt;new(\@data, \%options);</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 The Template::Iterator module defines a generic data iterator for use 
 by the FOREACH directive.  
@@ -38,9 +38,9 @@ It may be used as the base class for custom iterators.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='PUBLIC METHODS'
+    title="PUBLIC METHODS"
 -%][% WRAPPER subsection
-   title = 'new($data) '
+   title = "new($data) "
 -%]<p>
 Constructor method.  A reference to a list of values is passed as the
 first parameter.  Subsequent calls to get_first() and get_next() calls 
@@ -123,7 +123,7 @@ MyObjectList encapsulates.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'get_first()'
+   title = "get_first()"
 -%]<p>
 Returns a ($value, $error) pair for the first item in the iterator set.
 The $error returned may be zero or undefined to indicate a valid datum
@@ -132,7 +132,7 @@ is empty.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'get_next()'
+   title = "get_next()"
 -%]<p>
 Returns a ($value, $error) pair for the next item in the iterator set.
 Returns an error of STATUS_DONE if all items in the list have been 
@@ -140,7 +140,7 @@ visited.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'get_all()'
+   title = "get_all()"
 -%]<p>
 Returns a (\@values, $error) pair for all remaining items in the iterator 
 set.  Returns an error of STATUS_DONE if all items in the list have been 
@@ -148,26 +148,26 @@ visited.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'size()'
+   title = "size()"
 -%]<p>
 Returns the size of the data set or undef if unknown.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'max()'
+   title = "max()"
 -%]<p>
 Returns the maximum index number (i.e. the index of the last element) 
 which is equivalent to size() - 1.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'index()'
+   title = "index()"
 -%]<p>
 Returns the current index number which is in the range 0 to max().
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'count()'
+   title = "count()"
 -%]<p>
 Returns the current iteration count in the range 1 to size().  This is
 equivalent to index() + 1.  Note that number() is supported as an alias
@@ -175,28 +175,28 @@ for count() for backwards compatability.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'first()'
+   title = "first()"
 -%]<p>
 Returns a boolean value to indicate if the iterator is currently on 
 the first iteration of the set.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'last()'
+   title = "last()"
 -%]<p>
 Returns a boolean value to indicate if the iterator is currently on
 the last iteration of the set.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'prev()'
+   title = "prev()"
 -%]<p>
 Returns the previous item in the data set, or undef if the iterator is
 on the first item.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'next()'
+   title = "next()"
 -%]<p>
 Returns the next item in the data set or undef if the iterator is on the 
 last item.
@@ -204,7 +204,7 @@ last item.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -213,14 +213,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.08, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.10, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -229,7 +229,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template', 'Template') -%]
 </p>

@@ -12,17 +12,17 @@
         page = 'Credits'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='HISTORY';
-	INCLUDE tocitem title='CONTRIBUTORS ';
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="HISTORY";
+	INCLUDE tocitem title="CONTRIBUTORS ";
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section provides a brief history of the Template Toolkit and
 details the primary author and numerous other people who have
@@ -30,7 +30,7 @@ contributed to it.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='HISTORY'
+    title="HISTORY"
 -%]<p>
 The Template Toolkit began its life as the Text::MetaText module,
 originally released to CPAN around 1996.  This itself was the public
@@ -75,7 +75,7 @@ version 2.00 was released on 1st December 2000.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='CONTRIBUTORS '
+    title="CONTRIBUTORS "
 -%]<p>
 Many people have contributed ideas, inspiration, fixes and features to
 the Template Toolkit.  Their efforts continue to be very much appreciated.  
@@ -83,11 +83,13 @@ Please let me know if you think anyone is missing from this list.
 </p>
 <pre>  Chuck Adams               &lt;scrytch@uswest.net&gt;
   Thierry-Michel Barral     &lt;kktos@electron-libre.com&gt;
-  Stas Beckman		    &lt;stas@stason.org&gt;
+  Craig Barratt             &lt;craig@arraycomm.com&gt;
+  Stas Beckman              &lt;stas@stason.org&gt;
   Neil Bowers               &lt;neilb@cre.canon.co.uk&gt;
   Leon Brocard              &lt;acme@astray.com&gt;  
   Lyle Brooks               &lt;brooks@deseret.com&gt;
   Piers Cawley              &lt;pdcawley@bofh.org.uk&gt;
+  Eric Cholet               &lt;cholet@logilune.com&gt;
   Chris Dean                &lt;ctdean@babycenter.com&gt;  
   Francois Desarmenien      &lt;desar@club-internet.fr&gt;
   Horst Dumcke              &lt;hdumcke@cisco.com&gt; 
@@ -113,11 +115,12 @@ Please let me know if you think anyone is missing from this list.
   Michael Stevens           &lt;michael@etla.org&gt;
   Drew Taylor               &lt;dtaylor@vialogix.com&gt;   
   Swen Thuemmler            &lt;Swen.Thuemmler@paderlinx.de&gt;   
+  Richard Tietjen           &lt;Richard_Tietjen@mcgraw-hill.com&gt;
   Jim Vaughan               &lt;jim@mrjim.com&gt; 
   Chris Winters             &lt;cwinters@intes.net&gt;</pre>
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -126,13 +129,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

@@ -7,15 +7,18 @@ select STDOUT;
 
 use vars qw( $TT_INST_ROOT $TT_IMAGES $TT_RUN_DBI
 	     $TT_BUILD_DOCS $TT_SPLASH_DOCS $TT_EXAMPLES
+	     $TT_LATEX_PATH $TT_PDFLATEX_PATH $TT_DVIPS_PATH $TT_LATEX_ENABLE
 	     $TT_SPLASH_THEME );
 
-$TT_INST_ROOT    = '/usr/local/tt2';
-$TT_IMAGES       = '/tt2/images';
-$TT_RUN_DBI      = 'y';
-$TT_BUILD_DOCS   = 'y';
-$TT_SPLASH_DOCS  = 'y';
-$TT_EXAMPLES     = 'y';
-$TT_SPLASH_THEME = 'default';
+$TT_INST_ROOT     = '/usr/local/tt2';
+$TT_IMAGES        = '/tt2/images';
+$TT_RUN_DBI       = 'y';
+$TT_BUILD_DOCS    = 'y';
+$TT_SPLASH_DOCS   = 'y';
+$TT_EXAMPLES      = 'y';
+$TT_SPLASH_THEME  = 'default';
+$TT_LATEX_ENABLE  = '';
+
 my $TT_SPLASH_FG    = '';
 my $TT_SPLASH_BG    = '';
 
@@ -51,7 +54,7 @@ my $SPLASH_STYLES = {
 
 print <<EOF;
 
-                    Template Toolkit Version 2.02
+                    Template Toolkit Version 2.03
                     =============================
 
 Using $FLAVOUR defaults$DEFAULTS.
@@ -103,10 +106,10 @@ EOF
 }
 
 eval "use File::Spec";
-if ($@ or $File::Spec::VERSION < 0.8) {
+if ($@ or $File::Spec::VERSION < 0.6) {
     die(<<EOF);
 
-The Template Toolkit requires that the File::Spec module (version 0.82
+The Template Toolkit requires that the File::Spec module (version 0.6
 or later) first be installed.  This is used by the File plugin.  It is
 available from CPAN:
 
@@ -132,10 +135,15 @@ available on your system.
 EOF
 
 foreach my $mods ( [ Text::Autoformat => \&check_taf ],
-		   [ XML::DOM   => \&check_dom   ],
-		   [ XML::RSS   => \&check_rss   ],
-		   [ XML::XPath => \&check_xpath ],
-		   [ DBI        => \&dbi_config  ] ) {
+		   [ GD          => undef         ],
+		   [ GD::Text    => undef         ],
+		   [ GD::Graph   => undef         ],
+		   [ GD::Graph3d => undef         ],
+                   [ Date::Calc  => undef         ],
+		   [ XML::DOM    => \&check_dom   ],
+		   [ XML::RSS    => \&check_rss   ],
+		   [ XML::XPath  => \&check_xpath ],
+		   [ DBI         => \&dbi_config  ] ) {
     my ($module, $code) = ref $mods ? @$mods : ($mods, 0);
 
     printf("  %-16s ", $module);
@@ -152,6 +160,57 @@ foreach my $mods ( [ Text::Autoformat => \&check_taf ],
 	yep("version $ver installed");
     }
 }
+
+#------------------------------------------------------------------------
+# prompt for installation of latex filter
+#------------------------------------------------------------------------
+$TT_LATEX_PATH    ||= findProgram($ENV{PATH}, "latex")    || '';
+$TT_PDFLATEX_PATH ||= findProgram($ENV{PATH}, "pdflatex") || '';
+$TT_DVIPS_PATH    ||= findProgram($ENV{PATH}, "dvips")    || '';
+
+print <<EOF;
+
+TT2 supports PDF, DVI and PostScript output using the latex filter,
+implemented with the programs pdflatex, latex and dvips.
+
+Because the latex filter runs latex and pdflatex, template authors could
+use this feature to include any arbitrary file in their latex input, or
+also open an arbitrary output file, independent of the ABSOLUTE or
+RELATIVE configuration settings. This might create a security concern at
+your site. If you don't trust your template authors then don't enable
+the latex filter.
+
+I found the following locations for pdflatex, latex and dvips:
+  + pdflatex => $TT_PDFLATEX_PATH
+  + latex    => $TT_LATEX_PATH
+  + dvips    => $TT_DVIPS_PATH
+
+EOF
+
+if ( $TT_LATEX_PATH eq "" || $TT_PDFLATEX_PATH eq "" || $TT_DVIPS_PATH eq "" ) {
+    $TT_LATEX_ENABLE = 'n';
+}
+$TT_LATEX_ENABLE ||= 'y';
+$TT_LATEX_ENABLE = (
+    prompt('Do you want to enable the latex filter?',
+                                $TT_LATEX_ENABLE) =~ /^y/i
+);
+if ( $TT_LATEX_ENABLE ) {
+    if (prompt('Are the pdflatex, latex and dvips paths ok?', 'y') !~ /^y/i) {
+        $TT_PDFLATEX_PATH = prompt('pdflatex path', $TT_PDFLATEX_PATH);
+        $TT_LATEX_PATH    = prompt('latex path',    $TT_LATEX_PATH);
+        $TT_DVIPS_PATH    = prompt('dvips path',    $TT_DVIPS_PATH);
+    }
+} else {
+    #
+    # Empty paths will cause the latex filter to throw an error
+    #
+    $TT_PDFLATEX_PATH = $TT_LATEX_PATH = $TT_DVIPS_PATH = "";
+}
+
+fix_file('lib/Template/Config.pm', '$PDFLATEX_PATH', $TT_PDFLATEX_PATH);
+fix_file('lib/Template/Config.pm', '$LATEX_PATH',    $TT_LATEX_PATH);
+fix_file('lib/Template/Config.pm', '$DVIPS_PATH',    $TT_DVIPS_PATH);
 
 #------------------------------------------------------------------------
 # prompt for installation of optional libraries and other components
@@ -411,16 +470,21 @@ EOF
     # write configuration defaults to file
     #--------------------------------------------------------------------
     open(FP, "> $DEFAULTS_FILE") || die "$DEFAULTS_FILE: $!\n";
-    my ($ttdbi, $ttdocs, $ttsplash, $ttex) = map { $_ ? 'y' : 'n' } 
-	( $TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES );
+    my ($ttdbi, $ttdocs, $ttsplash, $ttex, $ttlatex) = map { $_ ? 'y' : 'n' } 
+	( $TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES,
+            $TT_LATEX_ENABLE );
     print FP <<EOF;
-\$TT_INST_ROOT    = '$TT_INST_ROOT';
-\$TT_IMAGES       = '$TT_IMAGES';
-\$TT_RUN_DBI      = '$ttdbi';
-\$TT_BUILD_DOCS   = '$ttdocs';
-\$TT_SPLASH_DOCS  = '$ttsplash';
-\$TT_EXAMPLES     = '$ttex';
-\$TT_SPLASH_THEME = '$TT_SPLASH_THEME';
+\$TT_INST_ROOT     = '$TT_INST_ROOT';
+\$TT_IMAGES        = '$TT_IMAGES';
+\$TT_RUN_DBI       = '$ttdbi';
+\$TT_BUILD_DOCS    = '$ttdocs';
+\$TT_SPLASH_DOCS   = '$ttsplash';
+\$TT_EXAMPLES      = '$ttex';
+\$TT_SPLASH_THEME  = '$TT_SPLASH_THEME';
+\$TT_LATEX_ENABLE  = '$ttlatex';
+\$TT_LATEX_PATH    = '$TT_LATEX_PATH';
+\$TT_PDFLATEX_PATH = '$TT_PDFLATEX_PATH';
+\$TT_DVIPS_PATH    = '$TT_DVIPS_PATH';
 EOF
     close(FP);
 
@@ -728,4 +792,26 @@ sub fix_file {
     close(FP);
 }
 
-
+#
+# findProgram($path, $prog)
+#
+# Find a program, $prog, by traversing the given directory path, $path.
+# Returns full path if the program is found.
+#
+# Written by Craig Barratt, Richard Tietjen add fixes for Win32.
+#
+sub findProgram {
+    my($path, $prog) = @_;
+    my $sep = $WIN32 ? qr/;/ : qr/:/;
+    foreach my $dir ( split($sep, $path) ) {
+        my $file = File::Spec->catfile($dir, $prog);
+        if ( !$WIN32 ) {
+            return $file if ( -x $file );
+        } else {
+            # Windows executables end in .xxx, exe precedes .bat and .cmd
+            foreach my $dx ( qw/exe bat cmd/ ) {
+                return "$file.$dx" if ( -x "$file.$dx" );
+            }
+        }
+    }
+}

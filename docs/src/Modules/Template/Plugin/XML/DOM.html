@@ -12,22 +12,23 @@
         page = 'Plugin_XML_DOM'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='PRE-REQUISITES';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='METHODS'
-                         subs=['parse()', 'toTemplate()', 'childrenToTemplate()', 'allChildrenToTemplate()'];
-	INCLUDE tocitem title='AUTHORS';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='HISTORY';
-	INCLUDE tocitem title='BUGS';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="PRE-REQUISITES";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="METHODS"
+                         subs=["parse()", "toTemplate()", "childrenToTemplate()", "allChildrenToTemplate()"];
+	INCLUDE tocitem title="PRESENTING DOM NODES USING VIEWS";
+	INCLUDE tocitem title="AUTHORS";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="HISTORY";
+	INCLUDE tocitem title="BUGS";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    # load plugin
     [% tt_start_tag %] USE dom = XML.DOM [% tt_end_tag %]</pre>
 <pre>    # also provide XML::Parser options
@@ -39,22 +40,37 @@
     [% tt_start_tag %] doc = dom.parse(xmltext) [% tt_end_tag %]
     [% tt_start_tag %] doc = dom.parse(text =&gt; xmltext) [% tt_end_tag %]</pre>
 <pre>    # call any XML::DOM methods on document/element nodes
-    [% tt_start_tag %] FOREACH node = doc.getElementsByTagName('CODEBASE') [% tt_end_tag %]
-       * [% tt_start_tag %] node.getAttribute('href') [% tt_end_tag %]     # or just '[% tt_start_tag %] node.href [% tt_end_tag %]'
+    [% tt_start_tag %] FOREACH node = doc.getElementsByTagName('report') [% tt_end_tag %]
+       * [% tt_start_tag %] node.getAttribute('title') [% tt_end_tag %]     # or just '[% tt_start_tag %] node.title [% tt_end_tag %]'
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<pre>    # process template for DOM node (template name is node TagName)
-    [% tt_start_tag %] node.toTemplate [% tt_end_tag %]</pre>
-<pre>    # process templates for all children of DOM node
-    [% tt_start_tag %] node.childrenToTemplate [% tt_end_tag %]</pre>
-<pre>    # process templates recursively for all descendants of DOM node
+<pre>    # define VIEW to present node(s)
+    [% tt_start_tag %] VIEW report notfound='xmlstring' [% tt_end_tag %]
+       # handler block for a &lt;report&gt;...&lt;/report&gt; element
+       [% tt_start_tag %] BLOCK report [% tt_end_tag %]
+          [% tt_start_tag %] item.content(view) [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>       # handler block for a &lt;section title=&quot;...&quot;&gt;...&lt;/section&gt; element
+       [% tt_start_tag %] BLOCK section [% tt_end_tag %]
+       &lt;h1&gt;[% tt_start_tag %] item.title [% tt_end_tag %]&lt;/h1&gt;
+       [% tt_start_tag %] item.content(view) [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>       # default template block converts item to string representation
+       [% tt_start_tag %] BLOCK xmlstring; item.toString; END [% tt_end_tag %]
+       
+       # block to generate simple text
+       [% tt_start_tag %] BLOCK text; item; END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>    # now present node (and children) via view
+    [% tt_start_tag %] report.print(node) [% tt_end_tag %]</pre>
+<pre>    # or print node content via view
+    [% tt_start_tag %] node.content(report) [% tt_end_tag %]</pre>
+<pre>    # following methods are soon to be deprecated in favour of views
+    [% tt_start_tag %] node.toTemplate [% tt_end_tag %]
+    [% tt_start_tag %] node.childrenToTemplate [% tt_end_tag %]
     [% tt_start_tag %] node.allChildrenToTemplate [% tt_end_tag %]</pre>
-<pre>    # examples of processing options
-    [% tt_start_tag %] node.toTemplate(verbose=&gt;1) [% tt_end_tag %]
-    [% tt_start_tag %] node.childrenToTemplate(prefix=&gt;'mytemplates/' suffix=&gt;'.tt2') [% tt_end_tag %]
-    [% tt_start_tag %] node.allChildrenToTemplate(default=&gt;'mytemplates/anynode.tt2') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='PRE-REQUISITES'
+    title="PRE-REQUISITES"
 -%]<p>
 This plugin requires that the XML::Parser (2.19 or later) and XML::DOM
 (1.27 or later) modules be installed.  These are available from CPAN:
@@ -66,7 +82,7 @@ Note that the XML::DOM module is now distributed as part of the
 </p>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This is a Template Toolkit plugin interfacing to the XML::DOM module.
 The plugin loads the XML::DOM module and creates an XML::DOM::Parser
@@ -117,9 +133,9 @@ for the XML::Parser object:
 <pre>    [% tt_start_tag %] USE dom = XML.DOM(ProtocolEncoding =&gt; 'ISO-8859-1') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='METHODS'
+    title="METHODS"
 -%][% WRAPPER subsection
-   title = 'parse()'
+   title = "parse()"
 -%]<p>
 The parse() method accepts a positional parameter which contains a filename
 or XML string.  It is assumed to be a filename unless it contains a &lt;
@@ -161,8 +177,12 @@ in place of
 <pre>    [% tt_start_tag %] node.getAttribute('attrib') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'toTemplate()'
+   title = "toTemplate()"
 -%]<p>
+<b>NOTE: This method will soon be deprecated in favour of the VIEW based
+approach desribed below.</b>
+</p>
+<p>
 This method will process a template for the current node on which it is 
 called.  The template name is constructed from the node TagName with any
 optional 'prefix' and/or 'suffix' options applied.  A 'default' template 
@@ -187,8 +207,12 @@ the output of calling toTemplate() on the &lt;page&gt; node would be:
 <pre>    Page: Hello World!</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'childrenToTemplate()'
+   title = "childrenToTemplate()"
 -%]<p>
+<b>NOTE: This method will soon be deprecated in favour of the VIEW based
+approach desribed below.</b>
+</p>
+<p>
 Effectively calls toTemplate() for the current node and then for each of 
 the node's children.  By default, the parent template is processed first,
 followed by each of the children.  The 'children' closure can be called
@@ -255,8 +279,12 @@ from being further processed.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'allChildrenToTemplate()'
+   title = "allChildrenToTemplate()"
 -%]<p>
+<b>NOTE: This method will soon be deprecated in favour of the VIEW based
+approach desribed below.</b>
+</p>
+<p>
 Similar to childrenToTemplate() but processing all descendants (i.e. children
 of children and so on) recursively.  This is identical to calling the 
 childrenToTemplate() method with the 'deep' flag set to any true value.
@@ -264,7 +292,92 @@ childrenToTemplate() method with the 'deep' flag set to any true value.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHORS'
+    title="PRESENTING DOM NODES USING VIEWS"
+-%]<p>
+You can define a VIEW to present all or part of a DOM tree by automatically
+mapping elements onto templates.  Consider a source document like the
+following:
+</p>
+<pre>    &lt;report&gt;
+      &lt;section title=&quot;Introduction&quot;&gt;
+        &lt;p&gt;
+        Blah blah.
+        &lt;ul&gt;
+          &lt;li&gt;Item 1&lt;/li&gt;
+          &lt;li&gt;item 2&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;/p&gt;
+      &lt;/section&gt;
+      &lt;section title=&quot;The Gory Details&quot;&gt;
+        ...
+      &lt;/section&gt;
+    &lt;/report&gt;</pre>
+<p>
+We can load it up via the XML::DOM plugin and fetch the node for the 
+&lt;report&gt; element.
+</p>
+<pre>    [% tt_start_tag %] USE dom = XML.DOM;
+       doc = dom.parse(file =&gt; filename);
+       report = doc.getElementsByTagName('report')
+    [% tt_end_tag %]</pre>
+<p>
+We can then define a VIEW as follows to present this document fragment in 
+a particular way.  The [% ttlink('Template::Manual::Views') -%] documentation
+contains further details on the VIEW directive and various configuration
+options it supports.
+</p>
+<pre>    [% tt_start_tag %] VIEW report_view notfound='xmlstring' [% tt_end_tag %]
+       # handler block for a &lt;report&gt;...&lt;/report&gt; element
+       [% tt_start_tag %] BLOCK report [% tt_end_tag %]
+          [% tt_start_tag %] item.content(view) [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>       # handler block for a &lt;section title=&quot;...&quot;&gt;...&lt;/section&gt; element
+       [% tt_start_tag %] BLOCK section [% tt_end_tag %]
+       &lt;h1&gt;[% tt_start_tag %] item.title [% tt_end_tag %]&lt;/h1&gt;
+       [% tt_start_tag %] item.content(view) [% tt_end_tag %]
+       [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<pre>       # default template block converts item to string representation
+       [% tt_start_tag %] BLOCK xmlstring; item.toString; END [% tt_end_tag %]
+       
+       # block to generate simple text
+       [% tt_start_tag %] BLOCK text; item; END [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Each BLOCK defined within the VIEW represents a presentation style for 
+a particular element or elements.  The current node is available via the
+'item' variable.  Elements that contain other content can generate it
+according to the current view by calling [% tt_start_tag %] item.content(view) [% tt_end_tag %].
+Elements that don't have a specific template defined are mapped to the
+'xmlstring' template via the 'notfound' parameter specified in the VIEW
+header.  This replicates the node as an XML string, effectively allowing
+general XML/XHTML markup to be passed through unmodified.
+</p>
+<p>
+To present the report node via the view, we simply call:
+</p>
+<pre>    [% tt_start_tag %] report_view.print(report) [% tt_end_tag %]</pre>
+<p>
+The output from the above example would look something like this:
+</p>
+<pre>    &lt;h1&gt;Introduction&lt;/h1&gt;
+    &lt;p&gt;
+    Blah blah.
+    &lt;ul&gt;
+      &lt;li&gt;Item 1&lt;/li&gt;
+      &lt;li&gt;item 2&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;/p&gt;
+  
+    &lt;h1&gt;The Gory Details&lt;/h1&gt;
+    ...</pre>
+<p>
+To print just the content of the report node (i.e. don't process the
+'report' template for the report node), you can call:
+</p>
+<pre>    [% tt_start_tag %] report.content(report_view) [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER section
+    title="AUTHORS"
 -%]<p>
 This plugin module was written by Andy Wardley &lt;abw@kfs.org&gt;
 and Simon Matthews &lt;sam@knowledgepool.com&gt;.
@@ -277,14 +390,14 @@ library.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.5, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.6, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='HISTORY'
+    title="HISTORY"
 -%]<p>
 Version 2.5 : updated for use with version 1.27 of the XML::DOM module.
 </p>
@@ -298,12 +411,10 @@ bound to the _UserData node entry instead of being forced directly
 into the node hash.
 </p>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER section
-    title='BUGS'
+    title="BUGS"
 -%]<p>
 The childrenToTemplate() and allChildrenToTemplate() methods can easily
 slip into deep recursion.
@@ -314,7 +425,7 @@ change in the near future.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 Copyright (C) 2000-2001 Andy Wardley, Simon Matthews.  All Rights Reserved.
 </p>
@@ -324,7 +435,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('XML::DOM', 'XML::DOM') -%], [% ttlink('XML::Parser', 'XML::Parser') -%]
 </p>

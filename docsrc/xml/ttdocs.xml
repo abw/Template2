@@ -48,9 +48,9 @@
               This tutorial gives an overview of the Template Toolkit,
               showing in particular how to use it to read and write
               data files in various different formats and styles.  It
-              was written by Dave Cross &lt;dave@dave.org.uk&gt; and
-              first appeared as a lead article at http://www.perl.com/ 
-              earlier in the year (2001).
+              was written by Dave Cross and first appeared as a lead
+              article at http://www.perl.com/ earlier in the year
+              (2001).
 	    </intro>
 	</page>
     </book>

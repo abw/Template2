@@ -12,25 +12,25 @@
         page = 'Plugin_File'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='EXAMPLES';
-	INCLUDE tocitem title='AUTHORS';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="EXAMPLES";
+	INCLUDE tocitem title="AUTHORS";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    [% tt_start_tag %] USE File(filepath) [% tt_end_tag %]
     [% tt_start_tag %] File.path [% tt_end_tag %]         # full path
     [% tt_start_tag %] File.name [% tt_end_tag %]	    # filename
     [% tt_start_tag %] File.dir [% tt_end_tag %]          # directory</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This plugin provides an abstraction of a file.  It can be used to 
 fetch details about files from the file system, or to represent abstract
@@ -135,14 +135,12 @@ The full, original file path specified to the constructor.
     [% tt_start_tag %] file.path [% tt_end_tag %]	# /foo/bar.html</pre>
 
 
-
 <li><b>name</b><br>
 <p>
 The name of the file without any leading directories.
 </p>
 <pre>    [% tt_start_tag %] USE file('/foo/bar.html') [% tt_end_tag %]
     [% tt_start_tag %] file.name [% tt_end_tag %]	# bar.html</pre>
-
 
 
 <li><b>dir</b><br>
@@ -153,7 +151,6 @@ The directory element of the path with the filename removed.
     [% tt_start_tag %] file.name [% tt_end_tag %]	# /foo</pre>
 
 
-
 <li><b>ext</b><br>
 <p>
 The file extension, if any, appearing at the end of the path following 
@@ -161,7 +158,6 @@ a '.' (not included in the extension).
 </p>
 <pre>    [% tt_start_tag %] USE file('/foo/bar.html') [% tt_end_tag %]
     [% tt_start_tag %] file.ext [% tt_end_tag %]	# html</pre>
-
 
 
 <li><b>home</b><br>
@@ -177,7 +173,6 @@ from a file to its root directory.
     [% tt_start_tag %] file.home [% tt_end_tag %]	# ../..</pre>
 
 
-
 <li><b>root</b><br>
 <p>
 The 'root' item can be specified as a constructor argument, indicating
@@ -186,7 +181,6 @@ set empty.
 </p>
 <pre>    [% tt_start_tag %] USE file('foo/bar.html', root='/tmp') [% tt_end_tag %]
     [% tt_start_tag %] file.root [% tt_end_tag %]	# /tmp</pre>
-
 
 
 <li><b>abs</b><br>
@@ -199,9 +193,7 @@ This returns the absolute file path by constructing a path from the
     [% tt_start_tag %] file.root [% tt_end_tag %]	# /tmp
     [% tt_start_tag %] file.abs [% tt_end_tag %]	# /tmp/foo/bar.html</pre>
 
-
 </ul>
-
 <p>
 In addition, the following method is provided:
 </p>
@@ -217,12 +209,10 @@ item.
 <pre>    [% tt_start_tag %] USE file('foo/bar/baz.html') [% tt_end_tag %]
     [% tt_start_tag %] file.rel('wiz/waz.html') [% tt_end_tag %]	# ../../wiz/waz.html</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER section
-    title='EXAMPLES'
+    title="EXAMPLES"
 -%]<pre>    [% tt_start_tag %] USE file('/foo/bar/baz.html') [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	  # /foo/bar/baz.html
     [% tt_start_tag %] file.dir [% tt_end_tag %]        # /foo/bar
@@ -262,7 +252,7 @@ item.
     [% tt_start_tag %] file.dir('wiz/woz.html') [% tt_end_tag %]          # ../../wiz/woz.html</pre>
 [%- END %]
 [% WRAPPER section
-    title='AUTHORS'
+    title="AUTHORS"
 -%]<p>
 Michael Stevens &lt;michael@etla.org&gt; wrote the original Directory plugin
 on which this is based.  Andy Wardley &lt;abw@kfs.org&gt; split it into 
@@ -271,21 +261,21 @@ for VIEW support, and made a few other minor tweaks.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::Directory', 'Template::Plugin::Directory') -%], [% ttlink('Template::View', 'Template::View') -%]
 </p>

@@ -12,23 +12,23 @@
         page = 'Variables'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION'
-                         subs=['Template Variables', 'Scalar Values', 'Hash Array References', 'List References', 'Subroutines', 'Objects', 'Parameters and Return Values', 'Error Handling', 'Virtual Variable Methods', 'Compound Variables', 'Variable Interpolation', 'Local and Global Variables', 'Special Variables'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION"
+                         subs=["Template Variables", "Scalar Values", "Hash Array References", "List References", "Subroutines", "Objects", "Parameters and Return Values", "Error Handling", "Virtual Variable Methods", "Compound Variables", "Variable Interpolation", "Local and Global Variables", "Special Variables"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section describes the different ways in which Perl data can be
 bound to template variables and accessed via Template Toolkit
 directives.
 </p>
 [% WRAPPER subsection
-   title = 'Template Variables'
+   title = "Template Variables"
 -%]<p>
 A reference to a hash array may be passed as the second argument to
 the process() method, containing definitions of template variables.
@@ -112,7 +112,7 @@ output:
     submit</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Scalar Values'
+   title = "Scalar Values"
 -%]<p>
 Regular scalar variables are accessed by simply specifying their name.
 As these are just entries in the top-level variable hash they can be 
@@ -122,7 +122,7 @@ with the main namespace hash automatically implied.
 <pre>    [% tt_start_tag %] article [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Hash Array References'
+   title = "Hash Array References"
 -%]<p>
 Members of hash arrays are accessed by specifying the hash reference
 and key separated by the dot '.' operator.
@@ -211,7 +211,7 @@ between key/value pairs and '=' can be used in place of '=&gt;'.
     [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'List References'
+   title = "List References"
 -%]<p>
 Items in lists are also accessed by use of the dot operator.
 </p>
@@ -259,7 +259,7 @@ operator:
     [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Subroutines'
+   title = "Subroutines"
 -%]<p>
 Template variables can contain references to Perl subroutines.  When
 the variable is used, the Template Toolkit will automatically call the
@@ -277,7 +277,7 @@ template:
     [% tt_start_tag %] wizard('Hocus Pocus!') [% tt_end_tag %]	# Abracadabra! Hocus Pocus!</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Objects'
+   title = "Objects"
 -%]<p>
 Template variables can also contain references to Perl objects.
 Methods are called using the dot operator to specify the method
@@ -313,7 +313,7 @@ equivalent to:
 <pre>    [% tt_start_tag %] myobj.method(10) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Parameters and Return Values'
+   title = "Parameters and Return Values"
 -%]<p>
 Subroutines and methods will be passed any arguments specified in the
 template.  Any template variables in the argument list will first be
@@ -385,7 +385,7 @@ template:
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Error Handling'
+   title = "Error Handling"
 -%]<p>
 Errors can be reported from user code by calling die().  Errors raised
 in this way are caught by the Template Toolkit and converted to
@@ -458,7 +458,7 @@ version.
     };</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Virtual Variable Methods'
+   title = "Virtual Variable Methods"
 -%]<p>
 The Template Toolkit provides virtual methods for manipulating
 variable values.  Most of them are analogous to regular Perl functions
@@ -477,7 +477,6 @@ Returns true if the value is defined.
 <pre>    [% tt_start_tag %] user = get_user(uid) IF uid.defined [% tt_end_tag %]</pre>
 
 
-
 <li><b>length</b><br>
 <p>
 Returns the length of the string representation of the item:
@@ -487,14 +486,12 @@ Returns the length of the string representation of the item:
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>repeat(n)</b><br>
 <p>
 Repeat the string a specified number of times.
 </p>
 <pre>    [% tt_start_tag %] name = 'foo' [% tt_end_tag %]
     [% tt_start_tag %] name.repeat(3) [% tt_end_tag %]		# foofoofoo</pre>
-
 
 
 <li><b>replace(search, replace)</b><br>
@@ -506,7 +503,6 @@ as a Perl regular expression) with the second.
     [% tt_start_tag %] name.replace('\W+', '_') [% tt_end_tag %]    # foo_bar_baz</pre>
 
 
-
 <li><b>search(pattern)</b><br>
 <p>
 Returns true if the string matches the regular expression pattern passed 
@@ -514,7 +510,6 @@ as an argument.
 </p>
 <pre>    [% tt_start_tag %] name = 'foo bar baz' [% tt_end_tag %]
     [% tt_start_tag %] name.search('bar') ? 'bar' : 'no bar' [% tt_end_tag %]	    # bar</pre>
-
 
 
 <li><b>split(pattern)</b><br>
@@ -526,9 +521,7 @@ strings.
        [% tt_start_tag %] dir [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 </ul>
-
 <p>
 The following can be called against hash references.
 </p>
@@ -546,7 +539,6 @@ have it interpolated (i.e. replaced with its value) before use.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>sort, nsort</b><br>
 <p>
 Return a list of the keys, sorted alphabetically (sort) or numerically
@@ -555,7 +547,6 @@ Return a list of the keys, sorted alphabetically (sort) or numerically
 <pre>    [% tt_start_tag %] FOREACH n = phones.sort [% tt_end_tag %]
        [% tt_start_tag %] phones.$n [% tt_end_tag %] is [% tt_start_tag %] n [% tt_end_tag %],
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 
 <li><b>import</b><br>
@@ -582,9 +573,7 @@ into the current namespace hash.
     [% tt_start_tag %] import(user) [% tt_end_tag %]
     [% tt_start_tag %] id [% tt_end_tag %]: [% tt_start_tag %] name [% tt_end_tag %]		# lwall: Larry Wall</pre>
 
-
 </ul>
-
 <p>
 The following virtual methods are provided for lists:
 </p>
@@ -599,14 +588,12 @@ list.
 <pre>    [% tt_start_tag %] results.first [% tt_end_tag %] to [% tt_start_tag %] results.last [% tt_end_tag %]</pre>
 
 
-
 <li><b>size, max</b><br>
 <p>
 Returns the size of a list (number of elements) and the maximum 
 index number (size - 1), respectively.
 </p>
 <pre>    [% tt_start_tag %] results.size [% tt_end_tag %] search results matched your query</pre>
-
 
 
 <li><b>reverse</b><br>
@@ -618,14 +605,12 @@ Returns the items of the list in reverse order.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 
-
 <li><b>join</b><br>
 <p>
 Joins the items in the list into a single string, using Perl's join 
 function.
 </p>
 <pre>    [% tt_start_tag %] items.join(', ') [% tt_end_tag %]</pre>
-
 
 
 <li><b>sort, nsort</b><br>
@@ -640,14 +625,12 @@ passed as an argument to specify the sort field.
 <pre>    [% tt_start_tag %] library = books.sort('author') [% tt_end_tag %]</pre>
 
 
-
 <li><b>unshift(item), push(item)</b><br>
 <p>
 Adds an item to the start/end of a list.
 </p>
 <pre>    [% tt_start_tag %] mylist.unshift('prev item') [% tt_end_tag %]
     [% tt_start_tag %] mylist.push('next item')    [% tt_end_tag %]</pre>
-
 
 
 <li><b>shift, pop</b><br>
@@ -657,9 +640,7 @@ Removes the first/last item from the list and returns it.
 <pre>    [% tt_start_tag %] first = mylist.shift [% tt_end_tag %]
     [% tt_start_tag %] last  = mylist.pop   [% tt_end_tag %]</pre>
 
-
 </ul>
-
 <p>
 The following example demonstrates how an empty list ('folk') can be 
 populated with formatted strings by using the push() method in conjunction
@@ -709,7 +690,7 @@ See also the examples in the t/vmeth.t test script.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Compound Variables'
+   title = "Compound Variables"
 -%]<p>
 Compound 'dotted' variables may contain any number of separate
 elements.  Each element may evaluate to any of the permitted variable
@@ -731,7 +712,7 @@ object the next without requiring any change to the templates.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Variable Interpolation'
+   title = "Variable Interpolation"
 -%]<p>
 The Template Toolkit uses '$' consistently to indicate that a variable
 should be interpolated in position.  Most frequently, you see this in 
@@ -787,7 +768,7 @@ template:
 <pre>    [% tt_start_tag %] INCLUDE $header [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Local and Global Variables'
+   title = "Local and Global Variables"
 -%]<p>
 Any simple variables that you create, or any changes you make to
 existing variables, will only persist while the template is being
@@ -867,7 +848,7 @@ hash are visible across all templates.
 <pre>    [% tt_start_tag %] global.version = 123 [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Special Variables'
+   title = "Special Variables"
 -%]<p>
 A number of special variables are automatically defined by the Template 
 Toolkit.
@@ -890,7 +871,6 @@ Note that the 'template' variable always references the top-level
 template, even when processing other template components via INCLUDE,
 PROCESS, etc.
 </p>
-
 
 
 <li><b>component</b><br>
@@ -921,7 +901,6 @@ This example should demonstrate the difference:
     [% tt_start_tag %] component.name [% tt_end_tag %]            # footer</pre>
 
 
-
 <li><b>loop</b><br>
 <p>
 Within a FOREACH loop, the 'loop' variable references the Template::Iterator
@@ -931,7 +910,6 @@ object responsible for controlling the loop.
        [% tt_start_tag %] &quot;Items:\n&quot; IF loop.first -[% tt_end_tag %]
        [% tt_start_tag %] loop.count [% tt_end_tag %]/[% tt_start_tag %] loop.size [% tt_end_tag %]: [% tt_start_tag %] item [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 
 <li><b>error</b><br>
@@ -947,7 +925,6 @@ be printed for automatic stringification into a message of the form
     [% tt_start_tag %] CATCH [% tt_end_tag %]
        [% tt_start_tag %] error [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 
 <li><b>content</b><br>
@@ -970,13 +947,11 @@ variable.
     &lt;/table&gt;
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 </ul>
-
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -985,13 +960,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

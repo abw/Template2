@@ -631,16 +631,16 @@ The outer waz
       Dir: some_dir
 
 -- test --
-[% BLOCK base -%]
+[% BLOCK parent -%]
 This is the base block
 [%- END -%]
 [% VIEW super %]
-   [%- BLOCK base -%]
-   [%- INCLUDE base | replace('base', 'super') -%]
+   [%- BLOCK parent -%]
+   [%- INCLUDE parent | replace('base', 'super') -%]
    [%- END -%]
 [% END -%]
-base: [% INCLUDE base %]
-super: [% super.base %]
+base: [% INCLUDE parent %]
+super: [% super.parent %]
 -- expect --
 base: This is the base block
 super: This is the super block
@@ -674,3 +674,111 @@ This is a list: [% item.as_list.join(', ') %]
 [% foo.print(blessed_list) %]
 -- expect --
 This is a list: Hello, World
+
+-- test --
+[% VIEW my.foo value=33; END -%]
+n: [% my.foo.value %]
+-- expect --
+n: 33
+
+-- test --
+[% VIEW parent -%]
+[% BLOCK one %]This is base one[% END %]
+[% BLOCK two %]This is base two[% END %]
+[% END -%]
+
+[%- VIEW child1 base=parent %]
+[% BLOCK one %]This is child1 one[% END %]
+[% END -%]
+
+[%- VIEW child2 base=parent %]
+[% BLOCK two %]This is child2 two[% END %]
+[% END -%]
+
+[%- VIEW child3 base=child2 %]
+[% BLOCK two %]This is child3 two[% END %]
+[% END -%]
+
+[%- FOREACH child = [ child1, child2, child3 ] -%]
+one: [% child.one %]
+[% END -%]
+[% FOREACH child = [ child1, child2, child3 ] -%]
+two: [% child.two %]
+[% END %]
+
+-- expect --
+one: This is child1 one
+one: This is base one
+one: This is base one
+two: This is base two
+two: This is child2 two
+two: This is child3 two
+
+-- test --
+[% VIEW my.view.default
+        prefix = 'view/default/'
+        value  = 3.14;
+   END
+-%]
+value: [% my.view.default.value %]
+-- expect --
+value: 3.14
+
+-- test --
+[% VIEW my.view.default
+        prefix = 'view/default/'
+        value  = 3.14;
+   END;
+   VIEW my.view.one
+        base   = my.view.default
+        prefix = 'view/one/';
+   END;
+   VIEW my.view.two
+	base  = my.view.default
+        value = 2.718;
+   END;
+-%]
+[% BLOCK view/default/foo %]Default foo[% END -%]
+[% BLOCK view/one/foo %]One foo[% END -%]
+0: [% my.view.default.foo %]
+1: [% my.view.one.foo %]
+2: [% my.view.two.foo %]
+0: [% my.view.default.value %]
+1: [% my.view.one.value %]
+2: [% my.view.two.value %]
+-- expect --
+0: Default foo
+1: One foo
+2: Default foo
+0: 3.14
+1: 3.14
+2: 2.718
+
+-- test --
+[% VIEW foo number = 10 sealed = 0; END -%]
+a: [% foo.number %]
+b: [% foo.number = 20 %]
+c: [% foo.number %]
+d: [% foo.number(30) %]
+e: [% foo.number %]
+-- expect --
+a: 10
+b: 
+c: 20
+d: 30
+e: 30
+
+-- test --
+[% VIEW foo number = 10 silent = 1; END -%]
+a: [% foo.number %]
+b: [% foo.number = 20 %]
+c: [% foo.number %]
+d: [% foo.number(30) %]
+e: [% foo.number %]
+-- expect --
+a: 10
+b: 
+c: 10
+d: 10
+e: 10
+

@@ -187,7 +187,7 @@ sub process_tree {
 	# check against ignore list
 	foreach $check (@$ignore) {
 	    if ($path =~ /$check/) {
-		printf "  - %-32s (ignored, matches /$check/)\n", $file
+		printf "  - %-32s (ignored, matches /$check/)\n", $path
 		    if $verbose;
 		next FILE;
 	    }
@@ -338,6 +338,7 @@ sub read_config {
         'template_pre_process|pre_process|preprocess=s@',
         'template_post_process|post_process|postprocess=s@',
         'template_process|process=s',
+        'template_recursion|recursion',
         'template_default|default=s',
         'template_error|error=s',
         'template_start_tag|start_tag|starttag=s',
@@ -481,8 +482,8 @@ Options:
    -p      (--preserve)     Preserve file ownership and permission
    -n      (--nothing)      Do nothing, just print summary (enables -v)
    -v      (--verbose)      Verbose mode
-   -d      (--debug)        Debug mode
    -h      (--help)         This help
+   -dbg    (--debug)        Debug mode
    -s DIR  (--src=DIR)      Source directory
    -d DIR  (--dest=DIR)     Destination directory
    -c DIR  (--cfg=DIR)      Location of configuration files
@@ -621,10 +622,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -637,5 +641,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<tpage|Template::Tools::tpage>
-
-

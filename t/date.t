@@ -23,6 +23,12 @@ use Template::Plugin::Date;
 use POSIX;
 $^W = 1;
 
+eval "use Date::Calc";
+
+my $got_date_calc = 0;
+$got_date_calc++ unless $@;
+
+
 $Template::Test::DEBUG = 0;
 
 my $format = {
@@ -52,6 +58,7 @@ my $params = {
 	&POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
 	return $datestr;
     },
+    date_calc => $got_date_calc,
 };
 
 test_expect(\*DATA, { POST_CHOMP => 1 }, $params);
@@ -185,4 +192,18 @@ Bad date: bad time/date string:  expects 'h:m:s d:m:y'  got: 'some stupid date'
 -- expect --
 -- process --
 input text [% now('%Y') %]
+
+-- test --
+[% IF date_calc -%]
+[% USE date; calc = date.calc; calc.Monday_of_Week(22, 2001).join('/') %]
+[% ELSE -%]
+not testing
+[% END -%]
+-- expect --
+-- process --
+[% IF date_calc -%]
+2001/5/28
+[% ELSE -%]
+not testing
+[% END -%]
 

@@ -159,4 +159,13 @@ foo
 [% dir %]/src/foo
 [% mtime %]
 
+-- test --
+[% USE file(file) -%]
+[% file.path %]
+[% file.mtime %]
+-- expect --
+-- process --
+[% dir %]/src/foo
+[% mtime %]
+
 

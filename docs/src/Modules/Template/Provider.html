@@ -12,24 +12,24 @@
         page = 'Provider'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='SYNOPSIS';
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='PUBLIC METHODS'
-                         subs=['new(\%options) ', 'fetch($name)', 'store($name, $template)', 'include_path(\@newpath))'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
-	INCLUDE tocitem title='SEE ALSO';
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="PUBLIC METHODS"
+                         subs=["new(\\%options) ", "fetch($name)", "store($name, $template)", "include_path(\\@newpath))"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    $provider = Template::Provider-&gt;new(\%options);</pre>
 <pre>    ($template, $error) = $provider-&gt;fetch($name);</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 The Template::Provider is used to load, parse, compile and cache template
 documents.  This object may be sub-classed to provide more specific 
@@ -51,9 +51,9 @@ This documentation needs work.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='PUBLIC METHODS'
+    title="PUBLIC METHODS"
 -%][% WRAPPER subsection
-   title = 'new(\%options) '
+   title = "new(\\%options) "
 -%]<p>
 Constructor method which instantiates and returns a new Template::Provider
 object.  The optional parameter may be a hash reference containing any of
@@ -90,7 +90,6 @@ directory names like 'C:\Blah Blah'.
 </p>
 
 
-
 <li><b>DELIMITER</b><br>
 <p>
 Used to provide an alternative delimiter character sequence for 
@@ -120,7 +119,6 @@ rather than rely on this subtle magic.
 </p>
 
 
-
 <li><b>ABSOLUTE</b><br>
 <p>
 The ABSOLUTE flag is used to indicate if templates specified with
@@ -141,7 +139,6 @@ with a driver letter and colon, such as:
 <pre>    C:/Foo/Bar</pre>
 
 
-
 <li><b>RELATIVE</b><br>
 <p>
 The RELATIVE flag is used to indicate if templates specified with
@@ -154,7 +151,6 @@ encountered.
 	RELATIVE =&gt; 1,
     });</pre>
 <pre>    [% tt_start_tag %] INCLUDE ../logs/error.log [% tt_end_tag %]</pre>
-
 
 
 <li><b>DEFAULT</b><br>
@@ -173,7 +169,6 @@ DEFAULT template is not used when templates are specified with
 absolute or relative filenames, or as a reference to a input file
 handle or text string.
 </p>
-
 
 
 <li><b>CACHE_SIZE</b><br>
@@ -200,7 +195,6 @@ The CACHE_SIZE can be set to 0 to disable caching altogether.
 <pre>    my $provider = Template::Provider-&gt;new({
 	CACHE_SIZE =&gt; 0,   # don't cache any compiled templates
     });</pre>
-
 
 
 <li><b>COMPILE_EXT</b><br>
@@ -234,7 +228,6 @@ time and resources required to reload templates.  Compiled templates can
 be reloaded by a simple call to Perl's require(), leaving Perl to handle
 all the parsing and compilation.  This is a Good Thing.
 </p>
-
 
 
 <li><b>COMPILE_DIR</b><br>
@@ -302,7 +295,6 @@ This would create the following cache directories:
     C:/TT2/Cache/D/My Templates</pre>
 
 
-
 <li><b>TOLERANT</b><br>
 <p>
 The TOLERANT flag is used by the various Template Toolkit provider
@@ -320,7 +312,6 @@ comply, then a '&lt;resource&gt; not found' exception is raised.
 </p>
 
 
-
 <li><b>PARSER</b><br>
 <p>
 The Template::Parser module implements a parser object for compiling
@@ -334,12 +325,10 @@ an alternate parser object.
 	PARSER =&gt; MyOrg::Template::Parser-&gt;new({ ... }),
     });</pre>
 
-
 </ul>
-
 [%- END %]
 [% WRAPPER subsection
-   title = 'fetch($name)'
+   title = "fetch($name)"
 -%]<p>
 Returns a compiled template for the name specified.  If the template 
 cannot be found then (undef, STATUS_DECLINED) is returned.  If an error
@@ -350,7 +339,7 @@ returning an error.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'store($name, $template)'
+   title = "store($name, $template)"
 -%]<p>
 Stores the compiled template, $template, in the cache under the name, 
 $name.  Susbequent calls to fetch($name) will return this template in
@@ -358,7 +347,7 @@ preference to any disk-based file.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'include_path(\@newpath))'
+   title = "include_path(\\@newpath))"
 -%]<p>
 Accessor method for the INCLUDE_PATH setting.  If called with an
 argument, this method will replace the existing INCLUDE_PATH with
@@ -367,7 +356,7 @@ the new value.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -376,14 +365,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.09, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.11, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -392,7 +381,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template', 'Template') -%], [% ttlink('Template::Parser', 'Template::Parser') -%], [% ttlink('Template::Context', 'Template::Context') -%]
 </p>

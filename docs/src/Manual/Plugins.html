@@ -12,26 +12,36 @@
         page = 'Plugins'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="TEMPLATE TOOLKIT PLUGINS"
+                         subs=["Autoformat", "CGI", "Datafile", "Date", "Directory", "DBI", "Dumper", "File", "Format", "GD::Image, GD::Polygon, GD::Constants", "GD::Text, GD::Text::Align, GD::Text::Wrap", "GD::Graph::lines, GD::Graph::bars, GD::Graph::points, GD::Graph::linespoin
+ts, GD::Graph::area, GD::Graph::mixed, GD::Graph::pie", "GD::Graph::bars3d, GD::Graph::lines3d, GD::Graph::pie3d", "HTML", "Iterator", "Table", "URL", "Wrap", "XML::DOM", "XML::XPath", "XML::RSS"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section lists the standard plugins which can be used to extend the
 runtime functionality of the Template Toolkit. The plugins are
 distributed with the Template Toolkit but may required additional
 modules from CPAN.
 </p>
-
-<ul>
-
-<li><b>Autoformat</b><br>
-<p>
+[%- END %]
+[% WRAPPER section
+    title="TEMPLATE TOOLKIT PLUGINS"
+-%]<p>
+The following plugin modules are distributed with the Template
+Toolkit.  Some of the plugins interface to external modules (detailed
+below) which should be downloaded from any CPAN site and installed
+before using the plugin.
+</p>
+[% WRAPPER subsection
+   title = "Autoformat"
+-%]<p>
 The Autoformat plugin is an interface to Damian Conway's Text::Autoformat 
 Perl module which provides advanced text wrapping and formatting.  See
 [% ttlink('Template::Plugin::Autoformat') -%] and [% ttlink('Text::Autoformat') -%] for further 
@@ -44,11 +54,10 @@ details.
 The Text::Autoformat module is available from CPAN:
 </p>
 <pre>    http://www.cpan.org/modules/by-module/Text/</pre>
-
-
-
-<li><b>CGI</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "CGI"
+-%]<p>
 The CGI plugin is a wrapper around Lincoln Stein's 
 &lt;lstein@genome.wi.mit.edu&gt; CGI.pm module.  The plugin is 
 distributed with the Template Toolkit (see [% ttlink('Template::Plugin::CGI') -%])
@@ -61,11 +70,10 @@ or is available from CPAN.
     [% tt_start_tag %] CGI.popup_menu( Name   =&gt; 'color', 
                        Values =&gt; [ 'Green', 'Brown' ] ) [% tt_end_tag %]
     [% tt_start_tag %] CGI.end_form [% tt_end_tag %]</pre>
-
-
-
-<li><b>Datafile</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Datafile"
+-%]<p>
 Provides an interface to data stored in a plain text file in a simple
 delimited format.  The first line in the file specifies field names
 which should be delimiter by any non-word character sequence.
@@ -88,11 +96,10 @@ example:
 <pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]
        [% tt_start_tag %] user.name [% tt_end_tag %] ([% tt_start_tag %] user.id [% tt_end_tag %])
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-
-
-<li><b>Date</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Date"
+-%]<p>
 The Date plugin provides an easy way to generate formatted time and date
 strings by delegating to the POSIX strftime() routine.   See
 [% ttlink('Template::Plugin::Date') -%] and [% ttlink('POSIX') -%] for further details.
@@ -100,27 +107,25 @@ strings by delegating to the POSIX strftime() routine.   See
 <pre>    [% tt_start_tag %] USE date [% tt_end_tag %]
     [% tt_start_tag %] date.format [% tt_end_tag %]		# current time/date</pre>
 <pre>    File last modified: [% tt_start_tag %] date.format(template.modtime) [% tt_end_tag %]</pre>
-
-
-
-<li><b>Directory</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Directory"
+-%]<p>
 The Directory plugin provides a simple interface to a directory and
 the files within it.  See [% ttlink('Template::Plugin::Directory') -%] for further
 details.
 </p>
 <pre>    [% tt_start_tag %] USE dir = Directory('/tmp') [% tt_end_tag %]
     [% tt_start_tag %] FOREACH file = dir.files [% tt_end_tag %]
-	# all the plain files in the directory
+        # all the plain files in the directory
     [% tt_start_tag %] END [% tt_end_tag %]
     [% tt_start_tag %] FOREACH file = dir.dirs [% tt_end_tag %]
-	# all the sub-directories
+        # all the sub-directories
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-
-
-<li><b>DBI</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "DBI"
+-%]<p>
 The DBI plugin, developed by Simon Matthews
 &lt;sam@knowledgepool.com&gt;, brings the full power of Tim Bunce's
 &lt;Tim.Bunce@ig.co.uk&gt; database interface module (DBI) to your
@@ -134,21 +139,19 @@ templates.  See [% ttlink('Template::Plugin::DBI') -%] and [% ttlink('DBI') -%] 
 The DBI and relevant DBD modules are available from CPAN:
 </p>
 <pre>  http://www.cpan.org/modules/by-module/DBI/</pre>
-
-
-
-<li><b>Dumper</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Dumper"
+-%]<p>
 The Dumper plugin provides an interface to the Data::Dumper module.  See
-[% ttlink('Template::Plugin::Dumper') -%] and [% ttlink('Data::Dumper') -%] for further details.
+[% ttlink('Template::Plugin::Dumper') -%] and [% ttlink('Data::Dumper') -%] for futher details.
 </p>
 <pre>    [% tt_start_tag %] USE dumper(indent=0, pad=&quot;&lt;br&gt;&quot;) [% tt_end_tag %]
     [% tt_start_tag %] dumper.dump(myvar, yourvar) [% tt_end_tag %]</pre>
-
-
-
-<li><b>File</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "File"
+-%]<p>
 The File plugin provides a general abstraction for files and can be
 used to fetch information about specific files within a filesystem.
 See [% ttlink('Template::Plugin::File') -%] for further details.
@@ -157,22 +160,164 @@ See [% ttlink('Template::Plugin::File') -%] for further details.
     [% tt_start_tag %] File.name [% tt_end_tag %]     # foo.html
     [% tt_start_tag %] File.dir [% tt_end_tag %]      # /tmp
     [% tt_start_tag %] File.mtime [% tt_end_tag %]    # modification time</pre>
-
-
-
-<li><b>Format</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Format"
+-%]<p>
 The Format plugin provides a simple way to format text according to a
 printf()-like format.   See [% ttlink('Template::Plugin::Format') -%] for further 
 details.
 </p>
 <pre>    [% tt_start_tag %] USE bold = format('&lt;b&gt;%s&lt;/b&gt;') [% tt_end_tag %]
     [% tt_start_tag %] bold('Hello') [% tt_end_tag %]</pre>
-
-
-
-<li><b>Iterator</b><br>
+[%- END %]
+[% WRAPPER subsection
+   title = "GD::Image, GD::Polygon, GD::Constants"
+-%]<p>
+These plugins provide access to the GD graphics library via Lincoln
+D. Stein's GD.pm interface.  These plugins allow PNG, JPEG and other
+graphical formats to be generated.
+</p>
+<pre>    [% tt_start_tag %] FILTER null;
+        USE im = GD.Image(100,100);
+        # allocate some colors
+        black = im.colorAllocate(0,   0, 0);
+        red   = im.colorAllocate(255,0,  0);
+        blue  = im.colorAllocate(0,  0,  255);
+        # Draw a blue oval
+        im.arc(50,50,95,75,0,360,blue);
+        # And fill it with red
+        im.fill(50,50,red);
+        # Output image in PNG format
+        im.png | stdout(1);
+       END;
+    -[% tt_end_tag %]</pre>
 <p>
+See [% ttlink('Template::Plugin::GD::Image') -%] for further details.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = "GD::Text, GD::Text::Align, GD::Text::Wrap"
+-%]<p>
+These plugins provide access to Martien Verbruggen's GD::Text,
+GD::Text::Align and GD::Text::Wrap modules. These plugins allow the
+layout, alignment and wrapping of text when drawing text in GD images.
+</p>
+<pre>    [% tt_start_tag %] FILTER null;
+        USE gd  = GD.Image(200,400);
+        USE gdc = GD.Constants;
+        black = gd.colorAllocate(0,   0, 0);
+        green = gd.colorAllocate(0, 255, 0);
+        txt = &quot;This is some long text. &quot; | repeat(10);
+        USE wrapbox = GD.Text.Wrap(gd,
+         line_space  =&gt; 4,
+         color       =&gt; green,
+         text        =&gt; txt,
+        );
+        wrapbox.set_font(gdc.gdMediumBoldFont);
+        wrapbox.set(align =&gt; 'center', width =&gt; 160);
+        wrapbox.draw(20, 20);
+        gd.png | stdout(1);
+      END;
+    -[% tt_end_tag %]</pre>
+<p>
+See [% ttlink('Template::Plugin::GD::Text') -%], [% ttlink('Template::Plugin::GD::Text::Align') -%]
+and [% ttlink('Template::Plugin::GD::Text::Wrap') -%] for further details.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = "GD::Graph::lines, GD::Graph::bars, GD::Graph::points, GD::Graph::linespoin
+ts, GD::Graph::area, GD::Graph::mixed, GD::Graph::pie"
+-%]<p>
+These plugins provide access to Martien Verbruggen's GD::Graph module
+that allows graphs, plots and charts to be created. These plugins allow
+graphs, plots and charts to be generated in PNG, JPEG and other
+graphical formats.
+</p>
+<pre>    [% tt_start_tag %] FILTER null;
+        data = [
+            [&quot;1st&quot;,&quot;2nd&quot;,&quot;3rd&quot;,&quot;4th&quot;,&quot;5th&quot;,&quot;6th&quot;],
+            [    4,    2,    3,    4,    3,  3.5]
+        ];
+        USE my_graph = GD.Graph.pie(250, 200);
+        my_graph.set(
+                title =&gt; 'A Pie Chart',
+                label =&gt; 'Label',
+                axislabelclr =&gt; 'black',
+                pie_height =&gt; 36,
+                transparent =&gt; 0,
+        );
+        my_graph.plot(data).png | stdout(1);
+      END;
+    -[% tt_end_tag %]</pre>
+<p>
+See
+[% ttlink('Template::Plugin::GD::Graph::lines') -%],
+[% ttlink('Template::Plugin::GD::Graph::bars') -%],
+[% ttlink('Template::Plugin::GD::Graph::points') -%],
+[% ttlink('Template::Plugin::GD::Graph::linespoints') -%],
+[% ttlink('Template::Plugin::GD::Graph::area') -%],
+[% ttlink('Template::Plugin::GD::Graph::mixed') -%],
+[% ttlink('Template::Plugin::GD::Graph::pie') -%], and
+[% ttlink('GD::Graph') -%],
+for more details.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = "GD::Graph::bars3d, GD::Graph::lines3d, GD::Graph::pie3d"
+-%]<p>
+These plugins provide access to Jeremy Wadsack's GD::Graph3d
+module.  This allows 3D bar charts and 3D lines plots to
+be generated.
+</p>
+<pre>    [% tt_start_tag %] FILTER null;
+        data = [
+            [&quot;1st&quot;,&quot;2nd&quot;,&quot;3rd&quot;,&quot;4th&quot;,&quot;5th&quot;,&quot;6th&quot;,&quot;7th&quot;, &quot;8th&quot;, &quot;9th&quot;],
+            [    1,    2,    5,    6,    3,  1.5,    1,     3,     4],
+        ];
+        USE my_graph = GD.Graph.bars3d();
+        my_graph.set(
+            x_label         =&gt; 'X Label',
+            y_label         =&gt; 'Y label',
+            title           =&gt; 'A 3d Bar Chart',
+            y_max_value     =&gt; 8,
+            y_tick_number   =&gt; 8,
+            y_label_skip    =&gt; 2,
+            # shadows
+            bar_spacing     =&gt; 8,
+            shadow_depth    =&gt; 4,
+            shadowclr       =&gt; 'dred',
+            transparent     =&gt; 0,
+        my_graph.plot(data).png | stdout(1);
+      END;
+    -[% tt_end_tag %]</pre>
+<p>
+See
+[% ttlink('Template::Plugin::GD::Graph::lines3d') -%],
+[% ttlink('Template::Plugin::GD::Graph::bars3d') -%], and
+[% ttlink('Template::Plugin::GD::Graph::pie3d') -%]
+for more details.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = "HTML"
+-%]<p>
+The HTML plugin is very new and very basic, implementing a few useful
+methods for generating HTML.  It is likely to be extended in the future
+or integrated with a larger project to generate HTML elements in a generic
+way (as discussed recently on the mod_perl mailing list).
+</p>
+<pre>    [% tt_start_tag %] USE HTML [% tt_end_tag %]
+    [% tt_start_tag %] HTML.escape(&quot;if (a &lt; b &amp;&amp; c &gt; d) ...&quot; [% tt_end_tag %]
+    [% tt_start_tag %] HTML.attributes(border =&gt; 1, cellpadding =&gt; 2) [% tt_end_tag %]
+    [% tt_start_tag %] HTML.element(table =&gt; { border =&gt; 1, cellpadding =&gt; 2 }) [% tt_end_tag %]</pre>
+<p>
+See [% ttlink('Template::Plugin::Iterator') -%] for further details.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Iterator"
+-%]<p>
 The Iterator plugin provides a way to create a Template::Iterator
 object to iterate over a data set.  An iterator is created
 automatically by the FOREACH directive and is aliased to the 'loop'
@@ -186,11 +331,10 @@ with a given name, or the default plugin name, 'iterator'.  See
        &lt;li&gt;[% tt_start_tag %] item [% tt_end_tag %]
        [% tt_start_tag %] '&lt;/ul&gt;' IF iterator.last [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-
-
-<li><b>Table</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Table"
+-%]<p>
 The Table plugin allows you to format a list of data items into a 
 virtual table by specifying a fixed number of rows or columns, with 
 an optional overlap.  See [% ttlink('Template::Plugin::Table') -%] for further 
@@ -200,12 +344,11 @@ details.
 <pre>    [% tt_start_tag %] FOREACH item = table.col(3) [% tt_end_tag %]
        [% tt_start_tag %] item [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-
-
-<li><b>URL</b><br>
-<p>
-The URL plugin provides a simple way of constructing URLs from a base
+[%- END %]
+[% WRAPPER subsection
+   title = "URL"
+-%]<p>
+The URL plugin provides a simple way of contructing URLs from a base
 part and a variable set of parameters.  See [% ttlink('Template::Plugin::URL') -%]
 for further details.
 </p>
@@ -214,11 +357,10 @@ for further details.
        # ==&gt; /cgi/bin/bar.pl?debug=1</pre>
 <pre>    [% tt_start_tag %] mycgi(mode='submit') [% tt_end_tag %]
        # ==&gt; /cgi/bin/bar.pl?mode=submit&amp;debug=1</pre>
-
-
-
-<li><b>Wrap</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Wrap"
+-%]<p>
 The Wrap plugin uses the Text::Wrap module by David Muir Sharnoff 
 &lt;muir@idiom.com&gt; (with help from Tim Pierce and many many others)
 to provide simple paragraph formatting.  See [% ttlink('Template::Plugin::Wrap') -%]
@@ -231,11 +373,10 @@ and [% ttlink('Text::Wrap') -%] for further details.
 The Text::Wrap module is available from CPAN:
 </p>
 <pre>    http://www.cpan.org/modules/by-module/Text/</pre>
-
-
-
-<li><b>XML::DOM</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "XML::DOM"
+-%]<p>
 The XML::DOM plugin gives access to the XML Document Object Module via
 Clark Cooper &lt;cooper@sch.ge.com&gt; and Enno Derksen's 
 &lt;enno@att.com&gt; XML::DOM module.  See [% ttlink('Template::Plugin::XML::DOM') -%] 
@@ -250,11 +391,10 @@ and [% ttlink('XML::DOM') -%] for further details.
 The plugin requires the XML::DOM module, available from CPAN:
 </p>
 <pre>    http://www.cpan.org/modules/by-module/XML/</pre>
-
-
-
-<li><b>XML::XPath</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "XML::XPath"
+-%]<p>
 The XML::XPath plugin provides an interface to Matt Sergeant's
 &lt;matt@sergeant.org&gt; XML::XPath module.  See 
 [% ttlink('Template::Plugin::XML::XPath') -%] and [% ttlink('XML::XPath') -%] for further details.
@@ -267,11 +407,10 @@ The XML::XPath plugin provides an interface to Matt Sergeant's
 The plugin requires the XML::XPath module, available from CPAN:
 </p>
 <pre>    http://www.cpan.org/modules/by-module/XML/</pre>
-
-
-
-<li><b>XML::RSS</b><br>
-<p>
+[%- END %]
+[% WRAPPER subsection
+   title = "XML::RSS"
+-%]<p>
 The XML::RSS plugin is a simple interface to Jonathan Eisenzopf's
 &lt;eisen@pobox.com&gt; XML::RSS module.  A RSS (Rich Site Summary)
 file is typically used to store short news 'headlines' describing
@@ -288,13 +427,10 @@ See [% ttlink('Template::Plugin::XML::RSS') -%] and [% ttlink('XML::RSS') -%] fo
 The XML::RSS module is available from CPAN:
 </p>
 <pre>    http://www.cpan.org/modules/by-module/XML/</pre>
-
-
-</ul>
-
+[%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -303,13 +439,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

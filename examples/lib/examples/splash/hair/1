@@ -1,0 +1,5 @@
+[% INCLUDE splash/hair
+           content = 'Box Content'
+           col   = 'white'
+           bgcol = 'black'
+%]

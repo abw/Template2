@@ -12,16 +12,16 @@
         page = 'Views'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION'
-                         subs=['Views as Template Collectors/Providers', 'Local BLOCK Definitions', 'Inheritance, Delegation and Reuse', 'Self-Reference', 'Saving References to External Views', 'Preserving Variable State within Views', 'Views as Data Presenters'];
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION"
+                         subs=["Views as Template Collectors/Providers", "Local BLOCK Definitions", "Preserving Variable State within Views", "Inheritance, Delegation and Reuse", "Self-Reference", "Saving References to External Views", "Views as Data Presenters"];
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section describes dynamic views: a powerful but experimental new
 feature in version 2.01 of the Template Toolkit.
@@ -54,7 +54,7 @@ next version or two.  Please be very wary about building your
 multi-million dollar e-commerce solutions based around this feature.
 </p>
 [% WRAPPER subsection
-   title = 'Views as Template Collectors/Providers'
+   title = "Views as Template Collectors/Providers"
 -%]<p>
 The VIEW directive starts a view definition and includes a name by
 which the view can be referenced.  The view definition continues up to
@@ -99,7 +99,7 @@ include() method.  Thus, the following are all equivalent:
     [% tt_start_tag %] myview.header(title='Hello World') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Local BLOCK Definitions'
+   title = "Local BLOCK Definitions"
 -%]<p>
 A VIEW definition can include BLOCK definitions which remain local to
 the view.   A request for a particular template will return a BLOCK,
@@ -121,15 +121,151 @@ if defined, in preference to any other template of the same name.
 <pre>    [% tt_start_tag %] INCLUDE foo [% tt_end_tag %]	    # public foo block
     [% tt_start_tag %] plain.foo [% tt_end_tag %]	    # plain foo block 
     [% tt_start_tag %] fancy.foo [% tt_end_tag %]	    # fancy foo block </pre>
+<p>
+In addition to BLOCK definitions, a VIEW can contain any other
+template directives.  The entire VIEW definition block is processed to
+initialise the view but no output is generated (this may change RSN -
+and get stored as 'output' item, subsequently accessible as [% tt_start_tag %]
+view.output [% tt_end_tag %]).  However, directives that have side-effects, such as
+those that update a variable, will have noticable consequences.
+</p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Inheritance, Delegation and Reuse'
+   title = "Preserving Variable State within Views"
 -%]<p>
-You can use this feature to implement inheritance, delegation or other
-reuse patterns.  Note that the regular INCLUDE/PROCESS/WRAPPER
-directives work entirely independantly of views and will always get
-the original, unaltered template rather than any local per-view
-definition.
+Views can also be used to save the values of any existing variables,
+or to create new ones at the point at which the view is defined.
+Unlike simple template metadata (META) which can only contain static
+string values, the view initialisation block can contain any template
+directives and generate any kind of dynamic output and/or data items.
+</p>
+<pre>    [% tt_start_tag %] VIEW my_web_site [% tt_end_tag %]
+       [% tt_start_tag %] view.title   = title or 'My Cool Web Site' [% tt_end_tag %]
+       [% tt_start_tag %] view.author  = &quot;$abw.name, $abw.email&quot; [% tt_end_tag %]
+       [% tt_start_tag %] view.sidebar = INCLUDE my/sidebar.tt2 [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Note that additional data items can be specified as arguments to the VIEW
+directive.  Anything that doesn't look like a configuration parameter is 
+assumed to be a data item.  This can be a little hazardous, of course, because
+you never know when a new configuration item might get added which interferes 
+with your data.
+</p>
+<pre>    [% tt_start_tag %] VIEW my_web_site
+	    # config options
+	    prefix = 'my/'
+	    # misc data
+	    title   = title or 'My Cool Web Site'
+	    author  = &quot;$abw.name, $abw.email&quot;
+	    sidebar = INCLUDE my/sidebar.tt2 
+    [% tt_end_tag %]
+       ...
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Outside of the view definition you can access the view variables as, for
+example:
+</p>
+<pre>    [% tt_start_tag %] my_web_site.title [% tt_end_tag %]</pre>
+<p>
+One important feature is the equivalence of simple variables and templates.
+You can implement the view item 'title' as a simple variable, a template
+defined in an external file, possibly with a prefix/suffix automatically
+appended, or as a local BLOCK definition within the [% tt_start_tag %] VIEW [% tt_end_tag %] ... [% tt_start_tag %] END [% tt_end_tag %]
+definition.  If you use the syntax above then the view will Do The Right
+Thing to return the appropriate output.
+</p>
+<p>
+At the END of the VIEW definition the view is &quot;sealed&quot; to prevent you
+from accidentally updating any variable values.  If you attempt to change
+the value of a variable after the END of the VIEW definition block then
+an 'view' error will be thrown.
+</p>
+<pre>    [% tt_start_tag %] TRY; 
+         my_web_site.title = 'New Title';
+       CATCH;
+         error;
+       END
+    [% tt_end_tag %]</pre>
+<p>
+The error above will be reported as:
+</p>
+<pre>    view error - cannot update item in sealed view: title</pre>
+<p>
+The same is true if you pass a parameter to a view variable.  This is
+interpreted as an attempt to update the variable and will raise the same
+warning.
+</p>
+<pre>    [% tt_start_tag %] my_web_site.title('New Title') [% tt_end_tag %]    # view error!</pre>
+<p>
+You can set the 'silent' parameter to have the view ignore these
+parameters and simply return the variable value. 
+</p>
+<pre>    [% tt_start_tag %] VIEW my_web_site
+            silent = 1
+	    title  = title or 'My Cool Web Site'
+	    # ... ;
+       END
+    [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] my_web_site.title('Blah Blah') [% tt_end_tag %]   # My Cool Web Site</pre>
+<p>
+Alternately, you can specify that a view is unsealed allowing existing
+variables to be updated and new variables defined.
+</p>
+<pre>    [% tt_start_tag %] VIEW my_web_site
+            sealed = 0
+	    title  = title or 'My Cool Web Site'
+	    # ... ;
+       END
+    [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] my_web_site.title('Blah Blah') [% tt_end_tag %]   # Blah Blah
+    [% tt_start_tag %] my_web_site.title [% tt_end_tag %]                # Blah Blah</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "Inheritance, Delegation and Reuse"
+-%]<p>
+Views can be inherited from previously defined views by use of the 'base'
+parameter.  This example shows how a base class view is defined which 
+applies a 'view/default/' prefix to all template names.
+</p>
+<pre>    [% tt_start_tag %] VIEW my.view.default
+            prefix = 'view/default/';
+       END
+    [% tt_end_tag %]</pre>
+<p>
+Thus the directive:
+</p>
+<pre>    [% tt_start_tag %] my.view.default.header(title='Hello World') [% tt_end_tag %]</pre>
+<p>
+is now equivalent to:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE view/default/header title='Hello World' [% tt_end_tag %]</pre>
+<p>
+A second view can be defined which specifies the default view as a 
+base.
+</p>
+<pre>    [% tt_start_tag %] VIEW my.view.fancy
+            base   = my.view.default
+            prefix = 'view/fancy/';
+       END
+    [% tt_end_tag %]</pre>
+<p>
+Now the directive:
+</p>
+<pre>    [% tt_start_tag %] my.view.fancy.header(title='Hello World') [% tt_end_tag %]</pre>
+<p>
+will resolve to:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE view/fancy/header title='Hello World' [% tt_end_tag %]</pre>
+<p>
+or if that doesn't exist, it will be handled by the base view as:
+</p>
+<pre>    [% tt_start_tag %] INCLUDE view/default/header title='Hello World' [% tt_end_tag %]</pre>
+<p>
+When a parent view is specified via the 'base' parameter, the
+delegation of a view to its parent for fetching templates and accessing
+user defined variables is automatic.  You can also implement your own
+inheritance, delegation or other reuse patterns by explicitly
+delegating to other views.
 </p>
 <pre>    [% tt_start_tag %] BLOCK foo [% tt_end_tag %]
        public foo block
@@ -147,16 +283,13 @@ definition.
 <pre>    [% tt_start_tag %] plain.foo [% tt_end_tag %]	# &lt;plain&gt;public foo block&lt;/plain&gt;
     [% tt_start_tag %] fancy.foo [% tt_end_tag %]	# &lt;fancy&gt;public foo block&lt;/fancy&gt;</pre>
 <p>
-In addition to BLOCK definitions, a VIEW can contain any other
-template directives.  The entire VIEW definition block is processed to
-initialise the view but no output is generated (this may change RSN -
-and get stored as 'output' item, subsequently accessible as [% tt_start_tag %]
-view.output [% tt_end_tag %]).  However, directives that have side-effects, such as
-those that update a variable, will have noticable consequences.
+Note that the regular INCLUDE/PROCESS/WRAPPER directives work entirely
+independantly of views and will always get the original, unaltered
+template name rather than any local per-view definition.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Self-Reference'
+   title = "Self-Reference"
 -%]<p>
 A reference to the view object under definition is available with the
 VIEW ... END block by its specified name and also by the special name
@@ -223,7 +356,7 @@ view object to which it belongs.
     [% tt_start_tag %] bar.header [% tt_end_tag %]                    # =&gt; Title: Hello World</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Saving References to External Views'
+   title = "Saving References to External Views"
 -%]<p>
 When it comes to view inheritance, it's always a good idea to take a
 local copy of a parent or delegate view and store it as an attribute
@@ -245,42 +378,9 @@ has been changed.
     [% tt_start_tag %] fancy.foo [% tt_end_tag %]	    # =&gt; &lt;fancy&gt;public foo block&lt;/fancy&gt;</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Preserving Variable State within Views'
+   title = "Views as Data Presenters"
 -%]<p>
-In general, you can use view data to save the values of any existing
-variables, or to define new ones, at the point at which the view is
-defined.  Unlike simple template metadata (META) which can only
-contain static string values, the view initialisation block can
-contain any template directives and generate any kind of dynamic
-output and/or data items.
-</p>
-<pre>    [% tt_start_tag %] VIEW my_web_site [% tt_end_tag %]
-       [% tt_start_tag %] view.title   = title or 'My Cool Web Site' [% tt_end_tag %]
-       [% tt_start_tag %] view.author  = &quot;$abw.name, $abw.email&quot; [% tt_end_tag %]
-       [% tt_start_tag %] view.sidebar = INCLUDE my/sidebar.tt2 [% tt_end_tag %]
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<p>
-Note that additional data items can be specified as arguments to the VIEW
-directive.  Anything that doesn't look like a configuration parameter is 
-assumed to be a data item.  This can be a little hazardous, of course, because
-you never know when a new configuration item might get added which interferes 
-with your data.
-</p>
-<pre>    [% tt_start_tag %] VIEW my_web_site
-	    # config options
-	    prefix = 'my/'
-	    # misc data
-	    title   = title or 'My Cool Web Site'
-	    author  = &quot;$abw.name, $abw.email&quot;
-	    sidebar = INCLUDE my/sidebar.tt2 
-    [% tt_end_tag %]
-       ...
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-[%- END %]
-[% WRAPPER subsection
-   title = 'Views as Data Presenters'
--%]<p>
-The second role of a view is to act as a dispatcher to automatically
+Another key role of a view is to act as a dispatcher to automatically
 apply the correct template to present a particular object or data
 item.  This is handled via the print() method.
 </p>
@@ -408,12 +508,9 @@ to guide the view along the right path to presentation happiness.
 </p>
 <p>
 The upshot is that you can use views to greatly simplify the display
-of data structures like XML::DOM trees.
-</p>
-<p>
-(NOTE: no you can't - I haven't added this facility to the XML::DOM plugin
-yet, but expect it Real Soon Now.  The other examples like File, Directory
-and Pod all work in 2.01).
+of data structures like XML::DOM trees.  The documentation for the 
+Template::Plugins::XML::DOM module contains an example of this.  In 
+essence, it looks something like this:
 </p>
 <p>
 XML source:
@@ -494,7 +591,7 @@ until the syntax and API stabilise).
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -503,13 +600,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
