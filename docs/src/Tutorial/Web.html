@@ -9,23 +9,23 @@
   #   documentation for the Template Toolkit is built.
 -%]
 [% META book = 'Tutorial'
-        page = 'Tutorial'
+        page = 'Web'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title='DESCRIPTION';
-	INCLUDE tocitem title='INTRODUCTION';
-	INCLUDE tocitem title='GENERATING STATIC PAGES';
-	INCLUDE tocitem title='DYNAMIC CONTENT GENERATION VIA CGI SCRIPT';
-	INCLUDE tocitem title='DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER';
-	INCLUDE tocitem title='USING PLUGINS TO EXTEND FUNCTIONALITY';
-	INCLUDE tocitem title='AUTHOR';
-	INCLUDE tocitem title='VERSION';
-	INCLUDE tocitem title='COPYRIGHT';
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="INTRODUCTION";
+	INCLUDE tocitem title="GENERATING STATIC PAGES";
+	INCLUDE tocitem title="DYNAMIC CONTENT GENERATION VIA CGI SCRIPT";
+	INCLUDE tocitem title="DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER";
+	INCLUDE tocitem title="USING PLUGINS TO EXTEND FUNCTIONALITY";
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This tutorial document provides a introduction to the Template Toolkit
 and demonstrates some of the typical ways it may be used for
@@ -56,7 +56,7 @@ you don't need to worry about all that.  You can have a seat, sit back.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='INTRODUCTION'
+    title="INTRODUCTION"
 -%]<p>
 The Template Toolkit is a set of Perl modules which collectively
 implement a template processing system.  In this context, a template
@@ -130,7 +130,7 @@ use in a template.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='GENERATING STATIC PAGES'
+    title="GENERATING STATIC PAGES"
 -%]<p>
 Having created a template file we can now process it to generate some
 real output.  The quickest and easiest way to do this is to use the 
@@ -375,7 +375,7 @@ implement in terms of common templates elements or variables.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='DYNAMIC CONTENT GENERATION VIA CGI SCRIPT'
+    title="DYNAMIC CONTENT GENERATION VIA CGI SCRIPT"
 -%]<p>
 The [% ttlink('Template', 'Template') -%] module provides a simple front-end to the Template 
 Toolkit for use in CGI scripts and Apache/mod_perl handlers.  Simply
@@ -494,7 +494,7 @@ desired output for the application state.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER'
+    title="DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER"
 -%]<p>
 <b>NOTE:</b> the Apache::Template module is now available from CPAN
 and provides a simple and easy to use Apache/mod_perl interface to the
@@ -582,7 +582,7 @@ print() method of the Apache request object.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='USING PLUGINS TO EXTEND FUNCTIONALITY'
+    title="USING PLUGINS TO EXTEND FUNCTIONALITY"
 -%]<p>
 As we've already shown, it is possible to bind Perl data and functions
 to template variables when creating dynamic content via a CGI script
@@ -754,7 +754,7 @@ about the underlying implementation.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -763,13 +763,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
