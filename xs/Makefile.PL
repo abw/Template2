@@ -11,6 +11,5 @@ WriteMakefile(
     'OBJECT'   => 'Stash.o',
     'VERSION'  => $Template::VERSION,
     'NORECURS' => 1,
-    'MAN3PODS' => 'none'
 );
 
