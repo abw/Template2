@@ -36,6 +36,8 @@
 * Added the Template::Plugin::Procedural module for creating plugins that
   use subroutines rather than method calls.
 
+* Fixed a html.t test to allow numerical instead of named entities (mark)
+
 #------------------------------------------------------------------------
 # Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
@@ -105,7 +107,6 @@
   process() with optional third $localize flag.  (darren)
 
 * Modified the OUTPUT option to accept a reference to a list (darren)
-
 
 #------------------------------------------------------------------------
 # Version 2.07b - July 7th 2002                   ## DEVELOPER RELEASE ##
