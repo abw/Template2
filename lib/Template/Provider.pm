@@ -42,6 +42,7 @@ use Template::Config;
 use Template::Constants;
 use Template::Document;
 use File::Basename;
+use File::Spec;
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -96,7 +97,7 @@ sub fetch {
 	$data = $data->{ data }
 	    unless $error;
     }
-    elsif (($name =~ m[^/]) || (($^O =~ /win/i) && ($name =~ m[^(\w:)?/]))) {
+    elsif (File::Spec->file_name_is_absolute($name)) {
 	# absolute paths (starting '/') allowed if ABSOLUTE set
 	($data, $error) = $self->{ ABSOLUTE } 
 	    ? $self->_fetch($name) 
@@ -156,7 +157,7 @@ sub load {
     my ($data, $error);
     my $path = $name;
 
-    if (($name =~ m[^/]) || (($^O =~ /win/i) && ($name =~ m[^(\w:)?/]))) {
+    if (File::Spec->file_name_is_absolute($name)) {
 	# absolute paths (starting '/') allowed if ABSOLUTE set
 	$error = "$name: absolute paths are not allowed (set ABSOLUTE option)" 
 	    unless $self->{ ABSOLUTE };
@@ -267,7 +268,7 @@ sub _init {
 
     # tweak delim to ignore C:/
     unless (defined $dlim) {
-	$dlim = ($^O =~ /win/i) ? ':(?!\\/)' : ':';
+        $dlim = ($^O eq 'MSWin32') ? ':(?!\\/)' : ':';
     }
 
     # coerce INCLUDE_PATH to an array ref, if not already so
@@ -305,7 +306,7 @@ sub _init {
 	require File::Path;
 	foreach my $dir (@$path) {
 	    my $wdir = $dir;
-	    $wdir =~ s[:][]g if ($^O =~ /win/i);
+            $wdir =~ s[:][]g if $^O eq 'MSWin32';
 	    &File::Path::mkpath("$cdir/$wdir");
 	}
 	# ensure $cdir is terminated with '/' for subsequent path building
@@ -490,7 +491,7 @@ sub _compiled_filename {
 
     $path = $file;
     $path =~ /^(.+)$/s or die "invalid filename: $path";
-    $path =~ s[:][]g if $^O =~ /win/i;
+    $path =~ s[:][]g if $^O eq 'MSWin32';
     $compiled = "$compdir$path$compext";
     $compiled =~ s[//][/]g;
 
