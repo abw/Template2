@@ -28,6 +28,18 @@
 * Applied Leon's patch to Template::Service to delete the 'template'
   entry added to the variable hash at the end of processing.
 
+* Fixed an obscured bug/oversight in Template::Plugins which tested
+  generated plugin objects for truth rather than definedness to see if
+  the plugin returned was valid.  This can cause problems if your 
+  object has an overloaded stringification operator which gets called
+  (but shouldn't) and could return an untrue (but correct) value.
+
+* Applied Craig's suggested fixes to the parser to correct potential
+  precendence problems and added tests to the test suite.  See:
+  http://tt2.org/pipermail/templates/2001-November/002138.html
+
+* Added the assert() subroutine to Template::Test.
+  
 
 #------------------------------------------------------------------------
 # Version 2.06a - 19th November 2001              ## DEVELOPER RELEASE ##
