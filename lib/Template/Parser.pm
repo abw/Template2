@@ -124,13 +124,14 @@ sub new {
 	GRAMMAR     => undef,
 	_ERROR      => '',
 	FACTORY     => 'Template::Directive',
-	DEBUG       => 0, #$DEBUG,
+	DEBUG       => $DEBUG,
     }, $class;
 
     # update self with any relevant keys in config
     foreach $key (keys %$self) {
 	$self->{ $key } = $config->{ $key } if defined $config->{ $key };
     }
+    $self->{ FILEINFO } = [ ];
 
     $grammar = $self->{ GRAMMAR } ||= do {
 	require Template::Grammar;
@@ -219,22 +220,29 @@ sub parse {
     my ($self, $text, $info) = @_;
     my ($tokens, $block);
 
-    $self->{ FILEINFO } = $info;
+    $info->{ DEBUG } = $self->{ DEBUG } 
+	unless defined $info->{ DEBUG };
+
 #    print "info: { ", join(', ', map { "$_ => $info->{ $_ }" } keys %$info), " }\n";
 
     # store for blocks defined in the template (see define_block())
     my $defblock = $self->{ DEFBLOCK } = { };
     my $metadata = $self->{ METADATA } = [ ];
 
-    $self->{ _ERROR }  = '';
+    $self->{ _ERROR } = '';
 
     # split file into TEXT/DIRECTIVE chunks
     $tokens = $self->split_text($text)
 	|| return undef;				    ## RETURN ##
 
+    push(@{ $self->{ FILEINFO } }, $info);
+
     # parse chunks
-    $block = $self->_parse($tokens)
-	|| return undef;				    ## RETURN ##
+    $block = $self->_parse($tokens, $info);
+
+    pop(@{ $self->{ FILEINFO } });
+
+    return undef unless $block;				    ## RETURN ##
 
     print STDERR "compiled main template document block:\n$block\n"
 	if $DEBUG;
@@ -627,7 +635,7 @@ sub add_metadata {
 #========================================================================
 
 #------------------------------------------------------------------------
-# _parse(\@tokens)
+# _parse(\@tokens, \@info)
 #
 # Parses the list of input tokens passed by reference and returns a 
 # Template::Directive::Block object which contains the compiled 
@@ -642,7 +650,7 @@ sub add_metadata {
 #------------------------------------------------------------------------
 
 sub _parse {
-    my ($self, $tokens) = @_;
+    my ($self, $tokens, $info) = @_;
     my ($token, $value, $text, $line, $inperl);
     my ($state, $stateno, $status, $action, $lookup, $coderet, @codevars);
     my ($lhs, $len, $code);	    # rule contents
@@ -662,7 +670,6 @@ sub _parse {
     $self->{ INPERL } = \$inperl;
 
     $status = CONTINUE;
-    my $file = $self->{ FILEINFO }->{ name };
     my $in_string = 0;
 
     while(1) {
@@ -680,7 +687,7 @@ sub _parse {
 		if (ref $token) {
 		    ($text, $line, $token) = @$token;
 		    if (ref $token) {
-			if ($self->{ DEBUG } && ! $in_string) {
+			if ($info->{ DEBUG } && ! $in_string) {
 			    # is this gnarly or what?  we're pushing
 			    # parse tokens to make it look like the author
 			    # added a DEBUG directive like this:
@@ -699,7 +706,7 @@ sub _parse {
 				    LITERAL => "'$dtext'",
 				    IDENT   => 'file',
 				    ASSIGN  => '=',
-				    LITERAL => "'$file'",
+				    LITERAL => "'$info->{ name }'",
 				    (';') x 2,
 				    @$token, 
 				    (';') x 2);
