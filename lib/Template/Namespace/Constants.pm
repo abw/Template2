@@ -26,6 +26,7 @@ package Template::Namespace::Constants;
 use strict;
 use Template::Base;
 use Template::Config;
+use Template::Directive;
 use Template::Exception;
 
 use base qw( Template::Base );
@@ -50,6 +51,7 @@ sub _init {
 
 sub ident {
     my ($self, $ident) = @_;
+    my @save = @$ident;
 
     # discard first node indicating constants namespace
     splice(@$ident, 0, 2);
@@ -62,28 +64,39 @@ sub ident {
 
     foreach $e (0..$nelems-1) {
 	# node name must be a constant
-	die "cannot fold constant ", $ident->[$e * 2], "\n"
-	    unless $ident->[$e * 2] =~ s/^'(.+)'$/$1/s;
+	unless ($ident->[$e * 2] =~ s/^'(.+)'$/$1/s) {
+	    $self->DEBUG(" * deferred (non-constant item: ", $ident->[$e * 2], ")\n")
+		if $DEBUG;
+	    return Template::Directive->ident(\@save);
+	}
 
 	# if args is non-zero then it must be eval'ed 
 	if ($ident->[$e * 2 + 1]) {
 	    my $args = $ident->[$e * 2 + 1];
 	    my $comp = eval "$args";
-	    die "cannot compile constant arguments: $args\n" if $@;
-	    print STDERR "($args) " if $comp && $DEBUG;
+	    if ($@) {
+		$self->DEBUG(" * deferred (non-constant args: $args)\n") if $DEBUG;
+		return Template::Directive->ident(\@save);
+	    }
+	    $self->DEBUG("($args) ") if $comp && $DEBUG;
 	    $ident->[$e * 2 + 1] = $comp;
 	}
     }
 
+
     $result = $self->{ STASH }->get($ident);
-    die "undefined constant [ @$ident ]\n" unless defined $result;
+
+    if (! length $result || ref $result) {
+	my $reason = length $result ? 'reference' : 'no result';
+	$self->DEBUG(" * deferred ($reason)\n") if $DEBUG;
+	return Template::Directive->ident(\@save);
+    }
 
     $result =~ s/'/\\'/;
 
-    print STDERR "=> '$result'\n" if $DEBUG;
+    $self->DEBUG(" * resolved => '$result'\n") if $DEBUG;
 
     return "'$result'";
-
 }
 
 1;
