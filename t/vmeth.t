@@ -32,6 +32,24 @@ $Template::Stash::LIST_OPS->{ sum } = \&sum;
 $Template::Stash::LIST_OPS->{ odd } = \&odd;
 $Template::Stash::LIST_OPS->{ jumble } = \&jumble;
 
+#------------------------------------------------------------------------
+# define a simple object to test sort vmethod calling object method
+#------------------------------------------------------------------------
+package My::Object;
+sub new { 
+    my ($class, $name) = @_;
+    bless {
+	_NAME => $name,
+    }, $class;
+}
+sub name { 
+    my $self = shift;
+    return $self->{ _NAME };
+}
+#------------------------------------------------------------------------
+
+package main;
+
 sub sum {
     my $list = shift;
     my $n = 0;
@@ -69,6 +87,10 @@ my $params = {
     primes   => [ 13, 11, 17, 19, 2, 3, 5, 7 ],
     phones   => { 3141 => 'Leon', 5131 => 'Andy', 4131 => 'Simon' },
     groceries => { 'Flour' => 3, 'Milk' => 1, 'Peanut Butter' => 21 },
+    names     => [ map { My::Object->new($_) }
+		   qw( Tom Dick Larry ) ],
+    numbers   => [ map { My::Object->new($_) }
+		   qw( 1 02 10 12 021 ) ],
 
 };
 
@@ -186,6 +208,37 @@ bar, baz, foo, qux, waz, wiz, woz
 Richard
 Larry
 Tom
+
+-- test --
+[% FOREACH obj = names.sort('name') -%]
+[% obj.name +%]
+[% END %]
+-- expect --
+Dick
+Larry
+Tom
+
+-- test --
+[% FOREACH obj = numbers.sort('name') -%]
+[% obj.name +%]
+[% END %]
+-- expect --
+02
+021
+1
+10
+12
+
+-- test --
+[% FOREACH obj = numbers.nsort('name') -%]
+[% obj.name +%]
+[% END %]
+-- expect --
+1
+02
+10
+12
+021
 
 -- test --
 [% FOREACH person = people.sort('name') -%]
