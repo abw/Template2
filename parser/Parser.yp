@@ -236,17 +236,24 @@ filter:	    FILTER lnameargs ';'
 	      lnameargs		    { $factory->filter(@_[3,1])           }
 ;
 
-#defblock:   BLOCK blockname ';' 
-#	      template END	    { $_[0]->define_block(@_[2, 4]); 
-#				      undef                               }
-#;
-defblock:   BLOCK blockname blockargs ';' 
-	      template END	    { local $" = ', ';
-				      print STDERR "experimental block args: [@{ $_[3] }]\n"
-					  if $_[3];
-				      $_[0]->define_block(@_[2, 5]); 
-				      undef                               }
+defblock: defblockname 
+          blockargs ';' 
+          template END		    { my $name = join('/', @{ $_[0]->{ DEFBLOCKS } });
+				      pop(@{ $_[0]->{ DEFBLOCKS } });
+				      $_[0]->define_block($name, $_[4]); 
+				      undef
+				    }
 ;
+
+# removed for now
+#	     print STDERR "experimental block args: [@{ $_[3] }]\n" if $_[3];
+
+defblockname: BLOCK blockname       { push(@{ $_[0]->{ DEFBLOCKS } }, $_[2]);
+				      $_[2];
+				    }
+;
+
+
 
 blockname:  filename 
         |   LITERAL		    { $_[1] =~ s/^'(.*)'$/$1/; $_[1]      }
