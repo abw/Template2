@@ -31,6 +31,7 @@ lib/Template/Parser.pod
 lib/Template/Plugin.pm
 lib/Template/Plugin.pod
 lib/Template/Plugin/CGI.pm
+lib/Template/Plugin/DBI.pm
 lib/Template/Plugin/Datafile.pm
 lib/Template/Plugin/Date.pm
 lib/Template/Plugin/Dumper.pm
@@ -72,6 +73,7 @@ t/config.t
 t/context.t
 t/datafile.t
 t/date.t
+t/dbi.t
 t/directive.t
 t/document.t
 t/dom.t
