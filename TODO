@@ -18,6 +18,8 @@
 # Miscellaneous
 #------------------------------------------------------------------------
 
+* mylist.sort.uniq
+
 * Errors thrown via the Error module are not correctly caught.  I looked
   at this briefly but the problem wasn't immediately obvious and needs some
   more considered investigation.  There are also problems with CGI::Carp
@@ -143,7 +145,7 @@
 # Stash
 #------------------------------------------------------------------------
 
-* The XS Stash may have problems trying to access tied hashes.  Also note
+* The XS Stash does not work with tied hashes (e.g. DBI.tie).  Also note
   that enabling the XS Stash cause all the Template::* modules to be 
   installed in an architecture-dependant directory.  For info, see
   http://www.tt2.org/pipermail/templates/2001-September/001568.html

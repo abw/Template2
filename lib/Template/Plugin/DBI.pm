@@ -752,6 +752,12 @@ entries in the 'people' hash.
 
     My name is [% people.abw.name %]
 
+IMPORTANT NOTE: the XS Stash (Template::Stash::XS) does not currently
+support access to tied hashes.  If you are using the XS stash and having
+problems then you should try enabling the regular stash instead.  You 
+can do this by setting $Template::Config::STASH to 'Template::Stash' 
+before instantiating the Template object.
+
 =head1 OBJECT METHODS
 
 =head2 connect($database, $username, $password)
@@ -893,8 +899,8 @@ Andy Wardley, Craig Barratt, Dave Hodgkinson and Rafael Kitover.
 
 =head1 VERSION
 
-2.30, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.31, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 
 
 

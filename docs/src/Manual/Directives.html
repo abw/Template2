@@ -12,21 +12,26 @@
         page = 'Directives'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'DESCRIPTION'
- 			subs  = [ 'Accessing and Updating Template Variables',
-			          'Processing Other Template Files and Blocks',
-			          'Conditional Processing',
-			          'Loop Processing',
-			          'Filters, Plugins, Macros and Perl',
-			          'Exception Handling and Flow Control',
-			          'Miscellaneous' ];
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [
+                    'Accessing and Updating Template Variables',
+		    'Processing Other Template Files and Blocks',
+		    'Conditional Processing',
+		    'Loop Processing',
+		    'Filters, Plugins, Macros and Perl',
+		    'Exception Handling and Flow Control',
+		    'Miscellaneous'
+		];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -1969,7 +1974,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06c, released on 13 December 2001.
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

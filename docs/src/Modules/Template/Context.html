@@ -12,36 +12,44 @@
         page = 'Context'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'SYNOPSIS';
-		INCLUDE tocitem 
-			title = 'DESCRIPTION';
-		INCLUDE tocitem 
-			title = 'METHODS'
- 			subs  = [ 'new(\\%params) ',
-			          'template($name) ',
-			          'plugin($name, \\@args)',
-			          'filter($name, \\@args, $alias)',
-			          'process($template, \\%vars)',
-			          'include($template, \\%vars)',
-			          'throw($error_type, $error_message, \\$output)',
-			          'catch($exception, \\$output)',
-			          'define_block($name, $block)',
-			          'define_filter($name, \\&amp;filter, $is_dynamic)',
-			          'localise(\\%vars)',
-			          'delocalise()',
-			          'visit(\\%blocks)',
-			          'leave()',
-			          'reset()',
-			          'AUTOLOAD' ];
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
-		INCLUDE tocitem 
-			title = 'SEE ALSO';
+	PROCESS tocitem 
+	        title ='SYNOPSIS'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='METHODS'
+                subs  = [
+                    'new(\\%params) ',
+		    'template($name) ',
+		    'plugin($name, \\@args)',
+		    'filter($name, \\@args, $alias)',
+		    'process($template, \\%vars)',
+		    'include($template, \\%vars)',
+		    'throw($error_type, $error_message, \\$output)',
+		    'catch($exception, \\$output)',
+		    'define_block($name, $block)',
+		    'define_filter($name, \\&amp;filter, $is_dynamic)',
+		    'localise(\\%vars)',
+		    'delocalise()',
+		    'visit(\\%blocks)',
+		    'leave()',
+		    'reset()',
+		    'AUTOLOAD'
+		];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='SEE ALSO'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -634,8 +642,8 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.43, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.44, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -12,22 +12,30 @@
         page = 'Plugin_Dumper'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'SYNOPSIS';
-		INCLUDE tocitem 
-			title = 'DESCRIPTION';
-		INCLUDE tocitem 
-			title = 'METHODS'
- 			subs  = [ 'dump()',
-			          'dump_html()' ];
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
-		INCLUDE tocitem 
-			title = 'SEE ALSO';
+	PROCESS tocitem 
+	        title ='SYNOPSIS'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='METHODS'
+                subs  = [
+                    'dump()',
+		    'dump_html()'
+		];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='SEE ALSO'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -95,8 +103,8 @@ Simon Matthews &lt;sam@knowledgepool.com&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.35, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.36, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -1,9 +1,13 @@
 [%
 docset => {
-    id    => '[% docset.id %]',
-    title => '[% docset.title %]',
-    about => '[% docset.about %]',
+    id    => 'tt2',
+    title => 'Template Toolkit',
+    about => 'A fast, powerful and extensible template processing system',
+
+    booklist => [ 'Tutorial', 'Manual', 'Modules', 'Library', 'Tools', 'FAQ', 'Release' ],
+
     books => {
+        
         Tutorial => {
             id     => 'Tutorial',
             name   => 'Tutorial',
@@ -14,6 +18,9 @@ docset => {
             about  => 'Template Toolkit Tutorials',
             prev   => '',
             next   => 'Manual',
+        
+            pagelist => [ 'Web', 'Datafile' ],
+        
             pages  => {
                 Web => {
                     id      => 'Web',
@@ -55,9 +62,8 @@ docset => {
         	}
         
             }
-            pagelist => [
-        	'Web', 'Datafile',     ]
         }
+        
         Manual => {
             id     => 'Manual',
             name   => 'Manual',
@@ -68,6 +74,9 @@ docset => {
             about  => 'User guide and reference manual for the Template Toolkit',
             prev   => 'Tutorial',
             next   => 'Modules',
+        
+            pagelist => [ 'Intro', 'Syntax', 'Variables', 'Directives', 'Config', 'Filters', 'Plugins', 'Internals', 'Views', 'Refs', 'Credits' ],
+        
             pages  => {
                 Intro => {
                     id      => 'Intro',
@@ -226,9 +235,8 @@ docset => {
         	}
         
             }
-            pagelist => [
-        	'Intro', 'Syntax', 'Variables', 'Directives', 'Config', 'Filters', 'Plugins', 'Internals', 'Views', 'Refs', 'Credits',     ]
         }
+        
         Modules => {
             id     => 'Modules',
             name   => 'Modules',
@@ -239,6 +247,9 @@ docset => {
             about  => 'Core modules comprising the Template Toolkit',
             prev   => 'Manual',
             next   => 'Library',
+        
+            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath' ],
+        
             pages  => {
                 Template => {
                     id      => 'Template',
@@ -995,9 +1006,8 @@ docset => {
         	}
         
             }
-            pagelist => [
-        	'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath',     ]
         }
+        
         Library => {
             id     => 'Library',
             name   => 'Library',
@@ -1008,6 +1018,9 @@ docset => {
             about  => 'Template libraries',
             prev   => 'Modules',
             next   => 'Tools',
+        
+            pagelist => [ 'HTML', 'Splash', 'PostScript' ],
+        
             pages  => {
                 HTML => {
                     id      => 'HTML',
@@ -1062,9 +1075,8 @@ docset => {
         	}
         
             }
-            pagelist => [
-        	'HTML', 'Splash', 'PostScript',     ]
         }
+        
         Tools => {
             id     => 'Tools',
             name   => 'Tools',
@@ -1075,6 +1087,9 @@ docset => {
             about  => 'Template Tools',
             prev   => 'Library',
             next   => 'FAQ',
+        
+            pagelist => [ 'tpage', 'ttree' ],
+        
             pages  => {
                 tpage => {
                     id      => 'tpage',
@@ -1116,9 +1131,8 @@ docset => {
         	}
         
             }
-            pagelist => [
-        	'tpage', 'ttree',     ]
         }
+        
         FAQ => {
             id     => 'FAQ',
             name   => 'FAQ',
@@ -1129,6 +1143,9 @@ docset => {
             about  => 'Frequently Asked Questions',
             prev   => 'Tools',
             next   => 'Release',
+        
+            pagelist => [ 'FAQ' ],
+        
             pages  => {
                 FAQ => {
                     id      => 'FAQ',
@@ -1157,9 +1174,8 @@ docset => {
         	}
         
             }
-            pagelist => [
-        	'FAQ',     ]
         }
+        
         Release => {
             id     => 'Release',
             name   => 'Release',
@@ -1170,6 +1186,9 @@ docset => {
             about  => 'Release notes: README, Changes, TODO, etc.',
             prev   => 'FAQ',
             next   => '',
+        
+            pagelist => [ 'README', 'INSTALL', 'Changes', 'TODO', 'HACKING' ],
+        
             pages  => {
                 README => {
                     id      => 'README',
@@ -1250,13 +1269,11 @@ docset => {
         	}
         
             }
-            pagelist => [
-        	'README', 'INSTALL', 'Changes', 'TODO', 'HACKING',     ]
         }
 
     },
-    booklist => [ 
-'Tutorial', 'Manual', 'Modules', 'Library', 'Tools', 'FAQ', 'Release',     ],
+
+    # internal links within the docset
     links => {
 	'Template::Tutorial::Web' => 'Tutorial/Web.html',
 	'Template::Tutorial::Datafile' => 'Tutorial/Datafile.html',
@@ -1343,6 +1360,19 @@ docset => {
 	'Changes' => 'Release/Changes.html',
 	'TODO' => 'Release/TODO.html',
 	'HACKING' => 'Release/HACKING.html',
+    },
+
+    # external CPAN modules references within the docset
+    cpan => {
+	'CGI' => 'CGI',
+	'Data::Dumper' => 'Data::Dumper',
+	'DBI' => 'DBI',
+	'Exporter' => 'Exporter',
+	'GD' => 'GD',
+	'Pod::POM' => 'Pod::POM',
+	'POSIX' => 'POSIX',
+	'Text::Autoformat' => 'Text::Autoformat',
+	'Tie::DBI' => 'Tie::DBI',
     },
 };
 -%]

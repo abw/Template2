@@ -8,7 +8,7 @@
 	sec   = sec ? "#$sec" : '';
 	IF (href = docset.links.$link); 
 	    link = "$page.uplink/$href$sec";
-	ELSIF link.search('::');
+	ELSIF link.search('::') or docset.cpan.$link;
             link = link.replace('^CPAN::', '');    # hack to force CPAN lookup
 	    text = text.replace('^CPAN::', '');
 	    link = link.replace(':', '%3A');	   # should use HTTP escape

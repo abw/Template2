@@ -12,24 +12,33 @@
         page = 'Web'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'DESCRIPTION';
-		INCLUDE tocitem 
-			title = 'INTRODUCTION';
-		INCLUDE tocitem 
-			title = 'GENERATING STATIC PAGES';
-		INCLUDE tocitem 
-			title = 'DYNAMIC CONTENT GENERATION VIA CGI SCRIPT';
-		INCLUDE tocitem 
-			title = 'DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER';
-		INCLUDE tocitem 
-			title = 'USING PLUGINS TO EXTEND FUNCTIONALITY';
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='INTRODUCTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='GENERATING STATIC PAGES'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='DYNAMIC CONTENT GENERATION VIA CGI SCRIPT'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='DYNAMIC CONTENT GENERATION VIA APACHE/MOD_PERL HANDLER'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='USING PLUGINS TO EXTEND FUNCTIONALITY'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -774,7 +783,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06c, released on 13 December 2001.
+Template Toolkit version 2.06c, released on 20 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -12,20 +12,25 @@
         page = 'Intro'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'DESCRIPTION'
- 			subs  = [ 'Template.pm',
-			          'Component Based Content Construction',
-			          'Data and Code Binding',
-			          'Advanced Features: Filters, Macros, Exceptions, Plugins',
-			          'Separating Presentation and Application Logic',
-			          'Performance' ];
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [
+                    'Template.pm',
+		    'Component Based Content Construction',
+		    'Data and Code Binding',
+		    'Advanced Features: Filters, Macros, Exceptions, Plugins',
+		    'Separating Presentation and Application Logic',
+		    'Performance'
+		];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -262,7 +267,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06c, released on 13 December 2001.
+Template Toolkit version 2.06c, released on 20 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -12,28 +12,40 @@
         page = 'FAQ'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'DESCRIPTION';
-		INCLUDE tocitem 
-			title = 'Template Toolkit Language'
- 			subs  = [ 'Why doesn\'t $tt_start_tag a = b IF c $tt_end_tag work as expected?' ];
-		INCLUDE tocitem 
-			title = 'Plugins'
- 			subs  = [ 'How do I get the Table plugin to order data across rather than down?',
-			          'Accessing Cookies' ];
-		INCLUDE tocitem 
-			title = 'Extending the Template Toolkit'
- 			subs  = [ 'Can I serve templates from a database?',
-			          'Can I fetch templates via http?' ];
-		INCLUDE tocitem 
-			title = 'Miscellaneous'
- 			subs  = [ 'How can I configure variables on a per-request basis?' ];
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='Template Toolkit Language'
+                subs  = [
+                    'Why doesn\'t $tt_start_tag a = b IF c $tt_end_tag work as expected?'
+		];
+	PROCESS tocitem 
+	        title ='Plugins'
+                subs  = [
+                    'How do I get the Table plugin to order data across rather than down?',
+		    'Accessing Cookies'
+		];
+	PROCESS tocitem 
+	        title ='Extending the Template Toolkit'
+                subs  = [
+                    'Can I serve templates from a database?',
+		    'Can I fetch templates via http?'
+		];
+	PROCESS tocitem 
+	        title ='Miscellaneous'
+                subs  = [
+                    'How can I configure variables on a per-request basis?'
+		];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -286,8 +298,8 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.36, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.37, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

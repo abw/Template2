@@ -12,23 +12,32 @@
         page = 'Datafile'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'DESCRIPTION';
-		INCLUDE tocitem 
-			title = 'Introducing the Template Toolkit';
-		INCLUDE tocitem 
-			title = 'Using the Template Toolkit'
- 			subs  = [ 'A more complex example' ];
-		INCLUDE tocitem 
-			title = 'Producing XML';
-		INCLUDE tocitem 
-			title = 'Multiple Formats';
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='Introducing the Template Toolkit'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='Using the Template Toolkit'
+                subs  = [
+                    'A more complex example'
+		];
+	PROCESS tocitem 
+	        title ='Producing XML'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='Multiple Formats'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -438,7 +447,7 @@ Dave Cross &lt;dave@dave.org.uk&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06c, released on 13 December 2001.
+Template Toolkit version 2.06c, released on 20 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -12,27 +12,32 @@
         page = 'Variables'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'DESCRIPTION'
- 			subs  = [ 'Template Variables',
-			          'Scalar Values',
-			          'Hash Array References',
-			          'List References',
-			          'Subroutines',
-			          'Objects',
-			          'Parameters and Return Values',
-			          'Error Handling',
-			          'Virtual Variable Methods',
-			          'Compound Variables',
-			          'Variable Interpolation',
-			          'Local and Global Variables',
-			          'Special Variables' ];
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [
+                    'Template Variables',
+		    'Scalar Values',
+		    'Hash Array References',
+		    'List References',
+		    'Subroutines',
+		    'Objects',
+		    'Parameters and Return Values',
+		    'Error Handling',
+		    'Virtual Variable Methods',
+		    'Compound Variables',
+		    'Variable Interpolation',
+		    'Local and Global Variables',
+		    'Special Variables'
+		];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -978,7 +983,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06c, released on 13 December 2001.
+Template Toolkit version 2.06c, released on 20 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -12,25 +12,33 @@
         page = 'Stash'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'SYNOPSIS';
-		INCLUDE tocitem 
-			title = 'DESCRIPTION';
-		INCLUDE tocitem 
-			title = 'PUBLIC METHODS'
- 			subs  = [ 'new(\\%params)',
-			          'get($variable)',
-			          'set($variable, $value, $default)',
-			          'clone(\\%params)',
-			          'declone()' ];
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
-		INCLUDE tocitem 
-			title = 'SEE ALSO';
+	PROCESS tocitem 
+	        title ='SYNOPSIS'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='PUBLIC METHODS'
+                subs  = [
+                    'new(\\%params)',
+		    'get($variable)',
+		    'set($variable, $value, $default)',
+		    'clone(\\%params)',
+		    'declone()'
+		];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='SEE ALSO'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -174,8 +182,8 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.45, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.46, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

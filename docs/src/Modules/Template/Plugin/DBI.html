@@ -12,27 +12,37 @@
         page = 'Plugin_DBI'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'SYNOPSIS';
-		INCLUDE tocitem 
-			title = 'DESCRIPTION'
- 			subs  = [ 'connect($database, $username, $password)',
-			          'query($sql)',
-			          'prepare($sql)',
-			          'execute(@args)',
-			          'do($sql)',
-			          'tie($table, $key, \\%args)',
-			          'quote($value, $type)',
-			          'dbh()',
-			          'disconnect()' ];
-		INCLUDE tocitem 
-			title = 'AUTHORS';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
-		INCLUDE tocitem 
-			title = 'SEE ALSO';
+	PROCESS tocitem 
+	        title ='SYNOPSIS'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='OBJECT METHODS'
+                subs  = [
+                    'connect($database, $username, $password)',
+		    'query($sql)',
+		    'prepare($sql)',
+		    'execute(@args)',
+		    'do($sql)',
+		    'tie($table, $key, \\%args)',
+		    'quote($value, $type)',
+		    'dbh()',
+		    'disconnect()'
+		];
+	PROCESS tocitem 
+	        title ='AUTHORS'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='SEE ALSO'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -245,10 +255,11 @@ support access to tied hashes.  If you are using the XS stash and having
 problems then you should try enabling the regular stash instead.  You 
 can do this by setting $Template::Config::STASH to 'Template::Stash' 
 before instantiating the Template object.
-    
-=head1 OBJECT METHODS
 </p>
-[% WRAPPER subsection
+[%- END %]
+[% WRAPPER section
+    title='OBJECT METHODS'
+-%][% WRAPPER subsection
    title = 'connect($database, $username, $password)'
 -%]<p>
 Establishes a database connection.  This method accepts both positional 
@@ -401,8 +412,8 @@ Andy Wardley, Craig Barratt, Dave Hodgkinson and Rafael Kitover.
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.30, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.31, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

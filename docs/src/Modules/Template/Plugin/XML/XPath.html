@@ -12,20 +12,27 @@
         page = 'Plugin_XML_XPath'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'SYNOPSIS';
-		INCLUDE tocitem 
-			title = 'PRE-REQUISITES';
-		INCLUDE tocitem 
-			title = 'DESCRIPTION';
-		INCLUDE tocitem 
-			title = 'AUTHORS';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
-		INCLUDE tocitem 
-			title = 'SEE ALSO';
+	PROCESS tocitem 
+	        title ='SYNOPSIS'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='PRE-REQUISITES'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='AUTHORS'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='SEE ALSO'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -99,8 +106,8 @@ The XML::XPath module is by Matt Sergeant &lt;matt@sergeant.org&gt;.
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.36, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.37, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -12,41 +12,50 @@
         page = 'Splash'
 %]
 [%  WRAPPER toc;
-		INCLUDE tocitem 
-			title = 'DESCRIPTION'
- 			subs  = [ 'Introduction',
-			          'Configuration',
-			          'Colours',
-			          'Style' ];
-		INCLUDE tocitem 
-			title = 'COMPONENT TEMPLATES'
- 			subs  = [ 'splash/text',
-			          'splash/table',
-			          'splash/row',
-			          'splash/cell',
-			          'splash/box',
-			          'splash/button',
-			          'splash/bar',
-			          'splash/hair',
-			          'splash/menu',
-			          'splash/menubar',
-			          'splash/panel',
-			          'splash/pane',
-			          'splash/tab',
-			          'splash/tabset',
-			          'splash/tabbox',
-			          'splash/tabsbox',
-			          'splash/tabspanel' ];
-		INCLUDE tocitem 
-			title = 'EXAMPLES';
-		INCLUDE tocitem 
-			title = 'AUTHOR';
-		INCLUDE tocitem 
-			title = 'VERSION';
-		INCLUDE tocitem 
-			title = 'COPYRIGHT';
-		INCLUDE tocitem 
-			title = 'SEE ALSO';
+	PROCESS tocitem 
+	        title ='DESCRIPTION'
+                subs  = [
+                    'Introduction',
+		    'Configuration',
+		    'Colours',
+		    'Style'
+		];
+	PROCESS tocitem 
+	        title ='COMPONENT TEMPLATES'
+                subs  = [
+                    'splash/text',
+		    'splash/table',
+		    'splash/row',
+		    'splash/cell',
+		    'splash/box',
+		    'splash/button',
+		    'splash/bar',
+		    'splash/hair',
+		    'splash/menu',
+		    'splash/menubar',
+		    'splash/panel',
+		    'splash/pane',
+		    'splash/tab',
+		    'splash/tabset',
+		    'splash/tabbox',
+		    'splash/tabsbox',
+		    'splash/tabspanel'
+		];
+	PROCESS tocitem 
+	        title ='EXAMPLES'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='AUTHOR'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='VERSION'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='COPYRIGHT'
+                subs  = [];
+	PROCESS tocitem 
+	        title ='SEE ALSO'
+                subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
@@ -1006,8 +1015,8 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.36, distributed as part of the
-Template Toolkit version 2.06c, released on 13 December 2001.
+2.37, distributed as part of the
+Template Toolkit version 2.06c, released on 15 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section
