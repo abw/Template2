@@ -79,6 +79,7 @@ my $params = {
     string   => 'The cat sat on the mat',
     spaced   => '  The dog sat on the log',
     hash     => { a => 'b', c => 'd' },
+    uhash    => { tobe => '2b', nottobe => undef },
     metavars => [ qw( foo bar baz qux wiz waz woz ) ],
     people   => [ { id => 'tom',   name => 'Tom' },
 		  { id => 'dick',  name => 'Richard' },
@@ -162,6 +163,33 @@ a, b, c, d
 [% hash.size %]
 -- expect --
 2
+
+-- test --
+[% hash.defined('a') ? 'good' : 'bad' %]
+[% hash.a.defined ? 'good' : 'bad' %]
+[% hash.defined('x') ? 'bad' : 'good' %]
+[% hash.x.defined ? 'bad' : 'good' %]
+-- expect --
+good
+good
+good
+good
+
+-- test --
+[% uhash.defined('tobe') ? 'good' : 'bad' %]
+[% uhash.tobe.defined ? 'good' : 'bad' %]
+[% uhash.exists('tobe') ? 'good' : 'bad' %]
+[% uhash.defined('nottobe') ? 'bad' : 'good' %]
+[% hash.nottobe.defined ? 'bad' : 'good' %]
+[% uhash.exists('nottobe') ? 'good' : 'bad' %]
+-- expect --
+good
+good
+good
+good
+good
+good
+
 
 # LIST_OPS
 
