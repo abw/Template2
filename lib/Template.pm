@@ -35,7 +35,6 @@ use Template::Provider;
 use Template::Service;
 use File::Basename;
 use File::Path;
-# use Template::Parser;    # autoloaded on demand
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
@@ -43,6 +42,9 @@ $VERSION     = '2.08a';
 $ERROR       = '';
 $DEBUG       = 0;
 $BINMODE     = ($^O eq 'MSWin32') ? 1 : 0;
+
+# preload all modules if we're running under mod_perl
+Template::Config->preload() if $ENV{ MOD_PERL };
 
 
 #------------------------------------------------------------------------
