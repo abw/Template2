@@ -113,7 +113,7 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 	|   RETURN		    { $factory->return()                  }
 	|   STOP		    { $factory->stop()                    }
 	|   CLEAR                   { "\$output = '';";                   }
-	|   BREAK                   { 'last;'                             }
+	|   LAST                    { 'last;'                             }
 	|   NEXT		    { $_[0]->{ INFOR }
 					? $factory->next()
 				        : 'next;'                         }
@@ -210,15 +210,14 @@ filter:	    FILTER lnameargs ';'
 	      lnameargs		    { $factory->filter(@_[3,1])           }
 ;
 
-defblock:   BLOCK filename ';' 
+defblock:   BLOCK blockname ';' 
 	      template END	    { $_[0]->define_block(@_[2, 4]); 
 				      undef                               }
 ;
 
-#blockname:  filename 
-#        |   LITERAL		    { $_[1] =~ s/^'(.*)'$/$1
-#	|   quoted		    { $factory->quoted($_[1])		  }
-#;
+blockname:  filename 
+        |   LITERAL		    { $_[1] =~ s/^'(.*)'$/$1/; $_[1]      }
+;
 
 anonblock:  BLOCK ';' block END	    { $factory->anon_block($_[3])         }
 ;
@@ -296,7 +295,9 @@ param:	    LITERAL ASSIGN term	    { "$_[1] => $_[3]"                    }
 ;
 
 ident:      ident DOT node	    { push(@{$_[1]}, @{$_[3]}); $_[1]     }
-	|   ident DOT NUMBER	    { push(@{$_[1]}, $_[3], 0); $_[1]     }
+	|   ident DOT NUMBER	    { push(@{$_[1]}, 
+					   map {($_, 0)} split(/\./, $_[3]));
+				      $_[1];			          }
 	|   node     
 ;
 

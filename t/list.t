@@ -25,6 +25,8 @@ $^W = 1;
 
 use Template::Parser;
 $Template::Test::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 # sample data
 my ($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, 
@@ -49,6 +51,7 @@ my $vars = {
     inst => [ { name => 'piano', url => '/roses.html'  },
 	      { name => 'flute', url => '/blow.html'   },
 	      { name => 'organ', url => '/tulips.html' }, ],
+    nest => [ [ 3, 1, 4 ], [ 2, [ 7, 1, 8 ] ] ],
 };
 
 my $config = {};
@@ -164,4 +167,27 @@ nsort: 1, 2, 5, 6, 8, 10, 11, 50, 52, 70, 90
 -- expect --
 another, <a href="/blow.html">flute</a>
 
+-- test --
+[% nest.0.0 %].[% nest.0.1 %][% nest.0.2 +%]
+[% nest.1.shift %].[% nest.1.0.join('') %]
+-- expect --
+3.14
+2.718
+
+-- test --
+[% # define some initial data
+   people   => [ 
+     { id => 'tom',   name => 'Tom'     },
+     { id => 'dick',  name => 'Richard' },
+     { id => 'larry', name => 'Larry'   },
+   ]
+-%]
+[% folk = [] -%]
+[% folk.push("<a href=\"${person.id}.html\">$person.name</a>")
+       FOREACH person = people.sort('name') -%]
+[% folk.join(",\n") -%]
+-- expect --
+<a href="larry.html">Larry</a>,
+<a href="dick.html">Richard</a>,
+<a href="tom.html">Tom</a>
 

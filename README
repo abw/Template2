@@ -1,47 +1,364 @@
+                          Template Toolkit
 
-             Template Toolkit Version 2.00 Beta Release 5
+                            Version 2.00
 
-                         14th September 2000
+                         1st November 2000
+
+        Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+
+          This is free software; you can redistribute it and/or
+             modify it under the same terms as Perl itself.
 
 
-This is the fifth beta release of version 2.00 of the Perl Template
-Toolkit.  Barring any major problems, this really will be the last
-beta release before version 2.00 proper (I know I said that for beta
-4, but I really mean it this time).  It is fully-featured, reliable
-and all known bugs have been fixed (but see the TODO list for a few
-outstanding issues and minor "features").  The Changes file details
-changes from the last beta release, and versions before that.  It also
-includes the major changes from Version 1.xx to 2.00.
+DESCRIPTION
+-----------
 
-Installation is as you might expect:
+The Template Toolkit is a collection of modules which implement a
+fast, flexible, powerful and extensible template processing system.
+It was originally designed and remains primarily useful for generating
+dynamic web content, but it can be used equally well for processing
+any other kind of text based documents: HTML, XML, POD, PostScript,
+LaTeX, and so on.
+
+It can be used as a stand-alone Perl module or embedded within an
+Apache/mod_perl server for generating highly configurable dynamic web
+content.  A number of Perl scripts are also provided which can greatly
+simplify the process of creating and managing static web content and 
+other offline document systems.
+
+Version 2 is a near-total rewrite which adds many new features while
+remaining *almost* fully backwardly compatible with version 1 (see
+'VERSION COMPATABILITY' below).  The internal design and
+architecture have been greatly improved and the template language
+offers a number of powerful new directives, while retaining all but
+the broken, buggy, undocumented or experimental features that had
+crept into versions 0.* and 1.* over the years.  Version 2 also offers
+important performance benefits, running significantly faster and using
+less memory than version 1.  This can only be described as a Good
+Thing.
+
+The Template Toolkit (version 1) received the award for "Best New Perl
+Module" at the 4th Perl Conference in Monterey, earlier this year.
+Version 2 is even better and if it doesn't make your content funkier,
+your job easier, your life more fun and you more attractive to the
+appropriate sex, then you can always return it for a full refund. :-)
+
+
+FEATURES
+--------
+
+  * simple but powerful language syntax and semantics
+
+  * promotes a clear separation between application functionality and
+    presentation elements
+
+  * variable substitution allows binding to any Perl data types
+    (scalars, hashes, lists, subs, objects)
+
+  * conditional blocks (IF/UNLESS/ELSIF/ELSE, SWITCH/CASE)
+
+  * loops and iterators (FOREACH, WHILE)
+
+  * file/template inclusion (INSERT, INCLUDE, PROCESS, WRAPPER)
+
+  * definition of local template components (BLOCK)
+
+  * post-processing filters (FILTER)
+
+  * plugin module architecture for easy extensibility (USE)
+
+  * embedded Perl can be optionally enabled (PERL/RAWPERL)
+
+  * full exception handling (TRY/THROW/CATCH/FINAL)
+  
+  * user-defined macros (MACRO)
+
+  * definition of template metadata (META)
+
+  * virtual methods for complex data types (e.g. list.size, hash.keys, etc.)
+
+  * numerous configuration options
+
+  * modular OO architecture allows extensive customisation
+
+  * fast LALR(1) parser modules compiles templates according to a
+    YACC-like grammar.
+
+  * templates compiled to Perl code for efficient runtime execution
+
+  * in-memory and on-disk caching of compiled templates
+
+  * simple front end module (Template.pm) for ease of use
+
+  * numerous plugin modules: CGI, DBI, XML, URL, Date, Table, etc
+
+  * standard filters for html, case folding, regex search and replace, etc.
+
+
+PREREQUISITES
+-------------
+
+The Template Toolkit is written entirely in Perl and should run on any 
+platform on which Perl is available.  It requires Perl 5.005 or later.
+
+The 'ttree' utility uses the AppConfig module (version 1.52 or above)
+for parsing command line options and configuration files.  You don't
+actually require this module to use the Template Toolkit itself, but
+will do if you plan to use the 'ttree' utility (which you really
+should).  It is available from CPAN:
+
+    http://www.cpan.org/modules/by-module/AppConfig/
+
+The Template Toolkit implements a "plugin" architecture which allow
+you to incorporate the functionality of virtually any Perl module into
+your templates.  A number of plugin modules are included with the
+distribution for interfacing to databases (DBI), XML files (XML::DOM,
+XML::RSS, XML::XPath), CGI scripts (CGI), and so on.  Some of these
+plugin modules are dependant on external modules but these are not
+pre-requisites for installation.  All plugin modules are installed,
+regardless of any unsatisfied dependencies, so that you can install an
+external module at a later date and then use the plugin without
+requiring re-installation of the Template Toolkit.
+
+If you want to enable all plugin modules then the following modules,
+all available from CPAN, should be installed:
+
+    Plugin		Requires
+    ------              --------
+    Autoformat	        Text::Autoformat 1.02+
+    DBI			DBI 1.14+ and relevant DBD drivers
+    XML::DOM            XML::DOM 1.25+   (requires XML::Parser 2.23+)
+    XML::RSS            XML::RSS 0.9+    (ditto)
+    XML::XPath          XML::XPath 1.00+ (ditto)
+
+
+OBTAINING AND INSTALLING THE TEMPLATE TOOLKIT
+---------------------------------------------
+
+The latest release version of the Template Toolkit can be downloaded 
+from any CPAN site:
+
+    http://www.cpan.org/modules/by-module/Template/
+
+Interim and development versions may also be available, along with
+other useful information, news, publications, mailing list archives,
+etc., from the Template Toolkit web site:
+
+    http://www.template-toolkit.org/
+
+The Template Toolkit is distributed as a gzipped tar archive file:
+
+    Template-Toolkit-<version>.tar.gz
+
+where <version> represents the current version number, e.g. 2.00
+
+To install the Template Toolkit, unpack the distribution archive to
+create an installation directory.  Something like this:
+
+    tar zxf Template-Toolkit-2.00.tar.gz
+or
+    gunzip Template-Toolkit-2.00.tar.gz
+    tar xf Template-Toolkit-2.00.tar
+
+You can then 'cd' into the directory created,
+
+    cd Template-Toolkit-2.00
+
+and perform the usual Perl installation procedure:
 
     perl Makefile.PL
     make
     make test
     make install
 
-If you have version 1.xx installed then be warned that version 2.00
-will render it totally useless.  This probably isn't an issue unless
-you're relying heavily on any of the more obscure "features" that have
-changed from version 1.xx to 2.00 (see Changes file).
+The 'make test' will run the test scripts in the 't' sub-directory,
+skipping any plugin tests that require external modules not available
+on your system.  If you have the DBI module installed then the
+Makefile.PL script will ask you if you want to run the DBI tests.  If
+you answer 'y' then it will prompt you for a database server to test
+against.  Please ensure that any database server you specify is
+running before executing 'make test', or expect a failure for the
+t/dbi.t test.
 
-You can specify the PREFIX option to install the Template Toolkit to a
-different location if you want to preserve an existing installation
-(see ExtUtils::MakeMaker).  Or preferably, install version 2.00 as per
-usual and then go back and install version 1.07 to an alternate
-location, thus ensuring that version 2.00 is the default.
+You can set the TEST_VERBOSE flag when running 'make test' to see the
+results of the individual tests:
 
-    perl Makefile.PL PREFIX=/some/where/else
-    make, etc.
+    make test TEST_VERBOSE=1
 
-The documentation is now complete in all its 100+ page glory.  
+The 'make install' will install the modules and scripts on your
+system.  You may need administrator privileges to perform this task.
+Alternately you can can install the Template Toolkit to a local
+directory (see ExtUtils::MakeMaker for full details), e.g.
+
+    perl Makefile.PL PREFIX=/home/abw/
+
+Don't forget to update your PERL5LIB environment variable if you do
+this, or add a line to your script to tell Perl where to find the files,
+e.g.
+
+    use lib qw( /home/abw/lib/perl5/site_perl/5.6.0 );
+
+If you're installing on a Win32 platform then 'nmake' should be a
+suitable alternative to 'make', available from Microsoft's web site.
+
+
+DOCUMENTATION
+-------------
+
+The Template Toolkit is provided with enough documentation to keep all
+but the most voracious reader happy for quite some time.  
+
+The 'Changes' file in the distribution directory documents all visible
+changes between versions of the Template Toolkit.  See the section 
+'VERSION COMPATABILITY' below for further details.
+
+The 'TODO' file, also in the distribution directory, lists known bugs,
+planned enhancements and possible new features.
+
+Having installed the module(s), the first port of call (if only
+briefly) should be the 'Template' manpage.  This contains
+comprehensive details of all the directives, syntax, configuration
+options, examples of use, etc., for the Template Toolkit.  If you're
+using a Unix system then you can use the 'man' command:
+
+    man Template
+
+Otherwise, 'perldoc' is your friend (and what we'll use for further
+examples):
 
     perldoc Template
 
-Any errors, inaccuracies or omissions are bugs and should be reported
-to the overworked and underpaid author who really needs to take a
-vacation.  8-)
+If that document leaves you feeling overwhelmed then you might
+prefer to look at the Template::Tutorial which gives a general
+overview and "Quick Start" guide to using the Template Toolkit.
+
+    perldoc Template::Tutorial
+
+Each of the various modules that comprise the Template Toolkit has its
+own associated documention.  The 'Template' manpage lists these
+modules along with a brief description of their functions.  For
+example:
+
+    perldoc Template::Context 
+    perldoc Template::Parser 
+    perldoc Template::Provider
+
+NOTE: At the time of writing there may be some minor inconsistencies
+between the documentation in these modules and that in the main
+'Template' manpage.  In general, the 'Template' documentation is
+updated and proof-read more often and is therefore more likely to be
+accurate.  Note however, that the documentation for the individual
+modules does tend to go into greater detail and may contain
+information not covered in the 'Template' manpage.  Please do report
+any errors or inconsistencies that you find or send patches to the 
+author.
 
 
-Enjoy
-A
+SUPPORT
+-------
+
+The Template Toolkit mailing list provides a forum for discussing
+issues relating to the use and abuse of the Template Toolkit.  There
+are a number of knowledgeable and helpful individuals who frequent the
+list (including the author) who can often offer help or suggestions.
+Please respect their time and patience by checking the documentation
+and/or mailing list archives before asking questions that may already
+have been answered.   
+
+To subscribe to the mailing list, send an email to:
+
+    templates-request@template-toolkit.org
+
+with the message 'subscribe' in the body.  You can also use the web 
+interface to subscribe or browse the archives:
+
+    http://www.template-toolkit.org/mailman/listinfo/templates
+
+A low-volume, moderated mailing list exists for announcements about new
+releases of the Template Toolkit and related products.  To subscribe, send
+an email to:
+
+    templates-announce-request@template-toolkit.org
+
+with the message 'subscribe' in the body.  A web interface also exists
+for subscription and browsing the archives:
+
+    http://www.template-toolkit.org/mailman/listinfo/templates-announce
+
+There is not yet a FAQ for the Template Toolkit but there definately 
+should be one.  This will be forthcoming in the very near future.
+
+For information about commercial support and consultancy for the Template 
+Toolkit, please contact the author.
+
+
+VERSION COMPATABILITY
+---------------------
+
+Version 2 is backwardly compatible with version 1 in all but a few
+minor areas.  The 'Changes' file details all the visible changes
+between version 1 and version 2, including deltas between alphas and
+betas.  Within this file there is a 'Gotchas' section which lists the
+changes that may affect backwards compatability with existing template
+files.  These are listed in brief below.  Please consult the 'Changes'
+file for full details.
+
+* All directive keywords should now be written in UPPER CASE (by default)
+  to avoid conflict with reserved words.  The CASE option is now called
+  ANYCASE and can be set true to permit lower case directive keywords.
+
+* CATCH blocks must now be scoped with a TRY block.
+
+* The ERROR directive is no longer supported.  THROW an exception instead
+  or use the 'stderr' filter if you really must write to STDERR and nowhere
+  else.
+
+* The ERROR configuration option (previously used to customise the ERROR
+  directive) is now used to specify handling for uncaught exceptions.
+
+* Version 1 allowed (but didn't recommend) the use of a leading '$' on a 
+  variable name (i.e. like Perl) which was silently ignored.  Version 2
+  no longer ignores them and treats it as a variable
+  pre-interpolation.  Most of the time you *don't* want to do this, so 
+  don't add a leading '$' unless you know what you're doing.  You can set
+  V1DOLLAR => 1 to revert to the old behaviour if you really have to.
+
+* The default tag style for version 1 accepted [% ... %] or %% ... %%
+  (the latter for backwards compatability with Text::MetaText, the 
+  predecessor to TT).  Version 2 now only accepts [% ... %] by default.
+  You can set TAG_STYLE => 'template1' to get both.
+
+* The 'into' filter is obsolete.  You can now simply assign the output 
+  of a directive into a variable, e.g. [% foo = INCLUDE header %]
+
+* The IMPORT directive has been removed and replaced by an 'import'
+  hash method.
+
+Most of the significant changes are in the internals of the Template
+Toolkit.  If you have any code that delves into the individual modules
+and tinkers with their guts then will need to check the 'Changes' file
+very carefully indeed and re-evaluate your code in the light of the
+new architecture.  The interns are cleaner and better organised making
+extension code much easier to write.  The downside is that some of the
+old and crusty ways you previously had to do things may no longer work.
+
+
+AUTHOR
+------
+
+The Template Toolkit was written by Andy Wardley <abw@kfs.org> with
+the invaluable assistance and contributions from many other people.
+Please see the 'ACKNOWLEDGMENTS' section of the 'Template' manpage for
+the extensive list of those people who made it possible.
+
+
+COPYRIGHT
+---------
+
+Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved
+Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+

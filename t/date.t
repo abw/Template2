@@ -4,13 +4,7 @@
 #
 # Tests the 'Date' plugin.
 #
-# NOTE: this relies on a hacked version of Template::Test.pm that supports
-# the '-- process --' flag in an '-- expect --' block.  We need this
-# because we can't hard-code expected output in advance when we're 
-# dealing with generating date string based on the current time at
-# execution. 
-#
-# Written by Andy Wardley <abw@cre.canon.co.uk>
+# Written by Andy Wardley <abw@kfs.org>
 #
 # Copyright (C) 2000 Andy Wardley. All Rights Reserved.
 #

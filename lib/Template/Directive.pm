@@ -66,6 +66,8 @@ sub template {
     my ($class, $block) = @_;
     $block = pad($block, 2) if $PRETTY;
 
+    return "sub { return '' }" unless $block =~ /\S/;
+
     return <<EOF;
 sub {
     my \$context = shift;
@@ -402,7 +404,7 @@ $block;
     };
     $loop_restore;
     die \$@ if \$@;
-    \$error = 0 if \$error eq Template::Constants::STATUS_DONE;
+    \$error = 0 if \$error && \$error eq Template::Constants::STATUS_DONE;
     die \$error if \$error;
 };
 EOF

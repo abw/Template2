@@ -59,8 +59,11 @@ $FILTERS = {
     'replace'    => [ \&replace_filter_factory,  1 ],
     'remove'     => [ \&remove_filter_factory,   1 ],
     'eval'       => [ \&eval_filter_factory,     1 ],
-    'evalperl'   => [ \&perl_filter_factory,     1 ],
+    'evaltt'     => [ \&eval_filter_factory,     1 ],	# alias
+    'perl'       => [ \&perl_filter_factory,     1 ],
+    'evalperl'   => [ \&perl_filter_factory,     1 ],	# alias
     'redirect'   => [ \&redirect_filter_factory, 1 ],
+    'file'       => [ \&redirect_filter_factory, 1 ],   # alias
 };
 
 
@@ -361,7 +364,11 @@ sub perl_filter_factory {
 	my $text = shift;
 	$Template::Perl::context = $context;
 	$Template::Perl::stash = $stash;
-	my $out = eval "package Template::Perl; $text";
+	my $out = eval <<EOF;
+package Template::Perl; 
+\$stash = \$context->stash(); 
+$text
+EOF
 	$context->throw($@) if $@;
 	return $out;
     }

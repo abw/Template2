@@ -1,64 +1,56 @@
+The following lists detail pending items, known bugs and possible future
+enhancements planned for the Template Toolkit.
+
+
+* cvs add doc/lib/directive/last
+
+
 #------------------------------------------------------------------------
-# PENDING TODO ITEMS
+# PENDING
+# 
+# The following items are planned for an imminent release.  Most of 
+# these are current works-in-progress.
 #------------------------------------------------------------------------
 
-* add new Wrap plugin
+* Apache::Template.  It is currently fairly easy to use the Template
+  Toolkit from within an Apache/mod_perl handler (see Template::Tutorial), 
+  but in many cases it would be nicer not to have to write any handler 
+  at all and just use a standard module.
 
-* document push/pop/shift/unshift as list methods and add any others 
-  such as splice, etc.
+* Documentation.  The current Template document is large (100+ pages)
+  and rather unwieldy.  Stas Beckman <stas@stason.org> has sent me
+  some code which uses Pod::HtmlPsPdf to build build all the
+  documentation into an HTML, PostScript or PDF book.  This just
+  requires a little debugging and some configuration before it's ready
+  to roll.
 
-* Stas' docs.
+* Pod::Template and 'ttpod' utility.  Further to the above, I'm
+  working on a POD to Template translator that will allow you to
+  convert any POD documents (include the TT docs, of course) into TT
+  templates that can then be processed into virtually any other format
+  or style.
 
-* fix parser to accept quoted blocknames
+* Template Toolkit FAQ.
 
-* fix PRE_PROCESS, etc., to allow 'foo.html'.  Should PRE_PROCESS etc., 
-  accept a reference?
+* Template::Internals.  A document about the internals describing how,
+  where and why to hack on them.
 
-* ttree pre_process and post_process options should be s@
 
-* document FILTER aliases
+#------------------------------------------------------------------------
+# KNOWN BUGS AND/OR LIMITATIONS
+#
+# These are minor bugs or limitations that may need attention at some
+# point in the future.
+#------------------------------------------------------------------------
 
 * URL plugin may be incorrect in not escaping certain characters such as 
   '&'.  I need to check the standards, or wait for someone more 
   knowledgeable in these matters to fix it for me, or otherwise give it 
   a clean bill of health (hint, hint :-).
 
-* XML::Simple plugin (I wrote this once already but my laptop died and 
-  took it with it).  An XML::XPath plugin would also be nice.  Both are
-  trivial, although XML::Simple should use a singleton parser object, 
-  instantiated via load() which can then cache parsed documents if 
-  required.  new() would then be used to parse a file/text and return 
-  the data tree.  There may be cleanup issues.  Haven't looked at writing
-  an XML::XPath plugin yet, but it should be reasonably similar.
-
-* DBI plugin, also by Simon Matthews, will be distributed with V2 proper,
-  or some time shortly afterwards.  Makefile.PL will need some hacking to 
-  incorporate DBI testing options. 
-
-* Document the TT internals and describe how, where and why to hack on
-  them.
-
-* The documentation should be broken up into smaller chunks (or 
-  published as a book!).  An HTML/XML version will also be forthcoming.
-
-
-#------------------------------------------------------------------------
-# KNOWN BUGS AND/OR LIMITATIONS
-#------------------------------------------------------------------------
-
-* Plugin.pm should be subclassed from Base.pm to provide consistent error()
-  interface.
-
-* PLUGINS should accept a reference to an object which is used as a 
-  singleton factory for a plugin.
-
-* empty hashes can cause a harmless, but possibly annoying parser error.
-
-* Template process($file) method returns a string if the named
-  template ($file) can't be found, rather than an exception.  This
-  should be changed so that an exception is returned whatever.  The
-  fix is fairly simple, but requires a careful examination of the code
-  as there may be several places where this kind of thing happens.
+* The childrenTotemplate() and allChildrenToTemplate() methods of the 
+  XML::DOM can send Perl into a deep recursive loop.  This will be 
+  fixed RSN, but first requires a little rethink.
 
 * Filters and plugins cache may bloat.  Perhaps reset() should accept
   flags to clear BLOCKS, PLUGINS, FILTERS, etc?  I need to check this.
@@ -69,44 +61,32 @@
   to the src directory and processes files as './myfile'.  TT doesn't
   compile RELATIVE files by default.
 
-* There's no easy way to run version 1 and version 2 on the same
-  machine.  If you're happy to junk version 1 then no problem, go
-  ahead.  If you want or need to keep version 1 then you can install
-  one or the other under a separate directory tree, e.g.
-
-    perl Makefile.PL PREFIX='/home/abw/tt1'
-
-  You'll need to tell your scripts (and also tpage and ttree if you
-  use them) where to find this version.  E.g.
-
-    use lib qw( /home/abw/tt1 );
-
-  I was planning on moving version 1 modules into Template::v1::* to 
-  allow them to co-exist but I think this will prove to be more trouble
-  than it's worth.
-
-* Note that no recursion checking is performed for BLOCKs, only 
+* No recursion checking is performed for BLOCKs, only
   Template::Document instances.  This is probably the way it will stay
   (unless anyone shouts loudly enough) but it should be documented
-  anyway.   STOP PRESS: I had an idea that bare BLOCK subs should 
-  be blessed into Template::Document class to allow $template->process()
-  to be called regardless.  Template::Document methods would need to 
-  test $self for CODE/HASH and Do The Right Thing.  This would then 
-  allow recursion testing for BLOCKs as well as Template::Document objects.
-
-* I've had a few reports of tests failing (provider.t test 37 and several
-  in args.t) but haven't been able to reproduce them.  If you do get 
-  any errors, please run the test individually (e.g. 'perl t/provider.t') 
-  or 'make test' in verbose mode (e.g. 'make test TEST_VERBOSE=1') and 
-  send me the output, along with any other relevant information.  If you're
-  able to track down the problem then so much the better.  The test suite
-  is well organised and fairly pleasant to work with these days so please
-  don't be afraid to go digging for answers (this means you, Perrin  :-)
+  anyway.  STOP PRESS: I had an idea that bare BLOCK subs should be
+  blessed into Template::Document class to allow $template->process()
+  to be called regardless.  Template::Document methods would need to
+  test $self for CODE/HASH and Do The Right Thing.  This would then
+  allow recursion testing for BLOCKs as well as Template::Document
+  objects.
 
 
 #------------------------------------------------------------------------
-# POSSIBLE FUTURE ENHANCEMENTS
+# FUTURE ENHANCEMENTS
+#
+# Things that might get added to a future release.
 #------------------------------------------------------------------------
+
+* PLUGINS could accept a reference to an object which is used as a 
+  singleton factory for a plugin.
+
+* A ':preload' use option to Template.pm to preload all modules?  Or
+  should it be ':noload' and have them preloaded by default? 
+
+* A 'FOR', like 'FOREACH' but without using an iterator.  You wouldn't get 
+  the 'loop' reference to test 'first', 'last', etc., against, but it would
+  be faster for those cases when you didn't need it.
 
 * It would be useful if template components had some notion of inheritance
   so that a 'derived' component could call on the 'super' component.  
@@ -129,6 +109,8 @@
   don't have to build any significant Perl structure.  It's not
   entirely trivial - the scanner in particular has to handle CHOMP
   options and user-definable TAGS, but it's certainly possible.
+
+* Merge Directive.pm into Parse.yp via template process.
 
 * An alternate parser back end could generate code which bypasses the
   stash altogether, based on Doug Steinwand's strategy.  The V2
@@ -160,20 +142,5 @@
   enough clues to Do The Right Thing most of the time, so I'm hoping
   that we will be able to incorporate some of those ideas some time
   soon.
-
-* A 'FOR', like 'FOREACH' but without using an iterator.  You wouldn't get 
-  the 'loop' reference to test 'first', 'last', etc., against, but it would
-  be faster for those cases when you didn't need that.
-
-
-#------------------------------------------------------------------------
-# MISCELLANEOUS
-#------------------------------------------------------------------------
-
-* Add :preload use option to Template.pm to preload all modules?  Or should
-  it be :noload and have preload by default?  Or should it not bother?
-
-* merge Directive into Parse.yp via template process?  Yeah, one of these
-  days RSN.
 
 

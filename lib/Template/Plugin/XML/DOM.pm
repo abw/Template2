@@ -251,6 +251,7 @@ sub _template_node {
     my $args = shift || { };
     my $vars = shift || { };
     my $context = $node->{ Doc }->{ _CONTEXT };
+    my $template;
     my $output = '';
 
     # if this is not a tag then it is text so output it
@@ -267,9 +268,9 @@ sub _template_node {
 
 	# locate a template by name built from prefix, tagname and suffix
 	# or fall back on any default template specified
-	my $template = $context->template($element);
-	$template = $context->template($args->{ default }) 
-	    if ! $template && $args->{ default };
+	eval { $template = $context->template($element) };
+	eval { $template = $context->template($args->{ default }) }
+	    if $@ && $args->{ default };
 	$template = $element unless $template;
 
 	# copy 'children' and 'prune' callbacks into node object (see AUTOLOAD)

@@ -4,7 +4,7 @@
 #
 # Template script testing the autoformat plugin.
 #
-# Written by Andy Wardley <abw@cre.canon.co.uk>
+# Written by Andy Wardley <abw@kfs.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
@@ -24,7 +24,6 @@ $^W = 1;
 
 $Template::Test::DEBUG = 0;
 $Template::Test::PRESERVE = 1;
-
 
 eval "use Text::Autoformat";
 
@@ -172,4 +171,5 @@ bar       The Bar Item       456.79
 
 987.00
 654.32
+
 

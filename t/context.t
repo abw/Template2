@@ -20,7 +20,7 @@ use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
 
-$Template::Test::DEBUG = 0;
+#$Template::Test::DEBUG = 1;
 
 ntests(54);
 
@@ -66,9 +66,9 @@ ok( $template );
 ok( UNIVERSAL::isa($template, 'Template::Document') );
 
 # test that non-existance of a template is reported
-$template = $context->template('no_such_template');
-ok( ! $template );
-ok( $context->error() eq 'no_such_template: not found' );
+eval { $template = $context->template('no_such_template') };
+ok( $@ );
+ok( "$@" eq 'file error - no_such_template: not found' );
 
 # check that template() returns CODE and Template::Document refs intact
 my $code = sub { return "this is a hard-coded template" };
@@ -90,30 +90,39 @@ my $blocks2 = {
     some_block_2 => 'world',
 };
 
-ok( ! $context->template('some_block_1') );
+eval { $context->template('some_block_1') };
+ok( $@ );
 $context->visit($blocks1);
-ok(   $context->template('some_block_1') eq 'hello' );
-ok( ! $context->template('some_block_2') );
+ok( $context->template('some_block_1') eq 'hello' );
+eval { $context->template('some_block_2') };
+ok( $@ );
 $context->visit($blocks2);
 ok(   $context->template('some_block_1') eq 'hello' );
 ok(   $context->template('some_block_2') eq 'world' );
 $context->leave();
 ok(   $context->template('some_block_1') eq 'hello' );
-ok( ! $context->template('some_block_2') );
+eval { $context->template('some_block_2') };
+ok( $@ );
 $context->leave();
-ok( ! $context->template('some_block_1') );
-ok( ! $context->template('some_block_2') );
+eval { $context->template('some_block_1') };
+ok( $@ );
+eval { $context->template('some_block_2') };
+ok( $@ );
+
 
 # test that reset() clears all blocks
 $context->visit($blocks1);
 ok(   $context->template('some_block_1') eq 'hello' );
-ok( ! $context->template('some_block_2') );
+eval { $context->template('some_block_2') };
+ok( $@ );
 $context->visit($blocks2);
 ok(   $context->template('some_block_1') eq 'hello' );
 ok(   $context->template('some_block_2') eq 'world' );
 $context->reset();
-ok( ! $context->template('some_block_1') );
-ok( ! $context->template('some_block_2') );
+eval { $context->template('some_block_1') };
+ok( $@ );
+eval { $context->template('some_block_2') };
+ok( $@ );
 
 #------------------------------------------------------------------------
 # plugin()
@@ -191,5 +200,4 @@ ok( $stash->get('a') eq 'charlie' );
 $text = $context->process('baz', { a => 'bravo' });
 ok( $text eq 'This is the baz file, a: bravo' );
 ok( $stash->get('a') eq 'charlie' );
-
 

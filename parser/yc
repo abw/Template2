@@ -13,15 +13,7 @@
 # You only need to run this script if you have changed the grammar and 
 # wish to recompile it.
 #
-# This script uses a slightly modified version of the Parse::Yapp module,
-# version 0.31.  The parse_yapp_patch patch file can be applied to the 
-# module to affect these changes.  Francois Desarmenien, the author of
-# Parse::Yapp, is expected to merge these changes into a new release
-# some time soon.  If you have a newer version of Parse::Yapp and it 
-# supports the '-t <filename>' option then you're probably OK with the
-# version you've got and don't need to apply the patch.
-# 
-# Andy Wardley <abw@cre.canon.co.uk>
+# Andy Wardley <abw@kfs.org>
 #
 #========================================================================
 

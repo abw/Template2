@@ -23,6 +23,8 @@ use Template::Test;
 use Cwd qw( abs_path );
 $^W = 1;
 
+#$Template::Test::DEBUG = 1;
+
 # I hate having to do this
 my $shut_up_warnings = $XML::DOM::VERSION;
 

@@ -63,8 +63,9 @@ sub process {
 
     # pre-request compiled template from context so that we can alias it 
     # in the stash for pre-processed templates to reference
-    $template = $context->template($template)
-	|| return $self->error($context->error);
+    eval { $template = $context->template($template) };
+    return $self->error($@)
+	if $@;
 
     # localise the variable stash with any parameters passed
     # and set the 'template' variable
@@ -199,8 +200,9 @@ sub _recover {
 	$handler = $handlers;
     }
 
-    $handler = $context->template($handler) || do {
-	$$error = $context->error;
+    eval { $handler = $context->template($handler) };
+    if ($@) {
+	$$error = $@;
 	return undef;						## RETURN
     };
 

@@ -21,7 +21,6 @@ use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Constants qw( :status );
-use Template::Stash;
 $^W = 1;
 
 #$Template::Stash::DEBUG = 1;

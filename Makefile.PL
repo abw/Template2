@@ -24,11 +24,11 @@ IMPORTANT NOTE:
 ---------------
     You have version $Template::VERSION of the Template Toolkit installed.
 
-    There are some minor incompatabilities between version 1.* and 2.*
+    There are some minor incompatabilities between version 1 and 2
     of the Template Toolkit which you should be aware of.  Installing
     this version will overwrite your version $Template::VERSION files
     unless you take measures to install one or the other version in a
-    different location (i.e. perl Makefile.PL LIB=/other/path).  
+    different location (i.e. perl Makefile.PL PREFIX=/other/path).  
 
     Please consult the README and Changes file for further details.
     Most of the changes are in the more obscure features and
@@ -45,30 +45,39 @@ EOF
 
 print <<EOF;
 
-The Template Toolkit includes a number of plugin modules, some of which 
-interface to external Perl modules available from CPAN.  All the plugins
-will be installed regardless (so that they will work automatically if and
-when you install the relevant modules) but the tests will be skipped for 
-plugins that require external modules not available on your system.
+The Template Toolkit includes a number of plugin modules, some of
+which interface to external Perl modules available from CPAN.  All the
+plugins will be installed regardless so that they will automatically
+work as and when you install the relevant modules.  The tests will be
+skipped for plugins that require external modules not currently
+available on your system.
 
 EOF
 
-foreach my $mods ( [ XML::DOM   => \&check_dom   ],
+foreach my $mods ( Text::Wrap,
+		   Text::Autoformat,
+		   [ XML::DOM   => \&check_dom   ],
 		   [ XML::RSS   => \&check_rss   ],
 		   [ XML::XPath => \&check_xpath ],
 		   [ DBI        => \&dbi_config  ] ) {
-    my ($module, $code) = @$mods;
+    my ($module, $code) = ref $mods ? @$mods : ($mods, 0);
 
-    printf("  %-12s - ", $module);
+    printf("  %-16s ", $module);
     eval "use $module";
     if ($@) {
-	print "skipping test (module not installed)\n";
+	nope("module not installed");
+    }
+    elsif ($code) {
+	&$code;
     }
     else {
-	&$code;
+	no strict qw( refs );
+	my $ver = ${"$module\::VERSION"};
+	yep("version $ver installed");
     }
 }
 
+print "\n";
 
 #------------------------------------------------------------------------ 
 # build options and write Makefile
@@ -96,6 +105,12 @@ if ($ExtUtils::MakeMaker::VERSION >= 5.43) {
 
 WriteMakefile( %opts );
 
+print <<EOF;
+
+Configuration complete.  You should now run 'make', 'make test' and then
+'make install'.  Please don't forget to read the README file.
+
+EOF
 
 #========================================================================
 
@@ -116,17 +131,31 @@ EOF
 
 
 #------------------------------------------------------------------------
+# yep($text)
+# nope($text)
+#------------------------------------------------------------------------
+
+sub yep {
+    print '[X] ', shift, "\n";
+}
+
+sub nope {
+    print '[ ] ', shift, "\n";
+}
+
+
+#------------------------------------------------------------------------
 # check_dom()
 #
 # XML::DOM version 1.25 (and earlier?) dump core with Perl 5.6.0
 #------------------------------------------------------------------------
 
 sub check_dom {
-    if ($] == 5.006 && $XML::DOM::VERSION <= 1.25) {
-	print "version $XML::DOM::VERSION may not work with Perl $], skipping\n";
+    if ($] >= 5.006 && $XML::DOM::VERSION <= 1.25) {
+	nope("version $XML::DOM::VERSION may not work with Perl $]");
     }
     else {
-	print "version $XML::DOM::VERSION installed, including tests\n";
+	yep("version $XML::DOM::VERSION installed");
     }
 }
 
@@ -139,11 +168,11 @@ sub check_dom {
 #------------------------------------------------------------------------
 
 sub check_rss {
-    if ($] == 5.006 && $XML::RSS::VERSION < 0.9) {
-	print "please upgrade to version 0.9 or later ($XML::RSS::VERSION installed)\n";
+    if ($] >= 5.006 && $XML::RSS::VERSION < 0.9) {
+	nope("requires version 0.9 or later ($XML::RSS::VERSION installed)");
     }
     else {
-	print "version $XML::RSS::VERSION installed, including tests\n";
+	yep("version $XML::RSS::VERSION installed");
     }
 }
 
@@ -156,10 +185,10 @@ sub check_rss {
 
 sub check_xpath {
     if ($XML::XPath::VERSION < 1.00) {
-	print "please upgrade to version 1.00 or later ($XML::XPath::VERSION installed)\n";
+	nope("requires version 1.00 or later ($XML::XPath::VERSION installed)");
     }
     else {
-	print "version $XML::XPath::VERSION installed, including tests\n";
+	yep("version $XML::XPath::VERSION installed");
     }
 }
 
@@ -174,10 +203,10 @@ sub dbi_config {
     my ($dsn, $user, $pass, $run);
     $run = 1;
 
-    print "version $DBI::VERSION installed, configuring tests\n";
+    print "[X] version $DBI::VERSION installed, configuring tests\n";
 
-    if (prompt("- Do you want to run the DBI tests?\n" .
-	       "  It requires access to an existing test database.",
+    if (prompt("  - Do you want to run the DBI tests?\n" .
+	       "    It requires access to an existing test database.",
 	       "y") =~ /y/i) {
 
 	my ($driver, $dbname);
@@ -186,24 +215,24 @@ sub dbi_config {
 
 	my $default = (grep(/m.?sql/i, @drivers))[0];
 
-	print "- Please enter the driver name for the test database.\n";
-	print "  The DBD drivers installed on your system are\n\n";
+	print "  - Please enter the driver name for the test database.\n";
+	print "    The DBD drivers installed on your system are\n\n";
 	print "      @drivers\n\n";
 
 	while (! $driver) {
-	    $driver = prompt("- Enter driver name: ", $default);
-	    print("! No such DBD driver\n"), undef $driver
+	    $driver = prompt("  - Enter driver name: ", $default);
+	    print("    No such DBD driver\n"), undef $driver
 		unless grep(/^$driver$/, @drivers);
 	}
 
 	while (! $dbname) {
-	    $dbname = prompt('- Enter database name: ', 'test');
+	    $dbname = prompt('  - Enter database name: ', 'test');
 	}
     
 	$dsn = "dbi:$driver:$dbname";
 
-	$user = prompt('- Enter user name : ', '');
-	$pass = prompt('- Enter password  : ', '');
+	$user = prompt('  - Enter user name : ', '');
+	$pass = prompt('  - Enter password  : ', '');
 
 	$user = '' unless defined $user;
 	$pass = '' unless defined $pass;
@@ -212,7 +241,7 @@ sub dbi_config {
 	$run = 0;
     }
 
-    print "- writing $DBI_CONFIG_FILE\n";
+    print "  - writing $DBI_CONFIG_FILE\n";
     open(CFGFILE, ">$DBI_CONFIG_FILE") || die "$DBI_CONFIG_FILE: $!\n";
     print CFGFILE <<EOF;
 \$run  = $run;

@@ -4,7 +4,7 @@
 #
 # Template script testing the FOREACH directive.
 #
-# Written by Andy Wardley <abw@cre.canon.co.uk>
+# Written by Andy Wardley <abw@kfs.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
@@ -83,7 +83,11 @@ sub format {
     }
 }
 
-my $template = Template->new({ INTERPOLATE => 1, POST_CHOMP => 1, ANYCASE => 1 });
+my $template = Template->new({ 
+    INTERPOLATE => 1, 
+    POST_CHOMP  => 1, 
+    ANYCASE     => 0
+});
 
 test_expect(\*DATA, $template, $params);
 
@@ -448,7 +452,7 @@ after 6
 -- test --
 [% count = 1; WHILE (count < 10) %]
 [% count = count + 1 %]
-[% NEXT if count < 5 %]
+[% NEXT IF count < 5 %]
 count: [% count +%]
 [% END %]
 -- expect --
@@ -460,22 +464,22 @@ count: 9
 count: 10
 
 -- test --
-[% for count = [ 1 2 3 ] %]${count}..[% END %]
+[% FOR count = [ 1 2 3 ] %]${count}..[% END %]
 -- expect --
 1..2..3..
 
 -- test --
-[% foreach count = [ 1 2 3 ] %]${count}..[% END %]
+[% FOREACH count = [ 1 2 3 ] %]${count}..[% END %]
 -- expect --
 1..2..3..
 
 -- test --
-[% for [ 1 2 3 ] %]<blip>..[% END %]
+[% FOR [ 1 2 3 ] %]<blip>..[% END %]
 -- expect --
 <blip>..<blip>..<blip>..
 
 -- test --
-[% foreach [ 1 2 3 ] %]<blip>..[% END %]
+[% FOREACH [ 1 2 3 ] %]<blip>..[% END %]
 -- expect --
 <blip>..<blip>..<blip>..
 
@@ -501,4 +505,20 @@ inner z
 last inner
 last outer
 
+
+-- test --
+[% FOREACH n = [ 1 2 3 4 5 ] -%]
+[% LAST IF loop.last -%]
+[% n %], 
+[%- END %]
+-- expect --
+1, 2, 3, 4, 
+
+-- test --
+[% FOREACH n = [ 1 2 3 4 5 ] -%]
+[% BREAK IF loop.last -%]
+[% n %], 
+[%- END %]
+-- expect --
+1, 2, 3, 4, 
 

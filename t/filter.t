@@ -4,7 +4,7 @@
 #
 # Template script testing FILTER directive.
 #
-# Written by Andy Wardley <abw@cre.canon.co.uk>
+# Written by Andy Wardley <abw@kfs.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
@@ -527,8 +527,10 @@ stderr: arse
 %]
 [% dir +%]
 FILTER [[% dir | eval %]]
+FILTER [[% dir | evaltt %]]
 -- expect --
 [% a %] blah blah [% b %]
+FILTER [alpha blah blah bravo]
 FILTER [alpha blah blah bravo]
 
 -- test -- 
@@ -593,7 +595,7 @@ bar: some random value
 -- test --
 [% TRY -%]
 before
-[% FILTER redirect(outfile) -%]
+[% FILTER file(outfile) -%]
 blah blah blah
 here is the news
 [% a %]
@@ -763,3 +765,18 @@ more blah blah blah
 -- expect --
 blah blah blah...
 more blah blah blah...
+
+-- test --
+[% '$stash->{ a } = 25' FILTER evalperl %]
+[% a %]
+-- expect --
+25
+25
+
+-- test --
+[% '$stash->{ a } = 25' FILTER perl %]
+[% a %]
+-- expect --
+25
+25
+

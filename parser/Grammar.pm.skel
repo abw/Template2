@@ -52,7 +52,7 @@ my ($factory, $rawstart);
 	GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK END
 	USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT DIV MOD
 	IF UNLESS ELSE ELSIF FOR NEXT WHILE SWITCH CASE META
-	TRY THROW CATCH FINAL BREAK RETURN STOP CLEAR
+	TRY THROW CATCH FINAL LAST RETURN STOP CLEAR
     );
 
 %CMPOP = qw( != ne  == eq  < <  > >  >= >=  <= <= );
@@ -65,6 +65,7 @@ my ($factory, $rawstart);
 # lookup table used by lexer is initialised with special-cases
 $LEXTABLE = {
     'FOREACH' => 'FOR',
+    'BREAK'   => 'LAST',
     '&&'      => 'AND',
     '||'      => 'OR',
     '!'       => 'NOT',

@@ -46,6 +46,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $ROOT_OPS = {
     'inc'  => sub { local $^W = 0; my $item = shift; ++$item }, 
     'dec'  => sub { local $^W = 0; my $item = shift; --$item }, 
+    defined $ROOT_OPS ? %$ROOT_OPS : (),
 };
 
 $SCALAR_OPS = {
@@ -56,6 +57,7 @@ $SCALAR_OPS = {
 	return [ defined $split ? split($split, $str, @args)
 				: split(' ', $str, @args) ];
     },
+    defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
 $HASH_OPS = {
@@ -67,6 +69,7 @@ $HASH_OPS = {
 		      @$hash{ keys %$imp } = values %$imp;
 		      return '';
 		  },
+    defined $HASH_OPS ? %$HASH_OPS : (),
 };
 
 $LIST_OPS = {
@@ -109,7 +112,8 @@ $LIST_OPS = {
 	       sort { $a->[1] <=> $b->[1] }
 	       map  { [ $_, lc $_ ] } 
 	       @$list
-   },
+    },
+    defined $LIST_OPS ? %$LIST_OPS : (),
 };
 
 

@@ -11,8 +11,8 @@
 #   Andy Wardley   <abw@kfs.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-1999 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-1999 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.

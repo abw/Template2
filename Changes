@@ -20,27 +20,27 @@
 # Version 2.00
 #------------------------------------------------------------------------
 
-* Updated the Makefile.PL to check for external modules, prompt for 
-  DBI test parameters, and various other niceties.
-
-* Fixed a bug in the Template::Service module which was using any 
-  non-word characters to delimit lists of PRE/POST_PROCESS files.
-  A value such as 'config, header.html' would be interpreted as 
-  [ 'config', 'header', 'html' ].  It now uses the DELIMITER value
-  which is ':' by default, e.g. PRE_PROCESS => 'config:header.html'
-  is interpreted as [ 'config', 'header.html' ].
+* Added the push(), pop(), unshift() and shift() virtual list methods
+  and fixed the parser to allow empty lists to be created (also fixed
+  the parser to prevent warnings being raised by empty hashes).
+  Updated test scripts and documentation to include examples.  Thanks
+  to Stas Beckman for raising the issue.
 
 * Incorporated the DBI plugin module, written by Simon Matthews.  This 
   features a major reorganisation of the code, fixes a few bugs, removes
   some dead wood, and has improved documentation and test script.
 
+* Updated the Makefile.PL to prompt for DBI test parameters, check for
+  external modules (and in particular, versions which may cause problems)
+  and various other niceties.  Also updated the README and TODO files.
+
 * Rewrote the XML::DOM plugin, fixing the memory leakage problems and 
   adding the toTemplate() method and friends, as provided by Simon 
   Matthews.  Note that it's quite easy to send Perl into a deep
   recursive loop via the childrenToTemplate() and allChildrenToTemplate()
-  methods due to a misfeature was added by Andy Wardley.  This will be 
-  fixed in a future release and may result in behavioural changes to 
-  these methods.  So don't rely on them for now.
+  methods due to a misfeature added by abw.  This will be fixed in a 
+  future release and may result in behavioural changes to the
+  *children* methods,  so don't rely on them too heavily for now.
 
 * Incorporated the Dumper plugin from Simon Matthews which interfaces to
   the Data::Dumper module.
@@ -49,10 +49,50 @@
   to be ignored.  Credit due (yet again!) to Simon Matthews for finding 
   the missing chomp().
 
-* Added the push(), pop(), unshift() and shift() virtual list methods
-  and fixed the parser to allow empty lists to be created.  Updated
-  documentation to include examples.  Thanks to Stas Beckman for 
-  raising the issue.
+* Fixed a bug in Template::Directive which was generating a 'Useless use 
+  of scalar ref constructor in void context...' for empty BLOCK 
+  definitions.
+
+* Added the Wrap and Autoformat plugins which interface to Text::Wrap
+  and Text::Autoformat respectively.  Thanks to Robert McArthur for the 
+  original Autoformat plugin code.
+
+* Added the XML::XPath plugin, test script and documentation.
+
+* Fixed a bug in the Template::Service module which was using any 
+  non-word characters to delimit lists of PRE/POST_PROCESS files.
+  A value such as 'config, header.html' would be interpreted as 
+  [ 'config', 'header', 'html' ].  It now uses the DELIMITER value
+  which is ':' by default, e.g. PRE_PROCESS => 'config:header.html'
+  is interpreted as [ 'config', 'header.html' ].
+
+* Fixed a bug in the parser grammar which was failing to correctly 
+  identify compound variables that contained two or more consecutive
+  numbers.  For example, the variable [% pi.3.14 %] was being interpreted 
+  as 'pi' . '3.14', instead of 'pi' . '3' . '14'.
+
+* Further modified parser to accept single quoted BLOCK names that would
+  otherwise choke on 'illegal' characters.  e.g. [% BLOCK 'foo bar' %]
+
+* Changed the Template::Context::template() method to always throw an
+  exception when a template can't be found instead of simply setting
+  an internal error string.  Modified other Template::Context and
+  Template::Service methods to expect this behaviour and act
+  accordingly.  The visible impact of this is that the Template
+  error() method will now always return an exception object.
+  Previously there were certain cases where a plain error string would
+  have been returned.
+
+* Change the ROOT_OPS, SCALAR_OPS, HASH_OPS and LIST_OPS virtual
+  method tables in Template::Stash to incorporate any existing defined
+  values.  Previously, you had to 'use Template::Stash' before
+  defining any new virtual methods to prevent them being overwritten
+  when Template::Stash was subsequently loaded.  Thanks to Chris
+  Nandor for identifying the problem and suggesting a fix.
+
+* Changed BREAK directive to LAST to keep it in line with Perl (don't
+  know why I originally chose 'BREAK' - must have had my C head on at
+  the time).  BREAK is still supported as an alias for LAST.
 
 * Renamed the Template::Iterator number() method to count(), although
   number() is still supported for backwards compatability.  The DBI 
@@ -62,14 +102,34 @@
   CASE to allow AUTOLOAD to be more easily reused by derived iterators
   such as the one for the DBI plugin.
 
+* The Template::Plugin module is now derived from Template::Base.  The
+  only significant ramification of this is that plugins should now
+  call the error() method on failure in preference to fail().  The
+  fail() method is still supported and delegates on to error(), but it
+  raises a deprecation warning.
+
 * Fixed a bug in the Table plugin which caused an "undefined variable..."
   warning to be emitted when an empty list was provided.
+
+* Renamed 'evalperl' filter to 'perl', something that previously
+  couldn't be done (before ANYCASE) due to 'perl' clashing with 'PERL'
+  reserved word.  'evalperl' is still provided for backwards
+  compatability.  Also added 'evaltt' as an alias for the 'eval'
+  filter and 'file' as an alias for 'redirect' (which I claimed to 
+  have done back in beta 3 but obviously hadn't). 
+
+* Fixed a bug in the perl/evalperl filter which was causing a stash
+  reference to be bound in a closure that could later become
+  invalidated.  This could lead to variables not getting/setting their
+  correct values in subsequent calls to the same filter.
 
 * Documented the problem identified by Chris Winters where an IF 
   used as a side-effect to an implied SET directive doesn't behave as
   expected.  A directive of the form  [% foo = 'bar' IF condition %]
   should be written explicitly as [% SET foo = 'bar' IF condition %]
 
+* Documented the 32k size limit (or typically less) for templates when 
+  the INTERPOLATE option is set.
 
 #------------------------------------------------------------------------
 # Version 2.00 beta 5  14th September 2000
@@ -196,7 +256,7 @@
   than genuine reference taking, but it looks and smells almost the same.
   Primarily, it is useful for allowing sub-routine references to be 
   passed to another sub-routine.  This is currently undocumented 
-  because I'm not sure about the validity of adding it, but See t/refs.t 
+  because I'm not sure about the validity of adding it, but see t/refs.t 
   for examples for now.
 
 * Changed parser to automatically unescape any escaped characters in 
@@ -691,68 +751,27 @@ New Language Features
 * Various new pseudo-methods have been added for inspecting and manipulating
   data.  The full list now looks something like this:
 
-      [% var.defined %]                    # variable is defined
-      [% var.length %]                     # length of string
-      [% var.split(delimiter, limit) %]    # split string as Perl does
+      [% var.defined %]               # variable is defined
+      [% var.length %]                # length of string
+      [% var.split(delim, limit) %]   # split string as Perl does
 
-      [% hash.keys %]                      # return list of hash keys
-      [% hash.values %]                    # ditto hash values
+      [% hash.keys %]                 # return list of hash keys
+      [% hash.values %]               # ditto hash values
+      [% hash.each %]                 # ditto keys and values
+      [% hash.import(hash2) %]        # merge hash2 into hash
 
-      [% list.size %]                      # number of items in list
-      [% list.max %]                       # last item number (size - 1)
-      [% list.first %]                     # first item    
-      [% list.last %]                      # last item
-      [% list.reverse %]                   # list in reverse order
-      [% list.sort(field) %]               # list in sorted order
-      [% list.join(joint) %]               # join items into single string
-
-
-Templates Compiled to Perl Code
--------------------------------
-
-Templates are now compiled to Perl code, with credit and respect due
-to Doug Steinwand for providing an implementation around which the
-new parser was built.  This brings a number of important benefits:
-
-* Speed and Memory Efficiency
-
-  Version 1 used a list of opcodes to represent directives and
-  lower-level operations.  These were evaluated by the hideously
-  contrived, and darkly sinister Template::Context::_evaluate()
-  method.  In version 2, all templates are parsed and rebuilt as Perl
-  code.  This is then evaluated and stored as a reference to a Perl
-  sub-routine which can then be executed and re-executed significantly
-  faster and with far less memory overhead.
-
-* Persistance.
-
-  Once a template has been compiled to Perl code it can be saved to
-  disk as a "compiled template" by defining the COMPILE_EXT option.
-  This allows you to specify a filename extension (e.g. '.ttc') which
-  is added to the template filename and used to create a new file
-  containg the Perl code.  Next time you use the template, even if
-  you've shut down your program/server/computer in the mean time, the
-  compiled template is there in a file as Perl code and is simply
-  require()d and executed.  It all happens significantly faster
-  because there's no Template::Parser to run.  In fact, if all your
-  templates are "compiled" on disk then the Template::Parser and
-  Template::Grammar modules won't even be loaded, further reducing
-  startup time and memory consumption (the grammar file, in particular
-  is rather large).  The Template::Provider module handles the
-  loading, caching and persistance of templates, and will examine file
-  timestamps and re-compiled modified templates as required.
-
-* Flexibility.  
-
-  Because "compiled templates" are now nothing more than Perl
-  sub-routines, you can use anyone or anything to generate them and
-  run them all under the same roof.  Different parser back-ends can
-  generate Perl code optimised for speed or functionality, for
-  example.  Or different parsers can compile different template
-  languages (PHP, ASP, Mason, roll-your-own, etc.) and run them
-  alongside regular templates.  Or if you don't trust a parser, you
-  can even write your own Perl code and have your templates execute as
-  fast as the code you can write.
+      [% list.size %]                 # number of items in list
+      [% list.max %]                  # last item number (size - 1)
+      [% list.first %]                # first item    
+      [% list.last %]                 # last item
+      [% list.push(item) %]	      # add item to end
+      [% list.pop %]		      # remove item from end
+      [% list.unshift(item) %]	      # add item to front
+      [% list.shift %]	              # remove item from front
+      [% list.reverse %]              # return reversed order
+      [% list.sort(field) %]          # return alpha sorted order
+      [% list.nsort(field) %]         # return numerical sorted order
+      [% list.join(joint) %]          # return items joined into single string
 
 
 Configuration Options
@@ -866,6 +885,59 @@ Configuration Options
 * Added the TRIM option to automatically removed leading and trailing 
   whitespace from the output of templates and BLOCKs.
 
+* The CASE option has now been obsoleted and replaces by the ANYCASE 
+  option.  See comments elsewhere in this document ('Gotchas' below and 
+  notes for 2.00 beta 4) for further details.
+
+
+Templates Compiled to Perl Code
+-------------------------------
+
+Templates are now compiled to Perl code, with credit and respect due
+to Doug Steinwand for providing an implementation around which the
+new parser was built.  This brings a number of important benefits:
+
+* Speed and Memory Efficiency
+
+  Version 1 used a list of opcodes to represent directives and
+  lower-level operations.  These were evaluated by the hideously
+  contrived, and darkly sinister Template::Context::_evaluate()
+  method.  In version 2, all templates are parsed and rebuilt as Perl
+  code.  This is then evaluated and stored as a reference to a Perl
+  sub-routine which can then be executed and re-executed significantly
+  faster and with far less memory overhead.
+
+* Persistance.
+
+  Once a template has been compiled to Perl code it can be saved to
+  disk as a "compiled template" by defining the COMPILE_EXT option.
+  This allows you to specify a filename extension (e.g. '.ttc') which
+  is added to the template filename and used to create a new file
+  containg the Perl code.  Next time you use the template, even if
+  you've shut down your program/server/computer in the mean time, the
+  compiled template is there in a file as Perl code and is simply
+  require()d and executed.  It all happens significantly faster
+  because there's no Template::Parser to run.  In fact, if all your
+  templates are "compiled" on disk then the Template::Parser and
+  Template::Grammar modules won't even be loaded, further reducing
+  startup time and memory consumption (the grammar file, in particular
+  is rather large).  The Template::Provider module handles the
+  loading, caching and persistance of templates, and will examine file
+  timestamps and re-compiled modified templates as required.
+
+* Flexibility.  
+
+  Because "compiled templates" are now nothing more than Perl
+  sub-routines, you can use anyone or anything to generate them and
+  run them all under the same roof.  Different parser back-ends can
+  generate Perl code optimised for speed or functionality, for
+  example.  Or different parsers can compile different template
+  languages (PHP, ASP, Mason, roll-your-own, etc.) and run them
+  alongside regular templates.  Or if you don't trust a parser, you
+  can even write your own Perl code and have your templates execute as
+  fast as the code you can write.
+
+
 Other Enhancements and Internal Features
 ----------------------------------------
 
@@ -942,29 +1014,57 @@ Other Enhancements and Internal Features
       # object as PARSER
       my $tt = Template->new({ ... })
 
+* The Template::Test module has been enhanced to make it easier to test
+  more advanced TT features.  You can now define multiple TT processors
+  and switch between them for different test with the '-- use name --'
+  directive.  Also added the '-- process --' directive which can be
+  added after '-- expect --' to hav the expected output processed by
+  TT before comparison.
+
 * The Template module remains, as it ever was, a simple front-end to
   the Template Toolkit.  This creates a single Template::Service to
   which it delegates control for processing templates.  Output is
   returned according to the OUTPUT options specified for the module
   and/or any output option passed explicitly to the process() method.
 
-Plugins and Filters
--------------------
 
-* Added the 'upper' and 'lower' filters for case folding text.
+New Filters
+-----------
 
-* Added the Date plugin.
+* 'upper' and 'lower' filters perform case folding of text.
 
-Tools and Tests
+* 'eval' can be used to evaluate Template Toolkit directives at runtime.
+
+* 'perl' evaluates Perl code if (and only if) the EVAL_PERL flag is set.
+
+* 'stderr' is a simple filter to STDERR.
+
+* 'file' is a new alias for the 'redirect' filter.  The OUTPUT_PATH option
+  must be set.
+
+
+New Plugins
+-----------
+
+* The DBI plugin is now distributed with the Template Toolkit.
+
+* The Date plugin formats dates and times via the POSIX strftime() sub.
+
+* The Iterator plugin provides access to the Template::Iterator module.
+
+* The Dumper plugin provides an interface to the Data::Dumper module.
+
+* The Wrap and Autoformat plugins interface to the Text::Wrap and 
+  Text::Autoformat modules respectively.
+
+* The XML::DOM and XML::XPath plugins provide interfaces to the relevant
+  XML modules.
+
+
+Utility Scripts
 ---------------
 
-* Added the --define var=val option to ttree.
-
-* Added '-- use name --' to Template::Test to switch between multiple
-  Template objects specified as a list reference as the second arg
-  to test_expect()
-
-* Totally updated the test suite.
+* Added the '--define var=val' option to ttree.
 
 
 Gotchas

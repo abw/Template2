@@ -58,7 +58,7 @@ sub new {
 # 
 # May be called as a class or object method to set or retrieve the 
 # package variable $ERROR (class method) or internal member 
-# $self->{ ERROR } (object method).  The presence of parameters indicates
+# $self->{ _ERROR } (object method).  The presence of parameters indicates
 # that the error value should be set.  Undef is then returned.  In the
 # abscence of parameters, the current error value is returned.
 #------------------------------------------------------------------------

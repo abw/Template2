@@ -1,6 +1,7 @@
-Script          Testing...
+Script          Testing
 -----------------------------------------------------------------------------
 args.t          Passing positional and named arguments to code/object methods
+autoform.t      Autoformat plugin (Template::Plugin::Autoformat)
 base.t          Template::Base.pm module
 binop.t         Binary operators
 block.t         BLOCK definition
@@ -16,6 +17,7 @@ config.t        Template::Config factory module
 context.t       Template::Context module
 datafile.t      Datafile plugin (Template::Plugin::Datafile)
 date.t          Date plugin (Template::Plugin::Date)
+dbi.t           DBI plugin (Template::Plugin::DBI)
 directive.t     Directive layout, chomping, comments, etc.
 document.t      Template::Document module
 dom.t           XML::DOM plugin (Template::Plugin::XML::DOM)
@@ -34,6 +36,7 @@ object.t        Binding objects to template variables
 output.t        OUTPUT_PATH and OUTPUT options
 parser.t        Template::Parser module
 plugins.t       Template::Plugins provider module (incomplete)
+process.t       PRE_PROCESS, PROCESS and POST_PROCESS options
 provider.t      Template::Provider module
 ref.t           Test the \ reference operator (currently undocumented)
 rss.t           XML::RSS plugin (Template::Plugin::XML::RSS)
@@ -52,5 +55,6 @@ vars.t          Variable usage and GET / SET / CALL / DEFAULT directives
 varsv1.t        As above, using version 1 handling of leading '$'
 vmeth.t         Virtual scalar/hash/list methods
 while.t         WHILE directive
+wrap.t          Wrap plugin (Template::Plugin::Wrap)
 wrapper.t       WRAPPER directive
-
+xpath.t         XML::XPath plugin (Template::Plugin::XML::XPath)

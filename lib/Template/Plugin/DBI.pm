@@ -605,28 +605,8 @@ documentation provided by Andy Wardley E<lt>abw@kfs.orgE<gt>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 1999 Simon Matthews.  All Rights Reserved
+Copyright (C) 1999-2000 Simon Matthews.  All Rights Reserved
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
-
-=head1 BUGS / LIMITATIONS
-
-=over 4
-
-=item FIXUP Handlers
-
-  - how to install
-  - ALL type to process all
-  - UNDEF magic should be optional ?
-
-=item DBI method access
-
-  - commit ?
-  - rollback ?
-
-=back
-
-
-
 

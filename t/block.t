@@ -97,3 +97,17 @@ blah
 [% PROCESS foo:bar %]
 -- expect --
 blah
+
+-- test --
+[% BLOCK 'hello html' -%]
+Hello World!
+[% END -%]
+[% PROCESS 'hello html' %]
+-- expect --
+Hello World!
+
+-- test --
+<[% INCLUDE foo %]>
+[% BLOCK foo %][% END %]
+-- expect --
+<>

@@ -23,5 +23,21 @@ use lib  qw( ./lib ../lib );
 use Template;
 use Template::Test;
 
-my $tt = Template->new();
+my $out;
+my $dir = -d 't' ? 't/test' : 'test';
+my $tt  = Template->new({
+    INCLUDE_PATH => "$dir/src:$dir/lib",	
+    OUTPUT       => \$out,
+});
+
 ok( $tt );
+ok( $tt->process('header') );
+ok( $out );
+
+$out = '';
+ok( ! $tt->process('this_file_does_not_exist') );
+my $error = $tt->error();
+ok( $error->type() eq 'file' );
+ok( $error->info() eq 'this_file_does_not_exist: not found' );
+
+

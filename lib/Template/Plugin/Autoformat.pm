@@ -14,8 +14,7 @@
 #       documentation
 #
 # COPYRIGHT
-#   Copyright (C) 2000 Robert McArthur.  All Rights Reserved.
-#   Copyright (C) 2000 DSTC Pty Ltd.  All Rights Reserved.
+#   Copyright (C) 2000 Robert McArthur & Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -202,9 +201,14 @@ These can also be passed directly to the autoformat subroutine.
 
 See L<Text::Autoformat> for further details.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Robert McArthur E<lt>mcarthur@dstc.edu.auE<gt>
+Robert McArthur E<lt>mcarthur@dstc.edu.auE<gt> wrote the original plugin 
+code, with some modifications and additions from Andy Wardley 
+E<lt>abw@kfs.orgE<gt>.
+
+Damian Conway E<lt>damian@conway.orgE<gt> wrote the Text::Autoformat 
+module (in his copious spare time :-) which does all the clever stuff.
 
 =head1 REVISION
 
@@ -212,8 +216,7 @@ $Revision$
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 Robert McArthur.  All Rights Reserved.
-Copyright (C) 2000 DSTC Pty Ltd. All Rights Reserved.
+Copyright (C) 2000 Robert McArthur & Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
