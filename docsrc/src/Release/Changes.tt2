@@ -51,6 +51,9 @@
   set explicitly, or link below for description of problem.
   http://template-toolkit.org/pipermail/templates/2003-April/004499.html
 
+* applied patch from Axel Gerstmair to Makefile.PL to add TT_EXTRAS item.
+  http://template-toolkit.org/pipermail/templates/2003-April/004543.html
+
 
 #------------------------------------------------------------------------
 # Version 2.09b - 24th April 2003                 ## DEVELOPER RELEASE ##
