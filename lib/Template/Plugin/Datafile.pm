@@ -55,13 +55,16 @@ sub new {
     while (! $line || $line =~ /^#/) {
 	$line = <FD>;
 	chomp $line;
+        $line =~ s/\r$//;
     }
+
     (@fields = split(/\s*$delim\s*/, $line)) 
 	|| return $class->fail("first line of file must contain field names");
 
     # read each line of the file
     while (<FD>) {
 	chomp;
+	s/\r$//;
 
 	# ignore comments and blank lines
 	next if /^#/ || /^\s*$/;
@@ -169,8 +172,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.40, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.41, distributed as part of the
+Template Toolkit version 2.06d, released on 22 January 2002.
 
 =head1 COPYRIGHT
 
