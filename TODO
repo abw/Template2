@@ -1,6 +1,12 @@
 The following lists detail pending items, known bugs and possible future
 enhancements planned for the Template Toolkit.
 
+LATEST
+------
+
+* Fix Template::DBI iterator first/last() - it doesn't behave the same as 
+  list first/last() and get_all() fails?
+
 
 #------------------------------------------------------------------------
 # PENDING
@@ -25,14 +31,22 @@ enhancements planned for the Template Toolkit.
   working on a POD to Template translator that will allow you to
   convert any POD documents (include the TT docs, of course) into TT
   templates that can then be processed into virtually any other format
-  or style.
+  or style.  There's a working prototype of this system if anyone wants
+  to take a look at it.  Ask me for the code if you're interested and
+  don't mind a few rough edges.
+
+* The File and Directory plugins have grown out of a Directory plugin
+  that Michael Stevens <michael@etla.org> wrote and posted to the list.
+  I need to post my changes back to Michael and the list and see what 
+  people think and where they can be improved.
 
 * Template Toolkit FAQ.
 
 * Template::Internals.  A document about the internals describing how,
   where and why to hack on them.
 
-* "Camelot!", "Camelot!", "Camelot!".  "It's only a model".
+* "Camelot!", "Camelot!", "Camelot!"  (It's only a model).  See 
+   http://www.template-toolkit.org/camelot/ for further info.
 
 
 #------------------------------------------------------------------------
@@ -86,8 +100,78 @@ enhancements planned for the Template Toolkit.
       #  foo                <- this gets printed
     %]
 
+
 #------------------------------------------------------------------------
-# FUTURE ENHANCEMENTS
+# LATEST THOUGHTS
+#
+# These are some of the latest ideas.
+#------------------------------------------------------------------------
+
+* Template::View, to implement dynamic views.  
+  (this is now underway - see Template::View, and Views.pod somewhere 
+  in the manual section of docs (under construction).
+
+* Ability to set different parser options for BLOCK definitions, etc.
+  See P2.pm - got half a lexer working.
+
+    [% BLOCK header
+         eval_perl = 0
+         pre_chomp = 1
+    %]
+       ...
+    [% END %]
+
+  Anonymous BLOCK can then be used to set a parser scope
+
+    [% BLOCK trim=1 %]
+ 
+    [% END %]
+
+    [% BLOCK trim=0 %]
+
+    [% END %]
+
+  And/or set different tag styles, etc.
+
+    [% BLOCK tags='star' %]
+       [* INCLUDE this_is_a_directive *]
+       [% INCLUDE this_is_not %]   
+    [* END *]
+
+    [% INCLUDE back_to_normal %]
+
+  This will require some fairly serious work on the parser.
+
+* Template::Component, kind of compimentary to Template::View.
+  It should be possible to create a component object which 
+  encapsulates pure Perl application logic with output templates,
+  managed by a related Template::View.  HTML::Mason is most definately
+  the inspiration for this.  For example, we might like to define
+  components on a per-directory basis.  A directory might contain a 
+  Perl module or modules which encode application logic, and one or
+  more templates which represent the view elements.
+
+  /usr/local/tt2/components/Mailbox/
+    Mailbox.pm 
+    header 
+    footer  
+    title
+  or
+
+  /usr/local/tt2/components/Mailbox/
+    perl/
+      Mailbox.pm
+      Reader.pm
+      Writer.pm
+      Blah/Blah.pm
+    template/
+      header 
+      footer 
+      title
+    config.xml
+
+#------------------------------------------------------------------------
+# POSSIBLE FUTURE ENHANCEMENTS (the less recent thoughts)
 #
 # Things that might get added to a future release.
 #------------------------------------------------------------------------
@@ -173,4 +257,12 @@ enhancements planned for the Template Toolkit.
   that we will be able to incorporate some of those ideas some time
   soon.
 
+#------------------------------------------------------------------------
+# misc
+#------------------------------------------------------------------------
+
+* default DELIMITER should be defined as a package var somewhere.  It's 
+  currently hardcoded in Template::Parser and Template::Context.
+
+* CVS add plusfile.t, prefix.t, ...
 

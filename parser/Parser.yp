@@ -45,6 +45,7 @@
 %left DOT
 %left CMPOP
 %left BINOP
+%left '+'
 %left '/'
 %left DIV
 %left MOD
@@ -78,6 +79,7 @@ statement:  directive
 	|   capture
 	|   macro
 	|   use       
+	|   view       
 	|   rawperl
 	|   expr		    { $factory->get($_[1])                }
 	|   META metadata 	    { $_[0]->add_metadata($_[2]);         }
@@ -189,6 +191,11 @@ final:	    CATCH filename ';'
 use:	    USE lnameargs	    { $factory->use($_[2])                }
 ;
 
+view:	    VIEW nameargs ';'	    { $_[0]->push_defblock();		  }
+	      block END             { $factory->view(@_[2,5], 
+						     $_[0]->pop_defblock) }
+;
+
 perl:	    PERL ';'                { ${$_[0]->{ INPERL }}++;             }
 	      block END		    { ${$_[0]->{ INPERL }}--;
 				      $_[0]->{ EVAL_PERL } 
@@ -210,8 +217,15 @@ filter:	    FILTER lnameargs ';'
 	      lnameargs		    { $factory->filter(@_[3,1])           }
 ;
 
-defblock:   BLOCK blockname ';' 
-	      template END	    { $_[0]->define_block(@_[2, 4]); 
+#defblock:   BLOCK blockname ';' 
+#	      template END	    { $_[0]->define_block(@_[2, 4]); 
+#				      undef                               }
+#;
+defblock:   BLOCK blockname blockargs ';' 
+	      template END	    { local $" = ', ';
+				      print STDERR "experimental block args: [@{ $_[3] }]\n"
+					  if $_[3];
+				      $_[0]->define_block(@_[2, 5]); 
 				      undef                               }
 ;
 
@@ -219,7 +233,15 @@ blockname:  filename
         |   LITERAL		    { $_[1] =~ s/^'(.*)'$/$1/; $_[1]      }
 ;
 
-anonblock:  BLOCK ';' block END	    { $factory->anon_block($_[3])         }
+blockargs:  metadata 
+	|   /* NULL */
+;
+
+anonblock:  BLOCK blockargs ';' block END	    
+				    { local $" = ', ';
+				      print STDERR "experimental block args: [@{ $_[2] }]\n"
+					  if $_[2];
+				      $factory->anon_block($_[4])         }
 ;
 
 capture:    ident ASSIGN mdir	    { $factory->capture(@_[1, 3])         }
@@ -290,8 +312,11 @@ params:	    params param	    { "$_[1], $_[2]"                      }
 	|   param
 ;
 
-param:	    LITERAL ASSIGN term	    { "$_[1] => $_[3]"                    }
-	|   IDENT ASSIGN term	    { "'$_[1]' => $_[3]"                  }
+#param:	    LITERAL ASSIGN term	    { "$_[1] => $_[3]"                    }
+#	|   IDENT ASSIGN term	    { "'$_[1]' => $_[3]"                  }
+#;
+param:	    LITERAL ASSIGN expr	    { "$_[1] => $_[3]"                    }
+	|   IDENT ASSIGN expr	    { "'$_[1]' => $_[3]"                  }
 ;
 
 ident:      ident DOT node	    { push(@{$_[1]}, @{$_[3]}); $_[1]     }
@@ -314,6 +339,7 @@ item:	    IDENT		    { "'$_[1]'"                           }
 
 expr:	    expr BINOP expr	    { "$_[1] $_[2] $_[3]"                 }
 	|   expr '/' expr	    { "$_[1] $_[2] $_[3]"                 }
+	|   expr '+' expr	    { "$_[1] $_[2] $_[3]"                 }
 	|   expr DIV expr	    { "int($_[1] / $_[3])"                }
 	|   expr MOD expr	    { "$_[1] % $_[3]"                     }
 	|   expr CMPOP expr	    { "$_[1] $CMPOP{ $_[2] } $_[3]"       }
@@ -361,15 +387,30 @@ lvalue:	    item
 	|   '"' quoted '"'	    { $factory->quoted($_[2])             }
 	|   LITERAL
 ;
-	
-nameargs:   '$' ident args	    { [ $factory->ident($_[2]), $_[3] ]   }
-	|   '"' quoted '"' args	    { [ $factory->quoted($_[2]), $_[4] ]  }
-	|   LITERAL args	    { [   $_[1],   $_[2] ]                }
-	|   filename '(' args ')'   { [ "'$_[1]'", $_[3] ]                }
-	|   filename args	    { [ "'$_[1]'", $_[2] ]                }
+
+nameargs:   '$' ident args	    { [ [$factory->ident($_[2])], $_[3] ]   }
+	|   names args		    { [ @_[1,2] ] }
+	|   names '(' args ')'	    { [ @_[1,3] ] }
 ;
 
-filename:   filename DOT filepart   { "$_[1].$_[3]"                       }
+names:	    names '+' name	    { push(@{$_[1]}, $_[3]); $_[1] }
+	|   name		    { [ $_[1] ]                    }
+;
+
+name:       '"' quoted '"'	    { $factory->quoted($_[2])  }
+	|   filename 	            { "'$_[1]'" }
+	|    LITERAL
+;
+
+#nameargs:   literal args	    { [ @_[1,2] ] }
+#	|   literal '(' args ')'    { [ @_[1,3] ] }
+#	|   '$' ident
+#;
+
+#namesargs:  names args		    { [ @_[1,2] ] }
+#;
+
+filename:   filename DOT filepart   { "$_[1].$_[3]" }
 	|   filepart
 ;
 

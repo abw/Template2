@@ -277,3 +277,4 @@ fooquxfooquxfoo
 [% string.replace('\W+', '_') %]
 -- expect --
 foo_bar_baz
+

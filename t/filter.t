@@ -574,7 +574,7 @@ ERROR [% error.type %]: [% error.info %]
 
 -- expect --
 before
-ERROR file: OUTPUT_PATH is not set
+ERROR redirect: OUTPUT_PATH is not set
 
 -- test --
 -- use evalperl --
@@ -604,7 +604,6 @@ after
 [% CATCH %]
 ERROR [% error.type %]: [% error.info %]
 [% END %]
-
 -- expect --
 before
 after
@@ -779,4 +778,31 @@ more blah blah blah...
 -- expect --
 25
 25
+
+-- test --
+[% FILTER indent -%]
+The cat sat
+on the mat
+[% END %]
+-- expect --
+    The cat sat
+    on the mat
+
+-- test --
+[% FILTER indent(2) -%]
+The cat sat
+on the mat
+[% END %]
+-- expect --
+  The cat sat
+  on the mat
+
+-- test --
+[% FILTER indent('>> ') -%]
+The cat sat
+on the mat
+[% END %]
+-- expect --
+>> The cat sat
+>> on the mat
 

@@ -35,7 +35,9 @@ lib/Template/Plugin/CGI.pm
 lib/Template/Plugin/DBI.pm
 lib/Template/Plugin/Datafile.pm
 lib/Template/Plugin/Date.pm
+lib/Template/Plugin/Directory.pm
 lib/Template/Plugin/Dumper.pm
+lib/Template/Plugin/File.pm
 lib/Template/Plugin/Format.pm
 lib/Template/Plugin/Iterator.pm
 lib/Template/Plugin/Table.pm
@@ -55,6 +57,7 @@ lib/Template/Stash.pod
 lib/Template/Test.pm
 lib/Template/Test.pod
 lib/Template/Tutorial.pod
+lib/Template/View.pm
 parser/Grammar.pm.skel
 parser/Parser.yp
 parser/README
@@ -79,6 +82,7 @@ t/datafile.t
 t/date.t
 t/dbi.t
 t/directive.t
+t/directry.t
 t/document.t
 t/dom.t
 t/dumper.t
@@ -86,6 +90,7 @@ t/error.t
 t/evalperl.t
 t/exception.t
 t/filter.t
+t/file.t
 t/foreach.t
 t/format.t
 t/include.t
@@ -96,6 +101,8 @@ t/object.t
 t/output.t
 t/parser.t
 t/plugins.t
+t/plusfile.t
+t/prefix.t
 t/process.t
 t/provider.t
 t/ref.t
@@ -148,6 +155,7 @@ t/try.t
 t/url.t
 t/vars.t
 t/varsv1.t
+t/view.t
 t/vmeth.t
 t/while.t
 t/wrap.t

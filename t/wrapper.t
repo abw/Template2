@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( ../lib );
+use lib qw( ../lib ./lib );
 use Template::Constants qw( :status );
 use Template;
 use Template::Test;
@@ -63,7 +63,6 @@ Wrapper Header
 Title: Another Test
 This is some more content
 Wrapper Footer
-
 
 -- test --
 [% WRAPPER mywrap

@@ -179,7 +179,7 @@ sub _recover {
 
     # there's a pesky lurking somewhere deep - let's hope this catches it
     unless (ref $$error) {
-	require Carp;
+	use Carp qw( confess );
 	confess('internal error: not an exception object',
 		' - please contact the author: <abw@kfs.org>\n',
 		"ERROR: $$error\n");

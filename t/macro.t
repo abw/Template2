@@ -122,3 +122,27 @@ end
 </tr>
 </table>
 
+-- test --
+[% MACRO one BLOCK -%]
+one: [% title %]
+[% END -%]
+[% saveone = one %]
+[% MACRO two BLOCK; title="2[$title]" -%]
+two: [% title %] -> [% saveone %]
+[% END -%]
+[% two(title="The Title") %]
+-- expect --
+two: 2[The Title] -> one:
+
+-- test --
+[% MACRO one BLOCK -%]
+one: [% title %]
+[% END -%]
+[% saveone = \one %]
+[% MACRO two BLOCK; title="2[$title]" -%]
+two: [% title %] -> [% saveone %]
+[% END -%]
+[% two(title="The Title") %]
+-- expect --
+two: 2[The Title] -> one: 2[The Title]
+

@@ -42,6 +42,7 @@ require 5.004;
 use strict;
 use vars qw( $VERSION $DEBUG $ERROR );
 use base qw( Template::Base );
+use vars qw( $TAG_STYLE $DEFAULT_STYLE );
 
 use Template::Directive;
 use Template::Grammar;
@@ -61,7 +62,7 @@ $ERROR   = '';
 #                        -- COMMON TAG STYLES --
 #========================================================================
 
-my $TAG_STYLE   = {
+$TAG_STYLE   = {
     'default'   => [ '\[%',    '%\]'    ],
     'template'  => [ '\[%',    '%\]'    ],
     'template1' => [ '[\[%]%', '%[\]%]' ],
@@ -71,6 +72,18 @@ my $TAG_STYLE   = {
     'asp'       => [ '<%',     '%>'     ],
     'php'       => [ '<\?',    '\?>'    ],
     'star'      => [ '\[\*',   '\*\]'   ],
+};
+
+$DEFAULT_STYLE = {
+    START_TAG   => $TAG_STYLE->{ default }->[0],
+    END_TAG     => $TAG_STYLE->{ default }->[1],
+#    TAG_STYLE   => 'default',
+    ANYCASE     => 0,
+    INTERPOLATE => 0,
+    PRE_CHOMP   => 0,
+    POST_CHOMP  => 0,
+    V1DOLLAR    => 0,
+    EVAL_PERL   => 0,
 };
 
 
@@ -127,7 +140,42 @@ sub new {
     @$self{ qw( LEXTABLE STATES RULES ) } 
 	= @$grammar{ qw( LEXTABLE STATES RULES ) };
     
+    $self->new_style($config)
+	|| return $class->error($self->error());
+	
     return $self;
+}
+
+
+sub new_style {
+    my ($self, $config) = @_;
+    my $styles = $self->{ STYLE } ||= [ ];
+    my $style  = { %{ $styles->[-1] || $DEFAULT_STYLE } };
+    my ($tagstyle, $tags, $start, $end, $key);
+
+    # expand START_TAG and END_TAG from specified TAG_STYLE
+    if ($tagstyle = $config->{ TAG_STYLE }) {
+	return $self->error("Invalid tag style: $tagstyle")
+	    unless defined ($tags = $TAG_STYLE->{ $tagstyle });
+	($start, $end) = @$tags;
+	$config->{ START_TAG } ||= $start;
+	$config->{   END_TAG } ||= $end;
+    }
+
+    foreach $key (keys %$DEFAULT_STYLE) {
+	$style->{ $key } = $config->{ $key } if defined $config->{ $key };
+    }
+    push(@$styles, $style);
+    return $style;
+}
+
+sub old_style {
+    my $self = shift;
+    my $styles = $self->{ STYLE };
+    return $self->error('only 1 parser style remaining')
+	unless (@$styles > 1);
+    pop @$styles;
+    return $styles->[-1];
 }
 
 
@@ -179,8 +227,9 @@ sub parse {
 sub split_text {
     my ($self, $text) = @_;
     my ($pre, $dir, $prelines, $dirlines, $postlines, $chomp, $tags, @tags);
+    my $style = $self->{ STYLE }->[-1];
     my ($start, $end, $prechomp, $postchomp, $interp ) = 
-	@$self{ qw( START_TAG END_TAG PRE_CHOMP POST_CHOMP INTERPOLATE ) };
+	@$style{ qw( START_TAG END_TAG PRE_CHOMP POST_CHOMP INTERPOLATE ) };
 
     my @tokens = ();
     my $line = 1;
@@ -357,8 +406,11 @@ sub interpolate_text {
 sub tokenise_directive {
     my ($self, $text, $line) = @_;
     my ($token, $uctoken, $type, $lookup);
-    my ($lextable, $anycase, $start, $end) = 
-	@$self{ qw( LEXTABLE ANYCASE START_TAG END_TAG ) };
+#    my ($lextable, $anycase, $start, $end) = 
+#	@$self{ qw( LEXTABLE ANYCASE START_TAG END_TAG ) };
+    my $lextable = $self->{ LEXTABLE };
+    my $style    = $self->{ STYLE }->[-1];
+    my ($anycase, $start, $end) = @$style{ qw( ANYCASE START_TAG END_TAG ) };
     my @tokens = ( );
 
     while ($text =~ 
@@ -392,7 +444,7 @@ sub tokenise_directive {
 		# an unquoted word or symbol matches in $7
 		(   [(){}\[\]:;,\/\\]    # misc parenthesis and symbols
 #		|   \->                  # arrow operator (for future?)
-		|   \+\-\*               # math operations
+		|   [+\-*]               # math operations
 		|   \$\{?                # dollar with option left brace
 		|   =>			 # like '='
 		|   [=!<>]?= | [!<>]     # eqality tests
@@ -494,6 +546,22 @@ sub define_block {
     $defblock->{ $name } = $block;
     
     return undef;
+}
+
+sub push_defblock {
+    my $self = shift;
+    my $stack = $self->{ DEFBLOCK_STACK } ||= [];
+    push(@$stack, $self->{ DEFBLOCK } );
+    $self->{ DEFBLOCK } = { };
+}
+
+sub pop_defblock {
+    my $self  = shift;
+    my $defs  = $self->{ DEFBLOCK };
+    my $stack = $self->{ DEFBLOCK_STACK } || return $defs;
+    return $defs unless @$stack;
+    $self->{ DEFBLOCK } = pop @$stack;
+    return $defs;
 }
 
 

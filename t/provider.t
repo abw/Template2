@@ -167,8 +167,7 @@ __DATA__
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file, a is 
-Error: file - not found
+This is the foo file, a is Error: file - not found
 
 -- test --
 [% TRY %]
@@ -178,8 +177,7 @@ Error: file - not found
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file, a is 
-Error: file - not found
+This is the foo file, a is Error: file - not found
 
 -- test --
 [% TRY %]
@@ -202,7 +200,7 @@ Error: file error - [* absfile *]: not found
 [% TRY %]
 [% INCLUDE $relfile %]
 [% INCLUDE foo %]
-[% CATCH file %]
+[% CATCH file +%]
 Error: [% error.type %] - [% error.info %]
 [% END %]
 -- expect --
@@ -213,7 +211,7 @@ Error: file - foo: not found
 [% TRY %]
 [% INCLUDE $relfile %]
 [% INCLUDE $absfile %]
-[% CATCH file %]
+[% CATCH file +%]
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
@@ -238,7 +236,7 @@ abs: file error - [* absfile *]: absolute paths are not allowed (set ABSOLUTE op
 [% TRY %]
 [% INCLUDE $absfile %]
 [% INCLUDE foo %]
-[% CATCH file %]
+[% CATCH file +%]
 Error: [% error.type %] - [% error.info %]
 [% END %]
 -- expect --
@@ -249,7 +247,7 @@ Error: file - foo: not found
 [% TRY %]
 [% INCLUDE $absfile %]
 [% INCLUDE $relfile %]
-[% CATCH file %]
+[% CATCH file +%]
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
@@ -267,7 +265,6 @@ abs: [% TRY; INSERT $absfile; CATCH; "$error\n"; END %]
 foo: file error - foo: not found
 rel: file error - [* relfile *]: relative paths are not allowed (set RELATIVE option)
 abs: This is the foo file, a is [% a %]
-
 
 
 #------------------------------------------------------------------------

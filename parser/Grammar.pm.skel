@@ -52,7 +52,7 @@ my ($factory, $rawstart);
 	GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK END
 	USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT DIV MOD
 	IF UNLESS ELSE ELSIF FOR NEXT WHILE SWITCH CASE META
-	TRY THROW CATCH FINAL LAST RETURN STOP CLEAR
+	TRY THROW CATCH FINAL LAST RETURN STOP CLEAR VIEW
     );
 
 %CMPOP = qw( != ne  == eq  < <  > >  >= >=  <= <= );
@@ -87,9 +87,11 @@ $LEXTABLE = {
 
 # localise the temporary variables needed to complete lexer table
 { 
-    my @tokens = qw< ( ) [ ] { } ${ $ / ; : ? >;
+#    my @tokens = qw< ( ) [ ] { } ${ $ / ; : ? >;
+    my @tokens = qw< ( ) [ ] { } ${ $ + / ; : ? >;
     my @cmpop  = keys %CMPOP;
-    my @binop  = qw( + - * % );              # '/' above, in @tokens
+#    my @binop  = qw( + - * % );              # '/' above, in @tokens
+    my @binop  = qw( - * % );              # '+' and '/' above, in @tokens
 
     # fill lexer table, slice by slice, with reserved words and operators
     @$LEXTABLE{ @RESERVED, @cmpop, @binop, @tokens } 

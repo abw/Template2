@@ -17,7 +17,107 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.00
+# Version 2.01 - snapshot 0.1
+#------------------------------------------------------------------------
+
+* Added the Template::View module, the VIEW directive and the View plugin
+  which can be used collectively to create dynamic views.  This is a very
+  powerful tool which fulfills a number of requirements and makes possible 
+  a number of things that have previously been messy, difficult or not 
+  possible.  Views are primarily collections of templates.  You can define
+  BLOCKs within a view and they remain local to it, but can be called 
+  from outside the view.  This is still very experimental.  Things are 
+  likely to change.  Take a look at t/view.t for examples.
+
+* Fixed the parser to accept expressions on the right hand side of 
+  parameter definitions for INCLUDE, etc.  e.g.
+
+    [% INCLUDE header
+         title = my_title or your_title or default_title
+         bgcol = (style == 'dark' ? '#000000' : '#ffffff')
+    %]
+
+* Added the facility to specify multiple templates within a PROCESS,
+  INCLUDE, INSERT or WRAPPER directive.  For all but WRAPPER, the 
+  templates are processed in the order specified.
+
+    [% PROCESS config + header + menu %]
+    [% INCLUDE section/break + html/titlebar
+         title='A New Section'
+    %]
+    [% WRAPPER edge + box + titlebar %]
+       ...
+    [% END %]
+
+  Multiple WRAPPER templates get processed in reverse order to create 
+  the correct nesting effect.  In the example above, the enclosed block
+  is processed and passed to 'titlebar' which wraps it and passes the 
+  output to 'header' which wraps it and passes the output to 'box', which 
+  wraps it and passes the output to 'edge' which wraps it and returns the
+  output.  Thus the specification order is outermost to innermost, but 
+  they are actually processed from the inside out.
+
+* Templates specified to INCLUDE, PROCESS, WRAPPER and INSERT can now
+  be given a prefix (delimited by ':', as in "file:blahblah.txt" or 
+  "http://www.tt2.org/index.html", for example) which maps them to a
+  particular template provider or providers.  A PREFIX_MAP
+  configuration option can be specified as a hash array mapping prefix
+  names to a reference to a list of providers.  For convenience, you 
+  can also specify the argument as a string of integers, delimited by
+  any non-numerical sequence, to indicate indices into the LOAD_TEMPLATES
+  provider list.  e.g.
+
+    my $template = Template->new({
+	LOAD_TEMPLATES => [ $foo, $bar, $baz, $wiz ],
+	PREFIX_MAP => {
+	    src => '0, 2',	# $foo and $baz
+	    lib => '1, 2',	# $bar and $baz
+	    all => '0, 1, 2',	# $foo, $bar and $baz
+	}
+    });
+
+  Thus [% INCLUDE src:hello.tt2 %] indicates the 'hello.tt2' template
+  to be provided by $foo or $baz, [% INCLUDE lib:hello.tt2 %] is mapped
+  to $bar and $baz, [% INCLUDE all:hello.tt2 %] can be provided by 
+  $foo, $bar or $baz, and the default [% INCLUDE hello.tt2 %] is
+  mapped to the entire LOAD_TEMPLATES list: $foo, $bar, $baz and $wiz.
+  This is initially useful for things like ttree which would like a way
+  to differentiate between templates in one place and templates in 
+  another.  It can also be used, of course, to provider special providers
+  for certain file type, as in http://fetch.some.file.com/blah/blah/...
+
+* I *think* I identified the bug whereby non-exception objects were
+  be raised, causing an error in Template::Service...
+
+* Added the 'indent' filter to indent a block by prefixing each line with
+  a specified string, or a number of spaces when the argument is numerical.
+
+* Added tag style 'star' of the form [* ... *]
+
+* Fixed a bug in Template::Stash which was raising an error when an 
+  element on the left hand side of a '.' evaluated to a defined, but 
+  empty value.
+
+* Fixed an obscure bug in Template::Stash which occurred when calling 
+  a scalar method on a value which contained a valid and visible object 
+  package name.  e.g. [% name = 'Foo::Bar'; name.baz() %] called
+  Foo::Bar->baz().
+
+* Fixed another obscure bug, this time in Template::Parser which wasn't 
+  chomping the final newline in the input string.  Thanks to Paul 
+  Makepeace for reporting the problem.
+
+* Removed some old "delegate-to-another-object" code from Template::Plugin,
+  including a nasty AUTOLOAD method which prevented derived objects from 
+  acting as transparent hashes.  If delegative functionality is required 
+  then it should be implemented as Template::Plugin::Delegate (and may
+  well be in the fullness of time).
+
+* Fixed a whole bunch of typos and spellos thanks to a patch from Leon.
+
+  
+#------------------------------------------------------------------------
+# Version 2.00  1st December 2000
 #------------------------------------------------------------------------
 
 * Added the repeat(n), search(pattern) and replace(search, replace)

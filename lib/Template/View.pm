@@ -69,6 +69,9 @@ sub _init {
 	%$map,
     };
 
+    # local BLOCKs definition table
+    $self->{ _BLOCKS } = $config->{ blocks } || { };
+    
     # name of presentation method which printed objects might provide
     $self->{ method } = defined $config->{ method } 
 	                      ? $config->{ method } : 'present';
@@ -78,7 +81,7 @@ sub _init {
 	$self->{ $arg } = $config->{ $arg } || '';
     }
 
-    # name of data itemused by view()
+    # name of data item used by view()
     $self->{ item } = $config->{ item } || 'item';
 
     # map methods of form ${include_prefix}_foobar() to include('foobar')?
@@ -92,7 +95,35 @@ sub _init {
     # what about mapping foobar() to view('foobar')?
     $self->{ view_naked  } = $config->{ view_naked  } || 0;
 
+    # the view is initially unsealed, allowing directives in the initial 
+    # view template to create data items via the AUTOLOAD; once sealed via
+    # call to seal(), the AUTOLOAD will not update any internal items.
+    delete @$config{ qw( method map default prefix suffix notfound item 
+			 include_prefix include_naked
+			 view_prefix view_naked blocks ) };
+    $self->{ data   } = $config;
+    $self->{ SEALED } = 0;
+
     return $self;
+}
+
+
+#------------------------------------------------------------------------
+# seal()
+# unseal()
+#
+# Seal or unseal the view to allow/prevent new datat items from being
+# automatically created by the AUTOLOAD method.
+#------------------------------------------------------------------------
+
+sub seal {
+    my $self = shift;
+    $self->{ SEALED } = 1;
+}
+
+sub unseal {
+    my $self = shift;
+    $self->{ SEALED } = 0;
 }
 
 
@@ -103,6 +134,8 @@ sub _init {
 # modifications specified in the $config hash passed as an argument.
 # Configuration items may also be specified as a list of "name => $value"
 # arguments.  Returns a reference to the cloned Template::View object.
+#
+# NOTE: may need to copy BLOCKS???
 #------------------------------------------------------------------------
 
 sub clone {
@@ -120,11 +153,18 @@ sub clone {
     $clone->{ map }->{ default } = $config->{ default }
         if defined $config->{ default };
 
-    # update any remaining args
-    foreach my $arg (qw( prefix suffix notfound item method 
-			 include_prefix view_prefix view_naked )) {
+    # update any remaining config items
+    my @args = qw( prefix suffix notfound item method include_prefix 
+		   include_naked view_prefix view_naked );
+    foreach my $arg (@args) {
 	$clone->{ $arg } = $config->{ $arg } if defined $config->{ $arg };
     }
+    push(@args, qw( default map ));
+    delete @$config{ @args };
+
+    # anything left is data
+    my $data = $clone->{ data } = { %{ $self->{ data } } };
+    @$data{ keys %$config } = values %$config;
 
     return $clone;
 }
@@ -147,7 +187,7 @@ sub clone {
 #------------------------------------------------------------------------
 
 sub print {
-    my $self   = shift;
+    my $self = shift;
 
     # if final config hash is specified then create a clone and delegate to it
     # NOTE: potential problem when called print(\%data_hash1, \%data_hash2);
@@ -230,35 +270,10 @@ sub view {
 sub include {
     my ($self, $template, $vars) = @_;
     my $context = $self->{ _CONTEXT };
-    return $context->throw(Template::Constants::ERROR_VIEW,
-			   "no view template specified")
-	unless $template;
+
+    $template = $self->template($template);
 
     $vars = { } unless ref $vars eq 'HASH';
-
-    my $notfound = $self->{ notfound };
-    my $error;
-
-    # try the named template
-    $template = $self->template_name($template);
-    $self->DEBUG("looking for $template\n") if $DEBUG;
-    eval { $template = $context->template($template) };
-
-    # try the 'notfound' template (if defined) if that failed
-    if (($error = $@) && $notfound) {
-	$notfound = $self->template_name($notfound);
-	$self->DEBUG("not found, looking for $notfound\n") if $DEBUG;
-	eval { $template = $context->template($notfound) };
-
-	return $context->throw(Template::Constants::ERROR_VIEW, $error)
-	    if $@;	# return first error
-    }
-    elsif ($error) {
-	$self->DEBUG("no 'notfound'\n") 
-	    if $DEBUG;
-	return $context->throw(Template::Constants::ERROR_VIEW, $error);
-    }
-
     $vars->{ view } ||= $self;
     $context->include( $template, $vars );
 }
@@ -279,8 +294,11 @@ sub template {
 	unless $template;
 
     my $notfound = $self->{ notfound };
-    my $error;
+    my ($block, $error);
 
+    return $block
+	if ($block = $self->{ _BLOCKS }->{ $template });
+    
     # try the named template
     $template = $self->template_name($template);
     $self->DEBUG("looking for $template\n") if $DEBUG;
@@ -288,12 +306,14 @@ sub template {
 
     # try the 'notfound' template (if defined) if that failed
     if (($error = $@) && $notfound) {
-	$notfound = $self->template_name($notfound);
-	$self->DEBUG("not found, looking for $notfound\n") if $DEBUG;
-	eval { $template = $context->template($notfound) };
+	unless ($template = $self->{ _BLOCKS }->{ $notfound }) {
+	    $notfound = $self->template_name($notfound);
+	    $self->DEBUG("not found, looking for $notfound\n") if $DEBUG;
+	    eval { $template = $context->template($notfound) };
 
-	return $context->throw(Template::Constants::ERROR_VIEW, $error)
-	    if $@;	# return first error
+	    return $context->throw(Template::Constants::ERROR_VIEW, $error)
+		if $@;	# return first error
+	}
     }
     elsif ($error) {
 	$self->DEBUG("no 'notfound'\n") 
@@ -362,8 +382,27 @@ sub AUTOLOAD {
 			    "attempt to view private member: $item");
     }
     elsif (exists $self->{ $item }) {
+	# update existing config item (e.g. 'prefix') if unsealed
+	return $self->{ _CONTEXT }->throw(Template::Constants::ERROR_VIEW,
+			    "cannot update config item in sealed view: $item")
+	    if @_ && $self->{ SEALED };
 	$self->DEBUG("accessing item: $item\n") if $DEBUG;
 	return @_ ? ($self->{ $item } = shift) : $self->{ $item };
+    }
+    elsif (exists $self->{ data }->{ $item }) {
+	# get/update existing data item (must be unsealed to update)
+	return $self->{ _CONTEXT }->throw(Template::Constants::ERROR_VIEW,
+				  "cannot update item in sealed view: $item")
+	    if @_ && $self->{ SEALED };
+	$self->DEBUG(@_ ? "updating data item: $item <= $_[0]\n" 
+		        : "returning data item: $item\n") if $DEBUG;
+	return @_ ? ($self->{ data }->{ $item } = shift) 
+		  :  $self->{ data }->{ $item };
+    }
+    elsif (@_ && ! $self->{ SEALED }) {
+	# set data item if unsealed
+	$self->DEBUG("setting unsealed data: $item => @_\n") if $DEBUG;
+	$self->{ data }->{ $item } = shift;
     }
     elsif ($item =~ s/^$self->{ view_prefix }//) {
 	$self->DEBUG("returning view($item)\n") if $DEBUG;
@@ -371,6 +410,10 @@ sub AUTOLOAD {
     }
     elsif ($item =~ s/^$self->{ include_prefix }//) {
 	$self->DEBUG("returning include($item)\n") if $DEBUG;
+	return $self->include($item, @_);
+    }
+    elsif ($self->{ include_naked }) {
+	$self->DEBUG("returning naked include($item)\n") if $DEBUG;
 	return $self->include($item, @_);
     }
     elsif ($self->{ view_naked }) {
@@ -395,20 +438,53 @@ Template::View - customised view of a template processing context
 
 =head1 SYNOPSIS
 
-    [% USE view( prefix        => 'my_', 
-		 suffix        => '.tt2',
-		 notfound      => 'no_such_file' %]
+    # define a view
+    [% VIEW view
+            # some standard args
+            prefix        => 'my_', 
+	    suffix        => '.tt2',
+	    notfound      => 'no_such_file'
+            ...
 
-    # include template mapped to view prefix, suffix, etc.
+            # any other data
+            title         => 'My View title'
+            other_item    => 'Joe Random Data'
+            ...
+    %]
+       # add new data definitions, via 'my' self reference
+       [% my.author = "$abw.name <$abw.email>" %]
+       [% my.copy   = "&copy; Copyright 2000 $my.author" %]
+
+       # define a local block
+       [% BLOCK header %]
+       This is the header block, title: [% title or my.title %]
+       [% END %]
+
+    [% END %]
+
+    # access data items for view
+    [% view.title %]
+    [% view.other_item %]
+
+    # access blocks directly ('include_naked' option, set by default)
+    [% view.header %]
+    [% view.header(title => 'New Title') %]
+
+    # non-local templates have prefix/suffix attached
+    [% view.footer %]		# => [% INCLUDE my_footer.tt2 %]
+
+    # more verbose form of block access
     [% view.include( 'header', title => 'The Header Title' ) %]
-
-    # shorter form of above
     [% view.include_header( title => 'The Header Title' ) %]
 
     # very short form of above ('include_naked' option, set by default)
     [% view.header( title => 'The Header Title' ) %]
 
+    # non-local templates have prefix/suffix attached
+    [% view.footer %]		# => [% INCLUDE my_footer.tt2 %]
+
     # fallback on the 'notfound' template ('my_no_such_file.tt2')
+    # if template not found 
     [% view.include('missing') %]
     [% view.include_missing %]
     [% view.missing %]
@@ -421,7 +497,7 @@ Template::View - customised view of a template processing context
     [% END %]
 
     # now print() a hash ref, mapped to 'hash' template
-    [% view.print(my_hash_ref) %]     # type=HASH, template='hash'
+    [% view.print(some_hash_ref) %]   # type=HASH, template='hash'
 
     [% BLOCK my_hash.tt2 %]	      # 'hash' with prefix/suffix
        hash keys: [% item.keys.sort.join(', ')

@@ -59,6 +59,8 @@ sub new {
     }
 
     # fold all remaining args into a hash, or use provided hash ref
+#    local $" = ', ';
+#    print STDERR "args: [@_]\n";
     $cfg  = ref $_[0] eq 'HASH' ? shift : { @_ };
 
     my $self = bless {

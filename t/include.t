@@ -245,4 +245,26 @@ recursion count: 3
 -- expect --
 ERROR: file error - nosuchfile: not found
 
+-- test --
+[% INCLUDE src:foo %]
+[% BLOCK src:foo; "This is foo!"; END %]
+-- expect --
+This is foo!
 
+-- test --
+[% a = ''; b = ''; d = ''; e = 0 %]
+[% INCLUDE foo name = a or b or 'c'
+               item = d or e or 'f' -%]
+[% BLOCK foo; "name: $name  item: $item\n"; END %]
+-- expect --
+name: c  item: f
+
+-- test --
+[% style = 'light'; your_title="Hello World" -%]
+[% INCLUDE foo 
+         title = my_title or your_title or default_title
+         bgcol = (style == 'dark' ? '#000000' : '#ffffff') %]
+[% BLOCK foo; "title: $title\nbgcol: $bgcol\n"; END %]
+-- expect --
+title: Hello World
+bgcol: #ffffff

@@ -205,3 +205,10 @@ a: 10
 3
 5
 7
+
+-- test --
+[% TAGS star -%]
+[* a = 10 -*]
+a is [* a *]
+-- expect --
+a is 10

@@ -37,6 +37,25 @@ my $p2 = Template::Parser->new({
     V1DOLLAR  => 1,
 });
 
+# test new/old styles
+my $s1 = $p2->new_style( { TAG_STYLE => 'metatext', PRE_CHOMP => 0, POST_CHOMP => 1 } )
+    || die $p2->error();
+ok( $s1 );
+match( $s1->{ START_TAG  }, '%%' );
+match( $s1->{ PRE_CHOMP  }, '0' );
+match( $s1->{ POST_CHOMP }, '1' );
+
+#print STDERR "style: { ", join(', ', map { "$_ => $s1->{ $_ }" } keys %$s1), " }\n";
+
+my $s2 = $p2->old_style()
+    || die $p2->error();
+ok( $s2 );
+match( $s2->{ START_TAG  }, '\[\*' );
+match( $s2->{ PRE_CHOMP  }, '1' );
+match( $s2->{ POST_CHOMP }, '0' );
+
+#print STDERR "style: { ", join(', ', map { "$_ => $s2->{ $_ }" } keys %$s2), " }\n";
+
 my $p3 = Template::Config->parser({
     TAG_STYLE  => 'html',
     POST_CHOMP => 1,

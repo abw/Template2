@@ -231,6 +231,21 @@ sub args {
     return '[ ' . join(', ', @$args) . ' ]';
 }
 
+#------------------------------------------------------------------------
+# filenames(\@names)
+#------------------------------------------------------------------------
+
+sub filenames {
+    my ($class, $names) = @_;
+    if (@$names > 1) {
+	$names = '[ ' . join(', ', @$names) . ' ]';
+    }
+    else {
+	$names = shift @$names;
+    }
+    return $names;
+}
+
 
 #------------------------------------------------------------------------
 # get($expr)                                                    [% foo %]
@@ -284,26 +299,28 @@ sub default {
 
 
 #------------------------------------------------------------------------
-# insert($file)                                         [% INSERT file %] 
+# insert(\@nameargs)                                    [% INSERT file %] 
+#         # => [ [ $file, ... ], \@args ]
 #------------------------------------------------------------------------
 
 sub insert {
     my ($class, $nameargs) = @_;
     my ($file, $args) = @$nameargs;
+    $file = $class->filenames($file);
     return "$OUTPUT \$context->insert($file);"; 
 }
 
 
-
 #------------------------------------------------------------------------
 # include(\@nameargs)                    [% INCLUDE template foo = bar %] 
-#          # => [ $file, \@args ]    
+#          # => [ [ $file, ... ], \@args ]    
 #------------------------------------------------------------------------
 
 sub include {
     my ($class, $nameargs) = @_;
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
+    $file = $class->filenames($file);
     $file .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
     return "$OUTPUT \$context->include($file);"; 
 }
@@ -311,13 +328,14 @@ sub include {
 
 #------------------------------------------------------------------------
 # process(\@nameargs)                    [% PROCESS template foo = bar %] 
-#         # => [ $file, \@args ]
+#         # => [ [ $file, ... ], \@args ]
 #------------------------------------------------------------------------
 
 sub process {
     my ($class, $nameargs) = @_;
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
+    $file = $class->filenames($file);
     $file .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
     return "$OUTPUT \$context->process($file);"; 
 }
@@ -426,7 +444,7 @@ EOF
 
 #------------------------------------------------------------------------
 # wrapper(\@nameargs, $block)            [% WRAPPER template foo = bar %] 
-#          # => [ $file, \@args ]    
+#          # => [ [$file,...], \@args ]    
 #------------------------------------------------------------------------
 
 sub wrapper {
@@ -434,11 +452,16 @@ sub wrapper {
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
 
+    local $" = ', ';
+#    print STDERR "wrapper([@$file], { @$hash })\n";
+
+    return $class->multi_wrapper($file, $hash, $block)
+	if @$file > 1;
+    $file = shift @$file;
+
     $block = pad($block, 1) if $PRETTY;
-#    push(@$hash, "'content'", '$content');
     push(@$hash, "'content'", '$output');
     $file .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
-
 
     return <<EOF;
 
@@ -447,6 +470,31 @@ $OUTPUT do {
     my \$output = '';
 $block
     \$context->include($file); 
+};
+EOF
+}
+
+
+sub multi_wrapper {
+    my ($class, $file, $hash, $block) = @_;
+    $block = pad($block, 1) if $PRETTY;
+
+    push(@$hash, "'content'", '$output');
+    $hash = @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
+
+    $file = join(', ', reverse @$file);
+#    print STDERR "multi wrapper: $file\n";
+
+    return <<EOF;
+
+# WRAPPER
+$OUTPUT do {
+    my \$output = '';
+$block
+    foreach ($file) {
+	\$output = \$context->include(\$_$hash); 
+    }
+    \$output;
 };
 EOF
 }
@@ -597,7 +645,7 @@ EOF
 
 #------------------------------------------------------------------------
 # throw(\@nameargs)                           [% THROW foo "bar error" %]
-#       # => [ $type, \@args ]
+#       # => [ [$type], \@args ]
 #------------------------------------------------------------------------
 
 sub throw {
@@ -605,6 +653,9 @@ sub throw {
     my ($type, $args) = @$nameargs;
     my $hash = shift(@$args);
     my $info = shift(@$args);
+    $type = shift @$type;	    # uses same parser production as INCLUDE
+				    # etc., which allow multiple names
+				    # e.g. INCLUDE foo+bar+baz
 
     if (! $info) {
 	$args = "$type, undef";
@@ -667,19 +718,59 @@ sub stop {
 
 #------------------------------------------------------------------------
 # use(\@lnameargs)                         [% USE alias = plugin(args) %]
-#     # => [ $file, \@args, $alias ]
+#     # => [ [$file, ...], \@args, $alias ]
 #------------------------------------------------------------------------
 
 sub use {
     my ($class, $lnameargs) = @_;
     my ($file, $args, $alias) = @$lnameargs;
+    $file = shift @$file;	# same production rule as INCLUDE
     $alias ||= $file;
     $args = &args($class, $args);
     $file .= ", $args" if $args;
-    my $set = &assign($class, $alias, '$plugin'); 
+#    my $set = &assign($class, $alias, '$plugin'); 
     return "# USE\n"
 	 . "\$stash->set($alias,\n"
          . "            \$context->plugin($file));";
+}
+
+#------------------------------------------------------------------------
+# view(\@nameargs, $block)                           [% VIEW name args %]
+#     # => [ [$file, ... ], \@args ]
+#------------------------------------------------------------------------
+
+sub view {
+    my ($class, $nameargs, $block, $defblocks) = @_;
+    my ($name, $args) = @$nameargs;
+    my $hash = shift @$args;
+    $name = shift @$name;	# same production rule as INCLUDE
+    $block = pad($block, 1) if $PRETTY;
+
+    if (%$defblocks) {
+	$defblocks = join(",\n", map { "'$_' => $defblocks->{ $_ }" }
+				keys %$defblocks);
+	$defblocks = pad($defblocks, 1) if $PRETTY;
+	$defblocks = "{\n$defblocks\n}";
+	push(@$hash, "'blocks'", $defblocks);
+    }
+    $hash = @$hash ? '{ ' . join(', ', @$hash) . ' }' : '';
+
+    return <<EOF;
+# VIEW
+do {
+    my \$output = '';
+    my \$oldv = \$stash->get('view');
+    my \$view = \$context->view($hash);
+    \$stash->set($name, \$view);
+    \$stash->set('view', \$view);
+
+$block
+
+    \$stash->set('view', \$oldv);
+    \$view->seal();
+    \$output;
+};
+EOF
 }
 
 
@@ -760,6 +851,7 @@ EOF
 sub filter {
     my ($class, $lnameargs, $block) = @_;
     my ($name, $args, $alias) = @$lnameargs;
+    $name = shift @$name;
     $args = &args($class, $args);
     $args = $args ? "$args, $alias" : ", undef, $alias"
 	if $alias;

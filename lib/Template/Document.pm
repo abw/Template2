@@ -163,6 +163,8 @@ sub AUTOLOAD {
 
     $method =~ s/.*:://;
     return if $method eq 'DESTROY';
+#    my ($pkg, $file, $line) = caller();
+#    print STDERR "called $self->AUTOLOAD($method) from $file line $line\n";
     return $self->{ $method };
 }
 

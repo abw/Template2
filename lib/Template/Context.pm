@@ -76,7 +76,8 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 sub template {
     my ($self, $name) = @_;
-    my ($blocks, $defblocks, $provider, $template, $error);
+    my ($prefix, $blocks, $defblocks, $provider, $template, $error);
+    my $providers;
 
     # references to Template::Document (or sub-class) objects objects, or
     # CODE references are assumed to be pre-compiled templates and are
@@ -91,18 +92,29 @@ sub template {
 	return $template
 	    if ($template = $self->{ BLOCKS }->{ $name });
 
-	# the we iterate through the BLKSTACK list to see if any of the
+	# then we iterate through the BLKSTACK list to see if any of the
 	# Template::Documents we're visiting define this BLOCK
 	foreach $blocks (@{ $self->{ BLKSTACK } }) {
 	    return $template
 		if $blocks && ($template = $blocks->{ $name });
 	}
+
+	# now it's time to ask the providers, so we look to see if any 
+	# prefix is specified to indicate the desired provider set.
+	if ($name =~ s/^(\w+)://o) {
+	    $providers = $self->{ PREFIX_MAP }->{ $1 } 
+		|| return $self->throw(Template::Constants::ERROR_FILE,
+				      "no providers for template prefix '$1'");
+#	    print STDERR "prefix identified: $1\n";
+	}
     }
+    $providers = $self->{ LOAD_TEMPLATES } 
+        unless $providers;
 
     # finally we try the regular template providers which will 
     # handle references to files, text, etc., as well as templates
     # reference by name
-    foreach my $provider (@{ $self->{ LOAD_TEMPLATES } }) {
+    foreach my $provider (@$providers) {
 	($template, $error) = $provider->fetch($name);
 	return $template unless $error;
 #	return $self->error($template)
@@ -224,43 +236,56 @@ sub view {
 
 sub process {
     my ($self, $template, $params) = @_;
-    my ($blocks, $output);
-    my $name = $template;
+    my ($trim, $blocks) = @$self{ qw( TRIM BLOCKS ) };
+    my (@compiled, $name, $compiled);
+    my ($stash, $tblocks, $error, $tmpout);
+    my $output = '';
 
-    # request compiled template from cache 
-    $template = $self->template($template);
-#	|| die Template::Exception->new(&Template::Constants::ERROR_FILE, 
-#				$self->{ _ERROR } || "$template: not found");
+#    my ($blocks, $output);
+#    my $name = $template;
 
-    # merge any local blocks defined in the Template::Document into our
-    # local BLOCKS cache
-    @{ $self->{ BLOCKS } }{ keys %$blocks } = values %$blocks
-	if UNIVERSAL::isa($template, 'Template::Document')
-	    && ($blocks = $template->blocks);
+    $template = [ $template ] unless ref $template eq 'ARRAY';
+
+    # fetch compiled template for each name specified
+    foreach $name (@$template) {
+	push(@compiled, $self->template($name));
+    }
 
     # update stash with any new parameters passed
-    $params ||= { };
-    $params->{ component } = ref $template eq 'CODE' 
-	? { ref $name ? () : ( name => $name, modtime => time() ) }
-        : $template;
     $self->{ STASH }->update($params);
-#	if $params;
-    
-    if (ref $template eq 'CODE') {
-	$output = &$template($self);
-    }
-    elsif (ref $template) {
-	$output = $template->process($self);
-    }
-    else {
-	die "invalid template reference: $template\n";
-    }
+    $stash = $self->{ STASH };
 
-    if ($self->{ TRIM }) {
-	for ($output) {
-	    s/^\s+//;
-	    s/\s+$//;
+    foreach $name (@$template) {
+	$compiled = shift @compiled;
+	my $element = ref $compiled eq 'CODE' 
+	    ? { (name => (ref $name ? () : $name), modtime => time()) }
+	: $compiled;
+	$stash->set('component', $element);
+	
+	# merge any local blocks defined in the Template::Document into our
+	# local BLOCKS cache
+	@$blocks{ keys %$tblocks } = values %$tblocks
+	    if UNIVERSAL::isa($compiled, 'Template::Document')
+		&& ($tblocks = $compiled->blocks());
+	
+	if (ref $compiled eq 'CODE') {
+	    $tmpout = &$compiled($self);
 	}
+	elsif (ref $compiled) {
+	    $tmpout = $compiled->process($self);
+	}
+	else {
+	    $self->throw('file', 
+			 "invalid template reference: $compiled");
+	}
+	
+	if ($trim) {
+	    for ($tmpout) {
+		s/^\s+//;
+		s/\s+$//;
+	    }
+	}
+	$output .= $tmpout;
     }
     
     return $output;
@@ -282,6 +307,61 @@ sub process {
 #------------------------------------------------------------------------
 
 sub include {
+    my ($self, $template, $params) = @_;
+    my $trim = $self->{ TRIM };
+    my (@compiled, $name, $compiled);
+    my ($stash, $error, $tmpout);
+    my $output = '';
+
+    $template = [ $template ] unless ref $template eq 'ARRAY';
+
+    # fetch compiled template for each name specified
+    foreach $name (@$template) {
+	push(@compiled, $self->template($name));
+    }
+
+    # localise the variable stash with any parameters passed
+    $stash = $self->{ STASH } = $self->{ STASH }->clone($params);
+
+    eval {
+	foreach $name (@$template) {
+	    $compiled = shift @compiled;
+	    my $element = ref $compiled eq 'CODE' 
+		? { (name => (ref $name ? '' : $name), modtime => time()) }
+		: $compiled;
+	    $stash->set('component', $element);
+
+	    if (ref $compiled eq 'CODE') {
+		$tmpout = &$compiled($self);
+	    }
+	    elsif (ref $compiled) {
+		$tmpout = $compiled->process($self);
+	    }
+	    else {
+		$self->throw('file', 
+			     "invalid template reference: $compiled");
+	    }
+
+	    if ($trim) {
+		for ($tmpout) {
+		    s/^\s+//;
+		    s/\s+$//;
+		}
+	    }
+	    $output .= $tmpout;
+	}
+    };
+    $error = $@;
+    # ensure stash is delocalised before dying
+    $self->{ STASH } = $self->{ STASH }->declone();
+    $self->throw(ref $error 
+		 ? $error : (Template::Constants::ERROR_FILE, $error))
+	if $error;
+					
+    return $output;
+}
+
+sub old_include {
     my ($self, $template, $params) = @_;
     my ($error, $blocks);
     my $output = '';
@@ -335,19 +415,37 @@ sub include {
 
 sub insert {
     my ($self, $file) = @_;
-    my ($text, $error);
+    my ($providers, $text, $error);
+    my $output = '';
 
-    foreach my $provider (@{ $self->{ LOAD_TEMPLATES } }) {
-	($text, $error) = $provider->load($file);
-	return $text unless $error;
-	if ($error == Template::Constants::STATUS_ERROR) {
-	    $self->throw($text) if ref $text;
-	    $self->throw(Template::Constants::ERROR_FILE, $text);
+    my $files = ref $file eq 'ARRAY' ? $file : [ $file ];
+
+    FILE: foreach $file (@$files) {
+	if ($file =~ s/^(\w+)://o) {
+	    $providers = $self->{ PREFIX_MAP }->{ $1 } 
+		|| return $self->throw(Template::Constants::ERROR_FILE,
+				      "no providers for file prefix '$1'");
 	}
-    }
+	else {
+	    $providers = $self->{ LOAD_TEMPLATES };
+	}
 
-    $self->throw(Template::Constants::ERROR_FILE, "$file: not found");
+	foreach my $provider (@$providers) {
+	    ($text, $error) = $provider->load($file);
+	    next FILE unless $error;
+	    if ($error == Template::Constants::STATUS_ERROR) {
+		$self->throw($text) if ref $text;
+		$self->throw(Template::Constants::ERROR_FILE, $text);
+	    }
+	}
+	$self->throw(Template::Constants::ERROR_FILE, "$file: not found");
+    }
+    continue {
+	$output .= $text;
+    }
+    return $output;
 }
+
 
 #------------------------------------------------------------------------
 # throw($type, $info, \$output)          [% THROW errtype "Error info" %]
@@ -623,6 +721,15 @@ sub _init {
 	$self->{ $name } = ref $item eq 'ARRAY' ? $item : [ $item ];
     }
 
+    my $providers  = $self->{ LOAD_TEMPLATES };
+    my $prefix_map = $self->{ PREFIX_MAP } = $config->{ PREFIX_MAP } || { };
+    while (my ($key, $val) = each %$prefix_map) {
+	$prefix_map->{ $key } = [ map { $providers->[$_] } split(/\D+/, $val) ]
+	    unless ref $val eq 'ARRAY';
+#	print(STDERR "prefix $key => $val => [", 
+#	      join(', ', @{ $prefix_map->{ $key } }), "]\n");
+    }
+
     # STASH
     $self->{ STASH } = $config->{ STASH } || do {
       	my $predefs  = $config->{ VARIABLES } 
@@ -651,12 +758,14 @@ sub _init {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # RECURSION - flag indicating is recursion into templates is supported
     # EVAL_PERL - flag indicating if PERL blocks should be processed
+#    # DELIMITER - used to detect template prefixes
     # TRIM      - flag to remove leading and trailing whitespace from output
     # BLKSTACK  - list of hashes of BLOCKs defined in current template(s)
     # CONFIG    - original configuration hash
 
     $self->{ RECURSION } = $config->{ RECURSION } || 0;
     $self->{ EVAL_PERL } = $config->{ EVAL_PERL } || 0;
+#    $self->{ DELIMITER } = $config->{ DELIMITER } || ':';
     $self->{ TRIM      } = $config->{ TRIM } || 0;
     $self->{ BLKSTACK  } = [ ];
     $self->{ CONFIG    } = $config;
