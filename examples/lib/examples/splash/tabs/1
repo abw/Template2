@@ -1,4 +1,0 @@
-[% INCLUDE splash/tab
-    content = 'Hello World'
-%]
-

@@ -1,8 +1,0 @@
-[% buttons = [
-    { link => 'buttons.html', text => 'Buttons' }
-    { link => 'menus.html',   text => 'Menus'   }
-    { link => 'tabs.html',    text => 'Tabs'    }
-   ]
-%]
-
-[% PROCESS splash/menu %]

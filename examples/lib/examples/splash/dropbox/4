@@ -1,7 +1,7 @@
 [% WRAPPER splash/dropbox 
       title = "Home Workshop"
       width = '50%'
-      bar   = 'lilac'
+      col   = 'scarlet'
       edge  = 'grey75'
       fill  = 'grey75'
       pad   = 10

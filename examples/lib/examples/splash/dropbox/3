@@ -1,10 +1,12 @@
+[% title = INCLUDE splash/text
+                   style   = splash.style.select
+                   content = "Carnival"
+%]
+
 [% WRAPPER splash/dropbox 
-     title  = "Carnival"
-     select = 1
-#     bar    = 'mauve'
-#     edge   = 'purple'
-     width  = "50%"
-     pad    = 10
+     style = splash.style.select
+     width = "50%"
+     pad   = 10
 %]
 
 <h3>Carnival</h3>

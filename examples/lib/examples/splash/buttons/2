@@ -1,8 +1,0 @@
-[% WRAPPER splash/button 
-    width   = '100%' 
-    col     = 'marine'
-    textcol = 'white'
-%]
-Choosing a Language for your Project
-[% END %]
-
