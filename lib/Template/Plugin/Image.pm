@@ -43,7 +43,12 @@ BEGIN {
             my @stuff = Image::Size::imgsize($file);
             return { "width"  => $stuff[0],
                      "height" => $stuff[1],
-                     "error"  => $stuff[2]
+                     "error"  =>
+                        # imgsize returns either a three letter file type
+                        # or an error message as third value
+                        (defined($stuff[2]) && length($stuff[2]) > 3
+                            ? $stuff[2]
+                            : undef),
                    };
         }
     }
