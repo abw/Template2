@@ -1933,6 +1933,30 @@ The TAGS directive may also be used to set a named TAG_STYLE
 See the TAGS and TAG_STYLE configuration options for further details.
 </p>
 
+<li><b>DEBUG</b><br>
+<p>
+The DEBUG directive can be used to control debugging options within a template.
+The DEBUG configuration option must be set to a true value for the DEBUG 
+directives to have any effect.  If DEBUG is set false then the parser will
+automatically ignore and remove any DEBUG directives.
+</p>
+<p>
+The DEBUG directive can be used with an 'on' or 'off' parameter to enable
+or disable directive debugging messages from that point forward.  When enabled,
+the output of each directive in the generated output will be prefixed by a comment
+indicate the file, line and original directive text.
+</p>
+<pre>    [% tt_start_tag %] DEBUG on [% tt_end_tag %]
+    directive debugging is on (assuming DEBUG option is set true)
+    [% tt_start_tag %] DEBUG off [% tt_end_tag %]
+    directive debugging is off</pre>
+<p>
+The 'format' parameter can be used to change the format of the debugging
+message.
+</p>
+<pre>    [% tt_start_tag %] DEBUG format '&lt;!-- $file line $line : [% tt_start_tag %] $text [% tt_end_tag %] --&gt;' [% tt_end_tag %]</pre>
+<pre>    </pre>
+
 </ul>
 [%- END %]
 [%- END %]

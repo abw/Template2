@@ -44,7 +44,7 @@ This template fragment would generate the following output:
 
     ## input text line 1 : [% foo = 'World' %] ##
     Hello World
-      
+
 It is anticipated that a future version of the Template Toolkit will
 support allow the different debugging options to be enabled or
 disabled individually.
