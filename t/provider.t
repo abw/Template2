@@ -73,20 +73,26 @@ my $parser = $factory->parser(POST_CHOMP => 1)
     || die $factory->error();
 ok( $parser );
 
-my $provinc = $factory->provider(INCLUDE_PATH => $dir, PARSER => $parser)
+my $provinc = $factory->provider(INCLUDE_PATH => $dir, 
+				 PARSER => $parser,
+				 TOLERANT => 1)
     || die $factory->error();
 ok( $provinc );
 
-my $provabs = $factory->provider({ ABSOLUTE => 1, PARSER => $parser })
+my $provabs = $factory->provider({ ABSOLUTE => 1, 
+				   PARSER => $parser, })
     || die $factory->error();
 ok( $provabs );
 
-my $provrel = Template::Provider->new({ RELATIVE => 1, PARSER => $parser })
+my $provrel = Template::Provider->new({ RELATIVE => 1, 
+					PARSER => $parser, })
     || die $Template::Provider::ERROR;
 ok( $provrel );
 
 ok( $provinc->{ PARSER } == $provabs->{ PARSER } );
 ok( $provabs->{ PARSER } == $provrel->{ PARSER } );
+
+banner('matrix');
 
 ok( delivered( $provinc, $file    ) );
 ok(  declined( $provinc, $absfile ) );
@@ -94,10 +100,10 @@ ok(  declined( $provinc, $relfile ) );
 
 ok(  declined( $provabs, $file    ) );
 ok( delivered( $provabs, $absfile ) );
-ok(  declined( $provabs, $relfile ) );
+ok(    denied( $provabs, $relfile ) );
 
 ok(  declined( $provrel, $file    ) );
-ok(  declined( $provrel, $absfile ) );
+ok(    denied( $provrel, $absfile ) );
 ok( delivered( $provrel, $relfile ) );
 
 
@@ -115,6 +121,14 @@ sub declined {
     print STDERR "$provider->fetch($file) -> [$result] [$error]\n"
 	if $DEBUG;
     return ($error == Template::Constants::STATUS_DECLINED);
+}
+
+sub denied {
+    my ($provider, $file) = @_;
+    my ($result, $error) = $provider->fetch($file);
+    print STDERR "$provider->fetch($file) -> [$result] [$error]\n"
+	if $DEBUG;
+    return ($error == Template::Constants::STATUS_ERROR);
 }
 
 #------------------------------------------------------------------------
@@ -187,7 +201,7 @@ Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
 This is the foo file, a is 
-Error: file - not found
+Error: file - absolute paths are not allowed (set ABSOLUTE option)
 
 #------------------------------------------------------------------------
 
@@ -212,7 +226,7 @@ Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
 This is the foo file, a is 
-Error: file - not found
+Error: file - relative paths are not allowed (set RELATIVE option)
 
 
 #------------------------------------------------------------------------
@@ -230,6 +244,10 @@ This is the old content
 [% INCLUDE foobar %]
 -- expect --
 This is the new content
+
+
+
+
 
 
 

@@ -39,28 +39,17 @@ switch.t        SWITCH / CASE directives
 plugins.t       Template::Plugins provider module
 template.t      Template module
 try.t           TRY / THROW / CATCH / FINAL directives
-
-
-NOTE: this is an older list.  Bit of a mess, don't trust anything here.
-
-merged literal.t into vars.t
-split vars.t into vars.t and varsv1.t (VERSION 1 compatibility) - OK
-added base.t to test Template::Base - OK
-chomp.t, postchomp.t and prechomp.t - OK
-binop.t - OK
-call.t - OK
-code.t - OK (includes some TRAPpage)
-filter.t - OK
+chomp.t         (merge chomp.t, prechomp.t and postchomp.t)
+code.t          binding code to variables (or covered in vars.t?)
+dom.t           copy from v1
+rss.t           copy from v1
 
 literal :     'foo' = bar
 directive + multi + comment + block -> directives
-get + set + default + call + vars + global + interp
-
+interpolate options
 break into while/foreach/if, etc.
-
-cache -> general cache/provider tests
-
-catch into trap
+comments
+named params with object.t and code.t
 
 format => plugins
 -------------------------------
@@ -133,15 +122,4 @@ fix    url
 ok     vars          merge of many tests
 ok     varsv1        ditto for VERSION => 1 compatability
 fix    while         mainly ok, but broken due to (a = b) not working
-
-TODO
-----
-* extract throwing subs from code.t and use in try/throw/catch/trap/etc.
-
---- directives ---
-[% sole %]
-[% many %] [% more %]
-[% start %] text
-text [% middle %] text
-text [% end %]
 

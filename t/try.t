@@ -51,22 +51,20 @@ after try
 
 -- test --
 [% META 
-   copyrights = '2000, Andy Wardley'
+   copyright = '2000, Andy Wardley'
 %]
-
 [% template.copyright or '2000, Big Corporation Networks Conglomerate, Inc' %]
 
 -- expect --
+2000, Andy Wardley
 
-
--- start --
 -- test --
 [% user = {
     name => 'andy'
     id   => 'abw'
     }
 %]
-
 [% user.name %]
-
+-- expect --
+andy
 

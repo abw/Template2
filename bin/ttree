@@ -85,9 +85,10 @@ my %ucttopts;
 # now create complete parameter hash for creating template processor
 my $ttopts   = {
     %ucttopts,
+    RELATIVE     => 1,
     INCLUDE_PATH => [ @$libdir, '.' ],
     OUTPUT_PATH  => $destdir,
-    ERROR        => \&error,
+#    ERROR        => \&error,
 };
 
 my $ttdata = {
@@ -326,6 +327,7 @@ sub read_config {
 	'template_interpolate|interpolate',
 	'template_pre_chomp|pre_chomp|prechomp',
 	'template_post_chomp|post_chomp|postchomp',
+	'template_trim|trim',
         'template_pre_process|pre_process|preprocess=s',
         'template_post_process|post_process|postprocess=s',
         'template_start_tag|start_tag|starttag=s',
@@ -487,6 +489,7 @@ Additional options to set Template Toolkit configuration items:
    --load_perl              Load regular Perl modules via USE directive
    --pre_chomp              Chomp leading whitespace 
    --post_chomp             Chomp trailing whitespace
+   --trim                   Trim blank lines around template blocks
    --pre_process=TEMPLATE   Use TEMPLATE as header
    --post_process=TEMPLATE  Use TEMPLATE as footer
    --start_tag=STRING       STRING defines start of directive tag

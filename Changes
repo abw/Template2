@@ -29,3 +29,12 @@ This list isn't complete - it's more of a reminder to me at the moment.
 
 * note that parser is not loaded at startup time.
 
+
+
+
+
+changes from alpha to beta
+--------------------------
+
+* fixed bug in Context filter() provider method which wasn't caching 
+  filters with args.

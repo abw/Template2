@@ -22,25 +22,10 @@ use Template::Test;
 use Template::Service;
 use Template::Document;
 
-#$Template::Service::DEBUG = 1;
-#$Template::Parser::DEBUG = 1;
-
-$^W = 1;
-
-sub demo {
-    my $context = shift;
-    my $stash   = $context->stash;
-    my $rval    = $stash->get('r') || $context->throw("No value for 'r'");
-#    die "total spasm\n";
-    return "r is set to $rval\n";
-}
-
-#my $demo = Template::Document->new(\&demo);
-
 my $tt = Template->new({
     INCLUDE_PATH => [ qw( t/test/lib test/lib t/test/src test/src) ],	
-    PRE_PROCESS  => 'config header',
-    POST_PROCESS => 'footer',
+#    PRE_PROCESS  => 'header',
+#    POST_PROCESS => 'footer',
     BLOCKS       => { demo => \&demo },
     ERROR        => {
 	'barf'    => 'barfed',
@@ -48,11 +33,11 @@ my $tt = Template->new({
     },
 });
 
-my $service = $tt->service;
-my $data = &callsign;
-#$data->{ r } = sub { die Template::Exception->new('zak', "blown up\n") };
-$data->{ title } = 'This is the TITLE';
+test_expect(\*DATA, $tt);
 
-print $service->process('tryme', $data)
-    || "SERVICE ERROR: " . $service->error(), "\n";
+__END__
+-- test --
+foo
+-- expect --
+foo
 

@@ -1,5 +1,12 @@
-use ExtUtils::MakeMaker;
+use ExtUtils::MakeMaker;				    # -*-perl-*-
 
+my $man3pods = {
+    map { ("docs/pod/$_.pod" => "\$(INST_MAN3DIR)/Template::$_.\$(MAN3EXT)") }
+    qw( Base Config Constants Context Document Exception Filters 
+	Iterator Parser Plugin Plugins Provider Service Stash 
+	Test Utils )
+};
+$man3pods->{'docs/pod/Template.pod'} = '$(INST_MAN3DIR)/Template.$(MAN3EXT)';
 
 WriteMakefile(
     'NAME'	   => 'Template',
@@ -8,6 +15,7 @@ WriteMakefile(
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
     'PMLIBDIRS'    => [ 'lib' ], 
     'PREREQ_PM'    => { 'AppConfig' => 1.52 },
+    'MAN3PODS'	   => $man3pods,
     'dist'         => {
 	'COMPRESS' => 'gzip',
 	'SUFFIX'   => 'gz',
@@ -18,12 +26,9 @@ WriteMakefile(
 sub build_docs {
     return <<EOF;
 echo "Building documentation for version \$(VERSION)" ;           \\
-\$(RM_F) lib/Template.pod lib/Template/Tutorial.pod ;             \\
-\$(PERL) doc/bin/mkdoc README.pod | pod2text > README ;           \\
-\$(PERL) doc/bin/mkdoc Template.pod > lib/Template.pod ;          \\
-\$(PERL) doc/bin/mkdoc Tutorial.pod > lib/Template/Tutorial.pod ; \\
-\$(CHMOD) 444 lib/Template.pod;                                   \\
-\$(CHMOD) 444 lib/Template/Tutorial.pod                           \\
+\$(CHMOD) 644 docs/pod/*.pod;                                     \\
+\$(PERL) bin/ttree -f ./docs/ttree.cfg -a;                        \\
+\$(CHMOD) 444 docs/pod/*.pod;                                     \\
 EOF
 }
 

@@ -25,7 +25,7 @@ $^W = 1;
 #$Template::Parser::DEBUG = 0;
 
 my $config = {
-    INTERPOLATE => 0,
+    INTERPOLATE => 1,
 };
 
 my $vars = {
@@ -42,5 +42,7 @@ __DATA__
 
 -- expect --
 alpha at bravo @ charlie
+
+
 
 

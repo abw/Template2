@@ -21,7 +21,6 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
-$Template::Plugins::DEBUG = 0;
 
 my $params = { 
     alphabet => [ 'a'..'z' ],

@@ -1,3 +1,18 @@
+* Fix Plugin.pm
+
+* Change ttree to have knowledge of new config options
+
+* Improve tpage to do the same
+
+* A COMPILE_DIR option to compliment COMPILE_EXT, specifying an alternate
+  directory in which to store compiled template documents.
+
+* Change filter factory interface to accept $context as first parameter?
+
+* Do something (i.e. mail Lincoln) about the CGI special case in
+  Template::Stash to work around the problem of CGI objects disclaiming
+  membership of the UNVIERSAL class after the first method call.
+
 * Change docs/examples to uniformly name the template variable hash as
   '$replace'.
 
@@ -64,7 +79,8 @@
 
 * fixed if/elsif generation
 
-* optimised FOREACH to only use an iterator if already so
+* optimised FOREACH to only use an iterator if already so ( but note that
+  this got changed again later)
 
 * cleaned up Template::Iterator.  Now derived from Template::Base.
   Removed ACTION and ORDER now that they are supported as list pseudo
@@ -81,5 +97,6 @@
 * Added cache persistance.  Had to re-organise a bunch of code around the 
   parser/provider/document.  Activated by COMPILE_EXT configuration item.
 
-
+* Added a work-around in Template::Stash to the problem of CGI disclaiming
+  membership of the UNIVERSAL class after the first method call.
 

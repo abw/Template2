@@ -97,7 +97,7 @@ sub fetch {
 	    ? $self->_fetch($name) 
 	    : $self->{ TOLERANT } 
 		? (undef, Template::Constants::STATUS_DECLINED)
-		: ("absolute paths are not allowed (set ABSOLUTE option): $name",
+		: ("$name: absolute paths are not allowed (set ABSOLUTE option)",
 		   Template::Constants::STATUS_ERROR);
     }
     elsif ($name =~ m[^\.+/]) {
@@ -106,7 +106,7 @@ sub fetch {
 	    ? $self->_fetch($name) 
 	    : $self->{ TOLERANT } 
 		? (undef, Template::Constants::STATUS_DECLINED)
-		: ("relative paths are not allowed (set RELATIVE option): $name",
+		: ("$name: relative paths are not allowed (set RELATIVE option)",
 		   Template::Constants::STATUS_ERROR);
     }
     else {

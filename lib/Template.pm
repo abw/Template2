@@ -31,10 +31,10 @@ use strict;
 use vars qw( $VERSION $AUTOLOAD $ERROR $DEBUG );
 use Template::Base;
 use Template::Config;
-#use Template::Parser;    # autoloaded on demand
-#use Template::Provider;  
-#use Template::Service;
+use Template::Provider;  
+use Template::Service;
 use Template::Utils;
+#use Template::Parser;    # autoloaded on demand
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
@@ -43,21 +43,26 @@ $ERROR       = '';
 $DEBUG       = 0;
 
 
-#TODO
+#------------------------------------------------------------------------
+# process($input, \%replace, $output)
+#
+# Main entry point for the Template Toolkit.  The Template module 
+# delegates most of the processing effort to the underlying SERVICE
+# object, an instance of the Template::Service class.  
+#------------------------------------------------------------------------
 
 sub process {
     my ($self, $template, $vars, $outstream) = @_;
-    my $error;
-    my $output = $self->{ SERVICE }->process($template, $vars);
+    my ($output, $error);
+
+    $output = $self->{ SERVICE }->process($template, $vars);
     
     if (defined $output) {
 	$outstream ||= $self->{ OUTPUT };
 	unless (ref $outstream) {
 	    my $outpath = $self->{ OUTPUT_PATH };
 	    $outstream = "$outpath/$outstream" if $outpath;
-	    print "output to $outstream\n[$output]\n";
-	}
-	
+	}	
 
 	# send processed template to output stream, checking for error
 	return ($self->error($error))
@@ -81,6 +86,19 @@ sub process {
 sub service {
     my $self = shift;
     return $self->{ SERVICE };
+}
+
+
+#------------------------------------------------------------------------
+# context()
+#
+# Returns a reference to the the CONTEXT object withint the SERVICE 
+# object.
+#------------------------------------------------------------------------
+
+sub context {
+    my $self = shift;
+    return $self->{ SERVICE }->{ CONTEXT };
 }
 
 
@@ -347,6 +365,11 @@ The Template module delegates most of the effort of processing templates
 to an underlying Template::Service object.  This method returns a reference
 to that object.
 
+=head2 context()
+
+The Template::Service module uses a core Template::Context object for
+runtime processing of templates.  This method returns a reference to 
+that object and is equivalent to $template->service->context();
 
 =head1 CONFIGURATION ITEMS
 

@@ -1,0 +1,13 @@
+\bCVS\b
+^MANIFEST\.
+^Makefile$
+~$
+\.old$
+\.ttc$
+^blib/
+^pm_to_blib$
+^parser/Parser\.output
+^docs/design/
+^docs/tpj/
+^docs/pod/.*\.pod$
+^t/test/tmp/

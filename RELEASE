@@ -32,8 +32,13 @@ CHECK: use lib qw( ./lib, ../lib )
        email, copyright, dates
 
 t/base.t                 OK, but could do with more tests?
+t/binop.t                OK
 t/block.t                OK
 t/capture.t              OK
+t/cgi.t                  OK
+t/compile1.t             OK
+t/compile2.t             OK
+t/compile3.t             OK
 t/config.t               OK
 t/document.t             OK
 t/exception.t            OK
@@ -43,7 +48,6 @@ t/iterator.t             OK
 t/table.t                OK
 t/url.t                  OK
 t/format.t               OK
-t/cgi.t                  broken (isa problem)
 
 
 TODO
