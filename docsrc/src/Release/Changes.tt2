@@ -31,6 +31,9 @@
   when copying files.
   http://template-toolkit.org/pipermail/templates/2004-March/005897.html
 
+* Commented out line 797 of Template::Directive.pm which serves no 
+  purpose and generates a warning.
+
 
 #------------------------------------------------------------------------
 # Version 2.13 - 30th January 2004
