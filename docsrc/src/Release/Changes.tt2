@@ -23,6 +23,21 @@
 # $Id$
 #========================================================================
 
+#------------------------------------------------------------------------
+# Version 2.12a - 13th January 2004               ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Tried once again to fix the bug in t/date.t.  It would be *really* nice
+  if someone who has previously seen this problem could test this version
+  and confirm that it is fixed *before* I do the next major release.  
+  After all, that's what developer releases (like 2.11a and 2.12b) are 
+  supposed to be for....
+
+* Added the FILE_INFO option to Template::Parser.  Enabled by default, 
+  this can be set to 0 to prevent the parser from adding file and line
+  info to the generated Perl file.  Don't ask me why - Autrijus wanted
+  it (which probably means he's up to something twisted again :-)
+
 
 #------------------------------------------------------------------------
 # Version 2.12 - 12th January 2004
@@ -48,7 +63,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.11a - 6th Januray 2004                ## DEVELOPER RELEASE ##
+# Version 2.11a - 6th January 2004                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed bug in t/date.t and corrected version number of 
@@ -56,7 +71,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.11 - 6th Januray 2004           
+# Version 2.11 - 6th January 2004           
 #------------------------------------------------------------------------
 
 * Bumped version number and updated documentation for release.
