@@ -50,6 +50,10 @@ Something to do with refraction.
 <p>
 Because the parser interprets it as [% tt_start_tag %] a = (b IF c) [% tt_end_tag %].
 </p>
+<p>
+Do this instead:
+</p>
+<pre>    [% tt_start_tag %] SET a = b IF c [% tt_end_tag %]</pre>
 
 
 </ul>

@@ -215,7 +215,7 @@
   line, and doesn't explicitly test under mod_perl...)
 
 * Applied a patch from Axel Gerstmair to fix a bug in PERL blocks
-  and fitlers which caused references to the context and stash to be
+  and filters which caused references to the context and stash to be
   kept in global package variables.  This meant they stayed alive for
   far too long.  Added a couple of tests to t/leak.t to check this now 
   works OK.

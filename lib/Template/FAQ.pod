@@ -62,6 +62,10 @@ Something to do with refraction.
 
 Because the parser interprets it as [% a = (b IF c) %].
 
+Do this instead:
+
+    [% SET a = b IF c %]
+
 =back
 
 =head2 Plugins
