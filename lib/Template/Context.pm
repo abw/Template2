@@ -27,7 +27,7 @@ package Template::Context;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $AUTOLOAD );
+use vars qw( $VERSION $DEBUG $AUTOLOAD $DEBUG_FORMAT );
 use base qw( Template::Base );
 
 use Template::Base;
@@ -36,6 +36,7 @@ use Template::Constants;
 use Template::Exception;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$DEBUG_FORMAT = "\n## line \$line : [% \$text %] ##\n";
 
 
 #========================================================================
@@ -627,6 +628,36 @@ sub stash {
 }
 
 
+sub debug {
+    my $self = shift;
+    my $hash = ref $_[-1] eq 'HASH' ? pop : { };
+    my @args = @_;
+
+    if (@args) {
+	if ($args[0] =~ /^on|1$/i) {
+	    $self->{ DEBUG } = 1;
+#	    print STDERR "context turning debug ON\n";
+	    pop(@args);
+	}
+	elsif ($args[0] =~ /^off|0$/i) {
+	    $self->{ DEBUG } = 0;
+#	    print STDERR "context turning debug OFF\n";
+	    pop(@args);
+	}
+    }
+
+    if (@args && $self->{ DEBUG }) {
+	if ($args[0] =~ /^dir$/i) {
+	    my $format = $self->{ DEBUG_FORMAT } || $DEBUG_FORMAT;
+	    $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
+	    return $format;
+	}
+	# else ignore
+    }
+
+    return '';
+}
+
 #------------------------------------------------------------------------
 # AUTOLOAD
 #
@@ -738,10 +769,10 @@ sub _init {
 
     $self->{ RECURSION } = $config->{ RECURSION } || 0;
     $self->{ EVAL_PERL } = $config->{ EVAL_PERL } || 0;
-#    $self->{ DELIMITER } = $config->{ DELIMITER } || ':';
     $self->{ TRIM      } = $config->{ TRIM } || 0;
     $self->{ BLKSTACK  } = [ ];
     $self->{ CONFIG    } = $config;
+    $self->{ DEBUG_FORMAT } = $config->{ DEBUG_FORMAT };
 
     return $self;
 }
@@ -756,12 +787,26 @@ sub _init {
 
 sub _dump {
     my $self = shift;
-    my $output = "$self\n";
-    foreach my $pname (qw( LOAD_TEMPLATES LOAD_PLUGINS LOAD_FILTERS )) {
-	foreach my $prov (@{ $self->{ $pname } }) {
-	    $output .= $prov->_dump();
-	}
+    my $output = "[Template::Context] {\n";
+    my $format = "    %-16s => %s\n";
+    my $key;
+
+    foreach $key (qw( RECURSION EVAL_PERL TRIM )) {
+	$output .= sprintf($format, $key, $self->{ $key });
     }
+    foreach my $pname (qw( LOAD_TEMPLATES LOAD_PLUGINS LOAD_FILTERS )) {
+	my $provtext = "[\n";
+	foreach my $prov (@{ $self->{ $pname } }) {
+	    $provtext .= $prov->_dump();
+#	    $provtext .= ",\n";
+	}
+	$provtext =~ s/\n/\n        /g;
+	$provtext =~ s/\s+$//;
+	$provtext .= ",\n    ]";
+	$output .= sprintf($format, $pname, $provtext);
+    }
+    $output .= sprintf($format, STASH => $self->{ STASH }->_dump());
+    $output .= '}';
     return $output;
 }
 
@@ -1381,13 +1426,13 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.55, distributed as part of the
+2.56, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
