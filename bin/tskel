@@ -1,0 +1,324 @@
+#!/usr/bin/perl -w                                         # -*- perl -*-
+#
+# NOTE: this is still in the ugly hack phase.  Haven't
+# done anything with it for a while.  Likely to junk 
+# it and try a slightly different approach.
+#
+#                       -- abw Sept 2001
+
+use strict;
+use lib qw( /home/abw/tt2/lib );
+use AppConfig qw( :expand );
+use Template;
+
+use Cwd qw( abs_path getcwd );
+use File::Spec;
+use File::Find;
+use File::Basename;
+
+
+#------------------------------------------------------------------------
+# program
+#------------------------------------------------------------------------
+
+my $PROGRAM  = 'tskel';
+my $VERSION  = 0.2; # sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+my $MINIHELP = "'$PROGRAM -h' for help.";
+my $PROGLINE = "$PROGRAM version $VERSION (Template Toolkit version $Template::VERSION)";
+my $SKELFILE = "$PROGRAM.tt2";
+#my $BEFORE  = "$PROGRAM/before";
+#my $AFTER   = "$PROGRAM/after";
+my $BEFORE   = "before";
+my $AFTER    = "after";
+my $IGNORE   = join('|', 'CVS', quotemeta($SKELFILE));
+
+# locate template skeleton files optionally installed by TT "make install"
+######
+###### TODO: change this back
+######
+#my $site = Template::Config->instdir()
+#    || die error("Template Toolkit template files are not installed");
+my $site = '/home/abw/tt2';
+
+$site = {
+    templates => File::Spec->catfile($site, 'templates'),
+    skeleton  => File::Spec->catfile($site, 'templates/skeleton'),
+};
+
+my $config  = read_config();
+my $verbose = $config->verbose();
+my $debug   = $config->debug();
+
+
+#------------------------------------------------------------------------
+# project
+#------------------------------------------------------------------------
+
+# find project skeleton directory
+my $project = shift || die usage($MINIHELP);
+my $projdir = File::Spec->catfile($site->{ skeleton }, $project);
+die error("no such project: $project ('$PROGRAM -l' to list projects)") 
+    unless -d $projdir;
+my $srcdir = "$projdir/src";
+
+# determine destination directory, prompt for create/overwrite
+my $destdir = $config->dir() || $project;
+my $destabs;
+
+if (-d $destdir) {
+    exit unless $config->yes or
+	yes("Directory $destdir already exists.  Overwrite it?", 'n');
+    $destabs = abs_path($destdir);
+}
+else {
+    $destabs = File::Spec->catfile(getcwd(), $destdir);
+    exit unless $config->yes or
+	yes("Directory $destdir does not exist.  Create it?", 'y');
+    mkdir($destabs) || die "$destabs: $!\n";
+}
+
+if ($verbose) {
+    print STDERR <<EOF;
+$PROGLINE
+
+     Project: $project ($srcdir)
+ Destination: $destdir ($destabs)
+EOF
+}
+
+
+#------------------------------------------------------------------------
+# tt2 process
+#------------------------------------------------------------------------
+
+my $tt2cfg = {
+    INCLUDE_PATH => [ $projdir, $srcdir, "$projdir/lib", 
+		      $site->{ templates } ],
+    OUTPUT_PATH  => $destabs,
+#    POST_CHOMP   => 1,
+    EVAL_PERL    => 1,
+    TRIM         => 1,
+    AUTO_RESET   => 0,
+};
+
+# $SKELFILE (tskel.tt2) can be defined to perform PRE/POST processing
+if (-f File::Spec->catfile($projdir, $SKELFILE)) {
+    $tt2cfg->{ PRE_PROCESS  } = [ $SKELFILE, $BEFORE ],
+    $tt2cfg->{ POST_PROCESS } = [ $AFTER ],
+}
+
+my $vars = {
+    id    => $destdir,
+    root  => $destabs,
+    site  => $site,
+    program => {
+	name    => $PROGRAM,
+	version => $VERSION,
+	config  => $config,
+	verbose => $verbose ? \&debug : '',
+	debug   => $debug   ? \&debug : '',
+	prompt  => \&prompt,
+	yes     => \&yes,
+    },
+};
+
+my $tt2 = Template->new($tt2cfg)
+    || die "$Template::ERROR\n";
+
+find(\&process_file, $srcdir);
+
+exit(0);
+
+#======================================================================== 
+# END 
+#========================================================================
+
+
+#------------------------------------------------------------------------
+# process_file($f)
+#
+# Called by File::Find find() sub.
+#------------------------------------------------------------------------ 
+
+sub process_file {
+    my $f = $File::Find::name;
+    return if -d || /\b$IGNORE\b/;
+    $f =~ s[^$srcdir/][];
+    $tt2->process($f, $vars, $f)
+ 	  || die $tt2->error();
+    print STDERR "    + $f\n" if $verbose;
+
+    my $srcfile  = File::Spec->catfile($srcdir, $f);
+    my $destfile = File::Spec->catfile($destabs, $f);
+
+    my ($mode, $uid, $gid);
+    (undef, undef, $mode, undef, $uid, $gid) = stat($srcfile);
+    chown($uid, $gid, $destfile) || warn "chown($uid, $gid, $destfile): $!\n";
+    chmod($mode, $destfile) || warn "chmod($mode, $destfile): $!\n";
+}
+
+
+#------------------------------------------------------------------------
+# prompt($message, $default)
+#
+# Prompt user for a value, providing optional default.  Borrowed (with some
+# minor mods) from ExtUtils::MakeMaker
+#------------------------------------------------------------------------
+
+sub prompt {
+    my($mess, $def) = @_;
+    my $ISA_TTY = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
+    die("prompt function called without an argument") unless defined $mess;
+    my $dispdef = defined $def ? "[$def] : " : ": ";
+    $def = defined $def ? $def : "";
+    my $ans;
+    local $|=1;
+    print STDERR "$mess $dispdef";
+    if ($ISA_TTY) {
+        chomp($ans = <STDIN>);
+    } else {
+        print STDERR "$def\n";
+    }
+    return ($ans ne '') ? $ans : $def;
+}
+
+
+#------------------------------------------------------------------------
+# yes($message, $default)
+#------------------------------------------------------------------------
+
+sub yes {
+    my ($message, $default) = @_;
+    $default ||= 'y';
+    prompt($message, $default) =~ /^y$/i;
+}
+
+
+#------------------------------------------------------------------------
+# read_config($file)
+#------------------------------------------------------------------------
+
+sub read_config {
+    my $file = shift;
+
+    my $config = AppConfig->new({ 
+	ERROR  => sub { die error(join('', @_)) },
+    },
+	'help|h'    => { ACTION => sub { print STDERR help(); exit(0) } },
+	'list|l'    => { ACTION => sub { list(); exit(0) } },
+	'dir|d=s'   => { EXPAND => EXPAND_ALL },
+	'yes|y'     => { DEFAULT => 0 },
+	'verbose|v' => { DEFAULT => 0 },
+        'debug|g'   => { DEFAULT => 0 },
+	'define=s%',
+    );
+
+    # add the 'file' option now that we have a $config object that we 
+    # can reference in a closure
+    $config->define(
+	'file|f=s@'   => { EXPAND => EXPAND_ALL, 
+			   ACTION => sub { 
+			       my ($state, $item, $file) = @_;
+			       $config->file($file) }  
+			   }
+    );
+
+    # process main config file, then command line args
+    $config->file($file) if $file && -f $file;
+    $config->args();
+
+    $config;
+}
+
+
+#------------------------------------------------------------------------
+# usage($msg)
+#------------------------------------------------------------------------
+
+sub usage {
+    my $msg = shift;
+    $msg = $msg ? "\n\n$msg" : "";
+    return <<EOF;
+$PROGLINE
+
+usage: 
+    $PROGRAM [options] project$msg
+EOF
+}
+
+
+#------------------------------------------------------------------------
+# error($msg)
+#------------------------------------------------------------------------
+
+sub error {
+    my $error = shift;
+    return <<EOF;
+$PROGLINE
+
+error:
+    $error
+
+$MINIHELP
+EOF
+}
+
+
+#------------------------------------------------------------------------
+# help()
+#------------------------------------------------------------------------
+
+sub help {
+    return usage() . <<EOF;
+
+options:
+    -d DIR  (--dir=DIR)   Destination directory (default: project name)
+    -l      (--list)      List projects
+    -y      (--yes)       Force reuse of existing directory without prompting
+    -v      (--verbose)   Verbose mode
+    -g      (--debug)     Debug mode
+    -h      (--help)      This help
+
+examples:
+    $PROGRAM -h
+    $PROGRAM -l
+    $PROGRAM tt2project
+    $PROGRAM -d mywebsite tt2project
+    $PROGRAM -v -y -d mywebsite tt2project
+
+
+This script uses the Template Toolkit to process a set of skeleton
+template files, for generating a new "project" of some kind.  Typical
+projects are 'tt2project' (for creating a project to build a web site
+using the Template Toolkit), 'perl/module' (for creating a new Perl 
+module), and so on.  On this system, skeleton templates for these projects
+are defined in $site->{ skeleton }.
+EOF
+}
+
+
+#------------------------------------------------------------------------
+# list()
+#------------------------------------------------------------------------
+
+sub list {
+    local *DIR;
+    my $dir = $site->{ skeleton };
+    my @files;
+    
+    opendir(DIR, $dir) or die error("$dir: $!");
+    print(STDERR "skeleton projects defined in $dir:\n    ",
+	  join("\n    ", grep(-d File::Spec->catfile($dir, $_) 
+			      && !/^\./, readdir(DIR))), "\n");
+    closedir(DIR); 
+}
+
+
+#------------------------------------------------------------------------
+# debug(...)
+#------------------------------------------------------------------------
+
+sub debug {
+    print STDERR @_;
+}
+
