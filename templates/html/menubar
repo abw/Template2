@@ -11,7 +11,7 @@
 <td>
 [% content %]
 </td>
-<td align=right>
+<td align="right">
 &nbsp;[% INCLUDE html/menu -%]
 </td>
 [%- END %]
