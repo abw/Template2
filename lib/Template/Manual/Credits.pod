@@ -104,6 +104,7 @@ Please let me know if you think anyone is missing from this list.
   Neil Bowers               <neilb@cre.canon.co.uk>
   Leon Brocard              <acme@astray.com>  
   Lyle Brooks               <brooks@deseret.com>
+  Dave Cash                 <dave@gnofn.org>
   Piers Cawley              <pdcawley@bofh.org.uk>
   Darren Chamberlain        <dlc@users.sourceforge.net>
   Eric Cholet               <cholet@logilune.com>
@@ -164,7 +165,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.12a, released on 13 January 2004.
+Template Toolkit version 2.13, released on 30 January 2004.
 
 =head1 COPYRIGHT
 

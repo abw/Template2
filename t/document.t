@@ -68,7 +68,12 @@ ok( &{ $doc->block }   eq 'some output' );
 ok( &{ $doc->blocks->{ foo } } eq 'the foo block' );
 ok( &{ $doc->blocks->{ bar } } eq 'the bar block' );
 
-test_expect(\*DATA, undef, { mydoc => $doc });
+my $dir   = -d 't' ? 't/test' : 'test';
+my $tproc = Template->new({ 
+    INCLUDE_PATH => "$dir/src",
+});
+
+test_expect(\*DATA, $tproc, { mydoc => $doc });
 
 __END__
 -- test --
@@ -140,3 +145,13 @@ title: My Template Title
 -- expect --
 some output
 
+-- stop --
+# test for component.caller and component.callers patch
+-- test --
+[% INCLUDE one;
+   INCLUDE two;
+   INCLUDE three;
+%]
+-- expect --
+one, three
+two, three

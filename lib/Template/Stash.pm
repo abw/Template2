@@ -934,7 +934,7 @@ A hash reference may be passed to provide variables and values which
 should be used to initialise the stash.
 
     my $stash = Template::Stash->new({ var1 => 'value1', 
-                       var2 => 'value2' });
+				       var2 => 'value2' });
 
 =head2 get($variable)
 
@@ -1014,8 +1014,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.83, distributed as part of the
-Template Toolkit version 2.12a, released on 13 January 2004.
+2.85, distributed as part of the
+Template Toolkit version 2.13, released on 30 January 2004.
 
 =head1 COPYRIGHT
 

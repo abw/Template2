@@ -44,7 +44,7 @@ my $data = {
 	};
     },
     obj => bless {
-	name => 'an object',
+        name => 'an object',
     }, 'AnObject',
 };
 
