@@ -26,10 +26,7 @@ $DEBUG = 0;
 #$Template::Test::PRESERVE = 1;
 
 eval "use DBI";
-if ($@) {
-    print "1..0\n";
-    exit(0);
-}
+exit if $@;
 
 # load the configuration file created by Makefile.PL which defines
 # the $run, $dsn, $user and $pass variables.
@@ -40,10 +37,13 @@ unless ($run) {
 }
 
 
-init_database($dsn, $user, $pass);
+my $dbh = DBI->connect($dsn, $user, $pass, { PrintError => 0 }) || do {
+    ntests(1);
+    ok(0);
+    die "DBI connect() failed: $DBI::errstr\n";
+};
 
-my $dbh = DBI->connect($dsn, $user, $pass, { PrintError => 0 })
-    || die "DBI connect() failed: $DBI::errstr\n";
+init_database($dbh);
 
 my $vars = {
     dbh  => $dbh,
@@ -54,7 +54,7 @@ my $vars = {
 
 test_expect(\*DATA, undef, $vars);
 
-cleanup_database($dsn, $user, $pass);
+cleanup_database($dbh);
 
 $dbh->disconnect();
 
@@ -63,10 +63,7 @@ $dbh->disconnect();
 #------------------------------------------------------------------------
 
 sub init_database {
-    my ($dsn, $user, $pass) = @_;
-
-    my $dbh = DBI->connect($dsn, $user, $pass)
-	|| die "DBI connect() failed: $DBI::errstr\n";
+    my $dbh = shift;
 
     # create some tables
     sql_query($dbh, 'CREATE TABLE grp ( 
@@ -122,15 +119,10 @@ sub sql_query {
 #------------------------------------------------------------------------
 
 sub cleanup_database {
-    my ($dsn, $user, $pass) = @_;
-
-    my $dbh = DBI->connect($dsn, $user, $pass)
-	|| die "DBI connect() failed: $DBI::errstr\n";
+    my $dbh = shift;
 
     sql_query($dbh, 'DROP TABLE usr');
     sql_query($dbh, 'DROP TABLE grp');
-    
-    $dbh->disconnect();
 };
 
 

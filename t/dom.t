@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( lib ../lib );
+use lib qw( ./lib ../lib );
 use Template;
 use Template::Test;
 use Cwd qw( abs_path );
@@ -29,10 +29,7 @@ my $shut_up_warnings = $XML::DOM::VERSION;
 eval "use XML::DOM";
 
 # XML::DOM version 1.25 (and earlier?) dump core with Perl 5.006
-if ($@ || ($] == 5.006 && $XML::DOM::VERSION <= 1.25)) {
-    print "1..0\n";
-    exit(0);
-}
+exit if $@ || ($] == 5.006 && $XML::DOM::VERSION <= 1.25);
 
 # account for script being run in distribution root or 't' directory
 my $file = abs_path( -d 't' ? 't/test/xml' : 'test/xml' );
