@@ -374,6 +374,12 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
     TT_PERF_INIT;
 
     /* ignore _private or .private members */
+    if (!root || *item == '_' || *item == '.') {
+        return &PL_sv_undef;
+     }
+
+
+    /* ignore _private or .private members */
     if (!root || !item_len || *item == '_' || *item == '.') {
 	return &PL_sv_undef;
     }
@@ -401,15 +407,12 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 		HV *roothv = (HV *) SvRV(root);
 
 		newhash = SvREFCNT_inc((SV *) newRV_noinc((SV *) newHV()));
-		if (hv_store(roothv, item, item_len, newhash, 0)) {
+		if (! hv_store(roothv, item, item_len, newhash, 0)) {
 		    /* trigger any tied magic to STORE value */
 	            SvSETMAGIC(newhash);
-		    return sv_2mortal(newhash);
-		} else {
-		    /* something went horribly wrong */
 		    SvREFCNT_dec(newhash);
-		    return &PL_sv_undef;
-	    	}
+		}
+		return sv_2mortal(newhash);
 	    }
 
 	    /* try hash pseudo-method */
@@ -528,14 +531,14 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 	if (!result) {
 	    /* failed to call object method, so try some fallbacks */
 	    if ((SvTYPE(SvRV(root)) == SVt_PVHV)
-		 && ((n = tt_fetch_item(root, key_sv, args, &result)) 
-			!= TT_RET_UNDEF)) {
+		&& ((n = tt_fetch_item(root, key_sv, args, &result)) != TT_RET_UNDEF)) {
 		if (n == TT_RET_OK) {
 		    return result;
 		}
 
-	    } else if ((SvTYPE(SvRV(root)) == SVt_PVAV)
-	    	&& (list_op(root, item, args, &result) == TT_RET_UNDEF)) {
+	    } 
+	    else if ((SvTYPE(SvRV(root)) == SVt_PVAV)
+		     && (list_op(root, item, args, &result) == TT_RET_UNDEF)) {
 		if (flags & TT_DEBUG_FLAG)
 		    result = (SV *) mk_mortal_av(&PL_sv_undef, NULL, ERRSV);
 	    }
@@ -656,15 +659,11 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 
 	    /* avoid 'modification of read-only value' error */
 	    newsv = newSVsv(value); 
-	    svp = hv_store(roothv, key, key_len, newsv, 0);
-
-	    /* invoke any tied magical STORE method */
-	    SvSETMAGIC(newsv);
-
-	    /* must dec ref counter if hash decline to store */
-	    if (! svp)
+	    if (! hv_store(roothv, key, key_len, newsv, 0)) {
+	        /* invoke any tied magical STORE method */
+		SvSETMAGIC(newsv);
 		SvREFCNT_dec(newsv);
-
+	    }
 	    return value;
 	    break;
 
@@ -681,10 +680,13 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 		    return &PL_sv_undef;
 	    }
 
-	    if (looks_like_number(key_sv) 
-		&& av_store(rootav, SvIV(key_sv), value)) {
-	        SvSETMAGIC(value);
-		return SvREFCNT_inc(value);
+	    if (looks_like_number(key_sv)) {
+		if (av_store(rootav, SvIV(key_sv), value))
+		    SvREFCNT_inc(value);
+		else 
+		    SvSETMAGIC(value);
+
+		return value;
 	    }
 	    else
 		return &PL_sv_undef;
