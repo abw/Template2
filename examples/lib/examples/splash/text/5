@@ -1,0 +1,18 @@
+[% # create custom style
+   bigred = {
+	font = {
+	    face = 'Helvetica, Arial, Sans-Serif' 
+            size = '+1' 
+            bold = 1
+	}
+	col = {
+	    text = 'blood'
+	}
+    }
+%]
+
+[% WRAPPER splash/text style=bigred %]
+Surely You're Joking?
+[% END %]
+
+
