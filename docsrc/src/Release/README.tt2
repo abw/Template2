@@ -53,6 +53,11 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
+Version 2.14 adds Unicode support to TT, a full set of command line
+options for tpage, the 'caller' and 'callers' items to each template
+component, some enhancements to the XML::Simple plugin, and a number
+of minor bug fixes.
+
 Version 2.13 followed on quickly from 2.13 to fix a minor, but 
 annoying bug in the date.t test script that we thought we had 
 fixed in 2.12 but hadn't.
