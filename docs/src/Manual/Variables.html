@@ -23,13 +23,12 @@
 		    "Objects",
 		    "Parameters and Return Values",
 		    "Error Handling",
-		    "Virtual Variable Methods",
-		    "Automagic Promotion of Scalar to List",
-		    "Compound Variables",
+		    "Virtual Methods",
 		    "Variable Interpolation",
 		    "Local and Global Variables",
 		    "Compile Time Constant Folding",
-		    "Special Variables"
+		    "Special Variables",
+		    "Compound Variables"
 		];
 	PROCESS tocitem 
 	        title ="AUTHOR"
@@ -481,488 +480,28 @@ version.
     };</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "Virtual Variable Methods"
+   title = "Virtual Methods"
 -%]<p>
-The Template Toolkit provides virtual methods for manipulating
-variable values.  Most of them are analogous to regular Perl functions
-of the same names.
+The Template Toolkit implements a number of &quot;virtual methods&quot; which 
+can be applied to scalars, hashes or lists.  For example:
 </p>
+<pre>    [% tt_start_tag %] mylist = [ 'foo', 'bar', 'baz' ] [% tt_end_tag %]
+    [% tt_start_tag %] newlist = mylist.sort [% tt_end_tag %]</pre>
 <p>
-The following methods can be called against any scalar value:
+Here 'mylist' is a regular reference to a list, and 'sort' is 
+a virtual method that returns a new list of the items in sorted 
+order.  You can chain multiple virtual methods together.  For
+example:
 </p>
-<ul>
-<li><b>defined</b><br>
+<pre>    [% tt_start_tag %] mylist.sort.join(', ') [% tt_end_tag %]</pre>
 <p>
-Returns true if the value is defined.
+Here the 'join' virtual method is called to join the sorted list into
+a single string, generating the following output:
 </p>
-<pre>    [% tt_start_tag %] user = get_user(uid) IF uid.defined [% tt_end_tag %]</pre>
-
-<li><b>length</b><br>
+<pre>    bar, baz, foo</pre>
 <p>
-Returns the length of the string representation of the item:
-</p>
-<pre>    [% tt_start_tag %] IF password.length &lt; 8 [% tt_end_tag %]
-       Password too short, dumbass!
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-<li><b>repeat(n)</b><br>
-<p>
-Repeat the string a specified number of times.
-</p>
-<pre>    [% tt_start_tag %] name = 'foo' [% tt_end_tag %]
-    [% tt_start_tag %] name.repeat(3) [% tt_end_tag %]		# foofoofoo</pre>
-
-<li><b>replace(search, replace)</b><br>
-<p>
-Outputs the string with all instances of the first argument (specified
-as a Perl regular expression) with the second.
-</p>
-<pre>    [% tt_start_tag %] name = 'foo, bar &amp; baz' [% tt_end_tag %]
-    [% tt_start_tag %] name.replace('\W+', '_') [% tt_end_tag %]    # foo_bar_baz</pre>
-
-<li><b>match(pattern)</b><br>
-<p>
-Performs a regular expression match on the string using the pattern
-passed as an argument.  If the pattern matches the string then the
-method returns a reference to a list of any strings captured within
-parenthesis in the pattern.
-</p>
-<pre>    [% tt_start_tag %] name = 'Larry Wall' [% tt_end_tag %]
-    [% tt_start_tag %] matches = name.match('(\w+) (\w+)') [% tt_end_tag %]
-    [% tt_start_tag %] matches.1 [% tt_end_tag %], [% tt_start_tag %] matches.0 [% tt_end_tag %]		# Wall, Larry</pre>
-<p>
-If the pattern does not match then the method returns false, rather
-than returning an empty list which Perl and the Template Toolkit both
-consider to be a true value.  This allows you to write expression like
-this.
-</p>
-<pre>    [% tt_start_tag %] &quot;We're not worthy!&quot; IF name.match('Larry Wall') [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] IF (matches = name.match('(\w+) (\w+)')) [% tt_end_tag %]
-       pattern matches: [% tt_start_tag %] matches.join(', ') [% tt_end_tag %]
-    [% tt_start_tag %] ELSE [% tt_end_tag %]
-       pattern does not match
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-<li><b>search(pattern)</b><br>
-<p>
-Performs a similar function to 'match' but simply returns true if the 
-string matches the regular expression pattern passed as an argument.
-</p>
-<pre>    [% tt_start_tag %] name = 'foo bar baz' [% tt_end_tag %]
-    [% tt_start_tag %] name.search('bar') ? 'bar' : 'no bar' [% tt_end_tag %]	    # bar</pre>
-<p>
-This virtual method is now deprecated in favour of 'match'.  Move along
-now, there's nothing more to see here.
-</p>
-
-<li><b>split(pattern)</b><br>
-<p>
-Calls Perl's split() function to split a string into a list of
-strings.
-</p>
-<pre>    [% tt_start_tag %] FOREACH dir = mypath.split(':') [% tt_end_tag %]
-       [% tt_start_tag %] dir [% tt_end_tag %]
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-<li><b>chunk(size)</b><br>
-<p>
-Splits the value into a list of chunks of a certain size.
-</p>
-<pre>    [% tt_start_tag %] ccard_no = &quot;1234567824683579&quot;;
-       ccard_no.chunk(4).join
-    [% tt_end_tag %]</pre>
-<p>
-Output:
-</p>
-<pre>    1234 5678 2468 3579</pre>
-<p>
-If the size is specified as a negative number then the text will
-be chunked from right-to-left.  This gives the correct grouping 
-for numbers, for example.
-</p>
-<pre>    [% tt_start_tag %] number = 1234567;
-       number.chunk(-3).join(',')
-    [% tt_end_tag %]</pre>
-<p>
-Output:
-</p>
-<pre>    1,234,567</pre>
-
-<li><b>list</b><br>
-<p>
-Return the value as a single element list.  This can be useful if you
-have a variable which may contain a single item or a list and you want
-to treat them equally.  The 'list' method can be called against a list
-reference and will simply return the original reference, effectively
-a no-op.
-</p>
-<pre>    [% tt_start_tag %] thing.list.size [% tt_end_tag %]  # thing can be a scalar or a list</pre>
-
-<li><b>hash </b><br>
-<p>
-Return the value as a hash reference containing a single entry with
-the key 'value' indicating the original scalar value.  As with the 
-'hash' virtual method, this is generally used to help massage data
-into different formats.
-</p>
-
-<li><b>size</b><br>
-<p>
-Always returns 1 for scalar values.  This method is provided for 
-consistency with the hash and list size methods.
-</p>
-
-</ul>
-<p>
-The following can be called against hash references.
-</p>
-<ul>
-<li><b>keys, values, each</b><br>
-<p>
-The regular hash operators returning lists of keys, values or both.
-Note how we use a '$' prefix on the 'key' variable in this example to
-have it interpolated (i.e. replaced with its value) before use.
-</p>
-<pre>    [% tt_start_tag %] FOREACH key = product.keys [% tt_end_tag %]
-       [% tt_start_tag %] key [% tt_end_tag %] =&gt; [% tt_start_tag %] product.$key [% tt_end_tag %]
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-<li><b>sort, nsort</b><br>
-<p>
-Return a list of the keys, sorted alphabetically (sort) or numerically
-(nsort) according to the corresponding values in the hash.
-</p>
-<pre>    [% tt_start_tag %] FOREACH n = phones.sort [% tt_end_tag %]
-       [% tt_start_tag %] phones.$n [% tt_end_tag %] is [% tt_start_tag %] n [% tt_end_tag %],
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-<li><b>import</b><br>
-<p>
-The import method can be called on a hash array to import the contents
-of another hash array.
-</p>
-<pre>    [% tt_start_tag %] hash1 = {
-	   foo =&gt; 'Foo',
-           bar =&gt; 'Bar',
-       }
-       hash2 = {
-           wiz =&gt; 'Wiz',
-           woz =&gt; 'Woz',
-       }
-    [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] hash1.import(hash2) [% tt_end_tag %]
-    [% tt_start_tag %] hash1.wiz [% tt_end_tag %]			# Wiz</pre>
-<p>
-You can also call the import() method by itself to import a hash array
-into the current namespace hash.
-</p>
-<pre>    [% tt_start_tag %] user = { id =&gt; 'lwall', name =&gt; 'Larry Wall' } [% tt_end_tag %]
-    [% tt_start_tag %] import(user) [% tt_end_tag %]
-    [% tt_start_tag %] id [% tt_end_tag %]: [% tt_start_tag %] name [% tt_end_tag %]		# lwall: Larry Wall</pre>
-
-<li><b>defined, exists</b><br>
-<p>
-Returns a true or false value if an item in the hash denoted by the key
-passed as an argument is defined or exists, respectively.
-</p>
-<pre>    [% tt_start_tag %] hash.defined('somekey') ? 'yes' : 'no' [% tt_end_tag %]
-    [% tt_start_tag %] hash.exists('somekey') ? 'yes' : 'no' [% tt_end_tag %]</pre>
-
-<li><b>size</b><br>
-<p>
-Returns the number of key =&gt; value pairs in the hash.
-</p>
-
-<li><b>item</b><br>
-<p>
-Returns an item from the hash using a key passed as an argument.
-</p>
-<pre>    [% tt_start_tag %] hash.item('foo') [% tt_end_tag %]  # same as hash.foo</pre>
-
-<li><b>list</b><br>
-<p>
-Returns the contents of the hash in list form.  An argument can be
-passed to indicate the desired items required in the list: 'keys' to
-return a list of the keys (same as hash.keys), 'values' to return a
-list of the values (same as hash.values), or 'each' to return as list
-of (key, value) pairs (same as hash.each).  When called without an
-argument it returns a list of hash references each containing a 'key'
-and 'value' item representing 
-</p>
-
-</ul>
-<p>
-The following virtual methods are provided for lists:
-</p>
-<ul>
-<li><b>first, last</b><br>
-<p>
-Returns the first/last item in the list.  The item is not removed from the 
-list.
-</p>
-<pre>    [% tt_start_tag %] results.first [% tt_end_tag %] to [% tt_start_tag %] results.last [% tt_end_tag %]</pre>
-
-<li><b>size, max</b><br>
-<p>
-Returns the size of a list (number of elements) and the maximum 
-index number (size - 1), respectively.
-</p>
-<pre>    [% tt_start_tag %] results.size [% tt_end_tag %] search results matched your query</pre>
-
-<li><b>reverse</b><br>
-<p>
-Returns the items of the list in reverse order.
-</p>
-<pre>    [% tt_start_tag %] FOREACH s = scores.reverse [% tt_end_tag %]
-       ...
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-<li><b>join</b><br>
-<p>
-Joins the items in the list into a single string, using Perl's join 
-function.
-</p>
-<pre>    [% tt_start_tag %] items.join(', ') [% tt_end_tag %]</pre>
-
-<li><b>grep</b><br>
-<p>
-Returns a list of the items in the list that match a regular expression
-pattern.
-</p>
-<pre>    [% tt_start_tag %] FOREACH directory.files.grep('\.txt$') [% tt_end_tag %]
-       ...
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
-<li><b>sort, nsort</b><br>
-<p>
-Returns the items in alpha (sort) or numerical (nsort) order.
-</p>
-<pre>    [% tt_start_tag %] library = books.sort [% tt_end_tag %]</pre>
-<p>
-An argument can be provided to specify a search key.  Where an item in 
-the list is a hash reference, the search key will be used to retrieve a 
-value from the hash which will then be used as the comparison value.
-Where an item is an object which implements a method of that name, the
-method will be called to return a comparison value.
-</p>
-<pre>    [% tt_start_tag %] library = books.sort('author') [% tt_end_tag %]</pre>
-<p>
-In the example, the 'books' list can contains hash references with 
-an 'author' key or objects with an 'author' method.
-</p>
-
-<li><b>unshift(item), push(item)</b><br>
-<p>
-Adds an item to the start/end of a list.
-</p>
-<pre>    [% tt_start_tag %] mylist.unshift('prev item') [% tt_end_tag %]
-    [% tt_start_tag %] mylist.push('next item')    [% tt_end_tag %]</pre>
-
-<li><b>shift, pop</b><br>
-<p>
-Removes the first/last item from the list and returns it.
-</p>
-<pre>    [% tt_start_tag %] first = mylist.shift [% tt_end_tag %]
-    [% tt_start_tag %] last  = mylist.pop   [% tt_end_tag %]</pre>
-
-<li><b>unique</b><br>
-<p>
-Returns a list of the unique elements in a list, in the same order
-as in the list itself.
-</p>
-<pre>    [% tt_start_tag %] mylist = [ 1, 2, 3, 2, 3, 4, 1, 4, 3, 4, 5 ] [% tt_end_tag %]
-    [% tt_start_tag %] numbers = mylist.unique [% tt_end_tag %]</pre>
-<p>
-While this can be explicitly sorted, it is not required that the list
-be sorted before the unique elements pulled out (unlike the Unix
-command line utility).
-</p>
-<pre>    [% tt_start_tag %] numbers = mylist.unique.sort [% tt_end_tag %]</pre>
-
-<li><b>merge</b><br>
-<p>
-Returns a list composed of zero or more other lists:
-</p>
-<pre>    [% tt_start_tag %] list_one = [ 1 2 3 ];
-       list_two = [ 4 5 6 ];
-       list_three = [ 7 8 9 ];
-       list_four = list_one.merge(list_two, list_three);
-    [% tt_end_tag %]</pre>
-<p>
-The original lists are not modified.
-</p>
-
-<li><b>slice(from, to)</b><br>
-<p>
-Returns a slice of items in the list between the bounds passed as
-arguments.  If the second argument, 'to', isn't specified, then it
-defaults to the last item in the list.  The original list is not 
-modified.
-</p>
-<pre>    [% tt_start_tag %] first_three = list.slice(0,2) [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] last_three  = list.slice(-3, -1) [% tt_end_tag %]</pre>
-
-<li><b>splice(offset, length, list)</b><br>
-<p>
-Behaves just like Perl's splice() function allowing you to selectively
-remove and/or replace elements in a list.  It removes 'length' items
-from the list, starting at 'offset' and replaces them with the items
-in 'list'.
-</p>
-<pre>   [% tt_start_tag %] play_game = [ 'play', 'scrabble' ];
-      ping_pong = [ 'ping', 'pong' ];
-      redundant = play_game.splice(1, 1, ping_pong);</pre>
-<pre>      redundant.join;     # scrabble
-      play_game.join;     # play ping pong
-   [% tt_end_tag %]</pre>
-<p>
-The method returns a list of the items removed by the splice.
-You can use the CALL directive to ignore the output if you're
-not planning to do anything with it.
-</p>
-<pre>    [% tt_start_tag %] CALL play_game.splice(1, 1, ping_pong) [% tt_end_tag %]</pre>
-<p>
-As well as providing a reference to a list of replacement values,
-you can pass in a list of items.
-</p>
-<pre>   [% tt_start_tag %] CALL list.splice(-1, 0, 'foo', 'bar') [% tt_end_tag %]</pre>
-<p>
-Be careful about passing just one item in as a replacement value.
-If it is a reference to a list then the contents of the list will
-be used.  If it's not a list, then it will be treated as a single 
-value.  You can use square brackets around a single item if you 
-need to be explicit:
-</p>
-<pre>  [% tt_start_tag %] # push a single item, an_item
-     CALL list.splice(-1, 0, an_item);</pre>
-<pre>     # push the items from another_list
-     CALL list.splice(-1, 0, another_list);</pre>
-<pre>     # push a reference to another_list
-     CALL list.splice(-1, 0, [ another_list ]);
-  [% tt_end_tag %]</pre>
-
-</ul>
-<p>
-The following example demonstrates how an empty list ('folk') can be 
-populated with formatted strings by using the push() method in conjunction
-with a FOREACH loop.  The resultant list can then be printed using join.
-</p>
-<pre>    [% tt_start_tag %] # define some initial data
-       people   =&gt; [ 
-           { id =&gt; 'tom',   name =&gt; 'Tom'     },
-	   { id =&gt; 'dick',  name =&gt; 'Richard' },
-           { id =&gt; 'larry', name =&gt; 'Larry'   },
-       ]</pre>
-<pre>       # define an empty list that list methods can be called against
-       folk = [] 
-    -[% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] folk.push(&quot;&lt;a href=\&quot;${person.id}.html\&quot;&gt;$person.name&lt;/a&gt;&quot;)
-         FOREACH person = people.sort('name') -[% tt_end_tag %]
-    [% tt_start_tag %] folk.join(&quot;,\n&quot;) [% tt_end_tag %]</pre>
-<p>
-Output:
-</p>
-<pre>    &lt;a href=&quot;larry.html&quot;&gt;Larry&lt;/a&gt;,
-    &lt;a href=&quot;dick.html&quot;&gt;Richard&lt;/a&gt;,
-    &lt;a href=&quot;tom.html&quot;&gt;Tom&lt;/a&gt;</pre>
-<p>
-You can define your own virtual methods for scalars, lists and hash
-arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
-and $HASH_OPS are references to hash arrays that define these virtual
-methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
-hash/list reference as the first item.  SCALAR_OPS are subroutines
-that accept a scalar value as the first item.  Any other arguments
-specified when the method is called will be passed to the subroutine.
-</p>
-<pre>    # load Template::Stash to make method tables visible
-    use Template::Stash;</pre>
-<pre>    # define list method to return new list of odd numbers only
-    $Template::Stash::LIST_OPS-&gt;{ odd } = sub {
-	my $list = shift;
-	return [ grep { $_ % 2 } @$list ];
-    };</pre>
-<p>
-template:
-</p>
-<pre>    [% tt_start_tag %] primes = [ 2, 3, 5, 7, 9 ] [% tt_end_tag %]
-    [% tt_start_tag %] primes.odd.join(', ') [% tt_end_tag %]		# 3, 5, 7, 9</pre>
-<p>
-See also the examples in the t/vmeth.t test script.
-</p>
-[%- END %]
-[% WRAPPER subsection
-   title = "Automagic Promotion of Scalar to List"
--%]<p>
-In addition to the scalar virtual methods listed in the previous
-section, you can also call any list virtual method against a scalar.
-The item will be automagically promoted to a single element list and
-the appropriate list virtual method will be called.  
-</p>
-<p>
-One particular benefit of this comes when calling subroutines or
-object methods that return a list of items, rather than the 
-preferred reference to a list of items.  In this case, the 
-Template Toolkit automatically folds the items returned into
-a list.
-</p>
-<p>
-The upshot is that you can continue to use existing Perl modules or
-code that returns lists of items, without having to refactor it
-just to keep the Template Toolkit happy (by returning references
-to list).  Class::DBI module is just one example of a particularly 
-useful module which returns values this way.
-</p>
-<p>
-If only a single item is returned from a subroutine then the 
-Template Toolkit assumes it meant to return a single item (rather
-than a list of 1 item) and leaves it well alone, returning the
-single value as it is.  If you're executing a database query, 
-for example, you might get 1 item returned, or perhaps many 
-items which are then folded into a list.
-</p>
-<p>
-The FOREACH directive will happily accept either a list or a single
-item which it will treat as a list.  So it's safe to write directives
-like this, where we assume that 'something' is bound to a subroutine
-which might return 1 or more items:
-</p>
-<pre>    [% tt_start_tag %] FOREACH item = something [% tt_end_tag %]
-       ...
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<p>
-The automagic promotion of scalars to single item lists means 
-that you can also use list virtual methods safely, even if you
-only get one item returned.  For example:
-</p>
-<pre>    [% tt_start_tag %] something.first   [% tt_end_tag %]
-    [% tt_start_tag %] something.join    [% tt_end_tag %]
-    [% tt_start_tag %] something.reverse.join(', ') [% tt_end_tag %]</pre>
-<p>
-Note that this is very much a last-ditch behaviour.  If the single
-item return is an object with a 'first' method, for example, then that
-will be called, as expected, in preference to the list virtual method.
-</p>
-[%- END %]
-[% WRAPPER subsection
-   title = "Compound Variables"
--%]<p>
-Compound 'dotted' variables may contain any number of separate
-elements.  Each element may evaluate to any of the permitted variable
-types and the processor will then correctly use this value to evaluate
-the rest of the variable.  Arguments may be passed to any of the
-intermediate elements.
-</p>
-<pre>    [% tt_start_tag %] myorg.people.sort('surname').first.fullname [% tt_end_tag %]</pre>
-<p>
-Intermediate variables may be used and will behave entirely as expected.
-</p>
-<pre>    [% tt_start_tag %] sorted = myorg.people.sort('surname') [% tt_end_tag %]
-    [% tt_start_tag %] sorted.first.fullname [% tt_end_tag %]</pre>
-<p>
-This simplified dotted notation has the benefit of hiding the
-implementation details of your data.  For example, you could implement
-a data structure as a hash array one day and then change it to an
-object the next without requiring any change to the templates.
+See [% ttlink('Template::Manual::VMethods') -%] for details of all the virtual 
+methods available.
 </p>
 [%- END %]
 [% WRAPPER subsection
@@ -1276,6 +815,28 @@ variable.
 
 </ul>
 [%- END %]
+[% WRAPPER subsection
+   title = "Compound Variables"
+-%]<p>
+Compound 'dotted' variables may contain any number of separate
+elements.  Each element may evaluate to any of the permitted variable
+types and the processor will then correctly use this value to evaluate
+the rest of the variable.  Arguments may be passed to any of the
+intermediate elements.
+</p>
+<pre>    [% tt_start_tag %] myorg.people.sort('surname').first.fullname [% tt_end_tag %]</pre>
+<p>
+Intermediate variables may be used and will behave entirely as expected.
+</p>
+<pre>    [% tt_start_tag %] sorted = myorg.people.sort('surname') [% tt_end_tag %]
+    [% tt_start_tag %] sorted.first.fullname [% tt_end_tag %]</pre>
+<p>
+This simplified dotted notation has the benefit of hiding the
+implementation details of your data.  For example, you could implement
+a data structure as a hash array one day and then change it to an
+object the next without requiring any change to the templates.
+</p>
+[%- END %]
 [%- END %]
 [% WRAPPER section
     title="AUTHOR"
@@ -1289,7 +850,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07c, released on 19 July 2002.
+Template Toolkit version 2.08, released on 30 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -406,55 +406,6 @@ need to be explicit:
 
 =back
 
-The following example demonstrates how an empty list ('folk') can be 
-populated with formatted strings by using the push() method in conjunction
-with a FOREACH loop.  The resultant list can then be printed using join.
-
-    [% # define some initial data
-       people   => [ 
-           { id => 'tom',   name => 'Tom'     },
-	   { id => 'dick',  name => 'Richard' },
-           { id => 'larry', name => 'Larry'   },
-       ]
-
-       # define an empty list that list methods can be called against
-       folk = [] 
-    -%]
-
-    [% folk.push("<a href=\"${person.id}.html\">$person.name</a>")
-         FOREACH person = people.sort('name') -%]
-    [% folk.join(",\n") %]
-
-Output:
-
-    <a href="larry.html">Larry</a>,
-    <a href="dick.html">Richard</a>,
-    <a href="tom.html">Tom</a>
-
-You can define your own virtual methods for scalars, lists and hash
-arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
-and $HASH_OPS are references to hash arrays that define these virtual
-methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
-hash/list reference as the first item.  SCALAR_OPS are subroutines
-that accept a scalar value as the first item.  Any other arguments
-specified when the method is called will be passed to the subroutine.
-
-    # load Template::Stash to make method tables visible
-    use Template::Stash;
-
-    # define list method to return new list of odd numbers only
-    $Template::Stash::LIST_OPS->{ odd } = sub {
-	my $list = shift;
-	return [ grep { $_ % 2 } @$list ];
-    };
-
-template:
-
-    [% primes = [ 2, 3, 5, 7, 9 ] %]
-    [% primes.odd.join(', ') %]		# 3, 5, 7, 9
-
-See also the examples in the t/vmeth.t test script.
-
 =head2 Automagic Promotion of Scalar to List for Virtual Methods
 
 In addition to the scalar virtual methods listed in the previous
@@ -502,25 +453,29 @@ Note that this is very much a last-ditch behaviour.  If the single
 item return is an object with a 'first' method, for example, then that
 will be called, as expected, in preference to the list virtual method.
 
-=head2 Compound Variables
+=head2 Defining Custom Virtual Methods
 
-Compound 'dotted' variables may contain any number of separate
-elements.  Each element may evaluate to any of the permitted variable
-types and the processor will then correctly use this value to evaluate
-the rest of the variable.  Arguments may be passed to any of the
-intermediate elements.
+You can define your own virtual methods for scalars, lists and hash
+arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
+and $HASH_OPS are references to hash arrays that define these virtual
+methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
+hash/list reference as the first item.  SCALAR_OPS are subroutines
+that accept a scalar value as the first item.  Any other arguments
+specified when the method is called will be passed to the subroutine.
 
-    [% myorg.people.sort('surname').first.fullname %]
+    # load Template::Stash to make method tables visible
+    use Template::Stash;
 
-Intermediate variables may be used and will behave entirely as expected.
+    # define list method to return new list of odd numbers only
+    $Template::Stash::LIST_OPS->{ odd } = sub {
+	my $list = shift;
+	return [ grep { $_ % 2 } @$list ];
+    };
 
-    [% sorted = myorg.people.sort('surname') %]
-    [% sorted.first.fullname %]
+template:
 
-This simplified dotted notation has the benefit of hiding the
-implementation details of your data.  For example, you could implement
-a data structure as a hash array one day and then change it to an
-object the next without requiring any change to the templates.
+    [% primes = [ 2, 3, 5, 7, 9 ] %]
+    [% primes.odd.join(', ') %]		# 3, 5, 7, 9
 
 =head1 AUTHOR
 
@@ -533,7 +488,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07c, released on 19 July 2002.
+Template Toolkit version 2.08, released on 30 July 2002.
 
 =head1 COPYRIGHT
 

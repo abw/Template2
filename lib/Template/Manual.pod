@@ -61,6 +61,13 @@ Directive syntax, structure and semantics
 This section describes the syntax, structure and semantics of the
 Template Toolkit directives and general presentation language.
 
+=item L<Template::Manual::Directives|Template::Manual::Directives>
+
+Template directives
+
+This section provides a reference of all Template Toolkit directives,
+complete with examples of use.
+
 =item L<Template::Manual::Variables|Template::Manual::Variables>
 
 Template variables and code bindings
@@ -77,13 +84,6 @@ The Template Toolkit provides virtual methods for manipulating variable
 values. Most of them are analogous to regular Perl functions of the
 same names. This section describes the different virtual methods that
 can be applied to scalar, list and hash values.
-
-=item L<Template::Manual::Directives|Template::Manual::Directives>
-
-Template directives
-
-This section provides a reference of all Template Toolkit directives,
-complete with examples of use.
 
 =item L<Template::Manual::Config|Template::Manual::Config>
 
@@ -157,7 +157,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07c, released on 19 July 2002.
+Template Toolkit version 2.08, released on 30 July 2002.
 
 =head1 COPYRIGHT
 

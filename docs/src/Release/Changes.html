@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.07c, detailing
+#   Revision history for the Template Toolkit version 2.08, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -27,7 +27,15 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.07c - July 19th 2002                  ## DEVELOPER RELEASE ##
+# Version 2.08 - July 30th 2002
+#------------------------------------------------------------------------
+
+* Applied two minor patches from Leon to remove 'use warnings' from 2
+  test scripts to maintain compatability with 5.005
+
+
+#------------------------------------------------------------------------
+# Version 2.07c - July 22nd 2002                  ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in Date plugin introduced in last version which caused
@@ -54,6 +62,9 @@
   end of the list.  Added the 'chunk' scalar virtual method to split a
   string into chunks of a particular flushed either left or right.
   (darren, mark, abw)
+
+* Moved documentation for virtual methods into a separate manpage,
+  Template::Manual::VMethods
 
 * Modifed Template::Test to allow -- name testname -- comments to 
   be added to tests to give them names, reported by test harness

@@ -58,12 +58,17 @@ tag by itself.
 
     [% foo %]
 
-The variable may take any of the forms described above:
+The variable can have an unlimited number of elements, each separated
+by a dot '.'.  Each element can have arguments specified within
+parentheses.
 
     [% foo %]
     [% bar.baz %]
     [% biz.baz(10) %]
     ...etc...
+
+See L<Template::Manual::Variables> for a full discussion on template
+variables.
 
 You can also specify expressions using the logical (and, or, not, ?:) and
 mathematic operators (+ - * / % mod div).
@@ -1301,6 +1306,14 @@ equivalent to:
     [% INCLUDE header title='Hello World' %]
     [% INCLUDE header title='Hello World' bgcol='#123456# %]
 
+Here's anothe example, defining a macro for display numbers
+in comma-delimited groups of 3, using the chunk and join virtual
+method.
+
+    [% MACRO number(n) GET n.chunk(-3).join(',') %]
+
+    [% number(1234567) %]    # 1,234,567
+
 A MACRO may precede any directive and must conform to the structure 
 of the directive.
 
@@ -1321,12 +1334,23 @@ evaluated each time the macro is called.
 
     [% header %]
 
+If you've got the EVAL_PERL option set, then you can even define a
+MACRO as a PERL block (see below):
+
+    [% MACRO triple(n) PERL %]
+         my $n = $stash->get('n');
+         print $n * 3;
+    [% END -%]
+
+
 
 
 
 
 
 =item PERL
+
+(for the advanced reader)
 
 The PERL directive is used to mark the start of a block which contains
 Perl code for evaluation.  The EVAL_PERL option must be enabled for Perl
@@ -1397,6 +1421,8 @@ output:
 
 
 =item RAWPERL
+
+(for the very advanced reader)
 
 The Template Toolkit parser reads a source template and generates the
 text of a Perl subroutine as output.  It then uses eval() to evaluate
@@ -1506,6 +1532,8 @@ and available for use within RAWPERL code.
 
 
 =item TRY / THROW / CATCH / FINAL
+
+(more advanced material)
 
 The Template Toolkit supports fully functional, nested exception
 handling.  The TRY directive introduces an exception handling scope 
@@ -2122,7 +2150,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07c, released on 19 July 2002.
+Template Toolkit version 2.08, released on 30 July 2002.
 
 =head1 COPYRIGHT
 

@@ -55,12 +55,18 @@ tag by itself.
 </p>
 <pre>    [% tt_start_tag %] foo [% tt_end_tag %]</pre>
 <p>
-The variable may take any of the forms described above:
+The variable can have an unlimited number of elements, each separated
+by a dot '.'.  Each element can have arguments specified within
+parentheses.
 </p>
 <pre>    [% tt_start_tag %] foo [% tt_end_tag %]
     [% tt_start_tag %] bar.baz [% tt_end_tag %]
     [% tt_start_tag %] biz.baz(10) [% tt_end_tag %]
     ...etc...</pre>
+<p>
+See [% ttlink('Template::Manual::Variables') -%] for a full discussion on template
+variables.
+</p>
 <p>
 You can also specify expressions using the logical (and, or, not, ?:) and
 mathematic operators (+ - * / % mod div).
@@ -1198,6 +1204,13 @@ equivalent to:
 <pre>    [% tt_start_tag %] INCLUDE header title='Hello World' [% tt_end_tag %]
     [% tt_start_tag %] INCLUDE header title='Hello World' bgcol='#123456# [% tt_end_tag %]</pre>
 <p>
+Here's anothe example, defining a macro for display numbers
+in comma-delimited groups of 3, using the chunk and join virtual
+method.
+</p>
+<pre>    [% tt_start_tag %] MACRO number(n) GET n.chunk(-3).join(',') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] number(1234567) [% tt_end_tag %]    # 1,234,567</pre>
+<p>
 A MACRO may precede any directive and must conform to the structure 
 of the directive.
 </p>
@@ -1215,8 +1228,19 @@ evaluated each time the macro is called.
        ...content...
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] header [% tt_end_tag %]</pre>
+<p>
+If you've got the EVAL_PERL option set, then you can even define a
+MACRO as a PERL block (see below):
+</p>
+<pre>    [% tt_start_tag %] MACRO triple(n) PERL [% tt_end_tag %]
+         my $n = $stash-&gt;get('n');
+         print $n * 3;
+    [% tt_start_tag %] END -[% tt_end_tag %]</pre>
 
 <li><b>PERL</b><br>
+<p>
+(for the advanced reader)
+</p>
 <p>
 The PERL directive is used to mark the start of a block which contains
 Perl code for evaluation.  The EVAL_PERL option must be enabled for Perl
@@ -1286,6 +1310,9 @@ output:
 </p>
 
 <li><b>RAWPERL</b><br>
+<p>
+(for the very advanced reader)
+</p>
 <p>
 The Template Toolkit parser reads a source template and generates the
 text of a Perl subroutine as output.  It then uses eval() to evaluate
@@ -1393,6 +1420,9 @@ and available for use within RAWPERL code.
    title = "Exception Handling and Flow Control"
 -%]<ul>
 <li><b>TRY / THROW / CATCH / FINAL</b><br>
+<p>
+(more advanced material)
+</p>
 <p>
 The Template Toolkit supports fully functional, nested exception
 handling.  The TRY directive introduces an exception handling scope 
@@ -1972,7 +2002,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07c, released on 19 July 2002.
+Template Toolkit version 2.08, released on 30 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

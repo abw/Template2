@@ -394,8 +394,8 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-2.50, distributed as part of the
-Template Toolkit version 2.07c, released on 19 July 2002.
+2.51, distributed as part of the
+Template Toolkit version 2.08, released on 30 July 2002.
 
 
 

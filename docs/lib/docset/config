@@ -75,7 +75,7 @@ docset => {
             prev   => 'Tutorial',
             next   => 'Modules',
         
-            pagelist => [ 'Intro', 'Syntax', 'Variables', 'VMethods', 'Directives', 'Config', 'Filters', 'Plugins', 'Internals', 'Views', 'Refs', 'Credits' ],
+            pagelist => [ 'Intro', 'Syntax', 'Directives', 'Variables', 'VMethods', 'Config', 'Filters', 'Plugins', 'Internals', 'Views', 'Refs', 'Credits' ],
         
             pages  => {
                 Intro => {
@@ -102,6 +102,19 @@ docset => {
                     about   => 'Directive syntax, structure and semantics',
                 
                     prev    => 'Intro',
+                    next    => 'Directives',
+                },
+                Directives => {
+                    id      => 'Directives',
+                    name    => 'Directives',
+                    title   => 'Directives',
+                    podname => 'Template::Manual::Directives',
+                    url     => 'Manual/Directives.html',
+                    uplink  => '..',
+                    author  => 'abw',
+                    about   => 'Template directives',
+                
+                    prev    => 'Syntax',
                     next    => 'Variables',
                 },
                 Variables => {
@@ -114,7 +127,7 @@ docset => {
                     author  => 'abw',
                     about   => 'Template variables and code bindings',
                 
-                    prev    => 'Syntax',
+                    prev    => 'Directives',
                     next    => 'VMethods',
                 },
                 VMethods => {
@@ -128,19 +141,6 @@ docset => {
                     about   => 'Virtual Methods',
                 
                     prev    => 'Variables',
-                    next    => 'Directives',
-                },
-                Directives => {
-                    id      => 'Directives',
-                    name    => 'Directives',
-                    title   => 'Directives',
-                    podname => 'Template::Manual::Directives',
-                    url     => 'Manual/Directives.html',
-                    uplink  => '..',
-                    author  => 'abw',
-                    about   => 'Template directives',
-                
-                    prev    => 'VMethods',
                     next    => 'Config',
                 },
                 Config => {
@@ -153,7 +153,7 @@ docset => {
                     author  => 'abw',
                     about   => 'Configuration options',
                 
-                    prev    => 'Directives',
+                    prev    => 'VMethods',
                     next    => 'Filters',
                 },
                 Filters => {
@@ -1306,9 +1306,9 @@ docset => {
 	'Template::Tutorial' => 'Tutorial/index.html',
 	'Template::Manual::Intro' => 'Manual/Intro.html',
 	'Template::Manual::Syntax' => 'Manual/Syntax.html',
+	'Template::Manual::Directives' => 'Manual/Directives.html',
 	'Template::Manual::Variables' => 'Manual/Variables.html',
 	'Template::Manual::VMethods' => 'Manual/VMethods.html',
-	'Template::Manual::Directives' => 'Manual/Directives.html',
 	'Template::Manual::Config' => 'Manual/Config.html',
 	'Template::Manual::Filters' => 'Manual/Filters.html',
 	'Template::Manual::Plugins' => 'Manual/Plugins.html',

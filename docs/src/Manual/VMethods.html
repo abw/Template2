@@ -19,7 +19,7 @@
 		    "Hash Virtual Methods",
 		    "List Virtual Methods",
 		    "Automagic Promotion of Scalar to List for Virtual Methods",
-		    "Compound Variables"
+		    "Defining Custom Virtual Methods"
 		];
 	PROCESS tocitem 
 	        title ="AUTHOR"
@@ -395,53 +395,6 @@ need to be explicit:
   [% tt_end_tag %]</pre>
 
 </ul>
-<p>
-The following example demonstrates how an empty list ('folk') can be 
-populated with formatted strings by using the push() method in conjunction
-with a FOREACH loop.  The resultant list can then be printed using join.
-</p>
-<pre>    [% tt_start_tag %] # define some initial data
-       people   =&gt; [ 
-           { id =&gt; 'tom',   name =&gt; 'Tom'     },
-	   { id =&gt; 'dick',  name =&gt; 'Richard' },
-           { id =&gt; 'larry', name =&gt; 'Larry'   },
-       ]</pre>
-<pre>       # define an empty list that list methods can be called against
-       folk = [] 
-    -[% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] folk.push(&quot;&lt;a href=\&quot;${person.id}.html\&quot;&gt;$person.name&lt;/a&gt;&quot;)
-         FOREACH person = people.sort('name') -[% tt_end_tag %]
-    [% tt_start_tag %] folk.join(&quot;,\n&quot;) [% tt_end_tag %]</pre>
-<p>
-Output:
-</p>
-<pre>    &lt;a href=&quot;larry.html&quot;&gt;Larry&lt;/a&gt;,
-    &lt;a href=&quot;dick.html&quot;&gt;Richard&lt;/a&gt;,
-    &lt;a href=&quot;tom.html&quot;&gt;Tom&lt;/a&gt;</pre>
-<p>
-You can define your own virtual methods for scalars, lists and hash
-arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
-and $HASH_OPS are references to hash arrays that define these virtual
-methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
-hash/list reference as the first item.  SCALAR_OPS are subroutines
-that accept a scalar value as the first item.  Any other arguments
-specified when the method is called will be passed to the subroutine.
-</p>
-<pre>    # load Template::Stash to make method tables visible
-    use Template::Stash;</pre>
-<pre>    # define list method to return new list of odd numbers only
-    $Template::Stash::LIST_OPS-&gt;{ odd } = sub {
-	my $list = shift;
-	return [ grep { $_ % 2 } @$list ];
-    };</pre>
-<p>
-template:
-</p>
-<pre>    [% tt_start_tag %] primes = [ 2, 3, 5, 7, 9 ] [% tt_end_tag %]
-    [% tt_start_tag %] primes.odd.join(', ') [% tt_end_tag %]		# 3, 5, 7, 9</pre>
-<p>
-See also the examples in the t/vmeth.t test script.
-</p>
 [%- END %]
 [% WRAPPER subsection
    title = "Automagic Promotion of Scalar to List for Virtual Methods"
@@ -497,26 +450,28 @@ will be called, as expected, in preference to the list virtual method.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "Compound Variables"
+   title = "Defining Custom Virtual Methods"
 -%]<p>
-Compound 'dotted' variables may contain any number of separate
-elements.  Each element may evaluate to any of the permitted variable
-types and the processor will then correctly use this value to evaluate
-the rest of the variable.  Arguments may be passed to any of the
-intermediate elements.
+You can define your own virtual methods for scalars, lists and hash
+arrays.  The Template::Stash package variables $SCALAR_OPS, $LIST_OPS
+and $HASH_OPS are references to hash arrays that define these virtual
+methods.  HASH_OPS and LIST_OPS methods are subroutines that accept a
+hash/list reference as the first item.  SCALAR_OPS are subroutines
+that accept a scalar value as the first item.  Any other arguments
+specified when the method is called will be passed to the subroutine.
 </p>
-<pre>    [% tt_start_tag %] myorg.people.sort('surname').first.fullname [% tt_end_tag %]</pre>
+<pre>    # load Template::Stash to make method tables visible
+    use Template::Stash;</pre>
+<pre>    # define list method to return new list of odd numbers only
+    $Template::Stash::LIST_OPS-&gt;{ odd } = sub {
+	my $list = shift;
+	return [ grep { $_ % 2 } @$list ];
+    };</pre>
 <p>
-Intermediate variables may be used and will behave entirely as expected.
+template:
 </p>
-<pre>    [% tt_start_tag %] sorted = myorg.people.sort('surname') [% tt_end_tag %]
-    [% tt_start_tag %] sorted.first.fullname [% tt_end_tag %]</pre>
-<p>
-This simplified dotted notation has the benefit of hiding the
-implementation details of your data.  For example, you could implement
-a data structure as a hash array one day and then change it to an
-object the next without requiring any change to the templates.
-</p>
+<pre>    [% tt_start_tag %] primes = [ 2, 3, 5, 7, 9 ] [% tt_end_tag %]
+    [% tt_start_tag %] primes.odd.join(', ') [% tt_end_tag %]		# 3, 5, 7, 9</pre>
 [%- END %]
 [%- END %]
 [% WRAPPER section
@@ -531,7 +486,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07c, released on 19 July 2002.
+Template Toolkit version 2.08, released on 30 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

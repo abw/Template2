@@ -23,7 +23,7 @@ use Template::Directive;
 
 my $DEBUG = grep(/-d/, @ARGV);
 #$Template::Parser::DEBUG = $DEBUG;
-$Template::Directive::Pretty = $DEBUG;
+#$Template::Directive::Pretty = $DEBUG;
 $Template::Test::PRESERVE = 1;
 
 my $dir   = -d 't' ? 't/test' : 'test';
