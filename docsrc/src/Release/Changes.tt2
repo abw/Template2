@@ -65,6 +65,13 @@
 * Applied a patch from Mark Fowler to improve the XML XPath plugin's
   handling of nested elements.
 
+* Fixed handling of prefix support in template() and insert() methods
+  of Template::Content.  Any prefix is stripped from the name but passed 
+  as the second argument to the provider fetch() method.  e.g.
+  [% INCLUDE foo:bar %] calls the foo $provider->fetch('bar', 'foo') and
+  [% INCLUDE http://tt2.org/t/templates/hello %] results in a call to
+  $provider->fetch('//tt2.org/t/templates/hello', 'http')
+
 
 #------------------------------------------------------------------------
 # Version 2.06d - 22nd January 2002               ## DEVELOPER RELEASE ##
