@@ -54,7 +54,7 @@ output:
 
 Local variable definitions may be specified after the template name,
 temporarily masking any existing variables.  Insignificant whitespace
-is ignore within directives so you can add variable definitions on the
+is ignored within directives so you can add variable definitions on the
 same line, the next line or split across several line with comments
 interspersed, if you prefer.
 
