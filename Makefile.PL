@@ -440,8 +440,11 @@ XS Stash: TT2 now twice as fast!
 
 We have a new, high speed version of the Template::Stash. It's 
 a Perl XS module which can evaluate templates about twice as fast as 
-the pure-Perl version.  Although still strictly "experimental", it
-has been widely tested and is thought to be stable and reliable.
+the pure-Perl version.  It has been widely tested and is thought to be 
+stable and reliable.  However, please note that there may be outstanding
+issues relating to accessing data from tied hashes (e.g. Apache::Session).
+Consult the README file or the Template Toolkit mailing list for details:
+http://www.tt2.org/pipermail/templates/2001-September/001568.html
 
 You can choose to build the XS stash module and enable it by default
 so that it is used automatically for all templates.  If you build it
