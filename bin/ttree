@@ -296,6 +296,8 @@ sub process_file {
     my ($dest, $destfile, $filename, $check, 
         $srctime, $desttime, $mode, $uid, $gid);
     my ($old_suffix, $new_suffix);
+    my $is_dep = 0;
+    my $copy_file = 0;
 
     $absfile ||= $file;
     $filename = basename($file);
@@ -314,6 +316,15 @@ sub process_file {
                    
 #    print "proc $file => $dest\n";
 
+
+    
+    # check against copy list
+    foreach $check (@$copy) {
+        if ($filename =~ /$check/) {
+            $copy_file = 1;
+        }
+    }
+
     # stat the source file unconditionally, so we can preserve
     # mode and ownership
     (undef, undef, $mode, undef, $uid, $gid, undef, undef, undef, $srctime,
@@ -323,10 +334,11 @@ sub process_file {
     if (! $all && ! $options{ force } && -f $dest) {
         $desttime = ( stat($dest) )[9];
 
-        if (defined $depends) {
+        if (defined $depends and not $copy_file) {
             my $deptime  = depend_time($file, $depends);
             if (defined $deptime && ($srctime < $deptime)) {
                 $srctime = $deptime;
+                $is_dep = 1;
             }
         }
     
@@ -338,21 +350,19 @@ sub process_file {
     }
     
     # check against copy list
-    foreach $check (@$copy) {
-        if ($filename =~ /$check/) {
-            printf "  > %-32s (copied, matches /$check/)\n", $file
-                if $verbose;
+    if ($copy_file) {
+        printf "  > %-32s (copied, matches /$check/)\n", $file
+            if $verbose;
 
-            unless ($dryrun) {
-                copy($absfile, $dest);
+        unless ($dryrun) {
+            copy($absfile, $dest);
 
-                if ($preserve) {
-                    chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
-                    chmod($mode, $dest) || warn "chmod($dest): $!\n";
-                }
+            if ($preserve) {
+                chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
+                chmod($mode, $dest) || warn "chmod($dest): $!\n";
             }
-            return;
         }
+        return;
     }
 
     # check against acceptance list
