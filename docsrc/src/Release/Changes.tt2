@@ -28,6 +28,15 @@
   [% USE URL('/cgi-bin/foo', items=[10,20]) %] generates a URL like:
   /cgi-bin/foo?item=10&amp;item=20
 
+* Applied a patch from David D. Kilzer to Makefile.PL to add -I flags
+  to the various invocations of perl that we missed, and also to add
+  a clean/FILES target for WriteMakefile().  See.
+  http://tt2.org/pipermail/templates/2002-January/002431.html
+
+* Fixed Makefile.PL to warn, not die, about mandatory modules, leaving
+  it to the definitions in the PREREQ_PM which the CPAN module can 
+  understand.  Thanks to Leon for waving the flag.
+
 
 #------------------------------------------------------------------------
 # Version 2.06c - 20th December 2001              ## DEVELOPER RELEASE ##
