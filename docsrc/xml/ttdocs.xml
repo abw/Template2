@@ -9,8 +9,10 @@
     </intro>
 
 
-    <!-- TUTORIAL -->
-    <book id="Tutorial" prefix="Template/Tutorial" title="Template Tutorials"
+    <!-- BOOK: TUTORIAL -->
+    <book id="Tutorial" 
+          prefix="Template/Tutorial" 
+          title="Template Tutorials"
 	  about="Template Toolkit Tutorials">
 
         <intro>
@@ -22,7 +24,8 @@
 	</intro>
 
 	<!-- Template::Tutorial -->
-	<index pod="Template::Tutorial" podfile="Template/Tutorial.pod"/>
+	<index pod="Template::Tutorial" 
+               podfile="Template/Tutorial.pod"/>
 
 	<!-- Template::Tutorial::Web -->
 	<page id="Web"
@@ -43,7 +46,8 @@
 	<page id="Datafile"
 	      standalone="1"
 	      about="Creating Data Output Files Using the Template Toolkit"
-	      author="dave" copyright="2001">
+	      author="dave" 
+              copyright="2001">
 	    <intro>
               This tutorial gives an overview of the Template Toolkit,
               showing in particular how to use it to read and write
@@ -56,8 +60,10 @@
     </book>
 
 
-    <!-- USER MANUAL -->
-    <book id="Manual" prefix="Template/Manual" title="User Manual"
+    <!-- BOOK: USER MANUAL -->
+    <book id="Manual" 
+	  prefix="Template/Manual" 
+	  title="User Manual"
 	  about="User guide and reference manual for the Template Toolkit">
 
 	<intro>
@@ -66,7 +72,8 @@
 	</intro>
 
 	<!-- Template::Manual -->
-	<index pod="Template::Manual" podfile="Template/Manual.pod"/>
+	<index pod="Template::Manual" 
+	       podfile="Template/Manual.pod"/>
 
 	<!-- Template::Manual::Introduction -->
 	<page id="Intro" 
@@ -201,8 +208,9 @@
     </book>
 
 
-    <!-- MODULES -->
-    <book id="Modules" title="Module Documentation"
+    <!-- BOOK: MODULES -->
+    <book id="Modules" 
+	  title="Module Documentation"
 	  about="Core modules comprising the Template Toolkit">
 
 	<intro>This section contains the documentation for the
@@ -210,7 +218,8 @@
         </intro>
 
 	<!-- Template::Modules -->
-	<index pod="Template::Modules" podfile="Template/Modules.pod"/>
+	<index pod="Template::Modules" 
+	       podfile="Template/Modules.pod"/>
 
 	<!-- Template -->
 	<page id="Template"
@@ -343,7 +352,7 @@
 	<page id="Plugin_Autoformat" 
 	      name="Template::Plugin::Autoformat"
 	      about="Interface to Text::Autoformat module"
-	      seealso="Template::Plugin, Text::Autoformat"
+	      seealso="Template::Plugin, CPAN::Text::Autoformat"
 	      module="1"
 	      nofoot="1"/>
 
@@ -357,8 +366,8 @@
 	<!-- Template::Plugin::DBI -->
 	<page id="Plugin_DBI" 
 	      name="Template::Plugin::DBI"
-	      about="Interface to the DBI module"
-	      seealso="Template::Plugin, CPAN::DBI"
+	      about="Template interface to the DBI module"
+	      seealso="Template::Plugin, CPAN::DBI, CPAN::Tie::DBI"
 	      module="1"
               nofoot="1"/>
 
@@ -390,7 +399,7 @@
 	<page id="Plugin_Dumper" 
 	      name="Template::Plugin::Dumper"
 	      about="Plugin interface to Data::Dumper"
-	      seealso="Template::Plugin, Data::Dumper"
+	      seealso="Template::Plugin, CPAN::Data::Dumper"
 	      module="1"
 	      nofoot="1"/>
 
@@ -408,7 +417,8 @@
 	      name="Template::Plugin::Filter"
 	      about="Base class for plugin filters"
 	      module="1"
-	      seealso="Template::Plugin, Template::Filters, Template::Manual::Filters" 
+	      seealso="Template::Plugin, Template::Filters, 
+	               Template::Manual::Filters" 
 	      />
 
 	<!-- Template::Plugin::Format -->
@@ -423,10 +433,11 @@
 	      name="Template::Plugin::GD::Image"
 	      about="Interface to GD Graphics Library"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Polygon,
-                      Template::Plugin::GD::Constants, GD"
+                       Template::Plugin::GD::Polygon,
+                       Template::Plugin::GD::Constants, GD"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             Lincoln D. Stein wrote the GD.pm interface to the GD library.
             </authadd>
@@ -443,7 +454,8 @@
                       Template::Plugin::GD::Image,
                       Template::Plugin::GD::Constants, GD"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             Lincoln D. Stein wrote the GD.pm interface to the GD library.
             </authadd>
@@ -460,7 +472,8 @@
                       Template::Plugin::GD::Image,
                       Template::Plugin::GD::Polygon, GD"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             Lincoln D. Stein wrote the GD.pm interface to the GD library.
             </authadd>
@@ -478,7 +491,8 @@
                       Template::Plugin::GD::Text::Align,
                       GD, GD::Text"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Text module was written by Martien Verbruggen.
             </authadd>
@@ -496,7 +510,8 @@
                       Template::Plugin::GD::Text::Wrap,
                       GD, GD::Text::Align"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Text module was written by Martien Verbruggen.
             </authadd>
@@ -513,7 +528,8 @@
                       Template::Plugin::GD::Text::Align,
                       GD, GD::Text::Wrap"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Text module was written by Martien Verbruggen.
             </authadd>
@@ -538,7 +554,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph module was written by Martien Verbruggen.
             </authadd>
@@ -563,7 +580,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph, GD::Graph3d"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph3d module was written by Jeremy Wadsack.
             </authadd>
@@ -589,7 +607,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph module was written by Martien Verbruggen.
             </authadd>
@@ -614,7 +633,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph, GD::Graph3d"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph3d module was written by Jeremy Wadsack.
             </authadd>
@@ -640,7 +660,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph module was written by Martien Verbruggen.
             </authadd>
@@ -665,7 +686,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph module was written by Martien Verbruggen.
             </authadd>
@@ -690,7 +712,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph module was written by Martien Verbruggen.
             </authadd>
@@ -715,7 +738,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph module was written by Martien Verbruggen.
             </authadd>
@@ -740,7 +764,8 @@
                       Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
             The GD::Graph module was written by Martien Verbruggen.
             </authadd>
@@ -765,7 +790,8 @@
                       Template::Plugin::GD::Graph::pie,
                       GD::Graph, GD::Graph3d"
 	      module="1"
-	      author="craig" copyright="2001">
+	      author="craig" 
+	      copyright="2001">
 	    <authadd>
 	    The GD::Graph3d module was written by Jeremy Wadsack.
 	    The GD::Graph module was written by Martien Verbruggen.
@@ -796,7 +822,7 @@
 	      name="Template::Plugin::Pod"
 	      about="Plugin interface to Pod::POM (Pod Object Model)"
 	      module="1"
-	      seealso="Template::Plugin, Pod::POM"/>
+	      seealso="Template::Plugin, CPAN::Pod::POM"/>
 
 	<!-- Template::Plugin::String -->
 	<page id="Plugin_String" 
@@ -876,16 +902,20 @@
 
 
 
-    <!-- LIBRARY -->
-    <book id="Library" prefix="Template/Library" title="Libraries"
+    <!-- BOOK: LIBRARY -->
+    <book id="Library" 
+	  prefix="Template/Library" 
+	  title="Libraries"
 	  about="Template libraries">
+
         <intro>
           This section contains documentation for the template libraries
           distributed with the Template Toolkit.
         </intro>
 
 	<!-- Template::Library::HTML -->
-	<page id="HTML" title="HTML Library"
+	<page id="HTML" 
+	      title="HTML Library"
 	      about="Template library for building basic HTML pages"
 	      standalone="1"
 	      seealso="Template::Library::Splash">
@@ -896,8 +926,9 @@
 	</page>
 
 	<!-- Template::Library::Splash -->
-	<page id="Splash" title="Splash! Library"
-	   about="Template library for building stylish HTML user interfaces"
+	<page id="Splash" 
+	      title="Splash! Library"
+	      about="Template library for building stylish HTML user interfaces"
 	      standalone="1"
 	      seealso="Template::Library::HTML">
 	    <intro>
@@ -908,7 +939,8 @@
 	</page>
 
 	<!-- Template::Library::PostScript -->
-	<page id="PostScript" title="PostScript Library"
+	<page id="PostScript" 
+	      title="PostScript Library"
 	      standalone="1"
 	      about="Template library for generating PostScript">
 	    <intro>
@@ -919,9 +951,11 @@
     </book>
 
 
-    <!-- TOOLS -->
-    <book id="Tools" prefix="Template/Tools"
+    <!-- BOOK: TOOLS -->
+    <book id="Tools" 
+	  prefix="Template/Tools"
 	  about="Template Tools">
+
         <intro>
 	    This section contains documentation for 'tpage' and 'ttree',
             two useful template processing tools distributed with the 
@@ -938,9 +972,10 @@
     </book>
 
 
-    <!-- FAQ -->
-    <book id="FAQ" title="Frequently Asked Questions"
-		   about="Frequently Asked Questions">
+    <!-- BOOK: FAQ -->
+    <book id="FAQ" 
+	  title="Frequently Asked Questions"
+	  about="Frequently Asked Questions">
 
 	<!-- Template::FAQ -->
 	<page id="FAQ" 
@@ -957,12 +992,16 @@
     </book>
 
 
-    <!-- RELEASE NOTES -->
-    <book id="Release" type="text" title="Release Notes"
-	  about="Release notes: README, Changes, TODO">
+    <!-- BOOK: RELEASE NOTES -->
+    <book id="Release" 
+	  type="text" 
+	  title="Release Notes"
+	  about="Release notes: README, Changes, TODO, etc.">
+
         <intro>
 	  This section contains the release notes for the Template Toolkit.
         </intro>
+
         <page id="README"  about="General information"/>
         <page id="INSTALL" about="Installation and configuration guide"/>
         <page id="Changes" about="Change history"/>

@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w                                         # -*- perl -*-
+#------------------------------------------------------------------------
 #
 # ttmkdocs  (docsrc/bin/ttmkdocs)
 #
@@ -13,6 +14,7 @@
 # documentation which are written to docs/src and some additional
 # library elements for same, written to docs/lib. 
 #
+#------------------------------------------------------------------------
 
 use strict;
 use lib qw( /home/abw/src/pmod/Pod-POM/lib );    ### TODO ###
@@ -28,13 +30,31 @@ my $PROGRAM = basename($0);
 
 #$Template::View::DEBUG = 1;
 
+
+#------------------------------------------------------------------------
+# read command line options, offer help if they need it, etc.
+#------------------------------------------------------------------------
+
+my $args = { };
+getopts('dhqvr:', $args);
+
+die <<'EOF' if $args->{ h };
+usage: $PROGRAM [ -q | -v | -h | -r /path/to/tt2/root ]
+
+    -q             quiet mode - stop the annoying messages
+    -v             verbose mode - get extra annoying messages
+    -h             help - get this particular annoying message
+    -r /tt2/root   specify path to TT2 distribution root
+
+EOF
+
+
 #------------------------------------------------------------------------
 # attempt to grok the root directory of the distribution;
 # script expects to be run in distribution root, in .../docsrc or
 # .../docsrc/bin.  -r <rootdir> option can also be used.
+#------------------------------------------------------------------------
 
-my $args = { };
-getopts('dhqvr:', $args);
 my $root = $args->{ r };
 
 unless ($root) {
@@ -55,7 +75,8 @@ EOF
 
 
 #------------------------------------------------------------------------
-# define configuration options and template variables
+# define docset configuration options and template variables
+#------------------------------------------------------------------------
 
 my $dirs = {
     pod  => "docsrc/pod",
@@ -67,26 +88,25 @@ my $dirs = {
 };
 my $vars = {
     ttversion => $Template::VERSION,
-    program => $PROGRAM,
-    version => $VERSION,
-    help    => $args->{ h },
-    quiet   => $args->{ q },
-    verbose => $args->{ v },
-#    debug   => $args->{ d },
-    dbg   => \&debug,
-    dir     => $dirs,
-    xmlfile => "$root/docsrc/xml/ttdocs.xml",
+    program   => $PROGRAM,
+    version   => $VERSION,
+    quiet     => $args->{ q },
+    verbose   => $args->{ v },
+    dbg       => \&debug,
+    dir       => $dirs,
+    xmlfile   => "$root/docsrc/xml/ttdocs.xml",
 };
 
 
 #------------------------------------------------------------------------
 # create a Template processor and fire!
+#------------------------------------------------------------------------
 
 my $template = Template->new({
     INCLUDE_PATH => "$root/docsrc/src:$root/docsrc/lib:$root/templates",
     PREFIX_MAP   => { src => 0, lib => 1, tt => 2 },
     OUTPUT_PATH  => $root,
-    PRE_PROCESS  => 'config',
+    PRE_PROCESS  => [ 'config', 'authors' ],
     EVAL_PERL    => 1,
     FILTERS      => {
 	tt_tags        => \&tt_tags,
@@ -96,15 +116,15 @@ my $template = Template->new({
 })
     || die $Template::ERROR, "\n";
 
-
 my $scrub;
-$template->process(\*DATA, $vars, \$scrub)
+$template->process('docset/maker', $vars, \$scrub)
     || die "error: ", $template->error(), "\n";
 
 
 #------------------------------------------------------------------------
-# filter to fix any TT tags like [% this %] in the input, changing them
+# filters to fix any TT tags like [% this %] in the input, changing them
 # to [% tt_start_tag %] this [% tt_end_tag %], effectively escaping them
+#------------------------------------------------------------------------
 
 sub tt_tags {
     my $text = shift;
@@ -137,55 +157,5 @@ sub debug {
     print STDERR ($name ? "$name => " : ''), "ref: [$ref]  item: [$str]\n";
 }
 
-
-#------------------------------------------------------------------------
-# template source
-
-__DATA__
-[%  # PROCESS banner | stderr UNLESS quiet;
-    PROCESS help | stderr IF help;
-    STOP IF help;
-
-   "Building documentation for Template Toolkit v$tt.version, $tt.release\n" | stderr;
-
-    USE dom = XML.DOM;
-    xmldom  = dom.parse(xmlfile);
-    xdocset = xmldom.getElementsByTagName('docset');
-
-    MACRO xcontent(xnode, name) BLOCK;
-	node = xnode.getElementsByTagName(name, 0);
-	text = node.childrenToTemplate(verbose=1, default="asis");
-	text.replace('\s+', ' ').replace('^\s+', '').replace('\s+$', '');
-    END;
-
-    BLOCK asis; node.toString; node.prune; END;
-
-    PROCESS docset/maker;
-
-    RETURN;
-%]
-
-[% BLOCK banner -%]
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-[% program %] version [% version %]
-
-This utility is used to building the Template Toolkit documentation from 
-the original source documents.  It constructs all the .pod pages for the 
-toolkit from constituent parts.  You probably don't want this script if 
-you're just looking to build the HTML documentatiom.
-
-You can use the quiet (-q) flag to stop this message being displayed.
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-[% END %]
-
-
-[% BLOCK help -%]
-usage: [% program %] [ -q | -v | -h | -r /tt2/root ]
-
-    -q             quiet mode - stop the annoying messages
-    -v             verbose mode - get extra annoying messages
-    -h             help - get this particular annoying message
-    -r /tt2/root   specify path to TT2 distribution root
-[% END %]
 
 

@@ -423,7 +423,7 @@ CGI object and a 'get_user_projects' sub-routine.
 	PRE_PROCESS  => 'config',
     });
 
-    $template->process($userinfo, $vars)
+    $template->process($file, $vars)
 	|| die $template->error();
 
 Here's a sample template file that we might create to build the output
