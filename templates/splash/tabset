@@ -68,6 +68,7 @@
 			      pad=0 space=0 border=0;
 		WRAPPER html/cell width=0;
 		    INCLUDE splash/icon img='left';
+		    '&nbsp;';
 		END;
 		INCLUDE html/cell width=0;  # previous content
 	    END;
@@ -77,6 +78,7 @@
 			      pad=0 space=0 border=0;
 		INCLUDE html/cell width=0;  # previous content
 		WRAPPER html/cell width=0;
+		    '&nbsp;';
 		    INCLUDE splash/icon img='right';
 		END;
 	    END;
