@@ -51,14 +51,18 @@ plugins that require external modules not available on your system.
 
 EOF
 
-foreach my $module (qw( XML::DOM XML::RSS XML::XPath DBI )) {
+foreach my $mods ( [ XML::DOM   => \&check_dom   ],
+		   [ XML::RSS   => \&check_rss   ],
+		   [ XML::XPath => \&check_xpath ],
+		   [ DBI        => \&dbi_config  ] ) {
+    my ($module, $code) = @$mods;
+
     eval "use $module";
     if ($@) {
-	print "    $module: not found - skipping test\n";
+	print "    $module - skipping test (module not installed)\n";
     }
     else {
-	print "    $module found - including test\n";
-	dbi_config() if $module eq 'DBI';
+	&$code;
     }
 }
 
@@ -105,6 +109,40 @@ sub build_docs {
 echo "Building documentation for version \$(VERSION)" ;           \\
 \$(PERL) bin/ttree -f ./docs/ttdist.cfg --define version=\$(VERSION) -a;  \\
 EOF
+}
+
+
+#------------------------------------------------------------------------
+# check_dom_version()
+#------------------------------------------------------------------------
+
+sub check_dom {
+    if ($] == 5.006 && $XML::DOM::VERSION <= 1.25) {
+	print "    XML::DOM - version $XML::DOM::VERSION may not work with Perl $], skipping\n";
+    }
+    else {
+	print "    XML::DOM - including tests\n";
+    }
+}
+
+
+sub check_rss {
+    if ($XML::RSS::VERSION < 0.9) {
+	print "    XML::RSS - please upgrade to version 0.9 or later ($XML::RSS::VERSION installed)\n";
+    }
+    else {
+	print "    XML::RSS - including tests\n";
+    }
+}
+
+
+sub check_xpath {
+    if ($XML::XPath::VERSION < 1.00) {
+	print "    XML::XPath - please upgrade to version 1.00 or later ($XML::XPath::VERSION installed)\n";
+    }
+    else {
+	print "    XML::XPath - including tests\n";
+    }
 }
 
 
