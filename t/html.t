@@ -70,15 +70,18 @@ OK
 -- test --
 -- name html entity --
 [% TRY; 
+     text =
       "Léon Brocard" | html_entity;
    CATCH;
      error;
-   END
+   END;
+ "passed" IF text == "L&eacute;on Brocard";
+ "passed" IF text == "L&#233;on Brocard";
 %]
 -- expect --
 -- process --
 [%  IF entities -%]
-L&eacute;on Brocard
+passed
 [%- ELSE -%]
 html_entity error - cannot locate Apache::Util or HTML::Entities
 [%- END %]
