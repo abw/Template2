@@ -1,0 +1,16 @@
+[% # set options directly 
+   WRAPPER splash/box
+	   border = 5
+	   pad    = 10
+%]
+
+<h3>Carnival</h3>
+
+Just as an individual person dreams
+fantastic happenings to release the 
+inner forces which cannot be encompassed
+by ordinary events, so too a city needs
+its dreams.
+
+[% END %]
+

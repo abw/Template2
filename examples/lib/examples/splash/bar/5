@@ -1,0 +1,7 @@
+[% WRAPPER splash/bar 
+    col   = 'grey75' 
+    align = 'right' 
+    width = '50%' 
+-%]
+Hello World
+[%- END %]

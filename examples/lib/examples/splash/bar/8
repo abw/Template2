@@ -1,0 +1,22 @@
+[%  width  = '50%'
+    pad    = 6
+%]
+
+[% WRAPPER splash/bar %]
+<b>Scattered Work</b>
+[% END %]
+
+[% WRAPPER splash/frame + splash/panel %]
+The artificial separation of houses and 
+work creates intolerable rifts in people's
+inner lives.
+[% END %]
+
+[% WRAPPER splash/bar + splash/text
+    link   = "tab.html" 
+    invert = 1 
+    align  = 'right'
+%]
+<i>more...</i>
+[% END %]
+

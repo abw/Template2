@@ -1,0 +1,10 @@
+[% WRAPPER splash/frame 
+	   style  = splash.style.select
+	   border = 0
+	   pad    = 10
+%]
+<tr>
+ <td> This has no border </td>
+</tr>
+[% END %]
+

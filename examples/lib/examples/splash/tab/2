@@ -1,0 +1,4 @@
+[% INCLUDE splash/tab
+    col     = 'aqua'
+    content = 'Foo'
+%]

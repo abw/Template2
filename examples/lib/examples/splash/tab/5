@@ -1,0 +1,10 @@
+[% WRAPPER splash/tab
+    invert = 1
+    style  = splash.style.select
+    width  = '30%'
+    align  = 'right'
+%]
+Bar
+[% END %]
+
+

@@ -1,13 +1,13 @@
 [%  library = libs.splash
-    section = 'menus' ;
+    section = 'menu' ;
     WRAPPER page
 %]
 
 <p>
-The splash/menu component generates a menu as a series of
-splash/button elements.  The splash/menubar template incorporates this
-into a larger title bar.
+[% PROCESS splash/about/menu %]
 </p>
+
+[% PROCESS splash/config %]
 
 [% buttons = [
     { link => 'buttons.html', text => 'Buttons' }
@@ -16,12 +16,6 @@ into a larger title bar.
    ]
 %]
 
-[% PROCESS splash/config %]
-
 [% PROCESS example/vsplit2 from=1 to=5 indent=1 %]
-
-[% PROCESS example/tbreak %]
-
-[% PROCESS example/vsplit2 from=6 to=7 indent=0 %]
 
 [% END %]

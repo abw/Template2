@@ -1,0 +1,8 @@
+[%  tabs = [
+ 	{ link => '#wait',  text => 'Wait'  }
+ 	{ link => '#meet',  text => 'Meet'  }
+ 	{ link => '#shade', text => 'Shade' }
+    ]
+%]
+
+[% INCLUDE splash/tabset %]

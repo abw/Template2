@@ -1,0 +1,5 @@
+[% WRAPPER splash/tab
+    width = '20%'
+%]
+Foo
+[% END %]

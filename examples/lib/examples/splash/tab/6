@@ -1,0 +1,9 @@
+[% WRAPPER splash/tab + splash/text
+    invert = 1
+    style  = splash.style.select
+    width  = '50%'
+%]
+Baz
+[% END %]
+
+

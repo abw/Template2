@@ -1,0 +1,17 @@
+[%  WRAPPER splash/button
+	    style = splash.style.select;
+%]
+
+[% WRAPPER splash/text
+           style = splash.style.select;
+-%]
+<h3>Hello World</h3>
+[% END %]
+
+[% WRAPPER splash/text
+	   style = splash.style.default
+-%]
+Choosing a Language for your Project
+[% END %]
+
+[% END %]

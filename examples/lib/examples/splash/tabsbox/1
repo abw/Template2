@@ -1,0 +1,18 @@
+[%  tabs = [
+ 	{ link => '#wait',  text => 'Wait'  }
+ 	{ link => '#meet',  text => 'Meet'  }
+ 	{ link => '#shade', text => 'Shade' }
+    ]
+%]
+
+[% WRAPPER splash/tabsbox %]
+
+<h3>A Pattern Language</h3>
+
+More extracts taken from 'A Pattern Language'
+by Christopher Alexander, et al.
+<br>
+Oxford University Press, 1977,
+ISBN 0-19-501919-9
+
+[% END %]

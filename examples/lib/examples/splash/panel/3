@@ -1,0 +1,39 @@
+[%  style = splash.style.select
+    width = '75%' 
+    pad   = 10
+%]
+
+[% WRAPPER splash/bar + splash/text 
+           size='+1'
+%]
+University as a Marketplace
+[% END %]
+
+[% WRAPPER splash/frame %]
+    [% WRAPPER splash/panel %]
+    <b>
+    Concentrated, cloistered universities, with 
+    closed admission policies and rigid procedures
+    which dictate who may teach a course, kill
+    opportunities for learning.
+    </b>
+    [% END %]
+
+    [% WRAPPER splash/panel col='white' %]
+    The original universities in the middle ages
+    were simply collections of teachers who 
+    attracted students because they had something
+    to offer.  They were marketplaces of ideas,
+    located all over the town, where people could
+    shop around for the kinds of ideas and 
+    learning which made sense to them.
+    [% END %]
+[% END %]
+
+[% WRAPPER splash/bar + splash/text
+    invert  = 1
+    align   = 'right'
+    link    = 'menu.html'
+%]
+next &gt;&gt;&gt;
+[% END %]

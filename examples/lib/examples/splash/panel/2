@@ -1,0 +1,5 @@
+[%  WRAPPER splash/frame;
+	INCLUDE splash/panel
+	    FOREACH content = ['one', 'two', 'three'];
+    END
+%]

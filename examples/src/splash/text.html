@@ -4,14 +4,11 @@
 %]
 
 <p>
-The splash/text template does a simple job of marking up text in 
-various different styles.  The larger components tend to use it to
-format tab or button text according to one of the pre-defined styles
-for 'select' or 'unselect'.
+[% PROCESS splash/about/text %]
 </p>
 
 [% PROCESS splash/config %]
 
-[% PROCESS example/vsplit3 count=4 indent=1 %]
+[% PROCESS example/vsplit3 count=5 indent=1 %]
 
 [% END %]

@@ -1,0 +1,18 @@
+[% WRAPPER splash/button + splash/text
+           width = '70%'
+	   style = splash.style.select
+%]
+The Poetry of the Language
+[% END %]
+
+[% WRAPPER splash/button 
+	   width = "70%"
+           align = 'left' 
+%]
+Finally, a note of caution.  This language, like
+English, can be a medium for prose, or a medium
+for poetry.  The difference between prose and 
+poetry is not that different languages are used,
+but that the same language is used, differently.
+[% END %]
+

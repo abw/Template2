@@ -1,0 +1,6 @@
+[% WRAPPER splash/frame %]
+<tr>
+ <td> Foo Bar Baz </td>
+</tr>
+[% END %]
+

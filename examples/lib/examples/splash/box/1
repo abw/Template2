@@ -1,0 +1,3 @@
+[% INCLUDE splash/box
+           content = 'Box Content'
+%]

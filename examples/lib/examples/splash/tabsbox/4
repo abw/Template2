@@ -1,0 +1,20 @@
+<a name="shade"> </a>
+
+[% WRAPPER splash/tabsbox 
+     select = 3
+     border = 1
+     invert = 1
+     pad    = 10
+%]
+
+<h3>Tapestry of Light and Dark</h3>
+
+Create alternating areas of light and dark 
+throughout the building, in such a way that 
+people naturally walk toward the light,
+whenever they are going to important places:
+seats, entrances, stairs, passages, places of
+special beauty, and make other areas darker,
+to increase the contrast.
+
+[% END %]

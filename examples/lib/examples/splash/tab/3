@@ -1,0 +1,6 @@
+[% INCLUDE splash/tab
+    col     = 'marine'
+    content = 'Bar'
+    invert  = 1
+%]
+

@@ -1,0 +1,4 @@
+[% WRAPPER splash/bar 
+    style=splash.style.select -%]
+Hello World
+[% END %]

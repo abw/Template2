@@ -1,0 +1,3 @@
+[% INCLUDE splash/bar 
+    content="Hello World" 
+%]

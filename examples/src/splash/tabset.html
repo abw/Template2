@@ -1,0 +1,21 @@
+[%  library = libs.splash
+    section = 'tabset' ;
+    WRAPPER page
+%]
+
+<p>
+[% PROCESS splash/about/tabset %]
+</p>
+
+[% PROCESS splash/config %]
+
+[%  tabs = [
+ 	{ link => '#wait',  text => 'Wait'  }
+ 	{ link => '#meet',  text => 'Meet'  }
+ 	{ link => '#shade', text => 'Shade' }
+    ]
+%]
+
+[% PROCESS example/split50 count=3 %]
+
+[% END %]

@@ -1,0 +1,46 @@
+[%  WRAPPER splash/frame 
+	    width  = '80%'
+	    border = 0
+            pad    = 0;
+	WRAPPER splash/panel
+		width = '100%';
+	    WRAPPER splash/bar + splash/text
+		    style = splash.style.select
+		    width = '100%'
+%]
+Hello World
+[%	    END;
+	END; 
+	WRAPPER splash/panel
+	        width = '100%';
+	    WRAPPER splash/frame 
+                    border = 2
+		    width = '100%'
+		    style  = splash.style.select;
+		WRAPPER splash/panel;
+%]
+This is the content in the first panel
+[%              END;
+		WRAPPER splash/panel;
+%]
+This is the content in the second panel
+[%              END;
+	    END;
+	END;
+	WRAPPER splash/panel
+		width = '100%';
+	    WRAPPER splash/bar + splash/text
+		    invert = 1
+		    style  = splash.style.select
+		    link   = 'http://www.tt2.org'
+		    width  = '100%'
+                    align  = 'center'
+%]
+http://www.tt2.org/
+[%          END;
+	END;
+    END;
+%]
+
+    
+	    

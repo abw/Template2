@@ -1,0 +1,17 @@
+<a name="wait"> </a>
+
+[% WRAPPER splash/tabsbox select=1 %]
+
+<h3>A Place to Wait</h3>
+
+In places where people end up waiting
+(for a bus, for an appointment, for a
+plane), create a situation which makes
+the waiting positive. Fuse the waiting
+with some other activity - newspaper, 
+coffee, pool tables, horseshoes; 
+something which draws people in who 
+are not simply waiting.
+
+[% END %]
+
