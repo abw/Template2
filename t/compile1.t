@@ -48,6 +48,11 @@ ok( -f "$dir/complex.ttc" );
 
 __DATA__
 -- test --
+[% INCLUDE evalperl %]
+-- expect --
+This file includes a perl block.
+
+-- test --
 [% TRY %]
 [% INCLUDE foo %]
 [% CATCH file %]
