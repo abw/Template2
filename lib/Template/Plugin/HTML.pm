@@ -34,6 +34,14 @@ use Template::Plugin;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
+sub new {
+    my ($class, $context, @args) = @_;
+    my $hash = ref $args[-1] eq 'HASH' ? pop @args : { };
+    bless {
+	_SORTED => $hash->{ sorted } || 0,
+    }, $class;
+}
+
 sub element {
     my ($self, $name, $attr) = @_;
     ($name, $attr) = %$name if ref $name eq 'HASH';
@@ -46,9 +54,13 @@ sub element {
 sub attributes {
     my ($self, $hash) = @_;
     return '' unless UNIVERSAL::isa($hash, 'HASH');
+
+    my @keys = keys %$hash;
+    @keys = sort @keys if $self->{ _SORTED };
+
     join(' ', map { 
 	"$_=\"" . $self->escape( $hash->{ $_ } ) . '"';
-    } keys %$hash);
+    } @keys);
 }
 
 sub escape {
@@ -60,6 +72,13 @@ sub escape {
 	s/"/&quot;/g;
     }
     $text;
+}
+
+sub url {
+    my ($self, $text) = @_;
+    return undef unless defined $text;
+    $text =~ s/([^a-zA-Z0-9_.-])/uc sprintf("%%%02x",ord($1))/eg;
+    return $text;
 }
 
 
@@ -134,8 +153,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.09, distributed as part of the
-Template Toolkit version 2.04b, released on 04 August 2001.
+2.10, distributed as part of the
+Template Toolkit version 2.04d, released on 29 August 2001.
 
 =head1 COPYRIGHT
 
