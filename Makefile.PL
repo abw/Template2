@@ -166,6 +166,12 @@ my $SPLASH_STYLES = {
 };
 
 
+# define version numbers of required modules
+my $TT_APPCONFIG_VERSION = '1.55';
+my $TT_FILE_SPEC_VERSION = '0.8';
+my $TT_FILE_TEMP_VERSION = '0.12';
+
+
 #========================================================================
 
 welcome_message();
@@ -243,9 +249,9 @@ my %opts = (
     'PMLIBDIRS'    => [ 'lib' ], 
     'DIR'          => [ ],
     'PREREQ_PM'    => { 
-        'AppConfig'    => 1.55,
-        'File::Spec'   => 0.8,
-        'File::Temp'   => 0.12,
+        'AppConfig'    => $TT_APPCONFIG_VERSION,
+        'File::Spec'   => $TT_FILE_SPEC_VERSION,
+        'File::Temp'   => $TT_FILE_TEMP_VERSION,
     },
     'dist'         => {
         'COMPRESS' => 'gzip',
@@ -360,13 +366,13 @@ EOF
 
 sub mandatory_modules {
     eval "use AppConfig";
-    if ($@ or $AppConfig::VERSION < 1.52) {
+    if ($@ or $AppConfig::VERSION < $TT_APPCONFIG_VERSION) {
 	warn(<<EOF);
 
-The Template Toolkit requires that the AppConfig module (version 1.52
-or later) first be installed.  This is used by the 'ttree' program for
-reading command line options and configuration files.  It is available
-from CPAN:
+The Template Toolkit requires that the AppConfig module (version $TT_APPCONFIG_VERSION
+or later) first be installed.  This is used by
+the 'ttree' program for reading command line options and configuration
+files.  It is available from CPAN:
 
     http://www.cpan.org/authors/Andy_Wardley/
 
@@ -374,10 +380,10 @@ EOF
     }
 
     eval "use File::Spec";
-    if ($@ or $File::Spec::VERSION < 0.8) {
+    if ($@ or $File::Spec::VERSION < $TT_FILE_SPEC_VERSION) {
 	warn(<<EOF);
 
-The Template Toolkit requires that the File::Spec module (version 0.8
+The Template Toolkit requires that the File::Spec module (version $TT_FILE_SPEC_VERSION
 or later) first be installed.  This is used by the File plugin.  It is
 available from CPAN:
 
@@ -387,10 +393,10 @@ EOF
     }
 
     eval "use File::Temp";
-    if ($@ or $File::Temp::VERSION < 0.12) {
+    if ($@ or $File::Temp::VERSION < $TT_FILE_TEMP_VERSION) {
         warn(<<EOF);
 
-The Template Toolkit requires that the File::Temp module (version 0.12
+The Template Toolkit requires that the File::Temp module (version $TT_FILE_TEMP_VERSION
 or later) first be installed.  This is used by the Template::Document
 class for storing compiled templates.  It is available from CPAN:
 
