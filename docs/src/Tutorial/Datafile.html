@@ -164,38 +164,31 @@ output
 Hopefully the syntax of the template is simple enough to 
 follow. There are a few points to note.
 </p>
-
 <ul>
-
 <li><p>
 Template processing directives are written using a simple 
 language which is not Perl.
 </p>
-
 
 <li><p>
 The keys of the <code>'%data'</code> have become the names of the data 
 variables within the template.
 </p>
 
-
 <li><p>
 Template processing directives are surrounded by <code>'[% tt_start_tag %]'</code> and 
 <code>'[% tt_end_tag %]'</code> sequences.
 </p>
-
 
 <li><p>
 If these tags are replaced with <code>'[% tt_start_tag %]-'</code> <code>'-[% tt_end_tag %]'</code> then the preceding 
 or following linefeed is suppressed.
 </p>
 
-
 <li><p>
 In the <code>'FOREACH'</code> loop, each element of the <code>'teams'</code> list was 
 assigned, in turn, to the temporary variable <code>'team'</code>.
 </p>
-
 
 <li><p>
 Each item assigned to the <code>'team'</code> variable is a Perl hash. 
@@ -447,7 +440,7 @@ Dave Cross &lt;dave@dave.org.uk&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07, released on 17 April 2002.
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

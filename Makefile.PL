@@ -3,6 +3,8 @@
 use strict;
 
 use lib qw( ./lib );
+use Config;
+use File::Spec::Functions qw( catfile );
 use Template;
 use ExtUtils::MakeMaker;
 use Cwd;
@@ -116,9 +118,9 @@ my $TT_SPLASH_FT  = '';
 my $TT_SPLASH_BT  = '';
 
 my $DEFAULTS_FILE   = '.defaults.cfg';
-my $DBI_CONFIG_FILE = 't/dbi_test.cfg';
-my $TT_DOCS_CFG     = 'docs/ttree.cfg';
-my $TT_EXAMPLE_CFG  = 'examples/ttree.cfg';
+my $DBI_CONFIG_FILE = catfile('t', 'dbi_test.cfg');
+my $TT_DOCS_CFG     = catfile('docs','ttree.cfg');
+my $TT_EXAMPLE_CFG  = catfile('examples','ttree.cfg');
 my $DEFAULTS = '';
 
 if (-f $DEFAULTS_FILE) {
@@ -484,7 +486,7 @@ EOF
 	$TT_XS_DEFAULT = (ttprompt('Do you want to use the XS Stash for all Templates?', 
 				   $TT_XS_DEFAULT) =~ /^y/i); 
 
-	fix_file('lib/Template/Config.pm',
+	fix_file(catfile('lib','Template','Config.pm'),
 		 '$STASH', 
 		 $TT_XS_DEFAULT ? 'Template::Stash::XS' : 'Template::Stash');
     }
@@ -548,9 +550,9 @@ EOF
 	$TT_PDFLATEX_PATH = $TT_LATEX_PATH = $TT_DVIPS_PATH = "";
     }
 
-    fix_file('lib/Template/Config.pm', '$PDFLATEX_PATH', $TT_PDFLATEX_PATH);
-    fix_file('lib/Template/Config.pm', '$LATEX_PATH',    $TT_LATEX_PATH);
-    fix_file('lib/Template/Config.pm', '$DVIPS_PATH',    $TT_DVIPS_PATH);
+    fix_file(catfile('lib','Template','Config.pm'), '$PDFLATEX_PATH', $TT_PDFLATEX_PATH);
+    fix_file(catfile('lib','Template','Config.pm'), '$LATEX_PATH',    $TT_LATEX_PATH);
+    fix_file(catfile('lib','Template','Config.pm'), '$DVIPS_PATH',    $TT_DVIPS_PATH);
 }
 
 
@@ -601,7 +603,7 @@ EOF
 	$TT_PREFIX = '';
     }
 
-    fix_file('lib/Template/Config.pm', '$INSTDIR', $TT_PREFIX);
+    fix_file(catfile('lib','Template','Config.pm'), '$INSTDIR', $TT_PREFIX);
 }
 
 
@@ -664,7 +666,7 @@ EOF
     $TT_IMAGES = ttprompt('URL base for TT2 images?', $TT_IMAGES || $IMAGES);
     $TT_IMAGES =~ s[/$][]g;	# just in case
 
-    fix_file('templates/splash/config', 'images', "$TT_IMAGES/splash");
+    fix_file(catfile('templates','splash','config'), 'images', "$TT_IMAGES/splash");
 }
 
 
@@ -1112,8 +1114,9 @@ sub fix_file {
 
 sub find_program {
     my($path, $prog) = @_;
-    my $sep = $WIN32 ? qr/;/ : qr/:/;
-    foreach my $dir ( split($sep, $path) ) {
+#     my $sep = $WIN32 ? qr/;/ : qr/:/;
+#     foreach my $dir ( split($sep, $path) ) {
+    foreach my $dir ( split($Config{path_sep}, $path) ) {
         my $file = File::Spec->catfile($dir, $prog);
         if ( !$WIN32 ) {
             return $file if ( -x $file );

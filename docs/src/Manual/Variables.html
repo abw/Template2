@@ -24,6 +24,7 @@
 		    "Parameters and Return Values",
 		    "Error Handling",
 		    "Virtual Variable Methods",
+		    "Automagic Promotion of Scalar to List",
 		    "Compound Variables",
 		    "Variable Interpolation",
 		    "Local and Global Variables",
@@ -483,20 +484,17 @@ version.
 -%]<p>
 The Template Toolkit provides virtual methods for manipulating
 variable values.  Most of them are analogous to regular Perl functions
-of the same names.  
+of the same names.
 </p>
 <p>
 The following methods can be called against any scalar value:
 </p>
-
 <ul>
-
 <li><b>defined</b><br>
 <p>
 Returns true if the value is defined.
 </p>
 <pre>    [% tt_start_tag %] user = get_user(uid) IF uid.defined [% tt_end_tag %]</pre>
-
 
 <li><b>length</b><br>
 <p>
@@ -506,14 +504,12 @@ Returns the length of the string representation of the item:
        Password too short, dumbass!
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 <li><b>repeat(n)</b><br>
 <p>
 Repeat the string a specified number of times.
 </p>
 <pre>    [% tt_start_tag %] name = 'foo' [% tt_end_tag %]
     [% tt_start_tag %] name.repeat(3) [% tt_end_tag %]		# foofoofoo</pre>
-
 
 <li><b>replace(search, replace)</b><br>
 <p>
@@ -522,7 +518,6 @@ as a Perl regular expression) with the second.
 </p>
 <pre>    [% tt_start_tag %] name = 'foo, bar &amp; baz' [% tt_end_tag %]
     [% tt_start_tag %] name.replace('\W+', '_') [% tt_end_tag %]    # foo_bar_baz</pre>
-
 
 <li><b>match(pattern)</b><br>
 <p>
@@ -547,7 +542,6 @@ this.
        pattern does not match
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 <li><b>search(pattern)</b><br>
 <p>
 Performs a similar function to 'match' but simply returns true if the 
@@ -560,7 +554,6 @@ This virtual method is now deprecated in favour of 'match'.  Move along
 now, there's nothing more to see here.
 </p>
 
-
 <li><b>split(pattern)</b><br>
 <p>
 Calls Perl's split() function to split a string into a list of
@@ -569,7 +562,6 @@ strings.
 <pre>    [% tt_start_tag %] FOREACH dir = mypath.split(':') [% tt_end_tag %]
        [% tt_start_tag %] dir [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 <li><b>list</b><br>
 <p>
@@ -581,7 +573,6 @@ a no-op.
 </p>
 <pre>    [% tt_start_tag %] thing.list.size [% tt_end_tag %]  # thing can be a scalar or a list</pre>
 
-
 <li><b>hash </b><br>
 <p>
 Return the value as a hash reference containing a single entry with
@@ -589,7 +580,6 @@ the key 'value' indicating the original scalar value.  As with the
 'hash' virtual method, this is generally used to help massage data
 into different formats.
 </p>
-
 
 <li><b>size</b><br>
 <p>
@@ -601,9 +591,7 @@ consistency with the hash and list size methods.
 <p>
 The following can be called against hash references.
 </p>
-
 <ul>
-
 <li><b>keys, values, each</b><br>
 <p>
 The regular hash operators returning lists of keys, values or both.
@@ -614,7 +602,6 @@ have it interpolated (i.e. replaced with its value) before use.
        [% tt_start_tag %] key [% tt_end_tag %] =&gt; [% tt_start_tag %] product.$key [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 <li><b>sort, nsort</b><br>
 <p>
 Return a list of the keys, sorted alphabetically (sort) or numerically
@@ -623,7 +610,6 @@ Return a list of the keys, sorted alphabetically (sort) or numerically
 <pre>    [% tt_start_tag %] FOREACH n = phones.sort [% tt_end_tag %]
        [% tt_start_tag %] phones.$n [% tt_end_tag %] is [% tt_start_tag %] n [% tt_end_tag %],
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 <li><b>import</b><br>
 <p>
@@ -649,7 +635,6 @@ into the current namespace hash.
     [% tt_start_tag %] import(user) [% tt_end_tag %]
     [% tt_start_tag %] id [% tt_end_tag %]: [% tt_start_tag %] name [% tt_end_tag %]		# lwall: Larry Wall</pre>
 
-
 <li><b>defined, exists</b><br>
 <p>
 Returns a true or false value if an item in the hash denoted by the key
@@ -658,19 +643,16 @@ passed as an argument is defined or exists, respectively.
 <pre>    [% tt_start_tag %] hash.defined('somekey') ? 'yes' : 'no' [% tt_end_tag %]
     [% tt_start_tag %] hash.exists('somekey') ? 'yes' : 'no' [% tt_end_tag %]</pre>
 
-
 <li><b>size</b><br>
 <p>
 Returns the number of key =&gt; value pairs in the hash.
 </p>
-
 
 <li><b>item</b><br>
 <p>
 Returns an item from the hash using a key passed as an argument.
 </p>
 <pre>    [% tt_start_tag %] hash.item('foo') [% tt_end_tag %]  # same as hash.foo</pre>
-
 
 <li><b>list</b><br>
 <p>
@@ -687,9 +669,7 @@ and 'value' item representing
 <p>
 The following virtual methods are provided for lists:
 </p>
-
 <ul>
-
 <li><b>first, last</b><br>
 <p>
 Returns the first/last item in the list.  The item is not removed from the 
@@ -697,14 +677,12 @@ list.
 </p>
 <pre>    [% tt_start_tag %] results.first [% tt_end_tag %] to [% tt_start_tag %] results.last [% tt_end_tag %]</pre>
 
-
 <li><b>size, max</b><br>
 <p>
 Returns the size of a list (number of elements) and the maximum 
 index number (size - 1), respectively.
 </p>
 <pre>    [% tt_start_tag %] results.size [% tt_end_tag %] search results matched your query</pre>
-
 
 <li><b>reverse</b><br>
 <p>
@@ -714,14 +692,12 @@ Returns the items of the list in reverse order.
        ...
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 <li><b>join</b><br>
 <p>
 Joins the items in the list into a single string, using Perl's join 
 function.
 </p>
 <pre>    [% tt_start_tag %] items.join(', ') [% tt_end_tag %]</pre>
-
 
 <li><b>grep</b><br>
 <p>
@@ -731,7 +707,6 @@ pattern.
 <pre>    [% tt_start_tag %] FOREACH directory.files.grep('\.txt$') [% tt_end_tag %]
        ...
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 <li><b>sort, nsort</b><br>
 <p>
@@ -751,14 +726,12 @@ In the example, the 'books' list can contains hash references with
 an 'author' key or objects with an 'author' method.
 </p>
 
-
 <li><b>unshift(item), push(item)</b><br>
 <p>
 Adds an item to the start/end of a list.
 </p>
 <pre>    [% tt_start_tag %] mylist.unshift('prev item') [% tt_end_tag %]
     [% tt_start_tag %] mylist.push('next item')    [% tt_end_tag %]</pre>
-
 
 <li><b>shift, pop</b><br>
 <p>
@@ -814,6 +787,59 @@ template:
     [% tt_start_tag %] primes.odd.join(', ') [% tt_end_tag %]		# 3, 5, 7, 9</pre>
 <p>
 See also the examples in the t/vmeth.t test script.
+</p>
+[%- END %]
+[% WRAPPER subsection
+   title = "Automagic Promotion of Scalar to List"
+-%]<p>
+In addition to the scalar virtual methods listed in the previous
+section, you can also call any list virtual method against a scalar.
+The item will be automagically promoted to a single element list and
+the appropriate list virtual method will be called.  
+</p>
+<p>
+One particular benefit of this comes when calling subroutines or
+object methods that return a list of items, rather than the 
+preferred reference to a list of items.  In this case, the 
+Template Toolkit automatically folds the items returned into
+a list.
+</p>
+<p>
+The upshot is that you can continue to use existing Perl modules or
+code that returns lists of items, without having to refactor it
+just to keep the Template Toolkit happy (by returning references
+to list).  Class::DBI module is just one example of a paricularly 
+useful module which returns values this way.
+</p>
+<p>
+If only a single item is returned from a subroutine then the 
+Template Toolkit assumes it meant to return a single item (rather
+than a list of 1 items) and leaves it well alone, returning the
+single value as it is.  If you're executing a database query, 
+for example, you might get 1 item returned, or perhaps many 
+items which are then folded into a list.
+</p>
+<p>
+The FOREACH directive will happily accept either a list or a single
+item which it will treat as a list.  So it's safe to write directives
+like this, where we assume that 'something' is bound to a subroutine
+which might return 1 or more items:
+</p>
+<pre>    [% tt_start_tag %] FOREACH item = something [% tt_end_tag %]
+       ...
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+The automagic promotion of scalars to single item lists means 
+that you can also use list virtual methods safely, even if you
+only get one item returned.  For example:
+</p>
+<pre>    [% tt_start_tag %] something.first   [% tt_end_tag %]
+    [% tt_start_tag %] something.join    [% tt_end_tag %]
+    [% tt_start_tag %] something.reverse.join(', ') [% tt_end_tag %]</pre>
+<p>
+Note that this is very much a last-ditch behaviour.  If the single
+item return is an object with a 'first' method, then that will be
+called, as expected, in preference to the list virtual method.
 </p>
 [%- END %]
 [% WRAPPER subsection
@@ -980,9 +1006,7 @@ hash are visible across all templates.
 A number of special variables are automatically defined by the Template 
 Toolkit.
 </p>
-
 <ul>
-
 <li><b>template</b><br>
 <p>
 The 'template' variable contains a reference to the main template
@@ -998,7 +1022,6 @@ Note that the 'template' variable always references the top-level
 template, even when processing other template components via INCLUDE,
 PROCESS, etc.
 </p>
-
 
 <li><b>component</b><br>
 <p>
@@ -1027,7 +1050,6 @@ This example should demonstrate the difference:
 <pre>    [% tt_start_tag %] template.name [% tt_end_tag %]		    # foo
     [% tt_start_tag %] component.name [% tt_end_tag %]            # footer</pre>
 
-
 <li><b>loop</b><br>
 <p>
 Within a FOREACH loop, the 'loop' variable references the Template::Iterator
@@ -1037,7 +1059,6 @@ object responsible for controlling the loop.
        [% tt_start_tag %] &quot;Items:\n&quot; IF loop.first -[% tt_end_tag %]
        [% tt_start_tag %] loop.count [% tt_end_tag %]/[% tt_start_tag %] loop.size [% tt_end_tag %]: [% tt_start_tag %] item [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 <li><b>error</b><br>
 <p>
@@ -1052,7 +1073,6 @@ be printed for automatic stringification into a message of the form
     [% tt_start_tag %] CATCH [% tt_end_tag %]
        [% tt_start_tag %] error [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 <li><b>content</b><br>
 <p>
@@ -1089,13 +1109,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07, released on 17 April 2002.
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+-%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

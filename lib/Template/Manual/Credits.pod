@@ -118,18 +118,21 @@ Please let me know if you think anyone is missing from this list.
   Rafael Kitover            <caelum@debian.org>
   Hans von Lengerke         <hans@lengerke.org>
   Jonas Liljegren           <jonas@paranormal.se>
+  Simon Luff                <simon@sports.com>
   Paul Makepeace            <Paul.Makepeace@realprogrammers.com>
   Simon Matthews            <sam@knowledgepool.com>
   Robert McArthur           <mcarthur@dstc.edu.au>
   Craig McLane              <mclanec@oxy.edu>     
   Leslie Michael Orchard    <deus_x@ninjacode.com>
   Eugene Miretskiy          <eugene@invision.net>
+  Keith G. Murphy           <keithmur@mindspring.com>
   Chris Nandor              <pudge@pobox.com>
+  Briac Pilpré              <briac@pilpre.com>
   Martin Portman            <mrp@cre.canon.co.uk>
   Christian Schaffner       <schaffner@eeh.ee.ethz.ch>
   Randal L. Schwartz        <merlyn@stonehenge.com>
   Paul Sharpe               <paul@miraclefish.com>
-  Ville Skytt�              <ville.skytta@iki.fi>
+  Ville Skyttä              <ville.skytta@iki.fi>
   Doug Steinwand            <dsteinwand@etoys.com>
   Michael Stevens           <michael@etla.org>
   Drew Taylor               <dtaylor@vialogix.com>   
@@ -151,7 +154,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07, released on 17 April 2002.
+Template Toolkit version 2.07a, released on 05 July 2002.
 
 =head1 COPYRIGHT
 

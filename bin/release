@@ -5,5 +5,5 @@
 && make test           \
 && bin/fixconfig -v -y \
 && make dist           \
-&& echo "Go forth and make content!"
+&& echo "Let the content commence!"
 

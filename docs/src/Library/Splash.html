@@ -234,26 +234,21 @@ adding links, etc.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Text content.
 </p>
-
 
 <li><b>link</b><br>
 <p>
 URL which can be defined to make the text a link.
 </p>
 
-
 <li><b>style</b><br>
 <p>
 Reference to a style hash.
 </p>
-
 
 <li><b>select</b><br>
 <p>
@@ -265,15 +260,10 @@ splash.unselect (select == false value).
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>col (style.col.text)</b>
-
 <li><b>font (style.font.face)</b>
-
 <li><b>bold (style.font.bold)</b>
-
 <li><b>size (style.font.size)</b>
 </ul>
 [%- END %]
@@ -296,38 +286,31 @@ by name.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Table content.
 </p>
-
 
 <li><b>col</b><br>
 <p>
 Background colour.
 </p>
 
-
 <li><b>border</b><br>
 <p>
 Border width (default: 0)
 </p>
-
 
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
 
-
 <li><b>pad</b><br>
 <p>
 Cell padding.
 </p>
-
 
 <li><b>space</b><br>
 <p>
@@ -352,26 +335,21 @@ Creates a row for an HTML table.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Row content.
 </p>
-
 
 <li><b>col</b><br>
 <p>
 Background colour.
 </p>
 
-
 <li><b>valign</b><br>
 <p>
 Vertical alignment
 </p>
-
 
 <li><b>rowspan</b><br>
 <p>
@@ -391,26 +369,21 @@ Creates a cell for an HTML table.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Cell content.
 </p>
-
 
 <li><b>col</b><br>
 <p>
 Background colour.
 </p>
 
-
 <li><b>align</b><br>
 <p>
 Horizontal alignment
 </p>
-
 
 <li><b>colspan</b><br>
 <p>
@@ -445,27 +418,22 @@ Creates a small button with rounded corners.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Button content.
 </p>
-
 
 <li><b>style</b><br>
 <p>
 Reference to a style hash.
 </p>
 
-
 <li><b>select</b><br>
 <p>
 Flag to default the style to splash.select (select == true value) or
 splash.unselect (select == false value).
 </p>
-
 
 <li><b>width</b><br>
 <p>
@@ -476,21 +444,13 @@ Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>col (style.col.text)</b>
-
 <li><b>textcol (style.col.text)</b>
-
 <li><b>font (style.font.face)</b>
-
 <li><b>size (style.font.size)</b>
-
 <li><b>bold (style.font.bold)</b>
-
 <li><b>width (style.button.width)</b>
-
 <li><b>align (style.button.align)</b>
 </ul>
 [%- END %]
@@ -508,20 +468,16 @@ square corners on the other.  Default has rounded at the top, set
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Bar content.
 </p>
 
-
 <li><b>style</b><br>
 <p>
 Reference to a style hash.
 </p>
-
 
 <li><b>select</b><br>
 <p>
@@ -529,12 +485,10 @@ Flag to default the style to splash.select (select == true value) or
 splash.unselect (select == false value).
 </p>
 
-
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
-
 
 <li><b>invert</b><br>
 <p>
@@ -546,21 +500,13 @@ upright.
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>col (style.col.text)</b>
-
 <li><b>textcol (style.col.text)</b>
-
 <li><b>font (style.font.face)</b>
-
 <li><b>size (style.font.size)</b>
-
 <li><b>bold (style.font.bold)</b>
-
 <li><b>width (style.button.width)</b>
-
 <li><b>align (style.button.align)</b>
 </ul>
 [%- END %]
@@ -575,14 +521,11 @@ Generates a frame enclosing the content within crosshair corners.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Hair content.
 </p>
-
 
 <li><b>style</b><br>
 <p>
@@ -593,13 +536,9 @@ Reference to a style hash.
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>col (style.col.text)</b>
-
 <li><b>bgcol (style.col.back)</b>
-
 <li><b>align (style.button.align)</b>
 </ul>
 [%- END %]
@@ -619,14 +558,11 @@ Creates a menu as a series of splash/button elements.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>buttons</b><br>
 <p>
 A reference to a list of hash arrays containing 'text' and 'link' items.
 </p>
-
 
 <li><b>select (n or 0)</b><br>
 <p>
@@ -634,12 +570,10 @@ Indicates which button should be selected.  First item is 1.  0 indicates
 no button selected.
 </p>
 
-
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
-
 
 <li><b>align</b><br>
 <p>
@@ -659,14 +593,11 @@ As above, but incorporated into a wider bar.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>buttons</b><br>
 <p>
 A reference to a list of hash arrays containing 'text' and 'link' items.
 </p>
-
 
 <li><b>select (n or 0)</b><br>
 <p>
@@ -674,12 +605,10 @@ Indicates which button should be selected.  First item is 1.  0 indicates
 no button selected.
 </p>
 
-
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
-
 
 <li><b>align</b><br>
 <p>
@@ -701,20 +630,16 @@ A table with a coloured edge.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Panel content.
 </p>
 
-
 <li><b>style</b><br>
 <p>
 Reference to a style hash.
 </p>
-
 
 <li><b>select</b><br>
 <p>
@@ -722,18 +647,15 @@ Flag to default the style to splash.select (select == true value) or
 splash.unselect (select == false value).
 </p>
 
-
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
 
-
 <li><b>align</b><br>
 <p>
 Horizontal alignment
 </p>
-
 
 <li><b>border</b><br>
 <p>
@@ -744,13 +666,9 @@ Border width (default: 0)
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>edge (style.col.edge)</b>
-
 <li><b>fill (style.col.fill)</b>
-
 <li><b>pad (style.pad)</b>
 </ul>
 [%- END %]
@@ -780,20 +698,16 @@ A simple button looking like a page tab.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>content</b><br>
 <p>
 Tab content.
 </p>
 
-
 <li><b>style</b><br>
 <p>
 Reference to a style hash.
 </p>
-
 
 <li><b>select</b><br>
 <p>
@@ -801,12 +715,10 @@ Flag to default the style to splash.select (select == true value) or
 splash.unselect (select == false value).
 </p>
 
-
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
-
 
 <li><b>align</b><br>
 <p>
@@ -817,19 +729,12 @@ Horizontal alignment
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>col (style.col.text)</b>
-
 <li><b>textcol (style.col.text)</b>
-
 <li><b>font (style.font.face)</b>
-
 <li><b>size (style.font.size)</b>
-
 <li><b>bold (style.font.bold)</b>
-
 <li><b>tabalign (style.tab.align)</b>
 </ul>
 [%- END %]
@@ -841,22 +746,18 @@ A set of splash/tab components, similar to a menu.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>tabs</b><br>
 <p>
 List of hash references containing text/link entries, as per 
 menu buttons.
 </p>
 
-
 <li><b>select</b><br>
 <p>
 Flag to default the style to splash.select (select == true value) or
 splash.unselect (select == false value).
 </p>
-
 
 <li><b>invert</b><br>
 <p>
@@ -874,35 +775,28 @@ Add a splash/tab to the top of a splash/box.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>title</b><br>
 <pre> title.</pre>
 
-
 <li><b>content</b><br>
 <pre> content.</pre>
-
 
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
 
-
 <li><b>tabwidth</b><br>
 <p>
 Width of tabs.
 </p>
-
 
 <li><b>select</b><br>
 <p>
 Flag to default the style to splash.select (select == true value) or
 splash.unselect (select == false value).
 </p>
-
 
 <li><b>border</b><br>
 <p>
@@ -913,15 +807,10 @@ Border width (default: 0)
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>col (style.col.text)</b>
-
 <li><b>fill (style.col.fill)</b>
-
 <li><b>tabalign (style.tab.align)</b>
-
 <li><b>tablocate (style.tab.locate)</b>
 </ul>
 [%- END %]
@@ -933,15 +822,12 @@ Add a splash/tabset to the top of a splash/box.
 <p>
 Configuration items:
 </p>
-
 <ul>
-
 <li><b>tabs</b><br>
 <p>
 List of hash references containing text/link entries, as per 
 menu buttons.
 </p>
-
 
 <li><b>select</b><br>
 <p>
@@ -949,22 +835,18 @@ Flag to default the style to splash.select (select == true value) or
 splash.unselect (select == false value).
 </p>
 
-
 <li><b>content</b><br>
 <pre> content.</pre>
-
 
 <li><b>width</b><br>
 <p>
 Width in absolute pixels (e.g. '100') or as a percentage (e.g. '50%').
 </p>
 
-
 <li><b>border</b><br>
 <p>
 Border width (default: 0)
 </p>
-
 
 <li><b>invert</b><br>
 <p>
@@ -976,15 +858,10 @@ upright.
 <p>
 The following items default to the relevant style values:
 </p>
-
 <ul>
-
 <li><b>col (style.col.text)</b>
-
 <li><b>fill (style.col.fill)</b>
-
 <li><b>tabalign (style.tab.align)</b>
-
 <li><b>tablocate (style.tab.locate)</b>
 </ul>
 [%- END %]
@@ -1015,14 +892,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.46, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.49, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+-%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

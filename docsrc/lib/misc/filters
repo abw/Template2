@@ -19,7 +19,7 @@ output:
 
 Folds the input to UPPER CASE.
 
-    [% "hello world" | FILTER upper %]
+    [% "hello world" FILTER upper %]
 
 output:
 
@@ -29,7 +29,7 @@ output:
 
 Folds the input to lower case.
 
-    [% "Hello World" | FILTER lower %]
+    [% "Hello World" FILTER lower %]
 
 output:
 
@@ -39,7 +39,7 @@ output:
 
 Folds the first character of the input to UPPER CASE.
 
-    [% "hello" | FILTER ucfirst %]
+    [% "hello" FILTER ucfirst %]
 
 output:
 
@@ -49,7 +49,7 @@ output:
 
 Folds the first character of the input to lower case.
 
-    [% "HELLO" | FILTER lcfirst %]
+    [% "HELLO" FILTER lcfirst %]
 
 output:
 

@@ -488,7 +488,7 @@ version.
 
 The Template Toolkit provides virtual methods for manipulating
 variable values.  Most of them are analogous to regular Perl functions
-of the same names.  
+of the same names.
 
 The following methods can be called against any scalar value:
 
@@ -793,6 +793,53 @@ template:
 
 See also the examples in the t/vmeth.t test script.
 
+=head2 Automagic Promotion of Scalar to List
+
+In addition to the scalar virtual methods listed in the previous
+section, you can also call any list virtual method against a scalar.
+The item will be automagically promoted to a single element list and
+the appropriate list virtual method will be called.  
+
+One particular benefit of this comes when calling subroutines or
+object methods that return a list of items, rather than the 
+preferred reference to a list of items.  In this case, the 
+Template Toolkit automatically folds the items returned into
+a list.
+
+The upshot is that you can continue to use existing Perl modules or
+code that returns lists of items, without having to refactor it
+just to keep the Template Toolkit happy (by returning references
+to list).  Class::DBI module is just one example of a paricularly 
+useful module which returns values this way.
+
+If only a single item is returned from a subroutine then the 
+Template Toolkit assumes it meant to return a single item (rather
+than a list of 1 items) and leaves it well alone, returning the
+single value as it is.  If you're executing a database query, 
+for example, you might get 1 item returned, or perhaps many 
+items which are then folded into a list.
+
+The FOREACH directive will happily accept either a list or a single
+item which it will treat as a list.  So it's safe to write directives
+like this, where we assume that 'something' is bound to a subroutine
+which might return 1 or more items:
+
+    [% FOREACH item = something %]
+       ...
+    [% END %]
+
+The automagic promotion of scalars to single item lists means 
+that you can also use list virtual methods safely, even if you
+only get one item returned.  For example:
+
+    [% something.first   %]
+    [% something.join    %]
+    [% something.reverse.join(', ') %]
+
+Note that this is very much a last-ditch behaviour.  If the single
+item return is an object with a 'first' method, then that will be
+called, as expected, in preference to the list virtual method.
+
 =head2 Compound Variables
 
 Compound 'dotted' variables may contain any number of separate
@@ -1055,7 +1102,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07, released on 17 April 2002.
+Template Toolkit version 2.07a, released on 05 July 2002.
 
 =head1 COPYRIGHT
 

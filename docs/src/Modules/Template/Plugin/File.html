@@ -138,16 +138,13 @@ empty.
 All File plugins, regardless of the nostat option, have set a number
 of items relating to the original path specified.
 </p>
-
 <ul>
-
 <li><b>path</b><br>
 <p>
 The full, original file path specified to the constructor.
 </p>
 <pre>    [% tt_start_tag %] USE file('/foo/bar.html') [% tt_end_tag %]
     [% tt_start_tag %] file.path [% tt_end_tag %]	# /foo/bar.html</pre>
-
 
 <li><b>name</b><br>
 <p>
@@ -156,14 +153,12 @@ The name of the file without any leading directories.
 <pre>    [% tt_start_tag %] USE file('/foo/bar.html') [% tt_end_tag %]
     [% tt_start_tag %] file.name [% tt_end_tag %]	# bar.html</pre>
 
-
 <li><b>dir</b><br>
 <p>
 The directory element of the path with the filename removed.
 </p>
 <pre>    [% tt_start_tag %] USE file('/foo/bar.html') [% tt_end_tag %]
     [% tt_start_tag %] file.name [% tt_end_tag %]	# /foo</pre>
-
 
 <li><b>ext</b><br>
 <p>
@@ -172,7 +167,6 @@ a '.' (not included in the extension).
 </p>
 <pre>    [% tt_start_tag %] USE file('/foo/bar.html') [% tt_end_tag %]
     [% tt_start_tag %] file.ext [% tt_end_tag %]	# html</pre>
-
 
 <li><b>home</b><br>
 <p>
@@ -186,7 +180,6 @@ from a file to its root directory.
 <pre>    [% tt_start_tag %] USE file('foo/bar/baz.html') [% tt_end_tag %]
     [% tt_start_tag %] file.home [% tt_end_tag %]	# ../..</pre>
 
-
 <li><b>root</b><br>
 <p>
 The 'root' item can be specified as a constructor argument, indicating
@@ -195,7 +188,6 @@ set empty.
 </p>
 <pre>    [% tt_start_tag %] USE file('foo/bar.html', root='/tmp') [% tt_end_tag %]
     [% tt_start_tag %] file.root [% tt_end_tag %]	# /tmp</pre>
-
 
 <li><b>abs</b><br>
 <p>
@@ -211,9 +203,7 @@ This returns the absolute file path by constructing a path from the
 <p>
 In addition, the following method is provided:
 </p>
-
 <ul>
-
 <li><b>rel(path)</b><br>
 <p>
 This returns a relative path from the current file to another path specified
@@ -277,8 +267,8 @@ for VIEW support, and made a few other minor tweaks.
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.44, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.46, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

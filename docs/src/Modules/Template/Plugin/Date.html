@@ -110,6 +110,16 @@ specification may follow that.
 <pre>    [% tt_start_tag %] date.format(filemod, '%d-%b-%Y') [% tt_end_tag %]
     [% tt_start_tag %] date.format(filemod, '%d-%b-%Y', 'en_GB') [% tt_end_tag %]</pre>
 <p>
+A fourth parameter allows you to force output in GMT, in the case of 
+seconds-since-the-epoch input:
+</p>
+<pre>    [% tt_start_tag %] date.format(filemod, '%d-%b-%Y', 'en_GB', 1) [% tt_end_tag %]</pre>
+<p>
+Note that in this case, if the local time is not GMT, then also specifying
+'%Z' (time zone) in the format parameter will lead to an extremely 
+misleading result.
+</p>
+<p>
 Any or all of these parameters may be named.  Positional parameters
 should always be in the order ($time, $format, $locale).
 </p>
@@ -117,6 +127,7 @@ should always be in the order ($time, $format, $locale).
     [% tt_start_tag %] date.format(time =&gt; filemod, format =&gt; '%H:%M:%S') [% tt_end_tag %]
     [% tt_start_tag %] date.format(mytime, format =&gt; '%H:%M:%S') [% tt_end_tag %]
     [% tt_start_tag %] date.format(mytime, format =&gt; '%H:%M:%S', locale =&gt; 'fr_FR') [% tt_end_tag %]
+    [% tt_start_tag %] date.format(mytime, format =&gt; '%H:%M:%S', gmt =&gt; 1) [% tt_end_tag %]
     ...etc...</pre>
 <p>
 The now() method returns the current system time in seconds since the 
@@ -144,8 +155,8 @@ fixups/enhancements, a test script and documentation.
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.46, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.49, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

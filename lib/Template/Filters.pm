@@ -938,7 +938,7 @@ output:
 
 Folds the input to UPPER CASE.
 
-    [% "hello world" | FILTER upper %]
+    [% "hello world" FILTER upper %]
 
 output:
 
@@ -948,7 +948,7 @@ output:
 
 Folds the input to lower case.
 
-    [% "Hello World" | FILTER lower %]
+    [% "Hello World" FILTER lower %]
 
 output:
 
@@ -958,7 +958,7 @@ output:
 
 Folds the first character of the input to UPPER CASE.
 
-    [% "hello" | FILTER ucfirst %]
+    [% "hello" FILTER ucfirst %]
 
 output:
 
@@ -968,7 +968,7 @@ output:
 
 Folds the first character of the input to lower case.
 
-    [% "HELLO" | FILTER lcfirst %]
+    [% "HELLO" FILTER lcfirst %]
 
 output:
 
@@ -1026,7 +1026,7 @@ equally as comprehensive) to perform the encoding.  If one or other of
 these modules are installed on your system then the text will be
 encoded (via the escape_html() or encode_entities() subroutines
 respectively) to convert all extended characters into their
-appropriate HTML entities (e.g. converting 'é' to '&eacute;').  If
+appropriate HTML entities (e.g. converting 'Ã©' to '&eacute;').  If
 neither module is available on your system then an 'html_all' exception
 will be thrown reporting an appropriate message.   
 
@@ -1340,8 +1340,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.52, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.53, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 
 =head1 COPYRIGHT
 

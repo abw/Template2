@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.07, detailing
+#   Revision history for the Template Toolkit version 2.07a, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -23,12 +23,56 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.07a -                                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Changed the Perl and XS stashes to automatically promote a scalar
+  to a list and apply a list virtual method (if defined) as a last
+  ditch attempt.  
+
+* Changed Template::Stash::Context virtual methods to import those
+  of Template::Stash.
+
+* Fixed a potential race condition when using compiled templates
+  by changing Template::Document::write_perl_file() to write
+  to a temporary file and then rename it into place, thus preventing
+  two separate processes attempting to write the same file at the
+  same time.
+
+* Added the DEBUG and DEBUG_FORMAT options and the corresponding
+  DEBUG directive.
+ 
+* Fixed bug introduced to Template::Provider in 2.06g which changed 
+  handling of trailing slashes on COMPILE_DIR.
+
+* Fixed a bug in Template::Parser to preserve any post-chomp flags 
+  that were otherwise ignored when an entire directive is commented
+  out, e.g.
+
+    [%# blah
+      # blah 
+    -%]
+
+* Applied a patch from Harald Joerg so that ttree considers files 
+  with equal mtime to be "not modified".
+
+* Applied a patch from Keith Murphy adding the gmt flag to the Date
+  plugin.
+
+* Applied Makefile.PL portability patch from Chris Nandor.
+
+* Minor documentation fixes.
+
+#------------------------------------------------------------------------
 # Version 2.07 - April 17th 2002 
 #------------------------------------------------------------------------
 
 * Changed example in synopsis of Template::Plugin::XML::Style to one 
   based on that posted to the mailing list by Tony Bowden.
- 
+
+* Fixed a single/double quoting bug in docsrc which prevented [% and %]
+  being correctly displayed in the tables of contents in HTML docs. 
+
 
 #------------------------------------------------------------------------
 # Version 2.06g - April 15th 2002                 ## DEVELOPER RELEASE ##

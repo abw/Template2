@@ -90,11 +90,12 @@ sub format {
 
     if ($time =~ /^\d+$/) {
 	# $time is now in seconds since epoch
-        my $convfunc = &localtime;
         if ($gmt) {
-            $convfunc = &gmtime;
+	    @date = (gmtime)[0..6];
         }
-        @date = (&$convfunc($time))[0..6];
+	else {
+	    @date = (localtime)[0..6];
+	}
     }
     else {
 	# if $time is numeric, then we assume it's seconds since the epoch
@@ -300,8 +301,8 @@ fixups/enhancements, a test script and documentation.
 
 =head1 VERSION
 
-2.47, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.49, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 
 
 

@@ -314,7 +314,7 @@ data.
 	my ($self, $text, $args, $conf) = @_;
 
 	$args = $self->merge_args($args); 
-	$conf = $self->merge_conf($conf);
+	$conf = $self->merge_config($conf);
 
 	# $args = [ 'foo', 'bar' ]	
 	# $conf = { wiz => 'waz', biz => 'baz' }	
@@ -409,8 +409,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-1.12, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+1.13, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 
 =head1 COPYRIGHT
 

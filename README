@@ -1,12 +1,12 @@
 
                             Template Toolkit
 
-                              Version 2.07
+                              Version 2.07a
 
-                             17 April 2002
+                             05 July 2002
 
-        Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
-        Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+        Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -43,8 +43,8 @@ need to install them.  They're all available from CPAN if you do.
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.07.tar.gz
-    cd Template-Toolkit-2.07
+    tar zxf Template-Toolkit-2.07a.tar.gz
+    cd Template-Toolkit-2.07a
     perl Makefile.PL
     make
     make test
@@ -336,7 +336,7 @@ VERSION COMPATABILITY
 ---------------------
 
 In terms of the template language and features available, versions
-2.01 through to 2.07 should be fully backwardly compatible with 
+2.01 through to 2.07a should be fully backwardly compatible with 
 version 2.00.  
 
 Version 2.00 is backwardly compatible with version 1 in all but a few
@@ -399,8 +399,8 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

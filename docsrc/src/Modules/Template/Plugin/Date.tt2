@@ -80,6 +80,15 @@ specification may follow that.
     [% date.format(filemod, '%d-%b-%Y') %]
     [% date.format(filemod, '%d-%b-%Y', 'en_GB') %]
 
+A fourth parameter allows you to force output in GMT, in the case of 
+seconds-since-the-epoch input:
+
+    [% date.format(filemod, '%d-%b-%Y', 'en_GB', 1) %]
+
+Note that in this case, if the local time is not GMT, then also specifying
+'%Z' (time zone) in the format parameter will lead to an extremely 
+misleading result.
+
 Any or all of these parameters may be named.  Positional parameters
 should always be in the order ($time, $format, $locale).
 
@@ -87,6 +96,7 @@ should always be in the order ($time, $format, $locale).
     [% date.format(time => filemod, format => '%H:%M:%S') %]
     [% date.format(mytime, format => '%H:%M:%S') %]
     [% date.format(mytime, format => '%H:%M:%S', locale => 'fr_FR') %]
+    [% date.format(mytime, format => '%H:%M:%S', gmt => 1) %]
     ...etc...
 
 The now() method returns the current system time in seconds since the 

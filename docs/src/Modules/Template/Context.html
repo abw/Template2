@@ -176,9 +176,7 @@ $Template::Context::ERROR package variable.
 <p>
 The following configuration items may be specified.
 </p>
-
 <ul>
-
 <li><b>VARIABLES, PRE_DEFINE</b><br>
 <p>
 The VARIABLES option (or PRE_DEFINE - they're equivalent) can be used
@@ -204,7 +202,6 @@ or
 	},
     };</pre>
 
-
 <li><b>BLOCKS</b><br>
 <p>
 The BLOCKS option can be used to pre-define a default set of template 
@@ -219,7 +216,6 @@ objects.
 	    another =&gt; Template::Document-&gt;new({ ... }),
 	},
     }); </pre>
-
 
 <li><b>TRIM</b><br>
 <p>
@@ -256,7 +252,6 @@ of the BLOCK.
 <p>
 The TRIM option is disabled (0) by default.
 </p>
-
 
 <li><b>EVAL_PERL</b><br>
 <p>
@@ -316,14 +311,12 @@ wants to.  If you don't like the idea of such uninvited guests causing
 a bother, then you can accept the default and keep EVAL_PERL disabled.
 </p>
 
-
 <li><b>RECURSION</b><br>
 <p>
 The template processor will raise a file exception if it detects
 direct or indirect recursion into a template.  Setting this option to 
 any true value will allow templates to include each other recursively.
 </p>
-
 
 <li><b>LOAD_TEMPLATES</b><br>
 <p>
@@ -370,7 +363,6 @@ constructor method.
 	INCLUDE_PATH =&gt; '/here:/there',
     });</pre>
 
-
 <li><b>LOAD_PLUGINS</b><br>
 <p>
 The LOAD_PLUGINS options can be used to specify a list of provider
@@ -396,7 +388,6 @@ constructor.
 	LOAD_PERL   =&gt; 1,
     });</pre>
 
-
 <li><b>LOAD_FILTERS</b><br>
 <p>
 The LOAD_FILTERS option can be used to specify a list of provider
@@ -415,7 +406,6 @@ Template::Context filter() method queries each provider in turn in a
 By default, a single Template::Filters object is created for the
 LOAD_FILTERS list.
 </p>
-
 
 <li><b>STASH</b><br>
 <p>
@@ -642,14 +632,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.55, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.60, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+-%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -115,3 +115,11 @@ This is the foo file, a is <!-- foo line 1 : [% a %] -->20
 [% foo %]
 -- expect --
 [ input text line 2 ]10
+
+-- test --
+[% DEBUG on;
+   DEBUG format '$text at line $line of $file';
+   DEBUG msg line='3.14' file='this file' text='hello world' 
+%]
+-- expect --
+hello world at line 3.14 of this file

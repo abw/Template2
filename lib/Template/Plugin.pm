@@ -383,8 +383,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.47, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.48, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 
 =head1 COPYRIGHT
 

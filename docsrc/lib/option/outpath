@@ -12,8 +12,8 @@ OUTPUT option, or passed by name as the third parameter to the
 Template process() method.
 
     my $template = Template->new({
-	INPUT_PATH  => "/tmp/src",
-	OUTPUT_PATH => "/tmp/dest",
+	INCLUDE_PATH => "/tmp/src",
+	OUTPUT_PATH  => "/tmp/dest",
     });
 
     my $vars = {

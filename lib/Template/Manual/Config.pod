@@ -920,8 +920,8 @@ OUTPUT option, or passed by name as the third parameter to the
 Template process() method.
 
     my $template = Template->new({
-	INPUT_PATH  => "/tmp/src",
-	OUTPUT_PATH => "/tmp/dest",
+	INCLUDE_PATH => "/tmp/src",
+	OUTPUT_PATH  => "/tmp/dest",
     });
 
     my $vars = {
@@ -1648,7 +1648,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07, released on 17 April 2002.
+Template Toolkit version 2.07a, released on 05 July 2002.
 
 =head1 COPYRIGHT
 

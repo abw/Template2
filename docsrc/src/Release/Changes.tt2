@@ -27,6 +27,22 @@
 # Version 2.07a -                                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
+* Changed the Perl and XS stashes to automatically promote a scalar
+  to a list and apply a list virtual method (if defined) as a last
+  ditch attempt.  
+
+* Changed Template::Stash::Context virtual methods to import those
+  of Template::Stash.
+
+* Fixed a potential race condition when using compiled templates
+  by changing Template::Document::write_perl_file() to write
+  to a temporary file and then rename it into place, thus preventing
+  two separate processes attempting to write the same file at the
+  same time.
+
+* Added the DEBUG and DEBUG_FORMAT options and the corresponding
+  DEBUG directive.
+ 
 * Fixed bug introduced to Template::Provider in 2.06g which changed 
   handling of trailing slashes on COMPILE_DIR.
 
@@ -37,6 +53,16 @@
     [%# blah
       # blah 
     -%]
+
+* Applied a patch from Harald Joerg so that ttree considers files 
+  with equal mtime to be "not modified".
+
+* Applied a patch from Keith Murphy adding the gmt flag to the Date
+  plugin.
+
+* Applied Makefile.PL portability patch from Chris Nandor.
+
+* Minor documentation fixes.
 
 #------------------------------------------------------------------------
 # Version 2.07 - April 17th 2002 

@@ -161,9 +161,7 @@ $Template::Service::ERROR package variable.
 <p>
 The following configuration items may be specified:
 </p>
-
 <ul>
-
 <li><b>PRE_PROCESS, POST_PROCESS</b><br>
 <p>
 These values may be set to contain the name(s) of template files
@@ -242,7 +240,6 @@ header:
     &lt;title&gt;[% tt_start_tag %] template.title [% tt_end_tag %]&lt;/title&gt;&lt;/head&gt;
     &lt;body bgcolor=&quot;[% tt_start_tag %] bgcolor [% tt_end_tag %]&quot;&gt;</pre>
 
-
 <li><b>PROCESS</b><br>
 <p>
 The PROCESS option may be set to contain the name(s) of template files
@@ -300,7 +297,6 @@ output:
     &amp;copy; Copyright 2000 Fred Foo
     &lt;/body&gt;
     &lt;/html&gt;</pre>
-
 
 <li><b>ERROR</b><br>
 <p>
@@ -382,7 +378,6 @@ type which can then be handled in the usual way.
 </p>
 <pre>    die &quot;I'm sorry Dave, I can't do that&quot;;</pre>
 
-
 <li><b>AUTO_RESET</b><br>
 <p>
 The AUTO_RESET option is set by default and causes the local BLOCKS
@@ -448,14 +443,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.49, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.53, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+-%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

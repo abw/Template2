@@ -62,9 +62,7 @@ The new() constructor creates and returns a reference to a new
 Template::Parser object.  A reference to a hash may be supplied as a 
 parameter to provide configuration values.  These may include:
 </p>
-
 <ul>
-
 <li><b>START_TAG, END_TAG</b><br>
 <p>
 The START_TAG and END_TAG options are used to specify character
@@ -91,7 +89,6 @@ The TAGS directive can also be used to set the START_TAG and END_TAG values
 on a per-template file basis.
 </p>
 <pre>    [% tt_start_tag %] TAGS &lt;+ +&gt; [% tt_end_tag %]</pre>
-
 
 <li><b>TAG_STYLE</b><br>
 <p>
@@ -121,7 +118,6 @@ The TAGS directive may also be used to set a TAG_STYLE
 </p>
 <pre>    [% tt_start_tag %] TAGS html [% tt_end_tag %]
     &lt;!-- INCLUDE header --&gt;</pre>
-
 
 <li><b>PRE_CHOMP, POST_CHOMP</b><br>
 <p>
@@ -215,7 +211,6 @@ With POST_CHOMP enabled, the above example would be parsed as if written:
 <pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]User: [% tt_start_tag %] user [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
-
 <li><b>INTERPOLATE</b><br>
 <p>
 The INTERPOLATE flag, when set to any true value will cause variable 
@@ -252,7 +247,6 @@ smaller files or blocks which can then be joined backed together via
 PROCESS or INCLUDE.
 </p>
 
-
 <li><b>ANYCASE</b><br>
 <p>
 By default, directive keywords should be expressed in UPPER CASE.  The 
@@ -282,7 +276,6 @@ The only lower case reserved words that cannot be used for variables,
 regardless of the ANYCASE option, are the operators:
 </p>
 <pre>    and or not mod div</pre>
-
 
 <li><b>V1DOLLAR</b><br>
 <p>
@@ -395,7 +388,6 @@ ignored.
 	V1DOLLAR =&gt; 1,
     });</pre>
 
-
 <li><b>GRAMMAR</b><br>
 <p>
 The GRAMMAR configuration item can be used to specify an alternate
@@ -460,15 +452,15 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.52, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.58, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 <pre> </pre>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+-%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

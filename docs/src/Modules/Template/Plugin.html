@@ -89,9 +89,7 @@ Use the PLUGIN_BASE option to specify the namespace that you use.  e.g.
 The following methods form the basic interface between the Template
 Toolkit and plugin modules.
 </p>
-
 <ul>
-
 <li><b>load($context)</b><br>
 <p>
 This method is called by the Template Toolkit when the plugin module
@@ -108,7 +106,6 @@ package method.
 	return $class;       # returns 'MyPlugin'
     }</pre>
 
-
 <li><b>new($context, @params)</b><br>
 <p>
 This method is called to instantiate a new plugin object for the USE 
@@ -123,7 +120,6 @@ the USE directive.
 	    _CONTEXT =&gt; $context,
 	}, $class;	     # returns blessed MyPlugin object
     }</pre>
-
 
 <li><b>error($error)</b><br>
 <p>
@@ -246,14 +242,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.46, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.48, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+-%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

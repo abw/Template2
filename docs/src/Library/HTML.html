@@ -89,9 +89,7 @@ directory for further examples and enlightenment on using this library.
 </p>
 [% WRAPPER subsection
    title = "Headers, Footers and Pages"
--%]
-<ul>
-
+-%]<ul>
 <li><b>header</b><br>
 <p>
 The 'header' element generates the regular header required as the 
@@ -116,7 +114,6 @@ variable, e.g.
 	 bgcol = '#ffffff'
     [% tt_end_tag %]</pre>
 
-
 <li><b>footer</b><br>
 <p>
 The 'footer' element generates the terminating &lt;/body&gt; and
@@ -125,7 +122,6 @@ The 'footer' element generates the terminating &lt;/body&gt; and
 <pre>    [% tt_start_tag %] PROCESS html/header [% tt_end_tag %]</pre>
 <pre>    ...page content here...</pre>
 <pre>    [% tt_start_tag %] PROCESS html/footer [% tt_end_tag %]</pre>
-
 
 <li><b>page</b><br>
 <p>
@@ -148,9 +144,7 @@ Additional HTML headers should be defined in the 'headers' variable.
 [%- END %]
 [% WRAPPER subsection
    title = "Tables, Bars and Boxes"
--%]
-<ul>
-
+-%]<ul>
 <li><b>table</b><br>
 <p>
 A basic element for creating HTML tables.
@@ -163,38 +157,31 @@ A basic element for creating HTML tables.
 <p>
 The following variables may be defined:
 </p>
-
 <ul>
-
 <li><b>border</b><br>
 <p>
 Set the border width (default: 0)
 </p>
-
 
 <li><b>col</b><br>
 <p>
 Set the background colour (default: none).
 </p>
 
-
 <li><b>width</b><br>
 <p>
 Set a fixed table width.
 </p>
-
 
 <li><b>pad</b><br>
 <p>
 Set the cellpadding.
 </p>
 
-
 <li><b>space</b><br>
 <p>
 Set the cellspacing.
 </p>
-
 
 <li><b>content</b><br>
 <p>
@@ -202,7 +189,6 @@ Content for the box.  Supplied automatically if used via WRAPPER.
 </p>
 
 </ul>
-
 
 <li><b>row</b><br>
 <p>
@@ -216,26 +202,21 @@ A basic element for creating HTML table rows.
 <p>
 The following variables may be defined:
 </p>
-
 <ul>
-
 <li><b>col</b><br>
 <p>
 Set the background colour (default: none).
 </p>
-
 
 <li><b>valign</b><br>
 <p>
 Set the vertical alignment.
 </p>
 
-
 <li><b>rowspan</b><br>
 <p>
 Specify the number of rows to span.
 </p>
-
 
 <li><b>content</b><br>
 <p>
@@ -243,7 +224,6 @@ Content for the box.  Supplied automatically if used via WRAPPER.
 </p>
 
 </ul>
-
 
 <li><b>cell</b><br>
 <p>
@@ -258,26 +238,21 @@ A basic element for creating HTML table cells.
 <p>
 The following variables may be defined:
 </p>
-
 <ul>
-
 <li><b>col</b><br>
 <p>
 Set the background colour (default: none).
 </p>
-
 
 <li><b>align</b><br>
 <p>
 Set the horizontal alignment.
 </p>
 
-
 <li><b>colspan</b><br>
 <p>
 Specify the number of columns to span.
 </p>
-
 
 <li><b>content</b><br>
 <p>
@@ -286,7 +261,6 @@ Content for the cell.  Supplied automatically if used via WRAPPER.
 
 </ul>
 
-
 <li><b>bar</b><br>
 <p>
 The bar element is a wrapping of html/table + html/row.
@@ -294,7 +268,6 @@ The bar element is a wrapping of html/table + html/row.
 <pre>    [% tt_start_tag %] WRAPPER html/bar [% tt_end_tag %]
        &lt;td&gt;Foo&lt;/td&gt;  &lt;td&gt;Bar&lt;/td&gt;
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-
 
 <li><b>box</b><br>
 <p>
@@ -319,14 +292,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.46, distributed as part of the
-Template Toolkit version 2.07, released on 17 April 2002.
+2.49, distributed as part of the
+Template Toolkit version 2.07a, released on 05 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+-%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
