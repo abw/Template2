@@ -14,7 +14,7 @@
 [% WRAPPER splash/button 
      width = "100%"
      align = 'left'
-     col   = splash.select.col.bar
+     col   = splash.style.select.col.fore
 %]
 <font size="+1" color="[% splash.rgb.white %]"><b>Template Toolkit Examples:</b>
 [% library.title %] Library: [% library.pages.$section %]</font>
