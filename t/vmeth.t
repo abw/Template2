@@ -127,6 +127,11 @@ def
 22
 
 -- test --
+[% string.sort.join %]
+-- expect --
+The cat sat on the mat
+
+-- test --
 [% string.split.join('_') %]
 -- expect --
 The_cat_sat_on_the_mat
@@ -207,6 +212,13 @@ woz
 [% metavars.size %]
 -- expect --
 7
+
+-- test --
+[% empty = [ ];
+   empty.size 
+%]
+-- expect --
+0
 
 -- test --
 [% metavars.max %]
