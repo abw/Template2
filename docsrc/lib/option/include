@@ -29,3 +29,58 @@ each directory is delimited by ':'.
 On Win32 systems, a little extra magic is invoked, ignoring delimiters
 that have ':' followed by a '/' or '\'.  This avoids confusion when using
 directory names like 'C:\Blah Blah'.
+
+When specified as a list, the INCLUDE_PATH path can contain elements 
+which dynamically generate a list of INCLUDE_PATH directories.  These 
+generator elements can be specified as a reference to a subroutine or 
+an object which implements a paths() method.
+
+    my [* obj *] = [* pkg *]->new({
+        INCLUDE_PATH => [ '/usr/local/templates', 
+                          \&incpath_generator, 
+			  My::IncPath::Generator->new( ... ) ],
+    });
+
+Each time a template is requested and the INCLUDE_PATH examined, the
+subroutine or object method will be called.  A reference to a list of
+directories should be returned.  Generator subroutines should report
+errors using die().  Generator objects should return undef and make an
+error available via its error() method.
+
+For example:
+
+    sub incpath_generator {
+
+	# ...some code...
+	
+	if ($all_is_well) {
+	    return \@list_of_directories;
+	}
+	else {
+	    die "cannot generate INCLUDE_PATH...\n";
+	}
+    }
+
+or:
+
+    package My::IncPath::Generator;
+
+    # Template::Base (or Class::Base) provides error() method
+    use Template::Base;
+    use base qw( Template::Base );
+
+    sub paths {
+	my $self = shift;
+
+	# ...some code...
+
+        if ($all_is_well) {
+	    return \@list_of_directories;
+	}
+	else {
+	    return $self->error("cannot generate INCLUDE_PATH...\n");
+	}
+    }
+
+    1;
+
