@@ -21,7 +21,7 @@ use Template::Test;
 use Cwd;
 $^W = 1;
 
-if ($^O =~ /win/i) {
+if ($^O eq 'MSWin32') {
     print "1..0\n";
     exit(0);
 }
