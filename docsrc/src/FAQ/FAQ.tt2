@@ -34,12 +34,12 @@ Or something like:
   [- INCLUDE foo -]   # is a directive
   [% INCLUDE foo %]   # not a directive, just plain text, passed through
 
-=head2 How do I itterate over a hash?
+=head2 How do I iterate over a hash?
 
-This is covered in the VMethods section of the manual page.  A list of
-all the keys that are in the hash can be obtained with the 'keys' virtual
-method.  You can then itterate over that list and by looking up each
-key in turn get the value.
+This is covered in the L<Template::Manual::VMethods|VMethods> section
+of the manual page.  A list of all the keys that are in the hash can
+be obtained with the 'keys' virtual method.  You can then iterate
+over that list and by looking up each key in turn get the value.
 
     [% FOREACH key = product.keys %]
        [% key %] => [% product.$key %]
