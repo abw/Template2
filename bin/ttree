@@ -348,6 +348,7 @@ sub read_config {
         'template_post_process|post_process|postprocess=s@',
         'template_process|process=s',
         'template_recursion|recursion',
+        'template_expose_blocks|expose_blocks',
         'template_default|default=s',
         'template_error|error=s',
         'template_start_tag|start_tag|starttag=s',
