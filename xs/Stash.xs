@@ -376,7 +376,6 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
     I32 atroot;
     TT_PERF_INIT;
 
-
     /* ignore _private or .private members */
     if (!root || *item == '_' || *item == '.') {
         return &PL_sv_undef;
@@ -520,8 +519,8 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
 		       real throwing */
 		    
 		    if (SvROK(ERRSV) || !strstr(SvPV(ERRSV, PL_na), 
-						"Can't locate object method")) {
-			die_object(aTHX_ ERRSV);
+                                        "Can't locate object method")) {
+              die_object(aTHX_ ERRSV);
 		    }
 		} else {
 		    result = fold_results(aTHX_ n);
@@ -718,11 +717,11 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
  */
 static void die_object (pTHX_ SV *err) {
 
-    if (sv_isobject(err)) {
-	/* throw object via ERRSV ($@) */
-	SV *errsv = perl_get_sv("@", TRUE);
-	sv_setsv(errsv, err);
-	(void) die(Nullch);
+    if (sv_isobject(err) || SvROK(err)) {
+       /* throw object via ERRSV ($@) */
+       SV *errsv = perl_get_sv("@", TRUE);
+       sv_setsv(errsv, err);
+       (void) die(Nullch);
     }
 
     /* error string sent back via croak() */
