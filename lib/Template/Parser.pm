@@ -45,7 +45,6 @@ use base qw( Template::Base );
 
 use Template::Utils;
 use Template::Directive;
-use Template::Document;
 use Template::Grammar;
 
 # parser state constants
@@ -132,29 +131,17 @@ sub new {
 
 
 #------------------------------------------------------------------------
-# parse($text, \%metadata)
+# parse($text)
 #
-# NOTE: abw changed this 02-June-2000, the following text is wrong.
-#
-# Parses the text string, $text and returns a Template::Document
-# object which represents the compiled template.  The process() method 
-# may then be called on the document, passing in a valid 
-# Template::Context reference, to process the template.  Additional 
-# component metadata arguments may be provided which are passed to
-# the document constructor.  Any blocks defined in the template will
-# also be compiled to evaluated Perl sub-routines and passed to 
-# the parent document constructor as the 'blocks' item.
-#
-# Returns a reference to a Template::Document object.  Errors are 
-# thrown to the context via the throw() method and may, or may not 
-# return, depending on any exception traps installed.
+# Parses the text string, $text and returns a hash array representing
+# the compiled template block(s) as Perl code, in the format expected
+# by Template::Document.
 #------------------------------------------------------------------------
 
 sub parse {
     my $self = shift;
     my $text = shift;
-    my $params = ref $_[0] eq 'HASH' ? shift : { @_ };
-    my ($tokens, $block, $name, $compiled);
+    my ($tokens, $block);
 
     # store for blocks defined in the template (see define_block())
     my $defblock = $self->{ DEFBLOCK } = { };
@@ -170,37 +157,14 @@ sub parse {
     $block = $self->_parse($tokens)
 	|| return undef;				    ## RETURN ##
 
-    print STDERR "compiling main template document block:\n$block\n"
+    print STDERR "compiled main template document block:\n$block\n"
 	if $DEBUG;
 
-
-    ## changed abw 02-Jul-2000
     return {
 	BLOCK     => $block,
 	DEFBLOCKS => $defblock,
 	METADATA  => { @$metadata },
     };
-
-#    $block = eval $block;
-#    return $self->error($@)
-#	 if $@;
-#
-#    foreach $name (keys %$defblock) {
-#	 print STDERR "compiling block '$name':\n$defblock->{ $name }\n"
-#	     if $DEBUG;
-#	 $compiled = eval $defblock->{ $name };
-#	 return $self->error($@) if $@;
-#	 $defblock->{ $name } = $compiled;
-#    }
-#
-#    $metadata = { 
-#	 %$params,
-#	 @$metadata,
-#	 BLOCKS => $defblock,
-#    };
-#
-#    # create a new Template::Document to encapsulate this block
-#    return Template::Document->new($block, $metadata);
 }
 
 
@@ -520,6 +484,9 @@ sub define_block {
     my $defblock = $self->{ DEFBLOCK } 
         || return undef;
 
+    print STDERR "compiled block '$name':\n$block\n"
+	if $DEBUG;
+
     $defblock->{ $name } = $block;
     
     return undef;
@@ -691,27 +658,29 @@ sub _parse {
     # munge text of last directive to make it readable
 #    $text =~ s/\n/\\n/g;
 
-    return $self->_parse_error("unexpected end of directive\n  [% $text %]")
+    return $self->_parse_error("unexpected end of directive", $text)
 	if $value eq ';';   # end of directive SEPARATOR
 
-    return $self->_parse_error("unexpected token ($value)\n  [% $text %]");
+    return $self->_parse_error("unexpected token ($value)", $text);
 }
 
 
 
 #------------------------------------------------------------------------
-# _parse_error($msg)
+# _parse_error($msg, $dirtext)
 #
 # Method used to handle errors encountered during the parse process
 # in the _parse() method.  
 #------------------------------------------------------------------------
 
 sub _parse_error {
-    my ($self, $msg) = @_;
+    my ($self, $msg, $text) = @_;
     my $line = $self->{ LINE };
-
     $line = ref($line) ? $$line : $line;
     $line = 'unknown' unless $line;
+
+    $msg .= "\n  [% $text %]"
+	if defined $text;
 
     return $self->error("line $line: $msg");
 }

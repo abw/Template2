@@ -21,11 +21,15 @@ use lib qw( ./lib ../lib );
 use Template::Test;
 $^W = 1;
 
-my $tt1 = Template->new();
-my $tt2 = Template->new( PRE_CHOMP => 1 );
-my $tt3 = Template->new( POST_CHOMP => 1 );
+my $ttobjs = [ 
+    tt   => Template->new(),
+    pre  => Template->new( PRE_CHOMP => 1 ),
+    post => Template->new( POST_CHOMP => 1 ),
+    trim => Template->new( INCLUDE_PATH => -d 't' ? 't/test/lib' : 'test/lib',
+			   TRIM => 1 ),
+];
 
-test_expect(\*DATA, [ tt => $tt1, pre => $tt2, post => $tt3 ], callsign);
+test_expect(\*DATA, $ttobjs, callsign);
 
 __DATA__
 #------------------------------------------------------------------------
@@ -259,4 +263,38 @@ start
 alphamid
 bravoend
 
+
+#------------------------------------------------------------------------
+# TRIM enabled
+#------------------------------------------------------------------------
+-- test --
+-- use trim --
+
+[% INCLUDE trimme %]
+
+
+-- expect --
+I am a template element file which will get TRIMmed
+
+
+-- test --
+[% BLOCK foo %]
+
+this is block foo
+
+[% END -%]
+
+[% BLOCK bar %]
+
+this is block bar
+
+[% END %]
+
+[% INCLUDE foo %]
+[% INCLUDE bar %]
+end
+-- expect --
+this is block foo
+this is block bar
+end
 

@@ -37,54 +37,11 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 
 #========================================================================
-#                      ----- PACKAGE SUBS -----
-#========================================================================
-
-sub write_perl_file {
-    my ($file, $content) = @_;
-    my ($block, $defblocks, $metadata) = 
-	@$content{ qw( BLOCK DEFBLOCKS METADATA ) };
-    my $pkg = __PACKAGE__;
-
-    $defblocks = join('', 
-		      map { "'$_' => $defblocks->{ $_ },\n" }
-		      keys %$defblocks);
-
-    $metadata = join('', 
-		       map { 
-			   my $x = $metadata->{ $_ }; 
-			   $x =~ s/['\\]/\\$1/g; 
-			   "'$_' => '$x',";
-		       } keys %$metadata);
-
-    local *CFH;
-    open(CFH, ">$file") or do {
-	$ERROR = $!;
-	return undef;
-    };
-
-    print CFH  <<EOF;
-bless {
-$metadata
-_HOT       => 0,
-_BLOCK     => $block,
-_DEFBLOCKS => {
-$defblocks
-},
-}, $pkg;
-EOF
-    close(CFH);
-
-    return 1;
-}
-
-		
-#========================================================================
 #                     -----  PUBLIC METHODS -----
 #========================================================================
 
 #------------------------------------------------------------------------
-# new($block, \%defblocks, \%metadata))
+# new(\%document)
 #
 # Creates a new self-contained Template::Document object which 
 # encapsulates a compiled Perl sub-routine, $block, any additional 
@@ -93,13 +50,13 @@ EOF
 #------------------------------------------------------------------------
 
 sub new {
-    my ($class, $block, $defblocks, $metadata) = @_;
+    my ($class, $doc) = @_;
+    my ($block, $defblocks, $metadata) = @$doc{ qw( BLOCK DEFBLOCKS METADATA ) };
     $defblocks ||= { };
     $metadata  ||= { };
 
     # evaluate Perl code in $block to create sub-routine reference if necessary
     unless (ref $block) {
-#	print "compiling BLOCK: $block\n";
 	$block = eval $block;
 	return $class->error($@)
 	    if $@;
@@ -109,9 +66,6 @@ sub new {
     @$defblocks{ keys %$defblocks } = 
 	map { ref($_) ? $_ : (eval($_) or return $class->error($@)) } 
         values %$defblocks;
-
-#    print "BLOCK: $block\nDEFBLOCKS: ", (map { "  $_ => $defblocks->{ $_ }\n" }
-#					 keys %$defblocks), "\n";
 
     bless {
 	%$metadata,
@@ -153,8 +107,7 @@ sub blocks {
 #
 # Process the document in a particular context.  Checks for recursion,
 # registers the document with the context via visit(), processes itself,
-# and then unwinds with a large gin and tonic.  Errors are handled, output
-# is TRIMmed if required, etc.
+# and then unwinds with a large gin and tonic.
 #------------------------------------------------------------------------
 
 sub process {
@@ -180,35 +133,7 @@ sub process {
     die $context->catch($@)
 	if $@;
 	
-    if ($context->{ TRIM }) {
-	for ($output) {
-	    s/^\s+//;
-	    s/\s+$//;
-	}
-    }
-
     return $output;
-}
-
-
-#------------------------------------------------------------------------
-# as_perl()
-#
-# Returns a representation of the compiled template in Perl code.  Relies
-# on PERL blocks being passed to the constructor.
-#------------------------------------------------------------------------
-
-sub as_perl {
-    my $self = shift;
-    my $class = ref $self;
-    return <<EOF;
-## NOTE: persistant templates don't work just yet
-bless { 
-    _BLOCK     => sub { return 'persistance not yet fully implemented' },
-    _DEFBLOCKS => { },
-    _HOT       => 0,
-}, '$class';
-EOF
 }
 
 
@@ -227,6 +152,10 @@ sub AUTOLOAD {
     return if $method eq 'DESTROY';
     return $self->{ $method };
 }
+
+#========================================================================
+#                     -----  PRIVATE METHODS -----
+#========================================================================
 
 
 #------------------------------------------------------------------------
@@ -251,6 +180,74 @@ sub _dump {
 
     return $output;
 }
+
+
+#========================================================================
+#                      ----- PACKAGE SUBS -----
+#========================================================================
+
+#------------------------------------------------------------------------
+# write_perl_file($filename, \%content)
+#
+# This sub-routine writes the Perl code representing a compiled
+# template to a file, specified by name as the first parameter.
+# The second parameter should be a hash array containing a main
+# template BLOCK, a hash array of additional DEFBLOCKS (named BLOCKs
+# definined in the template document source) and a hash array of
+# METADATA items.  The values for the BLOCK and individual BLOCKS
+# entries should be strings containing Perl code representing the
+# templates as compiled by the parser.
+#
+# Returns 1 on success.  On error, sets the $ERROR package variable
+# to contain an error message and returns undef.
+#
+# This is a bit of an ugly hack.  It might be better if the Document
+# object itself had an as_perl() method to return a Perl representation
+# of itself.  But that would imply it had to store it's Perl text 
+# as well as a reference to the evaluated Perl sub-routines.  Using this
+# approach, we can let the new() constructor eval() the Perl code
+# and then discard the source text.
+#------------------------------------------------------------------------
+
+sub write_perl_file {
+    my ($file, $content) = @_;
+    my ($block, $defblocks, $metadata) = 
+	@$content{ qw( BLOCK DEFBLOCKS METADATA ) };
+    my $pkg = __PACKAGE__;
+
+    $defblocks = join('', 
+		      map { "'$_' => $defblocks->{ $_ },\n" }
+		      keys %$defblocks);
+
+    $metadata = join('', 
+		       map { 
+			   my $x = $metadata->{ $_ }; 
+			   $x =~ s/['\\]/\\$1/g; 
+			   "'$_' => '$x',";
+		       } keys %$metadata);
+
+    local *CFH;
+    open(CFH, ">$file") or do {
+	$ERROR = $!;
+	return undef;
+    };
+
+    print CFH  <<EOF;
+bless {
+$metadata
+_HOT       => 0,
+_BLOCK     => $block,
+_DEFBLOCKS => {
+$defblocks
+},
+}, $pkg;
+EOF
+    close(CFH);
+
+    return 1;
+}
+
+		
     
 1;
 

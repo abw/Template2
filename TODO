@@ -133,3 +133,9 @@ Misc
 * should be able to pre-define BLOCKS as text which is auto-pre-compiled 
   - may rely on above to get access to Provider's PARSER object.
 
+* copied XML plugins and tests
+
+* fixed TRIM option to work with all BLOCKs and templates.  Moved TRIMing
+  operation into context process() and include() methods.  Also changed
+  service to call $context->process($template) rather than call the sub/
+  doc itself, thus ensuring that the output can get TRIMmed.

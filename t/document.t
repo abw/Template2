@@ -41,17 +41,17 @@ package main;
 #------------------------------------------------------------------------
 # create a document and check accessor methods for blocks and metadata
 #------------------------------------------------------------------------
-my $doc = Template::Document->new(
-    sub { my $c = shift; return "some output" },
-    {
+my $doc = Template::Document->new({
+    BLOCK     => sub { my $c = shift; return "some output" },
+    DEFBLOCKS => {
 	foo => sub { return 'the foo block' },
 	bar => sub { return 'the bar block' },
     },
-    {
+    METADATA  => {
 	author  => 'Andy Wardley',
 	version => 3.14,
-    }
-);
+    },
+});
 
 my $c = Template::DummyContext->new();
 

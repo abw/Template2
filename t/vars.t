@@ -393,6 +393,19 @@ The $product.id $product.desc costs \$${product.cost}.00
 -- expect --
 The XYZ-2000 Bogon Generator costs $678.00
 
+-- test --
+[% data => {
+       g => 'my data'
+   }
+   complex = {
+       gee => 'g'
+   }
+-%]
+[% data.${complex.gee} %]
+-- expect --
+my data
+
+
 #------------------------------------------------------------------------
 # DEFAULT
 #------------------------------------------------------------------------

@@ -83,12 +83,7 @@ sub process {
 
 	# PROCESS
 	eval {
-	    if (ref $template eq 'CODE') {
-		$procout = &$template($context);
-	    }
-	    else {
-		$procout = $template->process($context);
-	    }
+	    $procout = $context->process($template);
 	};
 	if ($error = $@) {
 	    last SERVICE

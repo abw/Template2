@@ -41,6 +41,7 @@ use vars qw( $VERSION $DEBUG $ERROR );
 use base qw( Template::Base );
 use Template::Constants;
 use Template::Config;
+use Template::Document;
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -566,8 +567,7 @@ sub _compile {
 	# return a cohesive object encapsulating the template, additional
 	# BLOCKs and metadata
 	return $data					    ## RETURN ##
-	    if $data->{ data } = Template::Document->new(
-		@$parsedoc{ qw( BLOCK DEFBLOCKS METADATA ) });
+	    if $data->{ data } = Template::Document->new($parsedoc);
 
 	$error = $Template::Document::ERROR;
     }

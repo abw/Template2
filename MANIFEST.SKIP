@@ -10,4 +10,4 @@
 ^docs/design/
 ^docs/tpj/
 ^docs/pod/.*\.pod$
-^t/test/tmp/
+

@@ -204,7 +204,7 @@ sub filter {
 
 sub process {
     my ($self, $template, $params) = @_;
-    my $blocks;
+    my ($blocks, $output);
 
     # request compiled template from cache 
     $template = $self->template($template)
@@ -222,11 +222,20 @@ sub process {
 	if $params;
     
     if (ref $template eq 'CODE') {
-	return &$template($self);
+	$output = &$template($self);
     }
     else {
-	return $template->process($self);
+	$output = $template->process($self);
     }
+
+    if ($self->{ TRIM }) {
+	for ($output) {
+	    s/^\s+//;
+	    s/\s+$//;
+	}
+    }
+    
+    return $output;
 }
 
 
@@ -271,6 +280,14 @@ sub include {
     $self->{ STASH } = $self->{ STASH }->declone();
 
     die $error if $error;
+
+    if ($self->{ TRIM }) {
+	for ($output) {
+	    s/^\s+//;
+	    s/\s+$//;
+	}
+    }
+
     return $output;
 }
 

@@ -65,9 +65,8 @@ $DEBUG   = 0 unless defined $DEBUG;
 # new(\@target, \%options)
 #
 # Constructor method which creates and returns a reference to a new 
-# Template::Iterator object.  A reference to the target data (currently 
-# an array, but future implementations may support hashes or other set 
-# types) may be passed for the object to iterate through.
+# Template::Iterator object.  A reference to the target data (array
+# or hash) may be passed for the object to iterate through.
 #------------------------------------------------------------------------
 
 sub new {
