@@ -1,0 +1,6 @@
+-- footer --
+[% INCLUDE copyright %]
+[% BLOCK copyright -%]
+This is the copyright message
+[% END -%]
+-- end of footer --

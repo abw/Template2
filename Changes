@@ -1,0 +1,31 @@
+This list isn't complete - it's more of a reminder to me at the moment.
+----------------------------------------------------------------------
+
+* All directives now compile to Perl code and run
+
+* USERDIR and USERBLOCK are currently not supported (and may never be,
+  given that they're experimental features of TT1 anyway). 
+
+* Fixed parser to not INTERPOLATE within PERL blocks.
+
+* Added TAG_STYLEs html, mason, asp and php, as provided by some kind 
+  dude on the list whose names escapes me at the moment.  Changed default 
+  to [% %] and changed names of some others
+
+* Changed how error/return values should be returned from user code.
+  All errors should be thrown via one of the following:
+
+    die $error_msg;
+    die Template::Exception->new($type, $info);
+
+* All binary operators have the same precedence as Perl.
+
+* Added '-- use name --' to Template::Test to switch between multiple
+  Template objects specified as a list reference as the second arg
+  to test_expect()
+
+* must explicitly use iterator if you want to access .first .last, etc.
+  in a loop.
+
+* note that parser is not loaded at startup time.
+

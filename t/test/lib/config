@@ -1,0 +1,8 @@
+-- config --
+[% foo = 'Foo' 
+   bar = 'Bar'
+-%]
+[% BLOCK menu -%]
+This is the menu, defined in 'config'
+[%- END -%]
+-- end of config --

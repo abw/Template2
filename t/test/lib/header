@@ -1,0 +1,4 @@
+-- header --
+title: [% title %]
+menu: [% INCLUDE menu %]
+-- end of header --

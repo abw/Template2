@@ -1,0 +1,179 @@
+This is an alpha release of version 2 of the Perl Template Toolkit.
+It is still in experimental form and should most definately not be
+used in production systems unless you really enjoy living dangerously.
+
+Don't even install it.  No, I'm serious.  It will overwrite your
+existing version 1.xx Template Toolkit modules and really spoil your
+day.  There's no Makefile.PL anyway, just in case you felt tempted to
+install it without reading this README first.
+
+So, with that warning aside, down to business.  This contains a current
+snapshot of my workings on version 2 of the Template Toolkit.  The 
+template language itself remains fairly constant, with a few minor
+changes, a couple of new features, and the cleaning up of a few loose
+ends and inconsistencies.  The majority of the work has gone on improving
+the architecture and internal workings of the toolkit.  Most significant
+is the fact that templates are now compiled to Perl code and evaluated
+as Perl sub-routines.  This has 2 main advantages.  The first is that
+the execution time is dramatically reduced.  In a persistant server 
+environment such as a web server, this is a major win.  The second
+benefit is that once compiled, the Perl code can be written to a file
+so that it can be re-loaded at some later date in considerably less 
+time.  As an added bonus, this makes it much easier to integrate 
+external modules, template components, and so on.  
+
+only one significant
+change that might affect you.  Up until now, the leading '$' on a variable
+has been optional and has no effect.  From version 2 onwards, variables
+should NOT be prefixed with a '$'.  More on that later, but for now rest
+assured that there's a VERSION compatability option which reverts this
+to the original behaviour.  Another change is the behaviour of CATCH
+blocks, which up until now has always been a little weird.  This has now
+been formalised into a properly structure TRY ... CATCH block.  There's
+also a new SWITCH ... CASE statement
+  The '$' is now used consistently to
+indicate that a variable name should interpolated, for example, when 
+accessing a hash key by a symbolic name:
+
+    hash.$key
+
+
+#------------------------------------------------------------------------
+Template::Document
+
+  This defines an object class whose instances represent compiled template
+  documents.  The Template::Parser module creates Template::Document
+  instances to encapsulate templates as it compiles them.  The template 
+  content itself should be passed to the constructor as a reference to 
+  a sub-routine.  The Template::Document object simply stores this 
+  reference internally and then calls it when its process($context)
+  method is invoked.  The sub-routine should expect a Template::Context
+  reference as its only parameter and should return its output or raise
+  an error via "die Template::Exception->new($type, $info)".
+
+    my $doc = Template::Document->new(
+	sub { 
+	    my $context = shift;
+	    my $stash   = $context->stash();
+	    my $foo     = $stash->get('foo') || 'undefined';
+	    return "The value of foo is $foo";
+	}
+    );
+
+    print $doc->process($context);
+
+  Additional parameters passed to the constructor are treated as named 
+  metadata items.  These are also stored internally and available via 
+  an AUTOLOAD method.
+
+    my $doc = Template::Document->new(\&mytemplate, 
+				      author  => 'Andy Wardley',
+				      version => 3.14 );
+
+    print "version ", $doc->version, " by ", $doc->author, "\n";
+  
+  
+  Metadata items are accessible in templates via the 'template'
+  variable which contains a reference to the parent Template::Document
+  object, where 'parent' defines the outermost template being
+  processed.
+
+    [% template.author %]
+
+  The BLOCKS parameter may be provided and should contain a reference to
+  a hash array of other Template::Document objects, representing any 
+  additional BLOCK definitions within the template source file.
+
+    my $hdr = Template::Document->new(\&myheader);
+    my $ftr = Template::Document->new(\&myfooter);
+
+    my $doc = Template::Document->new(\&mytemplate,
+				      BLOCKS => {
+				          header => $hdr,
+				          footer => $ftr,
+				      },
+				      author  => 'Andy Wardley',
+				      version => 3.14 );
+
+  Template::Document objects are usually created by the Template::Parser
+  but can be manually instantiated, or indeed sub-classed to provide
+  custom template components.
+
+
+#------------------------------------------------------------------------
+Template::Document
+
+  This defines an object class whose instances represent compiled template
+  documents.  A "compiled template document" is a reference to an anonymous
+  sub-routine.
+
+    new(\&template, BLOCKS => \%blockdefs, metavar => $val, ...)
+    process($context)
+    blocks()
+
+Template::Context
+
+  Runtime object:
+
+    new(\%config)
+    stash()                         # return Template::Stash reference
+    template($name)                 # fetches compiled template by name
+    plugin($name, \@args)           # fetches plugin by name (USE)
+    filter($name, \@args, $alias)   # fetches filter by name (FILTER)
+    process($template, \%params)    # process template in context (PROCESS)
+    include($template, \%params)    # ditto in localised context (INCLUDE)
+    throw($type, $info)             # raise exception via die() (THROW)
+    catch($error)		    # sanitise errors caught
+    localise()                      # localise the context
+    delocalise()                    # de-localise the context
+    
+
+Template::Stash
+
+  Variable storage:
+
+    new(\%predefs)
+    get('foo')                      # => [% foo %]
+    get(['foo', \@args])            # => [% foo(args) %]
+    get(['foo', 0, 'bar', 0])       # => [% foo.bar %]
+    get(['foo', \@args1, 'bar', \@args2])
+                                    # => [% foo(args1).bar(args2)... %]
+
+    set('foo', 5)                   # => [% foo = 5 %]
+    set('foo', 5, 1)                # => [% DEFAULT foo = 5 %]
+
+    set(['foo', 0, 'bar', 0], 5)    # => [% foo.bar = 5 %]
+    set(['foo', 0, 'bar', 0], 5, 1) # => [% DEFAULT foo.bar = 5 %]
+
+
+Template::Provider
+
+  Provides and caches compiled templates.
+
+    fetch($name)		    # return Template::Document object
+    store($name, $template)         # store Template::Document object
+
+
+Template::Parser
+ 
+  Parses templates and compiles them down to Perl code.  This is then
+  evaluated to define an anonymous sub-routine which, when invoked,
+  will generate the processed template output.  The parser instantiates
+  Template::Document objects to encapsulate the compiled template.
+
+    parse($text)
+
+
+Template::Filters
+
+  General provider for system-defined FILTER operations.
+
+    fetch($name, \@args)
+
+
+Template::Plugins
+
+  General provider for system-defined plugins operations.
+
+    fetch($name, \@args, $context)
+

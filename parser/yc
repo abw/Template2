@@ -1,0 +1,35 @@
+#!/bin/sh
+#========================================================================
+#
+# yc - yapp compile
+#
+# This calls 'yapp', distributed with the Parse::Yapp module, to 
+# compile the parser grammar and construct the ../Template/Grammar.pm 
+# file.  The grammar is defined in ./Parser.yp.  The skeleton file 
+# Grammar.pm.skel is used as a template for creating the grammar file.
+# An output file 'Parser.output' is generated containing a summary of 
+# the rule and state tables.
+#
+# You only need to run this script if you have changed the grammar and 
+# wish to recompile it.
+#
+# This script uses a slightly modified version of the Parse::Yapp module,
+# version 0.31.  The parse_yapp_patch patch file can be applied to the 
+# module to affect these changes.  Francois Desarmenien, the author of
+# Parse::Yapp, is expected to merge these changes into a new release
+# some time soon.  If you have a newer version of Parse::Yapp and it 
+# supports the '-t <filename>' option then you're probably OK with the
+# version you've got and don't need to apply the patch.
+# 
+# Andy Wardley <abw@cre.canon.co.uk>
+#
+#========================================================================
+
+GRAMMAR=Parser.yp
+OUTPUT=../lib/Template/Grammar.pm
+TEMPLATE=Grammar.pm.skel
+
+echo "Compiling parser grammar (${GRAMMAR} -> ${OUTPUT})"
+
+yapp -v -s -o ${OUTPUT} -t ${TEMPLATE} ${GRAMMAR}
+

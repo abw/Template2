@@ -1,0 +1,43 @@
+code
+kfs.org email
+copyright
+name, desc, title, docs
+test
+
+#------------------------------------------------------------------------
+Template::Constants - defines constants for the Template Toolkit
+  code, email, copy, docs, OK
+  test not needed
+
+#------------------------------------------------------------------------
+Template::Base - base class module implementing common functionality
+  code OK
+  emails OK
+  copyright OK
+  docs OK
+  test (t/base.t) OK
+
+#------------------------------------------------------------------------
+Template::Stash - magical storage for template variables
+  code OK
+  emails OK
+  copyright OK
+  docs OK
+  test (t/vars.t) OK
+
+#------------------------------------------------------------------------
+Template::Plugins - provider module for loading and instantiating plugins
+  code OK
+  emails OK
+  copyright OK
+  docs OK
+  test                       **TODO**
+
+#------------------------------------------------------------------------
+Template::Filters - defines post-processing filters for template blocks
+  code OK
+  emails OK
+  copyright OK
+  docs OK
+  test                       **TODO**
+
