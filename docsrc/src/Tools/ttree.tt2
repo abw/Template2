@@ -120,6 +120,15 @@ For example:
 
   $ ttree --depend foo=bar,/tmp/baz
 
+To define a dependency that applies to all files, use C<*> on the 
+left of the C<=>.
+
+  $ ttree --depend *=header,footer
+
+Any templates that are defined in the C<pre_process>, C<post_process>,
+C<process> or C<wrapper> options will automatically be added to the
+list of global dependencies that apply to all templates.
+
 =head2 Format of B<depend_file>
 
 The C<depend_file> option can be used to specify a file that contains
@@ -161,3 +170,7 @@ The F<index.html> template will only be processed if it or any of its
 dependant files has a modification time greater than the current
 F<index.html> output file.
 
+As with the command line options, the C<*> character can be used
+as a wildcard to specify a dependency for all templates.
+
+    * : config,header
