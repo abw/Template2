@@ -137,13 +137,14 @@ sub debug {
     print STDERR "[$pkg] $msg";
 }
 
+
 #------------------------------------------------------------------------
-# version()
+# module_version()
 #
 # Returns the current version number.
 #------------------------------------------------------------------------
 
-sub version {
+sub module_version {
     my $self = shift;
     my $class = ref $self || $self;
     no strict 'refs';
