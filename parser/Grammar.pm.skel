@@ -55,7 +55,20 @@ my ($factory, $rawstart);
 	TRY THROW CATCH FINAL LAST RETURN STOP CLEAR VIEW
     );
 
-%CMPOP = qw( != ne  == eq  < <  > >  >= >=  <= <= );
+%CMPOP = qw( 
+    ne ne
+    != ne
+    eq eq
+    == eq
+    lt lt
+    <  <
+    gt gt
+    >  >
+    ge ge
+    >= >=
+    le le
+    <= <=
+);
 
 
 #========================================================================
