@@ -193,8 +193,12 @@ sub _output {
         elsif (open(FP, ">$where")) { 
             # binmode option can be 1 or a specific layer, e.g. :utf8
             my $bm = $options->{ binmode };
-            if ($bm == 1) { binmode FP      }
-            elsif ($bm)   { binmode FP, $bm }
+            if ($bm && +$bm == 1) { 
+                binmode FP;
+            }
+            elsif ($bm){ 
+                binmode FP, $bm;
+            }
             print FP $$textref;
             close FP;
         }
