@@ -150,9 +150,16 @@ This is the Bar plugin, value is 64
 # LOAD_PERL
 #------------------------------------------------------------------------
 
+-- start --
 -- test --
 -- use tt3 --
 [% USE baz = MyPlugs.Baz(128) -%]
 [% baz.output %]
 -- expect --
 This is the Baz module, value is 128
+
+-- test --
+[% USE boz = MyPlugs.Baz(256) -%]
+[% boz.output %]
+-- expect --
+This is the Baz module, value is 256
