@@ -157,12 +157,16 @@ sub filter {
 
     # use any cached version of the filter if no params provided
     return $filter 
-	if ! $args && ($filter = $self->{ FILTER_CACHE }->{ $name });
+	if ! $args && ! ref $name
+	    && ($filter = $self->{ FILTER_CACHE }->{ $name });
 
     # request the named filter from each of the FILTERS providers in turn
     foreach my $provider (@{ $self->{ LOAD_FILTERS } }) {
 #	print STDERR "Asking filter provider $provider for $name...\n"
 #	    if $DEBUG;
+
+	$filter = $name, last 
+	    if ref $name;
 
 	($filter, $error) = $provider->fetch($name, $args, $self);
 	last unless $error;

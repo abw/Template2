@@ -641,3 +641,42 @@ wiz: The cat sat on the mat
 wiz: The dog sat on the log
 
 
+-- test --
+-- use evalperl --
+[% PERL %]
+$stash->set('merlyn', bless \&merlyn1, 'ttfilter');
+sub merlyn1 {
+    my $text = shift || '<no text>';
+    $text =~ s/stone/henge/g;
+    return $text;
+}
+[% END -%]
+[% FILTER $merlyn -%]
+Let him who is without sin cast the first stone.
+[% END %]
+-- expect --
+Let him who is without sin cast the first henge.
+
+-- test --
+-- use evalperl --
+[% PERL %]
+$stash->set('merlyn', sub { \&merlyn2 });
+sub merlyn2 {
+    my $text = shift || '<no text>';
+    $text =~ s/stone/henge/g;
+    return $text;
+}
+[% END -%]
+[% FILTER $merlyn -%]
+Let him who is without sin cast the first stone.
+[% END %]
+-- expect --
+Let him who is without sin cast the first henge.
+
+-- test --
+[% myfilter = 'html' -%]
+[% FILTER $myfilter -%]
+<html>
+[% END %]
+-- expect --
+&lt;html&gt;

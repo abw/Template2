@@ -49,6 +49,7 @@ lib/Template/Stash.pm
 lib/Template/Stash.pod
 lib/Template/Test.pm
 lib/Template/Test.pod
+lib/Template/Tutorial.pod
 parser/Grammar.pm.skel
 parser/Parser.yp
 parser/README

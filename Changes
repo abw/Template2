@@ -20,6 +20,25 @@
 # Version 2.00 beta 4  12th September 2000
 #------------------------------------------------------------------------
 
+* Changed the Template::Context filter() method to accept a code 
+  reference as the filter name and use it as the filter sub.  This 
+  allows filters to be bound to template variables which are then 
+  used as:
+
+   [% FILTER $myfilter %]
+
+  There is one catch, however.  TT will automatically call a subroutine
+  bound to a variable when evaluated.  Thus you must wrap your filter
+  sub in another sub: $stash->set('foo', sub { \&myfilter }); or bless
+  it into some class (any class) to fool TT into thinking it's not a 
+  subroutine ref: $stash->set('bar', bless \&myfilter, 'any_old_name');
+
+* Template::Tutorial
+
+#------------------------------------------------------------------------
+# Version 2.00 beta 4  12th September 2000
+#------------------------------------------------------------------------
+
 * Added the PROCESS config option which allows a template or templates
   to be specified which is/are processed instead of the template
   passed as an argument to the Template process() method.  The
