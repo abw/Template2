@@ -460,6 +460,7 @@ sub _fetch_path {
 		    unless $error;
 		$data = $self->_store($path, $data)
 		    unless $error || ! $caching;
+                $data = $data->{ data } if ! $caching;
 		# all done if $error is OK or ERROR
 		last INCLUDE if ! $error 
 		    || $error == Template::Constants::STATUS_ERROR;
@@ -1237,8 +1238,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.26, distributed as part of the
-Template Toolkit version 2.05, released on 11 September 2001.
+2.28, distributed as part of the
+Template Toolkit version 2.05a, released on 12 September 2001.
 
 =head1 COPYRIGHT
 
