@@ -205,7 +205,7 @@ It first determines which modules you have installed to configure the
 test suite accordingly.  If you have the DBI module installed then it
 will ask you if you want to run the DBI tests.  
 
-    Do you want to run the DBI tests?\n" .
+    Do you want to run the DBI tests?
     It requires access to an existing test database. [y]
 
 If you answer 'y' then it will prompt you for the DBD driver and the

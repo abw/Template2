@@ -108,7 +108,7 @@ these modules are installed on your system then the text will be
 encoded (via the escape_html() or encode_entities() subroutines
 respectively) to convert all extended characters into their
 appropriate HTML entities (e.g. converting 'é' to '&eacute;').  If
-neither module is available on your system then an 'html_all' exception
+neither module is available on your system then an 'html_entity' exception
 will be thrown reporting an appropriate message.   
 
 For further information on HTML entity encoding, see
