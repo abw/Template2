@@ -1,0 +1,4 @@
+[% INCLUDE splash/icon
+    FOREACH img = ['left', 'up', 'right', 'down']
+%]
+	   

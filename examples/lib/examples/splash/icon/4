@@ -1,0 +1,9 @@
+[%  INCLUDE splash/icon
+    FOREACH [ { col = 'red75',   img = 'minus'   },
+              { col = 'green75', img = 'plus'    },
+              { col = 'blue75',  img = 'diamond' },
+              { col = 'aqua',    img = 'negbox'  },
+              { col = 'marine',  img = 'posbox'  },
+              { col = 'lilac',   img = 'box'     } ]
+%]
+	   	   

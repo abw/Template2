@@ -1,0 +1,8 @@
+[%  tabs = [ ];
+    FOREACH n = [ 1..20 ];
+	tab = { text => "Item $n" };
+	tabs.push(tab);
+    END;
+%]
+
+[% INCLUDE splash/tabset select=5 %]
