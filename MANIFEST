@@ -666,3 +666,4 @@ xs/MANIFEST
 xs/Makefile.PL
 xs/README
 xs/Stash.xs
+xs/ppport.h

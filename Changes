@@ -23,13 +23,23 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06f - March 12th 2002                 ## DEVELOPER RELEASE ##
+# Version 2.06f - March 13th 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in both the Perl and XS Stash modules which resulted in 
   virtual methods being called on the base stash, e.g. [% size %]
   was treated as [% stash.size %].  The only exception that we allow
   through is 'import' so that we can [% import(another_hash) %]
+
+* Fixed the compilation of the XS Stash on earlier versions of Perl
+  (e.g. 5.00503) and other platforms (e.g. Win32) by including the 
+  ppport.h file.
+
+* Fixed a warning about undefined values in Template::Plugin::Format 
+  raised by t/format.t
+
+* Fixed a warning in t/html.t raised when neither Apache::Util nor 
+  HTML::Entities is installed.
 
 
 #------------------------------------------------------------------------

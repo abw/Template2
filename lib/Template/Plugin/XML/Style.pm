@@ -331,8 +331,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.11, distributed as part of the
-Template Toolkit version 2.06f, released on 12 March 2002.
+2.12, distributed as part of the
+Template Toolkit version 2.06f, released on 13 March 2002.
 
 =head1 COPYRIGHT
 
