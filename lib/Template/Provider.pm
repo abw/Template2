@@ -868,7 +868,7 @@ sub _compile {
 
 	unless ($error) {
 	    return $data				        ## RETURN ##
-		if $data->{ data } = Template::Document->new($parsedoc);
+		if $data->{ data } = $DOCUMENT->new($parsedoc);
 	    $error = $Template::Document::ERROR;
 	}
     }
@@ -1417,8 +1417,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.70, distributed as part of the
-Template Toolkit version 2.10, released on 24 July 2003.
+2.71, distributed as part of the
+Template Toolkit version 2.10a, released on 09 October 2003.
 
 =head1 COPYRIGHT
 
