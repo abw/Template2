@@ -115,6 +115,7 @@ $SCALAR_OPS = {
 $HASH_OPS = {
     'item'   => sub { my ($hash, $item) = @_; 
                       $item = '' unless defined $item;
+                      return if $item =~ /^[_.]/;
                       $hash->{ $item };
                   },
     'hash'   => sub { $_[0] },
