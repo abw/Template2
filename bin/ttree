@@ -315,20 +315,20 @@ sub process_file {
     $dest = $destdir ? "$destdir/$destfile" : $destfile;
                    
 #    print "proc $file => $dest\n";
-
-
     
     # check against copy list
-    foreach $check (@$copy) {
-        if ($filename =~ /$check/) {
+    foreach my $copy_pattern (@$copy) {
+        if ($filename =~ /$copy_pattern/) {
             $copy_file = 1;
+            $check = $copy_pattern;
+            last;
         }
     }
 
     # stat the source file unconditionally, so we can preserve
     # mode and ownership
-    (undef, undef, $mode, undef, $uid, $gid, undef, undef, undef, $srctime,
-     undef, undef, undef)  = stat($absfile);
+    ( undef, undef, $mode, undef, $uid, $gid, undef, 
+      undef, undef, $srctime, undef, undef, undef ) = stat($absfile);
     
     # test modification time of existing destination file
     if (! $all && ! $options{ force } && -f $dest) {
