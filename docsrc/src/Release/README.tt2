@@ -53,6 +53,10 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
+Version 2.13 followed on quickly from 2.13 to fix a minor, but 
+annoying bug in the date.t test script that we thought we had 
+fixed in 2.12 but hadn't.
+
 Version 2.12 followed on quickly from 2.11 to fix a minor, but 
 annoying bug in the date.t test script. 
 
