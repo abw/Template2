@@ -78,7 +78,6 @@ __END__
 version [% template.version %] by [% template.author %]
 -- expect --
 version 1.23 by Tom Smith
--- stop --
 
 # test local block definitions are accessible
 -- test --
@@ -97,3 +96,23 @@ version 1.23 by Tom Smith
    This is block bar
    This is the end of block foo
 
+-- test --
+[% META title = 'My Template Title' -%]
+[% BLOCK header -%]
+title: [% template.title or title %]
+[% END -%]
+[% INCLUDE header %]
+-- expect --
+title: My Template Title
+
+-- test --
+[% META title = 'My Template Title' -%]
+[% BLOCK header -%]
+title: [% title or template.title  %]
+[% END -%]
+[% INCLUDE header title = 'A New Title' %]
+[% INCLUDE header %]
+-- expect --
+title: A New Title
+
+title: My Template Title

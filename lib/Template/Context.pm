@@ -415,18 +415,17 @@ sub leave {
 
 
 #------------------------------------------------------------------------
-# reset_blocks(\%blocks)
+# reset()
 # 
 # Reset the state of the internal BLOCKS hash to clear any BLOCK 
-# definitions imported via the PROCESS directive.  A hash reference
-# can be passed to provide default BLOCK definitions which should be
-# used to re-initialise it.
+# definitions imported via the PROCESS directive.  Any original 
+# BLOCKS definitions passed to the constructor will be restored.
 #------------------------------------------------------------------------
 
-sub reset_blocks {
+sub reset {
     my ($self, $blocks) = @_;
     $self->{ BLKSTACK } = [ ];
-    $self->{ BLOCKS   } = { $blocks ? %$blocks : () };
+    $self->{ BLOCKS   } = { %{ $self->{ INIT_BLOCKS } } };
 }
 
 
@@ -479,7 +478,7 @@ sub DESTROY {
 
 sub _init {
     my ($self, $config) = @_;
-    my ($name, $item, $method);
+    my ($name, $item, $method, $block, $blocks);
     my @itemlut = ( 
 	TEMPLATES => 'provider',
 	PLUGINS   => 'plugins',
@@ -506,16 +505,27 @@ sub _init {
 	    || return $self->error($Template::Config::ERROR);
     };
 
+    # compile any template BLOCKS specified as text
+    $blocks = $config->{ BLOCKS } || { };
+    $self->{ INIT_BLOCKS } = $self->{ BLOCKS } = { 
+	map {
+	    $block = $blocks->{ $_ };
+	    $block = $self->template(\$block)
+		|| return undef
+		    unless ref $block;
+	    ($_ => $block);
+	} 
+	keys %$blocks
+    };
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # EVAL_PERL - flag indicating if PERL blocks should be processed
     # EVAL_PERL - flag to remove leading and trailing whitespace from output
     # BLKSTACK  - list of hashes of BLOCKs defined in current template(s)
-    # BLOCKS    - hash of local BLOCKs imported from templates via PROCESS
 
     $self->{ EVAL_PERL } = $config->{ EVAL_PERL } || 0;
     $self->{ TRIM      } = $config->{ TRIM } || 0;
     $self->{ BLKSTACK  } = [ ];
-    $self->{ BLOCKS    } = { };
 
     return $self;
 }

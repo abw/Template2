@@ -231,6 +231,25 @@ sub test_expect {
 	# processed OK
 	ok(1);
 
+	# another hack: if the '-- expect --' section starts with 
+	# '-- process --' then we process the expected output 
+	# before comparing it with the generated output.  This is
+	# slightly twisted but it makes it possible to run tests 
+	# where the expected output isn't static.  See t/date.t for
+	# an example.
+
+	if ($expect =~ s/^\s*--+\s*process\s*--+\s*\n//im) {
+	    my $out;
+	    $tproc->process(\$expect, $params, \$out) || do {
+		warn("Template process failed (expect): ", 
+		     $tproc->error(), "\n");
+		# report failure and automatically fail the expect match
+		ok(0);
+		next;
+	    };
+	    $expect = $out;
+	};		
+
 	# strip any trailing blank lines from expected and real output
 	foreach ($expect, $output) {
 	    s/\n*\Z//mg;

@@ -311,4 +311,39 @@ The_cat_sat_on_the_mat
 The cat shat on the mat
 The cplat splat on the mplat
 
+-- test --
+[% text = 'The <=> operator' %]
+[% text|html %]
+-- expect --
+The &lt;=&gt; operator
+
+-- test --
+[% text = 'The <=> operator, blah, blah' %]
+[% text | html | replace('blah', 'rhubarb') %]
+-- expect --
+The &lt;=&gt; operator, rhubarb, rhubarb
+
+-- test --
+[% | truncate(25) %]
+The cat sat on the mat, and wondered to itself,
+"How might I be able to climb up onto the shelf?",
+For up there I am sure I'll see,
+A tasty fishy snack for me.
+[% END %]
+-- expect --
+The cat sat on the mat...
+
+-- test --
+[% FILTER upper %]
+The cat sat on the mat
+[% END %]
+-- expect --
+THE CAT SAT ON THE MAT
+
+-- test --
+[% FILTER lower %]
+The cat sat on the mat
+[% END %]
+-- expect --
+the cat sat on the mat
 

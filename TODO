@@ -1,39 +1,53 @@
 Pending
 -------
 
-* cvs add t/test/src/incblock for t/include.t
+* Template -> Service -> Context -> Stash
+                                 -> Provider -> Parser -> Grammar
+                                                       -> Document
+                                                       -> Directive
+                                 -> Plugins  -> Plugin -> Plugin::*
+                                 -> Filters
 
-Fix
----
+  + Base, Config, Constants, Exception, Iterator, Test, Utils
+                                   
+Misc
+----
 
-* Fix Plugin.pm
+* Fix Plugin.pm - it's still basically v1 code and much can be discarded
 
-* Change ttree to have knowledge of new config options
+* Memory leaks (there's something creating circular references and it's 
+  probably glaringly obvious but I haven't bothered to look yet)
 
-* Improve tpage to do the same
+* Change ttree to have knowledge of new config options.  Add --define option
+  to define a template variable.
+
+* Improve tpage to do the same (i.e. have --define,  at least)
 
 * A COMPILE_DIR option to compliment COMPILE_EXT, specifying an alternate
   directory in which to store compiled template documents.
-
-* Change filter factory interface to accept $context as first parameter?
-
-* Do something (i.e. mail Lincoln) about the CGI special case in
-  Template::Stash to work around the problem of CGI objects disclaiming
-  membership of the UNVIERSAL class after the first method call.
-
-* Change docs/examples to uniformly name the template variable hash as
-  '$replace'.
 
 * Modules are mostly autoloaded.  Need PRELOAD option to preload all relevant
   modules?  (e.g. for mod_perl)
 
 * a FOR, like FOREACH but without using an iterator?
 
-* block persistance - sometimes need to define BLOCKs that persist 
-  through service invocations (AUTO_RESET => 0).
+* Change filter factory interface to accept $context as first parameter.
+  Dynamic dynamic filters can't grab context reference and some of them 
+  need it.
 
-* BLOCK caching is still a little messy - it works, but with belt and braces.
-  Need to finalise behaviour wrt importing BLOCK defs via INCLUDE/PROCESS.
+* add 'perl' filter - needs context access noted above to test EVAL_PERL
+
+* filters and plugins cache may bloat.  Perhaps reset() should accept
+  flags to clear BLOCKS, PLUGINS, FILTERS, etc.
+
+* Do something (i.e. mail Lincoln) about the CGI special case in
+  Template::Stash to work around the problem of CGI objects disclaiming
+  membership of the UNVIERSAL class after the first method call.
+
+* copy over new plugins and filters from v1.07
+
+* Change docs/examples to uniformly name the template variable hash as
+  '$replace'.
 
 * note that no recursion checking is performed for BLOCKs, only 
   Template::Document instances
@@ -41,9 +55,6 @@ Fix
 * options for provider retrievals such as DONT_USE_CACHE, DONT_CACHE, 
   DONT_COMPILE (e.g. for [% INSERT file %] directive), or should there
   be public interfaces for load(), compile(), etc.?
-
-* should be able to pre-define BLOCKS as text which is auto-pre-compiled 
-  - may rely on above to get access to Provider's PARSER object.
 
 * move Template::Utils::output somewhere better (Template.pm?) and get rid
   of Template::Utils
@@ -54,21 +65,12 @@ Fix
 * change all hardcoded object isa tests to use $Template::Config:XXXXX
   e.g. if (UNIVERSAL::isa($foo, $Template::Config::CONTEXT)) 
 
-* filters and plugins cache may bloat...
-
-* dynamic filters can't grab context reference - this screws up 'redirect'
-  filter which needs fixing/replacing anyway
-
-* add 'perl' filter - needs context access to determine if allowed or not.
 
 * check [% INCLUDE $template %] works where $template is a Template::Document
 
-* copy over new plugins and filters from v1.07, changes to Template::Test,
-  and any other changes...
-
-* fix \@ quoting (and others) in Directive and email dude who sent patch.
-
 * merge Directive into Parse.yp via template?
+
+
 
 -- DONE --
 
@@ -87,7 +89,7 @@ Fix
 
 * fixed if/elsif generation
 
-* optimised FOREACH to only use an iterator if already so ( but note that
+* optimised FOREACH to only use an iterator if already so (but note that
   this got changed again later)
 
 * cleaned up Template::Iterator.  Now derived from Template::Base.
@@ -102,9 +104,32 @@ Fix
 
 * Fixed bug in parse grammer preventing commas in a META list
 
-* Added cache persistance.  Had to re-organise a bunch of code around the 
-  parser/provider/document.  Activated by COMPILE_EXT configuration item.
+* Added cache persistance by writing real Perl to file (rather than
+  the previous Data::Dumper dump of the opcode tree).  Had to
+  re-organise a bunch of code around the parser/provider/document.  Activated 
+  by COMPILE_EXT configuration item.
 
 * Added a work-around in Template::Stash to the problem of CGI disclaiming
   membership of the UNIVERSAL class after the first method call.
+
+* block persistance - sometimes need to define BLOCKs that persist 
+  through service invocations (AUTO_RESET => 0).
+
+* fix \@ quoting (and others) in Directive (Perrin reported / Chuck patched)
+
+* BLOCK caching is still a little messy - it works, but with belt and braces.
+  Need to finalise behaviour wrt importing BLOCK defs via INCLUDE/PROCESS.
+
+* Added Date plugin and test, as provided by Thierry-Michel Barral and abw.
+
+* Integrate changes to Template::Test from version 1.07 and beyond.  Now 
+  supports -- process - option in expect, mainly for use of t/date.t et al.
+
+* Integrated new upper and lower filters from 1.08, and '|' alias for FILTER
+  from 1.07.
+
+* Added new directive.t test to test chomping and comments.
+
+* should be able to pre-define BLOCKS as text which is auto-pre-compiled 
+  - may rely on above to get access to Provider's PARSER object.
 

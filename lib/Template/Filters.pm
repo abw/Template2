@@ -38,6 +38,8 @@ $STD_FILTERS = {
     'html'       => sub { return \&html_filter },
     'html_para'  => sub { return \&html_paragraph; },
     'html_break' => sub { return \&html_break; },
+    'upper'      => sub { return sub { uc $_[0] } },
+    'lower'      => sub { return sub { lc $_[0] } },
 
     # dynamic filters
     'format'     => \&format_filter_factory,

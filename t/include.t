@@ -55,7 +55,7 @@ my $tproc = Template->new({
     INTERPOLATE  => 1,
     INCLUDE_PATH => "$dir/src:$dir/lib",
     TRIM         => 1,
-    AUTO_RESET   => 0,
+    RESET_BLOCKS => 0,
 });
 
 my $tt_reset = Template->new({ 

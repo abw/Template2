@@ -35,6 +35,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $STD_PLUGINS   = {
     'cgi'      => 'CGI',
+    'date'     => 'Date',
     'dbi'      => 'DBI',
     'url'      => 'URL',
     'format'   => 'Format',

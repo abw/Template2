@@ -5,7 +5,7 @@
 # DESCRIPTION
 #   Module implementing a template processing service which wraps a
 #   template within PRE_PROCESS and POST_PROCESS templates and offers 
-#   error recovery.
+#   ERROR recovery.
 #
 # AUTHOR
 #   Andy Wardley   <abw@kfs.org>
@@ -47,10 +47,9 @@ $DEBUG   = 0;
 # Process a template within a service framework.  A service may encompass
 # PRE_PROCESS and POST_PROCESS templates and an ERROR hash which names
 # templates to be substituted for the main template document in case of
-# Each service invocation begins by resetting the state of the context 
-# object via a call to reset(), passing any BLOCKS definitions to pre-
-# define blocks for the templates.  The AUTO_RESET option may be set to
-# 0 (default: 1) to bypass this step.
+# error.  Each service invocation begins by resetting the state of the 
+# context object via a call to reset().  The AUTO_RESET option may be set 
+# to 0 (default: 1) to bypass this step.
 #------------------------------------------------------------------------
 
 sub process {
@@ -58,8 +57,7 @@ sub process {
     my $context = $self->{ CONTEXT };
     my ($name, $output, $procout, $error);
 
-    # clear any BLOCK definitions back to the known default if 
-    $context->reset_blocks($self->{ BLOCKS })
+    $context->reset()
 	if $self->{ AUTO_RESET };
 
     # pre-request compiled template from context so that we can alias it 
@@ -68,7 +66,7 @@ sub process {
 	|| return $self->error($context->error);
 
     # localise the variable stash with any parameters passed
-    # set the 'template' variable in the stash
+    # and set the 'template' variable
     $params ||= { };
     $params->{ template } = $template 
 	unless ref $template eq 'CODE';
@@ -94,7 +92,7 @@ sub process {
 	};
 	if ($error = $@) {
 	    last SERVICE
-		unless defined ($procout = $self->recover(\$error));
+		unless defined ($procout = $self->_recover(\$error));
 	}
 	$output .= $procout;
 
@@ -119,7 +117,47 @@ sub process {
 
 
 #------------------------------------------------------------------------
-# recover(\$exception)
+# context()
+# 
+# Returns the internal CONTEXT reference.
+#------------------------------------------------------------------------
+
+sub context {
+    return $_[0]->{ CONTEXT };
+}
+
+
+#========================================================================
+#                     -- PRIVATE METHODS --
+#========================================================================
+
+sub _init {
+    my ($self, $config) = @_;
+    my ($item, $data, $context, $block, $blocks);
+
+    # coerce PRE_PROCESS and POST_PROCESS to arrays if necessary, 
+    # by splitting on non-word characters
+    foreach $item (qw( PRE_PROCESS POST_PROCESS )) {
+	$data = $config->{ $item };
+	$data = [ split(/\W+/, $data || '') ]
+	    unless ref $data eq 'ARRAY';
+        $self->{ $item } = $data;
+    }
+    
+    $self->{ ERROR      } = $config->{ ERROR };
+    $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
+			  ? $config->{ AUTO_RESET } : 1;
+
+    $context = $self->{ CONTEXT } = $config->{ CONTEXT }
+        || Template::Config->context($config)
+	|| return $self->error(Template::Config->error);
+
+    return $self;
+}
+
+
+#------------------------------------------------------------------------
+# _recover(\$exception)
 #
 # Examines the internal ERROR hash array to find a handler suitable 
 # for the exception object passed by reference.  Selecting the handler
@@ -129,7 +167,7 @@ sub process {
 # template which should be processed. 
 #------------------------------------------------------------------------
 
-sub recover {
+sub _recover {
     my ($self, $error) = @_;
     my $context = $self->{ CONTEXT };
     my ($hkey, $handler, $output);
@@ -181,66 +219,35 @@ sub recover {
 }
 
 
+
 #------------------------------------------------------------------------
-# context()
-# 
-# Returns the internal CONTEXT reference.
+# _dump()
+#
+# Debug method which return a string representing the internal object
+# state. 
 #------------------------------------------------------------------------
-
-sub context {
-    return $_[0]->{ CONTEXT };
-}
-
-
-#========================================================================
-#                     -- PRIVATE METHODS --
-#========================================================================
-
-sub _init {
-    my ($self, $config) = @_;
-    my ($item, $data, $context, $block, $blocks);
-
-    # coerce PRE_PROCESS and POST_PROCESS to arrays if necessary, 
-    # by splitting on non-word characters
-    foreach $item (qw( PRE_PROCESS POST_PROCESS )) {
-	$data = $config->{ $item };
-	$data = [ split(/\W+/, $data || '') ]
-	    unless ref $data eq 'ARRAY';
-        $self->{ $item } = $data;
-    }
-    
-    $self->{ ERROR      } = $config->{ ERROR };
-    $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
-			    ? $config->{ AUTO_RESET } : 1;
-
-    $context = $self->{ CONTEXT } = $config->{ CONTEXT }
-        || Template::Config->context($config)
-	|| return $self->error(Template::Config->error);
-
-    # compile any template BLOCKS specified as text
-    $blocks = $config->{ BLOCKS } || { };
-    $self->{ BLOCKS } = { 
-	map {
-	    $block = $blocks->{ $_ };
-	    $block = $context->template(\$block)
-		|| return $self->error("BLOCK $_: ", $context->error())
-		    unless ref $block;
-	    ($_ => $block);
-	} 
-	keys %$blocks
-    };
-
-    # call context reset_blocks() to install defined BLOCKS
-    $context->reset_blocks($self->{ BLOCKS }) 
-	if %$blocks;
-
-    return $self;
-}
-
 
 sub _dump {
     my $self = shift;
-    print("$self\n", (map { "  $_ => $self->{ $_ }\n" } keys %$self), "\n");
+    my $context = $self->{ CONTEXT }->_dump();
+    $context =~ s/\n/\n    /gm;
+
+    my $error = $self->{ ERROR };
+    $error = join('', 
+		  "{\n",
+		  (map { "    $_ => $error->{ $_ }\n" }
+		   keys %$error),
+		  "}\n")
+	if ref $error;
+    
+    local $" = ', ';
+    return <<EOF;
+$self
+PRE_PROCESS  => [ @{ $self->{ PRE_PROCESS } } ]
+POST_PROCESS => [ @{ $self->{ POST_PROCESS } } ]
+ERROR        => $error
+CONTEXT      => $context
+EOF
 }
 
 

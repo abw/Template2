@@ -11,6 +11,7 @@ compile3.t      Ensure that touching source template causes re-compilation
 config.t        Template::Config factory module
 context.t       Template::Context module
 datafile.t      Datafile plugin (Template::Plugin::Datafile)
+directive.t     Directive layout, chomping, comments, etc.
 document.t      Template::Document module
 evalperl.t      Evaluation of PERL and RAWPERL blocks
 exception.t     Template::Exception module
@@ -39,7 +40,6 @@ switch.t        SWITCH / CASE directives
 plugins.t       Template::Plugins provider module
 template.t      Template module
 try.t           TRY / THROW / CATCH / FINAL directives
-chomp.t         (merge chomp.t, prechomp.t and postchomp.t)
 code.t          binding code to variables (or covered in vars.t?)
 dom.t           copy from v1
 rss.t           copy from v1
