@@ -16,7 +16,7 @@
 #========================================================================
 
 use strict;
-use lib qw( ../lib );
+use lib qw( ./lib ../lib );
 use Template;
 use Template::Test;
 use Template::Config;
@@ -65,10 +65,9 @@ This is the foo file, a is 30
    END
 %]
 -- expect --
-file error - foo: not found
+file error - lib:foo: not found
 
 -- test --
 [% INSERT src:foo %]
 -- expect --
 This is the foo file, a is [% a -%]
-
