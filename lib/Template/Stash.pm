@@ -563,18 +563,24 @@ sub _dotop {
 	    elsif ($value = $SCALAR_OPS->{ $item }) {
 		@result = &$value($root, @$args);
 	    }
+	    elsif ($value = $LIST_OPS->{ $item }) {
+		@result = &$value([$root], @$args);
+	    }
 	    elsif ($self->{ _DEBUG }) {
 		@result = (undef, $@);
 	    }
 	}
     }
     elsif (($value = $SCALAR_OPS->{ $item }) && ! $lvalue) {
-
 	# at this point, it doesn't look like we've got a reference to
 	# anything we know about, so we try the SCALAR_OPS pseudo-methods
 	# table (but not for l-values)
-
 	@result = &$value($root, @$args);		    ## @result
+    }
+    elsif (($value = $LIST_OPS->{ $item }) && ! $lvalue) {
+	# last-ditch: can we promote a scalar to a one-element
+	# list and apply a LIST_OPS virtual method?
+	@result = &$value([$root], @$args);
     }
     elsif ($self->{ _DEBUG }) {
 	die "don't know how to access [ $root ].$item\n";   ## DIE
