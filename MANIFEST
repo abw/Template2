@@ -42,6 +42,7 @@ lib/Template/Plugin/Format.pm
 lib/Template/Plugin/Iterator.pm
 lib/Template/Plugin/Table.pm
 lib/Template/Plugin/URL.pm
+lib/Template/Plugin/View.pm
 lib/Template/Plugin/Wrap.pm
 lib/Template/Plugin/XML/DOM.pm
 lib/Template/Plugin/XML/RSS.pm
@@ -89,8 +90,8 @@ t/dumper.t
 t/error.t
 t/evalperl.t
 t/exception.t
-t/filter.t
 t/file.t
+t/filter.t
 t/foreach.t
 t/format.t
 t/include.t
@@ -115,6 +116,13 @@ t/switch.t
 t/table.t
 t/tags.t
 t/template.t
+t/test/dir/file1
+t/test/dir/file2
+t/test/dir/sub_one/bar
+t/test/dir/sub_one/foo
+t/test/dir/sub_two/waz.html
+t/test/dir/sub_two/wiz.html
+t/test/dir/xyzfile
 t/test/lib/README
 t/test/lib/badrawperl
 t/test/lib/barfed
@@ -151,6 +159,7 @@ t/test/tmp/README
 t/test/xml/example.rdf
 t/test/xml/testfile.xml
 t/text.t
+t/throw.t
 t/try.t
 t/url.t
 t/vars.t
