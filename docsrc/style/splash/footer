@@ -1,0 +1,18 @@
+<div align="center">
+<br>
+[% PROCESS navigate IF navigate.size %]
+[% INCLUDE splash/menu
+    buttons = booktabs
+    select  = book.name
+-%]
+</div>
+
+[% INCLUDE splash/button 
+	select=1 
+	width='100%'
+        link=tt_homepage 
+        align='center'
+        content=tt_homepage
+%]
+
+[% PROCESS html/footer %]

@@ -1,0 +1,62 @@
+[%
+    title = "$docset.title $book.name: $page.title";
+    PROCESS html/header;
+    select = 1;
+    title  = BLOCK;
+	INCLUDE splash/text link=rootindex content=docset.title;
+	t1 = page.name == book.name  ? '' : page.name;
+	t2 = page.name == page.title ? '' : page.title;
+	t3 = t1 and t2 ? "$t1: $t2" : t1 or t2;
+	t3 = "| $t3" IF t3;
+	IF book;
+	    ' | ';
+	    INCLUDE splash/text link=bookindex content=book.name;
+	    t3;
+	ELSE;
+	    '<b> Documentation</b>';
+	END;
+    END;
+
+    IF navleft;
+	navigate.0.text = "<b>&lt;&lt;</b> $navigate.0.text";
+    END;
+    IF navright;
+	n = navleft ? 1 : 0;
+        h = navleft ? navigate.1 : navigate.0;
+        h.text = "$h.text <b>&gt;&gt;</b> ";
+    END;
+-%]
+
+<table border=0 width="100%" cellpadding=0 cellspacing=0>
+<tr>
+  <td align="right">
+[% PROCESS booktabs %]
+  </td>
+  <td>&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr>
+  <td colspan=2>
+[%  INCLUDE splash/button 
+	content=title 
+	width='100%' 
+	size='+1'
+	select=1
+	bold=0
+%]
+  </td>
+</tr>
+</table>
+
+<table border="0" width="100%">
+<tr valign="top">
+  <td align="left">
+    <br>
+    <h2>[% page.title or page.name %]</h2>
+  </td>
+  <td align="right">
+[% PROCESS navigate %]
+  </td>
+</tr>
+</table>
+
+[% page.about %]
