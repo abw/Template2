@@ -38,7 +38,7 @@ use File::Path;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.08b';
+$VERSION     = '2.08c';
 $ERROR       = '';
 $DEBUG       = 0;
 $BINMODE     = ($^O eq 'MSWin32') ? 1 : 0;
@@ -909,7 +909,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08b, released on 01 November 2002.
+Template Toolkit version 2.08b, released on 04 November 2002.
 
 =head1 COPYRIGHT
 
