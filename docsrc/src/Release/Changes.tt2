@@ -24,18 +24,23 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.13a -                                 ## DEVELOPER RELEASE ##
+# Version 2.13a - 17th September                  ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied patch from Harald Joerg to prevent ttree from spewing warnings 
   when copying files.
   http://template-toolkit.org/pipermail/templates/2004-March/005897.html
 
+* Applied a patch from Paul Orrock to fix a couple of missing errors in 
+  ttree.
+  http://template-toolkit.org/pipermail/templates/2004-September/006605.html
+
 * Commented out line 797 of Template::Directive.pm which serves no 
   purpose and generates a warning.
 
 * Applied a patch from Mark Fowler to add support for Unicode to TT.
   http://template-toolkit.org/pipermail/templates/2004-June/006270.html
+
 
 
 #------------------------------------------------------------------------
