@@ -47,13 +47,18 @@ my $tt = Template->new( {
     DEBUG_FORMAT => "<!-- \$file line \$line : [% \$text %] -->",
 } );
 
+my $tt2 = Template->new( {
+    DEBUG => 1,
+    INCLUDE_PATH => "$dir/src:$dir/lib",
+} );
+
 my $ttd = Template->new( {
     DEBUG => 1,
     INCLUDE_PATH => "$dir/src:$dir/lib",
     DEBUG_FORMAT => "<!-- \$file line \$line : [% \$text %] -->",
 } );
 
-test_expect(\*DATA, [ default => $tt, debug => $ttd ], $vars);
+test_expect(\*DATA, [ default => $tt, debug => $ttd, debug2 => $tt2 ], $vars);
 #$tt->process(\*DATA, $vars) || die $tt->error();
 #print $tt->context->_dump();
 
@@ -128,3 +133,4 @@ This is the foo file, a is <!-- foo line 1 : [% a %] -->20
 %]
 -- expect --
 hello world at line 3.14 of this file
+
