@@ -6,7 +6,7 @@
 #   Definition of the parser grammar for the Template Toolkit language.
 #
 # AUTHOR
-#   Andy Wardley <abw@kfs.org> 
+#   Andy Wardley <abw@wardley.org> 
 #
 # HISTORY
 #   Totally re-written for version 2, based on Doug Steinwand's 
@@ -21,8 +21,8 @@
 #   I'm loathed to hack it up too much right now.  Maybe later.
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2004 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
