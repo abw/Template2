@@ -28,6 +28,7 @@ eval {
   require Template::Stash::XS;
 };
 if ($@) {
+  warn $@;
   exit(0);
 }
 
@@ -83,7 +84,6 @@ a:
 -- expect --
 ERROR: undef error - a is undefined
 
--- stop --
 -- test --
 -- use default --
 [% myitem = 'foo' -%]
@@ -230,3 +230,9 @@ an object
 [% obj.list.first.name %]
 -- expect --
 an object
+
+-- test --
+=[% size %]=
+-- expect --
+==
+

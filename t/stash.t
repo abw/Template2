@@ -21,12 +21,15 @@ use lib qw( ./lib ../lib );
 use Template::Constants qw( :status );
 use Template;
 use Template::Stash;
+use Template::Config;
 use Template::Test;
 $^W = 1;
 
 my $DEBUG = grep(/-d/, @ARGV);
 #$Template::Parser::DEBUG     = $DEBUG;
 #$Template::Directive::PRETTY = $DEBUG;
+
+$Template::Config::STASH = 'Template::Stash';
 
 my $count = 20;
 my $data = {
@@ -201,3 +204,8 @@ an object
 [% obj.list.first.name %]
 -- expect --
 an object
+
+-- test --
+=[% size %]=
+-- expect --
+==
