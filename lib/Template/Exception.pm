@@ -33,7 +33,7 @@ use vars qw( $VERSION );
 use constant TYPE  => 0;
 use constant INFO  => 1;
 use constant TEXT  => 2;
-use overload q|""| => "as_string";
+use overload q|""| => "as_string", fallback => 1;
 
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);

@@ -51,3 +51,6 @@ ok( $e3 );
 ok( $e3->text() eq '');
 ok( $e3->as_string() eq 'e3.type error - e3.info' );
 
+# test to check that overloading fallback works properly
+# by using a non explicitly defined op
+ok( $e3 ne "fish");
