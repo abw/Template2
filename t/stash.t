@@ -24,6 +24,10 @@ use Template::Stash;
 use Template::Test;
 $^W = 1;
 
+my $DEBUG = grep(/-d/, @ARGV);
+$Template::Parser::DEBUG     = $DEBUG;
+$Template::Directive::PRETTY = $DEBUG;
+
 my $count = 20;
 my $data = {
     foo => 10,
@@ -178,4 +182,26 @@ one, three
 %]
 -- expect --
 two, three, one
+
+-- start --
+-- test --
+[% 10 lt 20 ? 'foo' : 'bar' %]
+-- expect --
+foo
+
+-- test --
+[% 10 gt 20 ? 'foo' : 'bar' %]
+-- expect --
+bar
+
+-- test --
+[% 10 ne 20 ? 'foo' : 'bar' %]
+-- expect --
+foo
+
+-- test --
+[% 10 eq 20 ? 'foo' : 'bar' %]
+-- expect --
+bar
+
 
