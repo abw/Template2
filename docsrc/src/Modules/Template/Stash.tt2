@@ -70,7 +70,7 @@ element, or 0 if none.
 
     [% foo.bar(10).baz(20) %]
 
-    $stash->get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ]);
+    $stash->get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ] ]);
 
 =head2 set($variable, $value, $default)
 
