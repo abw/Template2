@@ -31,6 +31,13 @@
   t/gd.t and t/date.t.
   http://template-toolkit.org/pipermail/templates/2003-April/004545.html
 
+* Added undefined() method to the Stash which get() calls if a variable
+  value is undefined.  Currently just returns '' to implement existing 
+  behaviour, but it provides a method hook for subclasses to redefine.
+
+* Fixed a minor bug which prevented the Stash from being subclassable
+  by removing references to __PACKAGE__
+
 
 #------------------------------------------------------------------------
 # Version 2.09c - 29th April 2003                 ## DEVELOPER RELEASE ##
