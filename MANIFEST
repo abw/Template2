@@ -145,3 +145,4 @@ t/varsv1.t
 t/vmeth.t
 t/while.t
 t/wrapper.t
+t/xpath.t
