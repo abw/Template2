@@ -104,18 +104,17 @@ sub template {
 
 	if ($^O eq 'MSWin32') {
 	    $prefix = $1	# let C:/foo through
-		if $name =~ s/^(\w{2,})://o;
+		if $name =~ /^(\w{2,}):/o;
 	}
 	else {
 	    $prefix = $1 
-		if $name =~ s/^(\w+)://o;
+		if $name =~ /^(\w+):/;
 	}
 
 	if (defined $prefix) {
 	    $providers = $self->{ PREFIX_MAP }->{ $prefix } 
 		|| return $self->throw(Template::Constants::ERROR_FILE,
 				      "no providers for template prefix '$prefix'");
-#	    print STDERR "prefix identified: $prefix\n";
 	}
     }
     $providers = $self->{ PREFIX_MAP }->{ default }
@@ -128,14 +127,12 @@ sub template {
     foreach my $provider (@$providers) {
 	($template, $error) = $provider->fetch($name);
 	return $template unless $error;
-#	return $self->error($template)
 	if ($error == Template::Constants::STATUS_ERROR) {
 	    $self->throw($template) if ref $template;
 	    $self->throw(Template::Constants::ERROR_FILE, $template);
 	}
     }
 
-#    return $self->error("$name: not found");
     $self->throw(Template::Constants::ERROR_FILE, "$name: not found");
 }
 
@@ -181,20 +178,13 @@ sub filter {
     my ($self, $name, $args, $alias) = @_;
     my ($provider, $filter, $error);
 
-#    print STDERR "looking for filter $name\n";
-
     # use any cached version of the filter if no params provided
     return $filter 
 	if ! $args && ! ref $name
 	    && ($filter = $self->{ FILTER_CACHE }->{ $name });
 
-#    print STDERR "filter $name not in CACHE\n";
-
     # request the named filter from each of the FILTERS providers in turn
     foreach my $provider (@{ $self->{ LOAD_FILTERS } }) {
-#	$filter = $name, last 
-#	    if ref $name;
-
 	($filter, $error) = $provider->fetch($name, $args, $self);
 	last unless $error;
 	if ($error == Template::Constants::STATUS_ERROR) {
@@ -263,9 +253,6 @@ sub process {
     my (@compiled, $name, $compiled);
     my ($stash, $tblocks, $error, $tmpout);
     my $output = '';
-
-#    my ($blocks, $output);
-#    my $name = $template;
 
     $template = [ $template ] unless ref $template eq 'ARRAY';
 
@@ -384,51 +371,6 @@ sub include {
     return $output;
 }
 
-sub old_include {
-    my ($self, $template, $params) = @_;
-    my ($error, $blocks);
-    my $output = '';
-    my $name = $template;
-
-    # request compiled template from cache 
-    $template = $self->template($template);
-#	|| die Template::Exception->new(&Template::Constants::ERROR_FILE, 
-#			       $self->{ _ERROR } || "$template: not found" );
-
-    # localise the variable stash with any parameters passed
-    $params ||= { };
-    $params->{ component } = ref $template eq 'CODE' 
-	? { ref $name ? () : (name => $name, modtime => time()) }
-        : $template;
-    $self->{ STASH } = $self->{ STASH }->clone($params);
-
-    eval {
-	if (ref $template eq 'CODE') {
-	    $output = &$template($self);
-	}
-	elsif (ref $template) {
-	    $output = $template->process($self);
-	}
-	else {
-	    die "invalid template reference: $template\n";
-	}
-    };
-    $error = $@;
-
-    $self->{ STASH } = $self->{ STASH }->declone();
-
-    die $error if $error;
-
-    if ($self->{ TRIM }) {
-	for ($output) {
-	    s/^\s+//;
-	    s/\s+$//;
-	}
-    }
-
-    return $output;
-}
-
 
 #------------------------------------------------------------------------
 # insert($file)
@@ -444,7 +386,7 @@ sub insert {
     my $files = ref $file eq 'ARRAY' ? $file : [ $file ];
 
     FILE: foreach $file (@$files) {
-	if ($file =~ s/^(\w{2,})://o) {
+	if ($file =~ /^(\w{2,}):/o) {
 	    $providers = $self->{ PREFIX_MAP }->{ $1 } 
 		|| return $self->throw(Template::Constants::ERROR_FILE,
 				      "no providers for file prefix '$1'");
@@ -503,16 +445,13 @@ sub throw {
 
     # die! die! die!
     if (UNIVERSAL::isa($error, 'Template::Exception')) {
-#	print STDERR "throwing existing exception [@$error]\n";
 	die $error;
     }
     elsif (defined $info) {
-#	print STDERR "throwing new exception [$error] [$info]\n";
 	die Template::Exception->new($error, $info, $output);
     }
     else {
 	$error ||= '';
-#	print STDERR "throwing an undefined exception [$error]\n";
 	die Template::Exception->new('undef', $error, $output);
     }
 
@@ -747,7 +686,9 @@ sub _init {
     my $providers  = $self->{ LOAD_TEMPLATES };
     my $prefix_map = $self->{ PREFIX_MAP } = $config->{ PREFIX_MAP } || { };
     while (my ($key, $val) = each %$prefix_map) {
-	$prefix_map->{ $key } = [ map { $providers->[$_] } split(/\D+/, $val) ]
+	$prefix_map->{ $key } = [ ref $val ? $val :
+				  map { $providers->[$_] } 
+				  split(/\D+/, $val) ]
 	    unless ref $val eq 'ARRAY';
 #	print(STDERR "prefix $key => $val => [", 
 #	      join(', ', @{ $prefix_map->{ $key } }), "]\n");
@@ -1431,8 +1372,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.46, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.47, distributed as part of the
+Template Toolkit version 2.06d, released on 22 January 2002.
 
 =head1 COPYRIGHT
 
