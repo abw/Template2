@@ -2,6 +2,13 @@
 # PENDING TODO ITEMS
 #------------------------------------------------------------------------
 
+* fix parser to accept quoted blocknames
+
+* fix PRE_PROCESS, etc., to allow 'foo.html'.  Should PRE_PROCESS etc., 
+  accept a reference?
+
+* ttree pre_process and post_process options should be s@
+
 * document FILTER aliases
 
 * URL plugin may be incorrect in not escaping certain characters such as 
@@ -37,6 +44,12 @@
 #------------------------------------------------------------------------
 # KNOWN BUGS AND/OR LIMITATIONS
 #------------------------------------------------------------------------
+
+* Plugin.pm should be subclassed from Base.pm to provide consistent error()
+  interface.
+
+* PLUGINS should accept a reference to an object which is used as a 
+  singleton factory for a plugin.
 
 * empty hashes can cause a harmless, but possibly annoying parser error.
 

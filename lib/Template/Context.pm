@@ -135,11 +135,14 @@ sub plugin {
 
 	($plugin, $error) = $provider->fetch($name, $args, $self);
 	return $plugin unless $error;
-	return $self->error($plugin)
-	    if $error == &Template::Constants::STATUS_ERROR;
+	if ($error == &Template::Constants::STATUS_ERROR) {
+	    return $self->throw($plugin) if ref $plugin;
+	    return $self->throw(&Template::Constants::ERROR_PLUGIN, $plugin);
+	}
     }
 
-    return $self->error("$name: plugin not found");
+    return $self->throw(&Template::Constants::ERROR_PLUGIN,
+			"$name: plugin not found");
 }
 
 

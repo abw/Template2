@@ -383,7 +383,7 @@ sub tokenise_directive {
 		(-?\d+(?:\.\d+)?)       # numbers
 	    |
 		# filename matches in $5
-	    	( \/?\w+(?:(?:\/|::)\w*)+ | \/\w+)
+	    	( \/?\w+(?:(?:\/|::?)\w*)+ | \/\w+)
 	    |
 		# an identifier matches in $6
 		(\w+)                    # variable identifier

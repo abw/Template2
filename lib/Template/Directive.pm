@@ -662,9 +662,7 @@ sub use {
     my $set = &assign($class, $alias, '$plugin'); 
     return "# USE\n"
 	 . "\$stash->set($alias,\n"
-	 . "            \$context->plugin($file)\n"
-         . "         || \$context->throw(\$context->error) );";
-
+         . "            \$context->plugin($file));";
 }
 
 

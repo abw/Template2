@@ -215,6 +215,11 @@ defblock:   BLOCK filename ';'
 				      undef                               }
 ;
 
+#blockname:  filename 
+#        |   LITERAL		    { $_[1] =~ s/^'(.*)'$/$1
+#	|   quoted		    { $factory->quoted($_[1])		  }
+#;
+
 anonblock:  BLOCK ';' block END	    { $factory->anon_block($_[3])         }
 ;
 
@@ -366,7 +371,7 @@ filename:   filename DOT filepart   { "$_[1].$_[3]"                       }
 	|   filepart
 ;
 
-filepart: FILENAME | IDENT | NUMBER
+filepart: FILENAME | IDENT | NUMBER 
 ;
 
 

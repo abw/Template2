@@ -17,6 +17,18 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.00
+#------------------------------------------------------------------------
+
+* Rewrote the XML::DOM plugin, fixing the memory leakage problems and 
+  adding the toTemplate() method and friends, as provided by Simon 
+  Matthews.
+
+* Incorporated the Dumper plugin from Simon Matthews which interfaces to
+  the Data::Dumper module.
+
+
+#------------------------------------------------------------------------
 # Version 2.00 beta 5  14th September 2000
 #------------------------------------------------------------------------
 

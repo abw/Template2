@@ -42,6 +42,7 @@ $STD_PLUGINS   = {
     'table'    => 'Template::Plugin::Table',
     'iterator' => 'Template::Plugin::Iterator',
     'datafile' => 'Template::Plugin::Datafile',
+    'dumper'   => 'Template::Plugin::Dumper',
 };
 
 
@@ -98,7 +99,7 @@ sub fetch {
 	print STDERR "args: [ @$args ]\n"
 	    if $DEBUG;
 	$plugin = $factory->new(@$args)
-    	    || die "$name plugin: ", $factory->error(), "\n";	## DIE
+    	    || die "$name plugin failed: ", $factory->error(), "\n";	## DIE
     };
     if ($error = $@) {
 	chomp $error;

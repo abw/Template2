@@ -33,6 +33,7 @@ lib/Template/Plugin.pod
 lib/Template/Plugin/CGI.pm
 lib/Template/Plugin/Datafile.pm
 lib/Template/Plugin/Date.pm
+lib/Template/Plugin/Dumper.pm
 lib/Template/Plugin/Format.pm
 lib/Template/Plugin/Iterator.pm
 lib/Template/Plugin/Table.pm
@@ -74,6 +75,7 @@ t/date.t
 t/directive.t
 t/document.t
 t/dom.t
+t/dumper.t
 t/error.t
 t/evalperl.t
 t/exception.t

@@ -28,7 +28,10 @@ package Template::Plugin;
 require 5.004;
 
 use strict;
+use Template::Base;
+
 use vars qw( $VERSION $DEBUG $ERROR $AUTOLOAD );
+use base qw( Template::Base );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0;
@@ -73,7 +76,7 @@ sub new {
     my ($class, $context, $delclass, @params) = @_;
     my ($delegate, $delmod);
 
-    return $class->fail("Invalid context passed to $class constructor\n")
+    return $class->error("no context passed to $class constructor\n")
 	unless defined $context;
 
     if (ref $delclass) {
@@ -89,7 +92,7 @@ sub new {
 	    $delegate = $delclass->new(@params)
 		|| die "failed to instantiate $delclass object\n";
 	};
-	return $class->fail($@) if $@;
+	return $class->error($@) if $@;
     }
 
     bless {
@@ -103,27 +106,17 @@ sub new {
 #------------------------------------------------------------------------
 # fail($error)
 # 
-# Report class errors via the $ERROR package variable.
+# Version 1 error reporting function, now replaced by error() inherited
+# from Template::Base.  Raises a "deprecated function" warning and then
+# calls error().
 #------------------------------------------------------------------------
 
 sub fail {
     my $class = shift;
-    $ERROR = shift;
-    return undef;
+    my ($pkg, $file, $line) = caller();
+    warn "Template::Plugin::fail() is deprecated at $file line $line.  Please use error()\n";
+    $class->error(@_);
 }
-
-
-#------------------------------------------------------------------------
-# error()
-# 
-# Return error in the $ERROR package variable, previously set by calling
-# fail().
-#------------------------------------------------------------------------
-
-sub error {
-    $ERROR;
-}
-
 
 
 #========================================================================
