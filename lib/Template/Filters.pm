@@ -51,6 +51,8 @@ $FILTERS = {
     'html_break' => \&html_break,
     'upper'      => sub { uc $_[0] },
     'lower'      => sub { lc $_[0] },
+    'ucfirst'    => sub { ucfirst $_[0] },
+    'lcfirst'    => sub { lcfirst $_[0] },
     'stderr'     => sub { print STDERR @_; return '' },
     'trim'       => sub { for ($_[0]) { s/^\s+//; s/\s+$// }; $_[0] },
     'null'       => sub { return '' },
@@ -1249,8 +1251,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.40, distributed as part of the
-Template Toolkit version 2.06c, released on 15 December 2001.
+2.41, distributed as part of the
+Template Toolkit version 2.06c, released on 20 December 2001.
 
 =head1 COPYRIGHT
 
