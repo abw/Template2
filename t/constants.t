@@ -30,7 +30,7 @@ $Template::Namespace::Constants::DEBUG = $DEBUG;
 my $n = 0;
 
 my $constants = {
-    author => 'Andy Wardley',
+    author => 'Andy \'Da Man\' Wardley',
     single => 'foo\'bar',
     double => "foo'bar",
     joint  => ', ',
@@ -44,7 +44,7 @@ my $constants = {
 my $namespace = Template::Namespace::Constants->new( $constants );
 ok( $namespace, 'created constants namespace' );
 
-is( $namespace->ident([ 'constants', 0, "'author'", 0 ]), "'Andy Wardley'", 
+is( $namespace->ident([ 'constants', 0, "'author'", 0 ]), q{'Andy \'Da Man\' Wardley'}, 
     'author match' );
 is( $namespace->ident([ 'constants', 0, "'single'", 0 ]), "'foo\\'bar'", 
     'single match' );
@@ -76,7 +76,7 @@ die "parser error: ", $parser->error(), "\n"
 
 my $text = $parsed->{ BLOCK };
 
-ok( $text =~ /'Andy Wardley'/, 'author folded' );
+ok( $text =~ /'Andy 'Da Man' Wardley'/, 'author folded' );
 ok( $text =~ /"back is " . '#ffffff'/, 'col.back folded' );
 ok( $text =~ /stash->get\(\['col', 0, 'user', 0\]\)/, 'col.user unfolded' );
 
@@ -100,7 +100,7 @@ die "parser error: ", $parser->error(), "\n"
 
 $text = $parsed->{ BLOCK };
 
-ok( $text =~ /'Andy Wardley'/, 'author folded' );
+ok( $text =~ /'Andy 'Da Man' Wardley'/, 'author folded' );
 ok( $text =~ /"back is " . '#ffffff'/, 'col.back folded' );
 ok( $text =~ /stash->get\(\['col', 0, 'user', 0\]\)/, 'col.user unfolded' );
 
@@ -152,7 +152,7 @@ hello [% const.author %]
 [% "back is $const.col.back" %] and text is [% const.col.text %]
 col.user is [% col.user %]
 -- expect --
-hello Andy Wardley
+hello Andy 'Da Man' Wardley
 back is #ffffff and text is #000000
 col.user is red
 

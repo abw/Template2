@@ -92,7 +92,7 @@ sub ident {
 	return Template::Directive->ident(\@save);
     }
 
-    $result =~ s/'/\\'/;
+    $result =~ s/'/\\'/g;
 
     $self->DEBUG(" * resolved => '$result'\n") if $DEBUG;
 
