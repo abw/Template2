@@ -49,11 +49,30 @@ The following tag sets and associated constants are defined:
     ERROR_FILE                # file error: I/O, parse, recursion
     ERROR_UNDEF               # undefined variable value used
     ERROR_PERL                # error in [% PERL %] block
+    ERROR_FILTER              # filter error
+    ERROR_PLUGIN              # plugin error
 
   :chomp                      # for PRE_CHOMP and POST_CHOMP
     CHOMP_NONE                # do not remove whitespace
     CHOMP_ALL                 # remove whitespace
     CHOMP_COLLAPSE            # collapse whitespace to a single space
+
+  :debug
+    DEBUG_OFF                 # do nothing
+    DEBUG_ON                  # basic debugging flag
+    DEBUG_UNDEF               # throw undef on undefined variables
+    DEBUG_VARS                # general variable debugging
+    DEBUG_DIRS                # directive debugging
+    DEBUG_STASH               # general stash debugging
+    DEBUG_CONTEXT             # context debugging
+    DEBUG_PARSER              # parser debugging
+    DEBUG_PROVIDER            # provider debugging
+    DEBUG_PLUGINS             # plugins debugging
+    DEBUG_FILTERS             # filters debugging
+    DEBUG_SERVICE             # context debugging
+    DEBUG_ALL                 # everything
+    DEBUG_CALLER              # add caller file/line info
+    DEBUG_FLAGS               # bitmap used internally
 
   :all         All the above constants.
 
