@@ -175,7 +175,7 @@ if ($verbose) {
           "        Copy: [ @$copy ]\n",
           "      Accept: [ @$accept ]\n",
           "      Suffix: [ $sfx ]\n");
-    print("      Module: $ttmodule ", $ttmodule->version(), "\n")
+    print("      Module: $ttmodule ", $ttmodule->module_version(), "\n")
         unless $ttmodule eq $TTMODULE;
 
     if ($depends && $DEP_DEBUG) {

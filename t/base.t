@@ -122,14 +122,14 @@ ok( $mod && $mod->name eq 'bar' );
 ok( ! $mod->error );
 
 #------------------------------------------------------------------------
-# test version() method
+# test module_version() method
 #------------------------------------------------------------------------
 
 $pkg = 'Template::Version';
-is( $pkg->version(), 3.14, 'package version' );
+is( $pkg->module_version(), 3.14, 'package version' );
 
 my $obj = $pkg->new() || die $pkg->error();
 ok( $obj, 'created a version object' );
-is( $obj->version(), 3.14, 'object version' );
+is( $obj->module_version(), 3.14, 'object version' );
 
 
