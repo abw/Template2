@@ -192,8 +192,6 @@ sub ident {
 	my $key = $ident->[0];
 	$key =~ s/^'(.+)'$/$1/s;
 	if ($ns = $ns->{ $key }) {
-	    # discard first node indicating namespace
-	    splice(@$ident, 0, 2);
 	    return $ns->ident($ident);
 	}
     }
