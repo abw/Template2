@@ -1,0 +1,24 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+=item AUTO_RESET
+
+The AUTO_RESET option is set by default and causes the local BLOCKS
+cache for the Template::Context object to be reset on each call to the
+Template process() method.  This ensures that any BLOCKs defined
+within a template will only persist until that template is finished
+processing.  This prevents BLOCKs defined in one processing request
+from interfering with other independent requests subsequently
+processed by the same context object.
+
+The BLOCKS item may be used to specify a default set of block definitions
+for the Template::Context object.  Subsequent BLOCK definitions in templates
+will over-ride these but they will be reinstated on each reset if AUTO_RESET
+is enabled (default), or if the Template::Context reset() method is called.
+
+
+
+
+

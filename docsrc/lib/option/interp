@@ -1,0 +1,43 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item INTERPOLATE
+
+The INTERPOLATE flag, when set to any true value will cause variable 
+references in plain text (i.e. not surrounded by START_TAG and END_TAG)
+to be recognised and interpolated accordingly.  
+
+    my [* obj *] = [* pkg *]->new({ 
+  	INTERPOLATE => 1,
+    });
+
+Variables should be prefixed by a '$' to identify them.  Curly braces
+can be used in the familiar Perl/shell style to explicitly scope the
+variable name where required.
+
+    # INTERPOLATE => 0
+    <a href="http://[% server %]/[% help %]">
+    <img src="[% images %]/help.gif"></a>
+    [% myorg.name %]
+  
+    # INTERPOLATE => 1
+    <a href="http://$server/$help">
+    <img src="$images/help.gif"></a>
+    $myorg.name
+  
+    # explicit scoping with {  }
+    <img src="$images/${icon.next}.gif">
+
+Note that a limitation in Perl's regex engine restricts the maximum length
+of an interpolated template to around 32 kilobytes or possibly less.  Files
+that exceed this limit in size will typically cause Perl to dump core with
+a segmentation fault.  If you routinely process templates of this size 
+then you should disable INTERPOLATE or split the templates in several 
+smaller files or blocks which can then be joined backed together via 
+PROCESS or INCLUDE.
+
+
+

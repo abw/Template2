@@ -1,0 +1,10 @@
+#------------------------------------------------------------------------
+Generating book: [% book.name %] ([% book.id %])
+[%- IF verbose %]
+          title: [% book.title %]
+         prefix: [% book.prefix %]
+	    src: [% book.src %]  
+	   html: [% book.html %]
+	   type: [% book.type %]
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[% END -%]

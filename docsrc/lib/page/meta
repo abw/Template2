@@ -1,0 +1,9 @@
+id      => '[% page.id %]',
+name    => '[% page.name %]',
+title   => '[% page.title %]',
+podname => '[% page.podname %]',
+url     => '[% page.html %]',
+uplink  => '[% elems = page.html.split('/'); 
+		 dud = elems.shift;  elems.join('/').replace('[^\/]+', '..') %]',
+author  => '[% page.author or 'abw' %]',
+about   => '[% page.about %]',

@@ -1,0 +1,10 @@
+[% IF seealso -%]
+=head1 SEE ALSO
+
+[%  FOREACH item = seealso.split(',\s*');
+	item = item.split('\|');
+	link = item.1 or item.0
+	item = item.0
+-%]L<[% item %]|[% link %]>[% ', ' UNLESS loop.last -%]
+[%- END %]
+[% END -%]

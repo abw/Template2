@@ -1,0 +1,20 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item ABSOLUTE
+
+The ABSOLUTE flag is used to indicate if templates specified with
+absolute filenames (e.g. '/foo/bar') should be processed.  It is
+disabled by default and any attempt to load a template by such a
+name will cause a 'file' exception to be raised.
+
+    my [* obj *] = [* pkg *]->new({
+	ABSOLUTE => 1,
+    });
+
+    # this is why it's disabled by default
+    [% INSERT /etc/passwd %]
+

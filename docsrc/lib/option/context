@@ -1,0 +1,22 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item CONTEXT
+
+A reference to a Template::Context object which is used to define a 
+specific environment in which template are processed.  A Template::Context
+object is passed as the only parameter to the Perl subroutines that 
+represent "compiled" template documents.  Template subroutines make 
+callbacks into the context object to access Template Toolkit functionality,
+for example, to to INCLUDE or PROCESS another template (include() and 
+process() methods, respectively), to USE a plugin (plugin()) or 
+instantiate a filter (filter()) or to access the stash (stash()) which 
+manages variable definitions via the get() and set() methods.
+
+    my [* obj *] = [* pkg *]->new({
+	CONTEXT => MyOrg::Template::Context->new({ ... }),
+    });
+

@@ -1,0 +1,8 @@
+[% TAGS star %]
+
+=item RECURSION
+
+The template processor will raise a file exception if it detects
+direct or indirect recursion into a template.  Setting this option to 
+any true value will allow templates to include each other recursively.
+

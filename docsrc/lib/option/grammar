@@ -1,0 +1,39 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item GRAMMAR
+
+The GRAMMAR configuration item can be used to specify an alternate
+grammar for the parser.  This allows a modified or entirely new
+template language to be constructed and used by the Template Toolkit.
+
+Source templates are compiled to Perl code by the Template::Parser
+using the Template::Grammar (by default) to define the language
+structure and semantics.  Compiled templates are thus inherently
+"compatible" with each other and there is nothing to prevent any
+number of different template languages being compiled and used within
+the same Template Toolkit processing environment (other than the usual
+time and memory constraints).
+
+The Template::Grammar file is constructed from a YACC like grammar
+(using Parse::YAPP) and a skeleton module template.  These files are
+provided, along with a small script to rebuild the grammar, in the
+'parser' sub-directory of the distribution.  You don't have to know or
+worry about these unless you want to hack on the template language or
+define your own variant.  There is a README file in the same directory
+which provides some small guidance but it is assumed that you know
+what you're doing if you venture herein.  If you grok LALR parsers,
+then you should find it comfortably familiar.
+
+By default, an instance of the default Template::Grammar will be
+created and used automatically if a GRAMMAR item isn't specified.
+
+    use MyOrg::Template::Grammar;
+
+    my [* obj *] = [* pkg *]->new({ 
+       	GRAMMAR = MyOrg::Template::Grammar->new();
+    });
+

@@ -1,0 +1,19 @@
+[% TAGS star %]
+=item COMMENTS
+
+The '#' character is used to indicate comments within a directive.
+When placed immediately inside the opening directive tag, it causes
+the entire directive to be ignored.
+
+    [%# this entire directive is ignored no
+        matter how many lines it wraps onto
+    %]
+
+In any other position, it causes the remainder of the current line to 
+be treated as a comment.
+
+    [% # this is a one line comment
+       a = 20
+    %]
+
+

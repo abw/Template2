@@ -1,0 +1,19 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item DELIMITER
+
+Used to provide an alternative delimiter character sequence for 
+separating paths specified in the INCLUDE_PATH.  May be useful for 
+operating systems that permit the use of ':' in file names.
+
+    # tolerate Silly Billy's file system conventions
+    my [* obj *] = [* pkg *]->new({
+	DELIMITER    => ' ',
+        INCLUDE_PATH => 'C:/HERE/NOW D:/THERE/THEN',
+    });
+
+    # better solution: install Linux!  :-)

@@ -1,0 +1,140 @@
+#!/usr/bin/perl -w                                         # -*- perl -*-
+#
+# ttpodglu  (docsrc/bin/ttpodglu)
+#
+# This script takes the Template Toolkit POD documentation, built by
+# the 'ttmkdocs' script (docsrc/bin/ttmkdocs) and deposited in the 
+# docsrc/pod directory, and glues it onto the end of the corresponding
+# modules (.pm files) in the lib directory.
+#
+
+use strict;
+use lib qw( ./lib ../lib ../../lib );
+use Getopt::Std;
+use File::Basename;
+use File::Find;
+use File::Path;
+use File::Copy;
+use Cwd;
+
+my $VERSION = 0.01;
+my $PROGRAM = basename($0);
+
+
+#------------------------------------------------------------------------
+# attempt to grok the root directory of the distribution;
+# script expects to be run in distribution root, in .../docsrc or
+# .../docsrc/bin.  -r <rootdir> option can also be used.
+
+my $args = { };
+getopts('dhqvr:b:', $args);
+my $root = $args->{ r };
+
+unless ($root) {
+    $root =  getcwd;
+    $root =~ s[/docsrc(/bin)?$][];
+}
+
+
+die <<EOF unless -d "$root/docsrc/src";
+This humble script is unable to determine the root directory of your
+Template Toolkit distribution.  It is expecting to be run from the 
+distribution directory itself, or in one of the 'docs' or 'docs/bin'
+sub-directories.  Alternately, you can use the '-r' option to specify
+the root directory.  e.g.
+
+    \$ $PROGRAM -r /home/abw/templates/src/Template2/
+EOF
+
+
+print STDERR <<EOF unless $args->{ q };
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+$PROGRAM version $VERSION
+
+This utility is used to glue the Template Toolkit POD documentation onto
+the end of the modules (.pm files).
+
+You can use the quiet (-q) flag to stop this message being displayed.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+EOF
+
+
+if ($args->{ h }) {
+    print STDERR <<EOF;
+usage: $PROGRAM [ -q | -v | -h | -r /tt2/root | -b .ext ]
+
+    -q             quiet mode - stop the annoying messages
+    -v             verbose mode - get extra annoying messages
+    -h             help - get this particular annoying message
+    -r /tt2/root   specify path to TT2 distribution root
+    -b .ext        specify extension for backup (.bak)
+EOF
+    exit();
+}
+
+my $pod  = "$root/docsrc/pod";
+my $lib  = "$root/lib";
+my $bin  = "$root/bin";
+my $back = $args->{ b };
+$back = '.bak' unless defined $back;
+
+chdir($pod) || die "$root: $!\n";
+
+find({
+    wanted => \&wanted,
+    no_chdir => 1,
+},  '.');
+
+glu_file("Template/Tools/tpage.pod", "$bin/tpage");
+glu_file("Template/Tools/ttree.pod", "$bin/ttree");
+
+
+#------------------------------------------------------------------------
+
+sub wanted {
+    return if -d;
+
+    s[^\./(.*?)\.pod$][$1] || do {
+	warn "ignoring non-POD file: $_\n" unless $args->{ q };
+	return;
+    };
+
+    my $file = $_;
+    my $base = $1;
+
+    if (-f "$lib/$base.pm") {
+	glu_file("$file.pod", "$lib/$base.pm");
+    }
+    else {
+	print "copying $base.pod\n" unless $args->{ q };
+	my $dir = dirname("$lib/$base");
+	mkpath($dir) unless -d $dir;
+	copy("$_.pod", "$lib/$_.pod") || die "$_.pod: $!\n";
+    }
+}
+
+
+
+sub glu_file {
+    my ($pod, $pm) = @_;
+    local *FP;
+    local $/ = undef;
+
+    print "gluing $pod onto $pm\n" unless $args->{ q };
+
+    open(FP, "<$pm") || die "$pm: $!\n";
+    my $text = <FP>;
+    close(FP);
+    $text =~ s/\s*^__END__(.*)\Z//ms;
+    $text .= "\n\n__END__\n\n";
+
+    open(FP, "<$pod") || die "$pod: $!\n";
+    $text .= <FP>;
+    close(FP);
+
+    rename($pm, "$pm$back") if $back;
+
+    open(FP, ">$pm") || die "> $pm: $!\n";
+    print FP $text;
+    close(FP);
+}

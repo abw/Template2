@@ -1,0 +1,12 @@
+[% TAGS star %]
+=item CALL
+
+The CALL directive is similar to GET in evaluating the variable named,
+but doesn't print the result returned.  This can be useful when a
+variable is bound to a sub-routine or object method which you want to
+call but aren't interested in the value returned.
+
+    [% CALL dbi.disconnect %]
+
+    [% CALL inc_page_counter(page_count) %]
+

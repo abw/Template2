@@ -1,0 +1,101 @@
+[% TAGS star %]
+=item RAWPERL
+
+The Template Toolkit parser reads a source template and generates the
+text of a Perl subroutine as output.  It then uses eval() to evaluate
+it into a subroutine reference.  This subroutine is then called to
+process the template, passing a reference to the current
+Template::Context object through which the functionality of the
+Template Toolkit can be accessed.  The subroutine reference can be
+cached, allowing the template to be processed repeatedly without
+requiring any further parsing.
+
+For example, a template such as:
+
+    [% PROCESS header %]
+    The [% animal %] sat on the [% location %]
+    [% PROCESS footer %]
+
+is converted into the following Perl subroutine definition:
+
+    sub {
+    	my $context = shift;
+    	my $stash   = $context->stash;
+    	my $output  = '';
+    	my $error;
+    	
+    	eval { BLOCK: {
+    	    $output .=  $context->process('header');
+    	    $output .=  "The ";
+    	    $output .=  $stash->get('animal');
+    	    $output .=  " sat on the ";
+    	    $output .=  $stash->get('location');
+    	    $output .=  $context->process('footer');
+    	    $output .=  "\n";
+    	} };
+    	if ($@) {
+    	    $error = $context->catch($@, \$output);
+    	    die $error unless $error->type eq 'return';
+    	}
+    
+    	return $output;
+    }
+
+To examine the Perl code generated, such as in the above example, set
+the $Template::Parser::DEBUG package variable to any true value.  You
+can also set the $Template::Directive::PRETTY variable true to have
+the code formatted in a readable manner for human consumption.  The
+source code for each generated template subroutine will be printed to
+STDERR on compilation (i.e. the first time a template is used).
+
+    $Template::Parser::DEBUG = 1;
+    $Template::Directive::PRETTY = 1;
+
+    ...
+
+    $template->process($file, $vars)
+	|| die $template->error(), "\n";
+
+The PERL ... END construct allows Perl code to be embedded into a
+template (when the EVAL_PERL option is set), but it is evaluated at
+"runtime" using eval() each time the template subroutine is called.
+This is inherently flexible, but not as efficient as it could be,
+especially in a persistent server environment where a template may be
+processed many times.  
+
+The RAWPERL directive allows you to write Perl code that is integrated
+directly into the generated Perl subroutine text.  It is evaluated
+once at compile time and is stored in cached form as part of the
+compiled template subroutine.  This makes RAWPERL blocks more
+efficient than PERL blocks.
+
+The downside is that you must code much closer to the metal.  Within
+PERL blocks, you can call print() to generate some output.  RAWPERL
+blocks don't afford such luxury.  The code is inserted directly into
+the generated subroutine text and should conform to the convention of
+appending to the '$output' variable.
+
+    [% PROCESS  header %]
+
+    [% RAWPERL %]
+       $output .= "Some output\n";
+       ...
+       $output .= "Some more output\n";
+    [% END %]
+
+The critical section of the generated subroutine for this example would 
+then look something like:
+
+    ...
+    eval { BLOCK: {
+	$output .=  $context->process('header');
+        $output .=  "\n";
+        $output .= "Some output\n";
+	...
+        $output .= "Some more output\n";
+        $output .=  "\n";
+    } };
+    ...
+
+As with PERL blocks, the $context and $stash references are pre-defined
+and available for use within RAWPERL code. 

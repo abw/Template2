@@ -1,0 +1,28 @@
+[% PROCESS book/meta -%]
+prev   => '[% loop.prev.id %]',
+next   => '[% loop.next.id %]',
+pages  => {
+[%  FOREACH page = book.pages -%]
+    [% page.id %] => {
+[%  PROCESS page/config | indent(8) -%]
+        prev    => '[% loop.prev.id %]',
+        next    => '[% loop.next.id %]',
+    },
+[%  END -%]
+    index => {
+[%  IF book.index;
+	page = book.index;
+    ELSIF book.pages.size == 1;
+	page = book.pages.0;
+    ELSE;
+	page = '';
+    END;
+    PROCESS page/meta | indent(8) IF page;
+-%]
+    },
+},
+pagelist => [
+[% FOREACH page = book.pages -%]
+    '[% page.id %]',
+[% END -%]
+],

@@ -1,0 +1,59 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+*]
+
+=item EVAL_PERL
+
+This flag is used to indicate if PERL and/or RAWPERL blocks should be
+evaluated.  By default, it is disabled and any PERL or RAWPERL blocks
+encountered will raise exceptions of type 'perl' with the message
+'EVAL_PERL not set'.  Note however that any RAWPERL blocks should
+always contain valid Perl code, regardless of the EVAL_PERL flag.  The
+parser will fail to compile templates that contain invalid Perl code
+in RAWPERL blocks and will throw a 'file' exception.
+
+When using compiled templates (see 
+L<COMPILE_EXT|Template::Manual::Config/Caching_and_Compiling_Options> and 
+L<COMPILE_DIR|Template::Manual::Config/Caching_and_Compiling_Options>),
+the EVAL_PERL has an affect when the template is compiled, and again
+when the templates is subsequently processed, possibly in a different
+context to the one that compiled it.
+
+If the EVAL_PERL is set when a template is compiled, then all PERL and
+RAWPERL blocks will be included in the compiled template.  If the 
+EVAL_PERL option isn't set, then Perl code will be generated which 
+B<always> throws a 'perl' exception with the message 'EVAL_PERL not
+set' B<whenever> the compiled template code is run.
+
+Thus, you must have EVAL_PERL set if you want your compiled templates
+to include PERL and RAWPERL blocks.
+
+At some point in the future, using a different invocation of the
+Template Toolkit, you may come to process such a pre-compiled
+template.  Assuming the EVAL_PERL option was set at the time the
+template was compiled, then the output of any RAWPERL blocks will be
+included in the compiled template and will get executed when the
+template is processed.  This will happen regardless of the runtime
+EVAL_PERL status.
+
+Regular PERL blocks are a little more cautious, however.  If the 
+EVAL_PERL flag isn't set for the I<current> context, that is, the 
+one which is trying to process it, then it will throw the familiar 'perl'
+exception with the message, 'EVAL_PERL not set'.
+
+Thus you can compile templates to include PERL blocks, but optionally
+disable them when you process them later.  Note however that it is 
+possible for a PERL block to contain a Perl "BEGIN { # some code }"
+block which will always get run regardless of the runtime EVAL_PERL
+status.  Thus, if you set EVAL_PERL when compiling templates, it is
+assumed that you trust the templates to Do The Right Thing.  Otherwise
+you must accept the fact that there's no bulletproof way to prevent 
+any included code from trampling around in the living room of the 
+runtime environment, making a real nuisance of itself if it really
+wants to.  If you don't like the idea of such uninvited guests causing
+a bother, then you can accept the default and keep EVAL_PERL disabled.
+
+
+

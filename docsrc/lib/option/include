@@ -1,0 +1,28 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item INCLUDE_PATH
+
+The INCLUDE_PATH is used to specify one or more directories in which
+template files are located.  When a template is requested that isn't
+defined locally as a BLOCK, each of the INCLUDE_PATH directories is
+searched in turn to locate the template file.  Multiple directories
+can be specified as a reference to a list or as a single string where
+each directory is delimited by ':'. The DELIMITER option can be set
+to redefine the delimiter value.
+
+    my [* obj *] = [* pkg *]->new({
+        INCLUDE_PATH => '/usr/local/templates',
+    });
+  
+    my [* obj *] = [* pkg *]->new({
+        INCLUDE_PATH => '/usr/local/templates:/tmp/my/templates',
+    });
+  
+    my [* obj *] = [* pkg *]->new({
+        INCLUDE_PATH => [ '/usr/local/templates', 
+                          '/tmp/my/templates' ],
+    });

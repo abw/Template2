@@ -1,0 +1,20 @@
+[% TAGS star %]
+Exceptions can be raised in a template using the THROW directive,
+
+    [% THROW user.login 'no user id: please login' %]
+
+or by calling the throw() method on the current Template::Context object,
+
+    $context->throw('user.passwd', 'Incorrect Password');
+    $context->throw('Incorrect Password');    # type 'undef'
+
+or from Perl code by calling die() with a Template::Exception object,
+
+    die Template::Exception->new('user.denied', 'Invalid User ID');
+
+or by simply calling die() with an error string.  This is
+automagically caught and converted to an  exception of 'undef'
+type which can then be handled in the usual way.
+
+    die "I'm sorry Dave, I can't do that";
+

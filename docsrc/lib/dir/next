@@ -1,0 +1,12 @@
+[% TAGS star %]
+=item NEXT
+
+The NEXT directive can be used to start the next iteration of a FOREACH 
+or WHILE loop.
+
+    [% FOREACH user = userlist %]
+       [% NEXT IF user.isguest %]
+       Name: [% user.name %]    Email: [% user.email %]
+    [% END %]
+
+

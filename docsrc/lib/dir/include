@@ -1,0 +1,121 @@
+[% TAGS star %]
+=item INCLUDE
+
+The INCLUDE directive is used to process and include the output of
+another template file or block.
+
+    [% INCLUDE header %]
+
+If a BLOCK of the specified name is defined in the same file, or in a file 
+from which the current template has been called (i.e. a parent template) 
+then it will be used in preference to any file of the same name.
+
+    [% INCLUDE table %]		    # uses BLOCK defined below
+
+    [% BLOCK table %]
+       <table>
+       ...
+       </table>
+    [% END %]
+
+If a BLOCK definition is not currently visible then the template name
+should be a file relative to one of the INCLUDE_PATH directories, or
+an absolute or relative file name if the ABSOLUTE/RELATIVE options are
+appropriately enabled.  The INCLUDE directive automatically quotes the
+filename specified, as per INSERT described above.  When a variable
+contains the name of the template for the INCLUDE directive, it should
+be explicitly prefixed by '$' or double-quoted
+
+    [% myheader = 'my/misc/header' %]
+    [% INCLUDE   myheader  %]            # 'myheader'
+    [% INCLUDE  $myheader  %]		 # 'my/misc/header'
+    [% INCLUDE "$myheader" %]		 # 'my/misc/header'
+
+Any template directives embedded within the file will be processed
+accordingly.  All variables currently defined will be visible and 
+accessible from within the included template.  
+
+    [% title = 'Hello World' %]
+    [% INCLUDE header %]
+    <body>
+    ...
+
+'header':
+
+    <html>
+    <title>[% title %]</title>
+
+output:
+
+    <html>
+    <title>Hello World</title>
+    <body>
+    ...
+
+Local variable definitions may be specified after the template name,
+temporarily masking any existing variables.  Insignificant whitespace
+is ignore within directives so you can add variable definitions on the
+same line, the next line or split across several line with comments
+interspersed, if you prefer.
+
+    [% INCLUDE table %]
+
+    [% INCLUDE table title="Active Projects" %]
+
+    [% INCLUDE table 
+	 title   = "Active Projects" 
+         bgcolor = "#80ff00"	# chartreuse
+	 border  = 2
+    %]
+
+The INCLUDE directive localises (i.e. copies) all variables before
+processing the template.  Any changes made within the included
+template will not affect variables in the including template.
+
+    [% foo = 10 %]
+
+    foo is originally [% foo %]
+    [% INCLUDE bar %]
+    foo is still [% foo %]
+
+    [% BLOCK bar %]
+       foo was [% foo %]
+       [% foo = 20 %]
+       foo is now [% foo %]
+    [% END %]
+
+output:
+    foo is originally 10
+       foo was 10
+       foo is now 20
+    foo is still 10
+
+Technical Note: the localisation of the stash (that is, the process by
+which variables are copied before an INCLUDE to prevent being
+overwritten) is only skin deep.  The top-level variable namespace
+(hash) is copied, but no attempt is made to perform a deep-copy of
+other structures (hashes, arrays, objects, etc.)  Therefore, a 'foo'
+variable referencing a hash will be copied to create a new 'foo'
+variable but which points to the same hash array.  Thus, if you update
+compound variables (e.g. foo.bar) then you will change the original
+copy, regardless of any stash localisation.  If you're not worried
+about preserving variable values, or you trust the templates you're
+including then you might prefer to use the PROCESS directive which is
+faster by virtue of not performing any localisation.
+
+From version 2.01 onwards, it is possible to specify multiple template
+names within an INCLUDE to have them automatically processed in order.
+The template names (quoted or unquoted names only, no unquoted
+'$variables') should be delimited by '+'.
+
+    [% INCLUDE html/header + "site/$header" + site/menu
+         title = "My Groovy Web Site"
+    %]
+
+The variable stash is localised once and then the templates specified
+are processed in order, all within that same variable context.  This
+makes it slightly faster than specifying several separate INCLUDE
+directives (because you only clone the variable stash once instead of
+n times), but not quite as "safe" because any variable changes in the
+first file will be visible in the second, third and so on.  This
+might be what you want, of course, but then again, it might not.

@@ -1,0 +1,20 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item RELATIVE
+
+The RELATIVE flag is used to indicate if templates specified with
+filenames relative to the current directory (e.g. './foo/bar' or
+'../../some/where/else') should be loaded.  It is also disabled by
+default, and will raise a 'file' error if such template names are
+encountered.  
+
+    my [* obj *] = [* pkg *]->new({
+	RELATIVE => 1,
+    });
+
+    [% INCLUDE ../logs/error.log %]
+

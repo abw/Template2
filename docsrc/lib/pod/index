@@ -1,0 +1,18 @@
+=head1 DESCRIPTION
+
+[% USE wrap; book.intro | wrap(72) %]
+
+=over 4
+
+[% FOREACH page = book.pages -%]
+=item L<[% page.podname %]|[% page.podname %]>
+
+[% page.about | wrap(72) %]
+
+[% page.intro | wrap(72) %]
+
+[% END %]
+
+=back
+
+

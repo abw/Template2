@@ -1,0 +1,47 @@
+[% TAGS star -%]
+[%#
+[* PROCESS misc/warning | trim | indent('  # ') *]
+-%]
+[% META book = '[* book.id *]'
+        page = '[* page.id *]'
+%]
+[*  USE pod; 
+    pom = pod.parse_text("\n$content");
+
+    UNLESS pom;
+	"   ! Pod error: $pod.error\n" | stderr;
+	RETURN;
+    END;
+
+    FOREACH w = pod.warnings;
+	"   ! Pod warning: $w\n" | stderr;
+    END;
+
+    VIEW v prefix='pod/html/';
+	BLOCK list;
+	    view.print(i) FOREACH i = item;
+	END;
+    END;
+
+    PROCESS toc;
+
+    v.print(pom);
+-*]
+[* BLOCK toc -*]
+[%  WRAPPER toc;
+[*  FOREACH sec = pom.head1;
+	subs = []; 
+	title = v.print(sec.title) or sec.title;
+	NEXT IF title == 'NAME';
+	FOREACH sub = sec.head2;
+	    subs.push( v.print(sub.title) );
+	END;
+-*]
+	INCLUDE tocitem title='[* title *]'
+[*- IF subs.size *]
+                         subs=['[* subs.join("', '")*]']
+[*- END *];
+[* END -*]
+    END
+%]
+[* END *]

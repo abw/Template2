@@ -1,0 +1,38 @@
+The Template Toolkit web site contains the latest information, news and 
+other resources.
+
+    http://www.template-toolkit.org/
+
+A mailing list exists for up-to-date information on the Template Toolkit
+and for following and contributing to the development process.  To 
+subscribe, send an email to
+
+    templates-request@template-toolkit.org
+
+with the message 'subscribe' in the body.  You can also use the web 
+interface to subscribe or browse the archives:
+
+    http://www.template-toolkit.org/mailman/listinfo/templates
+
+The F<tpage> and F<ttree> scripts are distributed and installed along
+with the Template Toolkit.  The F<tpage> script simply processes named 
+files or STDIN if unspecified, using a default Template object.  The 
+F<ttree> script can be used to process entire directory trees of templates,
+allowing large content systems such as web sites to be rebuilt from a 
+single command or configuration file.
+
+    perldoc tpage
+    perldoc ttree
+
+The F<Template::Tutorial> document provides an introduction to the Template
+Toolkit and shows some typical examples of usage.
+
+    perldoc Template::Tutorial
+
+You may also like to consult the paper 'Building and Managing Web Systems
+with the Template Toolkit' and accompanying slides from the presentation
+at the 4th Perl Conference.  These are available from the Template
+Toolkit web site:
+
+    http://www.template-toolkit.org/docs.html
+

@@ -1,0 +1,17 @@
+[% TAGS star %]
+=item CLEAR
+
+The CLEAR directive can be used to clear the output buffer for the current
+enclosing block.   It is most commonly used to clear the output generated
+from a TRY block up to the point where the error occurred.
+
+    [% TRY %]
+       blah blah blah            # this is normally left intact
+       [% THROW some 'error' %]  # up to the point of error
+       ...
+    [% CATCH %]
+       [% CLEAR %]               # clear the TRY output
+       [% error %]               # print error string
+    [% END %]
+
+

@@ -1,0 +1,67 @@
+[% TAGS star %]
+=item INSERT
+
+The INSERT directive is used to insert the contents of an external file
+at the current position.
+
+    [% INSERT myfile %]
+
+No attempt to parse or process the file is made.  The contents,
+possibly including any embedded template directives, are inserted
+intact.
+
+The filename specified should be relative to one of the INCLUDE_PATH
+directories.  Absolute (i.e. starting with C</>) and relative
+(i.e. starting with C<.>) filenames may be used if the ABSOLUTE and
+RELATIVE options are set, respectively.  Both these options are
+disabled by default.
+
+    my $template = Template->new({
+	INCLUDE_PATH => '/here:/there',
+    });
+
+    $template->process('myfile');
+
+'myfile':
+
+    [% INSERT foo %]		# looks for /here/foo then /there/foo
+    [% INSERT /etc/passwd %]	# file error: ABSOLUTE not set
+    [% INSERT ../secret %]	# file error: RELATIVE not set
+
+For convenience, the filename does not need to be quoted as long as it
+contains only alphanumeric characters, underscores, dots or forward
+slashes.  Names containing any other characters should be quoted.
+
+    [% INSERT misc/legalese.txt            %]
+    [% INSERT 'dos98/Program Files/stupid' %]
+
+To evaluate a variable to specify a filename, you should explicitly
+prefix it with a '$' or use double-quoted string interpolation.
+
+    [% language = 'en'
+       legalese = 'misc/legalese.txt' 
+    %]
+
+    [% INSERT $legalese %]		# 'misc/legalese.txt'
+    [% INSERT "$language/$legalese" %]  # 'en/misc/legalese.txt'
+
+Multiple files can be specified using '+' as a delimiter.  All files
+should be unquoted names or quoted strings.  Any variables should be
+interpolated into double-quoted strings.
+
+    [% INSERT legalese.txt + warning.txt %]
+    [% INSERT  "$legalese" + warning.txt %]  # requires quoting
+
+
+
+
+
+
+
+
+
+
+
+
+
+

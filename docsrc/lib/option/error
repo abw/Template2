@@ -1,0 +1,67 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item ERROR
+
+The ERROR (or ERRORS if you prefer) configuration item can be used to
+name a single template or specify a hash array mapping exception types
+to templates which should be used for error handling.  If an uncaught
+exception is raised from within a template then the appropriate error
+template will instead be processed.
+
+If specified as a single value then that template will be processed 
+for all uncaught exceptions. 
+
+    my [* obj *] = [* pkg *]->new({
+	ERROR => 'error.html'
+    });
+
+If the ERROR item is a hash reference the keys are assumed to be
+exception types and the relevant template for a given exception will
+be selected.  A 'default' template may be provided for the general
+case.  Note that 'ERROR' can be pluralised to 'ERRORS' if you find
+it more appropriate in this case.
+
+    my [* obj *] = [* pkg *]->new({
+	ERRORS => {
+	    user     => 'user/index.html',
+	    dbi      => 'error/database',
+	    default  => 'error/default',
+	},
+    });
+
+In this example, any 'user' exceptions thrown will cause the
+'user/index.html' template to be processed, 'dbi' errors are handled
+by 'error/database' and all others by the 'error/default' template.
+Any PRE_PROCESS and/or POST_PROCESS templates will also be applied
+to these error templates.
+
+Note that exception types are hierarchical and a 'foo' handler will
+catch all 'foo.*' errors (e.g. foo.bar, foo.bar.baz) if a more
+specific handler isn't defined.  Be sure to quote any exception types
+that contain periods to prevent Perl concatenating them into a single
+string (i.e. C<user.passwd> is parsed as 'user'.'passwd').
+
+    my [* obj *] = [* pkg *]->new({
+	ERROR => {
+	    'user.login'  => 'user/login.html',
+	    'user.passwd' => 'user/badpasswd.html',
+	    'user'        => 'user/index.html',
+	    'default'     => 'error/default',
+	},
+    });
+
+In this example, any template processed by the [* obj *] object, or
+other templates or code called from within, can raise a 'user.login'
+exception and have the service redirect to the 'user/login.html'
+template.  Similarly, a 'user.passwd' exception has a specific 
+handling template, 'user/badpasswd.html', while all other 'user' or
+'user.*' exceptions cause a redirection to the 'user/index.html' page.
+All other exception types are handled by 'error/default'.
+
+[* PROCESS misc/exceptions *]
+
+

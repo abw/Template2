@@ -1,0 +1,7 @@
+=head1 COPYRIGHT
+
+[% PROCESS misc/copy | indent(2) %]
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+

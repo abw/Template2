@@ -1,0 +1,21 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item BLOCKS
+
+The BLOCKS option can be used to pre-define a default set of template 
+blocks.  These should be specified as a reference to a hash array 
+mapping template names to template text, subroutines or Template::Document
+objects.
+
+    my [* obj *] = [* pkg *]->new({
+	BLOCKS => {
+	    header  => 'The Header.  [% title %]',
+	    footer  => sub { return $some_output_text },
+	    another => Template::Document->new({ ... }),
+	},
+    }); 
+

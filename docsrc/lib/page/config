@@ -1,0 +1,9 @@
+[%  # create template files for larger page elements
+#    pagedir = "$bookdir/page/$page.name";
+#    FOREACH attr = ['intro'];
+#	IF (text = page.$attr);
+#	    text | redirect("$pagedir/$attr");
+#	END;
+#    END;
+    PROCESS page/meta;
+-%]

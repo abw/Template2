@@ -1,0 +1,17 @@
+This directory contains the source kit for the Template Toolkit
+documentation.  Template files from 'src' are processed with library
+elements in 'lib' with additional data supplied from xml/ttdocs.xml,
+all under the control of bin/ttmkdocs.  The destination files come in
+the form of a set of .pod files in 'pod', release notes in 'txt' and a
+set of HTML templates in '../docs/src' and '../docs/lib'.  The
+bin/ttpodglu script can then be run to copy the documentation into 
+the right place or glue it onto the end of the relevant module file
+(../lib) or script (../bin).
+
+    bin	    scripts for building the TT documentation
+    lib	    library containing shared document "chunks"
+    pod     output for generated .pod files
+    src	    source directory for documentation templates
+    txt     output for generated text files (e.g. Changes) 
+    xml     source directory for XML files
+

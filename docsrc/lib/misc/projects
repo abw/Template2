@@ -1,0 +1,35 @@
+There are a number of other projects related to the Template Toolkit.
+
+=over 4
+
+=item OpenInteract
+
+OpenInteract is a robust web application framework built to run under
+Apache and mod_perl using the Template Toolkit as a foundation.
+
+    http://www.openinteract.org/
+
+=item Apache::Template
+
+This is an Apache/mod_perl interface to the Template Toolkit.  Available
+from CPAN in the directory:
+
+    http://www.cpan.org/modules/by-module/Apache/
+
+=item AxKit::Template
+
+AxKit is Matt Sergeant's Apache XML Delivery Toolkit.  AxKit::Template
+provides an interface between AxKit and the Template Toolkit.  Available
+from CPAN in the directory:
+
+    http://www.cpan.org/modules/by-module/Apache/
+
+=item Slashcode
+
+Slashcode is the code which runs Slashdot.  Version 2 uses the
+Template Toolkit for generating the user interface from database
+driven template.
+
+    http://slashcode.org/
+
+=back

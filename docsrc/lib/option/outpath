@@ -1,0 +1,35 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item  OUTPUT_PATH
+
+The OUTPUT_PATH allows a directory to be specified into which output
+files should be written.  An output file can be specified by the 
+OUTPUT option, or passed by name as the third parameter to the 
+Template process() method.
+
+    my $template = Template->new({
+	INPUT_PATH  => "/tmp/src",
+	OUTPUT_PATH => "/tmp/dest",
+    });
+
+    my $vars = {
+	...
+    };
+
+    foreach my $file ('foo.html', 'bar.html') {
+	$template->process($file, $vars, $file)
+	    || die $template->error();	
+    }
+
+This example will read the input files '/tmp/src/foo.html' and 
+'/tmp/src/bar.html' and write the processed output to '/tmp/dest/foo.html'
+and '/tmp/dest/bar.html', respectively.
+
+
+
+
+

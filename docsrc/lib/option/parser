@@ -1,0 +1,19 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item PARSER
+
+The Template::Parser module implements a parser object for compiling
+templates into Perl code which can then be executed.  A default object
+of this class is created automatically and then used by the
+Template::Provider whenever a template is loaded and requires 
+compilation.  The PARSER option can be used to provide a reference to 
+an alternate parser object.
+
+    my [* obj *] = [* pkg *]->new({
+	PARSER => MyOrg::Template::Parser->new({ ... }),
+    });
+

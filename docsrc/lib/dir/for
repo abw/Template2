@@ -1,0 +1,178 @@
+[% TAGS star %]
+=item FOREACH
+
+The FOREACH directive will iterate through the items in a list, processing
+the enclosed block for each one.
+
+    my $vars = {
+	foo   => 'Foo',
+  	items => [ 'one', 'two', 'three' ],
+    };
+  
+template:
+
+    Things:
+    [% FOREACH thing = [ foo 'Bar' "$foo Baz" ] %]
+       * [% thing %]
+    [% END %]
+  
+    Items:
+    [% FOREACH i = items %]
+       * [% i %]
+    [% END %]
+  
+    Stuff:
+    [% stuff = [ foo "$foo Bar" ] %]
+    [% FOREACH s = stuff %]
+       * [% s %]
+    [% END %]
+
+output:
+
+    Things:
+      * Foo
+      * Bar
+      * Foo Baz
+  
+    Items:
+      * one
+      * two
+      * three
+  
+    Stuff:
+      * Foo
+      * Foo Bar
+
+When the FOREACH directive is used without specifying a target variable, 
+any iterated values which are hash references will be automatically 
+imported.
+
+    [% userlist = [
+	  { id => 'tom',   name => 'Thomas'  },
+	  { id => 'dick',  name => 'Richard'  },
+	  { id => 'larry', name => 'Lawrence' },
+       ]
+    %]
+
+    [% FOREACH user = userlist %]
+       [% user.id %] [% user.name %]
+    [% END %]
+
+short form:
+
+    [% FOREACH userlist %]
+       [% id %] [% name %]
+    [% END %]
+
+Note that this particular usage creates a localised variable context
+to prevent the imported hash keys from overwriting any existing
+variables.  The imported definitions and any other variables defined
+in such a FOREACH loop will be lost at the end of the loop, when the 
+previous context and variable values are restored.
+
+The FOREACH directive can also be used to iterate through the entries
+in a hash array.  Each entry in the hash is returned in sorted order
+(based on the key) as a hash array containing 'key' and 'value' items.
+
+    [% users = {
+	 tom   => 'Thomas',
+	 dick  => 'Richard',
+         larry => 'Lawrence',
+       }
+    %]
+
+    [% FOREACH u = users %]
+       * [% u.key %] : [% u.value %]
+    [% END %]
+
+Output:
+
+       * dick : Richard
+       * larry : Lawrence
+       * tom : Thomas      
+
+The NEXT directive starts the next iteration in the FOREACH loop.
+
+    [% FOREACH user = userlist %]
+       [% NEXT IF user.isguest %]
+       Name: [% user.name %]    Email: [% user.email %]
+    [% END %]
+
+The LAST directive can be used to prematurely exit the loop.  BREAK is
+also provided as an alias for LAST.
+
+    [% FOREACH match = results.nsort('score').reverse %]
+       [% LAST IF match.score < 50 %]
+       [% match.score %] : [% match.url %]
+    [% END %]
+
+The FOREACH directive is implemented using the Template::Iterator
+module.  A reference to the iterator object for a FOREACH directive is
+implicitly available in the 'loop' variable.  The following methods 
+can be called on the 'loop' iterator.
+
+    size()	number of elements in the list
+    max()       index number of last element (size - 1)
+    index()     index of current iteration from 0 to max()
+    count()     iteration counter from 1 to size() (i.e. index() + 1)
+    first()     true if the current iteration is the first
+    last()      true if the current iteration is the last
+    prev()      return the previous item in the list
+    next()      return the next item in the list
+
+See L<Template::Iterator> for further details.
+
+Example:
+
+    [% FOREACH item = [ 'foo', 'bar', 'baz' ] -%]
+       [%- "<ul>\n" IF loop.first %]
+       <li>[% loop.count %]/[% loop.size %]: [% item %]
+       [%- "</ul>\n" IF loop.last %]
+    [% END %]
+
+Output:
+
+    <ul>
+    <li>1/3: foo
+    <li>2/3: bar
+    <li>3/3: baz
+    </ul>
+
+Note that the number() method is supported as an alias for count() for
+backwards compatibility but may be deprecated in some future version.
+
+Nested loops will work as expected, with the 'loop' variable correctly 
+referencing the innermost loop and being restored to any previous 
+value (i.e. an outer loop) at the end of the loop.
+
+    [% FOREACH group = grouplist;
+	   # loop => group iterator
+           "Groups:\n" IF loop.first;
+
+           FOREACH user = group.userlist;
+               # loop => user iterator
+	       "$loop.count: $user.name\n";
+	   END;
+
+	   # loop => group iterator
+           "End of Groups\n" IF loop.last;
+       END 
+    %]
+
+The 'iterator' plugin can also be used to explicitly create an
+iterator object.  This can be useful within nested loops where you
+need to keep a reference to the outer iterator within the inner loop.
+The iterator plugin effectively allows you to create an iterator by a
+name other than 'loop'.  See Template::Plugin::Iterator for further
+details.
+
+    [% USE giter = iterator(grouplist) %]
+
+    [% FOREACH group = giter %]
+       [% FOREACH user = group.userlist %]
+             user #[% loop.count %] in
+             group [% giter.count %] is
+             named [% user.name %]
+       [% END %]
+    [% END %]
+

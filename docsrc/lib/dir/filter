@@ -1,0 +1,181 @@
+[% TAGS star %]
+=item FILTER
+
+The FILTER directive can be used to post-process the output of a
+block.  A number of standard filters are provided with the Template
+Toolkit.  The 'html' filter, for example, escapes the 'E<lt>', 'E<gt>'
+and '&' characters to prevent them from being interpreted as HTML tags
+or entity reference markers.
+
+    [% FILTER html %]
+       HTML text may have < and > characters embedded
+       which you want converted to the correct HTML entities.
+    [% END %]
+
+output:
+
+       HTML text may have &lt; and &gt; characters embedded
+       which you want converted to the correct HTML entities.
+
+The FILTER directive can also follow various other non-block directives.
+For example:
+
+    [% INCLUDE mytext FILTER html %]
+
+The '|' character can also be used as an alias for 'FILTER'.
+
+    [% INCLUDE mytext | html %]
+
+Multiple filters can be chained together and will be called in sequence.
+
+    [% INCLUDE mytext FILTER html FILTER html_para %]
+
+or
+
+    [% INCLUDE mytext | html | html_para %]
+
+Filters come in two flavours, known as 'static' or 'dynamic'.  A
+static filter is a simple subroutine which accepts a text string as
+the only argument and returns the modified text.  The 'html' filter is
+an example of a static filter, implemented as:
+
+    sub html_filter {
+	my $text = shift;
+    	for ($text) {
+	    s/&/&amp;/g;
+	    s/</&lt;/g;
+	    s/>/&gt;/g;
+    	}
+	return $text;
+    }
+
+Dynamic filters can accept arguments which are specified when the filter
+is called from a template.  The 'repeat' filter is such an example, 
+accepting a numerical argument which specifies the number of times
+that the input text should be repeated.
+
+    [% FILTER repeat(3) %]blah [% END %]
+
+output:
+
+    blah blah blah
+
+These are implemented as filter 'factories'.  The factory subroutine
+is passed a reference to the current Template::Context object along
+with any additional arguments specified.  It should then return a
+subroutine reference (e.g. a closure) which implements the filter.
+The 'repeat' filter factory is implemented like this:
+
+    sub repeat_filter_factory {
+	my ($context, $iter) = @_;
+	$iter = 1 unless defined $iter;
+
+	return sub {
+	    my $text = shift;
+	    $text = '' unless defined $text;
+	    return join('\n', $text) x $iter;
+	}
+    }
+
+The FILTERS option, described in L<Template::Manual::Config>, allows 
+custom filters to be defined when a Template object is instantiated.  
+The Template::Context define_filter() method allows further filters
+to be defined at any time.
+
+When using a filter, it is possible to assign an alias to it for 
+further use.  This is most useful for dynamic filters that you want 
+to re-use with the same configuration.
+
+    [% FILTER echo = repeat(2) %]
+    Is there anybody out there?
+    [% END %]
+
+    [% FILTER echo %]
+    Mother, should I build a wall?
+    [% END %]
+
+Output:
+
+    Is there anybody out there?
+    Is there anybody out there?
+
+    Mother, should I build a wall?
+    Mother, should I build a wall?
+
+The FILTER directive automatically quotes the name of the filter.  As
+with INCLUDE et al, you can use a variable to provide the name of the 
+filter, prefixed by '$'.
+
+    [% myfilter = 'html' %]
+    [% FILTER $myfilter %]	# same as [% FILTER html %]
+       ...
+    [% END %]
+
+A template variable can also be used to define a static filter
+subroutine.  However, the Template Toolkit will automatically call any
+subroutine bound to a variable and use the value returned.  Thus, the
+above example could be implemented as:
+
+    my $vars = {
+	myfilter => sub { return 'html' },
+    };
+
+template:
+
+    [% FILTER $myfilter %]	# same as [% FILTER html %]
+       ...
+    [% END %]
+
+To define a template variable that evaluates to a subroutine reference
+that can be used by the FILTER directive, you should create a
+subroutine that, when called automatically by the Template Toolkit,
+returns another subroutine reference which can then be used to perform
+the filter operation.  Note that only static filters can be
+implemented in this way.
+
+    my $vars = {
+	myfilter => sub { \&my_filter_sub },
+    };
+
+    sub my_filter_sub {
+	my $text = shift;
+	# do something
+        return $text;
+    }
+
+template:
+
+    [% FILTER $myfilter %]
+       ...
+    [% END %]
+
+Alternately, you can bless a subroutine reference into a class (any
+class will do) to fool the Template Toolkit into thinking it's an
+object rather than a subroutine.  This will then bypass the automatic
+"call-a-subroutine-to-return-a-value" magic.
+
+    my $vars = {
+	myfilter => bless(\&my_filter_sub, 'anything_you_like'),
+    };
+
+template:
+
+    [% FILTER $myfilter %]	    
+       ...
+    [% END %]
+
+Filters bound to template variables remain local to the variable
+context in which they are defined.  That is, if you define a filter in
+a PERL block within a template that is loaded via INCLUDE, then the
+filter definition will only exist until the end of that template when
+the stash is delocalised, restoring the previous variable state.  If
+you want to define a filter which persists for the lifetime of the
+processor, or define additional dynamic filter factories, then you can
+call the define_filter() method on the current Template::Context
+object.
+
+See L<Template::Manual::Filters> for a complete list of available filters,
+their descriptions and examples of use.
+
+
+

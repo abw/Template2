@@ -1,0 +1,23 @@
+[% TAGS star %]
+=item SWITCH / CASE
+
+The SWITCH / CASE construct can be used to perform a multi-way
+conditional test.  The SWITCH directive expects an expression which is
+first evaluated and then compared against each CASE statement in turn.
+Each CASE directive should contain a single value or a list of values
+which should match.  CASE may also be left blank or written as [% CASE
+DEFAULT %] to specify a default match.  Only one CASE matches, there
+is no drop-through between CASE statements.
+
+    [% SWITCH myvar %]
+    [% CASE value1 %]
+       ...
+    [% CASE [ value2 value3 ] %]   # multiple values
+       ...
+    [% CASE myhash.keys %]         # ditto
+       ...
+    [% CASE %]                     # default
+       ...
+    [% END %]
+  
+

@@ -1,0 +1,39 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item PLUGIN_BASE
+
+If a plugin is not defined in the PLUGINS hash then the PLUGIN_BASE is used
+to attempt to construct a correct Perl module name which can be successfully 
+loaded.  
+
+The PLUGIN_BASE can be specified as a single value or as a reference
+to an array of multiple values.  The default PLUGIN_BASE value,
+'Template::Plugin', is always added the the end of the PLUGIN_BASE
+list (a single value is first converted to a list).  Each value should
+contain a Perl package name to which the requested plugin name is
+appended.
+
+example 1:
+
+    my [* obj *] = [* pkg *]->new({
+	PLUGIN_BASE => 'MyOrg::Template::Plugin',
+    });
+
+    [% USE Foo %]    # => MyOrg::Template::Plugin::Foo
+                       or        Template::Plugin::Foo 
+
+example 2:
+
+    my [* obj *] = [* pkg *]->new({
+	PLUGIN_BASE => [   'MyOrg::Template::Plugin',
+			 'YourOrg::Template::Plugin'  ],
+    });
+
+    [% USE Foo %]    # =>   MyOrg::Template::Plugin::Foo
+                       or YourOrg::Template::Plugin::Foo 
+                       or          Template::Plugin::Foo 
+

@@ -1,0 +1,115 @@
+The following modules comprise the Template Toolkit.  Consult the
+individual documentation for further details.
+
+=over 4
+
+=item [% link('Template::Service') %]
+
+The Template::Service module handles the template processing
+lifecycle, adding PRE_PROCESS and POST_PROCESS templates, handling
+redirection through any defined PROCESS template, and dispatching any
+ERROR templates to handle uncaught exceptions.  The actual processing
+of these templates is handled by an underlying [% link('Template::Context') %]
+object.
+
+=item [% link('Template::Context') %]
+
+The Template::Context module defines a class of objects which each
+represent a unique run-time environment in which templates are
+processed.  The context maintains references to the stash of variables
+currently defined ([% link('Template::Stash') %]) and to provider
+objects for templates ([% link('Template::Provider') %]), filters 
+([% link('Template::Filters') %]) and plugins 
+([% link('Template::Plugins') %]).
+
+=item [% link('Template::Stash') %]
+
+The Template::Stash module defines an object class which is used for 
+storing, retrieving and evaluating variables and their values.
+
+=item [% link('Template::Provider') %]
+
+The Template::Provider module defines an object class which is used to
+find, load, parse, compile and then cache template documents.  The
+cache implements a simple fetch($template) method which will accept a
+wide range of inputs (filename, text ref, GLOB, IO::Handle, etc) and
+attempt to read the template and call on a [% link('Template::Parser')
+%] to parse and compile it to a [% link('Template::Document') %]
+which is then cached.
+
+=item [% link('Template::Document') %]
+
+Template::Document objects are thin wrappers around the Perl
+subroutines which have been compiled from source templates by the [%
+link('Template::Parser') %].  These objects also maintain any metadata
+values for the template and have references to any BLOCKs
+defined within the the template.
+
+=item [% link('Template::Parser') %]
+
+The Template::Parser module defines an object class which implements
+the template parser and compiler.  The template text is first scanned
+by a Perl regex which extracts the embedded directives and lexes the
+tokens contained within.  A DFA (Deterministic Finite-state Automaton)
+then iterates through the tokens using the rules and states defined in
+[% link('Template::Grammar') %] and generates a compiled template
+document as a Perl subroutine.
+
+=item [% link('Template::Grammar') %]
+
+The Template::Grammar module defines the rules and state tables for 
+the [% link('Template::Parser') %] DFA.  These are generated 
+by the Parse::Yapp module.  The Template-Toolkit distribution 
+contains a B<parser> directory which contains further files and 
+information concerning the grammar and compilation thereof.
+
+=item [% link('Template::Directive') %]
+
+This module implements a number of factory methods which are used by
+the [% link('Template::Parser') %] to generate Perl code from source
+templates.
+
+=item [% link('Template::Filters') %]
+
+This module implements the various FILTER subroutines and provides a 
+simple interface through which filter subs can be retrieved.
+
+=item [% link('Template::Plugins') %]
+
+This module provides access to the standard Template Toolkit or user
+defined plugin modules.
+
+=item [% link('Template::Plugin') %]
+
+Base class for Template::Plugin::* modules.
+
+=item [% link('Template::Exception') %]
+
+The Template::Exception module defines an exception type 
+for representing error conditions within the Template Toolkit.
+
+=item [% link('Template::Iterator') %]
+
+The Template::Iterator module defines a data iterator which is used 
+by the FOREACH directive.  This may be sub-classed to create more 
+specialised iterators for traversing data sets.
+
+=item [% link('Template::Constants') %]
+
+Defines various constants used in the Template Toolkit.
+
+=item [% link('Template::Config') %]
+
+Implements a number of factory methods through which other Template::*
+modules can be automatically loaded and instantiated.
+
+=item [% link('Template::Base') %]
+
+A common base class for many Template::* modules.
+
+=item [% link('Template::Test') %]
+
+Module for testing the Template Toolkit, primarily used by the test
+scripts in the 't' distribution sub-directory.
+
+=back

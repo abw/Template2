@@ -1,0 +1,63 @@
+[% TAGS star %]
+=item PROCESS
+
+The PROCESS directive is similar to INCLUDE but does not perform any 
+localisation of variables before processing the template.  Any changes
+made to variables within the included template will be visible in the
+including template.
+
+    [% foo = 10 %]
+
+    foo is [% foo %]
+    [% PROCESS bar %]
+    foo is [% foo %]
+
+    [% BLOCK bar %]
+       [% foo = 20 %]
+       changed foo to [% foo %]
+    [% END %]
+
+output:
+
+    foo is 10
+       changed foo to 20
+    foo is 20
+
+Parameters may be specified in the PROCESS directive, but these too will 
+become visible changes to current variable values.
+
+    [% foo = 10 %]
+    foo is [% foo %]
+    [% PROCESS bar
+       foo = 20 
+    %]
+    foo is [% foo %]
+
+    [% BLOCK bar %]
+       this is bar, foo is [% foo %]
+    [% END %]
+
+output:
+
+    foo is 10
+       this is bar, foo is 20
+    foo is 20
+
+The PROCESS directive is slightly faster than INCLUDE because it
+avoids the need to localise (i.e. copy) the variable stash before
+processing the template.  As with INSERT and INCLUDE, the first
+parameter does not need to be quoted as long as it contains only
+alphanumeric characters, underscores, periods or forward slashes.
+A '$' prefix can be used to explicitly indicate a variable which 
+should be interpolated to provide the template name:
+
+    [% myheader = 'my/misc/header' %]
+    [% PROCESS  myheader %]              # 'myheader'
+    [% PROCESS $myheader %]		 # 'my/misc/header'
+
+As with INCLUDE, multiple templates can be specified, delimited by
+'+', and are processed in order.
+
+    [% PROCESS html/header + my/header %]
+
+

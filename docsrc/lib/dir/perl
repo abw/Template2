@@ -1,0 +1,68 @@
+[% TAGS star %]
+=item PERL
+
+The PERL directive is used to mark the start of a block which contains
+Perl code for evaluation.  The EVAL_PERL option must be enabled for Perl
+code to be evaluated or a 'perl' exception will be thrown with the 
+message 'EVAL_PERL not set'.
+
+Perl code is evaluated in the Template::Perl package.  The $context
+package variable contains a reference to the current Template::Context
+object.  This can be used to access the functionality of the Template
+Toolkit to process other templates, load plugins, filters, etc.
+See L<Template::Context> for further details.
+
+    [% PERL %]
+       print $context->include('myfile');
+    [% END %]
+
+The $stash variable contains a reference to the top-level stash object
+which manages template variables.  Through this, variable values can
+be retrieved and updated.  See L<Template::Stash> for further details.
+
+    [% PERL %]
+       $stash->set(foo => 'bar');
+       print "foo value: ", $stash->get('foo');
+    [% END %]
+
+Output
+    foo value: bar
+
+Output is generated from the PERL block by calling print().  Note that
+the Template::Perl::PERLOUT handle is selected (tied to an output
+buffer) instead of STDOUT.
+
+    [% PERL %]
+       print "foo\n";	                        # OK
+       print PERLOUT "bar\n";                   # OK, same as above
+       print Template::Perl::PERLOUT "baz\n";   # OK, same as above
+       print STDOUT "qux\n";			# WRONG!
+    [% END %]
+
+The PERL block may contain other template directives.  These are
+processed before the Perl code is evaluated.
+
+    [% name = 'Fred Smith' %]
+
+    [% PERL %]
+       print "[% name %]\n";
+    [% END %]
+
+Thus, the Perl code in the above example is evaluated as:
+
+    print "Fred Smith\n";
+
+Exceptions may be thrown from within PERL blocks via die() and will be
+correctly caught by enclosing TRY blocks.
+
+    [% TRY %]
+       [% PERL %]
+          die "nothing to live for\n";
+       [% END %]
+    [% CATCH %]
+       error: [% error.info %]
+    [% END %]
+
+output:
+       error: nothing to live for
+

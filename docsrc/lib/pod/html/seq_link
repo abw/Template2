@@ -1,0 +1,8 @@
+[%  TAGS star -%][*
+    items = item.split('\|');
+    IF items.size > 1; 
+	"[% ttlink('$items.1', '$items.0') -%]";
+    ELSE;
+	"[% ttlink('$items.0') -%]";
+    END
+-*]

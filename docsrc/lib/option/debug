@@ -1,0 +1,15 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+=item DEBUG
+
+The DEBUG option causing any access to an undefined variable to be 
+raised as an 'undef' error.
+
+
+
+
+
+

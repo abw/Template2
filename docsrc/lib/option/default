@@ -1,0 +1,22 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item DEFAULT
+
+The DEFAULT option can be used to specify a default template which should 
+be used whenever a specified template can't be found in the INCLUDE_PATH.
+
+    my [* obj *] = [* pkg *]->new({
+	DEFAULT => 'notfound.html',
+    });
+
+If a non-existant template is requested through the Template process()
+method, or by an INCLUDE, PROCESS or WRAPPER directive, then the
+DEFAULT template will instead be processed, if defined.  Note that the
+DEFAULT template is not used when templates are specified with
+absolute or relative filenames, or as a reference to a input file
+handle or text string.
+

@@ -1,0 +1,26 @@
+[% DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-%]
+=item STASH
+
+A reference to a Template::Stash object or sub-class which will take
+responsibility for managing template variables.  
+
+    my $stash = MyOrg::Template::Stash->new({ ... });
+    my [% obj %] = [% pkg %]->new({
+	STASH => $stash,
+    });
+
+If unspecified, a default stash object is created using the VARIABLES
+configuration item to initialise the stash variables.  These may also
+be specified as the PRE_DEFINE option for backwards compatibility with 
+version 1.
+
+    my [% obj %] = [% pkg %]->new({
+	VARIABLES => {
+	    id    => 'abw',
+	    name  => 'Andy Wardley',
+	},
+    };
+

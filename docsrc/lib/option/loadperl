@@ -1,0 +1,34 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+*]
+
+=item LOAD_PERL
+
+If a plugin cannot be loaded using the PLUGINS or PLUGIN_BASE
+approaches then the provider can make a final attempt to load the
+module without prepending any prefix to the module path.  This allows
+regular Perl modules (i.e. those that don't reside in the
+Template::Plugin or some other such namespace) to be loaded and used
+as plugins.
+
+By default, the LOAD_PERL option is set to 0 and no attempt will be made
+to load any Perl modules that aren't named explicitly in the PLUGINS
+hash or reside in a package as named by one of the PLUGIN_BASE
+components.  
+
+Plugins loaded using the PLUGINS or PLUGIN_BASE receive a reference to
+the current context object as the first argument to the new()
+constructor.  Modules loaded using LOAD_PERL are assumed to not
+conform to the plugin interface.  They must provide a new() class
+method for instantiating objects but it will not receive a reference
+to the context as the first argument.  Plugin modules should provide a
+load() class method (or inherit the default one from the
+Template::Plugin base class) which is called the first time the plugin
+is loaded.  Regular Perl modules need not.  In all other respects,
+regular Perl objects and Template Toolkit plugins are identical.
+
+If a particular Perl module does not conform to the common, but not
+unilateral, new() constructor convention then a simple plugin wrapper
+can be written to interface to it.

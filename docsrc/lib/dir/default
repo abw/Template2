@@ -1,0 +1,26 @@
+[% TAGS star %]
+=item DEFAULT
+
+The DEFAULT directive is similar to SET but only updates variables 
+that are currently undefined or have no "true" value (in the Perl
+sense).
+
+    [% DEFAULT
+       name = 'John Doe'
+       id   = 'jdoe'
+    %]
+
+This can be particularly useful in common template components to
+ensure that some sensible default are provided for otherwise 
+undefined variables.
+
+    [% DEFAULT 
+       title = 'Hello World'
+       bgcol = '#ffffff'
+    %]
+    <html>
+    <head>
+    <title>[% title %]</title>
+    </head>
+
+    <body bgcolor="[% bgcol %]">

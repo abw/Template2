@@ -1,0 +1,36 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item ANYCASE
+
+By default, directive keywords should be expressed in UPPER CASE.  The 
+ANYCASE option can be set to allow directive keywords to be specified
+in any case.
+
+    # ANYCASE => 0 (default)
+    [% INCLUDE foobar %]	# OK
+    [% include foobar %]        # ERROR
+    [% include = 10   %]        # OK, 'include' is a variable
+
+    # ANYCASE => 1
+    [% INCLUDE foobar %]	# OK
+    [% include foobar %]	# OK
+    [% include = 10   %]        # ERROR, 'include' is reserved word
+
+One side-effect of enabling ANYCASE is that you cannot use a variable
+of the same name as a reserved word, regardless of case.  The reserved
+words are currently:
+
+    [* PROCESS misc/reserved *]
+
+The only lower case reserved words that cannot be used for variables,
+regardless of the ANYCASE option, are the operators:
+
+    and or not mod div
+
+
+
+

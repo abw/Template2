@@ -1,0 +1,61 @@
+[% TAGS star %]
+=item MACRO
+
+The MACRO directive allows you to define a directive or directive block
+which is then evaluated each time the macro is called. 
+
+    [% MACRO header INCLUDE header %]
+
+Calling the macro as:
+
+    [% header %]
+
+is then equivalent to:
+
+    [% INCLUDE header %]
+
+Macros can be passed named parameters when called.  These values remain 
+local to the macro.
+
+    [% header(title='Hello World') %]  
+
+equivalent to:
+
+    [% INCLUDE header title='Hello World' %]
+
+A MACRO definition may include parameter names.  Values passed to the 
+macros are then mapped to these local variables.  Other named parameters
+may follow these.
+
+    [% MACRO header(title) INCLUDE header %]
+
+    [% header('Hello World') %]
+    [% header('Hello World', bgcol='#123456') %]
+
+equivalent to:
+
+    [% INCLUDE header title='Hello World' %]
+    [% INCLUDE header title='Hello World' bgcol='#123456# %]
+
+A MACRO may precede any directive and must conform to the structure 
+of the directive.
+
+    [% MACRO header IF frames %]
+       [% INCLUDE frames/header %]
+    [% ELSE %]
+       [% INCLUDE header %]
+    [% END %]
+
+    [% header %]
+
+A MACRO may also be defined as an anonymous BLOCK.  The block will be
+evaluated each time the macro is called. 
+
+    [% MACRO header BLOCK %]
+       ...content...
+    [% END %]
+
+    [% header %]
+
+
+

@@ -1,0 +1,6 @@
+   * [% page.name %] ([% page.id %]) : [% page.title %]
+[%- IF verbose %]
+        src: [% page.src %]
+        pod: [% page.podfile %] as [% page.podname %]
+       html: [% page.html %]
+[% END -%]

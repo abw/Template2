@@ -1,0 +1,12 @@
+[%  tt = {
+	version => 2.01
+        release => '28th March 2001'
+    }
+    authors = {
+	abw = {
+	    name  = 'Andy Wardley' 
+	    email = 'abw@kfs.org'
+	    home  = 'http://www.andywardley.com/'
+	}
+    };
+%]

@@ -1,0 +1,82 @@
+[% TAGS star %]
+=item META
+
+The META directive allows simple metadata items to be defined within a 
+template.  These are evaluated when the template is parsed and as such
+may only contain simple values (e.g. it's not possible to interpolate 
+other variables values into META variables).
+
+    [% META
+       title   = 'The Cat in the Hat'
+       author  = 'Dr. Seuss'
+       version = 1.23 
+    %]
+
+The 'template' variable contains a reference to the main template 
+being processed.  These metadata items may be retrieved as attributes
+of the template.  
+
+    <h1>[% template.title %]</h1>
+    <h2>[% template.author %]</h2>
+
+The 'name' and 'modtime' metadata items are automatically defined for
+each template to contain its name and modification time in seconds
+since the epoch.
+
+    [% USE date %]		# use Date plugin to format time
+    ...
+    [% template.name %] last modified
+    at [% date.format(template.modtime) %]
+
+The PRE_PROCESS and POST_PROCESS options allow common headers and 
+footers to be added to all templates.  The 'template' reference is
+correctly defined when these templates are processed, allowing headers
+and footers to reference metadata items from the main template.
+
+    $template = Template->new({
+	PRE_PROCESS  => 'header',
+	POST_PROCESS => 'footer',
+    });
+
+    $template->process('cat_in_hat');
+
+header:
+
+    <html>
+    <head>
+    <title>[% template.title %]</title>
+    </head>
+    <body>
+
+cat_in_hat:
+
+    [% META
+       title   = 'The Cat in the Hat'
+       author  = 'Dr. Seuss'
+       version = 1.23 
+       year    = 2000
+    %]
+
+    The cat in the hat sat on the mat.
+
+footer:
+
+    <hr>
+    &copy; [% template.year %] [% template.author %]
+    </body>
+    </html>
+
+The output generated from the above example is:
+
+    <html>
+    <head>
+    <title>The Cat in the Hat</title>
+    </head>
+    <body>
+
+    The cat in the hat sat on the mat.
+
+    <hr>
+    &copy; 2000 Dr. Seuss
+    </body>
+    </html>

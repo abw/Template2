@@ -1,0 +1,265 @@
+[% TAGS [* *] %]
+=over 4
+
+=item format(format)
+
+The 'format' filter takes a format string as a parameter (as per
+printf()) and formats each line of text accordingly.
+
+    [% FILTER format('<!-- %-40s -->') %]
+    This is a block of text filtered 
+    through the above format.
+    [% END %]
+
+output:
+
+    <!-- This is a block of text filtered        -->
+    <!-- through the above format.               -->
+
+=item upper
+
+Folds the input to UPPER CASE.
+
+    [% "hello world" | FILTER upper %]
+
+output:
+
+    HELLO WORLD
+
+=item lower
+
+Folds the input to lower case.
+
+    [% "Hello World" | FILTER lower %]
+
+output:
+
+    hello world
+
+=item trim
+
+Trims any leading or trailing whitespace from the input text.  Particularly 
+useful in conjunction with INCLUDE, PROCESS, etc., having the same effect
+as the TRIM configuration option.
+
+    [% INCLUDE myfile | trim %]
+
+=item collapse
+
+Collapse any whitespace sequences in the input text into a single space.
+Leading and trailing whitespace (which would be reduced to a single space)
+is removed, as per trim.
+
+    [% FILTER collapse %]
+
+       The   cat
+
+       sat    on
+
+       the   mat
+
+    [% END %]
+
+output:
+
+    The cat sat on the mat
+
+=item html
+
+Converts the characters 'E<lt>', 'E<gt>' and '&' to '&lt;', '&gt;' and
+'&amp', respectively, protecting them from being interpreted as
+representing HTML tags or entities.
+
+    [% FILTER html %]
+    Binary "<=>" returns -1, 0, or 1 depending on...
+    [% END %]
+
+output:
+
+    Binary "&lt;=&gt;" returns -1, 0, or 1 depending on...
+
+=item html_para
+
+This filter formats a block of text into HTML paragraphs.  A sequence of 
+two or more newlines is used as the delimiter for paragraphs which are 
+then wrapped in HTML E<lt>pE<gt>...E<lt>/pE<gt> tags.
+
+    [% FILTER html_para %]
+    The cat sat on the mat.
+
+    Mary had a little lamb.
+    [% END %]
+
+output:
+
+    <p>
+    The cat sat on the mat.
+    </p>
+
+    <p>
+    Mary had a little lamb.
+    </p>
+
+=item html_break
+
+Similar to the html_para filter described above, but uses the HTML tag
+sequence E<lt>brE<gt>E<lt>brE<gt> to join paragraphs.
+
+    [% FILTER html_break %]
+    The cat sat on the mat.
+
+    Mary had a little lamb.
+    [% END %]
+
+output:
+
+    The cat sat on the mat.
+    <br>
+    <br>
+    Mary had a little lamb.
+
+=item indent(pad)
+
+Indents the text block by a fixed pad string or width.  The 'pad' argument
+can be specified as a string, or as a numerical value to indicate a pad
+width (spaces).  Defaults to 4 spaces if unspecified.
+
+    [% FILTER indent('ME> ') %]
+    blah blah blah
+    cabbages, rhubard, onions
+    [% END %]
+
+output:
+
+    ME> blah blah blah
+    ME> cabbages, rhubard, onions
+
+=item truncate(length)
+
+Truncates the text block to the length specified, or a default length of
+32.  Truncated text will be terminated with '...' (i.e. the '...' falls
+inside the required length, rather than appending to it).
+
+    [% FILTER truncate(21) %]
+    I have much to say on this matter that has previously 
+    been said on more than one occasion.
+    [% END %]
+
+output:
+
+    I have much to say...
+
+=item repeat(iterations)
+
+Repeats the text block for as many iterations as are specified (default: 1).
+
+    [% FILTER repeat(3) %]
+    We want more beer and we want more beer,
+    [% END %]
+    We are the more beer wanters!
+
+output:
+
+    We want more beer and we want more beer,
+    We want more beer and we want more beer,
+    We want more beer and we want more beer,
+    We are the more beer wanters!
+
+=item remove(string) 
+
+Searches the input text for any occurrences of the specified string and 
+removes them.  A Perl regular expression may be specified as the search 
+string.
+
+    [% "The  cat  sat  on  the  mat" FILTER remove('\s+') %]
+
+output: 
+
+    Thecatsatonthemat
+
+=item replace(search, replace) 
+
+Similar to the remove filter described above, but taking a second parameter
+which is used as a replacement string for instances of the search string.
+
+    [% "The  cat  sat  on  the  mat" | replace('\s+', '_') %]
+
+output: 
+
+    The_cat_sat_on_the_mat
+
+=item redirect(file)
+
+The 'redirect' filter redirects the output of the block into a separate
+file, specified relative to the OUTPUT_PATH configuration item.
+
+    [% FOREACH user = myorg.userlist %]
+       [% FILTER redirect("users/${user.id}.html") %]
+          [% INCLUDE userinfo %]
+       [% END %]
+    [% END %]
+
+or more succinctly, using side-effect notation:
+
+    [% INCLUDE userinfo 
+         FILTER redirect("users/${user.id}.html")
+	   FOREACH user = myorg.userlist 
+    %]
+
+A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
+
+=item eval(template_text)
+
+The 'eval' filter evaluates the block as template text, processing
+any directives embedded within it.  This allows template variables to
+contain template fragments, or for some method to be provided for
+returning template fragments from an external source such as a
+database, which can then be processed in the template as required.
+
+    my $vars  = {
+	fragment => "The cat sat on the [% place %]",
+    };
+    $template->process($file, $vars);
+
+The following example:
+
+    [% fragment | eval %]
+
+is therefore equivalent to 
+
+    The cat sat on the [% place %]
+
+The 'evaltt' filter is provided as an alias for 'eval'.
+
+=item perl(perlcode)
+
+The 'perl' filter evaluates the block as Perl code.  The EVAL_PERL
+option must be set to a true value or a 'perl' exception will be
+thrown.
+
+    [% my_perl_code | perl %]
+
+In most cases, the [% PERL %] ... [% END %] block should suffice for 
+evaluating Perl code, given that template directives are processed 
+before being evaluate as Perl.  Thus, the previous example could have
+been written in the more verbose form:
+
+    [% PERL %]
+    [% my_perl_code %]
+    [% END %]
+
+as well as
+
+    [% FILTER perl %]
+    [% my_perl_code %]
+    [% END %]
+
+The 'evalperl' filter is provided as an alias for 'perl' for backwards
+compatibility.
+
+=item stderr
+
+The stderr filter prints the output generating by the enclosing block to
+STDERR 
+
+=back
