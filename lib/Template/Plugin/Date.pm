@@ -97,7 +97,7 @@ sub format {
 	    unless @date >= 6 && defined $date[5];
 	$date[4] -= 1;     # correct month number 1-12 to range 0-11
 	$date[5] -= 1900;  # convert absolute year to years since 1900
-	$time = &POSIX::mktime(@date, 0, 0, 0);
+	$time = &POSIX::mktime(@date);
     }
     
 
