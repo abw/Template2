@@ -30,28 +30,29 @@ use base qw( Template::Base );
 use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
 	     $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
              $LATEX_PATH $PDFLATEX_PATH $DVIPS_PATH
-	     $STASH $SERVICE $CONTEXT );
+	     $STASH $SERVICE $CONTEXT $CONSTANTS );
 
-$VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG    = 0 unless defined $DEBUG;
-$ERROR    = '';
-$CONTEXT  = 'Template::Context';
-$FILTERS  = 'Template::Filters';
-$ITERATOR = 'Template::Iterator';
-$PARSER   = 'Template::Parser';
-$PLUGINS  = 'Template::Plugins';
-$PROVIDER = 'Template::Provider';
-$SERVICE  = 'Template::Service';
-$STASH    = 'Template::Stash';
+$VERSION   = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$DEBUG     = 0 unless defined $DEBUG;
+$ERROR     = '';
+$CONTEXT   = 'Template::Context';
+$FILTERS   = 'Template::Filters';
+$ITERATOR  = 'Template::Iterator';
+$PARSER    = 'Template::Parser';
+$PLUGINS   = 'Template::Plugins';
+$PROVIDER  = 'Template::Provider';
+$SERVICE   = 'Template::Service';
+$STASH     = 'Template::Stash';
+$CONSTANTS = 'Template::Namespace::Constants';
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '/usr/local/tt2';
+$INSTDIR  = '';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
-$LATEX_PATH    = '/usr/bin/latex';
-$PDFLATEX_PATH = '/usr/bin/pdflatex';
-$DVIPS_PATH    = '/usr/bin/dvips';
+$LATEX_PATH    = '';
+$PDFLATEX_PATH = '';
+$DVIPS_PATH    = '';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -208,6 +209,7 @@ sub context {
 	|| $class->error("failed to create context: ", $CONTEXT->error);
 }
 
+
 #------------------------------------------------------------------------
 # service(\%params)
 #
@@ -223,6 +225,26 @@ sub service {
     return undef unless $class->load($SERVICE);
     return $SERVICE->new($params) 
 	|| $class->error("failed to create context: ", $SERVICE->error);
+}
+
+
+#------------------------------------------------------------------------
+# constants(\%params)
+#
+# Instantiate a new namespace handler for compile time constant folding
+# (default: Template::Namespace::Constants). 
+# Returns object or undef, as above.
+#------------------------------------------------------------------------
+
+sub constants {
+    my $class  = shift;
+    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
+
+    return undef unless $class->load($CONSTANTS);
+    return $CONSTANTS->new($params) 
+	|| $class->error("failed to create constants namespace: ", 
+			 $CONSTANTS->error);
 }
 
 
