@@ -46,10 +46,10 @@ my (%config, %ttconfig);
 while ($_ = shift) {
     my ($k, $v) = split(/=/);
     if ($k =~ /^TT/) {
-	$ttconfig{ $k } = $v || 0;
+        $ttconfig{ $k } = $v || 0;
     }
     else {
-	$config{ $k } = $v || 0;
+        $config{ $k } = $v || 0;
     }
 };
 
@@ -236,39 +236,38 @@ package main;
     
 my %opts = (
     %config,
-    'NAME'	   => 'Template',
+    'NAME'	       => 'Template',
     'DISTNAME'     => 'Template-Toolkit',
     'VERSION_FROM' => 'lib/Template.pm',
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
     'PMLIBDIRS'    => [ 'lib' ], 
     'DIR'          => [ ],
     'PREREQ_PM'    => { 
-	'AppConfig'  => 1.52,
-	'File::Spec' => 0.8,
-        'File::Temp' => 0.12,
+        'AppConfig'    => 1.55,
+        'File::Spec'   => 0.8,
+        'File::Temp'   => 0.12,
     },
     'dist'         => {
-	'COMPRESS' => 'gzip',
-	'SUFFIX'   => 'gz',
+        'COMPRESS' => 'gzip',
+        'SUFFIX'   => 'gz',
     },
     'clean'        => {
-	'FILES'    => join(' ', qw( docs/ttree.cfg 
-				    examples/ttree.cfg 
-				    t/dbi_test.cfg 
-				    t/test/src/baz.ttc
-				    t/test/src/complex.org 
-				    t/test/src/complex.ttc
-				    t/test/src/evalperl.ttc
-				    t/test/src/foo.ttc )),
+        'FILES'        => join(' ', qw( docs/ttree.cfg 
+                                        examples/ttree.cfg 
+                                        t/dbi_test.cfg 
+                                        t/test/src/baz.ttc
+                                        t/test/src/complex.org 
+                                        t/test/src/complex.ttc
+                                        t/test/src/evalperl.ttc
+                                        t/test/src/foo.ttc )),
     },
 );
 
 push @{ $opts{'DIR'} }, 'xs' if $TT_XS_ENABLE;
 
 if ($ExtUtils::MakeMaker::VERSION >= 5.43) {
-    $opts{ AUTHOR }   = 'Andy Wardley <abw@kfs.org>';
-    $opts{ ABSTRACT } = 
-	'a fast, flexible and extensible template processing system',
+    $opts{ AUTHOR   } = 'Andy Wardley <abw@wardley.org>';
+    $opts{ ABSTRACT } = 'comprehensive template processing system',
 }
 
 
@@ -424,34 +423,34 @@ available on your system.
 EOF
 
     foreach my $mods ( [ 'Text::Autoformat' => \&check_taf ],
-		       [ 'GD'          => undef         ],
-		       [ 'GD::Text'    => undef         ],
-		       [ 'GD::Graph'   => undef         ],
-		       [ 'GD::Graph3d' => undef         ],
-		       [ 'Image::Info' => undef         ],
-		       [ 'Image::Size' => undef         ],
-		       [ 'Date::Calc'  => undef         ],
-		       [ 'Pod::POM'    => undef         ],
-		       [ 'Tie::DBI'    => undef         ],
-		       [ 'XML::DOM'    => \&check_dom   ],
-		       [ 'XML::RSS'    => \&check_rss   ],
-		       [ 'XML::XPath'  => \&check_xpath ],
-		       [ 'DBI'         => \&dbi_config  ] ) {
-	my ($module, $code) = ref $mods ? @$mods : ($mods, 0);
+                       [ 'GD'          => undef         ],
+                       [ 'GD::Text'    => undef         ],
+                       [ 'GD::Graph'   => undef         ],
+                       [ 'GD::Graph3d' => undef         ],
+                       [ 'Image::Info' => undef         ],
+                       [ 'Image::Size' => undef         ],
+                       [ 'Date::Calc'  => undef         ],
+                       [ 'Pod::POM'    => undef         ],
+                       [ 'Tie::DBI'    => undef         ],
+                       [ 'XML::DOM'    => \&check_dom   ],
+                       [ 'XML::RSS'    => \&check_rss   ],
+                       [ 'XML::XPath'  => \&check_xpath ],
+                       [ 'DBI'         => \&dbi_config  ] ) {
+        my ($module, $code) = ref $mods ? @$mods : ($mods, 0);
 	
-	printf("  %-16s ", $module) unless $TT_QUIET;
-	eval "use $module";
-	if ($@) {
-	    nope("module not installed");
-	}
-	elsif ($code) {
-	    &$code;
-	}
-	else {
-	    no strict qw( refs );
-	    my $ver = ${"$module\::VERSION"};
-	    yep("version $ver installed");
-	}
+        printf("  %-16s ", $module) unless $TT_QUIET;
+        eval "use $module";
+        if ($@) {
+            nope("module not installed");
+        }
+        elsif ($code) {
+            &$code;
+        }
+        else {
+            no strict qw( refs );
+            my $ver = ${"$module\::VERSION"};
+    	    yep("version $ver installed");
+        }
     }
 }
 
@@ -551,8 +550,10 @@ I found the following locations for pdflatex, latex and dvips:
 
 EOF
 
-    if ( $TT_LATEX_PATH eq "" || $TT_PDFLATEX_PATH eq "" || $TT_DVIPS_PATH eq "" ) {
-	$TT_LATEX_ENABLE = 'n';
+    if ( $TT_LATEX_PATH    eq "" 
+      || $TT_PDFLATEX_PATH eq "" 
+      || $TT_DVIPS_PATH    eq "" ) {
+         $TT_LATEX_ENABLE = 'n';
     }
     $TT_LATEX_ENABLE ||= 'y';
     $TT_LATEX_ENABLE = (
@@ -560,18 +561,18 @@ EOF
 				 $TT_LATEX_ENABLE) =~ /^y/i
 			);
     if ( $TT_LATEX_ENABLE ) {
-	if (ttprompt('Are the pdflatex, latex and dvips paths ok?', 'y') !~ /^y/i) {
-	    $TT_PDFLATEX_PATH = ttprompt('pdflatex path', $TT_PDFLATEX_PATH);
-	    $TT_LATEX_PATH    = ttprompt('latex path',    $TT_LATEX_PATH);
-	    $TT_DVIPS_PATH    = ttprompt('dvips path',    $TT_DVIPS_PATH);
-	}
+        if (ttprompt('Are the pdflatex, latex and dvips paths ok?', 'y') !~ /^y/i) {
+            $TT_PDFLATEX_PATH = ttprompt('pdflatex path', $TT_PDFLATEX_PATH);
+            $TT_LATEX_PATH    = ttprompt('latex path',    $TT_LATEX_PATH);
+            $TT_DVIPS_PATH    = ttprompt('dvips path',    $TT_DVIPS_PATH);
+        }
     } else {
-	#
-	# Empty paths will cause the latex filter to throw an error
-	#
-	$TT_PDFLATEX_PATH = $TT_LATEX_PATH = $TT_DVIPS_PATH = "";
+        #
+        # Empty paths will cause the latex filter to throw an error
+        #
+        $TT_PDFLATEX_PATH = $TT_LATEX_PATH = $TT_DVIPS_PATH = "";
     }
-
+    
     fix_file(catfile('lib','Template','Config.pm'), '$PDFLATEX_PATH', $TT_PDFLATEX_PATH);
     fix_file(catfile('lib','Template','Config.pm'), '$LATEX_PATH',    $TT_LATEX_PATH);
     fix_file(catfile('lib','Template','Config.pm'), '$DVIPS_PATH',    $TT_DVIPS_PATH);
@@ -625,7 +626,7 @@ EOF
         $TT_PREFIX =~ s[/$][];
     }
     else {
-	$TT_PREFIX = '';
+        $TT_PREFIX = '';
     }
 
     fix_file(catfile('lib','Template','Config.pm'), '$INSTDIR', $TT_PREFIX);
@@ -670,7 +671,7 @@ default and access the images via the filesystem.
 EOF
     }
     else {
-	message(<<EOF);
+        message(<<EOF);
 
 If you want to use the Splash! library then you'll need to copy these
 images, define an alias (e.g. in the httpd.conf) or create a symbolic
@@ -733,8 +734,8 @@ online at:
 EOF
 
     $TT_BUILD_DOCS = ( 
-	ttprompt('Do you want to build the HTML documentation?', 
-	       $TT_BUILD_DOCS) =~ /^y/i 
+    	ttprompt('Do you want to build the HTML documentation?', 
+                 $TT_BUILD_DOCS) =~ /^y/i 
     );
 
 }
@@ -761,42 +762,43 @@ use plain HTML.
 
 EOF
     $TT_SPLASH_DOCS = ( 
-	ttprompt('Do you want to use the Splash! library?', $TT_SPLASH_DOCS) =~ /^y/i 
+    	ttprompt('Do you want to use the Splash! library?', $TT_SPLASH_DOCS) =~ /^y/i 
     );
 
     if ($TT_SPLASH_DOCS) {
-	my $splash_style = '';
-	message(<<EOF);
+        my $splash_style = '';
+        message(<<EOF);
 
 Which Splash! colour scheme would you like to use to build the
 documentation?  Acceptable values are:
 
 EOF
-	unless ($TT_QUIET) {
-	    print "  Name     Colours\n  -------------------------\n";
-	    foreach my $t ('default', 
-			    grep { ! /^default$/ } sort keys %$SPLASH_STYLES) {
-		my $v = $SPLASH_STYLES->{ $t };
-		local $" = '/';
-		printf("  %-8s @$v\n", $t);
-	    } 
-	    print "\n";
+        unless ($TT_QUIET) {
+            print "  Name     Colours\n  -------------------------\n";
+    	    foreach my $t ('default', 
+        		    grep { ! /^default$/ } sort keys %$SPLASH_STYLES) {
+                my $v = $SPLASH_STYLES->{ $t };
+                local $" = '/';
+                printf("  %-8s @$v\n", $t);
+            } 
+            print "\n";
 	
-	    while (! $splash_style) {
-		$TT_SPLASH_THEME = ttprompt("Enter name of colour scheme: ", $TT_SPLASH_THEME);
-		message("! No such scheme\n"), $TT_SPLASH_THEME = 'default'
-		    unless ($splash_style = $SPLASH_STYLES->{ $TT_SPLASH_THEME });
-	    }
+    	    while (! $splash_style) {
+                $TT_SPLASH_THEME = ttprompt("Enter name of colour scheme: ", 
+                                            $TT_SPLASH_THEME);
+                message("! No such scheme\n"), $TT_SPLASH_THEME = 'default'
+                    unless ($splash_style = $SPLASH_STYLES->{ $TT_SPLASH_THEME });
+            }
 
-	    ( $TT_SPLASH_BG, $TT_SPLASH_FG, $TT_SPLASH_BT, $TT_SPLASH_FT ) 
-		= @$splash_style;
+            ( $TT_SPLASH_BG, $TT_SPLASH_FG, $TT_SPLASH_BT, $TT_SPLASH_FT ) 
+                = @$splash_style;
 
-	    # default background (unselected) text is black, fore is white
-	    $TT_SPLASH_BT ||= 'black';
-	    $TT_SPLASH_FT ||= 'white';
+    	    # default background (unselected) text is black, fore is white
+            $TT_SPLASH_BT ||= 'black';
+            $TT_SPLASH_FT ||= 'white';
 
-	    $style = 'splash';
-	    $style_cfg = <<EOF;
+    	    $style = 'splash';
+            $style_cfg = <<EOF;
 
 pre_process  = splash/config
 define splash_fg = '$TT_SPLASH_FG'
@@ -804,7 +806,7 @@ define splash_bg = '$TT_SPLASH_BG'
 define splash_ft = '$TT_SPLASH_FT'
 define splash_bt = '$TT_SPLASH_BT'
 EOF
-	}
+        }
     }
 
     #--------------------------------------------------------------------
@@ -961,8 +963,8 @@ sub check_taf {
     yep("version $Text::Autoformat::VERSION installed");
 
     if ($] <= 5.006 && $dec ne '.') {
-	print ' ' x 6, 
-	"NOTE: tests 23 and 25 may fail under your locale, see TODO file.\n";
+        print ' ' x 6, 
+        "NOTE: tests 23 and 25 may fail under your locale, see TODO file.\n";
     }
 }
 
@@ -976,10 +978,10 @@ sub check_taf {
 
 sub check_dom {
     if ($XML::DOM::VERSION < 1.27) {
-	nope("requires version 1.27 or later ($XML::DOM::VERSION installed)");
+        nope("requires version 1.27 or later ($XML::DOM::VERSION installed)");
     }
     else {
-	yep("version $XML::DOM::VERSION installed");
+        yep("version $XML::DOM::VERSION installed");
     }
 }
 
@@ -993,10 +995,10 @@ sub check_dom {
 
 sub check_rss {
     if ($] >= 5.006 && $XML::RSS::VERSION < 0.9) {
-	nope("requires version 0.9 or later ($XML::RSS::VERSION installed)");
+        nope("requires version 0.9 or later ($XML::RSS::VERSION installed)");
     }
     else {
-	yep("version $XML::RSS::VERSION installed");
+        yep("version $XML::RSS::VERSION installed");
     }
 }
 
@@ -1010,10 +1012,10 @@ sub check_rss {
 
 sub check_xpath {
     if ($XML::XPath::VERSION < 1.00) {
-	nope("requires version 1.00 or later ($XML::XPath::VERSION installed)");
+        nope("requires version 1.00 or later ($XML::XPath::VERSION installed)");
     }
     else {
-	yep("version $XML::XPath::VERSION installed");
+        yep("version $XML::XPath::VERSION installed");
     }
 }
 
@@ -1033,15 +1035,15 @@ sub dbi_config {
 	       "It requires access to an existing test database.",
 	       $TT_RUN_DBI) =~ /y/i) {
 
-	$TT_RUN_DBI = 1;
-	my ($driver, $dbname);
-	my @drivers = DBI->available_drivers();
-	local $" = ', ';
-
-	my $default = (grep(/m.?sql/i, @drivers))[0] 
-	    || $drivers[0] || '';
-	
-	message(<<EOF);
+        $TT_RUN_DBI = 1;
+        my ($driver, $dbname);
+        my @drivers = DBI->available_drivers();
+        local $" = ', ';
+        
+        my $default = (grep(/m.?sql/i, @drivers))[0] 
+            || $drivers[0] || '';
+        
+        message(<<EOF);
 
 DBI Test Configuration
 ----------------------
@@ -1053,13 +1055,13 @@ The DBD drivers installed on your system are
 
 EOF
 
-	while (! $driver) {
-	    $driver = ttprompt("Enter driver name: ", $default);
-	    message("! No such DBD driver\n"), undef $driver
-		unless grep(/^$driver$/, @drivers);
-	}
-
-	message(<<EOF);
+        while (! $driver) {
+            $driver = ttprompt("Enter driver name: ", $default);
+            message("! No such DBD driver\n"), undef $driver
+                unless grep(/^$driver$/, @drivers);
+        }
+        
+        message(<<EOF);
 
 Now enter the data source (DSN) for the test database.
 Many DBD drivers require only a database name (e.g. 'test') while
@@ -1069,18 +1071,16 @@ further details.
 
 EOF
 
-	my $dbname_eg = $driver eq 'Pg' ? 'dbname=test' : 'test';
-	while (! $dbname) {
-	    $dbname = ttprompt('Database name: ', $dbname_eg);
-	}
+    	my $dbname_eg = $driver eq 'Pg' ? 'dbname=test' : 'test';
+        while (! $dbname) {
+            $dbname = ttprompt('Database name: ', $dbname_eg);
+        }
     
-	$dsn = "dbi:$driver:$dbname";
-
-	$user = ttprompt('Enter user name : ', '');
-	$pass = ttprompt('Enter password  : ', '');
-
-	$user = '' unless defined $user;
-	$pass = '' unless defined $pass;
+        $dsn = "dbi:$driver:$dbname";
+    	$user = ttprompt('Enter user name : ', '');
+    	$pass = ttprompt('Enter password  : ', '');
+    	$user = '' unless defined $user;
+        $pass = '' unless defined $pass;
     }
     else {
         $TT_RUN_DBI = 0;
@@ -1181,10 +1181,10 @@ sub ttprompt {
     local $|=1;
     print "$msg $dispdef" unless $TT_QUIET;
     if ($TT_ACCEPT || ! $ISA_TTY) {
-	print "$def\n" unless $TT_QUIET;
+        print "$def\n" unless $TT_QUIET;
     }
     else {
-	chomp($ans = <STDIN>);
+        chomp($ans = <STDIN>);
     }
     return ($ans ne '') ? $ans : $def;
 }
