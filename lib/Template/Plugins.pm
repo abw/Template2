@@ -87,6 +87,11 @@ sub fetch {
     my ($self, $name, $args, $context) = @_;
     my ($factory, $plugin, $error);
 
+    $self->debug("fetch($name, ", 
+                 defined $args ? ('[ ', join(', ', @$args), ' ]') : '<no args>', ', ',
+                 defined $context ? $context : '<no context>', 
+                 ')') if $self->{ DEBUG };
+
     # NOTE:
     # the $context ref gets passed as the first parameter to all regular
     # plugins, but not to those loaded via LOAD_PERL;  to hack around
@@ -152,6 +157,8 @@ sub _init {
     $self->{ TOLERANT    } = $params->{ TOLERANT }  || 0;
     $self->{ LOAD_PERL   } = $params->{ LOAD_PERL } || 0;
     $self->{ FACTORY     } = $factory || { };
+    $self->{ DEBUG       } = ( $params->{ DEBUG } || 0 )
+                             & Template::Constants::DEBUG_PLUGINS;
 
     return $self;
 }
@@ -175,8 +182,8 @@ sub _load {
 	$pkg = $module;
 	($file = $module) =~ s|::|/|g;
 	$file =~ s|::|/|g;
-	print STDERR "fetch() loading $module.pm (PLUGIN_NAME)\n"
-	    if $DEBUG;
+	$self->debug("loading $module.pm (PLUGIN_NAME)")
+            if $self->{ DEBUG };
 	$ok = eval { require "$file.pm" };
 	$error = $@;
     }
@@ -188,8 +195,8 @@ sub _load {
 	    $pkg = $base . '::' . $module;
 	    ($file = $pkg) =~ s|::|/|g;
 
-	    print STDERR "fetch() attempting to load $file.pm (PLUGIN_BASE)\n"
-		if $DEBUG;
+	    $self->debug("loading $file.pm (PLUGIN_BASE)")
+                if $self->{ DEBUG };
 
 	    $ok = eval { require "$file.pm" };
 	    last unless $@;
@@ -200,8 +207,7 @@ sub _load {
     }
 
     if ($ok) {
-	print STDERR "fetch() attempting to call $pkg->load()\n"
-	    if $DEBUG;
+	$self->debug("calling $pkg->load()") if $self->{ DEBUG };
 
 	$factory = eval { $pkg->load($context) };
 	$error   = '';
@@ -230,8 +236,7 @@ sub _load {
     }
 
     if ($factory) {
-	print STDERR "load($name) => $factory\n"
-	    if $DEBUG;
+	$self->debug("$name => $factory") if $self->{ DEBUG };
 	return $factory;
     }
     elsif ($error) {

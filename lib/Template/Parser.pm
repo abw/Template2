@@ -108,7 +108,7 @@ $QUOTED_ESCAPES = {
 sub new {
     my $class  = shift;
     my $config = $_[0] && UNIVERSAL::isa($_[0], 'HASH') ? shift(@_) : { @_ };
-    my ($tagstyle, $start, $end, $defaults, $grammar, $hash, $key, $udef);
+    my ($tagstyle, $debug, $start, $end, $defaults, $grammar, $hash, $key, $udef);
 
     my $self = bless { 
 	START_TAG   => undef,
@@ -123,7 +123,6 @@ sub new {
 	GRAMMAR     => undef,
 	_ERROR      => '',
 	FACTORY     => 'Template::Directive',
-	DEBUG       => $DEBUG,
     }, $class;
 
     # update self with any relevant keys in config
@@ -131,6 +130,24 @@ sub new {
 	$self->{ $key } = $config->{ $key } if defined $config->{ $key };
     }
     $self->{ FILEINFO } = [ ];
+
+    # DEBUG config item can be a bitmask
+    if (defined ($debug = $config->{ DEBUG })) {
+        $self->{ DEBUG } = $debug & ( Template::Constants::DEBUG_PARSER
+                                    | Template::Constants::DEBUG_FLAGS );
+        $self->{ DEBUG_DIRS } = $debug & Template::Constants::DEBUG_DIRS;
+    }
+    # package variable can be set to 1 to support previous behaviour
+    elsif ($DEBUG == 1) {
+        $self->{ DEBUG } = Template::Constants::DEBUG_PARSER;
+        $self->{ DEBUG_DIRS } = 0;
+    }
+    # otherwise let $DEBUG be a bitmask
+    else {
+        $self->{ DEBUG } = $DEBUG & ( Template::Constants::DEBUG_PARSER
+                                    | Template::Constants::DEBUG_FLAGS );
+        $self->{ DEBUG_DIRS } = $DEBUG & Template::Constants::DEBUG_DIRS;
+    }
 
     $grammar = $self->{ GRAMMAR } ||= do {
 	require Template::Grammar;
@@ -228,7 +245,7 @@ sub parse {
     my ($self, $text, $info) = @_;
     my ($tokens, $block);
 
-    $info->{ DEBUG } = $self->{ DEBUG } 
+    $info->{ DEBUG } = $self->{ DEBUG_DIRS }
 	unless defined $info->{ DEBUG };
 
 #    print "info: { ", join(', ', map { "$_ => $info->{ $_ }" } keys %$info), " }\n";
@@ -252,8 +269,8 @@ sub parse {
 
     return undef unless $block;				    ## RETURN ##
 
-    print STDERR "compiled main template document block:\n$block\n"
-	if $DEBUG;
+    $self->debug("compiled main template document block:\n$block")
+	if $self->{ DEBUG } & Template::Constants::DEBUG_PARSER;
 
     return {
 	BLOCK     => $block,
@@ -462,8 +479,6 @@ sub interpolate_text {
 sub tokenise_directive {
     my ($self, $text, $line) = @_;
     my ($token, $uctoken, $type, $lookup);
-#    my ($lextable, $anycase, $start, $end) = 
-#	@$self{ qw( LEXTABLE ANYCASE START_TAG END_TAG ) };
     my $lextable = $self->{ LEXTABLE };
     my $style    = $self->{ STYLE }->[-1];
     my ($anycase, $start, $end) = @$style{ qw( ANYCASE START_TAG END_TAG ) };
@@ -598,8 +613,8 @@ sub define_block {
     my $defblock = $self->{ DEFBLOCK } 
         || return undef;
 
-    print STDERR "compiled block '$name':\n$block\n"
-	if $DEBUG;
+    $self->debug("compiled block '$name':\n$block")
+	if $self->{ DEBUG } & Template::Constants::DEBUG_PARSER;
 
     $defblock->{ $name } = $block;
     
