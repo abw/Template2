@@ -5,6 +5,7 @@
 ^Template-Toolkit-\d\.\d+\.tar\.gz$
 ~$
 \.old$
+\.\#
 \.ttc$
 \.gz$
 \.defaults\.cfg
@@ -12,6 +13,7 @@
 ^blib/
 ^clib/
 ^docsrc/
+^docset/
 ^project/
 ^todo/
 ^junk/

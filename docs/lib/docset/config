@@ -248,7 +248,7 @@ docset => {
             prev   => 'Manual',
             next   => 'Library',
         
-            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath' ],
+            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Namespace_Constants', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath' ],
         
             pages  => {
                 Template => {
@@ -366,6 +366,19 @@ docset => {
                     about   => 'Data iterator used by the FOREACH directive',
                 
                     prev    => 'Filters',
+                    next    => 'Namespace_Constants',
+                },
+                Namespace_Constants => {
+                    id      => 'Namespace_Constants',
+                    name    => 'Template::Namespace::Constants',
+                    title   => 'Template::Namespace::Constants',
+                    podname => 'Template::Namespace::Constants',
+                    url     => 'Modules/Template/Namespace/Constants.html',
+                    uplink  => '../../..',
+                    author  => 'abw',
+                    about   => 'Compile time constant folding',
+                
+                    prev    => 'Iterator',
                     next    => 'Parser',
                 },
                 Parser => {
@@ -378,7 +391,7 @@ docset => {
                     author  => 'abw',
                     about   => 'LALR(1) parser for compiling template documents',
                 
-                    prev    => 'Iterator',
+                    prev    => 'Namespace_Constants',
                     next    => 'Plugin',
                 },
                 Plugin => {
@@ -1299,6 +1312,7 @@ docset => {
 	'Template::Exception' => 'Modules/Template/Exception.html',
 	'Template::Filters' => 'Modules/Template/Filters.html',
 	'Template::Iterator' => 'Modules/Template/Iterator.html',
+	'Template::Namespace::Constants' => 'Modules/Template/Namespace/Constants.html',
 	'Template::Parser' => 'Modules/Template/Parser.html',
 	'Template::Plugin' => 'Modules/Template/Plugin.html',
 	'Template::Plugins' => 'Modules/Template/Plugins.html',

@@ -98,6 +98,12 @@ Data iterator used by the FOREACH directive
 
 
 
+=item L<Template::Namespace::Constants|Template::Namespace::Constants>
+
+Compile time constant folding
+
+
+
 =item L<Template::Parser|Template::Parser>
 
 LALR(1) parser for compiling template documents
@@ -401,7 +407,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07a, released on 05 July 2002.
+Template Toolkit version 2.07b, released on 07 July 2002.
 
 =head1 COPYRIGHT
 

@@ -28,6 +28,7 @@
 		    "Compound Variables",
 		    "Variable Interpolation",
 		    "Local and Global Variables",
+		    "Compile Time Constant Folding",
 		    "Special Variables"
 		];
 	PROCESS tocitem 
@@ -808,13 +809,13 @@ a list.
 The upshot is that you can continue to use existing Perl modules or
 code that returns lists of items, without having to refactor it
 just to keep the Template Toolkit happy (by returning references
-to list).  Class::DBI module is just one example of a paricularly 
+to list).  Class::DBI module is just one example of a particularly 
 useful module which returns values this way.
 </p>
 <p>
 If only a single item is returned from a subroutine then the 
 Template Toolkit assumes it meant to return a single item (rather
-than a list of 1 items) and leaves it well alone, returning the
+than a list of 1 item) and leaves it well alone, returning the
 single value as it is.  If you're executing a database query, 
 for example, you might get 1 item returned, or perhaps many 
 items which are then folded into a list.
@@ -838,8 +839,8 @@ only get one item returned.  For example:
     [% tt_start_tag %] something.reverse.join(', ') [% tt_end_tag %]</pre>
 <p>
 Note that this is very much a last-ditch behaviour.  If the single
-item return is an object with a 'first' method, then that will be
-called, as expected, in preference to the list virtual method.
+item return is an object with a 'first' method, for example, then that
+will be called, as expected, in preference to the list virtual method.
 </p>
 [%- END %]
 [% WRAPPER subsection
@@ -1001,6 +1002,85 @@ hash are visible across all templates.
 <pre>    [% tt_start_tag %] global.version = 123 [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
+   title = "Compile Time Constant Folding"
+-%]<p>
+In addition to variables that get resolved each time a template is
+processed, you can also define variables that get resolved just once
+when the template is compiled.  This generally results in templates
+processing faster because there is less work to be done.
+</p>
+<p>
+To define compile-time constants, specify a CONSTANTS hash as a
+constructor item as per VARIABLES.  The CONSTANTS hash can contain any
+kind of complex, nested, or dynamic data structures, just like regular
+variables.
+</p>
+<pre>    my $tt = Template-&gt;new({
+	CONSTANTS =&gt; {
+	    version =&gt; 3.14,
+	    release =&gt; 'skyrocket',
+	    col     =&gt; {
+		back =&gt; '#ffffff',
+		fore =&gt; '#000000',
+	    },
+	    myobj =&gt; My::Object-&gt;new(),
+	    mysub =&gt; sub { ... },
+	    joint =&gt; ', ',
+	},
+    });</pre>
+<p>
+Within a template, you access these variables using the 'constants'
+namespace prefix.
+</p>
+<pre>    Version [% tt_start_tag %] constants.version [% tt_end_tag %] ([% tt_start_tag %] constants.release [% tt_end_tag %])</pre>
+<pre>    Background: [% tt_start_tag %] constants.col.back [% tt_end_tag %]</pre>
+<p>
+When the template is compiled, these variable references are replaced
+with the corresponding value.  No further variable lookup is then 
+required when the template is processed.
+</p>
+<p>
+You can call subroutines, object methods, and even virtual methods on
+constant variables.
+</p>
+<pre>    [% tt_start_tag %] constants.mysub(10, 20) [% tt_end_tag %]
+    [% tt_start_tag %] constants.myobj(30, 40) [% tt_end_tag %]
+    [% tt_start_tag %] constants.col.keys.sort.join(', ') [% tt_end_tag %]</pre>
+<p>
+One important proviso is that any arguments you pass to subroutines
+or methods must also be literal values or compile time constants.
+</p>
+<p>
+For example, these are both fine:
+</p>
+<pre>    # literal argument
+    [% tt_start_tag %] constants.col.keys.sort.join(', ') [% tt_end_tag %]</pre>
+<pre>    # constant argument
+    [% tt_start_tag %] constants.col.keys.sort.join(constants.joint) [% tt_end_tag %]</pre>
+<p>
+But this next example will raise an error at parse time because
+'joint' is a runtime variable and cannot be determined at compile
+time.
+</p>
+<pre>    # ERROR: runtime variable argument!
+    [% tt_start_tag %] constants.col.keys.sort.join(joint) [% tt_end_tag %]</pre>
+<p>
+The CONSTANTS_NAMESPACE option can be used to provide a different 
+namespace prefix for constant variables.  For example:
+</p>
+<pre>    my $tt = Template-&gt;new({
+	CONSTANTS =&gt; {
+	    version =&gt; 3.14,
+	    # ...etc...
+	},
+	CONSTANTS_NAMESPACE =&gt; 'const',
+    });</pre>
+<p>
+Constants would then be referenced in templates as:
+</p>
+<pre>    [% tt_start_tag %] const.version [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
    title = "Special Variables"
 -%]<p>
 A number of special variables are automatically defined by the Template 
@@ -1109,7 +1189,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07a, released on 05 July 2002.
+Template Toolkit version 2.07b, released on 07 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.07a, detailing
+#   Revision history for the Template Toolkit version 2.07b, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -23,7 +23,17 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.07a -                                 ## DEVELOPER RELEASE ##
+# Version 2.07b - July 7th 2002                   ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Added the CONSTANTS, CONSTANTS_NAMESPACE and NAMESPACE options, the
+  Template::Namespace::Constants module, documentation and t/constants.t
+  test suite.  This adds support for compile-time constant folding and
+  other custom namespace handlers.
+
+
+#------------------------------------------------------------------------
+# Version 2.07a - July 5th 2002                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed the Perl and XS stashes to automatically promote a scalar

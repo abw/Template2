@@ -473,6 +473,105 @@ or
 	},
     };</pre>
 
+<li><b>CONSTANTS</b><br>
+<p>
+The CONSTANTS option can be used to specify a hash array of template
+variables that are compile-time constants.  These variables are
+resolved once when the template is compiled, and thus don't require
+further resolution at runtime.  This results in significantly faster
+processing of the compiled templates and can be used for variables that
+don't change from one request to the next.
+</p>
+<pre>    my $template = Template-&gt;new({
+	CONSTANTS =&gt; {
+	    title   =&gt; 'A Demo Page',
+	    author  =&gt; 'Joe Random Hacker',
+	    version =&gt; 3.14,
+	},
+    };</pre>
+
+<li><b>CONSTANT_NAMESPACE</b><br>
+<p>
+Constant variables are accessed via the 'constants' namespace by
+default.
+</p>
+<pre>    [% tt_start_tag %] constants.title [% tt_end_tag %]</pre>
+<p>
+The CONSTANTS_NAMESPACE option can be set to specify an alternate
+namespace.
+</p>
+<pre>    my $template = Template-&gt;new({
+	CONSTANTS =&gt; {
+	    title   =&gt; 'A Demo Page',
+	    # ...etc...
+	},
+	CONSTANTS_NAMESPACE =&gt; 'const',
+    };</pre>
+<p>
+In this case the constants would then be accessed as:
+</p>
+<pre>    [% tt_start_tag %] const.title [% tt_end_tag %]</pre>
+
+<li><b>NAMESPACE</b><br>
+<p>
+The constant folding mechanism described above is an example of a
+namespace handler.  Namespace handlers can be defined to provide
+alternate parsing mechanisms for variables in different namespaces.
+</p>
+<p>
+Under the hood, the Template module converts a constructor configuration
+such as:
+</p>
+<pre>    my $template = Template-&gt;new({
+	CONSTANTS =&gt; {
+	    title   =&gt; 'A Demo Page',
+	    # ...etc...
+	},
+	CONSTANTS_NAMESPACE =&gt; 'const',
+    };</pre>
+<p>
+into one like:
+</p>
+<pre>    my $template = Template-&gt;new({
+	NAMESPACE =&gt; {
+	    const =&gt; Template:::Namespace::Constants-&gt;new({
+		title   =&gt; 'A Demo Page',
+		# ...etc...
+	    }),
+	},
+    };</pre>
+<p>
+You can use this mechanism to define multiple constant namespaces, or
+to install custom handlers of your own.  
+</p>
+<pre>    my $template = Template-&gt;new({
+	NAMESPACE =&gt; {
+	    site =&gt; Template:::Namespace::Constants-&gt;new({
+		title   =&gt; &quot;Wardley's Widgets&quot;,
+		version =&gt; 2.718,
+	    }),
+	    author =&gt; Template:::Namespace::Constants-&gt;new({
+		name  =&gt; 'Andy Wardley',
+		email =&gt; 'abw@andywardley.com',
+	    }),
+	    voodoo =&gt; My::Namespace::Handler-&gt;new( ... ),
+	},
+    };</pre>
+<p>
+Now you have 2 constant namespaces, for example:
+</p>
+<pre>    [% tt_start_tag %] site.title [% tt_end_tag %]
+    [% tt_start_tag %] author.name [% tt_end_tag %]</pre>
+<p>
+as well as your own custom namespace handler installed for the 'voodoo'
+namespace.
+</p>
+<pre>    [% tt_start_tag %] voodoo.magic [% tt_end_tag %]</pre>
+<p>
+See [% ttlink('Template::Namespace::Constants', 'Template::Namespace::Constants') -%]
+for an example of what a namespace handler looks like on the inside.
+</p>
+
 </ul>
 [%- END %]
 [% WRAPPER subsection
@@ -1490,7 +1589,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07a, released on 05 July 2002.
+Template Toolkit version 2.07b, released on 07 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

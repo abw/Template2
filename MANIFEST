@@ -51,6 +51,7 @@ docs/src/Modules/Template/Document.html
 docs/src/Modules/Template/Exception.html
 docs/src/Modules/Template/Filters.html
 docs/src/Modules/Template/Iterator.html
+docs/src/Modules/Template/Namespace/Constants.html
 docs/src/Modules/Template/Parser.html
 docs/src/Modules/Template/Plugin.html
 docs/src/Modules/Template/Plugin/Autoformat.html
@@ -388,6 +389,7 @@ lib/Template/Manual/Syntax.pod
 lib/Template/Manual/Variables.pod
 lib/Template/Manual/Views.pod
 lib/Template/Modules.pod
+lib/Template/Namespace/Constants.pm
 lib/Template/Parser.pm
 lib/Template/Plugin.pm
 lib/Template/Plugin/Autoformat.pm
@@ -462,10 +464,12 @@ t/compile3.t
 t/compile4.t
 t/compile5.t
 t/config.t
+t/constants.t
 t/context.t
 t/datafile.t
 t/date.t
 t/dbi.t
+t/debug.t
 t/directive.t
 t/directry.t
 t/document.t
