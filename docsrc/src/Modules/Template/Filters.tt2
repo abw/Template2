@@ -10,7 +10,7 @@
 
 =head1 DESCRIPTION
 
-The Template::Plugins module implements a provider for creating and/or
+The Template::Filters module implements a provider for creating and/or
 returning subroutines that implement the standard filters.  Additional 
 custom filters may be provided via the FILTERS options.
 
