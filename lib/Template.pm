@@ -113,6 +113,15 @@ sub context {
 sub _init {
     my ($self, $config) = @_;
 
+    # prepare a namespace handler for any CONSTANTS definition
+    if (my $constants = $config->{ CONSTANTS }) {
+	my $ns  = $config->{ NAMESPACE } ||= { };
+	my $cns = $config->{ CONSTANTS_NAMESPACE } || 'constants';
+	$constants = Template::Config->constants($constants)
+	    || return $self->error(Template::Config->error);
+	$ns->{ $cns } = $constants;
+    }
+
     $self->{ SERVICE } = $config->{ SERVICE }
 	|| Template::Config->service($config)
 	|| return $self->error(Template::Config->error);
