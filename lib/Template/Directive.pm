@@ -44,6 +44,7 @@ $WHILE_MAX = 1000 unless defined $WHILE_MAX;
 $PRETTY    = 0 unless defined $PRETTY;
 my $OUTPUT = '$output .= ';
 
+
 sub pad {
     my ($text, $pad) = @_;
     $pad = ' ' x ($pad * 4);
@@ -175,6 +176,22 @@ sub ident {
 	$ident = '[' . join(', ', @$ident) . ']';
     }
     return "\$stash->get($ident)";
+}
+
+#------------------------------------------------------------------------
+# identref(\@ident)                                         \foo.bar(baz)
+#------------------------------------------------------------------------
+
+sub identref {
+    my ($class, $ident) = @_;
+    return "''" unless @$ident;
+    if (scalar @$ident <= 2 && ! $ident->[1]) {
+	$ident = $ident->[0];
+    }
+    else {
+	$ident = '[' . join(', ', @$ident) . ']';
+    }
+    return "\$stash->getref($ident)";
 }
 
 
@@ -667,9 +684,15 @@ $block
 
     \$Template::Perl::context = \$context;
     \$Template::Perl::stash   = \$stash;
-    \$output = eval \$output;
+
+    my \$result = '';
+    tie *Template::Perl::PERLOUT, 'Template::TieString', \\\$result;
+    my \$save_stdout = select *Template::Perl::PERLOUT;
+
+    eval \$output;
+    select \$save_stdout;
     \$context->throw(\$@) if \$@;
-    \$output;
+    \$result;
 };
 EOF
 }
@@ -824,6 +847,22 @@ $block
 });
 EOF
     }
+}
+
+
+#------------------------------------------------------------------------
+# simple package for tying $output variable to STDOUT, used by perl()
+#------------------------------------------------------------------------
+
+package Template::TieString;
+
+sub TIEHANDLE {
+    my ($class, $textref) = @_;
+    bless $textref, $class;
+}
+sub PRINT {
+    my $self = shift;
+    $$self .= join('', @_);
 }
 
 

@@ -184,3 +184,7 @@ Bad date: [% e.info %]
 [% END %]
 -- expect --
 Bad date: bad time/date string:  expects 'h:m:s d:m:y'  got: 'some stupid date'
+
+-- test --
+[% USE date %]
+[% template.name %] [% date.format(template.modtime) %]

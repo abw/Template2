@@ -41,6 +41,7 @@ use base qw( Template::Base );
 use Template::Config;
 use Template::Constants;
 use Template::Document;
+use File::Basename;
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -384,6 +385,7 @@ sub _fetch_path {
 
 	# search the INCLUDE_PATH for the file, in cache or on disk
 	foreach $dir (@{ $self->{ INCLUDE_PATH } }) {
+	    next unless $dir;
 	    $path = "$dir/$name";
 	    
 	    print STDERR "looking for $path\n" if $DEBUG;
@@ -396,10 +398,13 @@ sub _fetch_path {
 		last INCLUDE;
 	    }
 	    elsif (-f $path) {
-		if (($compext || $compdir) 
-		    && -f ($compiled = "$compdir$path$compext")
+		if ($compext || $compdir) {
+		    $compiled = "$compdir$path$compext";
+		    $compiled =~ s[//][/]g;
+		}
+		if ($compiled && -f $compiled
 		    && (stat($path))[9] < (stat($compiled))[9]) {
-
+		    
 		    # load compiled template via require();  we zap any
 		    # %INC entry to ensure it is reloaded (we don't 
 		    # want 1 returned by require() to say it's in memory)
@@ -674,9 +679,15 @@ sub _compile {
 	
 	# write the Perl code to the file $compfile, if defined
 	if ($compfile) {
-	    $error = $Template::Document::ERROR
+	    my $basedir = &File::Basename::dirname($compfile);
+	    &File::Path::mkpath($basedir) unless -d $basedir;
+
+	    $error = 'cache failed to write '
+		    . &File::Basename::basename($compfile)
+		    . ": $Template::Document::ERROR"
 		unless Template::Document::write_perl_file($compfile, 
 							   $parsedoc);
+	    print STDERR "error: $error" if $error;
 	}
 	
 	# call Template::Document constructor to compile Perl code and 
@@ -687,10 +698,11 @@ sub _compile {
 	    'modtime' => $data->{ time },
 	    %{ $parsedoc->{ METADATA } },
 	};
-	return $data					    ## RETURN ##
-	    if $data->{ data } = Template::Document->new($parsedoc);
-
-	$error = $Template::Document::ERROR;
+	unless ($error) {
+	    return $data				        ## RETURN ##
+		if $data->{ data } = Template::Document->new($parsedoc);
+	    $error = $Template::Document::ERROR;
+	}
     }
     else {
 	$error = 'parse error: ' . $data->{ name } . ' ' . $parser->error();

@@ -260,6 +260,7 @@ lterm:	    '[' list  ']'	    { "[ $_[2] ]"                         }
 ;
 
 sterm:	    ident		    { $factory->ident($_[1])              }
+	|   REF ident               { $factory->identref($_[2])           }
 	|   '"' quoted '"'	    { $factory->quoted($_[2])             }
 	|   LITERAL
 	|   NUMBER

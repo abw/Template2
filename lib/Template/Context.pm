@@ -465,12 +465,11 @@ sub leave {
 #------------------------------------------------------------------------
 # define_block($name, $block)
 #
-
 # Adds a new BLOCK definition to the local BLOCKS cache.  $block may
 # be specified as a reference to a sub-routine or Template::Document
 # object or as text which is compiled into a template.  Returns a true
 # value (the $block reference or compiled block reference) if
-# succesfull or undef on failure.  Call error() to retrieve the
+# succesful or undef on failure.  Call error() to retrieve the
 # relevent error message (i.e. compilation failure).
 #------------------------------------------------------------------------
 

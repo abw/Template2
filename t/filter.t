@@ -19,6 +19,7 @@
 use strict;
 use lib qw( ../lib );
 use Template qw( :status );
+use Template::Parser;
 use Template::Test;
 $^W = 1;
 
@@ -26,6 +27,8 @@ $Template::Test::DEBUG = 0;
 $Template::Test::EXTRA = 1;     # ensure redirected file is created
 #$Template::Context::DEBUG = 1;
 #$Template::DEBUG = 1;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 #------------------------------------------------------------------------
 # quick hack to allow STDERR to be tied to a variable.
@@ -514,7 +517,6 @@ FILTER [[% dir | eval %]]
 [% a %] blah blah [% b %]
 FILTER [alpha blah blah bravo]
 
--- start --
 -- test -- 
 [% TRY %]
 [% dir = "[\% FOREACH a = { 1 2 3 } %\]a: [\% a %\]\n[\% END %\]" %]
@@ -523,11 +525,8 @@ FILTER [alpha blah blah bravo]
 error: [[% error.type %]] [[% error.info %]]
 [% END %]
 -- expect --
-a: 1
-a: 2
-a: 3
-
--- stop --
+error: [file] [parse error: input text line 1: unexpected token (1)
+  [% FOREACH a = { 1 2 3 } %]]
 
 
 -- test --
@@ -593,4 +592,52 @@ ERROR [% error.type %]: [% error.info %]
 -- expect --
 before
 after
+
+-- test --
+[% PERL %]
+# static filter subroutine
+$Template::Filters::FILTERS->{ bar } = sub {
+    my $text = shift; 
+    $text =~ s/^/bar: /gm;
+    return $text;
+};
+[% END -%]
+[% FILTER bar -%]
+The cat sat on the mat
+The dog sat on the log
+[% END %]
+-- expect --
+bar: The cat sat on the mat
+bar: The dog sat on the log
+
+-- test --
+[% PERL %]
+# dynamic filter factory
+$Template::Filters::FILTERS->{ baz } = [
+    sub {
+	my $context = shift;
+	my $word = shift || 'baz';
+	return sub {
+	    my $text = shift; 
+            $text =~ s/^/$word: /gm;
+	    return $text;
+	};
+    }, 1 ];
+[% END -%]
+[% FILTER baz -%]
+The cat sat on the mat
+The dog sat on the log
+[% END %]
+[% FILTER baz('wiz') -%]
+The cat sat on the mat
+The dog sat on the log
+[% END %]
+
+-- expect --
+baz: The cat sat on the mat
+baz: The dog sat on the log
+
+wiz: The cat sat on the mat
+wiz: The dog sat on the log
+
 

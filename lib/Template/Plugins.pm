@@ -149,21 +149,6 @@ sub _init {
 # Private method which attempts to load a plugin module and determine the 
 # correct factory name or object by calling the load() class method in
 # the loaded module.
-#
-# *** DON'T TRUST THE REST OF THIS COMMENT BLOCK ***
-#
-#  The PLUGIN_NAME member is a hash array which maps 
-# "standard" plugin names (in lower case) to their correct case module 
-# names, along with any user-supplied name mappings.  Any periods in the
-# name are converted to '::'.  The method tries to load the relevant 
-# Perl module by prepending each of the PLUGIN_BASE values to the name
-# and require()ing it.  If successful, the load() package method for 
-# the module is called to return a factory name or reference.
-# If the LOAD_PERL option is set and the plugin cannot be loaded by 
-# the above then a final attempt is made to load the module without 
-# any name prefix.  If this succeeds then the factory name defaults 
-# to the package name.  Thus modules loaded in this way must support
-# the regular new() class constructor method.
 #------------------------------------------------------------------------
 
 sub _load {

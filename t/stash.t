@@ -1,10 +1,10 @@
 #============================================================= -*-perl-*-
 #
-# t/skel.t
+# t/ref.t
 #
-# Skeleton test script.
+# Template script testing (some elements of) the Template::Stash
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@cre.canon.co.uk>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
@@ -17,41 +17,27 @@
 #========================================================================
 
 use strict;
-use lib qw( ./lib ../lib );
+use lib qw( ../lib );
+use Template::Constants qw( :status );
+use Template;
 use Template::Test;
 $^W = 1;
 
-$Template::Test::DEBUG = 0;
-$Template::Parser::DEBUG = 1;
-$Template::Directive::PRETTY = 1;
+my $ttlist = [
+    'default' => Template->new(),
+    'warn'    => Template->new(DEBUG => 1),
+];
 
-ok(1);
-
-my $config = {
-    POST_CHOMP => 1,
-    EVAL_PERL => 1,
-};
-
-my $replace = {
-    a => 'alpha',
-    b => 'bravo',
-};
-
-test_expect(\*DATA, $config, $replace);
+test_expect(\*DATA, $ttlist);
 
 __DATA__
-# this is the first test
 -- test --
-[% a %]
+a: [% a %]
 -- expect --
-alpha
+a: 
 
-# this is the second test
 -- test --
-[% b %]
+-- use warn --
+[% TRY; a; CATCH; "ERROR: $error"; END %]
 -- expect --
-bravo
-
-
-
-
+ERROR: undef error - a is undefined

@@ -80,11 +80,12 @@ my $params = {
     'people'   => sub { return qw( Tom Dick Larry ) },
     'gee'      =>  'g',
     "letter$a" => "'$a'",
+    _private   => 123,
 
     # don't define a 'z' - DEFAULT test relies on its non-existance
 };
 
-test_expect(\*DATA, { INTERPOLATE => 1 }, $params);
+test_expect(\*DATA, { INTERPOLATE => 1, ANYCASE => 1 }, $params);
 
 
 #------------------------------------------------------------------------
@@ -485,10 +486,24 @@ Version: 4.14
       woz => 'Woz',
    }
 -%]
-[% n = (hash1.IMPORT = hash2) -%]
+[% hash1.import(hash2) -%]
 keys: [% hash1.keys.sort.join(', ') %]
-imported [% n %] items
 -- expect --
 keys: bar, foo, wiz, woz
-imported 2 items
+
+-- test --
+[% mage = { name    =>    'Gandalf', 
+	    aliases =>  [ 'Mithrandir', 'Olorin', 'Incanus' ] }
+-%]
+[% import(mage) -%]
+[% name %]
+[% aliases.join(', ') %]
+-- expect --
+Gandalf
+Mithrandir, Olorin, Incanus
+
+-- test --
+[[% _private %]]
+-- expect --
+[]
 

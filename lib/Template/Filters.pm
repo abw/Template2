@@ -28,7 +28,7 @@ require 5.004;
 
 use strict;
 use base qw( Template::Base );
-use vars qw( $VERSION $DEBUG $STD_FILTERS );
+use vars qw( $VERSION $DEBUG $FILTERS );
 use Template::Constants;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -43,7 +43,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 # for every filter request for that name.
 #------------------------------------------------------------------------
 
-$STD_FILTERS = {
+$FILTERS = {
     # static filters 
     'html'       => \&html_filter,
     'html_para'  => \&html_paragraph,
@@ -89,7 +89,8 @@ sub fetch {
 
     # retrieve the filter factory
     return (undef, Template::Constants::STATUS_DECLINED)
-	unless ($factory = $self->{ FILTERS }->{ $name });
+	unless ($factory = $self->{ FILTERS }->{ $name }
+			|| $FILTERS->{ $name });
 
     if (ref $factory eq 'ARRAY') {
 	($factory, $is_dynamic) = @$factory;
@@ -143,9 +144,8 @@ sub fetch {
 
 sub _init {
     my ($self, $params) = @_;
-    my $filters = $params->{ FILTERS } || { };
 
-    $self->{ FILTERS  } = { %$STD_FILTERS, %$filters };
+    $self->{ FILTERS  } = $params->{ FILTERS } || { };
     $self->{ TOLERANT } = $params->{ TOLERANT }  || 0;
 
     return $self;

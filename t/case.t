@@ -25,12 +25,23 @@ $Template::Test::DEBUG = 0;
 
 ok(1);
 
-my $config = { 
+my $ttdef = Template->new({
+    POST_CHOMP => 1,
+});
+
+my $ttcaseon = Template->new({ 
     CASE => 1, 
     POST_CHOMP => 1,
-};
+});
 
-test_expect(\*DATA, $config, callsign());
+my $ttcaseoff = Template->new({ 
+    CASE => 0, 
+    POST_CHOMP => 1,
+});
+
+my $tts = [ default => $ttdef, caseon => $ttcaseon, caseoff => $ttcaseoff ];
+
+test_expect(\*DATA, $tts, callsign());
 
 __DATA__
 -- test --
@@ -68,8 +79,19 @@ good
 -- expect --
 alpha
 
+-- test --
+-- use caseon --
+[% include = 10 %]
+include: [% include %]
+-- expect --
+include: 10
 
-
+-- test --
+-- use caseoff --
+[% include foo bar='baz' %]
+[% BLOCK foo %]this is foo, bar = [% bar %][% END %]
+-- expect --
+this is foo, bar = baz
 
 
 

@@ -47,13 +47,13 @@ EOF
 }
 
 
-my $man3pods = {
-    map { ("docs/pod/$_.pod" 
-	=> "\$(INST_MAN3DIR)/Template::$_.\$(MAN3EXT)") }
-    qw( Base Config Constants Context Document Exception Filters 
-	Iterator Parser Plugin Plugins Provider Service Stash Test )
-};
-$man3pods->{'docs/pod/Template.pod'} = '$(INST_MAN3DIR)/Template.$(MAN3EXT)';
+# my $man3pods = {
+#     map { ("docs/pod/$_.pod" 
+# 	  => "\$(INST_MAN3DIR)/Template::$_.\$(MAN3EXT)") }
+#     qw( Base Config Constants Context Document Exception Filters 
+# 	  Iterator Parser Plugin Plugins Provider Service Stash Test )
+# };
+# $man3pods->{'docs/pod/Template.pod'} = '$(INST_MAN3DIR)/Template.$(MAN3EXT)';
 
 my %opts = (
     'NAME'	   => 'Template',
@@ -62,7 +62,7 @@ my %opts = (
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
     'PMLIBDIRS'    => [ 'lib' ], 
     'PREREQ_PM'    => { 'AppConfig' => 1.52 },
-    'MAN3PODS'	   => $man3pods,
+#    'MAN3PODS'	   => $man3pods,
     'dist'         => {
 	'COMPRESS' => 'gzip',
 	'SUFFIX'   => 'gz',
@@ -84,7 +84,7 @@ WriteMakefile( %opts );
 sub build_docs {
     return <<EOF;
 echo "Building documentation for version \$(VERSION)" ;           \\
-\$(PERL) bin/ttree -f ./docs/ttree.cfg -a;                        \\
+\$(PERL) bin/ttree -f ./docs/ttdist.cfg --define version=\$(VERSION) -a;  \\
 EOF
 }
 

@@ -51,13 +51,22 @@ $ROOT_OPS = {
 $SCALAR_OPS = {
     'length'  => sub { length $_[0] },
     'defined' => sub { return 1 },
-    'split'   => sub { my $str = shift; [ split(shift, $str, @_) ] },
+    'split'   => sub { 
+	my ($str, $split, @args) = @_;
+	return [ defined $split ? split($split, $str, @args)
+				: split(' ', $str, @args) ];
+    },
 };
 
 $HASH_OPS = {
     'keys'   => sub { [ keys   %{ $_[0] } ] },
     'values' => sub { [ values %{ $_[0] } ] },
-    'each'   => sub { [ each   %{ $_[0] } ] },
+    'each'   => sub { [        %{ $_[0] } ] },
+    'import' => sub { my ($hash, $imp) = @_;
+		      $imp = {} unless ref $imp eq 'HASH';
+		      @$hash{ keys %$imp } = values %$imp;
+		      return '';
+		  },
 };
 
 $LIST_OPS = {
@@ -81,6 +90,19 @@ $LIST_OPS = {
 	       @$list 
 	    :  map  { $_->[0] }
 	       sort { $a->[1] cmp $b->[1] }
+	       map  { [ $_, lc $_ ] } 
+	       @$list
+   },
+   'nsort'    => sub {
+	my ($list, $field) = @_;
+	return $list unless $#$list;	    # no need to sort 1 item lists
+	return $field			    # Schwartzian Transform 
+	    ?  map  { $_->[0] }		    # for case insensitivity
+	       sort { $a->[1] <=> $b->[1] }
+	       map  { [ $_, lc $_->{ $field } ] } 
+	       @$list 
+	    :  map  { $_->[0] }
+	       sort { $a->[1] <=> $b->[1] }
 	       map  { [ $_, lc $_ ] } 
 	       @$list
    },
@@ -256,6 +278,46 @@ sub set {
 
 
 #------------------------------------------------------------------------
+# getref($ident)
+# 
+# Returns a "reference" to a particular item.  This is represented as a 
+# closure which will return the actual stash item when called.  
+# WARNING: still experimental!
+#------------------------------------------------------------------------
+
+sub getref {
+    my ($self, $ident, $args) = @_;
+    my ($root, $item, $result);
+    $root = $self;
+
+    if (ref $ident eq 'ARRAY') {
+	my $size = $#$ident;
+
+	foreach (my $i = 0; $i <= $size; $i += 2) {
+	    ($item, $args) = @$ident[$i, $i + 1]; 
+	    last if $i >= $size - 2;  # don't evaluate last node
+	    last unless defined 
+		($root = $self->_dotop($root, $item, $args));
+	}
+    }
+    else {
+	$item = $ident;
+    }
+
+    if (defined $root) {
+        return sub { my @args = (@{$args||[]}, @_);
+		     $self->_dotop($root, $item, \@args);
+		 }
+    }
+    else {
+	return sub { '' };
+    }
+}
+
+
+
+
+#------------------------------------------------------------------------
 # update(\%params)
 #
 # Update multiple variables en masse.  No magic is performed.  Simple
@@ -303,13 +365,13 @@ sub _dotop {
     $args ||= [ ];
     $lvalue ||= 0;
 
-    print STDERR "_dotop(root=$root, item=$item, args=[@$args])\n"
-	if $DEBUG;
+#    print STDERR "_dotop(root=$root, item=$item, args=[@$args])\n"
+#	if $DEBUG;
 
     # return undef without an error if either side of the dot is unviable
     # or if an attempt is made to access a private member, starting _ or .
     return undef
-	unless $root and defined $item and $item !~ /^[\._]/;
+	unless defined($root) and defined($item) and $item !~ /^[\._]/;
 
     if ($rootref eq __PACKAGE__ || $rootref eq 'HASH') {
 
@@ -328,10 +390,7 @@ sub _dotop {
 	    return $root->{ $item } = { };		    ## RETURN
 	}
 	elsif ($value = $HASH_OPS->{ $item }) {
-	    @result = &$value($root);			    ## @result
-	}
-	else {
-	    return undef;				    ## RETURN
+	    @result = &$value($root, @$args);		    ## @result
 	}
     }
     elsif ($rootref eq 'ARRAY') {
@@ -347,9 +406,6 @@ sub _dotop {
 	    $value = $root->[$item];
 	    return $value unless ref $value eq 'CODE';	    ## RETURN
 	    @result = &$value(@$args);			    ## @result
-	}
-	else {
-	    return undef;				    ## RETURN
 	}
     }
 
@@ -378,7 +434,7 @@ sub _dotop {
 
 	# at this point, it doesn't look like we've got a reference to
 	# anything we know about, so we try the SCALAR_OPS pseudo-methods
-	# table (not l-values)
+	# table (but not for l-values)
 
 	@result = &$value($root, @$args);		    ## @result
     }
@@ -430,11 +486,11 @@ sub _assign {
 	unless $root and defined $item and $item !~ /^[\._]/;
     
     if ($rootref eq 'HASH' || $rootref eq __PACKAGE__) {
-	if ($item eq 'IMPORT' && UNIVERSAL::isa($value, 'HASH')) {
-	    # IMPORT hash entries into root hash
-	    @$root{ keys %$value } = values %$value;
-	    return scalar keys %$value;				## RETURN
-	}
+#	if ($item eq 'import' && UNIVERSAL::isa($value, 'HASH')) {
+#	    # import hash entries into root hash
+#	    @$root{ keys %$value } = values %$value;
+#	    return '';						## RETURN
+#	}
 	# if the root is a hash we set the named key
 	return ($root->{ $item } = $value)			## RETURN
 	    unless $default && $root->{ $item };

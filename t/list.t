@@ -127,3 +127,11 @@ Sun
 -- expect --
 one, two, romeo
 
+-- test --
+[% data = [ 90, 8, 70, 6, 1, 11, 10, 2, 5, 50, 52 ] -%]
+ sort: [% data.sort.join(', ') %]
+nsort: [% data.nsort.join(', ') %]
+-- expect --
+ sort: 1, 10, 11, 2, 5, 50, 52, 6, 70, 8, 90
+nsort: 1, 2, 5, 6, 8, 10, 11, 50, 52, 70, 90
+

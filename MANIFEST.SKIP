@@ -7,8 +7,6 @@
 ^blib/
 ^pm_to_blib$
 ^parser/Parser\.output
-^docs/design/
-^docs/tpj/
-^docs/about
-^docs/release
-
+^docs/
+^clib/
+^t/test/src/complex.org

@@ -25,9 +25,9 @@ $^W = 1;
 
 #$Template::Test::DEBUG = 0;
 #$Template::Test::PRESERVE = 0;
-$Template::Stash::DEBUG = 1;
-$Template::Parser::DEBUG = 1;
-$Template::Parser::PRETTY = 1;
+#$Template::Stash::DEBUG = 1;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 my $p2 = Template::Parser->new({
     START_TAG => '\[\*',
@@ -194,7 +194,12 @@ The quoted value is [% quoted %]
 A directive looks like: [% INCLUDE foo %]
 The quoted value is [% INSERT foo %]
 
--- start --
+
+#------------------------------------------------------------------------
+# STOP RIGHT HERE!
+#------------------------------------------------------------------------
+
+-- stop --
 
 -- test --
 alist: [% $alist %]

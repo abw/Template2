@@ -2,20 +2,19 @@
 # KNOWN BUGS AND/OR LIMITATIONS
 #------------------------------------------------------------------------
 
-* fix end of Changes (gotchas)
+* Template::Hacking / Template::Internals, etc.
 
-* references are required!
+* TPC4 paper
 
-* empty hashes cause parser error.
+* NEXT
 
-* complex filenames don't all intermediates paths constructed
-  use File::Basename on $compiled in _compile()
+* XML::Simple plugin
 
-* The .pod form of the documentation doesn't get installed properly
-  because it lives in docs/pod instead of lib.  The man pages should
-  get built and installed OK, which is fine as long as you have 'man'
-  on your system.  I've tried various ExtUtils::MakeMaker options 
-  to make the Makefile.PL do the right thing, ut so far to no avail.
+* test IMPORT and import options
+
+* fix div (integer division) and mod
+
+* empty hashes can cause a harmless, but possibly annoying parser error.
 
 * Template process($file) method returns a string if the named
   template ($file) can't be found, rather than an exception.  This
@@ -71,14 +70,7 @@
 # PENDING ITEMS ON THE 'TO-DO' LIST
 #------------------------------------------------------------------------
 
-* I had a patch from someone to make 'print' work as expected in PERL
-  blocks.  That must have slipped through the net.  Need to find it 
-  and apply it.
-
-* Finish and tidy up documentation.  At the moment, all (er, most?) of
-  the individual modules should be fully documented.  Everything thing 
-  else (or most of it) is bundled into the monolithic Template.pod.
-  I should probably split this up.  Need to generate an HTML version.
+* document DEBUG option (or think of a better name)
 
 * test and document 'component' variable
 
@@ -154,24 +146,8 @@
 # MISCELLANEOUS
 #------------------------------------------------------------------------
 
-* Jonas reported that 'e' is no longer an alias for 'error' in CATCH 
-  blocks, but it is.  Need to check with him about that.
-
-* should the CASE option be set by default to avoid variable conflict?
-  If it was then it would allow directives such as 'FORNEXT' to be 
-  the preferred 'NEXT' without risk of conflict with a 'next' variable
-  (which I for one tend to use an awful lot)
-
 * Add :preload use option to Template.pm to preload all modules?  Or should
   it be :noload and have preload by default?  Or should it not bother?
-
-* Note that v1 \refs are not supported.  I don't know if they ever should
-  be, but I think that some of the problems for which refs were conceived
-  are still valid.  Hmm, maybe not.
-
-* change all hardcoded object isa tests to use $Template::Config:XXXXX
-  e.g. if (UNIVERSAL::isa($foo, $Template::Config::CONTEXT)).  Dunno if
-  this is still relevant.  Need to check.
 
 * merge Directive into Parse.yp via template process?  Yeah, one of these
   days RSN.

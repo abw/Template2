@@ -83,7 +83,9 @@ sub process {
 
 	# PROCESS
 	eval {
-	    $procout = $context->process($template);
+	    foreach $name (@{ $self->{ PROCESS } || [ $template ] }) {
+		$procout .= $context->process($name);
+	    }
 	};
 	if ($error = $@) {
 	    last SERVICE
@@ -130,14 +132,17 @@ sub _init {
     my ($self, $config) = @_;
     my ($item, $data, $context, $block, $blocks);
 
-    # coerce PRE_PROCESS and POST_PROCESS to arrays if necessary, 
+    # coerce PRE_PROCESS, PROCESS and POST_PROCESS to arrays if necessary, 
     # by splitting on non-word characters
-    foreach $item (qw( PRE_PROCESS POST_PROCESS )) {
+    foreach $item (qw( PRE_PROCESS PROCESS POST_PROCESS )) {
 	$data = $config->{ $item };
 	$data = [ split(/\W+/, $data || '') ]
 	    unless ref $data eq 'ARRAY';
         $self->{ $item } = $data;
     }
+    # unset PROCESS option unless explicitly specified in config
+    $self->{ PROCESS } = undef
+	unless exists $config->{ PROCESS };
     
     $self->{ ERROR      } = $config->{ ERROR } || $config->{ ERRORS };
     $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }

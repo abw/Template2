@@ -59,7 +59,7 @@ __DATA__
     my $output = "author: [% template.author %]\n";
     $stash->set('a', 'The cat sat on the mat');
     $output .= "more perl generated output\n";
-    $output;
+    print $output;
 [% END %]
 [% CATCH %]
 Not allowed: [% error +%]
@@ -132,7 +132,7 @@ ERROR: [undef]
     my $output = "author: [% template.author %]\n";
     $stash->set('a', 'The cat sat on the mat');
     $output .= "more perl generated output\n";
-    $output;
+    print $output;
 [% END %]
 -- expect --
 author: Andy Wardley
@@ -149,7 +149,7 @@ more perl generated output
     my $output = "author: [% template.author %]\n";
     $stash->set('a', 'The cat sat on the mat');
     $output .= "more perl generated output\n";
-    $output;
+    print $output;
 [% END %]
 a: [% a +%]
 a: $a
@@ -168,6 +168,26 @@ The cat sat on the mouse mat
 b: The cat sat where?
 b: The cat sat where?
 
+-- test --
+[% BLOCK foo %]This is block foo[% END %]
+[% PERL %]
+print $context->include('foo');
+print PERLOUT "\nbar\n";
+[% END %]
+The end
+-- expect --
+This is block foo
+bar
+The end
+
+-- test --
+[% TRY %]
+   [%- PERL %] die "nothing to live for\n" [% END %]
+[% CATCH %]
+   error: [% error %]
+[% END %]
+-- expect --
+   error: undef error - nothing to live for
 
 
 

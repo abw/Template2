@@ -92,7 +92,7 @@ sub new {
 	START_TAG   => undef,
 	END_TAG     => undef,
 	TAG_STYLE   => 'default',
-	CASE        => 0,
+	ANYCASE     => 0,
 	INTERPOLATE => 0,
 	PRE_CHOMP   => 0,
 	POST_CHOMP  => 0,
@@ -356,8 +356,8 @@ sub interpolate_text {
 sub tokenise_directive {
     my ($self, $text, $line) = @_;
     my ($token, $uctoken, $type, $lookup);
-    my ($lextable, $case, $start, $end) = 
-	@$self{ qw( LEXTABLE CASE START_TAG END_TAG ) };
+    my ($lextable, $anycase, $start, $end) = 
+	@$self{ qw( LEXTABLE ANYCASE START_TAG END_TAG ) };
     my @tokens = ( );
 
     while ($text =~ 
@@ -441,7 +441,7 @@ sub tokenise_directive {
 	}
 	elsif (defined($token = $6)) {
 	    # reserved words may be in lower case unless case sensitive
-	    $uctoken = $case ? $token : uc $token;
+	    $uctoken = $anycase ? uc $token : $token;
 	    if (defined ($type = $lextable->{ $uctoken })) {
 		$token = $uctoken;
 	    }
@@ -451,7 +451,7 @@ sub tokenise_directive {
 	}
 	elsif (defined ($token = $7)) {
 	    # reserved words may be in lower case unless case sensitive
-	    $uctoken = $case ? $token : uc $token;
+	    $uctoken = $anycase ? uc $token : $token;
 	    unless (defined ($type = $lextable->{ $uctoken })) {
 		$type = 'UNQUOTED';
 	    }
@@ -699,7 +699,7 @@ sub _parse_error {
 sub _dump {
     my $self = shift;
     my $output = "$self:\n";
-    foreach my $key (qw( START_TAG END_TAG TAG_STYLE CASE INTERPOLATE 
+    foreach my $key (qw( START_TAG END_TAG TAG_STYLE ANYCASE INTERPOLATE 
 			 PRE_CHOMP POST_CHOMP V1DOLLAR ) ) {
 	
 	$output .= sprintf("%-12s => %s\n", $key, $self->{ $key });

@@ -77,3 +77,18 @@ a is [% a %]
 -- expect --
 a is 1,2,3,
 
+-- test --
+[% BLOCK userinfo %]
+name: [% user +%]
+[% END %]
+[% out = PROCESS userinfo FOREACH user = [ 'tom', 'dick', 'larry' ] %]
+Output:
+[% out %]
+-- expect --
+Output:
+name: tom
+name: dick
+name: larry
+
+
+
