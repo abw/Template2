@@ -98,7 +98,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.06, distributed as part of the
+2.07, distributed as part of the
 Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT

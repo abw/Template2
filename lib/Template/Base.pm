@@ -212,7 +212,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.09, distributed as part of the
+2.10, distributed as part of the
 Template Toolkit version 2.02, released on 06 April 2001.
 
 =head1 COPYRIGHT
