@@ -44,7 +44,18 @@ sub new {
     my $input   = shift;
     my $args    = ref $_[-1] eq 'HASH' ? pop(@_) : { };
 
-    XMLin($input, %$args);
+    if (defined($input)) {  
+        # an input parameter can been be provided and can contain 
+        # XML text or the filename of an XML file, which we load
+        # using insert() to honour the INCLUDE_PATH; then we feed 
+        # it into XMLin().
+        $input = $context->insert($input) unless ( $input =~ /</ );
+        return XMLin($input, %$args);
+    } 
+    else {
+        # otherwise return a XML::Simple object
+        return new XML::Simple;
+    }
 }
 
 
