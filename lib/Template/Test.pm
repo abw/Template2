@@ -254,6 +254,14 @@ sub test_expect {
     # the remaining tests are defined in @tests...
     foreach $input (@tests) {
 	$count++;
+	my $name = '';
+
+	if ($input =~ s/^\s*-- name:? (.*?) --\s*\n//im) {
+	    $name = $1; 
+	}
+	else {
+	    $name = "template text $count";
+	}
 
 	# split input by a line like "-- expect --"
 	($input, $expect) = 
@@ -280,13 +288,13 @@ sub test_expect {
 	$tproc->process(\$input, $params, \$output) || do {
 	    warn "Template process failed: ", $tproc->error(), "\n";
 	    # report failure and automatically fail the expect match
-	    ok(0, "template test $count process FAILED: " . subtext($input));
+	    ok(0, "$name process FAILED: " . subtext($input));
 	    ok(0, '(obviously did not match expected)');
 	    next;
 	};
 
 	# processed OK
-	ok(1, "template test $count processed OK: " . subtext($input));
+	ok(1, "$name processed OK: " . subtext($input));
 
 	# another hack: if the '-- expect --' section starts with 
 	# '-- process --' then we process the expected output 
@@ -328,7 +336,7 @@ sub test_expect {
 		   $copyi, $copye, $copyo);
 	}
 
-	ok($match, $match ? "matched expected" : "did not match expected");
+	ok($match, $match ? "$name matched expected" : "$name did not match expected");
     };
 }
 
