@@ -830,6 +830,13 @@
 	      module="1"
 	      seealso="Template::Plugin"/>
 
+	<!-- Template::Plugin::Image -->
+	<page id="Plugin_Image" 
+	      name="Template::Plugin::Image"
+	      about="Plugin access to image sizes"
+	      module="1"
+	      seealso="Template::Plugin"/>
+
 	<!-- Template::Plugin::Iterator -->
 	<page id="Plugin_Iterator" 
 	      name="Template::Plugin::Iterator"
