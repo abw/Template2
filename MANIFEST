@@ -454,6 +454,7 @@ t/autoform.t
 t/base.t
 t/binop.t
 t/block.t
+t/blocks.t
 t/capture.t
 t/case.t
 t/cgi.t
