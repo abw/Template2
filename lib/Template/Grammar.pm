@@ -55,7 +55,27 @@ my ($factory, $rawstart);
 	TRY THROW CATCH FINAL LAST RETURN STOP CLEAR VIEW
     );
 
-%CMPOP = qw( != ne  == eq  < <  > >  >= >=  <= <= );
+# for historical reasons, != and == are converted to ne and eq to perform 
+# stringwise comparison (mainly because it doesn't generate "non-numerical 
+# comparison" warnings which != and == can) but the others (e.g. < > <= >=)
+# are not converted to their stringwise equivalents.  When I added 'gt' et
+# al, I realised it was all a little inconsistent, but I'm loathed to change
+# it now and risk breaking existing code.  That's something else for v3.
+
+%CMPOP = qw( 
+    ne ne
+    != ne
+    eq eq
+    == eq
+    lt lt
+    <  <
+    gt gt
+    >  >
+    ge ge
+    >= >=
+    le le
+    <= <=
+);
 
 
 #========================================================================

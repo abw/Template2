@@ -498,7 +498,7 @@ sub tokenise_directive {
 		    # interpolate_text() doesn't incorrectly treat it
 		    # as a variable reference
 #		    $token =~ s/\\([\\"])/$1/g;
-		    $token =~ s/\\([^\$n])/$1/g;
+		    $token =~ s/\\([^\$nrt])/$1/g;
 		    $token =~ s/\\n/\n/g;
 		    push(@tokens, ('"') x 2,
 				  @{ $self->interpolate_text($token) },
@@ -1268,8 +1268,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.24, distributed as part of the
-Template Toolkit version 2.04b, released on 04 August 2001.
+2.25, distributed as part of the
+Template Toolkit version 2.04d, released on 29 August 2001.
 
  
 
