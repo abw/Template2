@@ -95,11 +95,13 @@ $ROOT_OPS = {
 
 $SCALAR_OPS = { 
     %$Template::Stash::SCALAR_OPS,
+    'array' => sub { return [$_[0]] },
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
 $LIST_OPS = { 
     %$Template::Stash::LIST_OPS,
+    'array' => sub { return $_[0] },
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
 		    
@@ -108,6 +110,7 @@ $HASH_OPS = {
     defined $HASH_OPS ? %$HASH_OPS : (),
 };
  
+
 
 #========================================================================
 #                      -----  CLASS METHODS -----
