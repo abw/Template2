@@ -101,7 +101,8 @@ $DEFAULT_STYLE = {
 
 sub new {
     my $class  = shift;
-    my $config = UNIVERSAL::isa($_[0], 'HASH') ? shift(@_) : { @_ };
+    my $config = $_[0] && UNIVERSAL::isa($_[0], 'HASH') ? shift(@_) : { @_ };
+
     my ($tagstyle, $start, $end, $defaults, $grammar, $hash, $key, $udef);
 
     my $self = bless { 

@@ -387,7 +387,7 @@ sub foreach {
 
     my ($loop_save, $loop_set, $loop_restore, $setiter);
     if ($target) {
-	$loop_save    = '$oldloop = ' . &ident($class, ["'loop'"]);
+	$loop_save    = 'eval { $oldloop = ' . &ident($class, ["'loop'"]) . ' }';
 	$loop_set     = "\$stash->{'$target'} = \$value";
 	$loop_restore = "\$stash->set('loop', \$oldloop)";
     }

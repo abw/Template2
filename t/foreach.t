@@ -24,7 +24,7 @@ $^W = 1;
 
 #$Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 1;
-#$Template::Directive::PRETTY = 1;
+$Template::Directive::PRETTY = 1;
 
 my ($a, $b, $c, $d, $l, $o, $r, $u, $w ) = 
 	qw( alpha bravo charlie delta lima oscar romeo uncle whisky );
@@ -89,7 +89,11 @@ my $template = Template->new({
     ANYCASE     => 0
 });
 
-test_expect(\*DATA, $template, $params);
+my $ttdebug = Template->new({
+    DEBUG => 1,
+});
+
+test_expect(\*DATA, [ default => $template, debug => $ttdebug ], $params);
 
 __DATA__
 -- test --
@@ -521,4 +525,17 @@ last outer
 [%- END %]
 -- expect --
 1, 2, 3, 4, 
+
+-- test --
+-- use debug --
+[% FOREACH a = [ 1, 2, 3 ] -%]
+* [% a %]
+[% END -%]
+-- expect --
+* 1
+* 2
+* 3
+
+
+
 
