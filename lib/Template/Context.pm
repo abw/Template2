@@ -297,16 +297,16 @@ sub process {
 	    $compiled = shift @compiled;
 	    my $element = ref $compiled eq 'CODE' 
 		? { (name => (ref $name ? '' : $name), modtime => time()) }
-	    : $compiled;
+	        : $compiled;
 	    $stash->set('component', $element);
 	    
-		unless ($localize) {
-		    # merge any local blocks defined in the Template::Document
-		    # into our local BLOCKS cache
-		    @$blocks{ keys %$tblocks } = values %$tblocks
-			if UNIVERSAL::isa($compiled, 'Template::Document')
-			    && ($tblocks = $compiled->blocks());
-			}
+	    unless ($localize) {
+		# merge any local blocks defined in the Template::Document
+		# into our local BLOCKS cache
+		@$blocks{ keys %$tblocks } = values %$tblocks
+		    if UNIVERSAL::isa($compiled, 'Template::Document')
+			&& ($tblocks = $compiled->blocks());
+	    }
 	    
 	    if (ref $compiled eq 'CODE') {
 		$tmpout = &$compiled($self);
@@ -1433,8 +1433,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.66, distributed as part of the
-Template Toolkit version 2.07c, released on 19 July 2002.
+2.67, distributed as part of the
+Template Toolkit version 2.08, released on 30 July 2002.
 
 =head1 COPYRIGHT
 
