@@ -135,17 +135,29 @@ sub format {
 
 sub calc {
     my $self = shift;
-    eval {
-	require "Date/Calc.pm";
-    };
-    $self->throw("failed to load Date::Calc: $@")
-	if $@;
+    eval { require "Date/Calc.pm" };
+    $self->throw("failed to load Date::Calc: $@") if $@;
     return Template::Plugin::Date::Calc->new('no context');
 }
+
+sub manip {
+    my $self = shift;
+    eval { require "Date/Manip.pm" };
+    $self->throw("failed to load Date::Manip: $@") if $@;
+    return Template::Plugin::Date::Manip->new('no context');
+}
+
+
+sub throw {
+    my $self = shift;
+    die Template::Exception->new('date', join(', ', @_));
+}
+
 
 package Template::Plugin::Date::Calc;
 use base qw( Template::Plugin );
 use vars qw( $AUTOLOAD );
+*throw = \&Template::Plugin::Date::throw;
 
 sub AUTOLOAD {
     my $self = shift;
@@ -161,11 +173,24 @@ sub AUTOLOAD {
     &$sub(@_);
 }
 
-sub throw {
-    my $self = shift;
-    die Template::Exception->new('date', join(', ', @_));
-}
+package Template::Plugin::Date::Manip;
+use base qw( Template::Plugin );
+use vars qw( $AUTOLOAD );
+*throw = \&Template::Plugin::Date::throw;
 
+sub AUTOLOAD {
+    my $self = shift;
+    my $method = $AUTOLOAD;
+    
+    $method =~ s/.*:://;
+    return if $method eq 'DESTROY';
+    
+    my $sub = \&{"Date::Manip::$method"};
+    $self->throw("no such Date::Manip method: $method")
+        unless $sub;
+    
+    &$sub(@_);
+}
     
     
 1;
