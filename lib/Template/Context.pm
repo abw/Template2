@@ -145,7 +145,7 @@ sub template {
                         $self->throw($template);
                     }
                     else {
-                        $self->throw( Template::Constants::ERROR_FILE => $template );
+                        $self->throw( Template::Constants::ERROR_FILE, $template );
                     }
 		}
 		# DECLINE is ok, carry on
