@@ -53,7 +53,15 @@ my $params = {
     },
     nowloc  => sub { my ($time, $format, $locale) = @_;
 	my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
-	&POSIX::setlocale(&POSIX::LC_ALL, $locale);
+
+        # some systems expect locales to have a particular suffix
+        for my $suffix ('', @Template::Plugin::Date::LOCALE_SUFFIX) {
+            my $try_locale = $locale.$suffix;
+            if ($try_locale eq &POSIX::setlocale(&POSIX::LC_ALL, $try_locale)) {
+                $locale = $try_locale;
+                last;
+            }
+        }
 	my $datestr = &POSIX::strftime($format, localtime($time));
 	&POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
 	return $datestr;
