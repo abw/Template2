@@ -18,7 +18,7 @@
 #   modify it under the same terms as Perl itself.
 #
 # REVISION
-#   2.22
+#   2.23
 #
 #========================================================================
 
@@ -83,6 +83,19 @@ And then print each item in the column going across the output rows
     [% FOREACH item = column %]
 	<td>[% item %]</td>
     [% END %]
+
+=head2 Accessing Cookies
+
+Jeff Boes E<lt>boes@nexcerpt.comE<gt> writes:
+
+    Does anyone have a quick-n-dirty approach to accessing 
+    cookies from templates? 
+
+Jonas Liljegren replies:
+
+    [% USE CGI %]
+    
+    <p>The value is [% CGI.cookie('cookie_name') | html %]
 
 =head1 Extending the Template Toolkit
 
@@ -202,8 +215,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.22, distributed as part of the
-Template Toolkit version 2.04f, released on 10 September 2001.
+2.23, distributed as part of the
+Template Toolkit version 2.05, released on 11 September 2001.
 
 =head1 COPYRIGHT
 

@@ -400,6 +400,7 @@ EOF
 		       [ 'GD::Graph'   => undef         ],
 		       [ 'GD::Graph3d' => undef         ],
 		       [ 'Date::Calc'  => undef         ],
+		       [ 'Pod::POM'    => undef         ],
 		       [ 'XML::DOM'    => \&check_dom   ],
 		       [ 'XML::RSS'    => \&check_rss   ],
 		       [ 'XML::XPath'  => \&check_xpath ],

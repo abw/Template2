@@ -18,7 +18,7 @@
 	INCLUDE tocitem title="Template Toolkit Language"
                          subs=["Why doesn't $tt_start_tag a = b IF c $tt_end_tag work as expected?"];
 	INCLUDE tocitem title="Plugins"
-                         subs=["How do I get the Table plugin to order data across rather than down?"];
+                         subs=["How do I get the Table plugin to order data across rather than down?", "Accessing Cookies"];
 	INCLUDE tocitem title="Extending the Template Toolkit"
                          subs=["Can I serve templates from a database?", "Can I fetch templates via http?", "Miscellaneous"];
 	INCLUDE tocitem title="AUTHOR";
@@ -80,6 +80,20 @@ And then print each item in the column going across the output rows
     [% tt_start_tag %] FOREACH item = column [% tt_end_tag %]
 	&lt;td&gt;[% tt_start_tag %] item [% tt_end_tag %]&lt;/td&gt;
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "Accessing Cookies"
+-%]<p>
+Jeff Boes &lt;boes@nexcerpt.com&gt; writes:
+</p>
+<pre>    Does anyone have a quick-n-dirty approach to accessing 
+    cookies from templates? </pre>
+<p>
+Jonas Liljegren replies:
+</p>
+<pre>    [% tt_start_tag %] USE CGI [% tt_end_tag %]
+    
+    &lt;p&gt;The value is [% tt_start_tag %] CGI.cookie('cookie_name') | html [% tt_end_tag %]</pre>
 [%- END %]
 [%- END %]
 [% WRAPPER section
@@ -207,8 +221,8 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.22, distributed as part of the
-Template Toolkit version 2.04f, released on 10 September 2001.
+2.23, distributed as part of the
+Template Toolkit version 2.05, released on 11 September 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -3,7 +3,7 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.04f, containing
+#   TODO list for the Template Toolkit version 2.05, containing
 #   known bugs, limitations, planned enhancements, long term visions 
 #   and a few whacky ideas.
 #
@@ -17,6 +17,8 @@
 #------------------------------------------------------------------------
 # Miscellaneous
 #------------------------------------------------------------------------
+
+* Apply pudge's patch to use File::Spec consistently across TT.
 
 * Errors thrown via the Error module are not correctly caught.  I looked
   at this briefly but the problem wasn't immediately obvious and needs some

@@ -118,6 +118,36 @@ to make the XS Stash the default.
 Please report bugs to the Template Toolkit mailing list
 templates@template-toolkit.org
 
+As of version 2.05 of the Template Toolkit, use of the XS Stash is
+known to have 2 potentially troublesome side effects.  The first
+problem is that accesses to tied hashes (e.g. Apache::Session) may not
+work as expected.  This should be fixed in an imminent release.  If
+you are using tied hashes then it is suggested that you use the
+regular Stash by default, or write a thin wrapper around your tied
+hashes to enable the XS Stash to access items via regular method
+calls.
+
+The second potential problem is that enabling the XS Stash causes all
+the Template Toolkit modules to be installed in an architecture
+dependant library, e.g. in
+
+    /usr/lib/perl5/site_perl/5.6.0/i386-linux/Template
+
+instead of 
+
+    /usr/lib/perl5/site_perl/5.6.0/Template
+
+At the time of writing, we're not sure why this is happening but it's
+likely that this is either a bug or intentional feature in the Perl
+ExtUtils::MakeMaker module.  As far as I know, Perl always checks the
+architecture dependant directories before the architecture independant
+ones.  Therefore, a newer version of the Template Toolkit installed
+with the XS Stash enabled should be used by Perl in preference to any
+existing version using the regular stash.  However, if you install a 
+future version of the Template Toolkit with the XS Stash disabled, you
+may find that Perl continues to use the older version with XS Stash 
+enabled in preference.
+
 =head1 AUTHORS
 
 Andy Wardley E<lt>abw@tt2.orgE<gt>
@@ -126,7 +156,7 @@ Doug Steinwand E<lt>dsteinwand@citysearch.comE<gt>
 
 =head1 VERSION
 
-Template Toolkit version 2.04f, released on 10 September 2001.
+Template Toolkit version 2.05, released on 11 September 2001.
 
 
 

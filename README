@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.04f
+                              Version 2.05
 
-                              10 September 2001
+                              11 September 2001
 
         Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
@@ -42,8 +42,8 @@ need to install them.  They're all available from CPAN if you do.
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.04f.tar.gz
-    cd Template-Toolkit-2.04f
+    tar zxf Template-Toolkit-2.05.tar.gz
+    cd Template-Toolkit-2.05
     perl Makefile.PL
     make
     make test
@@ -239,19 +239,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.04f.
+where <version> represents the current version number, e.g. 2.05.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    tar zxf Template-Toolkit-2.04f.tar.gz
+    tar zxf Template-Toolkit-2.05.tar.gz
 or
-    gunzip Template-Toolkit-2.04f.tar.gz
-    tar xf Template-Toolkit-2.04f.tar
+    gunzip Template-Toolkit-2.05.tar.gz
+    tar xf Template-Toolkit-2.05.tar
 
 You can then 'cd' into the directory created,
 
-    cd Template-Toolkit-2.04f
+    cd Template-Toolkit-2.05
 
 and perform the usual Perl installation procedure:
 
