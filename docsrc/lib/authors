@@ -16,5 +16,10 @@
 	    name  = 'Darren Chamberlain' 
 	    email = 'dlc@users.sourceforge.net'
 	}
+	mark = {
+	    name  = 'Mark Fowler'
+	    email = 'mark@twoshortplanks.com'
+	    home  = 'http://www.twoshortplanks.com'
+	}
     }
 -%]
