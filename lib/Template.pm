@@ -27,7 +27,7 @@ use base qw( Template::Base );
 require 5.005;
 
 use strict;
-use vars qw( $VERSION $AUTOLOAD $ERROR $DEBUG );
+use vars qw( $VERSION $AUTOLOAD $ERROR $DEBUG $BINMODE );
 use Template::Base;
 use Template::Config;
 use Template::Provider;  
@@ -41,6 +41,7 @@ use File::Path;
 $VERSION     = '2.07c';
 $ERROR       = '';
 $DEBUG       = 0;
+$BINMODE     = ($^O eq 'MSWin32') ? 1 : 0;
 
 
 #------------------------------------------------------------------------
@@ -66,7 +67,7 @@ sub process {
 
 	# send processed template to output stream, checking for error
 	return ($self->error($error))
-	    if ($error = &_output($outstream, $output));
+	    if ($error = &_output($outstream, $output, $BINMODE));
 
 	return 1;
     }
@@ -141,7 +142,7 @@ sub _output {
     my $reftype;
     my $error = 0;
     
-    # call a CODE referenc
+    # call a CODE reference
     if (($reftype = ref($where)) eq 'CODE') {
 	&$where($text);
     }
