@@ -45,15 +45,15 @@ my $constants = {
 my $namespace = Template::Namespace::Constants->new( $constants );
 ok( $namespace, 'created constants namespace' );
 
-is( $namespace->ident([ "'author'", 0 ]), "'Andy Wardley'", 
+is( $namespace->ident([ 'constants', 0, "'author'", 0 ]), "'Andy Wardley'", 
     'author match' );
-is( $namespace->ident([ "'single'", 0 ]), "'foo\\'bar'", 
+is( $namespace->ident([ 'constants', 0, "'single'", 0 ]), "'foo\\'bar'", 
     'single match' );
-is( $namespace->ident([ "'double'", 0 ]), "'foo\\'bar'", 
+is( $namespace->ident([ 'constants', 0, "'double'", 0 ]), "'foo\\'bar'", 
     'double match' );
-is( $namespace->ident([ "'col'", 0, "'back'", 0 ]), "'#ffffff'", 
+is( $namespace->ident([ 'constants', 0, "'col'", 0, "'back'", 0 ]), "'#ffffff'", 
     'col.back match' );
-is( $namespace->ident([ "'col'", 0, "'text'", 0 ]), "'#000000'", 
+is( $namespace->ident([ 'constants', 0, "'col'", 0, "'text'", 0 ]), "'#000000'", 
     'col.text match' );
 
 my $factory = Template::Directive->new({
