@@ -136,6 +136,8 @@ The following configuration items may be specified:
 
 [* PROCESS option/reset *]
 
+[* PROCESS option/debug_mod/service *]
+
 =back
 
 =head2 process($input, \%replace)

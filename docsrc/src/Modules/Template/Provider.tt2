@@ -52,6 +52,8 @@ the following items:
 
 [* INCLUDE option/parser *]
 
+[* PROCESS option/debug_mod/provider *]
+
 =back
 
 =head2 fetch($name)

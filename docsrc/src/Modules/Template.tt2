@@ -339,8 +339,7 @@ Directory into which output files can be written.
 
 =item DEBUG
 
-Flag which, when enabled, causes any access to an undefined variable
-to be raised as an 'undef' error.
+Enable debugging messages.
 
 =back
 

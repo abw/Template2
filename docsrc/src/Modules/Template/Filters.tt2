@@ -72,6 +72,8 @@ to the Template::Filters new() constructor.
 
 [* PROCESS option/tolerant *]
 
+[* PROCESS option/debug_mod/filters *]
+
 =back
 
 =head1 TEMPLATE TOOLKIT FILTERS

@@ -81,6 +81,8 @@ to the Template::Plugins new() constructor.
 
 [* PROCESS option/tolerant *]
 
+[* PROCESS option/debug_mod/plugins *]
+
 =back
 
 [* INCLUDE misc/plugins *]

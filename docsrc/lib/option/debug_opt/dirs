@@ -1,0 +1,18 @@
+This option causes the Template Toolkit to generate comments
+indicating the source file, line and original text of each directive
+in the template.  These comments are embedded in the template output
+using the format defined in the DEBUG_FORMAT configuration item, or a
+simple default format if unspecified.
+
+For example, the following template fragment:
+
+    [% foo = 'World' %]
+    Hello [% foo %]
+
+would generate this output:
+
+    ## input text line 1 : [% foo = 'World' %] ##
+    Hello 
+    ## input text line 2 : [% foo %] ##
+    World
+

@@ -38,6 +38,8 @@ parameter to provide configuration values.  These may include:
 
 [* PROCESS option/grammar *]
 
+[* PROCESS option/debug_mod/parser *]
+
 =back
 
 =head2 parse($text)
