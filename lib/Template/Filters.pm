@@ -47,6 +47,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $FILTERS = {
     # static filters 
     'uri'        => \&uri_filter,
+    'html'       => \&html_filter,
     'html_para'  => \&html_paragraph,
     'html_break' => \&html_break,
     'upper'      => sub { uc $_[0] },
@@ -60,7 +61,7 @@ $FILTERS = {
 			  $_[0] },
 
     # dynamic filters
-    'html'       => [ \&html_filter_factory,     1 ],
+    'html_entity' => [ \&html_entity_filter_factory, 1 ],
     'indent'     => [ \&indent_filter_factory,   1 ],
     'format'     => [ \&format_filter_factory,   1 ],
     'truncate'   => [ \&truncate_filter_factory, 1 ],
@@ -241,6 +242,25 @@ sub uri_filter {
 
 
 #------------------------------------------------------------------------
+# html_filter()                                         [% FILTER html %]
+#
+# Convert any '<', '>' or '&' characters to the HTML equivalents, '&lt;',
+# '&gt;' and '&amp;', respectively. 
+#------------------------------------------------------------------------
+
+sub html_filter {
+    my $text = shift;
+    for ($text) {
+	s/&/&amp;/g;
+	s/</&lt;/g;
+	s/>/&gt;/g;
+	s/"/&quot;/g;
+    }
+    return $text;
+}
+
+
+#------------------------------------------------------------------------
 # html_paragraph()                                 [% FILTER html_para %]
 #
 # Wrap each paragraph of text (delimited by two or more newlines) in the
@@ -275,17 +295,16 @@ sub html_break  {
 #========================================================================
 
 #------------------------------------------------------------------------
-# html_filter_factory(\%optins)                         [% FILTER html %]
+# html_entity_filter_factory(\%options)                 [% FILTER html %]
 #
-# Convert any '<', '>' or '&' characters to the HTML equivalents, '&lt;',
-# '&gt;' and '&amp;', respectively.  The 'entity' option can be set to
-# any true value to prevent entities of the form &word; being converted
-# to &amp;word;
+# Dynamic version of the static html filter which attempts to locate the
+# Apache::Util or HTML::Entities modules to perform full entity encoding
+# of the text passed.  Returns an exception if one or other of the 
+# modules can't be located.
 #------------------------------------------------------------------------
 
-sub html_filter_factory {
+sub html_entity_filter_factory {
     my $context = shift;
-    my $opts = @_ && ref $_[-1] eq 'HASH' ? pop @_ : { };
 
     # if Apache::Util is installed then we use it
     eval { 
@@ -293,31 +312,18 @@ sub html_filter_factory {
         Apache::Util::escape_html('');
     };
     return \&Apache::Util::escape_html
-	unless $@ || $opts->{ entity };
+	unless $@;
 
     # otherwise if HTML::Entities is installed then we use that
     eval {
 	require HTML::Entities;
     };
     return \&HTML::Entities::encode_entities
-	unless $@ || $opts->{ entity };
+	unless $@;
 
-    # failing that, we fall back on the existing usage
-    return sub {
-	my $text = shift;
-	for ($text) {
-	    if ($opts->{ entity }) {
-		s/&(?!\w+;)/&amp;/g;
-	    }
-	    else {
-		s/&/&amp;/g;
-	    }
-	    s/</&lt;/g;
-	    s/>/&gt;/g;
-	    s/"/&quot;/g;
-	}
-	return $text;
-    };
+    return (undef, Template::Exception->new( html_all => 
+      	            'cannot locate Apache::Util or HTML::Entities' ));
+
 }
 
 
@@ -970,7 +976,7 @@ output:
 =head2 html
 
 Converts the characters 'E<lt>', 'E<gt>' and '&' to '&lt;', '&gt;' and
-'&amp', respectively, protecting them from being interpreted as
+'&amp;', respectively, protecting them from being interpreted as
 representing HTML tags or entities.
 
     [% FILTER html %]
@@ -980,6 +986,14 @@ representing HTML tags or entities.
 output:
 
     Binary "&lt;=&gt;" returns -1, 0, or 1 depending on...
+
+If the Apache::Util or HTML::Entities modules are installed on your
+system then these will instead be used to encode the text via the
+escape_html() or encode_entities() subroutines respectively.  Both
+these modules correctly handle the full gamut of HTML entities and
+will additionally escape characters like 'é' to '&eacute;'.  For
+further information, see
+http://www.w3.org/TR/REC-html40/sgml/entities.html.
 
 =head2 html_para
 
@@ -1288,8 +1302,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.43, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.45, distributed as part of the
+Template Toolkit version 2.06d, released on 22 January 2002.
 
 =head1 COPYRIGHT
 
