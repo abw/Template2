@@ -34,7 +34,6 @@ if ($@) {
 # the $run, $dsn, $user and $pass variables.
 require 'dbi_test.cfg';
 unless ($run) {
-    print "1..0\n";
     exit(0);
 }
 
