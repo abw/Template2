@@ -61,6 +61,18 @@ this.
        pattern does not match
     [% END %]
 
+Any regex modifiers, like C</s>, should be added in the regex using
+the C<(?s)> syntax.  For example, to modify the regex to disregard
+whitespace (the C</x> switch), use:
+
+    [% re = '(?x)
+               (\w+)
+               [ ]
+               (\w+)
+             ';
+      matches = name.match(re);
+    %]
+
 =item search(pattern)
 
 Performs a similar function to 'match' but simply returns true if the 
