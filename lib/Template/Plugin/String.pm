@@ -312,6 +312,7 @@ sub truncate {
     my ($self, $length, $suffix) = @_;
     return $self unless defined $length;
     $suffix ||= '';
+    return $self if CORE::length $self->{ text } <= $length;
     $self->{ text } = substr($self->{ text }, 0, 
 			     $length - CORE::length($suffix)) . $suffix;
     return $self;
@@ -769,8 +770,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.04, distributed as part of the
-Template Toolkit version 2.06c, released on 15 December 2001.
+2.05, distributed as part of the
+Template Toolkit version 2.06c, released on 20 December 2001.
 
 =head1 COPYRIGHT
 
