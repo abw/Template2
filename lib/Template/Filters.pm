@@ -46,36 +46,38 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $FILTERS = {
     # static filters 
-    'uri'        => \&uri_filter,
-    'html'       => \&html_filter,
-    'html_para'  => \&html_paragraph,
-    'html_break' => \&html_break,
-    'upper'      => sub { uc $_[0] },
-    'lower'      => sub { lc $_[0] },
-    'ucfirst'    => sub { ucfirst $_[0] },
-    'lcfirst'    => sub { lcfirst $_[0] },
-    'stderr'     => sub { print STDERR @_; return '' },
-    'trim'       => sub { for ($_[0]) { s/^\s+//; s/\s+$// }; $_[0] },
-    'null'       => sub { return '' },
-    'collapse'   => sub { for ($_[0]) { s/^\s+//; s/\s+$//; s/\s+/ /g };
-			  $_[0] },
+    'html'            => \&html_filter,
+    'html_para'       => \&html_paragraph,
+    'html_break'      => \&html_para_break,
+    'html_para_break' => \&html_para_break,
+    'html_line_break' => \&html_line_break,
+    'uri'             => \&uri_filter,
+    'upper'           => sub { uc $_[0] },
+    'lower'           => sub { lc $_[0] },
+    'ucfirst'         => sub { ucfirst $_[0] },
+    'lcfirst'         => sub { lcfirst $_[0] },
+    'stderr'          => sub { print STDERR @_; return '' },
+    'trim'            => sub { for ($_[0]) { s/^\s+//; s/\s+$// }; $_[0] },
+    'null'            => sub { return '' },
+    'collapse'        => sub { for ($_[0]) { s/^\s+//; s/\s+$//; s/\s+/ /g };
+                               $_[0] },
 
     # dynamic filters
     'html_entity' => [ \&html_entity_filter_factory, 1 ],
-    'indent'     => [ \&indent_filter_factory,   1 ],
-    'format'     => [ \&format_filter_factory,   1 ],
-    'truncate'   => [ \&truncate_filter_factory, 1 ],
-    'repeat'     => [ \&repeat_filter_factory,   1 ],
-    'replace'    => [ \&replace_filter_factory,  1 ],
-    'remove'     => [ \&remove_filter_factory,   1 ],
-    'eval'       => [ \&eval_filter_factory,     1 ],
-    'evaltt'     => [ \&eval_filter_factory,     1 ],	# alias
-    'perl'       => [ \&perl_filter_factory,     1 ],
-    'evalperl'   => [ \&perl_filter_factory,     1 ],	# alias
-    'redirect'   => [ \&redirect_filter_factory, 1 ],
-    'file'       => [ \&redirect_filter_factory, 1 ],   # alias
-    'stdout'     => [ \&stdout_filter_factory,   1 ],
-    'latex'      => [ \&latex_filter_factory,    1 ],
+    'indent'      => [ \&indent_filter_factory,      1 ],
+    'format'      => [ \&format_filter_factory,      1 ],
+    'truncate'    => [ \&truncate_filter_factory,    1 ],
+    'repeat'      => [ \&repeat_filter_factory,      1 ],
+    'replace'     => [ \&replace_filter_factory,     1 ],
+    'remove'      => [ \&remove_filter_factory,      1 ],
+    'eval'        => [ \&eval_filter_factory,        1 ],
+    'evaltt'      => [ \&eval_filter_factory,        1 ],  # alias
+    'perl'        => [ \&perl_filter_factory,        1 ],
+    'evalperl'    => [ \&perl_filter_factory,        1 ],  # alias
+    'redirect'    => [ \&redirect_filter_factory,    1 ],
+    'file'        => [ \&redirect_filter_factory,    1 ],  # alias
+    'stdout'      => [ \&stdout_filter_factory,      1 ],
+    'latex'       => [ \&latex_filter_factory,       1 ],
 };
 
 # name of module implementing plugin filters
@@ -115,56 +117,56 @@ sub fetch {
     # non-refs are assumed to be regular name lookups
 
     if (ref $name) {
-	if (UNIVERSAL::isa($name, $PLUGIN_FILTER)) {
-	    $factory = $name->factory()
-		|| return $self->error($name->error());
-	}
-	else {
-	    return $name;
-	}
+        if (UNIVERSAL::isa($name, $PLUGIN_FILTER)) {
+            $factory = $name->factory()
+                || return $self->error($name->error());
+        }
+        else {
+            return $name;
+        }
     }
     else {
-	return (undef, Template::Constants::STATUS_DECLINED)
-	    unless ($factory = $self->{ FILTERS }->{ $name }
-		    || $FILTERS->{ $name });
+        return (undef, Template::Constants::STATUS_DECLINED)
+            unless ($factory = $self->{ FILTERS }->{ $name }
+                    || $FILTERS->{ $name });
     }
 
     # factory can be an [ $code, $dynamic ] or just $code
     if (ref $factory eq 'ARRAY') {
-	($factory, $is_dynamic) = @$factory;
+        ($factory, $is_dynamic) = @$factory;
     }
     else {
-	$is_dynamic = 0;
+        $is_dynamic = 0;
     }
 
     if (ref $factory eq 'CODE') {
-	if ($is_dynamic) {
-	    # if the dynamic flag is set then the sub-routine is a 
-	    # factory which should be called to create the actual 
-	    # filter...
-	    eval {
-		($filter, $error) = &$factory($context, $args ? @$args : ());
-	    };
-	    $error ||= $@;
-	    $error = "invalid FILTER for '$name' (not a CODE ref)"
-		unless $error || ref($filter) eq 'CODE';
-	}
-	else {
-	    # ...otherwise, it's a static filter sub-routine
-	    $filter = $factory;
-	}
+        if ($is_dynamic) {
+            # if the dynamic flag is set then the sub-routine is a 
+            # factory which should be called to create the actual 
+            # filter...
+            eval {
+                ($filter, $error) = &$factory($context, $args ? @$args : ());
+            };
+            $error ||= $@;
+            $error = "invalid FILTER for '$name' (not a CODE ref)"
+                unless $error || ref($filter) eq 'CODE';
+        }
+        else {
+            # ...otherwise, it's a static filter sub-routine
+            $filter = $factory;
+        }
     }
     else {
-	$error = "invalid FILTER entry for '$name' (not a CODE ref)";
+        $error = "invalid FILTER entry for '$name' (not a CODE ref)";
     }
 
     if ($error) {
-	return $self->{ TOLERANT } 
-	       ? (undef,  Template::Constants::STATUS_DECLINED) 
-	       : ($error, Template::Constants::STATUS_ERROR) ;
+        return $self->{ TOLERANT } 
+               ? (undef,  Template::Constants::STATUS_DECLINED) 
+               : ($error, Template::Constants::STATUS_ERROR) ;
     }
     else {
-	return $filter;
+        return $filter;
     }
 }
 
@@ -224,14 +226,14 @@ sub _dump {
     my $key;
 
     foreach $key (qw( TOLERANT )) {
-	my $val = $self->{ $key };
-	$val = '<undef>' unless defined $val;
-	$output .= sprintf($format, $key, $val);
+        my $val = $self->{ $key };
+        $val = '<undef>' unless defined $val;
+        $output .= sprintf($format, $key, $val);
     }
 
     my $filters = $self->{ FILTERS };
     $filters = join('', map { 
-	sprintf("    $format", $_, $filters->{ $_ });
+        sprintf("    $format", $_, $filters->{ $_ });
     } keys %$filters);
     $filters = "{\n$filters    }";
     
@@ -239,9 +241,9 @@ sub _dump {
 
     $filters = $FILTERS;
     $filters = join('', map { 
-	my $f = $filters->{ $_ };
-	my ($ref, $dynamic) = ref $f eq 'ARRAY' ? @$f : ($f, 0);
-	sprintf("    $format", $_, $dynamic ? 'dynamic' : 'static');
+        my $f = $filters->{ $_ };
+        my ($ref, $dynamic) = ref $f eq 'ARRAY' ? @$f : ($f, 0);
+        sprintf("    $format", $_, $dynamic ? 'dynamic' : 'static');
     } sort keys %$filters);
     $filters = "{\n$filters    }";
     
@@ -273,7 +275,7 @@ sub uri_filter {
     # doing a sprintf() for every character in every string each 
     # time)
     $URI_ESCAPES ||= {
-	map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
+        map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
     };
     
     $text =~ s/([^;\/?:@&=+\$,A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/g;
@@ -291,10 +293,10 @@ sub uri_filter {
 sub html_filter {
     my $text = shift;
     for ($text) {
-	s/&/&amp;/g;
-	s/</&lt;/g;
-	s/>/&gt;/g;
-	s/"/&quot;/g;
+        s/&/&amp;/g;
+        s/</&lt;/g;
+        s/>/&gt;/g;
+        s/"/&quot;/g;
     }
     return $text;
 }
@@ -311,24 +313,34 @@ sub html_paragraph  {
     my $text = shift;
     return "<p>\n" 
            . join("\n</p>\n\n<p>\n", split(/(?:\r?\n){2,}/, $text))
-	   . "</p>\n";
+           . "</p>\n";
 }
 
 
 #------------------------------------------------------------------------
-# html_break()                                    [% FILTER html_break %]
-#
+# html_para_break()                          [% FILTER html_para_break %]
+#                                               
 # Join each paragraph of text (delimited by two or more newlines) with
 # <br><br> HTML tags.
 #------------------------------------------------------------------------
 
-sub html_break  {
+sub html_para_break  {
     my $text = shift;
     $text =~ s/(\r?\n){2,}/$1<br>$1<br>$1/g;
     return $text;
 }
 
+#------------------------------------------------------------------------
+# html_line_break()                          [% FILTER html_line_break %]
+#
+# replaces any newlines with <br> HTML tags.
+#------------------------------------------------------------------------
 
+sub html_line_break  {
+    my $text = shift;
+    $text =~ s/(\r?\n)/<br>$1/g;
+    return $text;
+}
 
 #========================================================================
 #                    -- DYNAMIC FILTER FACTORIES --
@@ -348,21 +360,21 @@ sub html_entity_filter_factory {
 
     # if Apache::Util is installed then we use it
     eval { 
-	require Apache::Util;
+        require Apache::Util;
         Apache::Util::escape_html('');
     };
     return \&Apache::Util::escape_html
-	unless $@;
+        unless $@;
 
     # otherwise if HTML::Entities is installed then we use that
     eval {
-	require HTML::Entities;
+        require HTML::Entities;
     };
     return \&HTML::Entities::encode_entities
-	unless $@;
+        unless $@;
 
     return (undef, Template::Exception->new( html_entity => 
-      	            'cannot locate Apache::Util or HTML::Entities' ));
+                    'cannot locate Apache::Util or HTML::Entities' ));
 
 }
 
@@ -380,10 +392,10 @@ sub indent_filter_factory {
     $pad = ' ' x $pad if $pad =~ /^\d+$/;
 
     return sub {
-	my $text = shift;
-	$text = '' unless defined $text;
-	$text =~ s/^/$pad/mg;
-	return $text;
+        my $text = shift;
+        $text = '' unless defined $text;
+        $text =~ s/^/$pad/mg;
+        return $text;
     }
 }
 
@@ -399,9 +411,9 @@ sub format_filter_factory {
     $format = '%s' unless defined $format;
 
     return sub {
-	my $text = shift;
-	$text = '' unless defined $text;
-	return join("\n", map{ sprintf($format, $_) } split(/\n/, $text));
+        my $text = shift;
+        $text = '' unless defined $text;
+        return join("\n", map{ sprintf($format, $_) } split(/\n/, $text));
     }
 }
 
@@ -417,9 +429,9 @@ sub repeat_filter_factory {
     $iter = 1 unless defined $iter and length $iter;
 
     return sub {
-	my $text = shift;
-	$text = '' unless defined $text;
-	return join('\n', $text) x $iter;
+        my $text = shift;
+        $text = '' unless defined $text;
+        return join('\n', $text) x $iter;
     }
 }
 
@@ -436,10 +448,10 @@ sub replace_filter_factory {
     $replace = '' unless defined $replace;
 
     return sub {
-	my $text = shift;
-	$text = '' unless defined $text;
-	$text =~ s/$search/$replace/g;
-	return $text;
+        my $text = shift;
+        $text = '' unless defined $text;
+        $text =~ s/$search/$replace/g;
+        return $text;
     }
 }
 
@@ -454,10 +466,10 @@ sub remove_filter_factory {
     my ($context, $search) = @_;
 
     return sub {
-	my $text = shift;
-	$text = '' unless defined $text;
-	$text =~ s/$search//g;
-	return $text;
+        my $text = shift;
+        $text = '' unless defined $text;
+        $text =~ s/$search//g;
+        return $text;
     }
 }
 
@@ -473,9 +485,9 @@ sub truncate_filter_factory {
     $len = 32 unless defined $len;
 
     return sub {
-	my $text = shift;
-	return $text if length $text < $len;
-	return substr($text, 0, $len - 3) . "...";
+        my $text = shift;
+        return $text if length $text < $len;
+        return substr($text, 0, $len - 3) . "...";
     }
 }
 
@@ -490,8 +502,8 @@ sub eval_filter_factory {
     my $context = shift;
 
     return sub {
-	my $text = shift;
-	$context->process(\$text);
+        my $text = shift;
+        $context->process(\$text);
     }
 }
 
@@ -508,19 +520,19 @@ sub perl_filter_factory {
     my $stash = $context->stash;
 
     return (undef, Template::Exception->new('perl', 'EVAL_PERL is not set'))
-	unless $context->eval_perl();
+        unless $context->eval_perl();
 
     return sub {
-	my $text = shift;
-	local($Template::Perl::context) = $context;
-	local($Template::Perl::stash)   = $stash;
-	my $out = eval <<EOF;
+        my $text = shift;
+        local($Template::Perl::context) = $context;
+        local($Template::Perl::stash)   = $stash;
+        my $out = eval <<EOF;
 package Template::Perl; 
 \$stash = \$context->stash(); 
 $text
 EOF
-	$context->throw($@) if $@;
-	return $out;
+        $context->throw($@) if $@;
+        return $out;
     }
 }
 
@@ -536,18 +548,18 @@ sub redirect_filter_factory {
     my $outpath = $context->config->{ OUTPUT_PATH };
 
     return (undef, Template::Exception->new('redirect', 
-					    'OUTPUT_PATH is not set'))
-	unless $outpath;
+                                            'OUTPUT_PATH is not set'))
+        unless $outpath;
 
     sub {
-	my $text = shift;
-	my $outpath = $context->config->{ OUTPUT_PATH }
-	    || return '';
-	$outpath .= "/$file";
+        my $text = shift;
+        my $outpath = $context->config->{ OUTPUT_PATH }
+            || return '';
+        $outpath .= "/$file";
         my $error = Template::_output($outpath, $text, $binmode);
-	die Template::Exception->new('redirect', $error)
-	    if $error;
-	return '';
+        die Template::Exception->new('redirect', $error)
+            if $error;
+        return '';
     }
 }
 
@@ -562,10 +574,10 @@ sub stdout_filter_factory {
     my ($context, $binmode) = @_;
 
     sub {
-	my $text = shift;
+        my $text = shift;
         binmode STDOUT if ( $binmode );
         print STDOUT $text;
-	return '';
+        return '';
     }
 }
 
@@ -765,11 +777,11 @@ Template::Filters object.  A reference to a hash array of configuration
 items may be passed as a parameter.  These are described below.  
 
     my $filters = Template::Filters->new({
-	FILTERS => { ... },
+        FILTERS => { ... },
     });
 
     my $template = Template->new({
-	LOAD_FILTERS => [ $filters ],
+        LOAD_FILTERS => [ $filters ],
     });
 
 A default Template::Filters module is created by the Template.pm module
@@ -828,11 +840,11 @@ dynamic (1).  A filter may also be specified as a solitary subroutine
 reference and is assumed to be static.
 
     $filters = Template::Filters->new({
-  	FILTERS => {
-  	    'sfilt1' =>   \&static_filter,      # static
+        FILTERS => {
+            'sfilt1' =>   \&static_filter,      # static
             'sfilt2' => [ \&static_filter, 0 ], # same as above
-  	    'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
-  	},
+            'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
+        },
     });
 
 Additional filters can be specified at any time by calling the 
@@ -854,9 +866,9 @@ the output of a template block which is passed as the only argument.
 The subroutine should return the modified text.
 
     sub static_filter {
-  	my $text = shift;
-	# do something to modify $text...
-  	return $text;
+        my $text = shift;
+        # do something to modify $text...
+        return $text;
     }
 
 The following template fragment:
@@ -879,13 +891,13 @@ another subroutine reference (usually a closure) which implements the
 filter.
 
     sub dynamic_filter_factory {
-	my ($context, @args) = @_;
+        my ($context, @args) = @_;
 
-  	return sub {
-  	    my $text = shift;
-	    # do something to modify $text...
-	    return $text;	    
-  	}
+        return sub {
+            my $text = shift;
+            # do something to modify $text...
+            return $text;           
+        }
     }
 
 The following template fragment:
@@ -931,7 +943,7 @@ value.
     use Template::Constants qw( :debug );
 
     my $template = Template->new({
-	DEBUG => DEBUG_FILTERS | DEBUG_PLUGINS,
+        DEBUG => DEBUG_FILTERS | DEBUG_PLUGINS,
     });
 
 
@@ -1099,6 +1111,20 @@ output:
     <br>
     Mary had a little lamb.
 
+=head2 html_linebreak
+
+This filter replaces any newlines with E<lt>brE<gt> HTML tags.
+
+    [% FILTER html_break %]
+    The cat sat on the mat.
+    Mary had a little lamb.
+    [% END %]
+
+output:
+
+    The cat sat on the mat.<br>
+    Mary had a little lamb.<br>
+
 =head2 uri
 
 This filter URI escapes the input text, converting any characters 
@@ -1203,7 +1229,7 @@ or more succinctly, using side-effect notation:
 
     [% INCLUDE userinfo 
          FILTER redirect("users/${user.id}.html")
-	   FOREACH user = myorg.userlist 
+           FOREACH user = myorg.userlist 
     %]
 
 A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
@@ -1217,7 +1243,7 @@ returning template fragments from an external source such as a
 database, which can then be processed in the template as required.
 
     my $vars  = {
-	fragment => "The cat sat on the [% place %]",
+        fragment => "The cat sat on the [% place %]",
     };
     $template->process($file, $vars);
 
