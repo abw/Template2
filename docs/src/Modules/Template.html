@@ -22,7 +22,7 @@
 	        title ="METHODS"
                 subs  = [
                     "new(\\%config)",
-		    "process(\$template, \\%vars, \$output)",
+		    "process(\$template, \\%vars, \$output, %options)",
 		    "error()",
 		    "service()",
 		    "context()"
@@ -125,7 +125,7 @@ folded into a hash array by the constructor.
 	|| die $Template::ERROR, &quot;\n&quot;;</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "process(\$template, \\%vars, \$output)"
+   title = "process(\$template, \\%vars, \$output, %options)"
 -%]<p>
 The process() method is called to process a template.  The first
 parameter indicates the input template as one of: a filename relative
@@ -195,6 +195,20 @@ In an Apache/mod_perl handler:
 	};</pre>
 <pre>	return OK;
     }</pre>
+<p>
+After the optional third output argument can come an optional
+reference to a hash or a list of (name, value) pairs providing further
+options for the output.  The only option currently supported is
+&quot;binmode&quot; which, when set to any true value will ensure that files
+created (but not any existing file handles passed) will be set to
+binary mode.
+</p>
+<pre>    # either: hash reference of options
+    $tt-&gt;process($infile, $vars, $outfile, { binmode =&gt; 1 })
+        || die $tt-&gt;error(), &quot;\n&quot;;</pre>
+<pre>    # or: list of name, value pairs
+    $tt-&gt;process($infile, $vars, $outfile, binmode =&gt; 1)
+        || die $tt-&gt;error(), &quot;\n&quot;;</pre>
 <p>
 The OUTPUT configuration item can be used to specify a default output 
 location other than \*STDOUT.  The OUTPUT_PATH specifies a directory
@@ -767,12 +781,12 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.09b, released on 24 April 2003.
+Template Toolkit version 2.10, released on 24 July 2003.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+-%]<pre>  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or

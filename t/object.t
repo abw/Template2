@@ -118,7 +118,7 @@ sub AUTOLOAD {
 
 package Stringy;
 
-use overload '""' => 'stringify';
+use overload '""' => 'stringify', fallback => 1;
 
 sub new {
     my ($class, $text) = @_;

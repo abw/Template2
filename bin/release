@@ -1,4 +1,4 @@
-PERL=perl5.8.0
+PERL=/usr/local/bin/perl  
    $PERL docsrc/bin/ttmkdocs \
 && $PERL docsrc/bin/ttpodglu \
 && $PERL Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n TT_LATEX=y \

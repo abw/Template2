@@ -322,7 +322,7 @@ output:
 
 Local variable definitions may be specified after the template name,
 temporarily masking any existing variables.  Insignificant whitespace
-is ignore within directives so you can add variable definitions on the
+is ignored within directives so you can add variable definitions on the
 same line, the next line or split across several line with comments
 interspersed, if you prefer.
 
@@ -755,6 +755,10 @@ output:
       * Foo
       * Foo Bar
 
+You can use also use 'IN' instead of '=' if you prefer.
+
+    [% FOREACH crook IN government %]
+    
 When the FOREACH directive is used without specifying a target variable, 
 any iterated values which are hash references will be automatically 
 imported.
@@ -766,7 +770,7 @@ imported.
        ]
     %]
 
-    [% FOREACH user = userlist %]
+    [% FOREACH user IN userlist %]
        [% user.id %] [% user.name %]
     [% END %]
 
@@ -799,7 +803,7 @@ in a hash array.  Each entry in the hash is returned in sorted order
        }
     %]
 
-    [% FOREACH u = users %]
+    [% FOREACH u IN users %]
        * [% u.key %] : [% u.value %]
     [% END %]
 
@@ -811,7 +815,7 @@ Output:
 
 The NEXT directive starts the next iteration in the FOREACH loop.
 
-    [% FOREACH user = userlist %]
+    [% FOREACH user IN userlist %]
        [% NEXT IF user.isguest %]
        Name: [% user.name %]    Email: [% user.email %]
     [% END %]
@@ -819,7 +823,7 @@ The NEXT directive starts the next iteration in the FOREACH loop.
 The LAST directive can be used to prematurely exit the loop.  BREAK is
 also provided as an alias for LAST.
 
-    [% FOREACH match = results.nsort('score').reverse %]
+    [% FOREACH match IN results.nsort('score').reverse %]
        [% LAST IF match.score < 50 %]
        [% match.score %] : [% match.url %]
     [% END %]
@@ -842,7 +846,7 @@ See L<Template::Iterator> for further details.
 
 Example:
 
-    [% FOREACH item = [ 'foo', 'bar', 'baz' ] -%]
+    [% FOREACH item IN [ 'foo', 'bar', 'baz' ] -%]
        [%- "<ul>\n" IF loop.first %]
        <li>[% loop.count %]/[% loop.size %]: [% item %]
        [%- "</ul>\n" IF loop.last %]
@@ -863,11 +867,11 @@ Nested loops will work as expected, with the 'loop' variable correctly
 referencing the innermost loop and being restored to any previous 
 value (i.e. an outer loop) at the end of the loop.
 
-    [% FOREACH group = grouplist;
+    [% FOREACH group IN grouplist;
 	   # loop => group iterator
            "Groups:\n" IF loop.first;
 
-           FOREACH user = group.userlist;
+           FOREACH user IN group.userlist;
                # loop => user iterator
 	       "$loop.count: $user.name\n";
 	   END;
@@ -886,8 +890,8 @@ details.
 
     [% USE giter = iterator(grouplist) %]
 
-    [% FOREACH group = giter %]
-       [% FOREACH user = group.userlist %]
+    [% FOREACH group IN giter %]
+       [% FOREACH user IN group.userlist %]
              user #[% loop.count %] in
              group [% giter.count %] is
              named [% user.name %]
@@ -1304,7 +1308,7 @@ may follow these.
 equivalent to:
 
     [% INCLUDE header title='Hello World' %]
-    [% INCLUDE header title='Hello World' bgcol='#123456# %]
+    [% INCLUDE header title='Hello World' bgcol='#123456' %]
 
 Here's another example, defining a macro for display numbers
 in comma-delimited groups of 3, using the chunk and join virtual
@@ -2152,11 +2156,11 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.09b, released on 24 April 2003.
+Template Toolkit version 2.10, released on 24 July 2003.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

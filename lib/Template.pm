@@ -38,7 +38,7 @@ use File::Path;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.09c';
+$VERSION     = '2.10';
 $ERROR       = '';
 $DEBUG       = 0;
 
@@ -307,7 +307,7 @@ folded into a hash array by the constructor.
     my $tt = Template->new(INCLUDE_PATH => '/tmp', POST_CHOMP => 1)
 	|| die $Template::ERROR, "\n";
 
-=head2 process($template, \%vars, $output)
+=head2 process($template, \%vars, $output, %options)
 
 The process() method is called to process a template.  The first
 parameter indicates the input template as one of: a filename relative
@@ -385,6 +385,21 @@ In an Apache/mod_perl handler:
 
 	return OK;
     }
+
+After the optional third output argument can come an optional
+reference to a hash or a list of (name, value) pairs providing further
+options for the output.  The only option currently supported is
+"binmode" which, when set to any true value will ensure that files
+created (but not any existing file handles passed) will be set to
+binary mode.
+
+    # either: hash reference of options
+    $tt->process($infile, $vars, $outfile, { binmode => 1 })
+        || die $tt->error(), "\n";
+
+    # or: list of name, value pairs
+    $tt->process($infile, $vars, $outfile, binmode => 1)
+        || die $tt->error(), "\n";
 
 The OUTPUT configuration item can be used to specify a default output 
 location other than \*STDOUT.  The OUTPUT_PATH specifies a directory
@@ -923,11 +938,11 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.09b, released on 24 April 2003.
+Template Toolkit version 2.10, released on 24 July 2003.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.09b, detailing
+#   Revision history for the Template Toolkit version 2.10, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,57 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.10 - 24th July 2003
+#------------------------------------------------------------------------
+
+* Merged in Darren's branch to add the define_vmethod() methods to
+  Template::Context and Template::Stash.
+
+* Applied patch from Axel Gerstmair for minor fixes to Makefile.PL, 
+  t/gd.t and t/date.t.
+  http://template-toolkit.org/pipermail/templates/2003-April/004545.html
+
+* Added undefined() method to the Stash which get() calls if a variable
+  value is undefined.  Currently just returns '' to implement existing 
+  behaviour, but it provides a method hook for subclasses to redefine.
+
+* Fixed a minor bug which prevented the Stash from being subclassable
+  by removing references to __PACKAGE__
+
+
+#------------------------------------------------------------------------
+# Version 2.09c - 29th April 2003                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* applied patch from Ivan Kurmanov &lt;kurmanov@openlib.org&gt; to XPath plugin
+  to add handling for comments.
+
+* modified grammar to allow 'IN' as an alternate for '=' in FOREACH 
+  directives, thus allowing [% tt_start_tag %] FOREACH item IN [ foo, bar, baz ] [% tt_end_tag %]
+  http://template-toolkit.org/pipermail/templates/2003-April/004519.html
+
+* changed test for PROCESS option in Template::Service init from 'exists' 
+  to 'defined' so that PROCESS set to undef Does The Right Thing.
+  http://template-toolkit.org/pipermail/templates/2003-April/004536.html
+
+* changed Template::process() method to accept a hash reference or list
+  of output options following any filename.  This can now be used to 
+  explicitly set binary mode (or not) for the output of a file.  Also
+  changed Template::_output() method to expect a reference to text rather 
+  than a duplicated text string (for efficiency) and also the new hash 
+  reference of options.  Also changed the redirect and stdout filters
+  accordingly.
+
+* disabled the mandatory binmode setting on all files created under 
+  MSWin32.  See previous item for details on how binmode can now be 
+  set explicitly, or link below for description of problem.
+  http://template-toolkit.org/pipermail/templates/2003-April/004499.html
+
+* applied patch from Axel Gerstmair to Makefile.PL to add TT_EXTRAS item.
+  http://template-toolkit.org/pipermail/templates/2003-April/004543.html
+
 
 #------------------------------------------------------------------------
 # Version 2.09b - 24th April 2003                 ## DEVELOPER RELEASE ##

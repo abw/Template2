@@ -287,7 +287,7 @@ output:
 <p>
 Local variable definitions may be specified after the template name,
 temporarily masking any existing variables.  Insignificant whitespace
-is ignore within directives so you can add variable definitions on the
+is ignored within directives so you can add variable definitions on the
 same line, the next line or split across several line with comments
 interspersed, if you prefer.
 </p>
@@ -677,17 +677,20 @@ output:
       * Foo
       * Foo Bar</pre>
 <p>
+You can use also use 'IN' instead of '=' if you prefer.
+</p>
+<pre>    [% tt_start_tag %] FOREACH crook IN government [% tt_end_tag %]
+    
 When the FOREACH directive is used without specifying a target variable, 
 any iterated values which are hash references will be automatically 
-imported.
-</p>
+imported.</pre>
 <pre>    [% tt_start_tag %] userlist = [
 	  { id =&gt; 'tom',   name =&gt; 'Thomas'  },
 	  { id =&gt; 'dick',  name =&gt; 'Richard'  },
 	  { id =&gt; 'larry', name =&gt; 'Lawrence' },
        ]
     [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH user IN userlist [% tt_end_tag %]
        [% tt_start_tag %] user.id [% tt_end_tag %] [% tt_start_tag %] user.name [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
@@ -721,7 +724,7 @@ in a hash array.  Each entry in the hash is returned in sorted order
          larry =&gt; 'Lawrence',
        }
     [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] FOREACH u = users [% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH u IN users [% tt_end_tag %]
        * [% tt_start_tag %] u.key [% tt_end_tag %] : [% tt_start_tag %] u.value [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
@@ -733,7 +736,7 @@ Output:
 <p>
 The NEXT directive starts the next iteration in the FOREACH loop.
 </p>
-<pre>    [% tt_start_tag %] FOREACH user = userlist [% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH user IN userlist [% tt_end_tag %]
        [% tt_start_tag %] NEXT IF user.isguest [% tt_end_tag %]
        Name: [% tt_start_tag %] user.name [% tt_end_tag %]    Email: [% tt_start_tag %] user.email [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
@@ -741,7 +744,7 @@ The NEXT directive starts the next iteration in the FOREACH loop.
 The LAST directive can be used to prematurely exit the loop.  BREAK is
 also provided as an alias for LAST.
 </p>
-<pre>    [% tt_start_tag %] FOREACH match = results.nsort('score').reverse [% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH match IN results.nsort('score').reverse [% tt_end_tag %]
        [% tt_start_tag %] LAST IF match.score &lt; 50 [% tt_end_tag %]
        [% tt_start_tag %] match.score [% tt_end_tag %] : [% tt_start_tag %] match.url [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
@@ -765,7 +768,7 @@ See [% ttlink('Template::Iterator') -%] for further details.
 <p>
 Example:
 </p>
-<pre>    [% tt_start_tag %] FOREACH item = [ 'foo', 'bar', 'baz' ] -[% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH item IN [ 'foo', 'bar', 'baz' ] -[% tt_end_tag %]
        [% tt_start_tag %]- &quot;&lt;ul&gt;\n&quot; IF loop.first [% tt_end_tag %]
        &lt;li&gt;[% tt_start_tag %] loop.count [% tt_end_tag %]/[% tt_start_tag %] loop.size [% tt_end_tag %]: [% tt_start_tag %] item [% tt_end_tag %]
        [% tt_start_tag %]- &quot;&lt;/ul&gt;\n&quot; IF loop.last [% tt_end_tag %]
@@ -787,10 +790,10 @@ Nested loops will work as expected, with the 'loop' variable correctly
 referencing the innermost loop and being restored to any previous 
 value (i.e. an outer loop) at the end of the loop.
 </p>
-<pre>    [% tt_start_tag %] FOREACH group = grouplist;
+<pre>    [% tt_start_tag %] FOREACH group IN grouplist;
 	   # loop =&gt; group iterator
            &quot;Groups:\n&quot; IF loop.first;</pre>
-<pre>           FOREACH user = group.userlist;
+<pre>           FOREACH user IN group.userlist;
                # loop =&gt; user iterator
 	       &quot;$loop.count: $user.name\n&quot;;
 	   END;</pre>
@@ -807,8 +810,8 @@ name other than 'loop'.  See Template::Plugin::Iterator for further
 details.
 </p>
 <pre>    [% tt_start_tag %] USE giter = iterator(grouplist) [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] FOREACH group = giter [% tt_end_tag %]
-       [% tt_start_tag %] FOREACH user = group.userlist [% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH group IN giter [% tt_end_tag %]
+       [% tt_start_tag %] FOREACH user IN group.userlist [% tt_end_tag %]
              user #[% tt_start_tag %] loop.count [% tt_end_tag %] in
              group [% tt_start_tag %] giter.count [% tt_end_tag %] is
              named [% tt_start_tag %] user.name [% tt_end_tag %]
@@ -1202,7 +1205,7 @@ may follow these.
 equivalent to:
 </p>
 <pre>    [% tt_start_tag %] INCLUDE header title='Hello World' [% tt_end_tag %]
-    [% tt_start_tag %] INCLUDE header title='Hello World' bgcol='#123456# [% tt_end_tag %]</pre>
+    [% tt_start_tag %] INCLUDE header title='Hello World' bgcol='#123456' [% tt_end_tag %]</pre>
 <p>
 Here's another example, defining a macro for display numbers
 in comma-delimited groups of 3, using the chunk and join virtual
@@ -2004,12 +2007,12 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.09b, released on 24 April 2003.
+Template Toolkit version 2.10, released on 24 July 2003.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+-%]<pre>  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or

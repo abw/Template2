@@ -94,8 +94,8 @@ additional Template Toolkit directives.
    <h1>Some Interesting Links</h1>
 
    [% webpages = [
-         { url => 'http://foo.org', title => 'The Foo Organsiation' }
-         { url => 'http://bar.org', title => 'The Bar Organsiation' }
+         { url => 'http://foo.org', title => 'The Foo Organisation' }
+         { url => 'http://bar.org', title => 'The Bar Organisation' }
       ]
    %]
 
@@ -778,11 +778,11 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.09b, released on 24 April 2003.
+Template Toolkit version 2.10, released on 24 July 2003.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

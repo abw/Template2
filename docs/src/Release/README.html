@@ -5,11 +5,11 @@
 
                             Template Toolkit
 
-                              Version 2.09b
+                              Version 2.10
 
-                             24 April 2003
+                             24 July 2003
 
-        Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
           This is free software; you can redistribute it and/or
@@ -47,8 +47,8 @@ need to install them.  They're all available from CPAN if you do.
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.09b.tar.gz
-    cd Template-Toolkit-2.09b
+    tar zxf Template-Toolkit-2.10.tar.gz
+    cd Template-Toolkit-2.10
     perl Makefile.PL
     make
     make test
@@ -107,9 +107,18 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
-Version 2.08 adds compile time constant folding which can result in a
+Version 2.10 provides a few trivial new features and applies fixes to
+some small bugs.  For example, you can now use IN instead of = in a
+loop, e.g. FOREACH item IN list.  The WRAPPER configuration option is
+new, and Template::Context and Template::Stash now both implement
+define_vmethod() methods which make it easier to define new virtual
+methods.
+
+Version 2.09 contained mostly bug fixes and minor enhancements.
+
+Version 2.08 added compile time constant folding which can result in a
 significant performance boost when processing templates.  It also 
-offers several other minor enhancements and bug fixes.
+offered several other minor enhancements and bug fixes.
 
 Version 2.07 was a major maintenance release, fixing numerous minor bugs
 and smoothing out various rough edges.  Version 2.06 was a very minor
@@ -348,7 +357,7 @@ VERSION COMPATABILITY
 ---------------------
 
 In terms of the template language and features available, versions
-2.01 through to 2.09b should be fully backwardly compatible with 
+2.01 through to 2.10 should be fully backwardly compatible with 
 version 2.00.  
 
 Version 2.00 is backwardly compatible with version 1 in all but a few
@@ -411,7 +420,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
 Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This is free software; you can redistribute it and/or modify it under

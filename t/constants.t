@@ -209,3 +209,13 @@ col  orange
 -- expect --
 back
 text
+
+-- test --
+-- use tt3 --
+a: [% const.author %]
+b: [% const.author = 'Fred Smith' %]
+c: [% const.author %]
+-- expect --
+a: abw
+b: 
+c: abw

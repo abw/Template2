@@ -104,6 +104,18 @@ this.
        pattern does not match
     [% END %]
 
+Any regex modifiers, like C</s>, should be added in the regex using
+the C<(?s)> syntax.  For example, to modify the regex to disregard
+whitespace (the C</x> switch), use:
+
+    [% re = '(?x)
+               (\w+)
+               [ ]
+               (\w+)
+             ';
+      matches = name.match(re);
+    %]
+
 =item search(pattern)
 
 Performs a similar function to 'match' but simply returns true if the 
@@ -162,7 +174,7 @@ a no-op.
 
 Return the value as a hash reference containing a single entry with
 the key 'value' indicating the original scalar value.  As with the 
-'hash' virtual method, this is generally used to help massage data
+'list' virtual method, this is generally used to help massage data
 into different formats.
 
 =item size
@@ -246,8 +258,9 @@ passed to indicate the desired items required in the list: 'keys' to
 return a list of the keys (same as hash.keys), 'values' to return a
 list of the values (same as hash.values), or 'each' to return as list
 of (key, value) pairs (same as hash.each).  When called without an
-argument it returns a list of hash references each containing a 'key'
-and 'value' item representing 
+argument it returns a list of hash references, each of which contains
+a 'key' and 'value' item representing a single key =E<gt> value pair
+in the hash.
 
 =back
 
@@ -262,6 +275,11 @@ Returns the first/last item in the list.  The item is not removed from the
 list.
 
     [% results.first %] to [% results.last %]
+
+If either is given a numeric argument C<n>, they return the first or
+last C<n> elements:
+
+    The first 5 results are [% results.first(5).join(", ") %].
 
 =item size, max
 
@@ -334,7 +352,7 @@ as in the list itself.
     [% numbers = mylist.unique %]
 
 While this can be explicitly sorted, it is not required that the list
-be sorted before the unique elements pulled out (unlike the Unix
+be sorted before the unique elements are pulled out (unlike the Unix
 command line utility).
 
     [% numbers = mylist.unique.sort %]
@@ -488,11 +506,11 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.09b, released on 24 April 2003.
+Template Toolkit version 2.10, released on 24 July 2003.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

@@ -920,7 +920,7 @@ element, or 0 if none.
 
     [% foo.bar(10).baz(20) %]
 
-    $stash->get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ]);
+    $stash->get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ] ]);
 
 =head2 set($variable, $value, $default)
 
@@ -984,12 +984,12 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.75, distributed as part of the
-Template Toolkit version 2.09c, released on 29 April 2003.
+2.78, distributed as part of the
+Template Toolkit version 2.10, released on 24 July 2003.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

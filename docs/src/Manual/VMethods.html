@@ -95,6 +95,18 @@ this.
     [% tt_start_tag %] ELSE [% tt_end_tag %]
        pattern does not match
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Any regex modifiers, like <code>'/s'</code>, should be added in the regex using
+the <code>'(?s)'</code> syntax.  For example, to modify the regex to disregard
+whitespace (the <code>'/x'</code> switch), use:
+</p>
+<pre>    [% tt_start_tag %] re = '(?x)
+               (\w+)
+               [ ]
+               (\w+)
+             ';
+      matches = name.match(re);
+    [% tt_end_tag %]</pre>
 
 <li><b>search(pattern)</b><br>
 <p>
@@ -155,7 +167,7 @@ a no-op.
 <p>
 Return the value as a hash reference containing a single entry with
 the key 'value' indicating the original scalar value.  As with the 
-'hash' virtual method, this is generally used to help massage data
+'list' virtual method, this is generally used to help massage data
 into different formats.
 </p>
 
@@ -239,8 +251,9 @@ passed to indicate the desired items required in the list: 'keys' to
 return a list of the keys (same as hash.keys), 'values' to return a
 list of the values (same as hash.values), or 'each' to return as list
 of (key, value) pairs (same as hash.each).  When called without an
-argument it returns a list of hash references each containing a 'key'
-and 'value' item representing 
+argument it returns a list of hash references, each of which contains
+a 'key' and 'value' item representing a single key =&gt; value pair
+in the hash.
 </p>
 
 </ul>
@@ -254,6 +267,11 @@ Returns the first/last item in the list.  The item is not removed from the
 list.
 </p>
 <pre>    [% tt_start_tag %] results.first [% tt_end_tag %] to [% tt_start_tag %] results.last [% tt_end_tag %]</pre>
+<p>
+If either is given a numeric argument <code>'n'</code>, they return the first or
+last <code>'n'</code> elements:
+</p>
+<pre>    The first 5 results are [% tt_start_tag %] results.first(5).join(&quot;, &quot;) [% tt_end_tag %].</pre>
 
 <li><b>size, max</b><br>
 <p>
@@ -327,7 +345,7 @@ as in the list itself.
     [% tt_start_tag %] numbers = mylist.unique [% tt_end_tag %]</pre>
 <p>
 While this can be explicitly sorted, it is not required that the list
-be sorted before the unique elements pulled out (unlike the Unix
+be sorted before the unique elements are pulled out (unlike the Unix
 command line utility).
 </p>
 <pre>    [% tt_start_tag %] numbers = mylist.unique.sort [% tt_end_tag %]</pre>
@@ -486,12 +504,12 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.09b, released on 24 April 2003.
+Template Toolkit version 2.10, released on 24 July 2003.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+-%]<pre>  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or

@@ -3,7 +3,7 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.09c, containing
+#   TODO list for the Template Toolkit version 2.10, containing
 #   known bugs, limitations, planned enhancements, long term visions 
 #   and a few whacky ideas.
 #
@@ -18,9 +18,22 @@
 # Miscellaneous
 #------------------------------------------------------------------------
 
+* The 'eval' filter leaks memory, as reported by Colin Johnson.  The
+  filter subroutine created contains a reference to the context and then
+  gets cached in the FILTER_CACHE item of the context.  Hey presto -
+  circular references.  The reset() method should probably clear the
+  FILTER_CACHE.  Also need to check the plugins cache for similar
+  problems.
+
 * The handling of the DELIMITER parameter could be improved.  At the 
   moments it's hardcoded and hacked to Do The Right Thing for Win32
   but I'd prefer it to Do The Good Thing.
+
+* If you use 'ttree' with a COMPILE_EXT or COMPILE_DIR option then
+  templates in the 'lib' directories will be compiled, but those in
+  the src directories will not.  This is because ttree does a chdir()
+  to the src directory and processes files as './myfile'.  TT doesn't
+  compile RELATIVE files by default.
 
 * No recursion checking is performed for BLOCKs, only
   Template::Document instances.  This is probably the way it will stay
