@@ -168,7 +168,7 @@ E<lt>eisen@pobox.comE<gt>.
 
 =head1 VERSION
 
-2.42, distributed as part of the
+2.43, distributed as part of the
 Template Toolkit version 2.06g, released on 15 April 2002.
 
 =head1 COPYRIGHT

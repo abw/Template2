@@ -930,7 +930,7 @@ Andy Wardley, Craig Barratt, Dave Hodgkinson and Rafael Kitover.
 
 =head1 VERSION
 
-2.39, distributed as part of the
+2.40, distributed as part of the
 Template Toolkit version 2.06g, released on 15 April 2002.
 
 

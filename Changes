@@ -23,7 +23,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06g - March                           ## DEVELOPER RELEASE ##
+# Version 2.06g - April 15th 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in ttree which prevented it from passing the recurse option
@@ -34,6 +34,12 @@
 
 * Fixed an oversight/bug in the XS stash where a missing aTHX_ around 
   line 546 caused compilation to fail under Win32.
+
+* Applied a patch to Template::Provider from Alexander Schilling which 
+  untaints paths before calling mkpath() to prevent errors under -T.
+
+* Fixed Template::Parser so that the INTERPOLATE option now works with 
+  files > 32K, thanks to the efforts of Stephen Adkins.
 
 
 #------------------------------------------------------------------------

@@ -23,7 +23,7 @@ use Template::Test;
 use Cwd qw( abs_path );
 $^W = 1;
 
-# $Template::Test::PRESERVE = 1;
+$Template::Test::PRESERVE = 1;
 
 test_expect(\*DATA);
 
@@ -194,3 +194,48 @@ __END__
 -- expect --
 <foo>The foo</foo>
 <baz>The bar</baz>
+
+#------------------------------------------------------------------------
+# an example based on one from Tony Bowden posted to the mailing list 
+#------------------------------------------------------------------------
+
+-- test --
+[% USE xmlstyle
+     video = {
+       element = 'table'
+       attributes = { class='videoTable' },
+     }
+ 
+     title = {
+       pre_start = "<tr>\n    <td>Title:</td>\n    "
+       element    = 'td'
+       attributes = { class='videoTitle' }
+       post_end  = "\n  </tr>"
+     }
+
+     price = {
+       pre_start = "<tr>\n    <td>Price:</td>\n    "
+       element    = 'td'
+       attributes = { class='videoPrice' }
+       post_end  = "\n  </tr>"
+     }
+   ; 
+   
+   FILTER xmlstyle 
+-%]
+<video>
+  <title>Buffy Series 1</title>
+  <price>10.99</price>
+</video>
+[% END %]
+-- expect --
+<table class="videoTable">
+  <tr>
+    <td>Title:</td>
+    <td class="videoTitle">Buffy Series 1</td>
+  </tr>
+  <tr>
+    <td>Price:</td>
+    <td class="videoPrice">10.99</td>
+  </tr>
+</table>
