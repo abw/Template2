@@ -30,11 +30,13 @@ use strict;
 use Template::Plugin;
 use Data::Dumper;
 
-use vars qw( $VERSION $DEBUG $AUTOLOAD );
+use vars qw( $VERSION $DEBUG @DUMPER_ARGS $AUTOLOAD );
 use base qw( Template::Plugin );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0 unless defined $DEBUG;
+@DUMPER_ARGS = qw( Indent Pad Varname Purity Useqq Terse Freezer
+                   Toaster Deepcopy Quotekeys Bless Maxdepth );
 
 #==============================================================================
 #                      -----  CLASS METHODS -----
@@ -50,7 +52,7 @@ sub new {
     $params ||= { };
 
 
-    foreach my $arg (qw( Indent Pad Varname )) {
+    foreach my $arg (@DUMPER_ARGS) {
 	no strict 'refs';
 	if (defined ($val = $params->{ lc $arg })
 	    or defined ($val = $params->{ $arg })) {
