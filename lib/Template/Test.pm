@@ -29,14 +29,18 @@ package Template::Test;
 require 5.004;
 
 use strict;
-use vars qw( @ISA @EXPORT $VERSION $DEBUG $EXTRA $PRESERVE $loaded %callsign);
+use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
+	     $VERSION $DEBUG $EXTRA $PRESERVE 
+	     $loaded %callsign);
 use Template qw( :template );
 use Exporter;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0;
 @ISA     = qw( Exporter );
-@EXPORT  = qw( ntests ok match flush test_expect callsign banner assert );
+@EXPORT  = qw( ntests ok match flush test_expect callsign banner );
+@EXPORT_OK = ( 'assert' );
+%EXPORT_TAGS = ( all => [ @EXPORT_OK, @EXPORT ] );
 $| = 1;
 
 $EXTRA    = 0;   # any extra tests to come after test_expect()
@@ -635,8 +639,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.35, distributed as part of the
-Template Toolkit version 2.06a, released on 25 November 2001.
+2.36, distributed as part of the
+Template Toolkit version 2.06b, released on 29 November 2001.
 
 =head1 COPYRIGHT
 
