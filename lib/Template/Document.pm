@@ -32,9 +32,6 @@ use strict;
 use vars qw( $VERSION $ERROR $COMPERR $DEBUG $AUTOLOAD );
 use base qw( Template::Base );
 use Template::Constants;
-#use Fcntl qw(O_WRONLY O_CREAT O_TRUNC);
-use File::Temp qw( tempfile );
-use File::Basename;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -278,7 +275,11 @@ sub write_perl_file {
 	unless $file =~ /^(.+)$/s;
 
     eval {
-	($fh, $tmpfile) = tempfile( DIR => dirname($file) );
+        require File::Temp;
+        require File::Basename;
+        ($fh, $tmpfile) = File::Temp::tempfile( 
+            DIR => File::Basename::dirname($file) 
+        );
 	print $fh $class->as_perl($content) || die $!;
 	close($fh);
     };
