@@ -12,6 +12,55 @@
 # $Id$
 #========================================================================
 
+* Reorganised the Template::Filters modules and changed the calling 
+  convention for requesting filters via the fetch() method.  This now
+  expects a reference to the calling Template::Context object as the
+  third parameter (after filter name and reference to a list of arguments).
+  Static filter sub-routines are returned as before and the context has
+  no effect.  Dynamic filter factories (denoted by a $is_dynamic flag
+  in the FILTER_FACTORY table) are called to create a filter sub-routine
+  (closure) for each request.  The context is now passed as the first
+  parameters, followed by the expansion of any arguments.  Filter 
+  factories should return a sub-routine or (undef, $error) on error.
+
+* Added several new filters:
+  - 'stderr' prints the output to STDERR (i.e. for generating output 
+    in the Apache logfile, for example).  e.g. [% message | stderr %]
+
+  - 'file' is the equivalent of the version 1 redirect() filter which 
+    writes the output to a new file, relative to OUTPUT_PATH.  Throws
+    a 'file' exception if OUTPUT_PATH is not set.  There should perhaps 
+    be some other way to disable this without relying on OUTPUT_PATH.
+
+  - 'eval' evaluates the input as a template and processes it.  Proposed
+    by Simon Matthews for times when you might be returning templates 
+    fragments from a database, for example.  e.g. [% dirtext | eval %]
+
+  - 'evalperl' evaluate the input as Perl code, as suggested by Jonas
+    Liligren. Requires the EVAL_PERL option to be set and will throw a 
+    'perl' error if not (see next item).  e.g. [% perlcode | evalperl %]
+
+* Changed PERL blocks to throw a 'perl' error if EVAL_PERL is not set.
+  Any other errors thrown in a Perl blocks are left intact.  Previously,
+  these were converted to 'perl' exceptions which prevented exceptions 
+  of other kinds being throw from within Perl code.
+
+* Changed Template::Base::error() to accept a reference (e.g. exception)
+  as the first parameter.  In this case, no attempt is made to 
+  concatenate (and thereby stringify) the arguments.
+
+* Added a direct stash() accessor method to Template::Context rather 
+  than relying on the slower AUTOLOAD method.
+
+* Fixed a bug with persistant templates not loading Template::Iterator.
+  Thanks to Doug Steinwand who identified the problem.  Also uncovered
+  and fixed a problem with persistant templates not being reloaded due 
+  to the %INC hash.  This caused 1 to be returned from require()
+  instead of the compiled template.
+
+* Applied documentation and test patches from Leon Brocard.
+
+
 #========================================================================
 # Changes from version 2.00-beta1 to 2.00-beta2
 #========================================================================

@@ -64,5 +64,15 @@ This is the hacked foo file, a is any value
 This is the header, title: Yet Another Template Test
 This is a more complex file which includes some BLOCK definitions
 This is the footer, author: billg, version: 6.66
+- 3 - 2 - 1 
+
+-- test --
+[% META author => 'billg' version => 6.66  %]
+[% INCLUDE complex %]
+-- expect --
+This is the header, title: Yet Another Template Test
+This is a more complex file which includes some BLOCK definitions
+This is the footer, author: billg, version: 6.66
+- 3 - 2 - 1 
 
 

@@ -23,9 +23,35 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
+$Template::Test::EXTRA = 1;     # ensure redirected file is created
 #$Template::Context::DEBUG = 1;
 #$Template::DEBUG = 1;
 
+#------------------------------------------------------------------------
+# quick hack to allow STDERR to be tied to a variable.
+# (I'm really surprised there isn't a standard module which does this)
+#------------------------------------------------------------------------
+
+package Tie::File2Str;
+
+sub TIEHANDLE {
+    my ($class, $textref) = @_;
+    bless $textref, $class;
+}
+sub PRINT {
+    my $self = shift;
+    $$self .= join('', @_);
+}
+
+
+package main;
+
+# tie STDERR to a variable
+my $stderr = '';
+tie(*STDERR, "Tie::File2Str", \$stderr);
+
+my $dir  = -d 't' ? 't/test/tmp' : 'test/tmp';
+my $file = 'xyz';
 my ($a, $b, $c, $d) = qw( alpha bravo charlie delta );
 my $params = { 
     'a'      => $a,
@@ -34,21 +60,56 @@ my $params = {
     'd'      => $d,
     'list'   => [ $a, $b, $c, $d ],
     'text'   => 'The cat sat on the mat',
+    outfile  => $file,
+    stderr   => sub { $stderr },
 };
-my $config = {
+my $filters = {
+    'nonfilt'    => 'nonsense',
+    'microjive'  => \&microjive,
+    'microsloth' => [ \&microsloth, 0 ],
+    'censor'     => [ \&censor_factory, 1 ],
+    'badfact'    => [ sub { return 'nonsense' }, 1 ],
+    'badfilt'    => [ 'rubbish', 1 ],
+    'barfilt'    => [ \&barf_up, 1 ],
+};
+my $config1 = {
     INTERPOLATE => 1, 
     POST_CHOMP  => 1,
-    FILTER_FACTORY  => {
-        'badfact'   => 'nonsense',
-	'badfilt'   => sub { 'rubbish' },
-	'microjive' => sub { \&microjive },
-	'censor'    => \&censor_factory,
-    },
+    FILTERS     => $filters,
 };
+my $config2 = {
+    EVAL_PERL   => 1,
+    FILTERS     => $filters,
+    OUTPUT_PATH => $dir,
+    BARVAL      => 'some random value',
+};
+
+unlink "$dir/$file" if -f "$dir/$file";
+
+my $tt1 = Template->new($config1);
+my $tt2 = Template->new($config2);
+
+test_expect(\*DATA, [ default => $tt1, evalperl => $tt2 ], $params);
+
+ok( -f "$dir/$file" );
+unlink "$dir/$file" if -f "$dir/$file";
+
+ 
+
+
+#------------------------------------------------------------------------
+# custom filter subs 
+#------------------------------------------------------------------------
 
 sub microjive {
     my $text = shift;
     $text =~ s/microsoft/The 'Soft/sig;
+    $text;
+}
+
+sub microsloth {
+    my $text = shift;
+    $text =~ s/microsoft/Microsloth/sig;
     $text;
 }
 
@@ -63,10 +124,108 @@ sub censor_factory {
     }
 }
 
-test_expect(\*DATA, $config, $params);
- 
+sub barf_up {
+    my $context = shift;
+    my $foad    = shift || 0;
+
+    if ($foad == 0) {
+        return (undef, "barfed");
+    }
+    elsif ($foad == 1) {
+	return (undef, Template::Exception->new('dead', 'deceased'));
+    }
+    elsif ($foad == 2) {
+	die "keeled over\n";
+    }
+    else {
+	die Template::Exception->new('unwell', 'sick as a parrot');
+    }
+}
+
 
 __DATA__
+#------------------------------------------------------------------------
+# test failures
+#------------------------------------------------------------------------
+-- test --
+[% TRY %]
+[% FILTER nonfilt %]
+blah blah blah
+[% END %]
+[% CATCH %]
+BZZZT: [% error.type %]: [% error.info %]
+[% END %]
+-- expect --
+BZZZT: undef: invalid FILTER entry for 'nonfilt' (not a CODE ref)
+
+-- test --
+[% TRY %]
+[% FILTER badfact %]
+blah blah blah
+[% END %]
+[% CATCH %]
+BZZZT: [% error.type %]: [% error.info %]
+[% END %]
+-- expect --
+BZZZT: undef: invalid FILTER for 'badfact' (not a CODE ref)
+
+-- test --
+[% TRY %]
+[% FILTER badfilt %]
+blah blah blah
+[% END %]
+[% CATCH %]
+BZZZT: [% error.type %]: [% error.info %]
+[% END %]
+-- expect --
+BZZZT: undef: invalid FILTER entry for 'badfilt' (not a CODE ref)
+
+-- test --
+[% TRY;
+     "foo" | barfilt;
+   CATCH;
+     "$error.type: $error.info";
+   END
+%]
+-- expect --
+undef: barfed
+
+-- test --
+[% TRY;
+     "foo" | barfilt(1);
+   CATCH;
+     "$error.type: $error.info";
+   END
+%]
+-- expect --
+dead: deceased
+
+-- test --
+[% TRY;
+     "foo" | barfilt(2);
+   CATCH;
+     "$error.type: $error.info";
+   END
+%]
+-- expect --
+undef: keeled over
+
+-- test --
+[% TRY;
+     "foo" | barfilt(3);
+   CATCH;
+     "$error.type: $error.info";
+   END
+%]
+-- expect --
+unwell: sick as a parrot
+
+
+#------------------------------------------------------------------------
+# test filters
+#------------------------------------------------------------------------
+
+-- test --
 [% FILTER html %]
 This is some html text
 All the <tags> should be escaped & protected
@@ -141,6 +300,17 @@ at The 'Soft, illustrated The 'Soft's strategy of "Embrace,
 Extend, Extinguish"
 
 -- test --
+[% FILTER microsloth %]
+The "Halloween Document", leaked to Eric Raymond from an insider
+at Microsoft, illustrated Microsoft's strategy of "Embrace,
+Extend, Extinguish"
+[% END %]
+-- expect --
+The "Halloween Document", leaked to Eric Raymond from an insider
+at Microsloth, illustrated Microsloth's strategy of "Embrace,
+Extend, Extinguish"
+
+-- test --
 [% FILTER censor('bottom' 'nipple') %]
 At the bottom of the hill, he had to pinch the
 nipple to reduce the oil flow.
@@ -148,28 +318,6 @@ nipple to reduce the oil flow.
 -- expect --
 At the [** CENSORED **] of the hill, he had to pinch the
 [** CENSORED **] to reduce the oil flow.
-
--- test --
-[% TRY %]
-[% FILTER badfact %]
-blah blah blah
-[% END %]
-[% CATCH %]
-BZZZT: [% error.type %]: [% error.info %]
-[% END %]
--- expect --
-BZZZT: undef: invalid FILTER factory for 'badfact' (not a CODE ref)
-
--- test --
-[% TRY %]
-[% FILTER badfilt %]
-blah blah blah
-[% END %]
-[% CATCH %]
-BZZZT: [% error.type %]: [% error.info %]
-[% END %]
--- expect --
-BZZZT: undef: invalid FILTER 'badfilt' (not a CODE ref)
 
 -- test --
 [% FILTER bold = format('<b>%s</b>') %]
@@ -346,4 +494,87 @@ The cat sat on the mat
 [% END %]
 -- expect --
 the cat sat on the mat
+
+-- test --
+[% 'arse' | stderr %]
+stderr: [% stderr %]
+-- expect --
+stderr: arse
+
+
+-- test --
+[% percent = '%'
+   left    = "[$percent"
+   right   = "$percent]"
+   dir     = "$left a $right blah blah $left b $right"
+%]
+[% dir +%]
+FILTER [[% dir | eval %]]
+-- expect --
+[% a %] blah blah [% b %]
+FILTER [alpha blah blah bravo]
+
+-- test --
+nothing
+[% TRY;
+    '$x = 10; $b = 20; $x + $b' | evalperl;
+   CATCH;
+     "$error.type: $error.info";
+   END
++%]
+happening
+-- expect --
+nothing
+perl: EVAL_PERL is not set
+happening
+
+-- test --
+[% TRY -%]
+before
+[% FILTER redirect('xyz') %]
+blah blah blah
+here is the news
+[% a %]
+[% END %]
+after
+[% CATCH %]
+ERROR [% error.type %]: [% error.info %]
+[% END %]
+
+-- expect --
+before
+ERROR file: OUTPUT_PATH is not set
+
+-- test --
+-- use evalperl --
+[% FILTER evalperl %]
+   $a = 10;
+   $b = 20;
+   $stash->{ foo } = $a + $b;
+   $stash->{ bar } = $context->config->{ BARVAL };
+   "all done"
+[% END +%]
+foo: [% foo +%]
+bar: [% bar %]
+-- expect --
+all done
+foo: 30
+bar: some random value
+
+-- test --
+[% TRY -%]
+before
+[% FILTER redirect(outfile) -%]
+blah blah blah
+here is the news
+[% a %]
+[% END -%]
+after
+[% CATCH %]
+ERROR [% error.type %]: [% error.info %]
+[% END %]
+
+-- expect --
+before
+after
 

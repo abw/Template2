@@ -2,6 +2,12 @@
 # TO-DO
 #------------------------------------------------------------------------
 
+* Exception names.  Also, we cannot catch 'perl'.
+
+* Document FILTER_FACTORY
+
+* load Template::Iterator for persistant templates...
+
 * move v1 Template::* to Template::v1::*.  Add 'version1' load flag
   as an EXPORT_FAIL to Tempate.pm to load v1.
 
@@ -27,7 +33,7 @@
     [% something->first %] => $stash->{'something'}->{'first'} 
     [% something.first %] => $stash->get('something', 0, 'first', 0)
   
-  The second example is as per the current V2 bet and allows
+  The second example is as per the current V2 beta and allows
   'something' to be either a hash with a 'first' member (which may be
   a sub-routine which is then run), or an object with a 'first'
   method, or a list from which the first item is returned.  All magic
@@ -48,12 +54,6 @@
   the 'loop' reference to test 'first', 'last', etc., against, but it would
   be faster for those cases when you didn't need that.
 
-* Change filter factory interface to accept $context as first parameter.
-  Dynamic dynamic filters can't grab context reference and some of them 
-  need it.
-
-* Add 'perl' filter, but can't do that until I fix the above.
-
 * Filters and plugins cache may bloat.  Perhaps reset() should accept
   flags to clear BLOCKS, PLUGINS, FILTERS, etc.
 
@@ -64,10 +64,6 @@
 * Note that \refs are not supported.  I don't know if they ever should
   be, but I think that some of the problems for which refs were conceived
   are still valid.
-
-* Do something (i.e. mail Lincoln) about the CGI special case in
-  Template::Stash to work around the problem of CGI objects disclaiming
-  membership of the UNIVERSAL class after the first method call. 
 
 * Note that no recursion checking is performed for BLOCKs, only 
   Template::Document instances.  Should be documented.
@@ -170,3 +166,15 @@
 * check [% INCLUDE $template %] works where $template is a 
   Template::Document
 
+-- v2.00 beta 3 --
+
+* Change filter factory interface to accept $context as first parameter.
+  Dynamic dynamic filters can't grab context reference and some of them 
+  need it.
+
+* Did something (i.e. spoke to Lincoln at TPC4) about the CGI special 
+  case in Template::Stash to work around the problem of CGI objects 
+  disclaiming membership of the UNIVERSAL class after the first method 
+  call.   Current solution is to test UNIVERSAL::can($obj, 'can').
+
+* Added eval, evalperl, file and stderr filters.

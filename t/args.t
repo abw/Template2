@@ -41,7 +41,7 @@ sub args {
     local $" = ', ';
     
     return "  ARGS: [ @args ]\n NAMED: { "
-	. join(', ', map { "$_ => $named->{ $_ }" } keys %$named)
+	. join(', ', map { "$_ => $named->{ $_ }" } sort keys %$named)
 	. " }\n";
 }
 

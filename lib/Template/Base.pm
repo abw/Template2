@@ -72,7 +72,7 @@ sub error {
 	$errvar = ref $self ? \$self->{ _ERROR } : \${"$self\::ERROR"};
     }
     if (@_) {
-	$$errvar = join('', @_);
+	$$errvar = ref($_[0]) ? shift : join('', @_);
 	return undef;
     }
     else {

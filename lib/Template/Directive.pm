@@ -599,22 +599,27 @@ sub use {
 
 sub perl {
     my ($class, $block) = @_;
-    $block = pad($block, 1) if $PRETTY;
+    $block = pad($block, 2) if $PRETTY;
 
     return <<EOF;
 
 # PERL
-$OUTPUT do {
-    my \$output = "package Template::Perl;\\n";
+if (\$context->eval_perl()) {
+    $OUTPUT do {
+	my \$output = "package Template::Perl;\\n";
 
 $block
 
-    \$Template::Perl::context = \$context;
-    \$Template::Perl::stash   = \$stash;
-    \$output = eval \$output;
-    \$context->throw('perl', \$@) if \$@;
-    \$output;
-} if \$context->eval_perl();
+        \$Template::Perl::context = \$context;
+	\$Template::Perl::stash   = \$stash;
+	\$output = eval \$output;
+	\$context->throw(\$@) if \$@;
+	\$output;
+    };
+}
+else {
+    \$context->throw('perl', 'EVAL_PERL not set');
+}
 EOF
 }
 

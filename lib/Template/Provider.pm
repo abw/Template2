@@ -335,8 +335,12 @@ sub _fetch_path {
 		    && -f ($compiled = "$compdir$path$compext")
 		    && (stat($path))[9] < (stat($compiled))[9]) {
 
-		    # load compiled template via require()
+		    # load compiled template via require();  we zap any
+		    # %INC entry to ensure it is reloaded (we don't 
+		    # want 1 returned by require() to say it's in memory)
+		    delete $INC{ $compiled };  # don't want 1 returned
 		    eval { $data = require $compiled };
+
 		    if ($data && ! $@) {
 			# store in cache
 			$data  = $self->store($path, $data);
@@ -363,7 +367,9 @@ sub _fetch_path {
 	}
 	# nothing found
 	($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
-    }
+    } # INCLUDE
+
+#    printf "returning ($data, %s)\n", defined $error ? $error : '<no error>';
 
     return ($data, $error);
 }

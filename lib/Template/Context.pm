@@ -105,7 +105,6 @@ sub template {
     foreach my $provider (@{ $self->{ LOAD_TEMPLATES } }) {
 	($template, $error) = $provider->fetch($name);
 	return $template unless $error;
-#	print STDERR "template() error: $error\ntemplate: $template";
 	return $self->error($template)
 	    if $error == &Template::Constants::STATUS_ERROR;
     }
@@ -165,7 +164,7 @@ sub filter {
 #	print STDERR "Asking filter provider $provider for $name...\n"
 #	    if $DEBUG;
 
-	($filter, $error) = $provider->fetch($name, $args);
+	($filter, $error) = $provider->fetch($name, $args, $self);
 	last unless $error;
 	return $self->error($filter)
 	    if $error == &Template::Constants::STATUS_ERROR;
@@ -225,8 +224,11 @@ sub process {
     if (ref $template eq 'CODE') {
 	$output = &$template($self);
     }
-    else {
+    elsif (ref $template) {
 	$output = $template->process($self);
+    }
+    else {
+	die "invalid template reference: $template\n";
     }
 
     if ($self->{ TRIM }) {
@@ -272,8 +274,11 @@ sub include {
 	if (ref $template eq 'CODE') {
 	    $output = &$template($self);
 	}
-	else {
+	elsif (ref $template) {
 	    $output = $template->process($self);
+	}
+	else {
+	    die "invalid template reference: $template\n";
 	}
     };
     $error = $@;
@@ -448,11 +453,25 @@ sub reset {
 
 
 #------------------------------------------------------------------------
+# stash()
+#
+# Simple accessor methods to return the STASH values.  This is likely
+# to be called quite often so we provide a direct method rather than
+# relying on the slower AUTOLOAD.
+#------------------------------------------------------------------------
+
+sub stash {
+    return $_[0]->{ STASH };
+}
+
+
+#------------------------------------------------------------------------
 # AUTOLOAD
 #
 # Provides pseudo-methods for read-only access to various internal 
-# members.  For example, stash(), templates(), plugins(), filters(),
-# eval_perl(), load_perl(), etc.
+# members.  For example, templates(), plugins(), filters(),
+# eval_perl(), load_perl(), etc.  These aren't called very often, or
+# may never be called at all.
 #------------------------------------------------------------------------
 
 sub AUTOLOAD {
@@ -540,10 +559,12 @@ sub _init {
     # EVAL_PERL - flag indicating if PERL blocks should be processed
     # EVAL_PERL - flag to remove leading and trailing whitespace from output
     # BLKSTACK  - list of hashes of BLOCKs defined in current template(s)
+    # CONFIG    - original configuration hash
 
     $self->{ EVAL_PERL } = $config->{ EVAL_PERL } || 0;
     $self->{ TRIM      } = $config->{ TRIM } || 0;
     $self->{ BLKSTACK  } = [ ];
+    $self->{ CONFIG    } = $config;
 
     return $self;
 }

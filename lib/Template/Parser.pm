@@ -372,6 +372,7 @@ sub tokenise_directive {
 			\\\2             # an escaped quote \" or \' (match $1)
 		    |                    # ...or...
 			.                # any other character
+		    |	\n
 		    )*?                  # non-greedy repeat
 		)                        # end of $3
 		\2                       # match opening quote

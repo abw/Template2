@@ -67,8 +67,10 @@ $STD_PLUGINS   = {
 # $factory->new(...), equivalent to MyClass->new(...) .  Where
 # $factory is a prototype object, the new() method is called as an
 # object method, $myobject->new(...).  This latter approach allows
-# plugins to act as Singletons, cache shared
-# data, etc.  The 
+# plugins to act as Singletons, cache shared data, etc.  
+#
+# Returns a reference to a plugin, (undef, STATUS_DECLINE) to decline
+# the request or ($error, STATUS_ERROR) on error.
 #------------------------------------------------------------------------
 
 sub fetch {

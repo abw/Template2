@@ -62,4 +62,7 @@ This is the foo file, a is
 This is the header, title: Yet Another Template Test
 This is a more complex file which includes some BLOCK definitions
 This is the footer, author: abw, version: 3.14
+- 3 - 2 - 1 
+
+
 

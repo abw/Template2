@@ -11,31 +11,7 @@ This is the header, title: [% title %]
 [% END %]
 
 [% BLOCK footer %][%# NOTE: the 'template' is the parent doc, not this one %]
-This is the footer, author: [% template.author %], version: [% template.version %]
+This is the footer, author: [% template.author %], version: [% template.version+%]
+[% "- $x " FOREACH x = [3 2 1] %]
 [% END %]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

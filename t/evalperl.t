@@ -52,11 +52,15 @@ __DATA__
    title   = 'Test Template $foo #6'
    version = 1.23
 %]
+[% TRY %]
 [% PERL %]
     my $output = "author: [% template.author %]\n";
     $stash->set('a', 'The cat sat on the mat');
     $output .= "more perl generated output\n";
     $output;
+[% END %]
+[% CATCH %]
+Not allowed.
 [% END %]
 a: [% a +%]
 a: $a
@@ -67,19 +71,25 @@ $stash->set('b', 'The cat sat where?');
 b: [% b +%]
 b: $b
 -- expect --
+Not allowed.
 a: alpha
 a: alpha
 b: bravo
 b: bravo
 
 -- test --
+[% TRY %]
 nothing
 [% PERL %]
 We don't care about correct syntax within PERL blocks if EVAL_PERL isn't set.
 They're simply ignored.
 [% END %]
+[% CATCH %]
+ERROR: [% error.type %]: [% error.info %]
+[% END %]
 -- expect --
 nothing
+ERROR: perl: EVAL_PERL not set
 
 -- test --
 some stuff
@@ -121,5 +131,7 @@ a: The cat sat on the mat
 The cat sat on the mouse mat
 b: The cat sat where?
 b: The cat sat where?
+
+
 
 
