@@ -55,6 +55,7 @@ sub new {
     # first line of file should contain field definitions
     while (! $line || $line =~ /^#/) {
 	$line = <FD>;
+	chomp $line;
     }
     (@fields = split(/\s*$delim\s*/, $line)) 
 	|| return $class->fail("first line of file must contain field names");

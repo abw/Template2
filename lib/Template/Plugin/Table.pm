@@ -77,6 +77,7 @@ sub new {
 	if ($size < $rows) {
 	    $rows = $size;   # pad?
 	    $cols = 1;
+	    $coloff = 0;
 	}
 	else {
 	    $coloff = $rows - $overlap;
