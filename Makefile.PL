@@ -498,15 +498,21 @@ EOF
 			      $TT_XS_ENABLE) =~ /^y/i);
 
     if ($TT_XS_ENABLE) {
-	
-	$TT_XS_DEFAULT = (ttprompt('Do you want to use the XS Stash for all Templates?', 
+        $TT_XS_DEFAULT =
+            (ttprompt('Do you want to use the XS Stash for all Templates?',
 				   $TT_XS_DEFAULT) =~ /^y/i); 
+    }
+    else {
+        # If the XS stash is disabled, we cannot use it as the default stash.
+        $TT_XS_DEFAULT = 0;
+    }
 
+    # Actually, we would have to fix 'Config.pm' only if the XS stash is
+    # disabled. But this way, we are sure the correct module is used.
 	fix_file(catfile('lib','Template','Config.pm'),
 		 '$STASH', 
 		 $TT_XS_DEFAULT ? 'Template::Stash::XS' : 'Template::Stash');
     }
-}
 
 
 #------------------------------------------------------------------------
@@ -604,7 +610,9 @@ specify a separate directory for them.
 
 EOF
 
-    if (ttprompt('Do you want to install these components?', $TT_EXTRAS) =~ /^y/i) {
+    if ($TT_EXTRAS = (
+        ttprompt('Do you want to install these components?',
+            $TT_EXTRAS) =~ /^y/i)) {
 	message(<<EOF);
 
 You can chose any directory for the installation of the additional
@@ -892,18 +900,19 @@ EOF
 
 sub write_defaults {
     open(FP, "> $DEFAULTS_FILE") || die "$DEFAULTS_FILE: $!\n";
-    my ( $ttdbi, $ttdocs, $ttsplash, $ttex, 
+    my ( $ttdbi, $ttdocs, $ttsplash, $ttexamples, $ttextras,
 	 $ttlatex, $ttxs_enable, $ttxs_default ) 
 	    = map { $_ ? 'y' : 'n' } 
        ( $TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, 
-	 $TT_LATEX_ENABLE, $TT_XS_ENABLE, $TT_XS_DEFAULT );
+     $TT_EXTRAS, $TT_LATEX_ENABLE, $TT_XS_ENABLE, $TT_XS_DEFAULT );
     print FP <<EOF;
 \$TT_PREFIX        = '$TT_PREFIX';
 \$TT_IMAGES        = '$TT_IMAGES';
 \$TT_RUN_DBI       = '$ttdbi';
 \$TT_BUILD_DOCS    = '$ttdocs';
 \$TT_SPLASH_DOCS   = '$ttsplash';
-\$TT_EXAMPLES      = '$ttex';
+\$TT_EXAMPLES      = '$ttexamples';
+\$TT_EXTRAS        = '$ttextras';
 \$TT_SPLASH_THEME  = '$TT_SPLASH_THEME';
 \$TT_LATEX_ENABLE  = '$ttlatex';
 \$TT_LATEX_PATH    = '$TT_LATEX_PATH';
