@@ -5,9 +5,12 @@
 # DESCRIPTION
 #   A Template Toolkit plugin to provide access to a DBI data source.
 #
-# AUTHOR
-#   Simon Matthews <sam@knowledgepool.com>, with contributions from 
-#   Andy Wardley <abw@kfs.org>.
+# AUTHORS
+#   Original version by Simon Matthews <sam@knowledgepool.com>
+#   with some reworking by Andy Wardley <abw@kfs.org> and other
+#   contributions from Craig Barratt <craig@arraycomm.com>,
+#   Dave Hodgkinson <daveh@davehodgkinson.com> and Rafael Kitover
+#   <caelum@debian.org>
 #
 # COPYRIGHT
 #   Copyright (C) 1999-2000 Simon Matthews.  All Rights Reserved.
@@ -15,9 +18,8 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#------------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 # 
 #==============================================================================
 
@@ -37,6 +39,9 @@ $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG    = 0 unless defined $DEBUG;
 $QUERY    = 'Template::Plugin::DBI::Query';
 $ITERATOR = 'Template::Plugin::DBI::Iterator';
+
+# alias _connect() to connect() for backwards compatability
+*_connect = \*connect;
 
 
 #------------------------------------------------------------------------
@@ -75,10 +80,11 @@ sub new {
 sub connect {
     my $self   = shift;
     my $params = ref $_[-1] eq 'HASH' ? pop(@_) : { };
-    my ($dbh, $dsn, $user, $pass);
+    my ($dbh, $dsn, $user, $pass, $klobs);
 
     # set debug flag
     $DEBUG = $params->{ debug } if exists $params->{ debug };
+    $self->{ _DEBUG } = $params->{ debug } || 0;
 
     # fetch 'dbh' named paramater or use positional arguments or named 
     # parameters to specify 'dsn', 'user' and 'pass'
@@ -94,18 +100,34 @@ sub connect {
 	$self->{ _DBH_CONNECT } = 0;
     }
     else {
+
+	# certain Perl programmers are known to have problems with short 
+	# term memory loss (see Tie::Hash::Cannabinol) so we let the poor
+	# blighters fumble any kind of argument that looks like it might
+	# identify the database 
+
 	$dsn = shift 
 	     || $params->{ data_source } 
+	     || $params->{ database } 
 	     || $params->{ connect } 
              || $params->{ dsn }
+             || $params->{ db }
 	     || $ENV{DBI_DSN}
 	     || return $self->_throw('data source not defined');
+
+	# add 'dbi:' prefix if it's not there
+	$dsn = "dbi:$dsn" unless $dsn =~ /^dbi:/i;
+
 	$user = shift
 	     || $params->{ username } 
 	     || $params->{ user };
+
 	$pass = shift 
 	     || $params->{ password } 
 	     || $params->{ pass };
+
+	# save connection data because we might need it later to do a tie()
+	@$self{ qw( _DSN _USER _PASS ) } = ($dsn, $user, $pass);
 
 	# reuse existing database handle if connection params match
 	my $connect = join(':', $dsn || '', $user || '', $pass || '');
@@ -116,8 +138,9 @@ sub connect {
 	$self->{ _DBH }->disconnect()
 	    if $self->{ _DBH } && $self->{ _DBH_CONNECT };
 	    
-	# open new connection
-	$params->{ PrintError } = 0 
+	# don't need DBI to automatically print errors because all calls go 
+	# via this plugin interface and we always check return values
+	$params->{ PrintError } = 0
 	    unless defined $params->{ PrintError };
 
 	$self->{ _DBH } = DBI->connect_cached( $dsn, $user, $pass, $params )
@@ -128,39 +151,6 @@ sub connect {
     }
 
     return '';
-}
-
-#------------------------------------------------------------------------
-# _connect()
-#
-# An alias for connect, provided for backwards compatability
-#------------------------------------------------------------------------
-
-sub _connect {
-    my $self = shift;
-#    unless (@_) {
-#	return $self->{ _DBH } || $self->_throw('no current dbh');
-#    }
-    return $self->connect(@_);
-}
-
-#------------------------------------------------------------------------
-# _getDBH()
-#
-# Internal method to retrieve the database handle belonging to the
-# instance or attempt to create a new one using connect.
-#------------------------------------------------------------------------
-
-sub _getDBH() {
-    my $self = shift;
-    my $dbh = $self->{ _DBH };
-
-    unless ($dbh) {
-        $self->connect;
-	$dbh = $self->{ _DBH };
-    }
-
-    return $dbh;
 }
 
 
@@ -180,6 +170,54 @@ sub disconnect {
 
 
 #------------------------------------------------------------------------
+# tie( $table, $key )
+#
+# Return a hash tied to a table in the database, indexed by the specified
+# key.
+#------------------------------------------------------------------------
+
+sub tie {
+    my $self = shift;
+    my $params = ref $_[-1] eq 'HASH' ? pop(@_) : { };
+    my ($table, $key, $klobs, $debug, %hash);
+
+    eval { require Tie::DBI };
+    $self->_throw("failed to load Tie::DBI module: $@") if $@;
+
+    $table = shift 
+	|| $params->{ table } 
+        || $self->_throw('table not defined');
+
+    $key = shift 
+	|| $params->{ key } 
+        || $self->_throw('key not defined');
+
+    # Achtung der Klobberman!
+    $klobs = $params->{ clobber };
+    $klobs = $params->{ CLOBBER } unless defined $klobs;
+
+    # going the extra mile to allow user to use UPPER or lower case or 
+    # inherit internel debug flag set by connect()
+    $debug = $params->{ debug };
+    $debug = $params->{ DEBUG } unless defined $debug;
+    $debug = $self->{ _DEBUG } unless defined $debug;
+
+    tie %hash, 'Tie::DBI', {
+	%$params,   # any other Tie::DBI options like DEBUG, WARN, etc
+	db       => $self->{ _DBH  } || $self->{ _DSN },
+	user     => $self->{ _USER },
+	password => $self->{ _PASS },
+	table    => $table,
+	key      => $key,
+	CLOBBER  => $klobs || 0,
+	DEBUG    => $debug || 0,
+    };
+
+    return \%hash ;
+}
+
+
+#------------------------------------------------------------------------
 # prepare($sql)
 #
 # Prepare a query and store the live statement handle internally for
@@ -190,11 +228,7 @@ sub prepare {
     my $self = shift;
     my $sql  = shift || return undef;
 
-#    my $dbh = $self->{ _DBH }
-#	|| return $self->_throw('no connection');
-    my $dbh = $self->_getDBH();
-
-    my $sth = $dbh->prepare($sql) 
+    my $sth = $self->dbh->prepare($sql) 
 	|| return $self->_throw("DBI prepare failed: $DBI::errstr");
     
     # create wrapper object around handle to return to template client
@@ -217,7 +251,7 @@ sub execute {
     my $sth = $self->{ _STH }->[-1]
 	|| return $self->_throw('no query prepared');
 
-    $sth->execute(@_) 
+    $sth->execute(@_);
 }
 
     
@@ -230,9 +264,8 @@ sub execute {
 sub query {
     my $self = shift;
     my $sql  = shift;
-    my $sth  = $self->prepare($sql);
 
-    $sth->execute(@_);
+    $self->prepare($sql)->execute(@_);
 }
 
 
@@ -246,12 +279,7 @@ sub do {
     my $self = shift;
     my $sql  = shift || return '';
 
-    # get a database connection
-#    my $dbh = $self->{ _DBH }
-#	|| return $self->_throw('no connection');
-    my $dbh = $self->_getDBH();
-
-    return $dbh->do($sql) 
+    return $self->dbh->do($sql) 
 	|| $self->_throw("DBI do failed: $DBI::errstr");
 }
 
@@ -265,12 +293,24 @@ sub do {
 
 sub quote {
     my $self = shift;
+    $self->dbh->quote(@_);
+}
 
-#    my $dbh = $self->{ _DBH }
-#	|| return $self->_throw('no connection');
-    my $dbh = $self->_getDBH();
 
-    $dbh->quote(@_);
+#------------------------------------------------------------------------
+# dbh()
+#
+# Internal method to retrieve the database handle belonging to the
+# instance or attempt to create a new one using connect.
+#------------------------------------------------------------------------
+
+sub dbh {
+    my $self = shift;
+
+    return $self->{ _DBH } || do {
+        $self->connect;
+	$self->{ _DBH };
+    };
 }
 
 
@@ -421,15 +461,6 @@ sub get_next {
 
     # look ahead to the next row so that the rowcache is refilled
     $self->_fetchrow();
-
-    # NOTE: this needs fixing, flushing or documenting...
-    # process any fixup handlers on the data
-#    if (defined($fixup = $self->{ _FIXUP })) {
-#	foreach (keys %$fixup) {
-#	    $data->{ $_ } = &{ $fixup->{$_} }($data->{ $_ })
-#		if exists $data->{ $_ };
-#	}
-#    }
 
     $self->{ ITEM } = $data;
     return ($data, Template::Constants::STATUS_OK);
@@ -694,8 +725,8 @@ E<lt>abw@kfs.orgE<gt>.
 
 =head1 VERSION
 
-2.28, distributed as part of the
-Template Toolkit version 2.06b, released on 29 November 2001.
+2.29, distributed as part of the
+Template Toolkit version 2.06b, released on 03 December 2001.
 
 
 
