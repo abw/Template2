@@ -40,7 +40,7 @@ my $NAME     = "ttree";
 my $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 my $HOME     = $ENV{ HOME } || '';
 my $RCFILE   = $ENV{"\U${NAME}rc"} || "$HOME/.${NAME}rc";
-
+my $TTMODULE = 'Template';
 
 #------------------------------------------------------------------------
 # configuration options
@@ -87,6 +87,7 @@ unshift(@INC, @{ $config->perl5lib });
 
 # get all template_* options from the config and fold keys to UPPER CASE
 my %ttopts   = $config->varlist('^template_', 1);
+my $ttmodule = delete($ttopts{ module });
 my $ucttopts = {
     map { my $v = $ttopts{ $_ }; defined $v ? (uc $_, $v) : () }
     keys %ttopts,
@@ -103,6 +104,17 @@ my $ttopts   = {
     INCLUDE_PATH => [ $srcdir, @$libdir ],
     OUTPUT_PATH  => $destdir,
 };
+
+# load custom template module 
+if ($ttmodule) {
+    my $ttpkg = $ttmodule;
+    $ttpkg =~ s[::][/]g;
+    $ttpkg .= '.pm';
+    require $ttpkg;
+}
+else {
+    $ttmodule = $TTMODULE;
+}
 
 
 #------------------------------------------------------------------------
@@ -148,31 +160,33 @@ my $DEP_DEBUG = $config->depend_debug();
 # pre-amble
 #------------------------------------------------------------------------
 
-print "$NAME $VERSION (Template Toolkit version $Template::VERSION)\n\n"
-    if $verbose;
-
 if ($verbose) {
     local $" = ', ';
+
+
+    print "$NAME $VERSION (Template Toolkit version $Template::VERSION)\n\n";
+
     my $sfx = join(', ', map { "$_ => $suffix->{$_}" } keys %$suffix);
 
-    print(STDERR 
-          "      Source: $srcdir\n",
+    print("      Source: $srcdir\n",
           " Destination: $destdir\n",
           "Include Path: [ @$libdir ]\n",
           "      Ignore: [ @$ignore ]\n",
           "        Copy: [ @$copy ]\n",
           "      Accept: [ @$accept ]\n",
           "      Suffix: [ $sfx ]\n");
+    print("      Module: $ttmodule ", $ttmodule->version(), "\n")
+        unless $ttmodule eq $TTMODULE;
+
     if ($depends && $DEP_DEBUG) {
-        print STDERR "Dependencies:\n";
+        print "Dependencies:\n";
         foreach my $key ('*', grep { !/\*/ } keys %$depends) {
-            printf(STDERR
-                   "    %-16s %s\n", $key, 
+            printf("    %-16s %s\n", $key, 
                    join(', ', @{ $depends->{ $key } }));
         }
     }
-    print STDERR "\n";
-    print(STDERR "NOTE: dry run, doing nothing...\n")
+    print "\n";
+    print "NOTE: dry run, doing nothing...\n"
         if $dryrun;
 }
 
@@ -180,7 +194,8 @@ if ($verbose) {
 # main processing loop
 #------------------------------------------------------------------------
 
-my $template = Template->new($ttopts);
+my $template = $ttmodule->new($ttopts)
+    || die $ttmodule->error();
 
 if (@ARGV) {
     # explicitly process files specified on command lines 
@@ -427,7 +442,7 @@ sub depend_time {
         push(@pending, @$deps);
     }
 
-    print STDERR "    # checking dependencies for $file...\n"
+    print "    # checking dependencies for $file...\n"
         if $DEP_DEBUG;
 
     # iterate through the list of pending files
@@ -437,7 +452,7 @@ sub depend_time {
 
         if (File::Spec->file_name_is_absolute($file) && -f $file) {
             $modtime = (stat($file))[9];
-            print STDERR "    #   $file [$modtime]\n"
+            print "    #   $file [$modtime]\n"
                 if $DEP_DEBUG;
         }
         else {
@@ -446,7 +461,7 @@ sub depend_time {
                 $absfile = File::Spec->catfile($dir, $file);
                 if (-f $absfile) {
                     $modtime = (stat($absfile))[9];
-                    print STDERR "    #   $absfile [$modtime]\n"
+                    print "    #   $absfile [$modtime]\n"
                         if $DEP_DEBUG;
                     last;
                 }
@@ -457,7 +472,7 @@ sub depend_time {
 
         if ($deps = $depends->{ $file }) {
             push(@pending, @$deps);
-            print STDERR "    #     depends on ", join(', ', @$deps), "\n"
+            print "    #     depends on ", join(', ', @$deps), "\n"
                 if $DEP_DEBUG;
         }
     }
@@ -499,6 +514,7 @@ sub read_config {
         'depend=s%',
         'depend_file|depfile=s',
         'depend_debug|depdbg',
+        'template_module|module=s',
         'template_anycase|anycase',
         'template_eval_perl|eval_perl',
         'template_load_perl|load_perl',
@@ -698,6 +714,7 @@ Additional options to set Template Toolkit configuration items:
    --compile_ext=STRING     File extension for compiled template files
    --compile_dir=DIR        Directory for compiled template files
    --perl5lib=DIR           Specify additional Perl library directories
+   --template_module=MODULE Specify alternate Template module
 
 See 'perldoc ttree' for further information.  
 
@@ -1012,6 +1029,11 @@ options correspond to the C<PRE_CHOMP> and C<POST_CHOMP> options.
 
 Run C<ttree -h> for a summary of the options available.
 
+The C<--template_module> option allows you to provide the name of 
+an alternate module for processing templates.  The Template module 
+is used by default.
+
+
 =head1 AUTHORS
 
 Andy Wardley E<lt>abw@andywardley.comE<gt>
@@ -1025,8 +1047,8 @@ Brocard who gets everywhere, it seems.
 
 =head1 VERSION
 
-2.65, distributed as part of the
-Template Toolkit version 2.11, released on 06 January 2004.
+2.66, distributed as part of the
+Template Toolkit version 2.11b, released on 07 January 2004.
 
 =head1 COPYRIGHT
 
