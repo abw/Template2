@@ -64,11 +64,11 @@ sub new {
 	    $args->{ filename } = $content;
 	}
     }
-    elsif ($content = $args->{ text }) {
+    elsif ($content = $args->{ text } || $args->{ xml }) {
 	$about = 'xml text';
 	$args->{ xml } = $content;
     }
-    elsif ($content = $args->{ file }) {
+    elsif ($content = $args->{ file } || $args->{ filename }) {
 	$about = "xml file $content";
 	$args->{ filename } = $content;
     }

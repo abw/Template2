@@ -62,6 +62,28 @@ page: The Baz Page
 
 
 -- test --
+[% USE xpath = XML.XPath(file => xmlfile) -%]
+[% FOREACH page = xpath.findnodes('/website/section/page') -%]
+page: [% page.getAttribute('title') %]
+[% END %]
+-- expect --
+page: The Foo Page
+page: The Bar Page
+page: The Baz Page
+
+
+-- test --
+[% USE xpath = XML.XPath(filename => xmlfile) -%]
+[% FOREACH page = xpath.findnodes('/website/section/page') -%]
+page: [% page.getAttribute('title') %]
+[% END %]
+-- expect --
+page: The Foo Page
+page: The Bar Page
+page: The Baz Page
+
+
+-- test --
 [% xmltext = BLOCK %]
 <html>
 <body>
@@ -169,3 +191,24 @@ FOO {
   </list>
 </bar>
 </foo>
+
+-- test --
+[% xmltext = BLOCK -%]
+<greeting type="hello" what="world" />
+[% END -%]
+[% USE xp = XML.XPath(xml => xmltext);
+   xp.find("/greeting[@type='hello']/@what") %]
+-- expect --
+world
+
+
+-- test --
+[% xmltext = BLOCK -%]
+<hello>world</hello>
+[% END -%]
+[% USE xp = XML.XPath(text => xmltext);
+   xp.find("/hello"); %]
+-- expect --
+world
+
+
