@@ -50,14 +50,15 @@ sub _init {
 
 sub ident {
     my ($self, $ident) = @_;
+
+    # discard first node indicating constants namespace
+    splice(@$ident, 0, 2);
+
     my $nelems = @$ident / 2;
     my ($e, $result);
     local $" = ', ';
 
     print STDERR "constant ident [ @$ident ] " if $DEBUG;
-
-    # discard first node indicating constants namespace
-    splice(@$ident, 0, 2);
 
     foreach $e (0..$nelems-1) {
 	# node name must be a constant
