@@ -29,7 +29,8 @@ use Template::Exception;
 
 use base qw( Template::Plugin );
 use vars qw( $VERSION $ERROR);
-use overload q|""| => "text";
+use overload q|""| => "text",
+             fallback => 1;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $ERROR   = '';
@@ -354,6 +355,12 @@ sub split {
 sub search {
     my ($self, $pattern) = @_;
     return $self->{ text } =~ /$pattern/;
+}
+
+
+sub equals {
+    my ($self, $comparison) = @_;
+    return $self->{ text } eq $comparison;
 }
 
 
@@ -762,8 +769,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-1.01, distributed as part of the
-Template Toolkit version 2.06b, released on 29 November 2001.
+2.02, distributed as part of the
+Template Toolkit version 2.06b, released on 03 December 2001.
 
 =head1 COPYRIGHT
 
