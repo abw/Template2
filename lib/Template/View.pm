@@ -212,10 +212,11 @@ sub print {
     my $method = $self->{ method };
     my $map = $self->{ map };
     my $output = '';
-    my $newType; 
     
     # print each argument
     foreach $item (@_) {
+	my $newtype;
+
 	if (! ($type = ref $item)) {
 	    # non-references are TEXT
 	    $type = 'TEXT';
@@ -225,7 +226,7 @@ sub print {
 	    # no specific map entry for object, maybe it implements a 
 	    # 'present' (or other) method?
 #	    $self->DEBUG("determining if $item can $method\n") if $DEBUG;
-	    if ($method && UNIVERSAL::can($item, $method)) {
+	    if ( $method && UNIVERSAL::can($item, $method) ) {
 		$self->DEBUG("Calling \$item->$method\n") if $DEBUG;
 		$present = $item->$method($self);	## call item method
 		# undef returned indicates error, note that we expect 
@@ -234,14 +235,15 @@ sub print {
 		$output .= $present;
 		next;					## NEXT
 	    }   
-	    elsif ( defined($newType = $item->{$method}) &&
-                    defined($template = $map->{"$method=>$newType"}) ) {
+	    elsif ( UNIVERSAL::isa($item, 'HASH' ) 
+		   && defined($newtype = $item->{$method})
+		   && defined($template = $map->{"$method=>$newtype"})) {
 	    }
-	    elsif ( defined($newType = $item->{$method}) &&
-                    defined($template = $map->{"$method=>*"}) ) {
-                $template =~ s/\*/$newType/;
+	    elsif ( defined($newtype)
+		 && defined($template = $map->{"$method=>*"}) ) {
+		$template =~ s/\*/$newtype/;
             }    
-	    elsif (! ($template = $map->{ default })) {
+	    elsif (! ($template = $map->{ default }) ) {
 		# default not defined, so construct template name from type
 		($template = $type) =~ s/\W+/_/g;
 	    }

@@ -17,7 +17,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.03b - 25th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##
+# Version 2.04 - 27th June 2001
 #------------------------------------------------------------------------
 
 * Applied a patch from Craig Barratt to both the regular
@@ -45,6 +45,11 @@
     didn't want to change this behavior, so NEXT and LAST only get the
     LOOP label inside loops (except in the top-level atomexpr FOREACH
     and atomexpr WHILE cases, which should be ok).
+
+* Does he ever sleep!  :-) Another patch from Craig to improve upon 
+  the ref->template mapping feature in Template::View.  Documentation
+  pending.  For further details, see
+  http://www.tt2.org/pipermail/templates/2001-June/001161.html
 
 * Applied a patch from Mark Fowler, which fixes the problem with 
   search/replace virtual methods incorrectly returning with a search
@@ -80,10 +85,6 @@
 
 * Added Craig's comments on replace backreferences and TT grammar to
   TODO list.
-
-#------------------------------------------------------------------------
-# Version 2.03a - 18th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##
-#------------------------------------------------------------------------
 
 * Applied various patches from Leon: to remove redundant "print 1..0"
   in various t/*.t files; to add '1;' to end of '.defaults.cfg' file;

@@ -1,7 +1,6 @@
-This is version 0.02 of the docsrc bundle for the Template Toolkit.  
-This contains all the templates, XML, scripts and other bits and pieces 
-required to build the Template Toolkit documentation in both POD and HTML 
-form.
+This is the docsrc bundle for the Template Toolkit, containing all the
+templates, XML, scripts and other bits and pieces required to build the 
+Template Toolkit documentation in both POD and HTML formats.
 
 Contents:
 

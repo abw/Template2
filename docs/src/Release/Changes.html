@@ -50,6 +50,11 @@
     LOOP label inside loops (except in the top-level atomexpr FOREACH
     and atomexpr WHILE cases, which should be ok).
 
+* Does he ever sleep!  :-) Another patch from Craig to improve upon 
+  the ref-&gt;template mapping feature in Template::View.  Documentation
+  pending.  For further details, see
+  http://www.tt2.org/pipermail/templates/2001-June/001161.html
+
 * Applied a patch from Mark Fowler, which fixes the problem with 
   search/replace virtual methods incorrectly returning with a search
   pattern of '0'.  e.g. [% tt_start_tag %] bob = '0'; bob.replace('0', 'zero') [% tt_end_tag %] 
