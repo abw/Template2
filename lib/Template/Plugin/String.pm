@@ -25,6 +25,7 @@ require 5.004;
 
 use strict;
 use Template::Plugin;
+use Template::Exception;
 
 use base qw( Template::Plugin );
 use vars qw( $VERSION $ERROR);
@@ -53,14 +54,36 @@ sub new {
 #    print STDERR "text: [$text]\n";
 #    print STDERR "class: [$class]\n";
     
-    bless {
-	text => $text,
+    my $self = bless {
+	text     => $text,
+	filters  => [ ],
+	_CONTEXT => $context,
     }, $class;
+
+    my $filter = $config->{ filter } || $config->{ filters };
+
+    # install any output filters specified as 'filter' or 'filters' option
+    $self->output_filter($filter)
+	if $filter;
+
+    return $self;
 }
 
 
 sub text {
-    return $_[0]->{ text };
+    my $self = shift;
+    return $self->{ text } unless @{ $self->{ filters } };
+
+    my $text = $self->{ text };
+    my $context = $self->{ _CONTEXT };
+
+    foreach my $dispatch (@{ $self->{ filters } }) {
+	my ($name, $args) = @$dispatch;
+	my $code = $context->filter($name, $args)
+	    || $self->throw($context->error());
+	$text = &$code($text);
+    }
+    return $text;
 }
 
 
@@ -68,6 +91,62 @@ sub copy {
     my $self = shift;
     $self->new($self->{ text });
 }
+
+
+sub throw {
+    my $self = shift;
+
+    die Template::Exception->new('String', join('', @_));
+}
+
+
+#------------------------------------------------------------------------
+# output_filter($filter)
+#
+# Install automatic output filter(s) for the string.  $filter can a list:
+# [ 'name1', 'name2' => [ ..args.. ], name4 => { ..args.. } ] or a hash
+# { name1 => '', name2 => [ args ], name3 => { args } }
+#------------------------------------------------------------------------
+
+sub output_filter {
+    my ($self, $filter) = @_;
+    my ($name, $args, $dispatch);
+    my $filters = $self->{ filters };
+    my $count = 0;
+
+    if (ref $filter eq 'HASH') {
+	$filter = [ %$filter ];
+    }
+    elsif (ref $filter ne 'ARRAY') {
+	$filter = [ split(/\s*\W+\s*/, $filter) ];
+    }
+
+    while (@$filter) {
+	$name = shift @$filter;
+
+	# args may follow as a reference (or empty string, e.g. { foo => '' }
+	if (@$filter && (ref($filter->[0]) || ! length $filter->[0])) {
+	    $args = shift @$filter;
+	    if ($args) {
+		$args = [ $args ] unless ref $args eq 'ARRAY';
+	    }
+	    else {
+		$args = [ ];
+	    }
+	}
+	else {
+	    $args = [ ];
+	}
+
+#	$self->DEBUG("adding output filter $name(@$args)\n");
+
+	push(@$filters, [ $name, $args ]);
+	$count++;
+    }
+
+    return '';
+}
+
 
 #------------------------------------------------------------------------
 
@@ -148,6 +227,18 @@ sub format {
     $self->{ text } = sprintf($format, $self->{ text });
     return $self;
 }
+
+
+sub filter {
+    my ($self, $name, @args) = @_;
+
+    my $context = $self->{ _CONTEXT };
+
+    my $code = $context->filter($name, \@args)
+	|| $self->throw($context->error());
+    return &$code($self->{ text });
+}
+
 
 #------------------------------------------------------------------------
 
