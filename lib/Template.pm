@@ -893,7 +893,7 @@ Ignored and deleted.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+Andy Wardley E<lt>abw@andywardley.comE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
@@ -902,7 +902,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07b, released on 07 July 2002.
+Template Toolkit version 2.07c, released on 08 July 2002.
 
 =head1 COPYRIGHT
 
