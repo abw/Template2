@@ -38,6 +38,7 @@ $STD_PLUGINS   = {
     'cgi'        => 'Template::Plugin::CGI',
     'datafile'   => 'Template::Plugin::Datafile',
     'date'       => 'Template::Plugin::Date',
+    'debug'      => 'Template::Plugin::Debug',
     'directory'  => 'Template::Plugin::Directory',
     'dbi'        => 'Template::Plugin::DBI',
     'dumper'     => 'Template::Plugin::Dumper',
@@ -253,19 +254,27 @@ sub _load {
 
 sub _dump {
     my $self = shift;
+    my $output = "[Template::Plugins] {\n";
+    my $format = "    %-16s => %s\n";
+    my $key;
+
+    foreach $key (qw( TOLERANT LOAD_PERL )) {
+	$output .= sprintf($format, $key, $self->{ $key });
+    }
+
     local $" = ', ';
     my $fkeys = join(", ", keys %{$self->{ FACTORY }});
     my $plugins = $self->{ PLUGINS };
-    $plugins = join(", ", map { "$_ => $plugins->{ $_ }" } keys %$plugins);
-
-    return <<EOF;
-$self
-PLUGIN_BASE => [ @{ $self->{ PLUGIN_BASE } } ]
-PLUGINS     => { $plugins }
-FACTORY     => [ $fkeys ]
-TOLERANT    => $self->{ TOLERANT }
-LOAD_PERL   => $self->{ LOAD_PERL }
-EOF
+    $plugins = join('', map { 
+	sprintf("    $format", $_, $plugins->{ $_ });
+    } keys %$plugins);
+    $plugins = "{\n$plugins    }";
+    
+    $output .= sprintf($format, 'PLUGIN_BASE', "[ @{ $self->{ PLUGIN_BASE } } ]");
+    $output .= sprintf($format, 'PLUGINS', $plugins);
+    $output .= sprintf($format, 'FACTORY', $fkeys);
+    $output .= '}';
+    return $output;
 }
 
 
@@ -985,13 +994,13 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.50, distributed as part of the
+2.51, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
