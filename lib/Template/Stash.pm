@@ -7,10 +7,10 @@
 #   variables for the Template Toolkit. 
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -250,6 +250,7 @@ sub hash_import {
     return '';
 }
 
+
 #------------------------------------------------------------------------
 # define_vmethod($type, $name, \&sub)
 #
@@ -257,21 +258,28 @@ sub hash_import {
 # name $name, that invokes &sub when called.  It is expected that &sub
 # be able to handle the type that it will be called upon.
 #------------------------------------------------------------------------
+
 sub define_vmethod {
     my ($class, $type, $name, $sub) = @_;
     my $op;
+    $type = lc $type;
 
-    if (($type = lc $type) eq 'scalar') {
+    if ($type =~ /^scalar|item$/) {
         $op = $SCALAR_OPS;
     }
     elsif ($type eq 'hash') {
         $op = $HASH_OPS;
     }
-    elsif ($type eq 'array') {
+    elsif ($type =~ /^list|array$/) {
         $op = $LIST_OPS;
     }
+    else {
+        die "invalid vmethod type: $type\n";
+    }
 
-    $op->{ $name } = $sub if $op;
+    $op->{ $name } = $sub;
+
+    return 1;
 }
 
 
