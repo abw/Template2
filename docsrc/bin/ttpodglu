@@ -19,7 +19,7 @@ use Cwd;
 
 my $VERSION = 0.01;
 my $PROGRAM = basename($0);
-my @DIST_FILES = qw( README INSTALL Changes TODO );
+my @DIST_FILES = qw( README INSTALL HACKING TODO Changes );
 
 #------------------------------------------------------------------------
 # attempt to grok the root directory of the distribution;
