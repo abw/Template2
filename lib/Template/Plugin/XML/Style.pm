@@ -25,101 +25,86 @@ package Template::Plugin::XML::Style;
 require 5.004;
 
 use strict;
-use Template::Plugin;
+use Template::Plugin::Filter;
 
-use base qw( Template::Plugin );
-use vars qw( $VERSION );
+use base qw( Template::Plugin::Filter );
+use vars qw( $VERSION $DYNAMIC $FILTER_NAME );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$DYNAMIC = 1;
+$FILTER_NAME = 'xmlstyle';
 
 
 #------------------------------------------------------------------------
 # new($context, \%config)
 #------------------------------------------------------------------------
 
-sub new {
-    my $class   = shift;
-    my $context = shift;
-    my $args    = ref $_[-1] eq 'HASH' ? pop(@_) : { };
-
-	my $self = bless {
-		config => $args,
-	}, $class;
-
-	# define 'xmlstyle' filter factory
-	$context->define_filter( xmlstyle => sub {
-		my $context = shift;
-		my $options = ref $_[-1] eq 'HASH' ? pop : { };
-		
-		return sub {
-			my $text = shift;
-			$self->xmlstyle($text, $options);
-		}
-	}, 1);
-
-	return $self;
-							
+sub init {
+    my $self = shift;
+    my $name = $self->{ _ARGS }->[0] || $FILTER_NAME;
+    $self->install_filter($name);
+    return $self;
 }
 
 
-sub xmlstyle {
-	my ($self, $text, $config) = @_;
+sub filter {
+    my ($self, $text, $args, $config) = @_;
 
-	# munge start tags
-	$text =~ s/ < ([\w\.\:]+) ( \s+ [^>]+ )? > 
-              / $self->start_tag($1, $2, $config)
-			  /gsex;
+    # munge start tags
+    $text =~ s/ < ([\w\.\:]+) ( \s+ [^>]+ )? > 
+	      / $self->start_tag($1, $2, $config)
+	      /gsex;
 
-	# munge end tags
-	$text =~ s/ < \/ ([\w\.\:]+) > 
-              / $self->end_tag($1, $config)
-			  /gsex;
+    # munge end tags
+    $text =~ s/ < \/ ([\w\.\:]+) > 
+	      / $self->end_tag($1, $config)
+	      /gsex;
 
-	return $text;
+    return $text;
 
 }
 
 
 sub start_tag {
-	my ($self, $elem, $textattr, $config) = @_;
-	$textattr ||= '';
-	my ($pre, $post);
+    my ($self, $elem, $textattr, $config) = @_;
+    $textattr ||= '';
+    my ($pre, $post);
 
-	# look for an element match in the stylesheet
-	my $match = $config->{ $elem } 
-             || $self->{ config }->{ $elem }
-	         || return "<$elem$textattr>";
+    # look for an element match in the stylesheet
+    my $match = $config->{ $elem } 
+	|| $self->{ _CONFIG }->{ $elem }
+	    || return "<$elem$textattr>";
 	
-	# merge element attributes into copy of stylesheet attributes
-	my $attr = { %{ $match->{ attributes } || { } } };
-	while ($textattr =~ / \s* ([\w\.\:]+) = " ([^"]+) " /gsx ) {
-		$attr->{ $1 } = $2;
-	}
-	$textattr = join(' ', map { "$_=\"$attr->{$_}\"" } keys %$attr);
-	$textattr = " $textattr" if $textattr;
+    # merge element attributes into copy of stylesheet attributes
+    my $attr = { %{ $match->{ attributes } || { } } };
+    while ($textattr =~ / \s* ([\w\.\:]+) = " ([^"]+) " /gsx ) {
+	$attr->{ $1 } = $2;
+    }
+    $textattr = join(' ', map { "$_=\"$attr->{$_}\"" } keys %$attr);
+    $textattr = " $textattr" if $textattr;
 
-	$elem = $match->{ element    } || $elem;
-	$pre  = $match->{ pre_start  } || '';
-	$post = $match->{ post_start } || '';
+    $elem = $match->{ element    } || $elem;
+    $pre  = $match->{ pre_start  } || '';
+    $post = $match->{ post_start } || '';
 
-	return "$pre<$elem$textattr>$post";
+    return "$pre<$elem$textattr>$post";
 }
 
 
 sub end_tag {
-	my ($self, $elem, $config) = @_;
-	my ($pre, $post);
+    my ($self, $elem, $config) = @_;
+    my ($pre, $post);
 
-	# look for an element match in the stylesheet
-	my $match = $config->{ $elem } 
-             || $self->{ config }->{ $elem }
-	         || return "</$elem>";
+    # look for an element match in the stylesheet
+    my $match = $config->{ $elem } 
+	|| $self->{ _CONFIG }->{ $elem }
+	|| return "</$elem>";
 	
-	$elem = $match->{ element  } || $elem;
-	$pre  = $match->{ pre_end  } || '';
-	$post = $match->{ post_end } || '';
-
-	return "$pre</$elem>$post";
+    $elem = $match->{ element  } || $elem;
+    $pre  = $match->{ pre_end  } || '';
+    $post = $match->{ post_end } || '';
+    
+    return "$pre</$elem>$post";
 }
 
 

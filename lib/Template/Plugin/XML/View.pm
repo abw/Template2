@@ -31,7 +31,7 @@ use Template::Plugin;
 use XML::Parser;
 
 use base qw( Template::Plugin );
-use vars qw( $VERSION $DEBUG $XML_PARSER_ARGS );
+use vars qw( $VERSION $DEBUG $XML_PARSER_ARGS $ELEMENT );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG = 1 unless defined $DEBUG;
@@ -41,6 +41,7 @@ $XML_PARSER_ARGS = {
     ParseParamEnt => 1,
 };
 
+$ELEMENT = 'Template::Plugin::XML::View::Element';
 
 #------------------------------------------------------------------------
 # new($context, $file_or_text, \%config)
@@ -57,13 +58,13 @@ sub new {
     # named parameters which may specify one of 'file', 'filename', 'text'
     # or 'xml'
 
-    if ($content = shift) {
+    if ($input = shift) {
 	if ($input =~ /\</) {
 	    $about  = 'xml text';
 	    $method = 'parse';
 	}
 	else {
-	    $about = "xml file $content";
+	    $about = "xml file $input";
 	    $method = 'parsefile';
 	}
     }
@@ -72,7 +73,7 @@ sub new {
 	$method = 'parse';
     }
     elsif ($input = $args->{ file } || $args->{ filename }) {
-	$about = "xml file $content";
+	$about = "xml file $input";
 	$method = 'parsefile';
     }
 #    else {
@@ -82,14 +83,27 @@ sub new {
     my $xpargs = {
 	%$XML_PARSER_ARGS,
 	map { defined $args->{$_} ? ( $_, $args->{$_} ) : ( ) }
-	qw( ErrorContext, Namespaces, ParseParamEnt ),
+	qw( ErrorContext Namespaces ParseParamEnt ),
     };
-    my $parser = XML::Parser->new(
+    $parser = XML::Parser->new(
 	%$xpargs,
-	Style         => 'Template::Plugin::XML::View::Parser',
+	Style    => 'Template::Plugin::XML::View::Parser',
+        Handlers => {
+	    Init => sub {
+		my $expat = shift;
+		my $handler = $ELEMENT->new( document => { } );
+		DEBUG("[Init]\n");
+		$expat->{ _TT2_XVIEW_TEXT    }  = '';
+		$expat->{ _TT2_XVIEW_RESULT  }  = '';
+		$expat->{ _TT2_XVIEW_CONTEXT }  = $context;
+		$expat->{ _TT2_XVIEW_STACK   }  = [ $handler ];
+	    },
+	},
     );
+    my $result = $parser->$method($input);
 
-
+    print STDERR "result: $result\n";
+    return $result;
 }
 
 
@@ -118,12 +132,15 @@ sub DEBUG { print STDERR @_ };
 #========================================================================
 
 package Template::Plugin::XML::View::Parser;
+use vars qw( $DEBUG $ELEMENT );
 
-\*DEBUG = \*Template::Plugin::XML::View::DEBUG;
+*DEBUG   = \*Template::Plugin::XML::View::DEBUG;
+$ELEMENT = 'Template::Plugin::XML::View::Element';
 
-sub Init { 
+
+sub OldInit { 
     my $expat = shift;
-    my $handler = Template::Plugin::XML::View::Element->new();
+    my $handler = $ELEMENT->new( document => { } );
     DEBUG("[Init]\n");
     $expat->{ _TT2_XVIEW_TEXT   }  = '';
     $expat->{ _TT2_XVIEW_RESULT }  = '';
@@ -132,6 +149,7 @@ sub Init {
 
 sub Start {
     my ($expat, $name, %attr) = @_;
+    my $attr = \%attr;
 
     # flush any character content
     Text($expat) if length $expat->{ _TT2_XVIEW_TEXT };
@@ -143,14 +161,15 @@ sub Start {
     }
 
     my $stack = $expat->{ _TT2_XVIEW_STACK };
-    $top->throw("unexpected <$name> element with no handler pushed")
-	unless @$stack;
 
-    my $top = $stack->[-1];
-    my $new = $top->element($expat, $name, \%attr)
-	|| $top->throw($top->error());	    # just throw parse errors for now
+    my $element = $ELEMENT->new($name, \%attr)
+	|| $stack->[-1]->throw($ELEMENT->error());
 
-    push(@$stack, $new);
+    push(@$stack, $element);
+
+#    my $new = $top->element($expat, $name, \%attr)
+#	|| $top->throw($top->error());	    # just throw parse errors for now
+
 }
 
 sub End {
@@ -177,7 +196,7 @@ sub End {
 sub Char {
     my ($expat, $char) = @_;
 
-    DEBUG("[Char] [$char]\n") if DEBUG;
+    DEBUG("[Char] [$char]\n") if $DEBUG;
 
     # push character content onto buffer
     $expat->{ _TT2_XVIEW_TEXT } .= $char;
@@ -209,7 +228,11 @@ sub Text {
 
 sub Final {
     my $expat = shift;
-    my $r = $expat->{ _TT2_VIEW_RESULT };
+    my $stack = $expat->{ _TT2_XVIEW_STACK };
+    my $top = pop(@$stack) || die "corrupt stack in Final";
+    my $end = $top->end($expat)
+	|| $top->throw($top->error());
+    my $r = $expat->{ _TT2_VIEW_RESULT } || $end;
     DEBUG("[Final] => [$r]\n") if $DEBUG;
     return $r;
 }
@@ -223,6 +246,39 @@ sub Final {
 #========================================================================
 
 package Template::Plugin::XML::View::Element;
+
+
+sub new {
+    my ($class, $name, $attr) = @_;
+    bless {
+	name    => $name,
+	attr    => $attr,
+	content => [ ],
+    }, $class;
+}
+
+# called to receive character content
+sub text {
+    my $self = shift;
+    my $expat = shift;
+    push(@{ $self->{ content } }, @_);
+}
+
+# called to receive completed child element
+sub child {
+    my ($self, $expat, $name, $child) = @_;
+    push(@{ $self->{ content } }, $child);    
+}
+
+sub end {
+    my ($self, $expat, $name) = @_;
+    my $context = $expat->{ _TT2_XVIEW_CONTEXT };
+    my $attr = $self->{ attr };
+    $attr->{ content } = join('', @{ $self->{ content } });
+    return $attr->{ content } unless $name;
+    $context->process($name, $attr);
+#    return $self;
+}
 
 
 1;
