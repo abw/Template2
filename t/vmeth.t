@@ -136,6 +136,10 @@ b, d
 -- expect --
 a, b, c, d
 
+-- test --
+[% hash.size %]
+-- expect --
+2
 
 # LIST_OPS
 
@@ -273,6 +277,16 @@ foobazfoobazfoo
 fooquxfooquxfoo
 
 -- test --
+[% string1 = 'foobarfoobarfoo'
+   string2 = 'foobazfoobazfoo'
+-%]
+[% string1.match('bar') ? 'ok' : 'not ok' %]
+[% string2.match('bar') ? 'not ok' : 'ok' %]
+-- expect --
+ok
+ok
+
+-- test --
 [% string = 'foo     bar   ^%$ baz' -%]
 [% string.replace('\W+', '_') %]
 -- expect --
@@ -291,6 +305,30 @@ bob: [% bob.replace('0','') %].
 -- expect --
 bob: .
 
+-- test --
+[% string = 'The cat sat on the mat';
+   match  = string.match('The (\w+) (\w+) on the (\w+)');
+-%]
+[% match.0 %].[% match.1 %]([% match.2 %])
+-- expect --
+cat.sat(mat)
+
+-- test --
+[% string = 'The cat sat on the mat' -%]
+[% IF (match  = string.match('The (\w+) sat on the (\w+)')) -%]
+matched animal: [% match.0 %]  place: [% match.1 %]
+[% ELSE -%]
+no match
+[% END -%]
+[% IF (match  = string.match('The (\w+) shat on the (\w+)')) -%]
+matched animal: [% match.0 %]  place: [% match.1 %]
+[% ELSE -%]
+no match
+[% END -%]
+-- expect --
+matched animal: cat  place: mat
+no match
+
 -- stop --
 
 -- test --
@@ -302,3 +340,4 @@ boo
 [% var = 'foo|bar/baz'; var.replace('(fo+)|(bar)(.*)$', '[ $1 | $2 | $3 ]') %]
 -- expect --
 [ foo | bar | ]
+
