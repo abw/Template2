@@ -64,7 +64,8 @@ $SCALAR_OPS = {
     },
     'replace'  => sub { 
 	my ($str, $search, $replace) = @_;
-	return $str unless defined $str and $search and $replace;
+	$replace = '' unless defined $replace;
+	return $str unless defined $str and $search;
 	$str =~ s/$search/$replace/g;
 	return $str;
     },
@@ -197,11 +198,26 @@ sub clone {
     my ($self, $params) = @_;
     $params ||= { };
 
-    bless { 
+    # look out for magical 'import' argument which imports another hash
+    my $import = $params->{ import };
+    if (defined $import && UNIVERSAL::isa($import, 'HASH')) {
+	delete $params->{ import };
+    }
+    else {
+	undef $import;
+    }
+
+    my $clone = bless { 
 	%$self,			# copy all parent members
 	%$params,		# copy all new data
         '_PARENT' => $self,     # link to parent
     }, ref $self;
+    
+    # perform hash import if defined
+    &{ $HASH_OPS->{ import }}($clone, $import)
+	if defined $import;
+
+    return $clone;
 }
 
 	
@@ -242,7 +258,9 @@ sub get {
     my ($root, $result);
     $root = $self;
 
-    if (ref $ident eq 'ARRAY') {
+    if (ref $ident eq 'ARRAY'
+	|| ($ident =~ /\./) 
+	&& ($ident = [ map { s/\(.*$//; ($_, 0) } split(/\./, $ident) ])) {
 	my $size = $#$ident;
 
 	# if $ident is a list reference, then we evaluate each item in the 
@@ -285,7 +303,11 @@ sub set {
     $root = $self;
 
     ELEMENT: {
-	if (ref $ident eq 'ARRAY') {
+	if (ref $ident eq 'ARRAY'
+	    || ($ident =~ /\./) 
+	    && ($ident = [ map { s/\(.*$//; ($_, 0) }
+			   split(/\./, $ident) ])) {
+
 	    # a compound identifier may contain multiple elements (e.g. 
 	    # foo.bar.baz) and we must first resolve all but the last, 
 	    # using _dotop() with the $lvalue flag set which will create 
@@ -359,6 +381,14 @@ sub getref {
 
 sub update {
     my ($self, $params) = @_;
+
+    # look out for magical 'import' argument to import another hash
+    my $import = $params->{ import };
+    if (defined $import && UNIVERSAL::isa($import, 'HASH')) {
+	@$self{ keys %$import } = values %$import;
+	delete $params->{ import };
+    }
+
     @$self{ keys %$params } = values %$params;
 }
 
