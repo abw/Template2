@@ -36,7 +36,10 @@ if (grep /^--?h(elp)?/, @ARGV) {
 push(@ARGV, '-') unless @ARGV;
 
 # create a template processor 
-my $template = Template->new();
+my $template = Template->new({
+    ABSOLUTE => 1,
+    RELATIVE => 1,
+});
 
 # process each input file 
 foreach my $file (@ARGV) {

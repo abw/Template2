@@ -56,7 +56,14 @@
 # PENDING ITEMS ON THE 'TO-DO' LIST
 #------------------------------------------------------------------------
 
-* complete documentation
+* I had a patch from someone to make 'print' work as expected in PERL
+  blocks.  That must have slipped through the net.  Need to find it 
+  and apply it.
+
+* Finish and tidy up documentation.  At the moment, all (er, most?) of
+  the individual modules should be fully documented.  Everything thing 
+  else (or most of it) is bundled into the monolithic Template.pod.
+  I should probably split this up.  Need to generate an HTML version.
 
 * test and document 'component' variable
 
