@@ -32,7 +32,7 @@ use strict;
 use vars qw( $VERSION $ERROR $COMPERR $DEBUG $AUTOLOAD );
 use base qw( Template::Base );
 use Template::Constants;
-use Fcntl qw(O_WRONLY O_CREAT);
+use Fcntl qw(O_WRONLY O_CREAT O_TRUNC);
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -248,7 +248,7 @@ sub write_perl_file {
 	$ERROR = "invalid filename: $file";
 	return undef;
     };
-    sysopen(CFH, $cfile, O_CREAT|O_WRONLY) or do {
+    sysopen(CFH, $cfile, O_CREAT|O_WRONLY|O_TRUNC) or do {
 	$ERROR = $!;
 	return undef;
     };
