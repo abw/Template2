@@ -28,7 +28,6 @@ my($LaTeXPath, $PdfLaTeXPath, $DviPSPath) = @{Template::Config->latexpaths()};
 # We need a non-empty $LaTeXPath to convert to DVI
 #
 if ( $LaTeXPath eq "" ) {
-    print "1..0\n";
     exit(0);
 }
 

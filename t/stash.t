@@ -25,8 +25,8 @@ use Template::Test;
 $^W = 1;
 
 my $DEBUG = grep(/-d/, @ARGV);
-$Template::Parser::DEBUG     = $DEBUG;
-$Template::Directive::PRETTY = $DEBUG;
+#$Template::Parser::DEBUG     = $DEBUG;
+#$Template::Directive::PRETTY = $DEBUG;
 
 my $count = 20;
 my $data = {

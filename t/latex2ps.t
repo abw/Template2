@@ -29,7 +29,6 @@ my($LaTeXPath, $PdfLaTeXPath, $DviPSPath) = @{Template::Config->latexpaths()};
 # We need a non-empty $LaTeXPath and $DviPSPath to convert to PS
 #
 if ( $LaTeXPath eq "" || $DviPSPath eq "" ) {
-    print "1..0\n";
     exit(0);
 }
 

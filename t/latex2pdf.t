@@ -28,7 +28,6 @@ my($LaTeXPath, $PdfLaTeXPath, $DviPSPath) = @{Template::Config->latexpaths()};
 # We need a non-empty $PdfLaTeXPath to convert to PDF
 #
 if ( $PdfLaTeXPath eq "" ) {
-    print "1..0\n";
     exit(0);
 }
 
