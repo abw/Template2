@@ -301,12 +301,15 @@ static void dump_all_perf(p, out)
 
 
 
-/* retrieves an item from the given hash or array ref.
- * if found:
- *   if a coderef, the coderef will be called and passed args
- *   returns TT_RET_CODEREF or TT_RET_OK and sets result
- * otherwise, returns TT_RET_UNDEF and result is undefined 
- */
+/*------------------------------------------------------------------------
+ * tt_fetch_item(SV *root, SV *key_sv, AV *args, SV **result)
+ *
+ * Retrieves an item from the given hash or array ref.  If item is found
+ * and a coderef then the coderef will be called and passed args.  Returns
+ * TT_RET_CODEREF or TT_RET_OK and sets result.  If not found, returns 
+ * TT_RET_UNDEF and result is undefined.
+ *------------------------------------------------------------------------*/
+
 static TT_RET tt_fetch_item(SV *root, SV *key_sv, AV *args, SV **result) {
     STRLEN key_len;
     char *key = SvPV(key_sv, key_len);
@@ -316,11 +319,11 @@ static TT_RET tt_fetch_item(SV *root, SV *key_sv, AV *args, SV **result) {
 	return TT_RET_UNDEF;
 
     switch (SvTYPE(SvRV(root))) {
-    case SVt_PVHV:
-	value = hv_fetch((HV *) SvRV(root), key, key_len, FALSE);
-	break;
+      case SVt_PVHV:
+        value = hv_fetch((HV *) SvRV(root), key, key_len, FALSE);
+        break;
 
-    case SVt_PVAV:
+      case SVt_PVAV:
 	if (looks_like_number(key_sv)) {
 	    value = av_fetch((AV *) SvRV(root), SvIV(key_sv), FALSE);
 	}
@@ -328,13 +331,18 @@ static TT_RET tt_fetch_item(SV *root, SV *key_sv, AV *args, SV **result) {
     }
 
     if (value) {
+	/* trigger any tied magic to FETCH value */
+      	SvGETMAGIC(*value);
+	
+	/* call if a coderef */
 	if (SvROK(*value) 
-	    && (SvTYPE(SvRV(*value)) == SVt_PVCV) 
-	    && !sv_isobject(*value)) {
+		&& (SvTYPE(SvRV(*value)) == SVt_PVCV) 
+		&& !sv_isobject(*value)) {
 	    *result = call_coderef(*value, args);
 	    return TT_RET_CODEREF;
 
-	} else if (*value != &PL_sv_undef) {
+	} 
+	else if (*value != &PL_sv_undef) {
 	    *result = *value;
 	    return TT_RET_OK;
 	}
@@ -345,14 +353,19 @@ static TT_RET tt_fetch_item(SV *root, SV *key_sv, AV *args, SV **result) {
 }
 
 
-/* Resolves dot operations of the form root.key, where 'root' is a
+
+/*------------------------------------------------------------------------
+ * dotop(SV *root, SV *key_sv, AV *args, int flags)
+ *
+ * Resolves dot operations of the form root.key, where 'root' is a
  * reference to the root item, 'key_sv' is an SV containing the
  * operation key (e.g. hash key, list index, first, last, each, etc),
  * 'args' is a list of additional arguments and 'TT_LVALUE_FLAG' is a 
  * flag to indicate if, for certain operations (e.g. hash key), the item
- * should be created if it doesn't exist. Also, 'TT_DEBUG_FLAG' is the 
+ * should be created if it doesn't exist.  Also, 'TT_DEBUG_FLAG' is the 
  * debug flag.
- */
+ *------------------------------------------------------------------------*/
+
 static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
     dSP;
     STRLEN item_len;
@@ -365,15 +378,11 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 	return &PL_sv_undef;
     }
 
+
     if (SvROK(root) && ((sv_derived_from(root, TT_STASH_PKG) ||
 	((SvTYPE(SvRV(root)) == SVt_PVHV) && !sv_isobject(root))))) {
 
-	/* if root is a regular HASH or a Template::Stash kinda HASH (the
-	   *real* root of everything).  We first lookup the named key
-	   in the hash, or create an empty hash in its place if undefined
-	   and the lvalue flag is set.  Otherwise, we check the HASH_OPS
-	   pseudo-methods table, calling the code if found. If that fails, 
-	   we'll try a hash slice or return undef. */
+        /* root is a HASH or Template::Stash */
 
 	switch(tt_fetch_item(root, key_sv, args, &result)) {
 	case TT_RET_OK:
@@ -393,6 +402,8 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 
 		newhash = SvREFCNT_inc((SV *) newRV_noinc((SV *) newHV()));
 		if (hv_store(roothv, item, item_len, newhash, 0)) {
+		    /* trigger any tied magic to STORE value */
+	            SvSETMAGIC(newhash);
 		    return sv_2mortal(newhash);
 		} else {
 		    /* something went horribly wrong */
@@ -413,6 +424,8 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 		    STRLEN tlen;
 		    SV **svp;
 
+		    /* TODO: SvGETMAGIC x 2 below */
+
 		    for (i = 0; i <= av_len(k_av); i++) {
 			if ((svp = av_fetch(k_av, i, 0))) {
 			    t = SvPV(*svp, tlen);
@@ -426,15 +439,16 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 	    }
 	}
 
-    } else if (SvROK(root) && (SvTYPE(SvRV(root)) == SVt_PVAV) 
+    }
+    else if (SvROK(root) && (SvTYPE(SvRV(root)) == SVt_PVAV) 
 		&& !sv_isobject(root)) {
 
-	/* if root is an ARRAY, check for a LIST_OPS pseudo-method
-	   (except for l-values for which it doesn't make any sense)
-	   or return the numerical index into the array, or undef */
+	/* root is an ARRAY */
 
+        /* try list pseudo-method, but not for lvalues */
 	if ((flags & TT_LVALUE_FLAG) ||
-	    (list_op(root, item, args, &result) == TT_RET_UNDEF)) {
+		(list_op(root, item, args, &result) == TT_RET_UNDEF)) {
+
 	    switch (tt_fetch_item(root, key_sv, args, &result)) {
 	    case TT_RET_OK:
 		return result;
@@ -452,6 +466,8 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 		    I32 i;
 		    SV **svp;
 
+		    /* TODO: SvGETMAGIC x 2 below */
+
 		    for (i = 0; i <= av_len(k_av); i++) {
 			if ((svp = av_fetch(k_av, i, FALSE))) {
 			    if (looks_like_number(*svp) && 
@@ -464,19 +480,10 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 		}
 	    }
 	}
+    }
+    else if (SvROK(root) && sv_isobject(root)) {
 
-    /* do the can-can because UNIVSERAL::isa($something, 'UNIVERSAL')
-       doesn't appear to work with CGI, returning true for the first 
-       call and false for all subsequent calls. 
-
-       *** I'm using sv_isobject() here instead *** */
-
-    } else if (SvROK(root) && sv_isobject(root)) {
-
-        /* if $root is a blessed reference (i.e. inherits from the
-           UNIVERSAL object base class) then we call the item as a method.
-           If that fails then we try to fallback on HASH behaviour if
-           possible. */
+        /* root is an object */
 
 	I32 n, i;
 	SV **svp;
@@ -535,9 +542,9 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 	}
     }
 
-    /* at this point, it doesn't look like we've got a reference to
-       anything we know about, so we try the SCALAR_OPS pseudo-methods
-       table (but not for l-values) */
+    /* it doesn't look like we've got a reference to anything we know about,
+     * so let's try the SCALAR_OPS pseudo-methods (but not for l-values) 
+     */
 
     else if (!(flags & TT_LVALUE_FLAG) 
 	     && (scalar_op(root, item, args, &result) == TT_RET_UNDEF)) {
@@ -546,9 +553,9 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 		SvPV(root, PL_na), item);
     }
 
-    /* if we have an arrayref:
-	and first element of result is defined, everything is peachy.
-        otherwise some gross error may have occurred */
+    /* if we have an arrayref and the first element is defined then 
+     * everything is peachy, otherwise some ugliness may have occurred 
+     */
 
     if (SvROK(result) && SvTYPE(SvRV(result)) == SVt_PVAV) {
 	SV **svp;
@@ -574,7 +581,11 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 }
 
 
-/* Resolves the final assignment element of a dotted compound variable
+
+/*------------------------------------------------------------------------
+ * assign(SV *root, SV *key_sv, AV *args, SV *value, int flags)
+ *
+ * Resolves the final assignment element of a dotted compound variable
  * of the form "root.key(args) = value".  'root' is a reference to
  * the root item, 'key_sv' is an SV containing the operation key
  * (e.g. hash key, list item, object method), 'args' is a list of user
@@ -582,7 +593,8 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
  * assignment value to be set (appended to args) and 'deflt' (default)
  * is a flag to indicate that the assignment should only be performed
  * if the item is currently undefined/false.
- */
+ *------------------------------------------------------------------------*/
+
 static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
     dSP;
     SV **svp, *newsv;
@@ -596,7 +608,9 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 	/* ignore _private or .private members */
 	return &PL_sv_undef;
 
-    } else if (SvROK(root)) {			    /* OBJECT */
+    } else if (SvROK(root)) {
+
+	/* see if root is an object (but not Template::Stash) */
 
 	if (sv_isobject(root) && !sv_derived_from(root, TT_STASH_PKG)) {
 	    HV *stash = SvSTASH((SV *) SvRV(root));
@@ -633,14 +647,24 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 
 	    /* check for any existing value if ''default'' flag set */
 	    if ((flags & TT_DEFAULT_FLAG)
-		&& (svp = hv_fetch(roothv, key, key_len, FALSE))
-		&& SvTRUE(*svp))
-		return &PL_sv_undef;
+		&& (svp = hv_fetch(roothv, key, key_len, FALSE))) {
+	        /* invoke any tied magical FETCH method */
+	        SvGETMAGIC(*svp);
+		if (SvTRUE(*svp))
+		    return &PL_sv_undef;
+	    }
 
 	    /* avoid 'modification of read-only value' error */
 	    newsv = newSVsv(value); 
-	    if (!hv_store(roothv, key, key_len, newsv, 0))
-	        SvREFCNT_dec(newsv);
+	    svp = hv_store(roothv, key, key_len, newsv, 0);
+
+	    /* invoke any tied magical STORE method */
+	    SvSETMAGIC(newsv);
+
+	    /* must dec ref counter if hash decline to store */
+	    if (! svp)
+		SvREFCNT_dec(newsv);
+
 	    return value;
 	    break;
 
@@ -650,13 +674,18 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 	    /* check for any existing value if default flag set */
 	    if ((flags & TT_DEFAULT_FLAG)
 		&& looks_like_number(key_sv)
-		&& (svp = av_fetch(rootav, SvIV(key_sv), FALSE))
-		&& SvTRUE(*svp))
-		return &PL_sv_undef;
+		&& (svp = av_fetch(rootav, SvIV(key_sv), FALSE))) {
+	        /* invoke any tied magical FETCH method */
+	        SvGETMAGIC(*svp);
+	        if (SvTRUE(*svp))
+		    return &PL_sv_undef;
+	    }
 
 	    if (looks_like_number(key_sv) 
-		&& av_store(rootav, SvIV(key_sv), value))
+		&& av_store(rootav, SvIV(key_sv), value)) {
+	        SvSETMAGIC(value);
 		return SvREFCNT_inc(value);
+	    }
 	    else
 		return &PL_sv_undef;
 
@@ -677,6 +706,7 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
     /* not reached */
     return &PL_sv_undef;			    /* just in case */
 }
+
 
 
 /* dies and passes back a blessed object,  
@@ -804,6 +834,7 @@ static SV *do_getset(root, ident_av, value, flags)
     }
 
     if (value && SvROK(root)) {
+
 	/* call assign() to resolve the last item */
 	if (!(svp = av_fetch(ident_av, size - 1, FALSE)))
 	    croak(TT_STASH_PKG ": set bad ident element at %d", i);
