@@ -376,26 +376,15 @@ sub _init {
     # create COMPILE_DIR and sub-directories representing each INCLUDE_PATH
     # element in which to store compiled files
     if ($cdir) {
-        
-# Stas' hack
-#        # this is a hack to solve the problem with INCLUDE_PATH using
-#	 # relative dirs
-#	 my $segments = 0;
-#	 for (@$path) {
-#	     my $c = 0;
-#	     $c++ while m|\.\.|g;
-#	     $segments = $c if $c > $segments;
-#	 }
-#	 $cdir .= "/".join "/",('hack') x $segments if $segments;
-#
-
         require File::Path;
         foreach my $dir (@$path) {
             next if ref $dir;
             my $wdir = $dir;
             $wdir =~ s[:][]g if $^O eq 'MSWin32';
             $wdir =~ /(.*)/;  # untaint
-            &File::Path::mkpath(File::Spec->catfile($cdir, $1));
+            $wdir = $1;
+            $wdir = File::Spec->catfile($cdir, $1);
+            File::Path::mkpath($wdir) unless -d $wdir;
         }
     }
 
@@ -874,13 +863,20 @@ sub _compile {
             my $basedir = &File::Basename::dirname($compfile);
             $basedir =~ /(.*)/;
             $basedir = $1;
-            &File::Path::mkpath($basedir) unless -d $basedir;
-            
-            my $docclass = $self->{ DOCUMENT };
-            $error = 'cache failed to write '
-                . &File::Basename::basename($compfile)
-                . ': ' . $docclass->error()
-                unless $docclass->write_perl_file($compfile, $parsedoc);
+
+            unless (-d $basedir) {
+                eval { File::Path::mkpath($basedir) };
+                $error = "failed to create compiled templates directory: $basedir ($@)"
+                    if ($@);
+            }
+
+            unless ($error) {
+                my $docclass = $self->{ DOCUMENT };
+                $error = 'cache failed to write '
+                    . &File::Basename::basename($compfile)
+                    . ': ' . $docclass->error()
+                    unless $docclass->write_perl_file($compfile, $parsedoc);
+            }
             
             # set atime and mtime of newly compiled file, don't bother
             # if time is undef
@@ -1031,7 +1027,6 @@ sub _decode_unicode
 
 
 1;
-
 
 __END__
 
@@ -1487,8 +1482,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.79, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.81, distributed as part of the
+Template Toolkit version 2.14, released on 04 October 2004.
 
 =head1 COPYRIGHT
 
