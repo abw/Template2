@@ -40,6 +40,26 @@ sub new {
     CGI->new(@_);
 }
 
+package CGI;
+
+sub params {
+    my $self = shift;
+    local $" = ', ';
+
+    return $self->{ _TT_PARAMS } ||= do {
+        # must call Vars() in a list context to receive
+        # plain list of key/vals rather than a tied hash
+        my $params = { $self->Vars() };
+
+        # convert any null separated values into lists
+        @$params{ keys %$params } = map { 
+            /\0/ ? [ split /\0/ ] : $_ 
+        } values %$params;
+
+        $params;
+    };
+}
+
 1;
 
 __END__
@@ -95,6 +115,22 @@ constructor:
     
     [% USE cgiprm = CGI('uid=abw&name=Andy+Wardley') %]
     [% cgiprm.param('uid') %]
+
+=head1 METHODS
+
+In addition to all the methods supported by the CGI module, this
+plugin defines the following.
+
+=head2 params()
+
+This method returns a reference to a hash of all the CGI parameters.
+Any parameters that have multiple values will be returned as lists.
+
+    [% USE CGI('user=abw&item=foo&item=bar') %]
+
+    [% CGI.params.user %]            # abw
+    [% CGI.params.item.join(', ') %] # foo, bar
+
 
 =head1 AUTHOR
 
