@@ -30,6 +30,7 @@ use strict;
 use vars qw( $VERSION $AUTOLOAD $ERROR $DEBUG $BINMODE );
 use Template::Base;
 use Template::Config;
+use Template::Constants;
 use Template::Provider;  
 use Template::Service;
 use File::Basename;
@@ -38,7 +39,7 @@ use File::Path;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.08';
+$VERSION     = '2.08a';
 $ERROR       = '';
 $DEBUG       = 0;
 $BINMODE     = ($^O eq 'MSWin32') ? 1 : 0;
@@ -113,6 +114,11 @@ sub context {
 sub _init {
     my ($self, $config) = @_;
 
+    # convert any textual DEBUG args to numerical form
+    my $debug = $config->{ DEBUG };
+    $config->{ DEBUG } = Template::Constants::debug_flags($self, $debug)
+        || return if defined $debug && $debug !~ /^\d+$/;
+        
     # prepare a namespace handler for any CONSTANTS definition
     if (my $constants = $config->{ CONSTANTS }) {
 	my $ns  = $config->{ NAMESPACE } ||= { };
