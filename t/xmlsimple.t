@@ -66,14 +66,14 @@ alpha
 
 -- test --
 [% USE xs = XML.Simple -%]
-[% xml = xs.XMLin( './test/xml/testfile.xml') -%]
+[% xml = xs.XMLin(xmlfile) -%]
 [% xml.section.title -%]
 -- expect --
 The Alpha Zone
 
 -- test --
 [% USE xs = XML.Simple -%]
-[% xml = xs.XMLin( './test/xml/testfile.xml') -%]
+[% xml = xs.XMLin(xmlfile) -%]
 [% xmlout = xs.XMLout(xml) -%]
 [% xmlout -%]
 -- expect --
