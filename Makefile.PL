@@ -242,6 +242,7 @@ my %opts = (
     'PREREQ_PM'    => { 
 	'AppConfig'  => 1.52,
 	'File::Spec' => 0.6,
+        'File::Temp' => 0.12,
     },
     'dist'         => {
 	'COMPRESS' => 'gzip',
