@@ -266,6 +266,13 @@ All the &lt;tags&gt; should be escaped &amp; protected
 The &lt;cat&gt; sat on the &lt;mat&gt;
 
 -- test --
+[% FILTER html %]
+"It isn't what I expected", he replied.
+[% END %]
+-- expect --
+&quot;It isn't what I expected&quot;, he replied.
+
+-- test --
 [% FILTER format %]
 Hello World!
 [% END %]
@@ -805,4 +812,10 @@ on the mat
 -- expect --
 >> The cat sat
 >> on the mat
+
+-- test --
+[% text = 'The cat sat on the mat';
+   text | indent('> ') | indent('+') %]
+-- expect --
++> The cat sat on the mat
 

@@ -102,6 +102,24 @@ sub AUTOLOAD {
     }
 }
 
+#------------------------------------------------------------------------
+# another object for testing auto-stringification
+#------------------------------------------------------------------------
+
+package Stringy;
+
+use overload '""' => 'stringify';
+
+sub new {
+    my ($class, $text) = @_;
+    bless \$text, $class;
+}
+
+sub stringify {
+    my $self = shift;
+    return "stringified '$$self'";
+}
+
 
 #------------------------------------------------------------------------
 # main 
@@ -116,7 +134,8 @@ my $objconf = {
 };
 
 my $replace = {
-    thing => TestObject->new($objconf),
+    thing  => TestObject->new($objconf),
+    string => Stringy->new('Test String'),
     %{ callsign() },
 };
 
@@ -223,4 +242,33 @@ before mid after
 -- expect --
 []
 []
+
+#------------------------------------------------------------------------
+# test auto-stringification
+#------------------------------------------------------------------------
+
+-- test --
+[% string.stringify %]
+-- expect --
+stringified 'Test String'
+
+-- test --
+[% string %]
+-- expect --
+stringified 'Test String'
+
+-- test --
+[% "-> $string <-" %]
+-- expect --
+-> stringified 'Test String' <-
+
+-- test --
+[% "$string" %]
+-- expect --
+stringified 'Test String'
+
+-- test --
+foo $string bar
+-- expect --
+foo stringified 'Test String' bar
 

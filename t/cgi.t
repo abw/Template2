@@ -32,6 +32,7 @@ if ($@) {
     exit(0);
 }
 
+
 my $cgi = CGI->new('');
 $cgi = join("\n", $cgi->checkbox_group(
 		-name     => 'words',
@@ -45,6 +46,7 @@ test_expect(\*DATA, undef, { cgicheck => $cgi, barf => \&barf });
 sub barf {
     carp('failed');
 }
+
 
 __END__
 -- test --

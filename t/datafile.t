@@ -63,6 +63,10 @@ Users:
   * mop: Marty Proton <mop@cre.canon.co.uk>
   * nellb: Nell Browser <nellb@cre.canon.co.uk>
 
-
+-- test --
+[% USE userlist = datafile(datafile.1, delim = '|') -%]
+size: [% userlist.size %]
+-- expect --
+size: 3
 
 

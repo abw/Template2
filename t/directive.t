@@ -376,8 +376,3 @@ romeo-sierra.
 -- expect --
 bravo
 
-
-
-
-
-

@@ -76,7 +76,7 @@ Directory error on /no/such/place
 [% FOREACH f = d.files -%]
    - [% f.name %]
 [% END -%]
-[% FOREACH f = d.dirs -%]
+[% FOREACH f = d.dirs; NEXT IF f.name == 'CVS';  -%]
    * [% f.name %]
 [% END %]
 -- expect --
@@ -94,7 +94,7 @@ Directory error on /no/such/place
 [% FOREACH f = dir.files -%]
     - [% f.name %]
 [% END -%]
-[% FOREACH f = dir.dirs -%]
+[% FOREACH f = dir.dirs; NEXT IF f.name == 'CVS';  -%]
 [% f.scan -%]
 [% INCLUDE dir dir=f FILTER indent(4) -%]
 [% END -%]
@@ -117,6 +117,7 @@ Directory error on /no/such/place
 [% INCLUDE dir %]
 [% BLOCK dir;
      FOREACH f = dir.list ;
+     NEXT IF f.name == 'CVS'; 
        IF f.isdir ; -%]
     * [% f.name %]
 [%       f.scan ;
@@ -144,7 +145,7 @@ Directory error on /no/such/place
 [% FOREACH f = d.files -%]
    - [% f.name %]
 [% END -%]
-[% FOREACH f = d.dirs -%]
+[% FOREACH f = d.dirs; NEXT IF f.name == 'CVS';  -%]
    * [% f.name %]
 [% END %]
 -- expect --
@@ -154,13 +155,13 @@ Directory error on /no/such/place
    * sub_one
    * sub_two
 
-
 -- test --
 [% USE dir = Directory(dir, recurse=1, root=cwd) -%]
 * [% dir.path %]
 [% INCLUDE dir %]
 [% BLOCK dir;
      FOREACH f = dir.list ;
+     NEXT IF f.name == 'CVS'; 
        IF f.isdir ; -%]
     * [% f.name %] => [% f.path %] => [% f.abs %]
 [%       INCLUDE dir dir=f FILTER indent(4) ;
@@ -188,7 +189,8 @@ Directory error on /no/such/place
 [% INCLUDE dir %]
 [% BLOCK dir;
      FOREACH f = dir.list ;
-       IF f.isdir ; -%]
+	NEXT IF f.name == 'CVS'; 
+	IF f.isdir ; -%]
     * [% f.name %] => [% f.home %]
 [%       INCLUDE dir dir=f FILTER indent(4) ;
        ELSE -%]
@@ -237,9 +239,9 @@ xyzfile
 f [% item.name %] => [% item.path %]
 [% END -%]
 
-[% BLOCK directory -%]
+[% BLOCK directory; NEXT IF item.name == 'CVS';  -%]
 d [% item.name %] => [% item.path %]
-[% item.content(my) | indent -%]
+[% item.content(view) | indent -%]
 [% END -%]
 
 [% END -%]
@@ -257,6 +259,7 @@ d dir => [% dir %]
         f waz.html => [% dir %]/sub_two/waz.html
         f wiz.html => [% dir %]/sub_two/wiz.html
     f xyzfile => [% dir %]/xyzfile
+
 
 
 

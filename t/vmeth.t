@@ -278,3 +278,9 @@ fooquxfooquxfoo
 -- expect --
 foo_bar_baz
 
+-- test --
+[% var = 'value99' ;
+   var.replace('value', '')
+%]
+-- expect --
+99

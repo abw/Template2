@@ -268,3 +268,31 @@ name: c  item: f
 -- expect --
 title: Hello World
 bgcol: #ffffff
+
+-- test --
+[% myhash = {
+    name  = 'Tom'
+    item  = 'teacup'
+   }
+-%]
+[% INCLUDE myblock
+    name = 'Fred'
+    item = 'fish'
+%]
+[% INCLUDE myblock
+     import=myhash
+%]
+import([% import %])
+[% PROCESS myblock
+     import={ name = 'Tim', item = 'teapot' }
+%]
+import([% import %])
+[% BLOCK myblock %][% name %] has a [% item %][% END %]
+-- expect --
+Fred has a fish
+Tom has a teacup
+import()
+Tim has a teapot
+import()
+
+-- test --

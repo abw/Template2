@@ -29,6 +29,10 @@ $Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 1;
 #$Template::Directive::PRETTY = 1;
 
+# uncommenting the next line should cause test 43 to fail because
+# the provider doesn't stat the file.
+# $Template::Provider::STAT_TTL = 10;
+
 my $DEBUG = 0;
 
 my $factory = 'Template::Config';
@@ -167,7 +171,9 @@ __DATA__
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file, a is Error: file - not found
+This is the foo file, a is 
+Error: file - not found
+
 
 -- test --
 [% TRY %]
@@ -177,11 +183,13 @@ This is the foo file, a is Error: file - not found
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file, a is Error: file - not found
+This is the foo file, a is 
+Error: file - not found
+
 
 -- test --
 [% TRY %]
-[% INSERT foo %]
+[% INSERT foo -%]
 [% INSERT $absfile %]
 [% CATCH file %]
 Error: [% error %]
@@ -192,7 +200,6 @@ Error: [% error %]
 This is the foo file, a is [% a %]
 Error: file error - [* absfile *]: not found
 
-
 #------------------------------------------------------------------------
 
 -- test --
@@ -200,7 +207,7 @@ Error: file error - [* absfile *]: not found
 [% TRY %]
 [% INCLUDE $relfile %]
 [% INCLUDE foo %]
-[% CATCH file +%]
+[% CATCH file -%]
 Error: [% error.type %] - [% error.info %]
 [% END %]
 -- expect --
@@ -209,14 +216,15 @@ Error: file - foo: not found
 
 -- test --
 [% TRY %]
-[% INCLUDE $relfile %]
+[% INCLUDE $relfile -%]
 [% INCLUDE $absfile %]
-[% CATCH file +%]
+[% CATCH file %]
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
 This is the foo file, a is 
 Error: file - absolute paths are not allowed (set ABSOLUTE option)
+
 
 -- test --
 foo: [% TRY; INSERT foo;      CATCH; "$error\n"; END %]
@@ -236,7 +244,7 @@ abs: file error - [* absfile *]: absolute paths are not allowed (set ABSOLUTE op
 [% TRY %]
 [% INCLUDE $absfile %]
 [% INCLUDE foo %]
-[% CATCH file +%]
+[% CATCH file %]
 Error: [% error.type %] - [% error.info %]
 [% END %]
 -- expect --
@@ -247,7 +255,7 @@ Error: file - foo: not found
 [% TRY %]
 [% INCLUDE $absfile %]
 [% INCLUDE $relfile %]
-[% CATCH file +%]
+[% CATCH file %]
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
@@ -265,6 +273,7 @@ abs: [% TRY; INSERT $absfile; CATCH; "$error\n"; END %]
 foo: file error - foo: not found
 rel: file error - [* relfile *]: relative paths are not allowed (set RELATIVE option)
 abs: This is the foo file, a is [% a %]
+
 
 
 #------------------------------------------------------------------------
