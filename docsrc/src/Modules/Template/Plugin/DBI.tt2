@@ -13,6 +13,9 @@
     [% USE DBI %]
     [% DBI.connect(dsn, user, pass) %]
 
+    # Or don't connect at all, and when necessary DBI will connect
+    # automatically using the environment variable DBI_DSN. See below.
+
     [% FOREACH item = DBI.query( 'SELECT rows FROM table' ) %]
        Here's some row data: [% item.field %]
     [% END %]
@@ -66,6 +69,16 @@ Any additional DBI attributes can be specified as named parameters.
 The 'PrintError' attribute defaults to 0 unless explicitly set true.
 
     [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
+
+The DBI connect_cached() method is used instead of the connect()
+method.  This allows for connection caching in a server environment,
+such as when the Template Toolkit is used from an Apache mod_perl
+handler.   In such a case, simply enable the mod_env module and put in a
+line such as:
+
+SetEnv DBI_DSN "dbi:DBDriver:DBName;host=DBHost;user=User;password=Password"
+
+Then use the DBI plugin without any parameters and without calling connect.
 
 Methods can then be called on the plugin object using the familiar dotted
 notation:

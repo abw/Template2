@@ -104,60 +104,61 @@ $SCALAR_OPS = {
     'defined' => sub { return 1 },
     'array'   => sub { return [$_[0]] },
     'repeat'  => sub { 
-	my ($str, $count) = @_;
-	$str = '' unless defined $str;  $count ||= 1;
-	return $str x $count;
+        my ($str, $count) = @_;
+        $str = '' unless defined $str;  $count ||= 1;
+        return $str x $count;
     },
     'search'  => sub { 
-	my ($str, $pattern) = @_;
-	return $str unless defined $str and $pattern;
-	return $str =~ /$pattern/;
+        my ($str, $pattern) = @_;
+        return $str unless defined $str and $pattern;
+        return $str unless defined $str and defined $pattern;
+        return $str =~ /$pattern/;
     },
     'replace'  => sub { 
-	my ($str, $search, $replace) = @_;
-	$replace = '' unless defined $replace;
-	return $str unless defined $str and $search;
-	$str =~ s/$search/$replace/g;
-#	print STDERR "s [ $search ] [ $replace ] g\n";
-#	eval "\$str =~ s$search$replaceg";
-	return $str;
+        my ($str, $search, $replace) = @_;
+        $replace = '' unless defined $replace;
+        return $str unless defined $str and defined $search;
+        $str =~ s/$search/$replace/g;
+#       print STDERR "s [ $search ] [ $replace ] g\n";
+#       eval "\$str =~ s$search$replaceg";
+        return $str;
     },
     'split'   => sub { 
-	my ($str, $split, @args) = @_;
-	$str = '' unless defined $str;
-	return [ defined $split ? split($split, $str, @args)
-				: split(' ', $str, @args) ];
+        my ($str, $split, @args) = @_;
+        $str = '' unless defined $str;
+        return [ defined $split ? split($split, $str, @args)
+                                : split(' ', $str, @args) ];
     },
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
 $HASH_OPS = {
     'item'   => sub { my ($hash, $item) = @_; 
-		      $item = '' unless defined $item;
-		      $hash->{ $item };
-		  },
+                      $item = '' unless defined $item;
+                      $hash->{ $item };
+                  },
     'hash'   => sub { $_[0] },
     'keys'   => sub { [ keys   %{ $_[0] } ] },
     'values' => sub { [ values %{ $_[0] } ] },
     'each'   => sub { [        %{ $_[0] } ] },
     'list'   => sub { my ($hash, $what) = @_;  $what ||= '';
-		      return ($what eq 'keys')   ? [   keys %$hash ]
-			   : ($what eq 'values') ? [ values %$hash ]
-			   : ($what eq 'each')   ? [ values %$hash ]
-			   : [ map { { key => $_ , value => $hash->{ $_ } } }
-			       keys %$hash ];
-		},
+                      return ($what eq 'keys')   ? [   keys %$hash ]
+                           : ($what eq 'values') ? [ values %$hash ]
+                           : ($what eq 'each')   ? [ values %$hash ]
+                           : [ map { { key => $_ , value => $hash->{ $_ } } }
+                               keys %$hash ];
+                },
     'import' => sub { my ($hash, $imp) = @_;
-		      $imp = {} unless ref $imp eq 'HASH';
-		      @$hash{ keys %$imp } = values %$imp;
-		      return '';
-		  },
+                      $imp = {} unless ref $imp eq 'HASH';
+                      @$hash{ keys %$imp } = values %$imp;
+                      return '';
+                  },
     'sort'    => sub {
-	my ($hash) = @_;
+        my ($hash) = @_;
         [ sort { lc $hash->{$a} cmp lc $hash->{$b} } (keys %$hash) ];
     },
     'nsort'    => sub {
-	my ($hash) = @_;
+        my ($hash) = @_;
         [ sort { $hash->{$a} <=> $hash->{$b} } (keys %$hash) ];
     },
     defined $HASH_OPS ? %$HASH_OPS : (),
@@ -167,7 +168,7 @@ $LIST_OPS = {
     'item'    => sub { $_[0]->[ $_[1] || 0 ] },
     'list'    => sub { $_[0] },
     'hash'    => sub { my $list = shift; my $n = 0; 
-		       return { map { ($n++, $_) } @$list }; },
+                       return { map { ($n++, $_) } @$list }; },
     'push'    => sub { my $list = shift; push(@$list, shift); return '' },
     'pop'     => sub { my $list = shift; pop(@$list) },
     'unshift' => sub { my $list = shift; unshift(@$list, shift); return '' },
@@ -179,35 +180,35 @@ $LIST_OPS = {
     'reverse' => sub { my $list = shift; [ reverse @$list ] },
     'array'   => sub { return $_[0] },
     'join'    => sub { 
-	    my ($list, $joint) = @_; 
-	    join(defined $joint ? $joint : ' ', 
-		 map { defined $_ ? $_ : '' } @$list) 
+            my ($list, $joint) = @_; 
+            join(defined $joint ? $joint : ' ', 
+                 map { defined $_ ? $_ : '' } @$list) 
     },
     'sort'    => sub {
-	my ($list, $field) = @_;
-	return $list unless $#$list;	    # no need to sort 1 item lists
-	return $field			    # Schwartzian Transform 
-	    ?  map  { $_->[0] }		    # for case insensitivity
-	       sort { $a->[1] cmp $b->[1] }
-	       map  { [ $_, lc $_->{ $field } ] } 
-	       @$list 
-	    :  map  { $_->[0] }
-	       sort { $a->[1] cmp $b->[1] }
-	       map  { [ $_, lc $_ ] } 
-	       @$list
+        my ($list, $field) = @_;
+        return $list unless $#$list;        # no need to sort 1 item lists
+        return $field                       # Schwartzian Transform 
+            ?  map  { $_->[0] }             # for case insensitivity
+               sort { $a->[1] cmp $b->[1] }
+               map  { [ $_, lc $_->{ $field } ] } 
+               @$list 
+            :  map  { $_->[0] }
+               sort { $a->[1] cmp $b->[1] }
+               map  { [ $_, lc $_ ] } 
+               @$list
    },
    'nsort'    => sub {
-	my ($list, $field) = @_;
-	return $list unless $#$list;	    # no need to sort 1 item lists
-	return $field			    # Schwartzian Transform 
-	    ?  map  { $_->[0] }		    # for case insensitivity
-	       sort { $a->[1] <=> $b->[1] }
-	       map  { [ $_, lc $_->{ $field } ] } 
-	       @$list 
-	    :  map  { $_->[0] }
-	       sort { $a->[1] <=> $b->[1] }
-	       map  { [ $_, lc $_ ] } 
-	       @$list
+        my ($list, $field) = @_;
+        return $list unless $#$list;        # no need to sort 1 item lists
+        return $field                       # Schwartzian Transform 
+            ?  map  { $_->[0] }             # for case insensitivity
+               sort { $a->[1] <=> $b->[1] }
+               map  { [ $_, lc $_->{ $field } ] } 
+               @$list 
+            :  map  { $_->[0] }
+               sort { $a->[1] <=> $b->[1] }
+               map  { [ $_, lc $_ ] } 
+               @$list
     },
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
@@ -544,6 +545,10 @@ sub _dotop {
 	elsif ($value = $HASH_OPS->{ $item }) {
 	    @result = &$value($root, @$args);		    ## @result
 	}
+	elsif (ref $item eq 'ARRAY') {
+	    # hash slice
+	    return [@$root{@$item}];                       ## RETURN
+	}
 	elsif ($value = $SCALAR_OPS->{ $item }) {
 	    #
 	    # Apply scalar ops to every hash element, in place.
@@ -576,6 +581,10 @@ sub _dotop {
                                                      $scalarContext);
             return $retVal if ( $ret );                     ## RETURN
 	}
+        elsif (ref $item eq 'ARRAY' ) {
+            # array slice
+            return [@$root[@$item]];                        ## RETURN
+        }
     }
 
     # NOTE: we do the can-can because UNIVSERAL::isa($something, 'UNIVERSAL')
@@ -858,8 +867,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-1.02, distributed as part of the
-Template Toolkit version 2.03, released on 15 June 2001.
+1.03, distributed as part of the
+Template Toolkit version 2.03a, released on 18 June 2001.
 
 =head1 COPYRIGHT
 

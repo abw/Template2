@@ -389,7 +389,7 @@ sub interpolate_text {
 	($pre, $var, $dir) = ($1, $3 || $4, $2);
 
 	# preceding text
-	if ($pre) {
+	if (defined($pre) && length($pre)) {
 	    $line += $pre =~ tr/\n//;
 	    $pre =~ s/\\\$/\$/g;
 	    push(@tokens, 'TEXT', $pre);
@@ -1268,8 +1268,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.16, distributed as part of the
-Template Toolkit version 2.03, released on 15 June 2001.
+2.17, distributed as part of the
+Template Toolkit version 2.03a, released on 18 June 2001.
 
  
 

@@ -144,3 +144,38 @@ one
 * a => alpha
 * msg => Hello World
 * things => one
+
+-- test --
+[% items = [ 'foo', 'bar', 'baz' ];
+   take  = [ 0, 2 ];
+   slice = items.$take;
+   slice.join(', ');
+%]
+-- expect --
+foo, baz
+
+-- test --
+[% items = {
+    foo = 'one',
+    bar = 'two',
+    baz = 'three'
+   }
+   take  = [ 'foo', 'baz' ];
+   slice = items.$take;
+   slice.join(', ');
+%]
+-- expect --
+one, three
+
+-- test --
+[% items = {
+    foo = 'one',
+    bar = 'two',
+    baz = 'three'
+   }
+   keys = items.keys.sort;
+   items.${keys}.join(', ');
+%]
+-- expect --
+two, three, one
+

@@ -32,7 +32,6 @@ my $shut_up_warnings = $XML::DOM::VERSION;
 
 eval "use XML::DOM";
 if ($@ ||  $XML::DOM::VERSION < 1.27) {
-    print "1..0\n";
     exit(0);
 }
 

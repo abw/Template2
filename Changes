@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.03, detailing
+#   Revision history for the Template Toolkit version 2.03a, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -15,6 +15,19 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.03a - 18th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##
+#------------------------------------------------------------------------
+
+* Applied various patches from Leon: to remove redundant "print 1..0"
+  in various t/*.t files; to add '1;' to end of '.defaults.cfg' file;
+  and to fix t/vmeth.t and t/leak.t to run correctly under latest
+  bleadperl. 
+
+* Applied a patch from Jonas Liljegren to fix problems with errors 
+  being raised in -T taint mode.
+
 
 #------------------------------------------------------------------------
 # Version 2.03 - 15th June 2001

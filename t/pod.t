@@ -27,7 +27,6 @@ $Template::Test::PRESERVE = 1;
 
 eval "use Pod::POM";
 if ($@) {
-    print "1..0\n";
     exit(0);
 }
 

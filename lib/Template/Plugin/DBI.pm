@@ -94,16 +94,13 @@ sub connect {
 	$dsn = shift 
 	     || $params->{ data_source } 
 	     || $params->{ connect } 
-	     || $params->{ dsn }
-	     || return $self->_throw('data source not defined');
+             || $params->{ dsn };
 	$user = shift
 	     || $params->{ username } 
-	     || $params->{ user } 
-	     || '';
+	     || $params->{ user };
 	$pass = shift 
 	     || $params->{ password } 
-	     || $params->{ pass } 
-	     || '';
+	     || $params->{ pass };
 
 	# reuse existing database handle if connection params match
 	my $connect = join(':', $dsn, $user, $pass);
@@ -117,8 +114,9 @@ sub connect {
 	# open new connection
 	$params->{ PrintError } = 0 
 	    unless defined $params->{ PrintError };
-	$self->{ _DBH } = DBI->connect( $dsn, $user, $pass, $params )
-	    || return $self->_throw("DBI connect failed: $DBI::errstr");
+
+	$self->{ _DBH } = DBI->connect_cached( $dsn, $user, $pass, $params )
+ 	    || return $self->_throw("DBI connect failed: $DBI::errstr");
 
 	# store the connection parameters
 	$self->{ _DBH_CONNECT } = $connect;
@@ -135,10 +133,29 @@ sub connect {
 
 sub _connect {
     my $self = shift;
-    unless (@_) {
-	return $self->{ _DBH } || $self->_throw('no current dbh');
-    }
+#    unless (@_) {
+#	return $self->{ _DBH } || $self->_throw('no current dbh');
+#    }
     return $self->connect(@_);
+}
+
+#------------------------------------------------------------------------
+# _getDBH()
+#
+# Internal method to retrieve the database handle belonging to the
+# instance or attempt to create a new one using connect.
+#------------------------------------------------------------------------
+
+sub _getDBH() {
+    my $self = shift;
+    my $dbh = $self->{ _DBH };
+
+    unless ($dbh) {
+        $self->connect;
+	$dbh = $self->{ _DBH };
+    }
+
+    return $dbh;
 }
 
 
@@ -168,8 +185,9 @@ sub prepare {
     my $self = shift;
     my $sql  = shift || return undef;
 
-    my $dbh = $self->{ _DBH }
-	|| return $self->_throw('no connection');
+#    my $dbh = $self->{ _DBH }
+#	|| return $self->_throw('no connection');
+    my $dbh = $self->_getDBH();
 
     my $sth = $dbh->prepare($sql) 
 	|| return $self->_throw("DBI prepare failed: $DBI::errstr");
@@ -221,8 +239,9 @@ sub do {
     my $sql  = shift || return '';
 
     # get a database connection
-    my $dbh = $self->{ _DBH }
-	|| return $self->_throw('no connection');
+#    my $dbh = $self->{ _DBH }
+#	|| return $self->_throw('no connection');
+    my $dbh = $self->_getDBH();
 
     return $dbh->do($sql) 
 	|| $self->_throw("DBI do failed: $DBI::errstr");
@@ -239,8 +258,9 @@ sub do {
 sub quote {
     my $self = shift;
 
-    my $dbh = $self->{ _DBH }
-	|| return $self->_throw('no connection');
+#    my $dbh = $self->{ _DBH }
+#	|| return $self->_throw('no connection');
+    my $dbh = $self->_getDBH();
 
     $dbh->quote(@_);
 }
@@ -625,7 +645,7 @@ E<lt>abw@kfs.orgE<gt>.
 =head1 VERSION
 
 1.04, distributed as part of the
-Template Toolkit version 2.03, released on 15 June 2001.
+Template Toolkit version 2.03a, released on 18 June 2001.
 
 
 

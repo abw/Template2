@@ -511,15 +511,15 @@
 	      name="Template::Plugin::GD::Graph::lines"
 	      about="Create line graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -536,15 +536,15 @@
 	      name="Template::Plugin::GD::Graph::lines3d"
 	      about="Create 3D line graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph, GD::Graph3d"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -562,15 +562,15 @@
 	      name="Template::Plugin::GD::Graph::bars"
 	      about="Create bar graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -587,15 +587,15 @@
 	      name="Template::Plugin::GD::Graph::bars3d"
 	      about="Create 3D bar graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph, GD::Graph3d"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -613,15 +613,15 @@
 	      name="Template::Plugin::GD::Graph::points"
 	      about="Create point graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -638,15 +638,15 @@
 	      name="Template::Plugin::GD::Graph::linespoints"
 	      about="Create line/point graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -663,15 +663,15 @@
 	      name="Template::Plugin::GD::Graph::area"
 	      about="Create area graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -688,15 +688,15 @@
 	      name="Template::Plugin::GD::Graph::mixed"
 	      about="Create mixed graphs with axes and legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::pie,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::pie,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -713,15 +713,15 @@
 	      name="Template::Plugin::GD::Graph::pie"
 	      about="Create pie charts with legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie3d,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie3d,
                       GD::Graph"
 	      module="1"
 	      author="craig" copyright="2001">
@@ -738,15 +738,15 @@
 	      name="Template::Plugin::GD::Graph::pie3d"
 	      about="Create 3D pie charts with legends"
 	      seealso="Template::Plugin, Template::Plugin::GD,
-                      Template::Plugin::GD::Graphs::lines,
-                      Template::Plugin::GD::Graphs::lines3d,
-                      Template::Plugin::GD::Graphs::bars,
-                      Template::Plugin::GD::Graphs::bars3d,
-                      Template::Plugin::GD::Graphs::points,
-                      Template::Plugin::GD::Graphs::linespoints,
-                      Template::Plugin::GD::Graphs::area,
-                      Template::Plugin::GD::Graphs::mixed,
-                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graph::lines,
+                      Template::Plugin::GD::Graph::lines3d,
+                      Template::Plugin::GD::Graph::bars,
+                      Template::Plugin::GD::Graph::bars3d,
+                      Template::Plugin::GD::Graph::points,
+                      Template::Plugin::GD::Graph::linespoints,
+                      Template::Plugin::GD::Graph::area,
+                      Template::Plugin::GD::Graph::mixed,
+                      Template::Plugin::GD::Graph::pie,
                       GD::Graph, GD::Graph3d"
 	      module="1"
 	      author="craig" copyright="2001">

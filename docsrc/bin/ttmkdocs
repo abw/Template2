@@ -66,6 +66,7 @@ my $dirs = {
     }
 };
 my $vars = {
+    ttversion => $Template::VERSION,
     program => $PROGRAM,
     version => $VERSION,
     help    => $args->{ h },

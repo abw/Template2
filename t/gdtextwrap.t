@@ -23,7 +23,6 @@ $^W = 1;
 eval "use GD; use GD::Text::Wrap;";
 
 if ( $@ ) {
-    print "1..0\n";
     exit(0);
 }
 

@@ -289,6 +289,19 @@ sub _init {
     # create COMPILE_DIR and sub-directories representing each INCLUDE_PATH
     # element in which to store compiled files
     if ($cdir) {
+
+# Stas' hack
+#        # this is a hack to solve the problem with INCLUDE_PATH using
+#	 # relative dirs
+#	 my $segments = 0;
+#	 for (@$path) {
+#	     my $c = 0;
+#	     $c++ while m|\.\.|g;
+#	     $segments = $c if $c > $segments;
+#	 }
+#	 $cdir .= "/".join "/",('hack') x $segments if $segments;
+#
+
 	require File::Path;
 	foreach my $dir (@$path) {
 	    my $wdir = $dir;
@@ -422,8 +435,11 @@ sub _fetch_path {
 		    # %INC entry to ensure it is reloaded (we don't 
 		    # want 1 returned by require() to say it's in memory)
 		    delete $INC{ $compiled };
-		    eval { $data = require $compiled };
-
+		    eval { 
+			my ($ccompiled) = $compiled =~ /^([\w\-\.\/]+)$/ 
+			    or die "invalid filename: $compiled";
+			$data = require $compiled;
+		    };
 		    if ($data && ! $@) {
 			# store in cache
 			$data  = $self->store($path, $data);
@@ -713,8 +729,15 @@ sub _compile {
 		unless Template::Document::write_perl_file($compfile, $parsedoc);
 
 	    if (!defined($error)) {
+		my ($ctime, $cfile);
 		# set atime and mtime of newly compiled file
-		utime($data->{ time }, $data->{ time }, $compfile);
+		($cfile = ($compfile =~ /^([\w\-\.\/]+)$/))
+		    or return("invalid filename: $compfile", 
+			      Template::Constants::STATUS_ERROR);
+		($ctime = ($data->{ time } =~ /^(\d+)$/))
+		    or return("invalid time: $ctime", 
+			      Template::Constants::STATUS_ERROR);
+ 		utime($ctime, $ctime, $cfile);
 	    }
 	}
 
@@ -1172,7 +1195,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 =head1 VERSION
 
 2.12, distributed as part of the
-Template Toolkit version 2.03, released on 15 June 2001.
+Template Toolkit version 2.03a, released on 18 June 2001.
 
 =head1 COPYRIGHT
 

@@ -79,6 +79,11 @@
   maps to the samed compiled version) but is convenient for those times
   when you know that's not going to be a problem.
 
+* Richard Tietjen's patch for stash replace.  Allows back references
+  (e.g. $1) but it would be nice to find a rock-solid way to implement
+  it without relying on unusual ^A delimiter character.
+
+
 #------------------------------------------------------------------------
 # Documentation
 #------------------------------------------------------------------------

@@ -243,7 +243,11 @@ sub write_perl_file {
 		       } keys %$metadata);
 
     local *CFH;
-    open(CFH, ">$file") or do {
+    my ($cfile) = $file =~ /^([\w\.\-\/]+)$/ or do {
+	$ERROR = "invalid filename: $file";
+	return undef;
+    };
+    open(CFH, ">$cfile") or do {
 	$ERROR = $!;
 	return undef;
     };
@@ -445,8 +449,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.13, distributed as part of the
-Template Toolkit version 2.03, released on 15 June 2001.
+2.14, distributed as part of the
+Template Toolkit version 2.03a, released on 18 June 2001.
 
 =head1 COPYRIGHT
 

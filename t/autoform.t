@@ -29,7 +29,6 @@ $Template::Test::PRESERVE = 1;
 eval "use Text::Autoformat";
 
 if ($@) {
-    print "1..0\n";
     exit(0);
 }
 

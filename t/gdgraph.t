@@ -24,7 +24,6 @@ $^W = 1;
 eval "use GD; use GD::Graph;";
 
 if ( $@ ) {
-    print "1..0\n";
     exit(0);
 }
 

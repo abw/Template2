@@ -22,7 +22,6 @@ $^W = 1;
 eval "use GD; use GD::Text;";
 
 if ( $@ ) {
-    print "1..0\n";
     exit(0);
 }
 

@@ -29,7 +29,6 @@ my $shut_up_warnings = $XML::XPath::VERSION;
 eval "use XML::XPath";
 
 if ($@ || $XML::XPath::VERSION < 1.0) {
-    print "1..0\n";
     exit(0);
 }
 

@@ -753,27 +753,6 @@ foo bar baz
 foo bar baz
 
 -- test --
-[% PERL %]
-$context->define_filter('foo', \&foo_factory, 1);
-sub foo_factory {
-    my ($context, $count) = @_;
-    return sub {
-	my $text = shift;
-	return $text . '.' x $count;
-    }
-}
-[% END -%]
-[% FILTER a = foo(3) -%]
-blah blah blah
-[%- END %]
-[% FILTER a -%]
-more blah blah blah
-[%- END %]
--- expect --
-blah blah blah...
-more blah blah blah...
-
--- test --
 [% '$stash->{ a } = 25' FILTER evalperl %]
 [% a %]
 -- expect --
