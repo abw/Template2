@@ -434,7 +434,7 @@
 	      about="Interface to GD Graphics Library"
 	      seealso="Template::Plugin, Template::Plugin::GD,
                        Template::Plugin::GD::Polygon,
-                       Template::Plugin::GD::Constants, GD"
+                       Template::Plugin::GD::Constants, CPAN::GD"
 	      module="1"
 	      author="craig" 
 	      copyright="2001">
@@ -452,7 +452,7 @@
 	      about="Interface to GD module Polygon class"
 	      seealso="Template::Plugin, Template::Plugin::GD,
                       Template::Plugin::GD::Image,
-                      Template::Plugin::GD::Constants, GD"
+                      Template::Plugin::GD::Constants, CPAN::GD"
 	      module="1"
 	      author="craig" 
 	      copyright="2001">

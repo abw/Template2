@@ -222,7 +222,7 @@ support access to tied hashes.  If you are using the XS stash and having
 problems then you should try enabling the regular stash instead.  You 
 can do this by setting $Template::Config::STASH to 'Template::Stash' 
 before instantiating the Template object.
-    
+
 =head1 OBJECT METHODS
 
 =head2 connect($database, $username, $password)

@@ -1,15 +1,22 @@
 [%  TAGS star -%]
 [%
 docset => {
-    id    => '[% docset.id %]',
-    title => '[% docset.title %]',
-    about => '[% docset.about %]',
+    id    => '[* docset.id *]',
+    title => '[* docset.title *]',
+    about => '[* docset.about *]',
+
+    booklist => [ [*
+	FOREACH book = docset.books; 
+	    "'$book.id'";
+	    ', ' UNLESS loop.last;
+	END
+    *] ],
+
     books => {
 [*  PROCESS book/config | indent(8) FOREACH book = docset.books *]
     },
-    booklist => [ 
-[*  "'$book.id', " FOREACH book = docset.books -*]
-    ],
+
+    # internal links within the docset
     links => {
 [*  FOREACH book = docset.books; 
 	FOREACH page = book.pages;
@@ -24,6 +31,13 @@ docset => {
 [*	END; 
     END
 -*]
+    },
+
+    # external CPAN modules references within the docset
+    cpan => {
+[*  FOREACH module = docset.cpan.keys.sort -*]
+	'[* module *]' => '[* module *]',
+[*  END -*]
     },
 };
 -%]

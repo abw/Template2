@@ -12,13 +12,13 @@
 </p>
 [* END -*]
 
-[%  WRAPPER ndx -%]
-[*  prefix = book.uplink ? "$book.uplink/" : '';
-    FOREACH page = book.pages *]
-[%  WRAPPER ndxitem 
-    	link='[* prefix *][* page.html *]'
-     	name='[* page.name *]'
-     	title='[* page.about *]'
+[% WRAPPER ndx -%]
+[* prefix = book.uplink ? "$book.uplink/" : '';
+   FOREACH page = book.pages *]
+[% WRAPPER ndxitem 
+       link  = '[* prefix *][* page.html *]'
+       name  = '[* page.name *]'
+       title = '[* page.about *]'
 -%]
 [* page.intro *]
 [% END %]

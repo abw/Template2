@@ -1,3 +1,4 @@
+
 [% book.id %] => {
     id     => '[% book.id %]',
     name   => '[% book.name %]',
@@ -10,6 +11,14 @@
     about  => '[% book.about %]',
     prev   => '[% loop.prev.id %]',
     next   => '[% loop.next.id %]',
+
+    pagelist => [ [%
+	FOREACH page = book.pages; 
+	    "'$page.id'";
+	    ', ' UNLESS loop.last;
+	END
+    %] ],
+
     pages  => {
 [%
     # generate configuration for each page
@@ -34,7 +43,4 @@
 	}
 [%  END %]
     }
-    pagelist => [
-	[% "'$page.id', " FOREACH page = book.pages -%]
-    ]
 }

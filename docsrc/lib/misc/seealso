@@ -3,7 +3,10 @@
 
 [%  FOREACH item = seealso.split(',\s*');
 	item = item.split('\|');
-        name = item.0.replace('^CPAN::', '');
+	IF item.0.search('^CPAN::');
+	    name = item.0.replace('^CPAN::', '');
+	    docset.cpan.$name = name;
+	END;
 #	(link = item.1) ? "L<$name|$link>" : "L<$name>";
 	link = item.1 or name;
 	"L<$name|$link>";
