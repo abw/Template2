@@ -43,6 +43,10 @@ output:
       * Foo
       * Foo Bar
 
+You can use also use 'IN' instead of '=' if you prefer.
+
+    [% FOREACH crook IN government %]
+    
 When the FOREACH directive is used without specifying a target variable, 
 any iterated values which are hash references will be automatically 
 imported.
@@ -54,7 +58,7 @@ imported.
        ]
     %]
 
-    [% FOREACH user = userlist %]
+    [% FOREACH user IN userlist %]
        [% user.id %] [% user.name %]
     [% END %]
 
@@ -87,7 +91,7 @@ in a hash array.  Each entry in the hash is returned in sorted order
        }
     %]
 
-    [% FOREACH u = users %]
+    [% FOREACH u IN users %]
        * [% u.key %] : [% u.value %]
     [% END %]
 
@@ -99,7 +103,7 @@ Output:
 
 The NEXT directive starts the next iteration in the FOREACH loop.
 
-    [% FOREACH user = userlist %]
+    [% FOREACH user IN userlist %]
        [% NEXT IF user.isguest %]
        Name: [% user.name %]    Email: [% user.email %]
     [% END %]
@@ -107,7 +111,7 @@ The NEXT directive starts the next iteration in the FOREACH loop.
 The LAST directive can be used to prematurely exit the loop.  BREAK is
 also provided as an alias for LAST.
 
-    [% FOREACH match = results.nsort('score').reverse %]
+    [% FOREACH match IN results.nsort('score').reverse %]
        [% LAST IF match.score < 50 %]
        [% match.score %] : [% match.url %]
     [% END %]
@@ -130,7 +134,7 @@ See L<Template::Iterator> for further details.
 
 Example:
 
-    [% FOREACH item = [ 'foo', 'bar', 'baz' ] -%]
+    [% FOREACH item IN [ 'foo', 'bar', 'baz' ] -%]
        [%- "<ul>\n" IF loop.first %]
        <li>[% loop.count %]/[% loop.size %]: [% item %]
        [%- "</ul>\n" IF loop.last %]
@@ -151,11 +155,11 @@ Nested loops will work as expected, with the 'loop' variable correctly
 referencing the innermost loop and being restored to any previous 
 value (i.e. an outer loop) at the end of the loop.
 
-    [% FOREACH group = grouplist;
+    [% FOREACH group IN grouplist;
 	   # loop => group iterator
            "Groups:\n" IF loop.first;
 
-           FOREACH user = group.userlist;
+           FOREACH user IN group.userlist;
                # loop => user iterator
 	       "$loop.count: $user.name\n";
 	   END;
@@ -174,8 +178,8 @@ details.
 
     [% USE giter = iterator(grouplist) %]
 
-    [% FOREACH group = giter %]
-       [% FOREACH user = group.userlist %]
+    [% FOREACH group IN giter %]
+       [% FOREACH user IN group.userlist %]
              user #[% loop.count %] in
              group [% giter.count %] is
              named [% user.name %]
