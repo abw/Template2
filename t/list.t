@@ -191,3 +191,12 @@ another, <a href="/blow.html">flute</a>
 <a href="dick.html">Richard</a>,
 <a href="tom.html">Tom</a>
 
+-- test --
+[% data.grep('r').join(', ') %]
+-- expect --
+romeo, sierra, foxtrot
+
+-- test --
+[% data.grep('^r').join(', ') %]
+-- expect --
+romeo
