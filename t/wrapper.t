@@ -25,8 +25,8 @@ $^W = 1;
 
 #$Template::Test::DEBUG = 0;
 #$Template::Context::DEBUG = 0;
-#$Template::Parser::DEBUG = 1;
-#$Template::Directive::PRETTY = 1;
+$Template::Parser::DEBUG = 1;
+$Template::Directive::PRETTY = 1;
 
 my $dir   = -d 't' ? 't/test' : 'test';
 my $tproc = Template->new({ 
@@ -128,8 +128,16 @@ of nuclear fusion.
 
 <hr>
 
+#========================================================================
+# STOP!  The rest of these tests don't work because the WRAPPER content
+#        is actually a closure constructed in the context of the
+#        calling block rather than the enclosing one.
+#========================================================================
+-- stop --
+
 -- test --
-[% FOREACH s = [ 'one' 'two' ]; WRAPPER section; PROCESS $s; END; END %]
+[%# FOREACH s = [ 'one' 'two' ]; WRAPPER section; PROCESS $s; END; END %]
+[% PROCESS $s WRAPPER section FOREACH s = [ 'one' 'two' ] %]
 [% BLOCK one; title = 'Block One' %]This is one[% END %]
 [% BLOCK two; title = 'Block Two' %]This is two[% END %]
 [% BLOCK section %]
@@ -147,4 +155,22 @@ This is one
 <h1>Block Two</h1>
 <p>
 This is two
+</p>
+
+-- test --
+[% BLOCK one; title = 'Block One' %]This is one[% END %]
+[% BLOCK section %]
+<h1>[% title %]</h1>
+<p>
+[% content %]
+</p>
+[% END %]
+[% WRAPPER section %]
+[% PROCESS one %]
+[% END %]
+title: [% title %]
+-- expect --
+<h1>Block One</h1>
+<p>
+This is one
 </p>

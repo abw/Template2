@@ -4,7 +4,7 @@
 
 * Template process($file) method returns a string if the named
   template ($file) can't be found, rather than an exception.  This
-  should be changed so that an exception is returned whatever.
+  should be changed so that an exception is returned whatever?
 
 * It's currently not possible to catch a 'perl' exception because 'PERL'
   is a reserved word.  You need to enable the CASE option to be able to 
@@ -48,6 +48,10 @@
   is well organised and fairly pleasant to work with these days so please
   don't be afraid to go digging for answers.
 
+* The XML::RSS plugin test may generate warnings (but passes all tests)
+  under Perl 5.6
+
+
 #------------------------------------------------------------------------
 # PENDING ITEMS ON THE 'TO-DO' LIST
 #------------------------------------------------------------------------
@@ -61,22 +65,18 @@
 * 'tpage' could do with a '--define var=value' variable and possibly 
   others.
 
-* An [% INSERT file %] directive to insert the contents of a file
-  without parsing, compiling or executing.  This is still a little
-  tricky because there's currently no way to tell the provider not to
-  compile a file.  We could keep file text hanging around (nah) or
-  pass options for provider retrievals such as DONT_USE_CACHE,
-  DONT_CACHE, DONT_COMPILE.  Or should there be public interfaces for
-  load(), compile(), etc.?  Not sure, but it's on the brain stack.
 
 #------------------------------------------------------------------------
 # POSSIBLE FUTURE ENHANCEMENTS
 #------------------------------------------------------------------------
 
 * It would be useful if template components had some notion of inheritance
-  so that a 'derived' component could call on the 'super' component.  I'm
-  not sure how this really fits in with the TT architecture.  Needs more
-  thought. 
+  so that a 'derived' component could call on the 'super' component.  
+  This can probably best be acheived by means of a Template::Component
+  object, derived from Template::Document, which has a super() method
+  (and maybe many other magical methods).  The super() method would 
+  return a reference to another "parent" template which could be processed
+  by a directive of the form [% INCLUDE $component.super %]
 
 * I've written a version of Template::Stash in XS which should give a 
   significant speedup to the runtime processing.  It's 95% complete and 
@@ -103,7 +103,7 @@
   provides all the magic for backwards compatibility, albeit at some
   trade-off in speed.  Nevertheless, compiled V2 templates should
   easily run twice as fast as under V1.  My current idea is to
-  re-write the parser to generate more explicit stash navigation code
+  hack the parser to generate more explicit stash navigation code
   which uses direct access where the type can be grokked in advanced
   (i.e. a NUMBER implies the parent is an ARRAY).  I'm also wondering
   if we could add the '->' operator as a clue to the parser to do
@@ -153,83 +153,5 @@
 
 * merge Directive into Parse.yp via template process?  Yeah, one of these
   days RSN.
-
-
-#------------------------------------------------------------------------
-# TO-DONE (beta release 1)
-#
-# The disorganised mess of random thoughts and notes that got shuffled 
-# from the TODO list down here as they got done.  Some of these items 
-# made it into the Changes file, others didn't, or weren't deemed 
-# important enough.
-#------------------------------------------------------------------------
-
--- v2.00 beta 1 --
-
-* Template::Context include()/process() should work with raw CODE refs.
-
-* any OUTPUT_PATH in Template.pm should be prepended to OUTPUT when OUTPUT
-  is a file name.
-
-* cleaned up Template::Iterator.  Now derived from Template::Base.
-  Removed ACTION and ORDER now that they are supported as list pseudo
-  methods in the Stash LIST_OPS.
-
-* Fixed bug in Provider preventing updates files from being automatically
-  reloaded.  Thanks to Perrin Harkins who provided the patch.
-
-* Fixed bug in Template::Plugin::Datafile which was preventing a comment
-  from being placed on the first line of the file.
-
-* Fixed bug in parse grammer preventing commas in a META list
-
-* Added cache persistance by writing real Perl to file (rather than
-  the previous Data::Dumper dump of the opcode tree).  Had to
-  re-organise a bunch of code around the parser/provider/document.  Activated 
-  by COMPILE_EXT configuration item.
-
-* Added a work-around in Template::Stash to the problem of CGI disclaiming
-  membership of the UNIVERSAL class after the first method call.
-
-* block persistance - sometimes need to define BLOCKs that persist 
-  through service invocations (AUTO_RESET => 0).
-
-* fix \@ quoting (and others) in Directive (Perrin Harkins reported / Chuck 
-  Adams patched)
-
-* Added Date plugin and test, as provided by Thierry-Michel Barral and abw.
-
-* Integrate changes to Template::Test from version 1.07 and beyond.  Now 
-  supports -- process - option in expect, mainly for use of t/date.t et al.
-
-* Integrated new upper and lower filters from 1.08, and '|' alias for FILTER
-  from 1.07.
-
-* Added new directive.t test to test chomping and comments.
-
-* should be able to pre-define BLOCKS as text which is auto-pre-compiled 
-  - may rely on above to get access to Provider's PARSER object.
-
-* copied XML plugins and tests
-
-* fixed TRIM option to work with all BLOCKs and templates.  Moved TRIMing
-  operation into context process() and include() methods.  Also changed
-  service to call $context->process($template) rather than call the sub/
-  doc itself, thus ensuring that the output can get TRIMmed.
-
-* Fix Plugin.pm - it's still basically v1 code and much can be discarded
-
-* Added --define option to ttree.
-
-* copy over new plugins and filters from v1.07
-
-* Move Template::Utils::output somewhere better (Template.pm?) and get rid
-  of Template::Utils
-
-* fixed bug in Context filter() provider method which wasn't caching 
-  filters with args.
-
-* [% CASE DEFAULT %] is now an alias for [% CASE %] (the default case),
-  in consistency with [% CATCH DEFAULT %] / [% CATCH %]
 
 

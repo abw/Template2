@@ -463,6 +463,27 @@ sub leave {
 
 
 #------------------------------------------------------------------------
+# define_block($name, $block)
+#
+
+# Adds a new BLOCK definition to the local BLOCKS cache.  $block may
+# be specified as a reference to a sub-routine or Template::Document
+# object or as text which is compiled into a template.  Returns a true
+# value (the $block reference or compiled block reference) if
+# succesfull or undef on failure.  Call error() to retrieve the
+# relevent error message (i.e. compilation failure).
+#------------------------------------------------------------------------
+
+sub define_block {
+    my ($self, $name, $block) = @_;
+    $block = $self->template(\$block)
+	|| return undef
+	    unless ref $block;
+    $self->{ BLOCKS }->{ $name } = $block;
+}
+
+
+#------------------------------------------------------------------------
 # reset()
 # 
 # Reset the state of the internal BLOCKS hash to clear any BLOCK 
