@@ -62,12 +62,14 @@ my $dryrun   = $config->nothing;
 my $verbose  = $config->verbose || $dryrun;
 my $recurse  = $config->recurse;
 my $preserve = $config->preserve;
-my $debug    = $config->debug;
 my $all      = $config->all;
 my $libdir   = $config->lib;
 my $ignore   = $config->ignore;
 my $copy     = $config->copy;
 my $accept   = $config->accept;
+my $absolute = $config->absolute;
+my $relative = $config->relative;
+my $suffix   = $config->suffix;
 my $srcdir   = $config->src
 	       || die "Source directory not set (-s)\n";
 my $destdir  = $config->dest
@@ -94,7 +96,8 @@ my $replace = $config->get('define');
 # now create complete parameter hash for creating template processor
 my $ttopts   = {
     %$ucttopts,
-    RELATIVE     => 1,
+    RELATIVE     => $relative,
+    ABSOLUTE     => $absolute,
 #    INCLUDE_PATH => [ @$libdir, '.' ],
     INCLUDE_PATH => [ $srcdir, @$libdir ],
     OUTPUT_PATH  => $destdir,
@@ -108,30 +111,34 @@ print "$NAME $VERSION (Template Toolkit version $Template::VERSION)\n\n"
 
 if ($verbose) {
     local $" = ', ';
+    my $sfx = join(', ', map { "$_ => $suffix->{$_}" } keys %$suffix);
+
     print(STDERR 
-	  "      Source: $srcdir\n",
-	  " Destination: $destdir\n",
-	  "Include Path: [ @$libdir ]\n",
-	  "      Ignore: [ @$ignore ]\n",
-	  "        Copy: [ @$copy ]\n",
-	  "      Accept: [ ", @$accept ? "@$accept" : "*", " ]\n\n");
+          "      Source: $srcdir\n",
+          " Destination: $destdir\n",
+          "Include Path: [ @$libdir ]\n",
+          "      Ignore: [ @$ignore ]\n",
+          "        Copy: [ @$copy ]\n",
+          "      Accept: [ @$accept ]\n",
+          "      Suffix: [ $sfx ]\n\n");
     print(STDERR "NOTE: dry run, doing nothing...\n")
-	if $dryrun;
+    	if $dryrun;
 }
-if ($debug) {
-    local $" = ', ';
-    print STDERR "Template Toolkit configuration:\n";
-    foreach (keys %$ucttopts) {
-	my $val = $ucttopts->{$_};
-	next unless $val;
-	if (ref($val) eq 'ARRAY') {
-	    next unless @$val;
-	    $val = "[ @$val ]";
-	}
-	printf STDERR "  %-12s => $val\n", $_;
-    }
-    print STDERR "\n";
-}
+
+#if ($debug) {
+#    local $" = ', ';
+#    print STDERR "Template Toolkit configuration:\n";
+#    foreach (keys %$ucttopts) {
+#        my $val = $ucttopts->{$_};
+#        next unless $val;
+#        if (ref($val) eq 'ARRAY') {
+#            next unless @$val;
+#            $val = "[ @$val ]";
+#        }
+#        printf STDERR "  %-12s => $val\n", $_;
+#    }
+#    print STDERR "\n";
+#}
 
 
 #------------------------------------------------------------------------
@@ -145,9 +152,7 @@ my $template = Template->new($ttopts);
 if (@ARGV) {
     # explicitly process files specified on command lines 
     foreach my $file (@ARGV) {
-	print "  + $file\n" if $verbose;
-	$template->process($file, $replace, $file)
-	    || print "  ! ", $template->error(), "\n";
+        process_file($file, $srcdir ? "$srcdir/$file" : $file, force => 1);
     }
 }
 else {
@@ -172,56 +177,54 @@ sub process_tree {
     my $absdir = join('/', $srcdir ? $srcdir : (), $dir ? $dir : ());
     $absdir ||= '.';
 
-    print STDERR "  * processing tree: $absdir\n" if $debug;
-
     opendir(DIR, $absdir) || do { warn "$absdir: $!\n"; return undef; };
 
     FILE: while (defined ($file = readdir(DIR))) {
-	next if $file eq '.' || $file eq '..';
-	$path = $dir ? "$dir/$file" : $file;
-	$abspath = "$absdir/$file";
-	
-	next unless -e $abspath;
+        next if $file eq '.' || $file eq '..';
+        $path = $dir ? "$dir/$file" : $file;
+        $abspath = "$absdir/$file";
+        
+        next unless -e $abspath;
 
-	# check against ignore list
-	foreach $check (@$ignore) {
-	    if ($path =~ /$check/) {
-		printf "  - %-32s (ignored, matches /$check/)\n", $path
-		    if $verbose;
-		next FILE;
-	    }
-	}
+        # check against ignore list
+        foreach $check (@$ignore) {
+            if ($path =~ /$check/) {
+                printf "  - %-32s (ignored, matches /$check/)\n", $path
+                    if $verbose;
+                next FILE;
+            }
+        }
 
-	if (-d $abspath) {
-	    if ($recurse) {
-		my ($uid, $gid, $mode);
-
-		(undef, undef, $mode, undef, $uid, $gid, undef, undef,
-		 undef, undef, undef, undef, undef)  = stat($abspath);
-
-		# create target directory if required
-		$target = "$destdir/$path";
-		unless (-d $target || $dryrun) {
-		    mkdir $target, $mode || do { 
-			warn "mkdir  ($target): $!\n";
-			next;
-		    };
+        if (-d $abspath) {
+            if ($recurse) {
+                my ($uid, $gid, $mode);
+                
+                (undef, undef, $mode, undef, $uid, $gid, undef, undef,
+                 undef, undef, undef, undef, undef)  = stat($abspath);
+                
+                # create target directory if required
+                $target = "$destdir/$path";
+                unless (-d $target || $dryrun) {
+                    mkdir $target, $mode || do { 
+                        warn "mkdir  ($target): $!\n";
+                        next;
+                    };
 # commented out by abw on 2000/12/04 - seems to raise a warning?   
 #		    chown($uid, $gid, $target) || warn "chown($target): $!\n";
-		    printf "  + %-32s (created target directory)\n", $path
-			if $verbose;
-		}
-		# recurse into directory
-		process_tree($path);
-	    }
-	    else {
-		printf "  - %-32s (directory, not recursing)\n", $path
-		    if $verbose;
-	    }
-	}
-	else {
-	    process_file($path, $abspath);
-	}
+                    printf "  + %-32s (created target directory)\n", $path
+                        if $verbose;
+                }
+                # recurse into directory
+                process_tree($path);
+            }
+            else {
+                printf "  - %-32s (directory, not recursing)\n", $path
+                    if $verbose;
+            }
+        }
+        else {
+            process_file($path, $abspath);
+        }
     }
     closedir(DIR);
 }
@@ -234,12 +237,25 @@ sub process_tree {
 #------------------------------------------------------------------------
 
 sub process_file {
-    my ($file, $absfile) = @_;
-    my ($dest, $base, $check, $srctime, $desttime, $mode, $uid, $gid);
+    my ($file, $absfile, %options) = @_;
+    my ($dest, $destfile, $filename, $check, 
+        $srctime, $desttime, $mode, $uid, $gid);
+    my ($old_suffix, $new_suffix);
 
     $absfile ||= $file;
-    $dest = $destdir ? "$destdir/$file" : $file;
-    $base = basename($file);
+    $filename = basename($file);
+    $destfile = $file;
+    
+    # look for any relevant suffix mapping
+    if (%$suffix) {
+        if ($filename =~ m/\.(.+)$/) {
+            $old_suffix = $1;
+            if ($new_suffix = $suffix->{ $old_suffix }) {
+                $destfile =~ s/$old_suffix$/$new_suffix/;
+            }
+        }
+    }
+    $dest = $destdir ? "$destdir/$destfile" : $destfile;
 			       
 #    print "proc $file => $dest\n";
 
@@ -249,54 +265,58 @@ sub process_file {
      undef, undef, undef)  = stat($absfile);
     
     # test modification time of existing destination file
-    if (-f $dest && ! $all) {
-	$desttime = ( stat($dest) )[9];
+    if (! $all && ! $options{ force } && -f $dest) {
+        $desttime = ( stat($dest) )[9];
 
-	if ($desttime >= $srctime) {
-	    printf "  - %-32s (not modified)\n", $file
-		if $verbose;
-	    return;
-	}
+        if ($desttime >= $srctime) {
+            printf "  - %-32s (not modified)\n", $file
+                if $verbose;
+            return;
+        }
     }
 	
     # check against copy list
     foreach $check (@$copy) {
-	if ($base =~ /$check/) {
-	    printf "  > %-32s (copied, matches /$check/)\n", $file
-		if $verbose;
+        if ($filename =~ /$check/) {
+            printf "  > %-32s (copied, matches /$check/)\n", $file
+                if $verbose;
 
-	    unless ($dryrun) {
-		copy($absfile, $dest);
+            unless ($dryrun) {
+                copy($absfile, $dest);
 
-		if ($preserve) {
-		    chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
-		    chmod($mode, $dest) || warn "chmod($dest): $!\n";
-		}
-	    }
-	    return;
-	}
+                if ($preserve) {
+                    chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
+                    chmod($mode, $dest) || warn "chmod($dest): $!\n";
+                }
+            }
+            return;
+        }
     }
 
     # check against acceptance list
     if (@$accept) {
-	unless (grep { $base =~ /$_/ } @$accept) {
-	    printf "  - %-32s (not accepted)\n", $file
-		if $verbose;
-	    return;
-	}
+        unless (grep { $filename =~ /$_/ } @$accept) {
+            printf "  - %-32s (not accepted)\n", $file
+                if $verbose;
+            return;
+        }
     }
 
-    print "  + $file\n" if $verbose;
+    if ($verbose) {
+        printf("  + %-32s", $file);
+        print " (changed suffix to $new_suffix)" if $new_suffix;
+        print "\n";
+    }
 
     # process file
     unless ($dryrun) {
-        $template->process($file, $replace, $file)
-	    || print("  ! ", $template->error(), "\n");
+        $template->process($file, $replace, $destfile)
+            || print("  ! ", $template->error(), "\n");
 
-	if ($preserve) {
-	    chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
-	    chmod($mode, $dest) || warn "chmod($dest): $!\n";
-	}
+        if ($preserve) {
+            chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
+            chmod($mode, $dest) || warn "chmod($dest): $!\n";
+        }
     }
 }
 
@@ -310,30 +330,34 @@ sub process_file {
 sub read_config {
     my $file = shift;
 
-    my $config = AppConfig->new({ 
-	ERROR  => sub { die @_, "\ntry `$NAME --help'\n" }   }, 
-	'help|h'      => { ACTION => \&help },
-	'src|s=s'     => { EXPAND => EXPAND_ALL },
-	'dest|d=s'    => { EXPAND => EXPAND_ALL },
-	'lib|l=s@'    => { EXPAND => EXPAND_ALL },
-	'cfg|c=s'     => { EXPAND => EXPAND_ALL, DEFAULT => '.' },
-	'verbose|v'   => { DEFAULT => 0 },
-	'recurse|r'   => { DEFAULT => 0 },
-	'nothing|n'   => { DEFAULT => 0 },
-	'preserve|p'  => { DEFAULT => 0 },
-	'all|a'       => { DEFAULT => 0 },
-        'debug|dbg'   => { DEFAULT => 0 },
-	'define=s%',
-	'ignore=s@',
-	'copy=s@',
-	'accept=s@',
-	'template_anycase|anycase',
-	'template_eval_perl|eval_perl',
-	'template_load_perl|load_perl',
-	'template_interpolate|interpolate',
-	'template_pre_chomp|pre_chomp|prechomp',
-	'template_post_chomp|post_chomp|postchomp',
-	'template_trim|trim',
+    my $config = AppConfig->new(
+        { 
+            ERROR  => sub { die(@_, "\ntry `$NAME --help'\n") }
+        }, 
+    	'help|h'      => { ACTION => \&help },
+    	'src|s=s'     => { EXPAND => EXPAND_ALL },
+    	'dest|d=s'    => { EXPAND => EXPAND_ALL },
+    	'lib|l=s@'    => { EXPAND => EXPAND_ALL },
+    	'cfg|c=s'     => { EXPAND => EXPAND_ALL, DEFAULT => '.' },
+    	'verbose|v'   => { DEFAULT => 0 },
+    	'recurse|r'   => { DEFAULT => 0 },
+    	'nothing|n'   => { DEFAULT => 0 },
+    	'preserve|p'  => { DEFAULT => 0 },
+    	'absolute'    => { DEFAULT => 0 },
+    	'relative'    => { DEFAULT => 0 },
+    	'all|a'       => { DEFAULT => 0 },
+    	'define=s%',
+    	'suffix=s%',
+    	'ignore=s@',
+    	'copy=s@',
+    	'accept=s@',
+    	'template_anycase|anycase',
+    	'template_eval_perl|eval_perl',
+    	'template_load_perl|load_perl',
+    	'template_interpolate|interpolate',
+    	'template_pre_chomp|pre_chomp|prechomp',
+    	'template_post_chomp|post_chomp|postchomp',
+        'template_trim|trim',
         'template_pre_process|pre_process|preprocess=s@',
         'template_post_process|post_process|postprocess=s@',
         'template_process|process=s',
@@ -342,25 +366,27 @@ sub read_config {
         'template_expose_blocks|expose_blocks',
         'template_default|default=s',
         'template_error|error=s',
+        'template_debug|debug=s',
         'template_start_tag|start_tag|starttag=s',
         'template_end_tag|end_tag|endtag=s',
         'template_tag_style|tag_style|tagstyle=s',
         'template_compile_ext|compile_ext=s',
         'template_compile_dir|compile_dir=s',
-	'template_plugin_base|plugin_base|pluginbase=s@',
-	'perl5lib|perllib=s@'
+    	'template_plugin_base|plugin_base|pluginbase=s@',
+    	'perl5lib|perllib=s@'
     );
 
     # add the 'file' option now that we have a $config object that we 
     # can reference in a closure
     $config->define(
-	'file|f=s@'   => { EXPAND => EXPAND_ALL, 
-			   ACTION => sub { 
-			       my ($state, $item, $file) = @_;
-			       $file = $state->cfg . "/$file" 
-				   unless $file =~ /^[\.\/]|(?:\w:)/;
-			       $config->file($file) }  
-			   }
+        'file|f=s@' => { 
+            EXPAND => EXPAND_ALL, 
+            ACTION => sub { 
+                my ($state, $item, $file) = @_;
+                $file = $state->cfg . "/$file" 
+                    unless $file =~ /^[\.\/]|(?:\w:)/;
+                $config->file($file) }  
+        }
     );
 
     # process main config file, then command line args
@@ -484,7 +510,6 @@ Options:
    -n      (--nothing)      Do nothing, just print summary (enables -v)
    -v      (--verbose)      Verbose mode
    -h      (--help)         This help
-   -dbg    (--debug)        Debug mode
    -s DIR  (--src=DIR)      Source directory
    -d DIR  (--dest=DIR)     Destination directory
    -c DIR  (--cfg=DIR)      Location of configuration files
@@ -496,6 +521,9 @@ File search specifications (all may appear multiple times):
    --copy=REGEX             Copy files matching REGEX
    --accept=REGEX           Process only files matching REGEX 
 
+File suffix rewriting (may appear multiple times)
+   --suffix old=new         Change any '.old' suffix to '.new'
+
 Additional options to set Template Toolkit configuration items:
    --define var=value       Define template variable
    --interpolate            Interpolate '\$var' references in text
@@ -505,12 +533,15 @@ Additional options to set Template Toolkit configuration items:
    --trim                   Trim blank lines around template blocks
    --eval_perl              Evaluate [% PERL %] ... [% END %] code blocks
    --load_perl              Load regular Perl modules via USE directive
+   --absolute               Enable the ABSOLUTE option
+   --relative               Enable the RELATIVE option
    --pre_process=TEMPLATE   Process TEMPLATE before each main template
    --post_process=TEMPLATE  Process TEMPLATE after each main template
    --process=TEMPLATE       Process TEMPLATE instead of main template
    --wrapper=TEMPLATE       Process TEMPLATE wrapper around main template
    --default=TEMPLATE       Use TEMPLATE as default
    --error=TEMPLATE         Use TEMPLATE to handle errors
+   --debug=STRING           Set TT DEBUG option to STRING
    --start_tag=STRING       STRING defines start of directive tag
    --end_tag=STRING         STRING defined end of directive tag
    --tag_style=STYLE        Use pre-defined tag STYLE    
@@ -519,9 +550,7 @@ Additional options to set Template Toolkit configuration items:
    --compile_dir=DIR        Directory for compiled template files
    --perl5lib=DIR           Specify additional Perl library directories
 
-See 'perldoc ttree' for further information.  Note that earlier versions
-of AppConfig (<1.53) may require options of the form '--name=opt' to be 
-specified as '-name opt'.
+See 'perldoc ttree' for further information.  
 
 END_OF_HELP
 
