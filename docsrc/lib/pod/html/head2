@@ -1,6 +1,6 @@
 [% TAGS star -%]
 [% WRAPPER subsection
-   title = '[* vq.print(item.title).replace("'", "\\'") *]'
+   title = "[* vq.print(item.title) *]"
 -%]
 [*- view.print(item.content) -*]
 [%- END %]

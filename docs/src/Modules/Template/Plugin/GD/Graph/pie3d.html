@@ -13,35 +13,35 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='SYNOPSIS'
+	        title ="SYNOPSIS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='EXAMPLES'
+	        title ="EXAMPLES"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='SEE ALSO'
+	        title ="SEE ALSO"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    [% tt_start_tag %] USE g = GD.Graph.pie3d(x_size, y_size); [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='EXAMPLES'
+    title="EXAMPLES"
 -%]<pre>    [% tt_start_tag %] FILTER null;
         data = [
             [&quot;1st&quot;,&quot;2nd&quot;,&quot;3rd&quot;,&quot;4th&quot;,&quot;5th&quot;,&quot;6th&quot;],
@@ -60,7 +60,7 @@
     -[% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 The GD.Graph.pie3d plugin provides an interface to the GD::Graph::pie3d
 class defined by the GD::Graph module. It allows an (x,y) data set to
@@ -76,7 +76,7 @@ See [% ttlink('GD::Graph3d') -%] for more details.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -85,14 +85,14 @@ The GD::Graph3d module was written by Jeremy Wadsack. The GD::Graph module was w
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-1.35, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+1.36, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 Copyright (C) 2001 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -105,7 +105,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::GD', 'Template::Plugin::GD') -%], [% ttlink('Template::Plugin::GD::Graph::lines', 'Template::Plugin::GD::Graph::lines') -%], [% ttlink('Template::Plugin::GD::Graph::lines3d', 'Template::Plugin::GD::Graph::lines3d') -%], [% ttlink('Template::Plugin::GD::Graph::bars', 'Template::Plugin::GD::Graph::bars') -%], [% ttlink('Template::Plugin::GD::Graph::bars3d', 'Template::Plugin::GD::Graph::bars3d') -%], [% ttlink('Template::Plugin::GD::Graph::points', 'Template::Plugin::GD::Graph::points') -%], [% ttlink('Template::Plugin::GD::Graph::linespoints', 'Template::Plugin::GD::Graph::linespoints') -%], [% ttlink('Template::Plugin::GD::Graph::area', 'Template::Plugin::GD::Graph::area') -%], [% ttlink('Template::Plugin::GD::Graph::mixed', 'Template::Plugin::GD::Graph::mixed') -%], [% ttlink('Template::Plugin::GD::Graph::pie', 'Template::Plugin::GD::Graph::pie') -%], [% ttlink('GD::Graph', 'GD::Graph') -%], [% ttlink('GD::Graph3d', 'GD::Graph3d') -%]
 </p>

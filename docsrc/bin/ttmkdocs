@@ -139,10 +139,10 @@ sub tt_tags {
 sub tt_quote_tags {
     my $text = shift;
     for ($text) {
+	s/(["\\\$])/\\$1/g;
 	s/\[%/[% START_TAG %]/g;
 	s/(?<!\[% START_TAG )%\]/\$tt_end_tag/g;
 	s/\[% START_TAG %\]/\$tt_start_tag/g;
-	s/(["\\])/\\$1/g;
     }
     return $text;
 }

@@ -13,38 +13,38 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='SYNOPSIS'
+	        title ="SYNOPSIS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='EXAMPLES'
+	        title ="EXAMPLES"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='AUTHORS'
+	        title ="AUTHORS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='SEE ALSO'
+	        title ="SEE ALSO"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    [% tt_start_tag %] USE File(filepath) [% tt_end_tag %]
     [% tt_start_tag %] File.path [% tt_end_tag %]         # full path
     [% tt_start_tag %] File.name [% tt_end_tag %]	    # filename
     [% tt_start_tag %] File.dir [% tt_end_tag %]          # directory</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This plugin provides an abstraction of a file.  It can be used to 
 fetch details about files from the file system, or to represent abstract
@@ -226,7 +226,7 @@ item.
 </ul>
 [%- END %]
 [% WRAPPER section
-    title='EXAMPLES'
+    title="EXAMPLES"
 -%]<pre>    [% tt_start_tag %] USE file('/foo/bar/baz.html') [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	  # /foo/bar/baz.html
     [% tt_start_tag %] file.dir [% tt_end_tag %]        # /foo/bar
@@ -266,7 +266,7 @@ item.
     [% tt_start_tag %] file.dir('wiz/woz.html') [% tt_end_tag %]          # ../../wiz/woz.html</pre>
 [%- END %]
 [% WRAPPER section
-    title='AUTHORS'
+    title="AUTHORS"
 -%]<p>
 Michael Stevens &lt;michael@etla.org&gt; wrote the original Directory plugin
 on which this is based.  Andy Wardley &lt;abw@kfs.org&gt; split it into 
@@ -275,21 +275,21 @@ for VIEW support, and made a few other minor tweaks.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.43, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+2.44, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::Directory', 'Template::Plugin::Directory') -%], [% ttlink('Template::View', 'Template::View') -%]
 </p>

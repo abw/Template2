@@ -18,7 +18,7 @@
 #   modify it under the same terms as Perl itself.
 #
 # REVISION
-#   2.45
+#   2.46
 #
 #========================================================================
 
@@ -57,6 +57,23 @@ Do this instead:
 
     [% SET a = b IF c %]
 
+=head2 If I'm using TT to write out a TT template, is there a good way to escape [% and %]?
+
+You can do this:
+ 
+  [% stag = "[\%"
+     etag = "%\]"
+  %]
+ 
+and then:
+ 
+  [% stag; 'hello'; etag %]
+
+Or something like:
+
+  [% TAGS [- -] %]
+  [- INCLUDE foo -]   # is a directive
+  [% INCLUDE foo %]   # not a directive, just plain text, passed through
 
 =head1 Plugins
 
@@ -277,8 +294,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.45, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+2.46, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 
 =head1 COPYRIGHT
 

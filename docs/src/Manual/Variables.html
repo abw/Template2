@@ -13,43 +13,43 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [
-                    'Template Variables',
-		    'Scalar Values',
-		    'Hash Array References',
-		    'List References',
-		    'Subroutines',
-		    'Objects',
-		    'Parameters and Return Values',
-		    'Error Handling',
-		    'Virtual Variable Methods',
-		    'Compound Variables',
-		    'Variable Interpolation',
-		    'Local and Global Variables',
-		    'Special Variables'
+                    "Template Variables",
+		    "Scalar Values",
+		    "Hash Array References",
+		    "List References",
+		    "Subroutines",
+		    "Objects",
+		    "Parameters and Return Values",
+		    "Error Handling",
+		    "Virtual Variable Methods",
+		    "Compound Variables",
+		    "Variable Interpolation",
+		    "Local and Global Variables",
+		    "Special Variables"
 		];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section describes the different ways in which Perl data can be
 bound to template variables and accessed via Template Toolkit
 directives.
 </p>
 [% WRAPPER subsection
-   title = 'Template Variables'
+   title = "Template Variables"
 -%]<p>
 A reference to a hash array may be passed as the second argument to
 the process() method, containing definitions of template variables.
@@ -133,7 +133,7 @@ output:
     submit</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Scalar Values'
+   title = "Scalar Values"
 -%]<p>
 Regular scalar variables are accessed by simply specifying their name.
 As these are just entries in the top-level variable hash they can be 
@@ -143,7 +143,7 @@ with the main namespace hash automatically implied.
 <pre>    [% tt_start_tag %] article [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Hash Array References'
+   title = "Hash Array References"
 -%]<p>
 Members of hash arrays are accessed by specifying the hash reference
 and key separated by the dot '.' operator.
@@ -232,7 +232,7 @@ between key/value pairs and '=' can be used in place of '=&gt;'.
     [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'List References'
+   title = "List References"
 -%]<p>
 Items in lists are also accessed by use of the dot operator.
 </p>
@@ -280,7 +280,7 @@ operator:
     [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Subroutines'
+   title = "Subroutines"
 -%]<p>
 Template variables can contain references to Perl subroutines.  When
 the variable is used, the Template Toolkit will automatically call the
@@ -298,7 +298,7 @@ template:
     [% tt_start_tag %] wizard('Hocus Pocus!') [% tt_end_tag %]	# Abracadabra! Hocus Pocus!</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Objects'
+   title = "Objects"
 -%]<p>
 Template variables can also contain references to Perl objects.
 Methods are called using the dot operator to specify the method
@@ -334,7 +334,7 @@ equivalent to:
 <pre>    [% tt_start_tag %] myobj.method(10) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Parameters and Return Values'
+   title = "Parameters and Return Values"
 -%]<p>
 Subroutines and methods will be passed any arguments specified in the
 template.  Any template variables in the argument list will first be
@@ -406,7 +406,7 @@ template:
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Error Handling'
+   title = "Error Handling"
 -%]<p>
 Errors can be reported from user code by calling die().  Errors raised
 in this way are caught by the Template Toolkit and converted to
@@ -479,7 +479,7 @@ version.
     };</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Virtual Variable Methods'
+   title = "Virtual Variable Methods"
 -%]<p>
 The Template Toolkit provides virtual methods for manipulating
 variable values.  Most of them are analogous to regular Perl functions
@@ -817,7 +817,7 @@ See also the examples in the t/vmeth.t test script.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Compound Variables'
+   title = "Compound Variables"
 -%]<p>
 Compound 'dotted' variables may contain any number of separate
 elements.  Each element may evaluate to any of the permitted variable
@@ -839,7 +839,7 @@ object the next without requiring any change to the templates.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Variable Interpolation'
+   title = "Variable Interpolation"
 -%]<p>
 The Template Toolkit uses '$' consistently to indicate that a variable
 should be interpolated in position.  Most frequently, you see this in 
@@ -895,7 +895,7 @@ template:
 <pre>    [% tt_start_tag %] INCLUDE $header [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Local and Global Variables'
+   title = "Local and Global Variables"
 -%]<p>
 Any simple variables that you create, or any changes you make to
 existing variables, will only persist while the template is being
@@ -975,7 +975,7 @@ hash are visible across all templates.
 <pre>    [% tt_start_tag %] global.version = 123 [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Special Variables'
+   title = "Special Variables"
 -%]<p>
 A number of special variables are automatically defined by the Template 
 Toolkit.
@@ -1078,7 +1078,7 @@ variable.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -1087,13 +1087,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.06g, released on 15 April 2002.
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

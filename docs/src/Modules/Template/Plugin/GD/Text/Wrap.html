@@ -13,35 +13,35 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='SYNOPSIS'
+	        title ="SYNOPSIS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='EXAMPLES'
+	        title ="EXAMPLES"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='SEE ALSO'
+	        title ="SEE ALSO"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    [% tt_start_tag %] USE align = GD.Text.Wrap(gd_image); [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='EXAMPLES'
+    title="EXAMPLES"
 -%]<pre>    [% tt_start_tag %] FILTER null;
         USE gd  = GD.Image(200,400);
         USE gdc = GD.Constants;
@@ -98,7 +98,7 @@
     -[% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 The GD.Text.Wrap plugin provides an interface to the GD::Text::Wrap
 module. It allows multiples line of text to be drawn in GD images with
@@ -112,7 +112,7 @@ and orientation.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -121,14 +121,14 @@ The GD::Text module was written by Martien Verbruggen.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-1.35, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+1.36, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 Copyright (C) 2001 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -141,7 +141,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::GD', 'Template::Plugin::GD') -%], [% ttlink('Template::Plugin::GD::Text::Align', 'Template::Plugin::GD::Text::Align') -%], [% ttlink('GD', 'GD') -%], [% ttlink('GD::Text::Wrap', 'GD::Text::Wrap') -%]
 </p>

@@ -13,41 +13,41 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='SYNOPSIS'
+	        title ="SYNOPSIS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='OBJECT METHODS'
+	        title ="OBJECT METHODS"
                 subs  = [
-                    'connect($database, $username, $password)',
-		    'query($sql)',
-		    'prepare($sql)',
-		    'execute(@args)',
-		    'do($sql)',
-		    'tie($table, $key, \\%args)',
-		    'quote($value, $type)',
-		    'dbh()',
-		    'disconnect()'
+                    "connect(\$database, \$username, \$password)",
+		    "query(\$sql)",
+		    "prepare(\$sql)",
+		    "execute(@args)",
+		    "do(\$sql)",
+		    "tie(\$table, \$key, \\%args)",
+		    "quote(\$value, \$type)",
+		    "dbh()",
+		    "disconnect()"
 		];
 	PROCESS tocitem 
-	        title ='AUTHORS'
+	        title ="AUTHORS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='SEE ALSO'
+	        title ="SEE ALSO"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<p>
 Making an implicit database connection:
 </p>
@@ -122,7 +122,7 @@ Tieing to a database table (via Tie::DBI):
 <pre>    I am [% tt_start_tag %] people.abw.name [% tt_end_tag %]   # I am a free man!</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This Template Toolkit plugin module provides an interface to the Perl
 DBI/DBD modules, allowing you to integrate SQL queries into your
@@ -289,9 +289,9 @@ before instantiating the Template object.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='OBJECT METHODS'
+    title="OBJECT METHODS"
 -%][% WRAPPER subsection
-   title = 'connect($database, $username, $password)'
+   title = "connect(\$database, \$username, \$password)"
 -%]<p>
 Establishes a database connection.  This method accepts both positional 
 and named parameter syntax.  e.g. 
@@ -312,7 +312,7 @@ to reuse it by passing it as the 'dbh' parameter.
 <pre>    [% tt_start_tag %] DBI.connect( dbh = my_dbh_ref ) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'query($sql)'
+   title = "query(\$sql)"
 -%]<p>
 This method submits an SQL query to the database and creates an iterator 
 object to return the results.  This may be used directly in a FOREACH 
@@ -324,7 +324,7 @@ from the query result set as required for memory efficiency.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'prepare($sql)'
+   title = "prepare(\$sql)"
 -%]<p>
 Prepare a query for later execution.  This returns a compiled query
 object (of the Template::Plugin::DBI::Query class) on which the
@@ -333,7 +333,7 @@ execute() method can subsequently be called.
 <pre>    [% tt_start_tag %] query = DBI.prepare('SELECT * FROM users WHERE id = ?') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'execute(@args)'
+   title = "execute(@args)"
 -%]<p>
 Execute a previously prepared query.  This method should be called on
 the query object returned by the prepare() method.  Returns an
@@ -348,7 +348,7 @@ iterator object which can be used directly in a FOREACH directive.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'do($sql)'
+   title = "do(\$sql)"
 -%]<p>
 The do() method executes a sql statement from which no records are
 returned.  It will return true if the statement was successful
@@ -358,7 +358,7 @@ returned.  It will return true if the statement was successful
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'tie($table, $key, \\%args)'
+   title = "tie(\$table, \$key, \\%args)"
 -%]<p>
 Returns a reference to a hash array tied to a table in the database,
 implemented using the Tie::DBI module.  You should pass the name of
@@ -412,27 +412,27 @@ See [% ttlink('Tie::DBI') -%] for further information on the 'CLOBBER' option.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'quote($value, $type)'
+   title = "quote(\$value, \$type)"
 -%]<p>
 Calls the quote() method on the underlying DBI handle to quote the value
 specified in the appropriate manner for its type.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'dbh()'
+   title = "dbh()"
 -%]<p>
 Return the database handle currently in use by the plugin.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'disconnect()'
+   title = "disconnect()"
 -%]<p>
 Disconnects the current database.
 </p>
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHORS'
+    title="AUTHORS"
 -%]<p>
 The DBI plugin was originally written by Simon A Matthews, and
 distributed as a separate module.  It was integrated into the Template
@@ -441,14 +441,14 @@ Andy Wardley, Craig Barratt, Dave Hodgkinson and Rafael Kitover.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.40, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+2.41, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 Copyright (C) 1999-2001 Simon Matthews.  All Rights Reserved
 </p>
@@ -458,7 +458,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('DBI', 'DBI') -%], [% ttlink('Tie::DBI', 'Tie::DBI') -%]
 </p>

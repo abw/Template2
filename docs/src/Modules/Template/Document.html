@@ -13,42 +13,42 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='SYNOPSIS'
+	        title ="SYNOPSIS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='METHODS'
+	        title ="METHODS"
                 subs  = [
-                    'new(\\%config)',
-		    'process($context)',
-		    'block()',
-		    'blocks()',
-		    'AUTOLOAD'
+                    "new(\\%config)",
+		    "process(\$context)",
+		    "block()",
+		    "blocks()",
+		    "AUTOLOAD"
 		];
 	PROCESS tocitem 
-	        title ='PACKAGE SUB-ROUTINES'
+	        title ="PACKAGE SUB-ROUTINES"
                 subs  = [
-                    'write_perl_file(\\%config)'
+                    "write_perl_file(\\%config)"
 		];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='SEE ALSO'
+	        title ="SEE ALSO"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    use Template::Document;</pre>
 <pre>    $doc = Template::Document-&gt;new({
 	BLOCK =&gt; sub { # some perl code; return $some_text },
@@ -64,7 +64,7 @@
 <pre>    print $doc-&gt;process($context);</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This module defines an object class whose instances represent compiled
 template documents.  The Template::Parser module creates a
@@ -118,9 +118,9 @@ template components.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='METHODS'
+    title="METHODS"
 -%][% WRAPPER subsection
-   title = 'new(\\%config)'
+   title = "new(\\%config)"
 -%]<p>
 Constructor method which accept a reference to a hash array containing the
 structure as shown in this example:
@@ -149,7 +149,7 @@ the relevant error message.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'process($context)'
+   title = "process(\$context)"
 -%]<p>
 Main processing routine for the compiled template document.  A reference to 
 a Template::Context object should be passed as the first parameter.  The 
@@ -164,19 +164,19 @@ Errors are thrown via die().
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'block()'
+   title = "block()"
 -%]<p>
 Returns a reference to the main BLOCK subroutine.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'blocks()'
+   title = "blocks()"
 -%]<p>
 Returns a reference to the hash array of named DEFBLOCKS subroutines.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'AUTOLOAD'
+   title = "AUTOLOAD"
 -%]<p>
 An autoload method returns METADATA items.
 </p>
@@ -184,9 +184,9 @@ An autoload method returns METADATA items.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='PACKAGE SUB-ROUTINES'
+    title="PACKAGE SUB-ROUTINES"
 -%][% WRAPPER subsection
-   title = 'write_perl_file(\\%config)'
+   title = "write_perl_file(\\%config)"
 -%]<p>
 This package subroutine is provided to effect persistance of compiled
 templates.  If the COMPILE_EXT option (to indicate a file extension
@@ -201,7 +201,7 @@ have persistance of compiled templates.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -210,14 +210,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.47, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+2.48, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -226,7 +226,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template', 'Template') -%], [% ttlink('Template::Parser', 'Template::Parser') -%]
 </p>

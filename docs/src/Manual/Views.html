@@ -13,30 +13,30 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [
-                    'Views as Template Collectors/Providers',
-		    'Local BLOCK Definitions',
-		    'Preserving Variable State within Views',
-		    'Inheritance, Delegation and Reuse',
-		    'Self-Reference',
-		    'Saving References to External Views',
-		    'Views as Data Presenters'
+                    "Views as Template Collectors/Providers",
+		    "Local BLOCK Definitions",
+		    "Preserving Variable State within Views",
+		    "Inheritance, Delegation and Reuse",
+		    "Self-Reference",
+		    "Saving References to External Views",
+		    "Views as Data Presenters"
 		];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section describes dynamic views: a powerful but experimental new
 feature in version 2.01 of the Template Toolkit.
@@ -69,7 +69,7 @@ next version or two.  Please be very wary about building your
 multi-million dollar e-commerce solutions based around this feature.
 </p>
 [% WRAPPER subsection
-   title = 'Views as Template Collectors/Providers'
+   title = "Views as Template Collectors/Providers"
 -%]<p>
 The VIEW directive starts a view definition and includes a name by
 which the view can be referenced.  The view definition continues up to
@@ -114,7 +114,7 @@ include() method.  Thus, the following are all equivalent:
     [% tt_start_tag %] myview.header(title='Hello World') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Local BLOCK Definitions'
+   title = "Local BLOCK Definitions"
 -%]<p>
 A VIEW definition can include BLOCK definitions which remain local to
 the view.   A request for a particular template will return a BLOCK,
@@ -146,7 +146,7 @@ those that update a variable, will have noticable consequences.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Preserving Variable State within Views'
+   title = "Preserving Variable State within Views"
 -%]<p>
 Views can also be used to save the values of any existing variables,
 or to create new ones at the point at which the view is defined.
@@ -236,7 +236,7 @@ variables to be updated and new variables defined.
     [% tt_start_tag %] my_web_site.title [% tt_end_tag %]                # Blah Blah</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Inheritance, Delegation and Reuse'
+   title = "Inheritance, Delegation and Reuse"
 -%]<p>
 Views can be inherited from previously defined views by use of the 'base'
 parameter.  This example shows how a base class view is defined which 
@@ -304,7 +304,7 @@ template name rather than any local per-view definition.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Self-Reference'
+   title = "Self-Reference"
 -%]<p>
 A reference to the view object under definition is available with the
 VIEW ... END block by its specified name and also by the special name
@@ -371,7 +371,7 @@ view object to which it belongs.
     [% tt_start_tag %] bar.header [% tt_end_tag %]                    # =&gt; Title: Hello World</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Saving References to External Views'
+   title = "Saving References to External Views"
 -%]<p>
 When it comes to view inheritance, it's always a good idea to take a
 local copy of a parent or delegate view and store it as an attribute
@@ -393,7 +393,7 @@ has been changed.
     [% tt_start_tag %] fancy.foo [% tt_end_tag %]	    # =&gt; &lt;fancy&gt;public foo block&lt;/fancy&gt;</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Views as Data Presenters'
+   title = "Views as Data Presenters"
 -%]<p>
 Another key role of a view is to act as a dispatcher to automatically
 apply the correct template to present a particular object or data
@@ -606,7 +606,7 @@ until the syntax and API stabilise).
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -615,13 +615,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.06g, released on 15 April 2002.
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

@@ -13,48 +13,48 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='SYNOPSIS '
+	        title ="SYNOPSIS "
                 subs  = [];
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='METHODS'
+	        title ="METHODS"
                 subs  = [
-                    'new(\\%config)',
-		    'process($template, \\%vars, $output)',
-		    'error()',
-		    'service()',
-		    'context()'
+                    "new(\\%config)",
+		    "process(\$template, \\%vars, \$output)",
+		    "error()",
+		    "service()",
+		    "context()"
 		];
 	PROCESS tocitem 
-	        title ='CONFIGURATION SUMMARY'
+	        title ="CONFIGURATION SUMMARY"
                 subs  = [
-                    'Template Style and Parsing Options',
-		    'Template Files and Blocks',
-		    'Template Variables',
-		    'Runtime Processing Options',
-		    'Caching and Compiling Options',
-		    'Plugins and Filters',
-		    'Compatibility, Customisation and Extension'
+                    "Template Style and Parsing Options",
+		    "Template Files and Blocks",
+		    "Template Variables",
+		    "Runtime Processing Options",
+		    "Caching and Compiling Options",
+		    "Plugins and Filters",
+		    "Compatibility, Customisation and Extension"
 		];
 	PROCESS tocitem 
-	        title ='DIRECTIVE SUMMARY'
+	        title ="DIRECTIVE SUMMARY"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS '
+    title="SYNOPSIS "
 -%]<pre>  use Template;</pre>
 <pre>  # some useful options (see below for full list)
   my $config = {
@@ -81,7 +81,7 @@
       || die $template-&gt;error();</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This documentation describes the Template module which is the direct
 Perl interface into the Template Toolkit.  It covers the use of the
@@ -93,9 +93,9 @@ as an introductory guide to using the Template Toolkit.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='METHODS'
+    title="METHODS"
 -%][% WRAPPER subsection
-   title = 'new(\\%config)'
+   title = "new(\\%config)"
 -%]<p>
 The new() constructor method (implemented by the Template::Base base
 class) instantiates a new Template object.  A reference to a hash
@@ -125,7 +125,7 @@ folded into a hash array by the constructor.
 	|| die $Template::ERROR, &quot;\n&quot;;</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'process($template, \\%vars, $output)'
+   title = "process(\$template, \\%vars, \$output)"
 -%]<p>
 The process() method is called to process a template.  The first
 parameter indicates the input template as one of: a filename relative
@@ -219,7 +219,7 @@ error handling may be further customised.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'error()'
+   title = "error()"
 -%]<p>
 When called as a class method, it returns the value of the $ERROR package
 variable.  Thus, the following are equivalent.
@@ -254,7 +254,7 @@ the formatted error string.
     };</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'service()'
+   title = "service()"
 -%]<p>
 The Template module delegates most of the effort of processing templates
 to an underlying Template::Service object.  This method returns a reference
@@ -262,7 +262,7 @@ to that object.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'context()'
+   title = "context()"
 -%]<p>
 The Template::Service module uses a core Template::Context object for
 runtime processing of templates.  This method returns a reference to 
@@ -271,13 +271,13 @@ that object and is equivalent to $template-&gt;service-&gt;context();
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='CONFIGURATION SUMMARY'
+    title="CONFIGURATION SUMMARY"
 -%]<p>
 The following list gives a short summary of each Template Toolkit 
 configuration option.  See [% ttlink('Template::Manual::Config') -%] for full details.
 </p>
 [% WRAPPER subsection
-   title = 'Template Style and Parsing Options'
+   title = "Template Style and Parsing Options"
 -%]
 <ul>
 
@@ -321,7 +321,7 @@ Allow directive keywords in lower case (default: 0 - UPPER only).
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Template Files and Blocks'
+   title = "Template Files and Blocks"
 -%]
 <ul>
 
@@ -376,7 +376,7 @@ Flag to permit recursion into templates (default: 0).
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Template Variables'
+   title = "Template Variables"
 -%]
 <ul>
 
@@ -388,7 +388,7 @@ Hash array of variables and values to pre-define in the stash.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Runtime Processing Options'
+   title = "Runtime Processing Options"
 -%]
 <ul>
 
@@ -438,7 +438,7 @@ to be raised as an 'undef' error.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Caching and Compiling Options'
+   title = "Caching and Compiling Options"
 -%]
 <ul>
 
@@ -465,7 +465,7 @@ Root of directory in which compiled template files should be written
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Plugins and Filters'
+   title = "Plugins and Filters"
 -%]
 <ul>
 
@@ -496,7 +496,7 @@ Hash array mapping filter names to filter subroutines or factories.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Compatibility, Customisation and Extension'
+   title = "Compatibility, Customisation and Extension"
 -%]
 <ul>
 
@@ -564,7 +564,7 @@ Reference to a custom grammar object (default: Template::Grammar).
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='DIRECTIVE SUMMARY'
+    title="DIRECTIVE SUMMARY"
 -%]<p>
 The following list gives a short summary of each Template Toolkit directive.
 See [% ttlink('Template::Manual::Directives') -%] for full details.
@@ -828,7 +828,7 @@ Ignored and deleted.
 </ul>
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -837,13 +837,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.06g, released on 15 April 2002.
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

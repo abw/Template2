@@ -13,44 +13,45 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='Template Toolkit Language'
+	        title ="Template Toolkit Language"
                 subs  = [
-                    'Why doesn\'t $tt_start_tag a = b IF c $tt_end_tag work as expected?'
+                    "Why doesn't $tt_start_tag a = b IF c $tt_end_tag work as expected?",
+		    "If I'm using TT to write out a TT template, is there a good way to escape $tt_start_tag and $tt_end_tag?"
 		];
 	PROCESS tocitem 
-	        title ='Plugins'
+	        title ="Plugins"
                 subs  = [
-                    'How do I get the Table plugin to order data across rather than down?',
-		    'Accessing Cookies'
+                    "How do I get the Table plugin to order data across rather than down?",
+		    "Accessing Cookies"
 		];
 	PROCESS tocitem 
-	        title ='Extending the Template Toolkit'
+	        title ="Extending the Template Toolkit"
                 subs  = [
-                    'Can I serve templates from a database?',
-		    'Can I fetch templates via http?'
+                    "Can I serve templates from a database?",
+		    "Can I fetch templates via http?"
 		];
 	PROCESS tocitem 
-	        title ='Miscellaneous'
+	        title ="Miscellaneous"
                 subs  = [
-                    'How can I configure variables on a per-request basis?'
+                    "How can I configure variables on a per-request basis?"
 		];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This is the Frequently Asked Questions list for the Template Toolkit.
 More accurately, it's a very thin placeholder for where the FAQ will
@@ -58,9 +59,9 @@ soon be.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='Template Toolkit Language'
+    title="Template Toolkit Language"
 -%][% WRAPPER subsection
-   title = 'Why doesn\'t $tt_start_tag a = b IF c $tt_end_tag work as expected?'
+   title = "Why doesn't $tt_start_tag a = b IF c $tt_end_tag work as expected?"
 -%]<p>
 Because the parser interprets it as 
 </p>
@@ -70,11 +71,31 @@ Do this instead:
 </p>
 <pre>    [% tt_start_tag %] SET a = b IF c [% tt_end_tag %]</pre>
 [%- END %]
+[% WRAPPER subsection
+   title = "If I'm using TT to write out a TT template, is there a good way to escape $tt_start_tag and $tt_end_tag?"
+-%]<p>
+You can do this:
+ 
+  [% tt_start_tag %] stag = &quot;[\%&quot;
+     etag = &quot;%\]&quot;
+  [% tt_end_tag %]
+ 
+and then:
+ 
+  [% tt_start_tag %] stag; 'hello'; etag [% tt_end_tag %]
+</p>
+<p>
+Or something like:
+</p>
+<pre>  [% tt_start_tag %] TAGS [- -] [% tt_end_tag %]
+  [- INCLUDE foo -]   # is a directive
+  [% tt_start_tag %] INCLUDE foo [% tt_end_tag %]   # not a directive, just plain text, passed through</pre>
+[%- END %]
 [%- END %]
 [% WRAPPER section
-    title='Plugins'
+    title="Plugins"
 -%][% WRAPPER subsection
-   title = 'How do I get the Table plugin to order data across rather than down?'
+   title = "How do I get the Table plugin to order data across rather than down?"
 -%]<p>
 Order the data into rows:
 </p>
@@ -95,7 +116,7 @@ And then print each item in the column going across the output rows
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Accessing Cookies'
+   title = "Accessing Cookies"
 -%]<p>
 Jeff Boes &lt;boes@nexcerpt.com&gt; asks:
 </p>
@@ -110,9 +131,9 @@ Jonas Liljegren answers:
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='Extending the Template Toolkit'
+    title="Extending the Template Toolkit"
 -%][% WRAPPER subsection
-   title = 'Can I serve templates from a database?'
+   title = "Can I serve templates from a database?"
 -%]<p>
 Short answer: yes, Chris Nandor has done this for Slash.  You need to 
 subclass Template::Provider.  See the mailing list archives for further
@@ -120,7 +141,7 @@ info.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Can I fetch templates via http?'
+   title = "Can I fetch templates via http?"
 -%]<p>
 To do the job properly, you should sublcass Template::Provider to 
 Template::Provider::HTTP and use a PREFIX_MAP option to bind the 
@@ -211,9 +232,9 @@ pointers on how to acheive this using existing modules:
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='Miscellaneous'
+    title="Miscellaneous"
 -%][% WRAPPER subsection
-   title = 'How can I configure variables on a per-request basis?'
+   title = "How can I configure variables on a per-request basis?"
 -%]<p>
 One easy way to acheive this is to define a single PRE_PROCESS template which
 loads in other configuration files based on variables defined or other 
@@ -287,7 +308,7 @@ pretty much any kind of per-document initialisation that you require.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -296,14 +317,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.45, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+2.46, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

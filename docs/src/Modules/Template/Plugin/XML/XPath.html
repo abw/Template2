@@ -13,31 +13,31 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='SYNOPSIS'
+	        title ="SYNOPSIS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='PRE-REQUISITES'
+	        title ="PRE-REQUISITES"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='AUTHORS'
+	        title ="AUTHORS"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='SEE ALSO'
+	        title ="SEE ALSO"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='SYNOPSIS'
+    title="SYNOPSIS"
 -%]<pre>    # load plugin and specify XML file to parse
     [% tt_start_tag %] USE xpath = XML.XPath(xmlfile) [% tt_end_tag %]
     [% tt_start_tag %] USE xpath = XML.XPath(file =&gt; xmlfile) [% tt_end_tag %]
@@ -76,7 +76,7 @@
     [% tt_start_tag %] page.content(repview) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title='PRE-REQUISITES'
+    title="PRE-REQUISITES"
 -%]<p>
 This plugin requires that the XML::Parser and XML::XPath modules be 
 installed.  These are available from CPAN:
@@ -84,7 +84,7 @@ installed.  These are available from CPAN:
 <pre>    http://www.cpan.org/modules/by-module/XML</pre>
 [%- END %]
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This is a Template Toolkit plugin interfacing to the XML::XPath module.
 </p>
@@ -108,7 +108,7 @@ view &quot;view&quot;, followed by the end tag.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='AUTHORS'
+    title="AUTHORS"
 -%]<p>
 This plugin module was written by Andy Wardley &lt;abw@kfs.org&gt;.
 </p>
@@ -117,14 +117,14 @@ The XML::XPath module is by Matt Sergeant &lt;matt@sergeant.org&gt;.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-2.45, distributed as part of the
-Template Toolkit version 2.06g, released on 15 April 2002.
+2.46, distributed as part of the
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -133,7 +133,7 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='SEE ALSO'
+    title="SEE ALSO"
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('XML::XPath', 'XML::XPath') -%], [% ttlink('XML::Parser', 'XML::Parser') -%]
 </p>

@@ -43,13 +43,13 @@
 	NEXT IF title == 'NAME';
 
 	FOREACH sub = sec.head2;
-	    subs.push( vq.print(sub.title).replace("'", "\\'") );
+	    subs.push( vq.print(sub.title) );
 	END;
 -*]
 	PROCESS tocitem 
-	        title ='[* title *]'
+	        title ="[* title *]"
                 subs  = [[* IF subs.size *]
-                    '[* subs.join("',\n\t\t    '") *]'
+                    "[* subs.join("\",\n\t\t    \"") *]"
 		[* END *]];
 [*  END -*]
     END

@@ -13,37 +13,37 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [
-                    'Tag Styles',
-		    'Comments',
-		    'Chomping Whitespace',
-		    'Implicit Directives: GET and SET',
-		    'Block Directives',
-		    'Capturing Block Output',
-		    'Chaining Filters',
-		    'Multiple Directive Blocks'
+                    "Tag Styles",
+		    "Comments",
+		    "Chomping Whitespace",
+		    "Implicit Directives: GET and SET",
+		    "Block Directives",
+		    "Capturing Block Output",
+		    "Chaining Filters",
+		    "Multiple Directive Blocks"
 		];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This section describes the syntax, structure and semantics of the
 Template Toolkit directives and general presentation language.
 </p>
 [% WRAPPER subsection
-   title = 'Tag Styles'
+   title = "Tag Styles"
 -%]<p>
 By default, template directives are embedded within the character sequences
 '[% tt_start_tag %]' and '[% tt_end_tag %]'.  e.g.
@@ -82,7 +82,7 @@ within the directive.
     Name: [% tt_start_tag %] name [% tt_end_tag %]  ([% tt_start_tag %]id[% tt_end_tag %])</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Comments'
+   title = "Comments"
 -%]<p>
 The '#' character is used to indicate comments within a directive.
 When placed immediately inside the opening directive tag, it causes
@@ -101,7 +101,7 @@ be treated as a comment.
     [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Chomping Whitespace'
+   title = "Chomping Whitespace"
 -%]<p>
 You can add '-' or '+' to the immediate start or end of a directive
 tag to control the whitespace chomping options.  See the PRE_CHOMP and
@@ -112,7 +112,7 @@ POST_CHOMP options for further details.
     [% tt_start_tag %]- END [% tt_end_tag %]			# remove leading newline</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Implicit Directives: GET and SET'
+   title = "Implicit Directives: GET and SET"
 -%]<p>
 The simplest directives are GET and SET which retrieve and update
 variable values respectively.  The GET and SET keywords are actually
@@ -145,7 +145,7 @@ entirely separate from the STOP directive.
 <pre>    [% tt_start_tag %] STOP [% tt_end_tag %]                              # directive</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Block Directives'
+   title = "Block Directives"
 -%]<p>
 Directives such as FOREACH, WHILE, BLOCK, FILTER, etc., mark the start
 of a block which may contain text or other directives up to the
@@ -192,7 +192,7 @@ versus:
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Capturing Block Output'
+   title = "Capturing Block Output"
 -%]<p>
 The output of a directive can be captured by simply assigning the directive
 to a variable.
@@ -238,7 +238,7 @@ To achieve the expected behaviour, the directive should be written as:
 <pre>    [% tt_start_tag %] SET var = 'value' IF some_condition [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Chaining Filters'
+   title = "Chaining Filters"
 -%]<p>
 Multiple FILTER directives can be chained together in sequence.  They
 are called in the order defined, piping the output of one into the 
@@ -251,7 +251,7 @@ The pipe character, '|', can also be used as an alias for FILTER.
 <pre>    [% tt_start_tag %] PROCESS somefile | truncate(100) | html [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = 'Multiple Directive Blocks'
+   title = "Multiple Directive Blocks"
 -%]<p>
 Multiple directives can be included within a single tag when delimited
 by semi-colons, ';'.  Note however that the TAGS directive must always
@@ -274,7 +274,7 @@ versus
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -283,13 +283,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.06g, released on 15 April 2002.
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>

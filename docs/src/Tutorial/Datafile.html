@@ -13,36 +13,36 @@
 %]
 [%  WRAPPER toc;
 	PROCESS tocitem 
-	        title ='DESCRIPTION'
+	        title ="DESCRIPTION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='Introducing the Template Toolkit'
+	        title ="Introducing the Template Toolkit"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='Using the Template Toolkit'
+	        title ="Using the Template Toolkit"
                 subs  = [
-                    'A more complex example'
+                    "A more complex example"
 		];
 	PROCESS tocitem 
-	        title ='Producing XML'
+	        title ="Producing XML"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='Multiple Formats'
+	        title ="Multiple Formats"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='AUTHOR'
+	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='VERSION'
+	        title ="VERSION"
                 subs  = [];
 	PROCESS tocitem 
-	        title ='COPYRIGHT'
+	        title ="COPYRIGHT"
                 subs  = [];
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title='DESCRIPTION'
+    title="DESCRIPTION"
 -%]<p>
 This tutorial gives an overview of the Template Toolkit, showing in
 particular how to use it to read and write data files in various
@@ -52,7 +52,7 @@ appeared as a lead article at http://www.perl.com/ earlier in the year
 </p>
 [%- END %]
 [% WRAPPER section
-    title='Introducing the Template Toolkit'
+    title="Introducing the Template Toolkit"
 -%]<p>
 There are a number of Perl modules that are universally 
 recognised as The Right Thing To Use for certain tasks. If you 
@@ -86,7 +86,7 @@ just as useful in non-web applications.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='Using the Template Toolkit'
+    title="Using the Template Toolkit"
 -%]<p>
 Let's look at how we'd use TT2 to process a simple data file. 
 TT2 is an object oriented Perl module. Having downloaded it from 
@@ -225,7 +225,7 @@ required to the template as the template processor would realise
 that it needed to call methods rather than access hash values.
 </p>
 [% WRAPPER subsection
-   title = 'A more complex example'
+   title = "A more complex example"
 -%]<p>
 Stats about the English Football League are usually presented in
 a slightly more complex format than the one we used above. A 
@@ -340,7 +340,7 @@ Which would produce output like this:
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title='Producing XML'
+    title="Producing XML"
 -%]<p>
 This is starting to show some of the power and flexibility of 
 TT2, but you may be thinking that you could just as easily produce 
@@ -396,7 +396,7 @@ is transparent to our template designer.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='Multiple Formats'
+    title="Multiple Formats"
 -%]<p>
 As a final example, let's suppose that we need to create output
 football league tables in a number of formats. Perhaps we are 
@@ -439,19 +439,19 @@ an essential part of many people's Perl installation.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='AUTHOR'
+    title="AUTHOR"
 -%]<p>
 Dave Cross &lt;dave@dave.org.uk&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title='VERSION'
+    title="VERSION"
 -%]<p>
-Template Toolkit version 2.06g, released on 15 April 2002.
+Template Toolkit version 2.07, released on 17 April 2002.
 </p>
 [%- END %]
 [% WRAPPER section
-    title='COPYRIGHT'
+    title="COPYRIGHT"
 -%]<p>
 Copyright (C) 2001 Dave Cross &lt;dave@dave.org.uk&gt;
 </p>
