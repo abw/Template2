@@ -352,7 +352,7 @@ sub _fetch {
 
     if (defined $size && ! $size) {
 	# caching disabled so load and compile but don't cache
-	if ($compiled && -f $compiled && (stat($name))[9] < (stat($compiled))[9]) {
+	if ($compiled && -f $compiled && (stat($name))[9] <= (stat($compiled))[9]) {
 	    $data = $self->_load_compiled($compiled);
 	    $error = $self->error() unless $data;
 	}
@@ -372,7 +372,7 @@ sub _fetch {
     }
     else {
 	# nothing in cache so try to load, compile and cache
-	if ($compiled && -f $compiled && (stat($name))[9] < (stat($compiled))[9]) {
+	if ($compiled && -f $compiled && (stat($name))[9] <= (stat($compiled))[9]) {
 	    $data = $self->_load_compiled($compiled);
 	    $error = $self->error() unless $data;
 	}
@@ -441,7 +441,7 @@ sub _fetch_path {
 		$compiled = $self->_compiled_filename($path)
 		    if $compext || $compdir;
 
-		if ($compiled && -f $compiled && (stat($path))[9] < (stat($compiled))[9]) {
+		if ($compiled && -f $compiled && (stat($path))[9] <= (stat($compiled))[9]) {
 		    if ($data = $self->_load_compiled($compiled)) {
 			# store in cache
 			$data  = $self->store($path, $data);
@@ -1238,8 +1238,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.40, distributed as part of the
-Template Toolkit version 2.06c, released on 15 December 2001.
+2.41, distributed as part of the
+Template Toolkit version 2.06c, released on 20 December 2001.
 
 =head1 COPYRIGHT
 
