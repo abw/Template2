@@ -24,7 +24,14 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.08e - March 18th                      ## DEVELOPER RELEASE ##
+# Version 2.09 - April 23rd 2003
+#------------------------------------------------------------------------
+
+* Bumped version number for release.
+
+
+#------------------------------------------------------------------------
+# Version 2.08e - March 18th 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * changed Template::Provider and Template::Context to propagate nested
@@ -39,7 +46,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.08d - March 18th                      ## DEVELOPER RELEASE ##
+# Version 2.08d - March 18th 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Made Template::Exception DTRT with overloading (mark)
@@ -53,7 +60,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.08c - November 4th                    ## DEVELOPER RELEASE ##
+# Version 2.08c - November 4th 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch from Bradley Baetz to work around a bug in Perl when 
