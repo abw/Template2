@@ -85,16 +85,6 @@ my $ucttopts = {
     keys %ttopts,
 };
 
-# special case  # what special case is that then?
-                # I'm commenting this out -- abw 2002/12/05
-#$ucttopts->{ RECURSION } = $recurse if defined $recurse;
-
-#@ucttopts{ map { uc } keys %ttopts } = values %ttopts;
-
-#print STDERR("TT config: ", 
-#	     join(', ', map { "$_ => $ucttopts->{ $_ }"} keys %$ucttopts), 
-#	     "\n") if $debug;
-
 # get all template variable definitions
 my $replace = $config->get('define');
 
@@ -347,6 +337,7 @@ sub read_config {
         'template_pre_process|pre_process|preprocess=s@',
         'template_post_process|post_process|postprocess=s@',
         'template_process|process=s',
+        'template_wrapper|wrapper=s',
         'template_recursion|recursion',
         'template_expose_blocks|expose_blocks',
         'template_default|default=s',
@@ -514,9 +505,10 @@ Additional options to set Template Toolkit configuration items:
    --trim                   Trim blank lines around template blocks
    --eval_perl              Evaluate [% PERL %] ... [% END %] code blocks
    --load_perl              Load regular Perl modules via USE directive
-   --pre_process=TEMPLATE   Add TEMPLATE as header for each file
-   --post_process=TEMPLATE  Add TEMPLATE as footer for each file
-   --process=TEMPLATE       Use TEMPLATE as wrapper around each file
+   --pre_process=TEMPLATE   Process TEMPLATE before each main template
+   --post_process=TEMPLATE  Process TEMPLATE after each main template
+   --process=TEMPLATE       Process TEMPLATE instead of main template
+   --wrapper=TEMPLATE       Process TEMPLATE wrapper around main template
    --default=TEMPLATE       Use TEMPLATE as default
    --error=TEMPLATE         Use TEMPLATE to handle errors
    --start_tag=STRING       STRING defines start of directive tag
