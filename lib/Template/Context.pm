@@ -302,6 +302,28 @@ sub include {
 
 
 #------------------------------------------------------------------------
+# insert($file)
+#
+# Insert the contents of a file without parsing.
+#------------------------------------------------------------------------
+
+sub insert {
+    my ($self, $file) = @_;
+    my ($text, $error);
+
+    foreach my $provider (@{ $self->{ LOAD_TEMPLATES } }) {
+	($text, $error) = $provider->load($file);
+	return $text unless $error;
+	die Template::Exception->new(&Template::Constants::ERROR_FILE, $text)
+	    if $error == &Template::Constants::STATUS_ERROR; 
+    }
+
+    $text = "$file: not found";
+    die Template::Exception->new(&Template::Constants::ERROR_FILE, $text);
+}
+
+
+#------------------------------------------------------------------------
 # throw($type, $info, \$output)          [% THROW errtype "Error info" %]
 #
 # Throws a Template::Exception object by calling die().  This method

@@ -39,6 +39,15 @@
   (unless anyone shouts loudly enough) but it should be documented
   anyway.
 
+* I've had a few reports of tests failing (provider.t test 37 and several
+  in args.t) but haven't been able to reproduce them.  If you do get 
+  any errors, please run the test individually (e.g. 'perl t/provider.t') 
+  or 'make test' in verbose mode (e.g. 'make test TEST_VERBOSE=1') and 
+  send me the output, along with any other relevant information.  If you're
+  able to track down the problem then so much the better.  The test suite
+  is well organised and fairly pleasant to work with these days so please
+  don't be afraid to go digging for answers.
+
 #------------------------------------------------------------------------
 # PENDING ITEMS ON THE 'TO-DO' LIST
 #------------------------------------------------------------------------
@@ -67,7 +76,7 @@
 * It would be useful if template components had some notion of inheritance
   so that a 'derived' component could call on the 'super' component.  I'm
   not sure how this really fits in with the TT architecture.  Needs more
-  thought.
+  thought. 
 
 * I've written a version of Template::Stash in XS which should give a 
   significant speedup to the runtime processing.  It's 95% complete and 

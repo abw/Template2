@@ -105,6 +105,7 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 	|   CALL expr		    { $factory->call($_[2])               }
 	|   SET setlist    	    { $factory->set($_[2])                }
 	|   DEFAULT setlist         { $factory->default($_[2])            }
+	|   INSERT nameargs         { $factory->insert($_[2])             }
 	|   INCLUDE nameargs	    { $factory->include($_[2])            }
 	|   PROCESS nameargs	    { $factory->process($_[2])            }
 #	|   PLUGIN nameargs	    { $factory->plugin($_[2])             }

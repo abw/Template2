@@ -76,3 +76,75 @@ Title: Another Test
 This is some content
 Wrapper Footer
 
+
+-- test --
+[% WRAPPER page
+   title = 'My Interesting Page'
+%]
+[% WRAPPER section
+   title = 'Quantum Mechanics'
+-%]
+Quantum mechanics is a very interesting subject wish 
+should prove easy for the layman to fully comprehend.
+[%- END %]
+
+[% WRAPPER section
+   title = 'Desktop Nuclear Fusion for under $50'
+-%]
+This describes a simple device which generates significant 
+sustainable electrical power from common tap water by process 
+of nuclear fusion.
+[%- END %]
+[% END %]
+
+[% BLOCK page -%]
+<h1>[% title %]</h1>
+[% content %]
+<hr>
+[% END %]
+
+[% BLOCK section -%]
+<p>
+<h2>[% title %]</h2>
+[% content %]
+</p>
+[% END %]
+
+-- expect --
+<h1>My Interesting Page</h1>
+
+<p>
+<h2>Quantum Mechanics</h2>
+Quantum mechanics is a very interesting subject wish 
+should prove easy for the layman to fully comprehend.
+</p>
+
+<p>
+<h2>Desktop Nuclear Fusion for under $50</h2>
+This describes a simple device which generates significant 
+sustainable electrical power from common tap water by process 
+of nuclear fusion.
+</p>
+
+<hr>
+
+-- test --
+[% FOREACH s = [ 'one' 'two' ]; WRAPPER section; PROCESS $s; END; END %]
+[% BLOCK one; title = 'Block One' %]This is one[% END %]
+[% BLOCK two; title = 'Block Two' %]This is two[% END %]
+[% BLOCK section %]
+<h1>[% title %]</h2>
+<p>
+[% content %]
+</p>
+[% END %]
+-- expect --
+<h1>Block One</h1>
+<p>
+This is one
+</p>
+
+<h1>Block Two</h1>
+<p>
+This is two
+</p>

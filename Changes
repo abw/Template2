@@ -12,9 +12,9 @@
 # $Id$
 #========================================================================
 
-#========================================================================
-# Changes from version 2.00-beta2 to 2.00-beta3
-#========================================================================
+#------------------------------------------------------------------------
+# Version 2.00 beta 3  2000/08/
+#------------------------------------------------------------------------
 
 * Added the WRAPPER directive to include another template, passing the 
   enclosing block as the 'content' variable.  e.g.
@@ -31,6 +31,13 @@
     [% END %]
     [% INCLUDE mytable %]
 
+* Added the [% INSERT file %] directive to insert the contents of a disk
+  file without processing any of the content.  Looks for the file in the
+  INCLUDE_PATH and honours the ABSOLUTE and RELATIVE flags.  Added the
+  insert($file) method to Template::Context which calls the new 
+  load($file) method in Template::Provider which loads the file text
+  without compiling it.
+
 * Added the DEFAULT configuration option which allows you to specify a 
   default template which should be used whenever a named template 
   cannot be found.  This is ignored for templates specified with absolute
@@ -40,7 +47,8 @@
   FOREACH loop, as suggested/requested by Jo Ellen Wisnosky.  I chose
   FORNEXT rather than simply NEXT because 'next' is a very common
   variable name but I'm open to better suggestions.  Perhaps CASE
-  should be set by default to prevent variable conflict?
+  should be set by default to prevent variable conflict?  This might
+  change.
 
 * Reorganised the Template::Filters modules and changed the calling 
   convention for requesting filters via the fetch() method.  This now
@@ -114,6 +122,11 @@
   encountered when EVAL_PERL is disabled will now cause a 'perl' exception
   to be thrown. 
 
+* Added a define_block($name, $block) option to Template::Context to 
+  add a definition to the local BLOCKS cache.  $block can be a reference
+  to a template sub-routine or Template::Document object or template 
+  text which is first compiled.
+
 * Any other errors thrown in a PERL blocks (assuming EVAL_PERL set)
   are now left unchanged.  Previously, these were converted to 'perl'
   exceptions which prevented exceptions of other kinds being throw
@@ -152,9 +165,9 @@
   concatenation, as noted by Randal Schwartz.
 
 
-#========================================================================
-# Changes from version 2.00-beta1 to 2.00-beta2
-#========================================================================
+#------------------------------------------------------------------------
+# Version 2.00 beta 2
+#------------------------------------------------------------------------
 
 * Added COMPILE_DIR option.  This allows you to specify a separate 
   directory in which compiled templates should be written.  The COMPILE_DIR
@@ -194,9 +207,88 @@
 * More complete documentation, but not yet fully complete.
 
 
+#------------------------------------------------------------------------
+# Version 2.00 beta 1
+#------------------------------------------------------------------------
+
+* Template::Context include()/process() now works with raw CODE refs.
+
+* Template.pm now prefixes OUTPUT with the OUTPUT_PATH when OUTPUT
+  is a file name.
+
+* Cleaned up Template::Iterator.  Now derived from Template::Base.
+  Removed ACTION and ORDER now that they are supported as list pseudo
+  methods in the Stash LIST_OPS.
+
+* Fixed bug in Provider preventing updated files from being automatically
+  reloaded.  Thanks to Perrin Harkins who provided the patch.
+
+* Fixed bug in Template::Plugin::Datafile which was preventing a comment
+  from being placed on the first line of the file.
+
+* Fixed bug in parse grammer preventing commas in a META list
+
+* Added cache persistance by writing real Perl to file (rather than
+  the previous Data::Dumper dump of the opcode tree).  Had to
+  re-organise a bunch of code around the parser/provider/document.  
+  Activated by COMPILE_EXT configuration item.
+
+* Added a work-around in Template::Stash to the problem of CGI disclaiming
+  membership of the UNIVERSAL class after the first method call.
+
+* Added AUTO_RESET option which is enabled by default.  Disable this 
+  (AUTO_RESET => 0) for block persistance across service invocations.
+
+* Fixed \@ quoting (and others) in Directive thanks to Perrin Harkins 
+  who reported the bug and Chuck Adams who provided a patch.
+
+* Added Date plugin and test, as provided by Thierry-Michel Barral.
+
+* Integrated changes to Template::Test from version 1.07 and beyond.  Now 
+  supports -- process -- option in expect, mainly for use of t/date.t et al.
+
+* Integrated new upper and lower filters from 1.08, and '|' alias for FILTER
+  from 1.07.
+
+* Added new directive.t test to test chomping and comments.
+
+* BLOCKS can now be defined as template text which gets automatically 
+  compiled into a Template::Document object.
+
+* Integrated XML plugins and tests from version 1.07
+
+* Fixed TRIM option to work with all BLOCKs and templates.  Moved TRIMing
+  operation into context process() and include() methods.  Also changed
+  service to call $context->process($template) rather than call the sub/
+  doc itself, thus ensuring that the output can get TRIMmed.
+
+* Updated Template::Plugin.pm
+
+* Added '--define' option to ttree.
+
+* Integrated various plugins and filters from v1.07
+
+* Moved Template::Utils::output into Template.pm?) and got rid of
+  Template::Utils altogether.
+
+* Fixed bug in Context filter() provider method which wasn't caching 
+  filters with args.
+
+* [% CASE DEFAULT %] is now an alias for [% CASE %] (the default case),
+  in consistency with [% CATCH DEFAULT %] / [% CATCH %]
+
+
+#------------------------------------------------------------------------
+# Version 2.00 alpha 1
+#------------------------------------------------------------------------
+
+* first public alpha release of Version 2.00
+ 
+
+
 #========================================================================
-#                       ***** VERSION 2.00 *****
-#
+#                           VERSION 2.00
+#------------------------------------------------------------------------
 # The following list outlines the major differences between version 1.*
 # and version 2.00 of the Template Toolkit. 
 #========================================================================
@@ -303,6 +395,22 @@ New Language Features
   contain other template directives, etc, which are first evaluated
   (e.g. PERL...END processes the block and filters the output into
   Perl evaluation at runtime).
+
+* New INSERT directive which inserts the contents of a file without 
+  processing it.
+
+* New WRAPPER directive which processes the following block into the
+  'content' variable and then INCLUDEs the named file.
+
+    [% WRAPPER table %]
+       blah blah blah
+    [% END %]
+
+    [% BLOCK table %]
+    <table>
+    [% content %]
+    </table>
+    [% END %]
 
 * Comments now only extend to the end of the current line.
 
