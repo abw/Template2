@@ -308,10 +308,8 @@ sub _init {
 	    my $wdir = $dir;
             $wdir =~ s[:][]g if $^O eq 'MSWin32';
 	    $wdir =~ /(.*)/;  # untaint
-	    &File::Path::mkpath($cdir . $1);
+	    &File::Path::mkpath(File::Spec->catfile($cdir, $1));
 	}
-	# ensure $cdir is terminated with '/' for subsequent path building
-	$cdir .= '/';
     }
 
     $self->{ LOOKUP }       = { };
@@ -476,8 +474,6 @@ sub _fetch_path {
 	($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
     } # INCLUDE
 
-#    printf "returning ($data, %s)\n", defined $error ? $error : '<no error>';
-
     return ($data, $error);
 }
 
@@ -494,8 +490,9 @@ sub _compiled_filename {
     $path = $file;
     $path =~ /^(.+)$/s or die "invalid filename: $path";
     $path =~ s[:][]g if $^O eq 'MSWin32';
-    $compiled = "$compdir$path$compext";
-    $compiled =~ s[//][/]g;
+
+    $compiled = "$path$compext";
+    $compiled = File::Spec->catfile($compdir, $compiled) if length $compdir;
 
     return $compiled;
 }
@@ -1241,13 +1238,13 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.49, distributed as part of the
+2.50, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
