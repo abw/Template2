@@ -324,7 +324,8 @@ sub dbh {
 sub DESTROY {
     my $self = shift;
     delete($self->{ _STH });       # first DESTROY any queries
-    $self->{ _DBH }->disconnect() if $self->{ _DBH };
+    $self->{ _DBH }->disconnect() 
+	if $self->{ _DBH } && $self->{ _DBH_CONNECT };
 }
 
 
@@ -899,8 +900,8 @@ Andy Wardley, Craig Barratt, Dave Hodgkinson and Rafael Kitover.
 
 =head1 VERSION
 
-2.31, distributed as part of the
-Template Toolkit version 2.06c, released on 15 December 2001.
+2.32, distributed as part of the
+Template Toolkit version 2.06c, released on 20 December 2001.
 
 
 
