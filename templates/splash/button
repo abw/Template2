@@ -1,60 +1,47 @@
-<!-- tt2.splash.button -->  
-[%
-  # splash/button: a single button with rounded corners
-  # ARGS:
-  #	content	    # button text
-  #     alt         # alt text for image links
-  #     width       # button width
-  #     select      # flag to indicate style (1: select, 0: unselect)
-  # The following arguments default to values set in the style
-  #     col         # button colour
-  #     textcol     # text colour
-  #     font        # text font
-  #     size        # text size
-  #     bold        # make text bold
-  #     align       # text alignment
-  DEFAULT 
-	style   = select ? splash.select : splash.unselect
-	col     = style.col.bar   or splash.col.bar
-	textcol = style.col.text  or splash.col.text
-	font    = style.font.face or splash.font.face
-	size    = style.font.size or splash.font.size
-        width   = style.button.width or splash.button.width
-        align   = style.button.align or splash.button.align;
+[%  # splash/button: a bar with rounded corners
+    #
+    #  ARGS: content, style
+    # STYLE: col, bgcol, align, width
+    #
     SET
-	rgbcol  = splash.rgb.$col
-	imgdir  = "$splash.images/$col"
-        imgsize = splash.imgsize;
-	bold    = bold.defined ? bold : style.font.bold;
-	bold    = bold.defined ? bold : splash.font.bold;
+        default = splash.style.default
+    ;
+    DEFAULT 
+        style   = default
+        col     = style.col.fore     or default.col.fore
+        bgcol   = style.col.back     or default.col.back
+        align   = style.button.align or default.button.align
+    ;
+    SET
+        rgbcol  = splash.rgb.$col
+        imgbase = "$splash.images/$bgcol"
+        imgsize = splash.imgsize
+        imgtype = splash.imgtype
+    ;
 -%]
-<table border=0 [% IF width %]width="[% width %]"[% END %]
-       bgcolor="[% rgbcol %]" cellpadding=0 cellspacing=0>
-  <tr height="[% imgsize %]" valign=top>
-    <td width="[% imgsize %]"><img
-        src="[% imgdir %]/topleft.png" 
-	width="[% imgsize %]" height="[% imgsize %]"
-	[%- IF alt %] alt="[% alt %]"[% END %]></td>
-    <td rowspan=2 valign="middle"[% IF align %] align="[% align %]"[% END %]
-	[%- IF width %] width="100%"[% END %]>
-        [%- INCLUDE splash/text col=textcol -%]
-    </td>
+<!-- tt2.splash.button -->  
+<table bgcolor="[% rgbcol %]"[% IF width %] width="[% width %]"[% END %]
+       border="0" cellpadding="0" cellspacing="0">
+  <tr height="[% imgsize %]" valign="top">
+    <td width="[% imgsize %]"><img 
+        src="[% imgbase %]/tl.[% imgtype %]"
+        width="[% imgsize %]" height="[% imgsize %]"></td>
+    <td rowspan="2" valign="middle"
+        [%- IF align %] align="[% align %]"[% END %]
+        [%- IF width %] width="100%"[% END %]>
+        [%- content.length ? content : '&nbsp;' -%]</td>
     <td width="[% imgsize %]" align="right"><img 
-        src="[% imgdir %]/topright.png"
-        width="[% imgsize %]" height="[% imgsize %]"
-	[%- IF alt %] alt="[% alt %]"[% END %]></td>
+        src="[% imgbase %]/tr.[% imgtype %]" 
+        width="[% imgsize %]" height="[% imgsize %]"></td>
   </tr>
-  <tr height="[% imgsize %]" valign=bottom>
-     <td width="[% imgsize %]" align=left><img 
-	 src="[% imgdir %]/botleft.png" 
-  	 width="[% imgsize %]" height="[% imgsize %]"
-	 [%- IF alt %] alt="[% alt %]"[% END %]></td>
-     <td width="[% imgsize %]" align=right><img 
-	 src="[% imgdir %]/botright.png" 
-  	 width="[% imgsize %]" height="[% imgsize %]"
-	 [%- IF alt %] alt="[% alt %]"[% END %]></td>
+  <tr height="[% imgsize %]" valign="bottom">
+     <td width="[% imgsize %]" align="left"><img 
+         src="[% imgbase %]/bl.[% imgtype %]" 
+         width="[% imgsize %]" height="[% imgsize %]"></td>
+     <td width="[% imgsize %]" align="right"><img 
+         src="[% imgbase %]/br.[% imgtype %]" 
+         width="[% imgsize %]" height="[% imgsize %]"></td>
   </tr>
 </table>
-<!-- /tt2.splash.button -->  
-
+<!-- /tt2.splash.button -->
 

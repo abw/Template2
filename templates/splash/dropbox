@@ -1,47 +1,57 @@
-<!-- tt2.splash.dropbox -->  
-[%  DEFAULT 
-	style   = select ? splash.select : splash.unselect
-	bar     = style.col.bar  or splash.col.bar
-	textcol = style.col.text or splash.col.text
-	edge    = style.col.edge or splash.col.edge
-        fill    = style.col.fill or splash.col.fill;
+[%  # splash/dropbox
+    #
     SET
-	rgb = {
-	    bar  = splash.rgb.$bar
-	    edge = splash.rgb.$edge
-	}
-	barimg  = "$splash.images/$bar"
+        default = splash.style.default
+    ;
+    DEFAULT 
+        style   = default
+        col     = style.col.fore or default.col.fore
+        bgcol   = style.col.back or default.col.back
+	edge    = style.col.edge or default.col.edge
+        fill    = style.col.fill or default.col.fill
+    ;
+    SET
+	rgbfore = splash.rgb.$col
+	rgbback = splash.rgb.$bgcol
+	rgbedge = splash.rgb.$edge
+	imgfore = "$splash.images/$col"
+	imgback = "$splash.images/$bgcol"
         imgsize = splash.imgsize
-        border  = border.defined ? border : splash.border
-        pad     = pad.defined ? pad : splash.pad
+        imgtype = splash.imgtype
+	border  = border.defined ? border 
+			         : style.border.defined ? style.border
+					                : default.border
+        pad     = pad.defined ? pad 
+			      : style.pad.defined ? style.pad : default.pad
+    ;
 -%]
 <!-- tt2.splash.dropbox -->  
 <table border=0 [% IF width  %]width="[% width %]"[% END %]
-       bgcolor="[% rgb.bar %]" cellpadding=0 cellspacing=0>
+       bgcolor="[% rgbfore %]" cellpadding=0 cellspacing=0>
   <tr height="[% imgsize %]" valign=top>
     <td width="[% imgsize %]"><img
-        src="[% barimg %]/topleft.png" width="[% imgsize %]" height="[% imgsize %]"></td>
+        src="[% imgback %]/tl.[% imgtype %]" 
+	width="[% imgsize %]" height="[% imgsize %]"></td>
     <td rowspan=2 valign="middle"
 	[%- IF align %] align="[% align %]"[% END %]
 	[%- IF width %] width="100%"[% END %]>
-	[%- INCLUDE splash/text content=title col=textcol %]
+	[%- title %]
     </td>
     <td width="[% imgsize %]" align="right"><img 
-        src="[% barimg %]/topright.png"
+        src="[% imgback %]/tr.[% imgtype %]"
         width="[% imgsize %]" height="[% imgsize %]"></td>
   </tr>
   <tr height="[% imgsize %]" valign=bottom>
-     <td width="[% imgsize %]" align=left><img src="[% barimg %]/botleft.png" 
+     <td width="[% imgsize %]" align=left><img src="[% imgback %]/bl.[% imgtype %]" 
   	 width="[% imgsize %]" height="[% imgsize %]"></td>
-     <td width="[% imgsize %]" align=right><img src="[% barimg %]/botright.png" 
+     <td width="[% imgsize %]" align=right><img src="[% imgback %]/br.[% imgtype %]" 
   	 width="[% imgsize %]" height="[% imgsize %]"></td>
   </tr>
   <tr> 
     <td></td>
-    <td bgcolor="[% rgb.edge %]">
-	[%- INCLUDE splash/box col=fill, width='100%', space=border %]</td>
+    <td bgcolor="[% rgbedge %]">
+	[%- INCLUDE splash/box col=rgbedge bgcol=fill width='100%' %]</td>
     <td></td>
   </tr>
 </table>
 <!-- /tt2.splash.dropbox -->
-

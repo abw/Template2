@@ -1,51 +1,48 @@
-<!-- tt2.splash.tabbox -->  
-[%
-  # splash/tabbox: a box with a single tab
-  # ARGS:
-  #	title	    # box title (placed in tab)
-  #     content     # box content
-  #     width       # box width (default: 0, grow to fit content)
-  #     tabwidth    # width of tab (default: 0, grow to fit)
-  #     select	    # flag to select style (1: select, 0: unselect)
-  # The following default to values set in the style
-  #     col         # colour
-  #     fill        # fill colour
-  #     border      # border width
-  #     pad	    # box padding
-  #     tabalign    # alignment of tab text
-  #     tablocate   # tab location ('left', 'center', 'right')
-  # + all configuration values for splash/text
--%]
-[%  DEFAULT 
-	style = select ? splash.select : splash.unselect
-	col   = style.col.bar  or splash.col.bar
-        fill  = style.col.fill or splash.col.fill
-        tablocate = style.tab.locate or splash.tab.locate
+[%  # splash/tabbox: a box with a single tab
+    #
+    #  ARGS: title, content, style, tabwidth, tablocate, tabalign
+    #
+    SET
+	default = splash.style.default
+    ;
+    DEFAULT 
+	style     = default
+	col       = style.col.fore   or default.col.fore
+	bgcol     = style.col.back   or default.col.back
+	edge      = style.col.edge   or default.col.edge
+	fill      = style.col.fill   or default.col.fill
+        tabalign  = style.tab.align  or default.tab.align
+        tabwidth  = style.tab.width  or default.tab.width
+        tablocate = style.tab.locate or default.tab.locate
     ;
     SET
-	rgbcol  = splash.rgb.$edge
-	imgdir  = "$splash.images/$edge"
+	rgbfore = splash.rgb.$col
+	rgbback = splash.rgb.$bgcol
+	imgfore = "$splash.images/$col"
+	imgback = "$splash.images/$bgcol"
         imgsize = splash.imgsize
-        border  = border.defined ? border 
-			: (style.border.defined ? style.border : splash.border)
+        imgtype = splash.imgtype
+	up      = invert ? 'bottom' : 'top'
+	down    = invert ? 'top'    : 'bottom'
+	border  = border.defined ? border 
+			         : style.border.defined ? style.border
+					                : default.border
         pad     = pad.defined ? pad 
-			: (style.pad.defined ? style.pad : splash.pad)
+			      : style.pad.defined ? style.pad : default.pad
+    ;
 -%]
+<!-- tt2.splash.tabbox -->  
 <table border=0 cellpadding=0 cellspacing=0
   [%- IF width  %] width="[% width %]"[% END %]>
   <tr>
     <td align="[% tablocate %]">
 	[%- INCLUDE splash/tab 
-		width=tabwidth 
-		align=tabalign
-		content=title %]</td>
+		width   = tabwidth 
+		align   = tabalign
+		content = title %]</td>
   </tr>
-
   <tr> 
-    <td>[% WRAPPER splash/box width='100%' pad=0 space=0;
-           INCLUDE splash/box col=fill width='100%' space=border;
-           END
-        %]</td>
+    <td>[% INCLUDE splash/box col=edge bgcol=fill width='100%' %]</td>
   </tr>
 </table>
 <!-- /splash.tabbox -->

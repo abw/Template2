@@ -1,3 +1,0 @@
-[%  col = splash.rgb.$col IF col;
-    PROCESS html/table 
--%]

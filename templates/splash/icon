@@ -1,5 +1,5 @@
-[%  INCLUDE splash/button
-	select  = 0
+[%  INCLUDE splash/button + splash.text
+	style   = splash.style.default
 	bold    = 1
 	content = splash.name
 	link    = splash.homepage

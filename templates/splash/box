@@ -1,4 +1,19 @@
-[% WRAPPER splash/table + splash/row + splash/cell border=0;
-     content;
-   END 
--%]
+[%  # splash/box: a single panel within a frame
+    #
+    #  ARGS: col, bgcol, border
+    #
+    SET
+	default = splash.style.default
+    ;
+    DEFAULT 
+	style     = default
+	col       = style.col.edge or default.col.edge
+	bgcol     = style.col.fill or default.col.fill
+    ;
+    WRAPPER splash/frame;
+	WRAPPER splash/panel col=bgcol;
+	    content; 
+	END;
+    END;
+%]
+

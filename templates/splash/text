@@ -1,27 +1,24 @@
-[%
-  # splash/text: format text according to font, colour, size, bold, etc 
-  # ARGS:
-  #	content	    # text
-  #     style       # presentation style
-  #     link	    # href link
-  # following default to values in style or splash defaults
-  #     col         # font colour
-  #	font	    # font face
-  #     bold        # make bold
-  #     size        # set size
-%]
-[%- DEFAULT
-	style   = select ? splash.select : splash.unselect
-	content = '&nbsp;'
-	col     = style.col.text  or splash.col.text
-	font    = style.font.face or splash.font.face
-	size    = style.font.size or splash.font.size;
+[%  # splash/text: present text according to style
+    #
+    #  ARGS: content, style, link
+    # STYLE: col, font, size, bold
+    #
+    SET 
+	default = splash.style.default;
+    ;
+    DEFAULT
+	style   = default
+	col     = style.col.text  or default.col.text
+	font    = style.font.face or default.font.face
+	size    = style.font.size or default.font.size
+    ;
     SET
 	bold    = bold.defined ? bold : style.font.bold
-	content = bold ? "<b>$content</b>" : content;
-	rgbcol  = splash.rgb.$col IF col
-%]
-[%- IF link %]<a href="[% link %]">[% END %]
+	content = bold ? "<b>$content</b>" : content
+	rgbcol  = col ? splash.rgb.$col : ''
+    ;
+-%]
+[% IF link %]<a href="[% link %]">[% END -%]
 [%- IF size or font or col -%]
 <font
   [%- IF size %] size="[% size %]"[% END %]

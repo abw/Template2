@@ -8,63 +8,59 @@
 
 	# URL prefix to Splash images 
 	# NOTE: this is set by the Makefile.PL at installation time
-	images  = '/tt2/images/splash'
+	images  = '/tt2/images/splash2'
+	images  = '/~abw/tt2d/images/splash'
 
-	# default border/space/pad widths
-	border  = 2
-	space   = 2
-	pad     = 2
+	style = {
+	    default = {
+		name = "Default"
+		# border/space/pad widths
+		border = 2
+		space  = 2
+		pad    = 2
+	    
+		col = {
+		    back => 'white'   # background
+		    fore => 'lilac'   # foreground (e.g. button)
+		    edge => 'lilac'   # edging strip
+		    fill => 'white'   # fill (e.g. panels)
+		    text => 'black'   # text
+		}
 
-	# default colours
-	col = {
-	    bar  => 'lilac'		# tabs, buttons, bars, etc
-	    edge => 'lilac'		# edge colour
-	    fill => 'white'		# fill colour
-	    back => 'white'		# background
-	    text => 'black'		# text colour
-	}
+		font = {
+		    # face = 'Helvetica, Arial, Sans-Serif'
+		    # size = '+1'
+		    # bold = 1
+		}
 
-	# default font settings for UI elements (tabs, buttons, etc.)
-	font = {
-	    face = 'Helvetica, Arial'
-	    # and/or combinations of the following...
-	    # size = '+1'		# ...for example...
-	    # bold = 1			# turn bold on
-	}
+		tab = {
+		    locate = 'right'		# tab location on box 
+		    align  = 'center'		# text alignment
+		}
 
-	# default settings for tab elements
-	tab = {
-	    locate = 'right'		# tab location on box 
-	    align  = 'center'		# text alignment
-	}
+		button = {
+		    width  = 0			# grow to fit
+		    align  = 'center'		# text alignment
+		}
 
-	# default settings for buttons
-	button = {
-	    width  = 0			# grow to fit
-	    align  = 'left'		# text alignment
-	}
-
-	# override settings for the "select" style
-	select = {
-	    col = {			# refine colour settings
-		bar  = 'mauve'
-		edge = 'mauve'
-		text = 'white'
+		bar = {
+		    width  = 0			# grow to fit
+		    align  = 'left'		# text alignment
+		}
 	    }
-	    font = {			# refine font settings
-		bold = 1
-	    }
-            # tab = {			# refine tab settings
-	    #   ...
-	    # }
-	    # button = {		# refine button settings
-	    #   ...
-	    # }
-	}
 
-	# override settings for the "unselect" style
-	unselect = {
-	    # same as default style
+	    select = {
+		name = "Selected"
+		col = {
+		    fore = 'mauve'
+		    edge = 'mauve'
+		    fill = 'grey75'
+		    text = 'white'
+		}
+		font = {
+		    bold = 1
+		}
+	    }
 	}
     };
 -%]
@@ -74,9 +70,11 @@
 
     splash_sys = {
 	name     = 'Splash!'
+	version  = 0.02
 	homepage = 'http://www.template-toolkit.org/splash/'
 	about    = 'The Template Toolkit HTML Library / Widget Set'
 	imgsize  = 8
+	imgtype  = 'gif'
     };
 
     splash.import(splash_sys);

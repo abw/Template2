@@ -1,24 +1,24 @@
-<!-- tt2.splash.menu -->
-[%
-  # splash/menu: build menu as a sequence of buttons
-  # ARGS:
-  #	buttons = [
-  #	    { link => 'page1.html', text => 'First Page' },
-  #	    { link => 'page2.html', text => 'Second Page' },
-  #	      ...
-  #	],
-  #	select	    # item to select in range 1..n (0: none)
-  #     width	    # menu width (default: grow to fit)
-  #     align       # button text alignment
+[% # splash/menu: build menu as a sequence of buttons
+   # ARGS:
+   #	buttons = [
+   #	    { link => 'page1.html', text => 'First Page' },
+   #	    { link => 'page2.html', text => 'Second Page' },
+   #	      ...
+   #	],
+   #	select	    # item to select in range 1..n (0: none)
 -%]
-[%  WRAPPER splash/table + splash/row align=0 col=0;
+<!-- tt2.splash.menu -->
+[%  WRAPPER html/table + html/row align=0 col=0;
 	FOREACH button = buttons;
-	    WRAPPER splash/cell width=0 align=0 col=0;
-		INCLUDE splash/button
-		    content = button.text
-		    link    = button.link
-		    width   = width ? '100%' : 0
-		    select  = (select == loop.count or select == button.text) ? 1 : 0;
+	    WRAPPER html/cell width=0 align=0 col=0;
+		style = (select == loop.count or select == button.text) 
+			         ? splash.style.select : splash.style.default;
+		WRAPPER splash/button
+		        width = width ? '100%' : 0;
+			INCLUDE splash/text 
+				content = button.text
+				link    = button.link;
+		END;
 	    END;
 	END;
     END
