@@ -53,8 +53,8 @@ additional Template Toolkit directives.
    <h1>Some Interesting Links</h1>
 
    [% webpages = [
-         { url => 'http://foo.org', title => 'The Foo Organsiation' }
-         { url => 'http://bar.org', title => 'The Bar Organsiation' }
+         { url => 'http://foo.org', title => 'The Foo Organisation' }
+         { url => 'http://bar.org', title => 'The Bar Organisation' }
       ]
    %]
 
