@@ -24,7 +24,15 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.07c - July 19th 2002                  ## DEVELOPER RELEASE ##
+# Version 2.08 - July 30th 2002
+#------------------------------------------------------------------------
+
+* Applied two minor patches from Leon to remove 'use warnings' from 2
+  test scripts to maintain compatability with 5.005
+
+
+#------------------------------------------------------------------------
+# Version 2.07c - July 22nd 2002                  ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in Date plugin introduced in last version which caused
