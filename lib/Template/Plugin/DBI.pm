@@ -660,7 +660,7 @@ E<lt>abw@kfs.orgE<gt>.
 =head1 VERSION
 
 1.04, distributed as part of the
-Template Toolkit version 2.03b, released on 25 June 2001.
+Template Toolkit version 2.04, released on 27 June 2001.
 
 
 

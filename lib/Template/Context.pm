@@ -206,7 +206,7 @@ sub filter {
 
     # alias defaults to name if undefined
     $alias = $name
-	unless defined($alias) or ref($name);
+	unless defined($alias) or ref($name) or $args;
 
     # cache FILTER if alias is valid
     $self->{ FILTER_CACHE }->{ $alias } = $filter
@@ -1419,8 +1419,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.22, distributed as part of the
-Template Toolkit version 2.03b, released on 25 June 2001.
+2.23, distributed as part of the
+Template Toolkit version 2.04, released on 27 June 2001.
 
 =head1 COPYRIGHT
 

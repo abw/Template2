@@ -425,7 +425,9 @@ The cat...
 [% global.blocktext FILTER truncate %]
 
 -- expect --
-The cat...
+The cat sat on the mat
+
+Mary ...
 
 -- test --
 [% "foo..." FILTER repeat(5) %]
@@ -826,4 +828,11 @@ mat
 [% END %]>>
 -- expect --
 <<The cat sat on the mat>>
+
+-- test --
+[% FILTER format('++%s++') %]Hello World[% END %]
+[% FILTER format %]Hello World[% END %]
+-- expect --
+++Hello World++
+Hello World
 

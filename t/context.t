@@ -1,3 +1,4 @@
+#!/usr/bin/perl -w                                         # -*- perl -*-
 #============================================================= -*-perl-*-
 #
 # t/context.t
@@ -155,16 +156,16 @@ ok( $filter );
 ok( ref $filter eq 'CODE' );
 ok( &$filter('<input/>') eq '&lt;input/&gt;' );
 
-$filter = $context->filter('replace', [ 'foo', 'bar' ]);
+$filter = $context->filter('replace', [ 'foo', 'bar' ], 'repsave');
 ok( $filter );
 ok( ref $filter eq 'CODE' );
 ok( &$filter('this is foo, so it is') eq 'this is bar, so it is' );
 
 # check filter got cached
-$filter = $context->filter('replace');
+$filter = $context->filter('repsave');
 ok( $filter );
 ok( ref $filter eq 'CODE' );
-ok( &$filter('this is foo, so it is') eq 'this is bar, so it is' );
+match( &$filter('this is foo, so it is'), 'this is bar, so it is' );
 
 
 #------------------------------------------------------------------------

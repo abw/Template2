@@ -345,6 +345,7 @@ sub repeat_filter_factory {
 
 sub replace_filter_factory {
     my ($context, $search, $replace) = @_;
+    $search = '' unless defined $search;
     $replace = '' unless defined $replace;
 
     return sub {
@@ -1207,8 +1208,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.18, distributed as part of the
-Template Toolkit version 2.03b, released on 25 June 2001.
+2.19, distributed as part of the
+Template Toolkit version 2.04, released on 27 June 2001.
 
 =head1 COPYRIGHT
 
