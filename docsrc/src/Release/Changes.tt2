@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.09a -                                 ## DEVELOPER RELEASE ##
+# Version 2.09a - 23rd April 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * added WRAPPER configuration item, documentation and tests.  Also added 
@@ -35,14 +35,14 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.09 - April 23rd 2003
+# Version 2.09 - 23rd April 2003
 #------------------------------------------------------------------------
 
 * Bumped version number for release.
 
 
 #------------------------------------------------------------------------
-# Version 2.08e - March 18th 2003                 ## DEVELOPER RELEASE ##
+# Version 2.08e - 18th March 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * changed Template::Provider and Template::Context to propagate nested
@@ -57,7 +57,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.08d - March 18th 2003                 ## DEVELOPER RELEASE ##
+# Version 2.08d - 18th March 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Made Template::Exception DTRT with overloading (mark)
@@ -71,7 +71,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.08c - November 4th 2002               ## DEVELOPER RELEASE ##
+# Version 2.08c - 4th November 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch from Bradley Baetz to work around a bug in Perl when 
@@ -83,7 +83,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.08b - November 1st 2002               ## DEVELOPER RELEASE ##
+# Version 2.08b - 1st November 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied two patches from Leon to fix bug in constant folding with
@@ -112,7 +112,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
+# Version 2.08a - 14th August 2002                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Totally re-implemented the handling of the DEBUG parameter.  Added 
@@ -133,7 +133,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.08 - July 30th 2002
+# Version 2.08 - 30th July 2002
 #------------------------------------------------------------------------
 
 * Applied two minor patches from Leon to remove 'use warnings' from 2
@@ -141,7 +141,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.07c - July 22nd 2002                  ## DEVELOPER RELEASE ##
+# Version 2.07c - 22nd July 2002                  ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in Date plugin introduced in last version which caused
@@ -183,7 +183,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.07b - July 7th 2002                   ## DEVELOPER RELEASE ##
+# Version 2.07b - 7th July 2002                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Added the CONSTANTS, CONSTANTS_NAMESPACE and NAMESPACE options, the
@@ -193,7 +193,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.07a - July 5th 2002                   ## DEVELOPER RELEASE ##
+# Version 2.07a - 5th July 2002                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed the Perl and XS stashes to automatically promote a scalar
@@ -235,7 +235,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.07 - April 17th 2002 
+# Version 2.07 - 17th April 2002 
 #------------------------------------------------------------------------
 
 * Changed example in synopsis of Template::Plugin::XML::Style to one 
@@ -246,7 +246,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.06g - April 15th 2002                 ## DEVELOPER RELEASE ##
+# Version 2.06g - 15th April 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in ttree which prevented it from passing the recurse option
@@ -266,7 +266,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.06f - March 13th 2002                 ## DEVELOPER RELEASE ##
+# Version 2.06f - 13th March 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in both the Perl and XS Stash modules which resulted in 
@@ -286,7 +286,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.06e - March 12th 2002                 ## DEVELOPER RELEASE ##
+# Version 2.06e - 12th March 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a minor bug in t/tiedhash.t which was trying to use the XS stash
