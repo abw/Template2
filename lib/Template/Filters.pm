@@ -573,11 +573,13 @@ sub redirect_filter_factory {
 #------------------------------------------------------------------------
 
 sub stdout_filter_factory {
-    my ($context, $binmode) = @_;
+    my ($context, $options) = @_;
+
+    $options = { binmode => $options } unless ref $options;
 
     sub {
         my $text = shift;
-        binmode STDOUT if ( $binmode );
+        binmode STDOUT if $options->{ $binmode };
         print STDOUT $text;
         return '';
     }
