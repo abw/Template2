@@ -43,6 +43,36 @@ $ @ { } @{ } ${ } # ~ ' ! % *foo
 $a ${b} $c
 
 -- test --
+<table width=50%>&copy;
+-- expect --
+<table width=50%>&copy;
+
+-- test --
+[% foo = 'Hello World' -%]
+start
+[%
+#
+# [% foo %]
+#
+#
+-%]
+end
+-- expect --
+start
+end
+
+-- test --
+pre
+[%
+# [% PROCESS foo %]
+-%]
+mid
+[% BLOCK foo; "This is foo"; END %]
+-- expect --
+pre
+mid
+
+-- test --
 -- use interp --
 This is a text block "hello" 'hello' 1/3 1\4 <html> </html>
 \$ @ { } @{ } \${ } # ~ ' ! % *foo
@@ -52,6 +82,37 @@ This is a text block "hello" 'hello' 1/3 1\4 <html> </html>
 $ @ { } @{ } ${ } # ~ ' ! % *foo
 alpha bravo charlie
 
+-- test --
+<table width=50%>&copy;
+-- expect --
+<table width=50%>&copy;
+
+-- test --
+[% foo = 'Hello World' -%]
+start
+[%
+#
+# [% foo %]
+#
+#
+-%]
+end
+-- expect --
+start
+end
+
+-- test --
+pre
+[%
+#
+# [% PROCESS foo %]
+#
+-%]
+mid
+[% BLOCK foo; "This is foo"; END %]
+-- expect --
+pre
+mid
 
 
 

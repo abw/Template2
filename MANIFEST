@@ -133,6 +133,7 @@ t/test/src/bar/baz.txt
 t/test/src/baz
 t/test/src/benchmark
 t/test/src/complex
+t/test/src/evalperl
 t/test/src/foo
 t/test/src/foobar
 t/test/src/golf

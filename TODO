@@ -32,6 +32,8 @@ enhancements planned for the Template Toolkit.
 * Template::Internals.  A document about the internals describing how,
   where and why to hack on them.
 
+* "Camelot!", "Camelot!", "Camelot!".  "It's only a model".
+
 
 #------------------------------------------------------------------------
 # KNOWN BUGS AND/OR LIMITATIONS
@@ -48,7 +50,11 @@ enhancements planned for the Template Toolkit.
 
 * The childrenTotemplate() and allChildrenToTemplate() methods of the 
   XML::DOM can send Perl into a deep recursive loop.  This will be 
-  fixed RSN, but first requires a little rethink.
+  fixed RSN, but first requires a little rethink.  The XML::DOM module
+  itself seems to be a little unstable in general.  I've had to disable 
+  one of the tests in t/dom.t which tests the parser creation failing,
+  as it seems to be causing a segfault core dump during global cleanup
+  a the end of the script.
 
 * Filters and plugins cache may bloat.  Perhaps reset() should accept
   flags to clear BLOCKS, PLUGINS, FILTERS, etc?  I need to check this.
@@ -69,6 +75,16 @@ enhancements planned for the Template Toolkit.
   allow recursion testing for BLOCKs as well as Template::Document
   objects.
 
+* The parser isn't as intelligent as it could be about blocks of template
+  code commented out en masse.  The pre-scanner find the first terminating 
+  '%]' (or END_TAG) after an opening tag, regardless of it being on a 
+  commented line or not.
+  e.g.
+    [%#
+      # 
+      #  [% INCLUDE blah %] <- directive ends here
+      #  foo                <- this gets printed
+    %]
 
 #------------------------------------------------------------------------
 # FUTURE ENHANCEMENTS

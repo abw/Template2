@@ -34,7 +34,7 @@ use vars qw( $VERSION $DEBUG );
 use base qw( Template::Plugin );
 
 #$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/) - 1;
-$VERSION = 1.02;
+$VERSION = 1.03;
 $DEBUG   = 0 unless defined $DEBUG;
 
 
@@ -51,7 +51,7 @@ $DEBUG   = 0 unless defined $DEBUG;
 sub new {
     my $class   = shift;
     my $context = shift;
-    my $self    = bless {
+    my $self    = ref $class ? $class : bless { 
 	_CONTEXT => $context, 
     }, $class;
 
@@ -106,9 +106,9 @@ sub connect {
 	     || $params->{ pass } 
 	     || '';
 
-	# return existing database handle if connection params match
+	# reuse existing database handle if connection params match
 	my $connect = join(':', $dsn, $user, $pass);
-	return $self->{ _DBH }
+	return ''
 	    if $self->{ _DBH } && $self->{ _DBH_CONNECT } eq $connect;
 	
 	# otherwise disconnect any existing database handle that we opened
@@ -126,6 +126,20 @@ sub connect {
     }
 
     return '';
+}
+
+#------------------------------------------------------------------------
+# _connect()
+#
+# An alias for connect, provided for backwards compatability
+#------------------------------------------------------------------------
+
+sub _connect {
+    my $self = shift;
+    unless (@_) {
+	return $self->{ _DBH } || $self->_throw('no current dbh');
+    }
+    return $self->connect(@_);
 }
 
 
@@ -617,6 +631,17 @@ Modified connect method to pass all named arguments to DBI.  e.g.
 Added prev() and next() methods to Template::Plugin::DBI:Iterator to
 return the previous and next items in the iteration set or undef if
 not available.
+
+=item 1.03  2000/11/31  sam
+
+Added _connect method to Plugin::DBI for backwards compatability with code 
+from version 1 of Template that subclassed the plugin
+
+Changed the new method on the DBI plugin so that it checks to see if it is
+being called by a subclassed object.  
+
+Fixed the return value in the DBI plugin when connect is called more than
+once in the lifetime of the plugin.
 
 =back
 

@@ -31,6 +31,7 @@ my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => $dir,
     COMPILE_EXT => '.ttc',
+    EVAL_PERL   => 1,
 };
 
 # delete any existing files

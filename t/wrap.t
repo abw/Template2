@@ -22,6 +22,8 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 eval "use Text::Wrap";
 
@@ -89,18 +91,21 @@ The cat sat on the mat and then sat on the flat.
 + flat.
 
 -- test --
+[% USE wrap -%]
 [% FILTER bullet = wrap(40, '* ', '  ') -%]
 First, attach the transmutex multiplier to the cross-wired quantum
 homogeniser.
 [%- END %]
+[% FILTER remove('\s+(?=\n)') -%]
 [% FILTER bullet -%]
 Then remodulate the shield to match the harmonic frequency, taking 
 care to correct the phase difference.
+[% END %]
 [% END %]
 -- expect --
 * First, attach the transmutex
   multiplier to the cross-wired quantum
   homogeniser.
 * Then remodulate the shield to match
-  the harmonic frequency, taking 
+  the harmonic frequency, taking
   care to correct the phase difference.

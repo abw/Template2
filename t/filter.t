@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( ../lib );
+use lib qw( ./lib ../lib );
 use Template qw( :status );
 use Template::Parser;
 use Template::Test;
@@ -173,7 +173,7 @@ blah blah blah
 BZZZT: [% error.type %]: [% error.info %]
 [% END %]
 -- expect --
-BZZZT: undef: invalid FILTER entry for 'nonfilt' (not a CODE ref)
+BZZZT: filter: invalid FILTER entry for 'nonfilt' (not a CODE ref)
 
 -- test --
 [% TRY %]
@@ -184,7 +184,7 @@ blah blah blah
 BZZZT: [% error.type %]: [% error.info %]
 [% END %]
 -- expect --
-BZZZT: undef: invalid FILTER for 'badfact' (not a CODE ref)
+BZZZT: filter: invalid FILTER for 'badfact' (not a CODE ref)
 
 -- test --
 [% TRY %]
@@ -195,7 +195,7 @@ blah blah blah
 BZZZT: [% error.type %]: [% error.info %]
 [% END %]
 -- expect --
-BZZZT: undef: invalid FILTER entry for 'badfilt' (not a CODE ref)
+BZZZT: filter: invalid FILTER entry for 'badfilt' (not a CODE ref)
 
 -- test --
 [% TRY;
@@ -205,7 +205,7 @@ BZZZT: undef: invalid FILTER entry for 'badfilt' (not a CODE ref)
    END
 %]
 -- expect --
-undef: barfed
+filter: barfed
 
 -- test --
 [% TRY;
@@ -225,7 +225,7 @@ dead: deceased
    END
 %]
 -- expect --
-undef: keeled over
+filter: keeled over
 
 -- test --
 [% TRY;

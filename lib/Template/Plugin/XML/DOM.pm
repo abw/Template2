@@ -31,10 +31,11 @@ use Template::Plugin;
 use XML::DOM;
 
 use base qw( Template::Plugin );
-use vars qw( $VERSION );
+use vars qw( $VERSION $DEBUG );
 
 #$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$VERSION = 2.5;
+$VERSION  = 2.5;
+$DEBUG    = 0 unless defined $DEBUG;
 
 
 #------------------------------------------------------------------------
@@ -49,8 +50,9 @@ sub new {
     my $context = shift;
     my $args    = ref $_[-1] eq 'HASH' ? pop(@_) : { };
     
-    my $parser ||= XML::DOM::Parser->new(%$args)
-	or $class->_throw("failed to create XML::DOM::Parser\n");
+    my $parser ||= XML::DOM::Parser->new(%$args);
+    return $class->error("failed to create XML::DOM::Parser\n")
+	unless $parser;
 
     # we've had to deprecate the old usage because it broke things big time
     # with DOM trees never getting cleaned up.
@@ -58,8 +60,8 @@ sub new {
 	if @_;
     
     bless { 
-	_PARSER     => $parser,
-	_DOCS       => [ ],
+	_PARSER  => $parser,
+	_DOCS    => [ ],
 	_CONTEXT => $context,
 	_PREFIX  => $args->{ prefix  } || '',
 	_SUFFIX  => $args->{ suffix  } || '',
@@ -124,6 +126,9 @@ sub parse {
     };
 
     # keep track of all DOM docs for subsequent dispose()
+#    print STDERR "DEBUG: $self adding doc: $doc\n"
+#	if $DEBUG;
+
     push(@{ $self->{ _DOCS } }, $doc);
 
     return $doc;
@@ -155,10 +160,16 @@ sub DESTROY {
 
     # call dispose() on each document produced by this parser
     foreach my $doc (@{ $self->{ _DOCS } }) {
-	delete $doc->[ XML::DOM::Node::_UserData ]->{ _CONTEXT };
-	$doc->dispose();
+#	print STDERR "DEBUG: $self destroying $doc\n"
+#	    if $DEBUG;
+	if (ref $doc) {
+#	    print STDERR "disposing of $doc\n";
+#	    undef $doc->[ XML::DOM::Node::_UserData ]->{ _CONTEXT };
+#	    $doc->dispose();
+	}
     }
     delete $self->{ _CONTEXT };
+    delete $self->{ _PARSER };
 }
 
 

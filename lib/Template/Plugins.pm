@@ -104,7 +104,7 @@ sub fetch {
     	    || die "$name plugin failed: ", $factory->error(), "\n";	## DIE
     };
     if ($error = $@) {
-	chomp $error;
+#	chomp $error;
 	return $self->{ TOLERANT } 
 	       ? (undef,  Template::Constants::STATUS_DECLINED)
 	       : ($error, Template::Constants::STATUS_ERROR);

@@ -43,8 +43,9 @@ my $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 my $HOME     = $ENV{ HOME } || '';
 my $RCFILE   = $ENV{"\U${NAME}rc"} || "$HOME/.${NAME}rc";
 
-# create a sample config file
-unless (-f $RCFILE) {
+# offer create a sample config file if it doesn't exist, unless a '-f'
+# has been specified on the command line
+unless (-f $RCFILE or grep(/^-f$/, @ARGV) ) {
     print("Do you want me to create a sample '.ttreerc' file for you?\n",
 	  "(file: $RCFILE)   [y/n]: ");
     my $y = <STDIN>;
@@ -351,7 +352,7 @@ sub read_config {
     );
 
     # process main config file, then command line args
-    $config->file($file);
+    $config->file($file) if -f $file;
     $config->args();
 
     $config;

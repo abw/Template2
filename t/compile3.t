@@ -23,16 +23,34 @@ use Template::Test;
 use File::Copy;
 $^W = 1;
 
+#ntests(13);
+
 # declare extra test to follow test_expect();
 $Template::Test::EXTRA = 1;
+#$Template::Parser::DEBUG = 1;
 
 # script may be being run in distribution root or 't' directory
 my $dir   = -d 't' ? 't/test/src' : 'test/src';
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => $dir,
-    COMPILE_EXT => '.ttc',
+    COMPILE_EXT  => '.ttc',
 };
+
+# test process fails when EVAL_PERL not set
+my $tt = Template->new($ttcfg);
+my $out;
+ok( ! $tt->process("evalperl", { }, \$out) );
+match( $tt->error->type, 'perl' );
+match( $tt->error->info, 'EVAL_PERL not set' );
+
+# ensure we can run compiled templates without loading parser
+# (fix for "Can't locate object method "TIEHANDLE" via package 
+# Template::String..." bug)
+$ttcfg->{ EVAL_PERL } = 1;
+$tt = Template->new($ttcfg);
+ok( $tt->process("evalperl", { }, \$out) )
+    || match( $tt->error(), "" );
 
 my $file = "$dir/complex";
 

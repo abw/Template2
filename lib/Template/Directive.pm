@@ -434,19 +434,18 @@ sub wrapper {
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
 
-    $block = pad($block, 2) if $PRETTY;
-    push(@$hash, "'content'", '$content');
+    $block = pad($block, 1) if $PRETTY;
+#    push(@$hash, "'content'", '$content');
+    push(@$hash, "'content'", '$output');
     $file .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
+
 
     return <<EOF;
 
 # WRAPPER
 $OUTPUT do {
-    my \$content = sub {
-	my \$output = '';
+    my \$output = '';
 $block
-        return \$output;
-    };
     \$context->include($file); 
 };
 EOF
@@ -606,9 +605,25 @@ sub throw {
     my ($type, $args) = @$nameargs;
     my $hash = shift(@$args);
     my $info = shift(@$args);
-    
-    $args = join(', ', $info ? ($type, $info) : ($type, 'undef'));
 
+    if (! $info) {
+	$args = "$type, undef";
+    }
+    elsif (@$hash || @$args) {
+	local $" = ', ';
+	my $i = 0;
+	$args = "$type, { args => [ " 
+	      . join(', ', $info, @$args) 
+	      . ' ], '
+	      . join(', ', 
+		     (map { "'" . $i++ . "' => $_" } ($info, @$args)),
+		     @$hash)
+	      . ' }';
+    }
+    else {
+	$args = "$type, $info";
+    }
+    
     return "\$context->throw($args, \\\$output);";
 }
 
@@ -679,6 +694,9 @@ sub perl {
     return <<EOF;
 
 # PERL
+\$context->throw('perl', 'EVAL_PERL not set')
+    unless \$context->eval_perl();
+
 $OUTPUT do {
     my \$output = "package Template::Perl;\\n";
 
@@ -849,22 +867,6 @@ $block
 });
 EOF
     }
-}
-
-
-#------------------------------------------------------------------------
-# simple package for tying $output variable to STDOUT, used by perl()
-#------------------------------------------------------------------------
-
-package Template::TieString;
-
-sub TIEHANDLE {
-    my ($class, $textref) = @_;
-    bless $textref, $class;
-}
-sub PRINT {
-    my $self = shift;
-    $$self .= join('', @_);
 }
 
 

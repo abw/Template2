@@ -265,7 +265,7 @@ sub format_filter_factory {
 
 sub repeat_filter_factory {
     my ($context, $iter) = @_;
-    $iter = 1 unless defined $iter;
+    $iter = 1 unless defined $iter and length $iter;
 
     return sub {
 	my $text = shift;

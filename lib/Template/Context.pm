@@ -170,8 +170,12 @@ sub filter {
 
 	($filter, $error) = $provider->fetch($name, $args, $self);
 	last unless $error;
-	return $self->error($filter)
-	    if $error == &Template::Constants::STATUS_ERROR;
+	if ($error == Template::Constants::STATUS_ERROR) {
+	    $self->throw($filter) if ref $filter;
+	    $self->throw(Template::Constants::ERROR_FILTER, $filter);
+	}
+	# return $self->error($filter)
+	#    if $error == &Template::Constants::STATUS_ERROR;
     }
 
     return $self->error("$name: filter not found")

@@ -345,6 +345,27 @@ this is block foo
 this is block bar
 end
 
+
+-- test --
+<foo>[% PROCESS foo %]</foo>
+<bar>[% PROCESS bar %]</bar>
+[% BLOCK foo %]
+
+this is block foo
+
+[% END -%]
+[% BLOCK bar %]
+
+this is block bar
+
+[% END -%]
+end
+-- expect --
+<foo>this is block foo</foo>
+<bar>this is block bar</bar>
+end
+
+
 -- test --
 [% r; r = s; "-"; r %].
 -- expect --
@@ -354,5 +375,9 @@ romeo-sierra.
 [% IF a; b; ELSIF c; d; ELSE; s; END %]
 -- expect --
 bravo
+
+
+
+
 
 

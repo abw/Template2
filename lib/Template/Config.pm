@@ -217,4 +217,29 @@ sub service {
 }
 
 
+#========================================================================
+# This should probably be moved somewhere else in the long term, but for
+# now it ensures that Template::TieString is available even if the 
+# Template::Directive module hasn't been loaded, as is the case when 
+# using compiled templates and Template::Parser hasn't yet been loaded
+# on demand.
+#========================================================================
+
+#------------------------------------------------------------------------
+# simple package for tying $output variable to STDOUT, used by perl()
+#------------------------------------------------------------------------
+
+package Template::TieString;
+
+sub TIEHANDLE {
+    my ($class, $textref) = @_;
+    bless $textref, $class;
+}
+sub PRINT {
+    my $self = shift;
+    $$self .= join('', @_);
+}
+
+
+
 1;

@@ -177,6 +177,14 @@ sub _recover {
     my $context = $self->{ CONTEXT };
     my ($hkey, $handler, $output);
 
+    # there's a pesky lurking somewhere deep - let's hope this catches it
+    unless (ref $$error) {
+	require Carp;
+	confess('internal error: not an exception object',
+		' - please contact the author: <abw@kfs.org>\n',
+		"ERROR: $$error\n");
+    }
+
     # a 'stop' exception is thrown by [% STOP %] - we return the output
     # buffer stored in the exception object
     return $$error->text()

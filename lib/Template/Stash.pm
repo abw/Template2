@@ -52,8 +52,25 @@ $ROOT_OPS = {
 $SCALAR_OPS = {
     'length'  => sub { length $_[0] },
     'defined' => sub { return 1 },
+    'repeat'  => sub { 
+	my ($str, $count) = @_;
+	$str = '' unless defined $str;  $count ||= 1;
+	return $str x $count;
+    },
+    'search'  => sub { 
+	my ($str, $pattern) = @_;
+	return $str unless defined $str and $pattern;
+	return $str =~ /$pattern/;
+    },
+    'replace'  => sub { 
+	my ($str, $search, $replace) = @_;
+	return $str unless defined $str and $search and $replace;
+	$str =~ s/$search/$replace/g;
+	return $str;
+    },
     'split'   => sub { 
 	my ($str, $split, @args) = @_;
+	$str = '' unless defined $str;
 	return [ defined $split ? split($split, $str, @args)
 				: split(' ', $str, @args) ];
     },

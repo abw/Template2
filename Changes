@@ -17,6 +17,107 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.00
+#------------------------------------------------------------------------
+
+* Added the repeat(n), search(pattern) and replace(search, replace)
+  virtual methods for scalars, and fixed a warning in the split()
+  method raised when an attempt was made to split an undefined value.
+
+* Changed the THROW directive to accept multiple parameters which 
+  become named items of the 'error.info' item, thanks to a suggestion
+  from Piers Cawley.  Positional arguments can be addressed as 
+  [% error.info.n %] or as a list as [% error.info.args %].  Named 
+  parameters can be accessed as [% error.info.name %].
+  e.g. 
+    [% TRY %]
+    [% THROW foo 'one' 2 three=3.14 %],
+    [% CATCH %]
+       [% error.type %]        # foo
+       [% error.info.0 %]      # one
+       [% error.info.1 %]      # 2
+       [% error.info.three %]  # 3.14
+    [% END %]
+
+* Moved the definition of Template::TieString from Template::Directive
+  into Template::Config (for now) to ensure that its definition is 
+  visible even if the Template::Parser, and through it, the
+  Template::Directive module, haven't been loaded.  This fixes the 
+  bug causing the error "Can't locate object method "TIEHANDLE" 
+  via package Template::String..." raised when using EVAL_PERL with 
+  compiled templates only.  In this case, the parser wasn't getting
+  loaded (because it had no templates to parse, them all being pre-
+  compiled) and the Template::TieString defintion wasn't visible to 
+  the EVAL_PERL blocks that require it.  Added a test to t/compile3.t.
+  Thanks to Igor Vylusko for reporting the problem.
+
+* Changed the Template::Directive Perl generator for EVAL_PERL blocks
+  to generate code to first test the EVAL_PERL option in the runtime
+  context and throw a 'perl error - EVAL_PERL not set' exception if
+  unset.  Thus the behaviour for EVAL_PERL when using compiled templates 
+  is now: if the EVAL_PERL option isn't set in the _compiling_ context, 
+  then Perl code will be generated which *always* throws an exception
+  'perl error - EVAL_PERL not set'.  If EVAL_PERL is set, then it will
+  generate code which tests the EVAL_PERL option in the _running_ 
+  context (which may not be the same context that compiled it), and 
+  throws the same error is the option is not set.  Note that [% RAWPERL %]
+  blocks are added verbatim to the generated code if the EVAL_PERL
+  option is set in the compiling context and no runtime check for 
+  EVAL_PERL is made.  Similarly, [% PERL %] blocks could contain a
+  Perl BEGIN block, e.g. "BEGIN { # subterfuge code here }" which 
+  will always get executed at runtime, regardless of any runtime 
+  EVAL_PERL option.  Thanks to Randal Schwartz for raising this issue.
+
+* Fixed an obscure bug in WRAPPER which was causing some variables to 
+  have apparently strange values when within the block content.  This
+  was due to the content being formed into a closure which was called
+  from within the WRAPPER template, possibly after some variable values
+  had been changed.  e.g.
+    [% title = "foo" %]
+    [% WRAPPER outer title="bar" %]
+       The title is [% title %]
+    [% END %]
+  Here, the 'outer' template should be called with a 'title' value of 
+  'bar' but with 'content' set to 'The title is foo'.  Previously, 
+  the content would have been processed from within the 'outer' template,
+  resulting in a 'content' value of 'The title is bar'.  The behaviour is
+  now correct.
+
+* Filter failures are now raised as 'filter' exception types, instead
+  of 'undef'.
+
+* Applied a patch from Simon Matthews to fix some minor bugs in the 
+  DBI plugin:
+
+  - Added _connect method to Plugin::DBI for backwards compatability with 
+    code from version 1 of Template that subclassed the plugin
+
+  - Changed the new mothod on the DBI plugin so that it checks to see if 
+    it is being called by a subclassed object.  
+
+  - Fixed the return value in the DBI plugin when connect is called more 
+    than once in the lifetime of the plugin
+
+* Removed a dubious looking chomp() from Template::Plugins which may
+  have caused abject stringification of any error object throw by a 
+  failed plugin constructor.  Thanks to Piers Cawley for finding the 
+  devious culprit.
+
+* Changed ttree to not offer to create a ~/.ttreerc file if it doesn't
+  exist when the user has specified a '-f file' on the command line.
+  Thanks to Michael Stevens for raising the issue.
+
+* Added the match($result, $expect) subroutine to Template::Test.
+
+* Modified the final test of wrap.t to strip any trailing whitespace from
+  the output due to a problem with Text::Wrap under 5.005_02.  Thanks to
+  Rob Stone for reporting the problem.
+
+* Added documentation for DEBUG options and stderr filter.  Thanks to
+  Piers Cawley for spotting the omission.
+
+
+#------------------------------------------------------------------------
 # Version 2.00-rc2  14th November 2000
 #------------------------------------------------------------------------
 

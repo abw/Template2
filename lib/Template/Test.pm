@@ -36,7 +36,7 @@ use Exporter;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0;
 @ISA     = qw( Exporter );
-@EXPORT  = qw( ntests ok flush test_expect callsign banner );
+@EXPORT  = qw( ntests ok match flush test_expect callsign banner );
 $| = 1;
 
 $EXTRA    = 0;   # any extra tests to come after test_expect()
@@ -95,6 +95,28 @@ sub ok {
     else {
 	# haven't started counting tests yet, so buffer it for later
 	push(@results, $result);
+    }
+    return $result;
+}
+
+
+#------------------------------------------------------------------------
+# match( $result, $expect )
+#------------------------------------------------------------------------
+
+sub match {
+    my ($result, $expect) = @_;
+    my $count = $ok_count ? $ok_count : scalar @results + 1;
+
+    # force stringification of $result to avoid 'no eq method' overload errors
+    $result = "$result" if ref $result;	   
+
+    if ($result eq $expect) {
+	return ok(1);
+    }
+    else {
+	print STDERR "FAILED $count:\n  expect: [$expect]\n  result: [$result]\n";
+	return ok(0);
     }
 }
 

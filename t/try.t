@@ -22,7 +22,8 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
-#$Template::Parser::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 my $ttcfg = {
     INCLUDE_PATH => [ qw( t/test/lib test/lib ) ],	
@@ -562,6 +563,7 @@ outer
 inner
 RIGHT: caught outer foo golf
 after
+
 
 #------------------------------------------------------------------------
 # test throwing from Perl code via die()

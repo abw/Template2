@@ -40,7 +40,11 @@ $cgi = join("\n", $cgi->checkbox_group(
 )); 
 
 
-test_expect(\*DATA, undef, { cgicheck => $cgi });
+test_expect(\*DATA, undef, { cgicheck => $cgi, barf => \&barf });
+
+sub barf {
+    carp('failed');
+}
 
 __END__
 -- test --
@@ -82,4 +86,5 @@ name: Andy Wardley
 -- expect --
 -- process --
 [% cgicheck %]
+
 

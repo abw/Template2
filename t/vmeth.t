@@ -251,3 +251,29 @@ I want 21 kilos of Peanut Butter,
 I want 3 kilos of Flour,
 I want 1 kilos of Milk,
 
+
+-- test --
+[% string = 'foo' -%]
+[% string.repeat(3) %]
+-- expect --
+foofoofoo
+
+-- test --
+[% string1 = 'foobarfoobarfoo'
+   string2 = 'foobazfoobazfoo'
+-%]
+[% string1.search('bar') ? 'ok' : 'not ok' %]
+[% string2.search('bar') ? 'not ok' : 'ok' %]
+[% string1.replace('bar', 'baz') %]
+[% string2.replace('baz', 'qux') %]
+-- expect --
+ok
+ok
+foobazfoobazfoo
+fooquxfooquxfoo
+
+-- test --
+[% string = 'foo     bar   ^%$ baz' -%]
+[% string.replace('\W+', '_') %]
+-- expect --
+foo_bar_baz
