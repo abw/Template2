@@ -84,7 +84,7 @@ The list of news items can be retrieved using the 'items' method:
 
 =head1 AUTHORS
 
-This plugin was written by Andy Wardley E<lt>abw@kfs.orgE<gt>,
+This plugin was written by Andy Wardley E<lt>abw@wardley.orgE<gt>,
 inspired by an article in Web Techniques by Randal Schwartz
 E<lt>merlyn@stonehenge.comE<gt>.
 

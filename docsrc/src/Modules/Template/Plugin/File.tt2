@@ -232,7 +232,7 @@ item.
 =head1 AUTHORS
 
 Michael Stevens E<lt>michael@etla.orgE<gt> wrote the original Directory plugin
-on which this is based.  Andy Wardley E<lt>abw@kfs.orgE<gt> split it into 
+on which this is based.  Andy Wardley E<lt>abw@wardley.orgE<gt> split it into 
 separate File and Directory plugins, added some extra code and documentation
 for VIEW support, and made a few other minor tweaks.
 

@@ -18,7 +18,7 @@ installed.  These are available from CPAN:
 =head1 AUTHORS
 
 This plugin wrapper module was written by Andy Wardley
-E<lt>abw@kfs.orgE<gt>.
+E<lt>abw@wardley.orgE<gt>.
 
 The XML::Simple module which implements all the core functionality 
 was written by Grant McLean E<lt>grantm@web.co.nzE<gt>.

@@ -58,7 +58,7 @@ Output:
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
 The Text::Wrap module was written by David Muir Sharnoff
 E<lt>muir@idiom.comE<gt> with help from Tim Pierce and many
