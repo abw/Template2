@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.09a, detailing
+#   Revision history for the Template Toolkit version 2.09b, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -27,15 +27,30 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.09b - 24th April 2003                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* fixed bug introduced in 2.08e which caused some exception handling to
+  fail under Perl 5.6.1 and earlier.
+  http://template-toolkit.org/pipermail/templates/2003-April/004502.html
+
+* applied patch from Tatsuhiko Miyagawa to gd.t test to change size test
+  from 6500 to 6000.
+
+* applied patch from Axel Gerstmair to the Image plugin.
+  http://template-toolkit.org/pipermail/templates/2003-April/004496.html
+
+
+#------------------------------------------------------------------------
 # Version 2.09a - 23rd April 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * added WRAPPER configuration item, documentation and tests.  Also added 
-  'wrapper' configuration item to ttree.
+  'wrapper' configuration item to ttree.  See Template::Manual::Config
 
 * applied patch from Axel Gerstmair to fix File::Spec and File::Temp
-  versions in Makefile.PL
-
+  versions in Makefile.PL.
+  http://template-toolkit.org/pipermail/templates/2003-April/004480.html
 
 #------------------------------------------------------------------------
 # Version 2.09 - 23rd April 2003
