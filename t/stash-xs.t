@@ -18,7 +18,7 @@
 #========================================================================
 
 use strict;
-use lib qw( ./lib ../lib );
+use lib qw( ./lib ../lib ../blib/lib ../blib/arch );
 use Template::Constants qw( :status );
 use Template;
 use Template::Test;
@@ -43,6 +43,9 @@ my $data = {
 	    biz => (shift || '<undef>'),
 	};
     },
+    obj => bless {
+	name => 'an object',
+    }, 'AnObject',
 };
 
 my $stash = Template::Stash::XS->new($data);
@@ -59,9 +62,11 @@ match( $stash->get('baz(50).biz'), '<undef>' );   # args are ignored
 $stash->set( 'bar.buz' => 100 );
 match( $stash->get('bar.buz'), 100 );
 
+my $stash_dbg = Template::Stash::XS->new({ %$data, _DEBUG => 1 });
+
 my $ttlist = [
-    'default' => Template->new(),
-    'warn'    => Template->new(DEBUG => 1),
+    'default' => Template->new( STASH => $stash ),
+    'warn'    => Template->new( STASH => $stash_dbg ),
 ];
 
 test_expect(\*DATA, $ttlist, $data);
@@ -78,6 +83,7 @@ a:
 -- expect --
 ERROR: undef error - a is undefined
 
+-- stop --
 -- test --
 -- use default --
 [% myitem = 'foo' -%]
@@ -210,3 +216,17 @@ two, three, one
 -- expect --
 gamma
 
+-- test --
+[% obj.name %]
+-- expect --
+an object
+
+-- test --
+[% obj.name.list.first %]
+-- expect --
+an object
+
+-- test --
+[% obj.list.first.name %]
+-- expect --
+an object
