@@ -126,7 +126,7 @@ sub glu_file {
     local *FP;
     local $/ = undef;
 
-    print "gluing $pod onto $pm\n" unless $args->{ q };
+    print "gluing $pod\n" unless $args->{ q };
 
     open(FP, "<$pm") || die "$pm: $!\n";
     my $text = <FP>;

@@ -1,0 +1,515 @@
+<docset id="tt2" name="Template" title="Template Toolkit"
+	about="A fast, powerful and extensible template processing system">
+    <intro>
+	This is the documentation set for the Template Toolkit.  It is 
+	split into a number of "books" which describe different aspects
+	of installing, configuring, using and extending the Template 
+	Toolkit.
+    </intro>
+
+
+    <!-- TUTORIAL -->
+    <book id="Tutorial" title="Template Tutorial"
+	  about="Introductory tutorial for the Template Toolkit">
+
+        <intro>
+	    The tutorial section provides a general overview of the
+	    Template Toolkit, showing users how to get quickly up to
+	    speed without getting bogged down in too much detail.
+	</intro>
+
+	<!-- Template::Tutorial -->
+	<page id="Tutorial"
+	      standalone="1"
+	      podfile="Template/Tutorial.pod"
+	      about="Tutorial on using and abusing the Template Toolkit">
+	    <intro>
+		This tutorial provides an introduction to the Template
+		Toolkit and a "quick start" guide to getting up to speed.
+		Its primarily focus is on using the Template Toolkit to 
+		build web content and it covers 4 basic areas: using tpage
+                and ttree; using the Template.pm module in CGI scripts;
+		writing Apache/mod_perl handlers; and extending the toolkit
+                by writing plugins.
+	    </intro>
+	</page>
+    </book>
+
+
+    <!-- USER MANUAL -->
+    <book id="Manual" prefix="Template/Manual" title="User Manual"
+	  about="User guide and reference manual for the Template Toolkit">
+	<intro>
+	    This is the comprehensive user guide and reference manual for
+	    the Template Toolkit.
+	</intro>
+
+	<!-- Template::Manual -->
+	<index pod="Template::Manual" podfile="Template/Manual.pod"/>
+
+	<!-- Template::Manual::Introduction -->
+	<page id="Intro" 
+	      title="Introduction"
+	      standalone="1"
+	      about="Introduction to the Template Toolkit">
+	    <intro>
+	      This section provides a general introduction to the
+	      Template Toolkit, giving a quick overview of features,
+	      examples of template directives and use of the
+	      Template.pm module.  It also described the basic concept
+	      underlying the toolkit: the separation of presentation
+	      elements from application logic and data.
+            </intro>
+        </page>
+
+	<!-- Template::Manual::Syntax -->
+	<page id="Syntax"
+	      standalone="1"
+	      about="Directive syntax, structure and semantics">
+	    <intro>
+		This section describes the syntax, structure and
+                semantics of the Template Toolkit directives and 
+		general presentation language.
+	    </intro>
+	</page>
+
+	<!-- Template::Manual::Variables -->
+	<page id="Variables"
+	      standalone="1"
+	      about="Template variables and code bindings">
+	    <intro>
+	      This section describes the different ways in which Perl
+              data can be bound to template variables and accessed via
+              Template Toolkit directives.
+            </intro>
+	</page>
+
+	<!-- Template::Manual::Directives -->
+	<page id="Directives"
+	      standalone="1"
+	      about="Template directives">
+	    <intro>
+	      This section provides a reference of all Template Toolkit 
+	      directives, complete with examples of use.
+	    </intro>
+	</page>
+
+	<!-- Template::Manual::Config -->
+	<page id="Config"
+	      title="Configuration"
+	      standalone="1"
+	      about="Configuration options">
+	    <intro>
+	      This section contains details of all the configuration options
+	      that can be used to customise the behaviour and extend the
+	      features of the Template Toolkit.
+	    </intro>
+	</page>
+
+	<!-- Template::Manual::Filters -->
+	<page id="Filters"
+	      standalone="1"
+	      about="Standard filters">
+	    <intro>
+		This section lists all the standard filters distributed 
+		with the Template Toolkit for post-processing output.
+	    </intro>
+	</page>
+
+	<!-- Template::Manual::Plugins -->
+	<page id="Plugins"
+	      standalone="1"
+	      about="Standard plugins">
+	    <intro>
+		This section lists the standard plugins which can be used
+		to extend the runtime functionality of the Template Toolkit.
+		The plugins are distributed with the Template Toolkit but
+		may required additional modules from CPAN.
+	    </intro>
+	</page>
+
+	<!-- Template::Manual::Internals -->
+	<page id="Internals"
+	      standalone="1"
+	      about="Template Toolkit internals">
+	    <intro>
+		This document provides an overview of the internal
+		architecture of the Template Toolkit.  It is a work in
+		progress and is far from complete, currently providing
+		little more than an overview of how the major
+		components fit together.  Nevertheless, it's a good 
+		starting point for anyone wishing to delve into the 
+		source code to find out how it all works.
+	    </intro>
+	</page>
+
+	<!-- Template::Manual::Views -->
+	<page id="Views"
+	      standalone="1"
+	      about="Template Toolkit views (experimental)">
+	    <intro>
+		This section describes dynamic views: a powerful but
+		experimental new feature in version 2.01 of the
+		Template Toolkit.
+  	    </intro>
+	</page>
+
+	<!-- Template::Manual::Refs" -->
+	<page id="Refs" 
+	      title="References"
+	      standalone="1"
+	      about="Related modules, projects and other resources">
+	    <intro>
+	      This section provides references to external modules,
+	      projects and other resources related to the Template
+	      Toolkit.
+	    </intro>
+	</page>
+
+	<!-- Template::Manual::Credits -->
+	<page id="Credits"
+	      name="Credits"
+	      standalone="1"
+	      about='Author and contributor credits'>
+	    <intro>
+	      This section provides a brief history of the Template
+	      Toolkit and details the primary author and numerous
+	      other people who have contributed to it.
+	    </intro>
+	</page>
+    </book>
+
+
+    <!-- MODULES -->
+    <book id="Modules" title="Module Documentation"
+	  about="Core modules comprising the Template Toolkit">
+	<intro>This section contains the documentation for the
+               modules that comprise the Template Toolkit.
+        </intro>
+
+	<!-- Template::Modules -->
+	<index pod="Template::Modules" podfile="Template/Modules.pod"/>
+
+	<!-- Template -->
+	<page id="Template"
+	      about="Front-end module to the Template Toolkit"/>
+
+	<!-- Template::Base -->
+	<page id="Base" 
+	      name="Template::Base"
+	      about="Base class module implementing common functionality"
+	      seealso="Template"/>
+
+	<!-- Template::Config -->
+	<page id="Config" 
+	      name="Template::Config" 
+	      about="Factory module for instantiating other TT2 modules"
+	      seealso="Template"/>
+
+	<!-- Template::Constants -->
+	<page id="Constants" 
+	      name="Template::Constants"
+	      about="Defines constants for the Template Toolkit"
+	      seealso="Template, CPAN::Exporter"/>
+
+	<!-- Template::Context -->
+	<page id="Context" 
+	      name="Template::Context"
+	      about="Runtime context in which templates are processed"
+	      seealso="Template, Template::Document, Template::Exception, 
+	          Template::Filters, Template::Plugins, Template::Provider, 
+	          Template::Service, Template::Stash" />
+
+	<!-- Template::Document -->
+	<page id="Document" 
+	      name="Template::Document"
+	      about="Compiled template document object"
+	      seealso="Template, Template::Parser" />
+
+	<!-- Template::Exception -->
+	<page id="Exception" 
+	      name="Template::Exception"
+	      about="Exception handling class module"
+	      seealso="Template, Template::Context"/>
+
+	<!-- Template::Filters -->
+	<page id="Filters" 
+	      name="Template::Filters"
+	      about="Post-processing filters for template blocks"
+	      seealso="Template, Template::Context"/>
+
+	<!-- Template::Iterator -->
+	<page id="Iterator" 
+	      name="Template::Iterator"
+	      about="Data iterator used by the FOREACH directive"
+	      seealso="Template"/>
+
+	<!-- Template::Parser -->
+	<page id="Parser" 
+	      name="Template::Parser"
+	      about="LALR(1) parser for compiling template documents"
+	      seealso="Template, Template::Grammar, Template::Directive"
+	      nofoot="1" />
+
+	<!-- Template::Plugin -->
+	<page id="Plugin" 
+	      name="Template::Plugin"
+	      about="Base class for Template Toolkit plugins"
+	      seealso="Template, Template::Plugins, Template::Context"/>
+
+	<!-- Template::Plugins -->
+	<page id="Plugins" 
+	      name="Template::Plugins"
+	      about="Plugin provider module"
+	      seealso="Template, Template::Plugin, Template::Context"/>
+
+	<!-- Template::Provider -->
+	<page id="Provider" 
+	      name="Template::Provider"
+	      about="Provider module for loading/compiling templates"
+	      seealso="Template, Template::Parser, Template::Context"/>
+
+	<!-- Template::Service -->
+	<page id="Service" 
+	      name="Template::Service"
+	      about="General purpose template processing service"
+	      seealso="Template, Template::Context"/>
+
+	<!-- Template::Stash -->
+	<page id="Stash" 
+	      name="Template::Stash"
+	      about="Magical storage for template variables"
+	      seealso="Template, Template::Context"/>
+
+	<!-- Template::Test -->
+	<page id="Test" 
+	      name="Template::Test"
+	      about="Module for automating TT2 test scripts"
+	      seealso="Template"/>
+
+	<!-- Template::Plugin::Autoformat -->
+	<page id="Plugin_Autoformat" 
+	      name="Template::Plugin::Autoformat"
+	      about="Interface to Text::Autoformat module"
+	      seealso="Template::Plugin, Text::Autoformat"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::CGI -->
+	<page id="Plugin_CGI" 
+	      name="Template::Plugin::CGI"
+	      about="Interface to the CGI module"
+	      seealso="Template::Plugin, CPAN::CGI"/>
+
+	<!-- Template::Plugin::DBI -->
+	<page id="Plugin_DBI" 
+	      name="Template::Plugin::DBI"
+	      about="Interface to the DBI module"
+	      seealso="Template::Plugin, CPAN::DBI"
+              nofoot="1"/>
+
+	<!-- Template::Plugin::Datafile -->
+	<page id="Plugin_Datafile" 
+	      name="Template::Plugin::Datafile"
+	      about="Plugin to construct records from a simple data file"
+	      seealso="Template::Plugin"/>
+
+	<!-- Template::Plugin::Date -->
+	<page id="Plugin_Date" 
+	      name="Template::Plugin::Date"
+	      about="Plugin to generate formatted date strings"
+	      seealso="Template::Plugin, CPAN::POSIX"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::Directory -->
+	<page id="Plugin_Directory" 
+	      name="Template::Plugin::Directory"
+	      about="Plugin for generating directory listings"
+	      seealso="Template::Plugin, Template::Plugin::File, 
+		       Template::View"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::Dumper -->
+	<page id="Plugin_Dumper" 
+	      name="Template::Plugin::Dumper"
+	      about="Plugin interface to Data::Dumper"
+	      seealso="Template::Plugin, Data::Dumper"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::File -->
+	<page id="Plugin_File" 
+	      name="Template::Plugin::File"
+	      about="Plugin providing information about files"
+	      seealso="Template::Plugin, Template::Plugin::Directory, 
+		       Template::View"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::Format -->
+	<page id="Plugin_Format" 
+	      name="Template::Plugin::Format"
+	      about="Plugin to create formatting functions"
+	      seealso="Template::Plugin"/>
+
+	<!-- Template::Plugin::Iterator -->
+	<page id="Plugin_Iterator" 
+	      name="Template::Plugin::Iterator"
+	      about="Plugin to create iterators (Template::Iterator)"
+	      seealso="Template::Plugin, Template::Iterator"/>
+
+	<!-- Template::Plugin::Pod -->
+	<page id="Plugin_Pod" 
+	      name="Template::Plugin::Pod"
+	      about="Plugin interface to Pod::POM (Pod Object Model)"
+	      seealso="Template::Plugin, Pod::POM"/>
+
+	<!-- Template::Plugin::Table -->
+	<page id="Plugin_Table" 
+	      name="Template::Plugin::Table"
+	      about="Plugin to present data in a table"
+	      seealso="Template::Plugin"/>
+
+	<!-- Template::Plugin::URL -->
+	<page id="Plugin_URL" 
+	      name="Template::Plugin::URL"
+	      about="Plugin to construct complex URLs"
+	      seealso="Template::Plugin"/>
+
+	<!-- Template::Plugin::View -->
+	<page id="Plugin_View" 
+	      name="Template::Plugin::View"
+	      about="Plugin to create views (Template::View)"
+	      seealso="Template::Plugin, Template::View"/>
+
+	<!-- Template::Plugin::Wrap -->
+	<page id="Plugin_Wrap" 
+	      name="Template::Plugin::Wrap"
+	      about="Plugin interface to Text::Wrap"
+	      seealso="Template::Plugin, Text::Wrap"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::XML::DOM -->
+	<page id="Plugin_XML_DOM" 
+	      name="Template::Plugin::XML::DOM"
+	      about="Plugin interface to XML::DOM"
+	      seealso="Template::Plugin, XML::DOM, XML::Parser"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::XML::RSS -->
+	<page id="Plugin_XML_RSS" 
+	      name="Template::Plugin::XML::RSS"
+	      about="Plugin interface to XML::RSS"
+	      seealso="Template::Plugin, XML::RSS, XML::Parser"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::XML::Simple -->
+	<page id="Plugin_XML_Simple" 
+	      name="Template::Plugin::XML::Simple"
+	      about="Plugin interface to XML::Simple"
+	      seealso="Template::Plugin, XML::Simple, XML::Parser"
+	      nofoot="1"/>
+
+	<!-- Template::Plugin::XML::XPath -->
+	<page id="Plugin_XML_XPath" 
+	      name="Template::Plugin::XML::XPath"
+	      about="Plugin interface to XML::XPath"
+	      seealso="Template::Plugin, XML::XPath, XML::Parser"
+	      nofoot="1"/>
+    </book>
+
+
+    <!-- FAQ -->
+    <book id="FAQ" title="Frequently Asked Questions"
+		   about="Frequently Asked Questions">
+
+	<!-- Template::FAQ -->
+	<page id="FAQ" 
+	      title="Frequently Asked Questions"
+	      about="Frequently Asked Questions about the Template Toolkit"
+	      standalone="1"
+	      podfile="Template/FAQ.pod">
+	    <intro>
+		This is the Frequently Asked Questions list for the
+		Template Toolkit.  More accurately, it's a very thin
+		placeholder for where the FAQ will soon be.
+	    </intro>
+	</page>
+    </book>
+
+
+    <!-- LIBRARY -->
+    <book id="Library" prefix="Template/Library" title="Libraries"
+	  about="Reusable template libraries for rapid content creation">
+        <intro>
+          This section contains documentation for the template libraries
+          distributed with the Template Toolkit.
+        </intro>
+
+	<!-- Template::Library::HTML -->
+	<page id="HTML" title="HTML Library"
+	      about="Template library for basic HTML pages"
+	      standalone="1"
+	      seealso="Template::Library::Splash">
+	    <intro>
+		The HTML library provides a number of basic templates for
+		use in building HTML pages.
+	    </intro>
+	</page>
+
+	<!-- Template::Library::Splash -->
+	<page id="Splash" title="Splash! Library"
+	      about="Template widget set for fancy HTML user interfaces"
+	      standalone="1"
+	      seealso="Template::Library::HTML">
+	    <intro>
+		The Splash! library is built on top of the HTML 
+		library and implements a set of widgets for easy
+		construction of stylish HTML pages
+	    </intro>
+	</page>
+
+	<!-- Template::Library::PostScript -->
+	<page id="PostScript" title="PostScript Library"
+	      standalone="1"
+	      about="Template library for generating PostScript">
+	    <intro>
+	      This library contains a number of useful templates for
+              generating PostScript pages.
+	    </intro>
+	</page>
+    </book>
+
+
+    <!-- TOOLS -->
+    <book id="Tools" prefix="Template/Tools"
+	  about="Useful scripts distributed with the Template Toolkit">
+        <intro>
+	    This section contains documentation for 'tpage' and 'ttree',
+            two useful template processing tools distributed with the 
+            Template Toolkit.
+        </intro>
+
+	<!-- Template::Tools::tpage -->
+	<page id="tpage" about="Process templates from command line"
+	      seealso="ttree|Template::Tools::ttree"/>
+
+	<!-- Template::Tools::ttree -->
+	<page id="ttree" about="Process entire directory trees of templates"
+	      seealso="tpage|Template::Tools::tpage"/>
+    </book>
+
+
+    <!-- RELEASE NOTES -->
+    <book id="Release" type="text" title="Release Notes"
+	  about="README, Changes and TODO files">
+        <intro>
+	  This section contains the release notes for the Template Toolkit.
+        </intro>
+        <page id="README" about="General information and installation guide"/>
+        <page id="Changes" about="Change history"/>
+        <page id="TODO" about="Known bugs, planned features, etc."/>
+    </book>
+
+</docset>
+
+
+
+
