@@ -30,7 +30,7 @@ use base qw( Template::Base );
 use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
 	     $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
              $LATEX_PATH $PDFLATEX_PATH $DVIPS_PATH
-	     $STASH $SERVICE $CONTEXT $CONSTANTS );
+	     $STASH $SERVICE $CONTEXT $CONSTANTS @PRELOAD );
 
 $VERSION   = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG     = 0 unless defined $DEBUG;
@@ -45,18 +45,38 @@ $SERVICE   = 'Template::Service';
 $STASH     = 'Template::Stash';
 $CONSTANTS = 'Template::Namespace::Constants';
 
+@PRELOAD   = ( $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
+               $PLUGINS, $PROVIDER, $SERVICE, $STASH );
+
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+$INSTDIR  = '/usr/local/tt2';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
-$LATEX_PATH    = '';
-$PDFLATEX_PATH = '';
-$DVIPS_PATH    = '';
+$LATEX_PATH    = '/usr/bin/latex';
+$PDFLATEX_PATH = '/usr/bin/pdflatex';
+$DVIPS_PATH    = '/usr/bin/dvips';
 
 #========================================================================
 #                       --- CLASS METHODS ---
 #========================================================================
+
+#------------------------------------------------------------------------
+# preload($module, $module, ...)
+#
+# Preloads all the standard TT modules that are likely to be used, along
+# with any other passed as arguments.
+#------------------------------------------------------------------------
+
+sub preload {
+    my $class = shift;
+
+    foreach my $module (@PRELOAD, @_) {
+        $class->load($module) || return;
+    };
+    return 1;
+}
+
 
 #------------------------------------------------------------------------
 # load($module)
