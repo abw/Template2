@@ -12,19 +12,29 @@
         page = 'Service'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="METHODS"
-                         subs=["new(\\%config)", "process($input, \\%replace)", "context()", "error()"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'METHODS'
+ 			subs  = [ 'new(\\%config)',
+			          'process($input, \\%replace)',
+			          'context()',
+			          'error()' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    use Template::Service;</pre>
 <pre>    my $service = Template::Service-&gt;new({
 	PRE_PROCESS  =&gt; [ 'config', 'header' ],
@@ -39,7 +49,7 @@
 	|| die $service-&gt;error(), &quot;\n&quot;;</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The Template::Service module implements an object class for providing
 a consistent template processing service. 
@@ -117,9 +127,9 @@ be written as:
     });</pre>
 [%- END %]
 [% WRAPPER section
-    title="METHODS"
+    title='METHODS'
 -%][% WRAPPER subsection
-   title = "new(\\%config)"
+   title = 'new(\\%config)'
 -%]<p>
 The new() constructor method is called to instantiate a Template::Service
 object.  Configuration parameters may be specified as a HASH reference or
@@ -385,7 +395,7 @@ is enabled (default), or if the Template::Context reset() method is called.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "process($input, \\%replace)"
+   title = 'process($input, \\%replace)'
 -%]<p>
 The process() method is called to process a template specified as the first
 parameter, $input.  This may be a file name, file handle (e.g. GLOB or IO::Handle)
@@ -405,21 +415,21 @@ retrieved via the error() method.
 	|| die $service-&gt;error();</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "context()"
+   title = 'context()'
 -%]<p>
 Returns a reference to the internal context object which is, by default, an
 instance of the Template::Context class.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "error()"
+   title = 'error()'
 -%]<p>
 Returns the most recent error message.
 </p>
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -428,14 +438,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.32, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.33, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -444,10 +454,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template', 'Template') -%], [% ttlink('Template::Context', 'Template::Context') -%]
 </p>
 [%- END %]
+
 
 

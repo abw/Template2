@@ -12,17 +12,23 @@
         page = 'Plugin_Date'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="AUTHORS";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'AUTHORS';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE date [% tt_end_tag %]</pre>
 <pre>    # use current time and default format
     [% tt_start_tag %] date.format [% tt_end_tag %]</pre>
@@ -46,7 +52,7 @@
     ...</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The Date plugin provides an easy way to generate formatted time and date
 strings by delegating to the POSIX strftime() routine.  
@@ -119,7 +125,7 @@ module (if installed on your system).
     [% tt_start_tag %] calc.Monday_of_Week(22, 2001).join('/') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="AUTHORS"
+    title='AUTHORS'
 -%]<p>
 Thierry-Michel Barral &lt;kktos@electron-libre.com&gt; wrote the original
 plugin.
@@ -130,14 +136,14 @@ fixups/enhancements, a test script and documentation.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.30, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.31, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 Copyright (C) 2000 Thierry-Michel Barral, Andy Wardley.
 </p>
@@ -147,10 +153,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('CPAN::POSIX', 'CPAN::POSIX') -%]
 </p>
 [%- END %]
+
 
 

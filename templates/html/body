@@ -2,7 +2,7 @@
   #
   # ARGS:
   #   - html.body.*	    # any body attributes
-  #   - content             # body content
+  #   - content         # body content
 -%]
 [% USE HTML; HTML.element( body => html.body ) +%]
 [% content -%]

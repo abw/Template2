@@ -12,19 +12,30 @@
         page = 'Stash'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="PUBLIC METHODS"
-                         subs=["new(\\%params)", "get($variable)", "set($variable, $value, $default)", "clone(\\%params)", "declone()"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'PUBLIC METHODS'
+ 			subs  = [ 'new(\\%params)',
+			          'get($variable)',
+			          'set($variable, $value, $default)',
+			          'clone(\\%params)',
+			          'declone()' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    use Template::Stash;</pre>
 <pre>    my $stash = Template::Stash-&gt;new(\%vars);</pre>
 <pre>    # get variable values
@@ -43,7 +54,7 @@
     $stash = $stash-&gt;declone();</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The Template::Stash module defines an object class which is used to store
 variable values for the runtime use of the template processor.  Variable
@@ -63,9 +74,9 @@ localising changes made to variables.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="PUBLIC METHODS"
+    title='PUBLIC METHODS'
 -%][% WRAPPER subsection
-   title = "new(\\%params)"
+   title = 'new(\\%params)'
 -%]<p>
 The new() constructor method creates and returns a reference to a new
 Template::Stash object.  
@@ -79,7 +90,7 @@ should be used to initialise the stash.
 				       var2 =&gt; 'value2' });</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "get($variable)"
+   title = 'get($variable)'
 -%]<p>
 The get() method retrieves the variable named by the first parameter.
 </p>
@@ -95,12 +106,17 @@ element, or 0 if none.
 <pre>    $stash-&gt;get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ]);</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "set($variable, $value, $default)"
+   title = 'set($variable, $value, $default)'
 -%]<p>
 The set() method sets the variable name in the first parameter to the 
 value specified in the second.
 </p>
 <pre>    $stash-&gt;set('var1', 'value1');</pre>
+<p>
+If the third parameter evaluates to a true value, the variable is
+set only if it did not have a true value before.
+</p>
+<pre>    $stash-&gt;set('var2', 'default_value', 1);</pre>
 <p>
 Dotted compound variables may be specified as per get() above.
 </p>
@@ -117,7 +133,7 @@ copied (i.e. imported) into the current namespace.
     $stash-&gt;set('IMPORT', $stash-&gt;get('foo'));</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "clone(\\%params)"
+   title = 'clone(\\%params)'
 -%]<p>
 The clone() method creates and returns a new Template::Stash object which
 represents a localised copy of the parent stash.  Variables can be
@@ -139,7 +155,7 @@ from in its '_PARENT' member.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "declone()"
+   title = 'declone()'
 -%]<p>
 The declone() method returns the '_PARENT' reference and can be used to
 restore the state of a stash as described above.
@@ -147,7 +163,7 @@ restore the state of a stash as described above.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -156,14 +172,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.37, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.38, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -172,10 +188,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template', 'Template') -%], [% ttlink('Template::Context', 'Template::Context') -%]
 </p>
 [%- END %]
+
 
 

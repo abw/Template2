@@ -12,24 +12,34 @@
         page = 'Provider'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="PUBLIC METHODS"
-                         subs=["new(\\%options) ", "fetch($name)", "store($name, $template)", "include_path(\\@newpath))"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'PUBLIC METHODS'
+ 			subs  = [ 'new(\\%options) ',
+			          'fetch($name)',
+			          'store($name, $template)',
+			          'include_path(\\@newpath))' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    $provider = Template::Provider-&gt;new(\%options);</pre>
 <pre>    ($template, $error) = $provider-&gt;fetch($name);</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The Template::Provider is used to load, parse, compile and cache template
 documents.  This object may be sub-classed to provide more specific 
@@ -51,9 +61,9 @@ This documentation needs work.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="PUBLIC METHODS"
+    title='PUBLIC METHODS'
 -%][% WRAPPER subsection
-   title = "new(\\%options) "
+   title = 'new(\\%options) '
 -%]<p>
 Constructor method which instantiates and returns a new Template::Provider
 object.  The optional parameter may be a hash reference containing any of
@@ -328,7 +338,7 @@ an alternate parser object.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "fetch($name)"
+   title = 'fetch($name)'
 -%]<p>
 Returns a compiled template for the name specified.  If the template 
 cannot be found then (undef, STATUS_DECLINED) is returned.  If an error
@@ -339,7 +349,7 @@ returning an error.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "store($name, $template)"
+   title = 'store($name, $template)'
 -%]<p>
 Stores the compiled template, $template, in the cache under the name, 
 $name.  Susbequent calls to fetch($name) will return this template in
@@ -347,7 +357,7 @@ preference to any disk-based file.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "include_path(\\@newpath))"
+   title = 'include_path(\\@newpath))'
 -%]<p>
 Accessor method for the INCLUDE_PATH setting.  If called with an
 argument, this method will replace the existing INCLUDE_PATH with
@@ -356,7 +366,7 @@ the new value.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -365,14 +375,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.32, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.33, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -381,10 +391,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template', 'Template') -%], [% ttlink('Template::Parser', 'Template::Parser') -%], [% ttlink('Template::Context', 'Template::Context') -%]
 </p>
 [%- END %]
+
 
 

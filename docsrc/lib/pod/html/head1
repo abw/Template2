@@ -3,7 +3,7 @@
 -%]
 [% TAGS star -%]
 [% WRAPPER section
-    title="[* t *]"
+    title='[* t.replace("'", "\\'") *]'
 -%]
 [*- view.print(item.content) -*]
 [%- END %]

@@ -12,23 +12,33 @@
         page = 'Config'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="DESCRIPTION"
-                         subs=["Template Style and Parsing Options", "Template Files and Blocks", "Template Variables", "Runtime Processing Options", "Caching and Compiling Options", "Plugins and Filters", "Compatibility, Customisation and Extension"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
+		INCLUDE tocitem 
+			title = 'DESCRIPTION'
+ 			subs  = [ 'Template Style and Parsing Options',
+			          'Template Files and Blocks',
+			          'Template Variables',
+			          'Runtime Processing Options',
+			          'Caching and Compiling Options',
+			          'Plugins and Filters',
+			          'Compatibility, Customisation and Extension' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This section contains details of all the configuration options that can
 be used to customise the behaviour and extend the features of the
 Template Toolkit.
 </p>
 [% WRAPPER subsection
-   title = "Template Style and Parsing Options"
+   title = 'Template Style and Parsing Options'
 -%]
 <ul>
 
@@ -290,7 +300,7 @@ regardless of the ANYCASE option, are the operators:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Template Files and Blocks"
+   title = 'Template Files and Blocks'
 -%]
 <ul>
 
@@ -447,7 +457,7 @@ any true value will allow templates to include each other recursively.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Template Variables"
+   title = 'Template Variables'
 -%]
 <ul>
 
@@ -479,7 +489,7 @@ or
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Runtime Processing Options"
+   title = 'Runtime Processing Options'
 -%]
 <ul>
 
@@ -856,7 +866,7 @@ raised as an 'undef' error.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Caching and Compiling Options"
+   title = 'Caching and Compiling Options'
 -%]
 <ul>
 
@@ -986,7 +996,7 @@ This would create the following cache directories:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Plugins and Filters"
+   title = 'Plugins and Filters'
 -%]
 <ul>
 
@@ -1181,7 +1191,7 @@ See the FILTER directive for further examples.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Compatibility, Customisation and Extension"
+   title = 'Compatibility, Customisation and Extension'
 -%]
 <ul>
 
@@ -1510,7 +1520,7 @@ created and used automatically if a GRAMMAR item isn't specified.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -1519,13 +1529,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-Template Toolkit version 2.05b, released on 21 September 2001.
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -1533,5 +1543,6 @@ This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 </p>
 [%- END %]
+
 
 

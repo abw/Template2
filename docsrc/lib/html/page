@@ -5,47 +5,55 @@
 [% META book = '[* book.id *]'
         page = '[* page.id *]'
 %]
-[*  USE pod; 
+[*  # parse POD source into Pod Object Model
+	USE pod; 
     pom = pod.parse_text("\n$content");
 
+	# check pom was built OK
     UNLESS pom;
-	"   ! Pod error: $pod.error\n" | stderr;
-	RETURN;
+		"   ! Pod error: $pod.error\n" | stderr;
+		RETURN;
     END;
 
-    FOREACH w = pod.warnings;
-	"   ! Pod warning: $w\n" | stderr;
-    END;
-
-    VIEW v prefix='pod/html/';
-	BLOCK list;
-	    view.print(i) FOREACH i = item;
+	# raise any warnings to STDERR
+	FOREACH w = pod.warnings;
+		"   ! Pod warning: $w\n" | stderr;
 	END;
-    END;
-    VIEW vq base=v prefix='pod/html/quote_';
+
+	# define standard view
+    VIEW v 
+		prefix = 'pod/html/';
+
+		BLOCK list;
+	    	view.print(i) FOREACH i = item;
+		END;
     END;
 
-    PROCESS toc;
-
-    v.print(pom);
+	# derive view for quoting items
+    VIEW vq 
+		base   = v 
+		prefix = 'pod/html/quote_';
+    END;
 -*]
-[* BLOCK toc -*]
 [%  WRAPPER toc;
-[*  FOREACH sec = pom.head1;
-	subs = []; 
-	title = vq.print(sec.title) or sec.title;
-	NEXT IF title == 'NAME';
-	FOREACH sub = sec.head2;
-#		n = vq.print(sub.title);
-#		"title: [$n]\n" | stderr;
-	    subs.push( vq.print(sub.title) );
-	END;
+[*  # build table of contents from =head1 sections
+    FOREACH sec = pom.head1;
+		subs = []; 
+		title = vq.print(sec.title) or sec.title;
+		NEXT IF title == 'NAME';
+		FOREACH sub = sec.head2;
+	    	subs.push( vq.print(sub.title).replace("'", "\\'") );
+		END;
 -*]
-	INCLUDE tocitem title="[* title *]"
-[*- IF subs.size *]
-                         subs=["[* subs.join('", "')*]"]
-[*- END *];
-[* END -*]
+		INCLUDE tocitem 
+			title = '[* title *]'
+[*- 	IF subs.size *]
+ 			subs  = [ '[* subs.join("',\n\t\t\t          '")*]' ]
+[*- 	END *];
+[* 	END -*]
     END
 %]
-[* END *]
+[* 	# now generate contents from POM
+	v.print(pom) 
+*]
+

@@ -11,9 +11,9 @@
   #     to put extra stuff in the <head>...</head> element
 -%]
 <head>
-<title>[% html.head.title %]</title>
+  <title>[% html.head.title %]</title>
 [% FOREACH item = html.head.meta -%]
-<meta name="[% item.key %]" content="[% item.value %]">
+  <meta name="[% item.key %]" content="[% item.value %]">
 [% END -%]
 [% html.headers -%]
 </head>

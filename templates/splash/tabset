@@ -6,6 +6,7 @@
   #     select      # number of tab to select (1 - n, 0: none)
   #     invert      # flag to invert tabs (hang down)
   #     limit       # maximum number before scrolling
+  # 	valign      # vertical alignment of tabs
     SET default = splash.style.default;
     DEFAULT 
 	style = default

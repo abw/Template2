@@ -38,3 +38,10 @@ The Makefile.PL will prompt for additional configuration options,
 including the installation of optional template libraries, HTML
 documentation and examples.  You can safely answer 'n' to all of these
 questions for a quick and basic installation.  
+
+If you're running ActivePerl on a Win32 platform then you can use the
+Perl Package Manager (PPM) to install the Template Toolkit.  Chris
+Winters maintains a repository of pre-compiled PPM packages which contains
+the Template Toolkit, AppConfig and others.  For further information, see:
+
+    http://openinteract.sourceforge.net/

@@ -12,35 +12,43 @@
         page = 'Parser'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="PUBLIC METHODS"
-                         subs=["new(\\%params)", "parse($text)"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'PUBLIC METHODS'
+ 			subs  = [ 'new(\\%params)',
+			          'parse($text)' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    use Template::Parser;</pre>
 <pre>    $parser   = Template::Parser-&gt;new(\%config);
     $template = $parser-&gt;parse($text)
         || die $parser-&gt;error(), &quot;\n&quot;;</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The Template::Parser module implements a LALR(1) parser and associated methods
 for parsing template documents into Perl code.  
 </p>
 [%- END %]
 [% WRAPPER section
-    title="PUBLIC METHODS"
+    title='PUBLIC METHODS'
 -%][% WRAPPER subsection
-   title = "new(\\%params)"
+   title = 'new(\\%params)'
 -%]<p>
 The new() constructor creates and returns a reference to a new 
 Template::Parser object.  A reference to a hash may be supplied as a 
@@ -418,7 +426,7 @@ created and used automatically if a GRAMMAR item isn't specified.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "parse($text)"
+   title = 'parse($text)'
 -%]<p>
 The parse() method parses the text passed in the first parameter and
 returns a reference to a Template::Document object which contains the
@@ -433,7 +441,7 @@ Example:
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -442,15 +450,15 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.35, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.37, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 <pre> </pre>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -470,10 +478,11 @@ following copyright notice appears in the Parse::Yapp documentation.
     specified in the Perl README file.</pre>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template', 'Template') -%], [% ttlink('Template::Grammar', 'Template::Grammar') -%], [% ttlink('Template::Directive', 'Template::Directive') -%]
 </p>
 [%- END %]
+
 
 

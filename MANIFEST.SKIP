@@ -43,3 +43,4 @@
 ^xs/Stash.o
 ^xs/XS.bs
 ^xs/pm_to_blib
+^templates/xhtml

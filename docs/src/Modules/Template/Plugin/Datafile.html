@@ -12,18 +12,25 @@
         page = 'Plugin_Datafile'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="BUGS";
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'BUGS';
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE mydata = datafile('/path/to/datafile') [% tt_end_tag %]
     [% tt_start_tag %] USE mydata = datafile('/path/to/datafile', delim = '|') [% tt_end_tag %]
    
@@ -32,7 +39,7 @@
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This plugin provides a simple facility to construct a list of hash 
 references, each of which represents a data record of known structure,
@@ -72,14 +79,14 @@ line which start with a '#'.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="BUGS"
+    title='BUGS'
 -%]<p>
 Should handle file names relative to INCLUDE_PATH.
 Doesn't permit use of ':' in a field.  Some escaping mechanism is required.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -88,14 +95,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.30, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.31, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -104,10 +111,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%]
 </p>
 [%- END %]
+
 
 

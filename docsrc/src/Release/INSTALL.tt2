@@ -115,6 +115,28 @@ libraries, HTML documentation and examples can be correctly viewed via
 your web browser.  The INSTALLATION section covers this.
 
 
+INSTALLING ON MICROSOFT WIN32 PLATFORMS
+---------------------------------------
+
+The easiest way to install the Template Toolkit on a Win32 machine is 
+using ActiveState's Perl Package Manager (ppm) and the pre-compiled
+packages built by Chris Winters.  For further details, see:
+
+    http://openinteract.sourceforge.net/
+    http://activestate.com/
+
+If you prefer, you can manually install the Template Toolkit on Win32
+systems by following the instructions in this installation guide.
+However, please note that you are likely to encounter problems using
+'make' and should instead download and use 'nmake' as a replacement.
+This is available from Microsoft's ftp site.
+
+    ftp://ftp.microsoft.com/Softlib/MSLFILES/nmake15.exe
+
+In this case, you should substitute 'nmake' for 'make' in all the
+instructions contained herein.
+
+
 CONFIGURATION
 -------------
 
@@ -330,12 +352,6 @@ The 'make' command will build the Template Toolkit modules in the
 usual manner.  
 
     make
-
-If you're installing the Template Toolkit on a Win32 machine, then you
-should be using 'nmake' instead.  This is available from Microsoft's
-ftp site.
-
-    ftp://ftp.microsoft.com/Softlib/MSLFILES/nmake15.exe
 
 The 'make test' command runs the test scripts in the 't' subdirectory.
 There is known to be at least one failures under certain conditions:

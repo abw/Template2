@@ -12,22 +12,27 @@
         page = 'Refs'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="DESCRIPTION"
-                         subs=["Resources", "Projects"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
+		INCLUDE tocitem 
+			title = 'DESCRIPTION'
+ 			subs  = [ 'Resources',
+			          'Projects' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This section provides references to external modules, projects and
 other resources related to the Template Toolkit.
 </p>
 [% WRAPPER subsection
-   title = "Resources"
+   title = 'Resources'
 -%]<p>
 The Template Toolkit web site contains the latest information, news and 
 other resources.
@@ -68,7 +73,7 @@ Toolkit web site:
 <pre>    http://www.template-toolkit.org/docs.html</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "Projects"
+   title = 'Projects'
 -%]<p>
 There are a number of other projects related to the Template Toolkit.
 </p>
@@ -112,7 +117,7 @@ driven template.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -121,13 +126,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-Template Toolkit version 2.05b, released on 21 September 2001.
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -135,5 +140,6 @@ This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 </p>
 [%- END %]
+
 
 

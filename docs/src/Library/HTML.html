@@ -12,17 +12,23 @@
         page = 'HTML'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="DESCRIPTION"
-                         subs=["Headers, Footers and Pages", "Tables, Bars and Boxes"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'DESCRIPTION'
+ 			subs  = [ 'Headers, Footers and Pages',
+			          'Tables, Bars and Boxes' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 <b>NOTE:</b> This documentation is incomplete and may be incorrect
 in places. 
@@ -76,7 +82,7 @@ See the example in the 'examples' sub-directory of the distribution
 directory for further examples and enlightenment on using this library.
 </p>
 [% WRAPPER subsection
-   title = "Headers, Footers and Pages"
+   title = 'Headers, Footers and Pages'
 -%]
 <ul>
 
@@ -135,7 +141,7 @@ Additional HTML headers should be defined in the 'headers' variable.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Tables, Bars and Boxes"
+   title = 'Tables, Bars and Boxes'
 -%]
 <ul>
 
@@ -296,7 +302,7 @@ The box element is a wrapping of html/table + html/row + html/cell
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -305,14 +311,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.28, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.29, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -321,10 +327,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Library::Splash', 'Template::Library::Splash') -%]
 </p>
 [%- END %]
+
 
 

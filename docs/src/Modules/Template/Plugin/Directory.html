@@ -12,18 +12,25 @@
         page = 'Plugin_Directory'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="TODO";
-	INCLUDE tocitem title="AUTHORS";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'TODO';
+		INCLUDE tocitem 
+			title = 'AUTHORS';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE dir = Directory(dirpath) [% tt_end_tag %]</pre>
 <pre>    # files returns list of regular files
     [% tt_start_tag %] FOREACH file = dir.files [% tt_end_tag %]
@@ -55,7 +62,7 @@
     [% tt_start_tag %] myview.print(dir) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This Template Toolkit plugin provides a simple interface to directory
 listings.  It is derived from the Template::Plugin::File module and
@@ -214,14 +221,14 @@ block should explicitly call a scan() on each directory.
     [% tt_start_tag %] myview.print(dir) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="TODO"
+    title='TODO'
 -%]<p>
 Might be nice to be able to specify accept/ignore options to catch
 a subset of files.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHORS"
+    title='AUTHORS'
 -%]<p>
 Michael Stevens &lt;michael@etla.org&gt; wrote the original Directory plugin
 on which this is based.  Andy Wardley &lt;abw@kfs.org&gt; split it into 
@@ -230,24 +237,25 @@ for VIEW support, and made a few other minor tweaks.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.28, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.29, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::File', 'Template::Plugin::File') -%], [% ttlink('Template::View', 'Template::View') -%]
 </p>
 [%- END %]
+
 
 

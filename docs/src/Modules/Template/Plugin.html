@@ -12,20 +12,29 @@
         page = 'Plugin'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="PLUGIN API";
-	INCLUDE tocitem title="DEEPER MAGIC";
-	INCLUDE tocitem title="Template::Plugin Delegation";
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'PLUGIN API';
+		INCLUDE tocitem 
+			title = 'DEEPER MAGIC';
+		INCLUDE tocitem 
+			title = 'Template::Plugin Delegation';
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    package MyOrg::Template::Plugin::MyPlugin;
     use base qw( Template::Plugin );
     use Template::Plugin;
@@ -39,7 +48,7 @@
     }</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 A &quot;plugin&quot; for the Template Toolkit is simply a Perl module which 
 exists in a known package location (e.g. Template::Plugin::*) and 
@@ -66,7 +75,7 @@ Use the PLUGIN_BASE option to specify the namespace that you use.  e.g.
     });</pre>
 [%- END %]
 [% WRAPPER section
-    title="PLUGIN API"
+    title='PLUGIN API'
 -%]<p>
 The following methods form the basic interface between the Template
 Toolkit and plugin modules.
@@ -133,7 +142,7 @@ argument, it returns the value of the variable.
 </ul>
 [%- END %]
 [% WRAPPER section
-    title="DEEPER MAGIC"
+    title='DEEPER MAGIC'
 -%]<p>
 The Template::Context object that handles the loading and use of
 plugins calls the new() and error() methods against the package name
@@ -207,7 +216,7 @@ MyClient object, primed to communicate with the creating MyServer.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="Template::Plugin Delegation"
+    title='Template::Plugin Delegation'
 -%]<p>
 As of version 2.01, the Template::Plugin module no longer provides an
 AUTOLOAD method to delegate to other objects or classes.  This was a
@@ -217,7 +226,7 @@ require this kind of functionality.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -226,14 +235,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.30, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.31, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -242,10 +251,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template', 'Template') -%], [% ttlink('Template::Plugins', 'Template::Plugins') -%], [% ttlink('Template::Context', 'Template::Context') -%]
 </p>
 [%- END %]
+
 
 

@@ -79,6 +79,11 @@ value specified in the second.
 
     $stash->set('var1', 'value1');
 
+If the third parameter evaluates to a true value, the variable is
+set only if it did not have a true value before.
+
+    $stash->set('var2', 'default_value', 1);
+
 Dotted compound variables may be specified as per get() above.
 
     [% foo.bar = 30 %]

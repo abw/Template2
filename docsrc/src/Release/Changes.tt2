@@ -18,6 +18,45 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.05d - 6th Nov 2001                    ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in the parser which was missing a '^' anchor on the regex
+  matching the TAGS directive, causing it to match anywhere.  Thanks to
+  Dominic Mitchell and Adrian Howard for reporting and fixing the problem.
+  See http://tt2.org/pipermail/templates/2001-October/001760.html
+
+* Modified Template::Parser to correctly handle "\t" and "\r" in double
+  quoted strings as well as "\n".  Added test to t/parser.t
+
+* Applied a patch from Stas Bekman to add 'valign' as an option to the 
+  html/cell template.
+
+* Applied a patch from Harald Joerg to document the 3rd $default
+  option to Template::Stash::set().  
+
+* Fixed a problem in the docsrc build whereby double quote strings
+  were causing embedded variables to be incorrectly interpolated, e.g.
+  [% INCLUDE xyz title="set($var, $val, $default)" %] is now 
+  [% INCLUDE xyz title='set($var, $val,  $default)' %].  Thanks to 
+  Harald Joerg for reporting the problem.
+
+
+#------------------------------------------------------------------------
+# Version 2.05c - 22 Oct 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied a patch from Tony Payne which fixes a bug where templates were
+  being mangled under mod_perl due to a missing O_TRUNC on a sysopen().
+  See http://www.tt2.org/pipermail/templates/2001-October/001834.html
+
+* Fixed the mess I made of Pudge's XS Stash patch applied in 2.05b.
+
+* Updated the INSTALL/README guides to note the PPM installation for
+  Win32 users.
+
+
+#------------------------------------------------------------------------
 # Version 2.05b - 21 Sep 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 

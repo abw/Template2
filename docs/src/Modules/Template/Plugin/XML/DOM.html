@@ -12,23 +12,37 @@
         page = 'Plugin_XML_DOM'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="PRE-REQUISITES";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="METHODS"
-                         subs=["parse()", "toTemplate()", "childrenToTemplate()", "allChildrenToTemplate()"];
-	INCLUDE tocitem title="PRESENTING DOM NODES USING VIEWS";
-	INCLUDE tocitem title="AUTHORS";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="HISTORY";
-	INCLUDE tocitem title="BUGS";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'PRE-REQUISITES';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'METHODS'
+ 			subs  = [ 'parse()',
+			          'toTemplate()',
+			          'childrenToTemplate()',
+			          'allChildrenToTemplate()' ];
+		INCLUDE tocitem 
+			title = 'PRESENTING DOM NODES USING VIEWS';
+		INCLUDE tocitem 
+			title = 'AUTHORS';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'HISTORY';
+		INCLUDE tocitem 
+			title = 'BUGS';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    # load plugin
     [% tt_start_tag %] USE dom = XML.DOM [% tt_end_tag %]</pre>
 <pre>    # also provide XML::Parser options
@@ -70,7 +84,7 @@
     [% tt_start_tag %] node.allChildrenToTemplate [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="PRE-REQUISITES"
+    title='PRE-REQUISITES'
 -%]<p>
 This plugin requires that the XML::Parser (2.19 or later) and XML::DOM
 (1.27 or later) modules be installed.  These are available from CPAN:
@@ -82,7 +96,7 @@ Note that the XML::DOM module is now distributed as part of the
 </p>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This is a Template Toolkit plugin interfacing to the XML::DOM module.
 The plugin loads the XML::DOM module and creates an XML::DOM::Parser
@@ -133,9 +147,9 @@ for the XML::Parser object:
 <pre>    [% tt_start_tag %] USE dom = XML.DOM(ProtocolEncoding =&gt; 'ISO-8859-1') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="METHODS"
+    title='METHODS'
 -%][% WRAPPER subsection
-   title = "parse()"
+   title = 'parse()'
 -%]<p>
 The parse() method accepts a positional parameter which contains a filename
 or XML string.  It is assumed to be a filename unless it contains a &lt;
@@ -177,7 +191,7 @@ in place of
 <pre>    [% tt_start_tag %] node.getAttribute('attrib') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "toTemplate()"
+   title = 'toTemplate()'
 -%]<p>
 <b>NOTE: This method will soon be deprecated in favour of the VIEW based
 approach desribed below.</b>
@@ -207,7 +221,7 @@ the output of calling toTemplate() on the &lt;page&gt; node would be:
 <pre>    Page: Hello World!</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "childrenToTemplate()"
+   title = 'childrenToTemplate()'
 -%]<p>
 <b>NOTE: This method will soon be deprecated in favour of the VIEW based
 approach desribed below.</b>
@@ -279,7 +293,7 @@ from being further processed.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "allChildrenToTemplate()"
+   title = 'allChildrenToTemplate()'
 -%]<p>
 <b>NOTE: This method will soon be deprecated in favour of the VIEW based
 approach desribed below.</b>
@@ -292,7 +306,7 @@ childrenToTemplate() method with the 'deep' flag set to any true value.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="PRESENTING DOM NODES USING VIEWS"
+    title='PRESENTING DOM NODES USING VIEWS'
 -%]<p>
 You can define a VIEW to present all or part of a DOM tree by automatically
 mapping elements onto templates.  Consider a source document like the
@@ -377,7 +391,7 @@ To print just the content of the report node (i.e. don't process the
 <pre>    [% tt_start_tag %] report.content(report_view) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="AUTHORS"
+    title='AUTHORS'
 -%]<p>
 This plugin module was written by Andy Wardley &lt;abw@kfs.org&gt;
 and Simon Matthews &lt;sam@knowledgepool.com&gt;.
@@ -390,14 +404,14 @@ library.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
 2.6, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="HISTORY"
+    title='HISTORY'
 -%]<p>
 Version 2.5 : updated for use with version 1.27 of the XML::DOM module.
 </p>
@@ -414,7 +428,7 @@ into the node hash.
 </ul>
 [%- END %]
 [% WRAPPER section
-    title="BUGS"
+    title='BUGS'
 -%]<p>
 The childrenToTemplate() and allChildrenToTemplate() methods can easily
 slip into deep recursion.
@@ -425,7 +439,7 @@ change in the near future.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 Copyright (C) 2000-2001 Andy Wardley, Simon Matthews.  All Rights Reserved.
 </p>
@@ -435,10 +449,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('XML::DOM', 'XML::DOM') -%], [% ttlink('XML::Parser', 'XML::Parser') -%]
 </p>
 [%- END %]
+
 
 

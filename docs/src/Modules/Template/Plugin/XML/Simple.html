@@ -12,29 +12,36 @@
         page = 'Plugin_XML_Simple'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="PRE-REQUISITES";
-	INCLUDE tocitem title="AUTHORS";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'PRE-REQUISITES';
+		INCLUDE tocitem 
+			title = 'AUTHORS';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    # load plugin and specify XML file to parse
     [% tt_start_tag %] USE xml = XML.Simple(xml_file_or_text) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This is a Template Toolkit plugin interfacing to the XML::Simple module.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="PRE-REQUISITES"
+    title='PRE-REQUISITES'
 -%]<p>
 This plugin requires that the XML::Parser and XML::Simple modules be 
 installed.  These are available from CPAN:
@@ -42,7 +49,7 @@ installed.  These are available from CPAN:
 <pre>    http://www.cpan.org/modules/by-module/XML</pre>
 [%- END %]
 [% WRAPPER section
-    title="AUTHORS"
+    title='AUTHORS'
 -%]<p>
 This plugin wrapper module was written by Andy Wardley
 &lt;abw@kfs.org&gt;.
@@ -53,14 +60,14 @@ was written by Grant McLean &lt;grantm@web.co.nz&gt;.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.25, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.26, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -69,10 +76,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('XML::Simple', 'XML::Simple') -%], [% ttlink('XML::Parser', 'XML::Parser') -%]
 </p>
 [%- END %]
+
 
 

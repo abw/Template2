@@ -760,6 +760,11 @@ value specified in the second.
 
     $stash->set('var1', 'value1');
 
+If the third parameter evaluates to a true value, the variable is
+set only if it did not have a true value before.
+
+    $stash->set('var2', 'default_value', 1);
+
 Dotted compound variables may be specified as per get() above.
 
     [% foo.bar = 30 %]
@@ -810,8 +815,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.37, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.38, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 
 =head1 COPYRIGHT
 

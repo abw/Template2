@@ -2,6 +2,7 @@
   # ARGS:
   #	col	    # background colour (default: none)
   #     align       # horizontal alignment (default: none)
+  #     valign      # vertical alignment (default: none)
   #     colspan     # span multiple columns (defualt: none)
   #     content     # box content
 -%]
@@ -9,6 +10,7 @@
     [%- IF width %] width="[% width %]"[% END %]
     [%- IF col %] bgcolor="[% col %]"[% END %]
     [%- IF colspan %] colspan="[% colspan %]"[% END %]
-    [%- IF  align %] align="[% align %]"[% END %]>
+    [%- IF  align %] align="[% align %]"[% END %]
+    [%- IF  valign %] valign="[% valign %]"[% END %]>
 [%- content -%]
 </td>

@@ -12,16 +12,25 @@
         page = 'Intro'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="DESCRIPTION"
-                         subs=["Template.pm", "Component Based Content Construction", "Data and Code Binding", "Advanced Features: Filters, Macros, Exceptions, Plugins", "Separating Presentation and Application Logic", "Performance"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
+		INCLUDE tocitem 
+			title = 'DESCRIPTION'
+ 			subs  = [ 'Template.pm',
+			          'Component Based Content Construction',
+			          'Data and Code Binding',
+			          'Advanced Features: Filters, Macros, Exceptions, Plugins',
+			          'Separating Presentation and Application Logic',
+			          'Performance' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This section provides a general introduction to the Template Toolkit,
 giving a quick overview of features, examples of template directives
@@ -60,7 +69,7 @@ embed your variables in Perl style:
     arrears to the sum of $debt.
     ...</pre>
 [% WRAPPER subsection
-   title = "Template.pm"
+   title = 'Template.pm'
 -%]<p>
 The Template.pm module is the front end to the Template Toolkit,
 providing access to the full range of functionality through a single
@@ -96,7 +105,7 @@ retrieve details of the error.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "Component Based Content Construction"
+   title = 'Component Based Content Construction'
 -%]<p>
 A number of special directives are provided, such as INSERT, INCLUDE
 and PROCESS, which allow content to be built up from smaller template
@@ -131,7 +140,7 @@ for building up repetitive elements such as tables, menus, etc.
     &lt;/table&gt;</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "Data and Code Binding"
+   title = 'Data and Code Binding'
 -%]<p>
 One of the key features that sets the Template Toolkit apart from
 other template processors is the ability to bind template variables to
@@ -174,7 +183,7 @@ directives such as IF, UNLESS, ELSIF, ELSE, SWITCH, CASE, etc.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "Advanced Features: Filters, Macros, Exceptions, Plugins"
+   title = 'Advanced Features: Filters, Macros, Exceptions, Plugins'
 -%]<p>
 The Template Toolkit also provides a number of additional directives
 for advanced processing and programmatical functionality.  It supports
@@ -191,7 +200,7 @@ management systems and other web applications.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "Separating Presentation and Application Logic"
+   title = 'Separating Presentation and Application Logic'
 -%]<p>
 Rather than embedding Perl code or some other scripting language
 directly into template documents, it encourages you to keep functional
@@ -227,7 +236,7 @@ real Perl code in your templates within PERL ... END directives.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "Performance"
+   title = 'Performance'
 -%]<p>
 The Template Toolkit uses a fast YACC-like parser which compiles
 templates into Perl code for maximum runtime efficiency.  It also has
@@ -242,7 +251,7 @@ interface through the Template front-end module for general use.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -251,13 +260,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-Template Toolkit version 2.05b, released on 21 September 2001.
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -265,5 +274,6 @@ This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 </p>
 [%- END %]
+
 
 

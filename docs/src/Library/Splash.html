@@ -12,20 +12,46 @@
         page = 'Splash'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="DESCRIPTION"
-                         subs=["Introduction", "Configuration", "Colours", "Style"];
-	INCLUDE tocitem title="COMPONENT TEMPLATES"
-                         subs=["splash/text", "splash/table", "splash/row", "splash/cell", "splash/box", "splash/button", "splash/bar", "splash/hair", "splash/menu", "splash/menubar", "splash/panel", "splash/pane", "splash/tab", "splash/tabset", "splash/tabbox", "splash/tabsbox", "splash/tabspanel"];
-	INCLUDE tocitem title="EXAMPLES";
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'DESCRIPTION'
+ 			subs  = [ 'Introduction',
+			          'Configuration',
+			          'Colours',
+			          'Style' ];
+		INCLUDE tocitem 
+			title = 'COMPONENT TEMPLATES'
+ 			subs  = [ 'splash/text',
+			          'splash/table',
+			          'splash/row',
+			          'splash/cell',
+			          'splash/box',
+			          'splash/button',
+			          'splash/bar',
+			          'splash/hair',
+			          'splash/menu',
+			          'splash/menubar',
+			          'splash/panel',
+			          'splash/pane',
+			          'splash/tab',
+			          'splash/tabset',
+			          'splash/tabbox',
+			          'splash/tabsbox',
+			          'splash/tabspanel' ];
+		INCLUDE tocitem 
+			title = 'EXAMPLES';
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 <b>NOTE:</b> This documentation is incomplete, incorrect and outdated.
 The Splash! library is still evolving and subject to change.  See
@@ -33,7 +59,7 @@ the examples for a much more recent and accurate demonstration of
 use.
 </p>
 [% WRAPPER subsection
-   title = "Introduction"
+   title = 'Introduction'
 -%]<p>
 The 'Splash' template library is distributed as part of the Template
 Toolkit.  It can be found in the 'templates' sub-directory of the
@@ -83,7 +109,7 @@ the 'html' directory and contain directives of the form:
 <pre>    [% tt_start_tag %] INCLUDE html/something [% tt_end_tag %].</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "Configuration"
+   title = 'Configuration'
 -%]<p>
 The 'splash/config' template defines a 'splash' hash array which
 contains numerous configuration items for the Splash library.  You
@@ -129,7 +155,7 @@ things you might like to tweak.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "Colours"
+   title = 'Colours'
 -%]<p>
 The Splash! library uses the colours defined in the html/rgb template.
 The 'rgb' hash defined therein is imported as the 'splash.rgb' hash.
@@ -140,7 +166,7 @@ See the examples for further enlightenment on using colour.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "Style"
+   title = 'Style'
 -%]<p>
 There are two very primitive &quot;styles&quot; implemented called &quot;select&quot; and
 &quot;unselect&quot;.  These are used to indicate which item on a menu is
@@ -177,7 +203,7 @@ of the inbuilt styles: splash.select or splash.unselect.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="COMPONENT TEMPLATES"
+    title='COMPONENT TEMPLATES'
 -%]<p>
 This section describes some of the component templates in the Splash!
 library.  This documentation is incomplete and may also be inaccurate
@@ -185,7 +211,7 @@ in places.  The examples in the 'examples' directory are likely to be
 a much better reference.
 </p>
 [% WRAPPER subsection
-   title = "splash/text"
+   title = 'splash/text'
 -%]<p>
 Simple template to format text according to a selected/unselected style,
 adding links, etc.
@@ -243,7 +269,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/table"
+   title = 'splash/table'
 -%]<p>
 A thin wrapper around html/table, allowing a colour to be specified
 by name.
@@ -302,7 +328,7 @@ Cell padding.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/row"
+   title = 'splash/row'
 -%]<p>
 Creates a row for an HTML table.
 </p>
@@ -346,7 +372,7 @@ Number of rows to span.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/cell"
+   title = 'splash/cell'
 -%]<p>
 Creates a cell for an HTML table.
 </p>
@@ -385,7 +411,7 @@ Number of columns to span.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/box"
+   title = 'splash/box'
 -%]<p>
 A box created from a union of splash/table, splash/row and splash/cell.
 The following is equivalent to the previous example.
@@ -398,7 +424,7 @@ Configuration items are as per the individual templates.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/button"
+   title = 'splash/button'
 -%]<p>
 Creates a small button with rounded corners.
 </p>
@@ -460,7 +486,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/bar"
+   title = 'splash/bar'
 -%]<p>
 Creates a bar with rounded corners at either the top or bottom, and 
 square corners on the other.  Default has rounded at the top, set
@@ -530,7 +556,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/hair"
+   title = 'splash/hair'
 -%]<p>
 Generates a frame enclosing the content within crosshair corners.
 </p>
@@ -569,7 +595,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/menu"
+   title = 'splash/menu'
 -%]<p>
 Creates a menu as a series of splash/button elements.
 </p>
@@ -614,7 +640,7 @@ Horizontal alignment
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/menubar"
+   title = 'splash/menubar'
 -%]<p>
 As above, but incorporated into a wider bar.
 </p>
@@ -654,7 +680,7 @@ Horizontal alignment
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/panel"
+   title = 'splash/panel'
 -%]<p>
 A table with a coloured edge.
 </p>
@@ -720,7 +746,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/pane"
+   title = 'splash/pane'
 -%]<p>
 A union of splash/row + splash/cell.
 </p>
@@ -734,7 +760,7 @@ A union of splash/row + splash/cell.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/tab"
+   title = 'splash/tab'
 -%]<p>
 A simple button looking like a page tab.
 </p>
@@ -799,7 +825,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/tabset"
+   title = 'splash/tabset'
 -%]<p>
 A set of splash/tab components, similar to a menu.
 </p>
@@ -832,7 +858,7 @@ upright.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/tabbox"
+   title = 'splash/tabbox'
 -%]<p>
 Add a splash/tab to the top of a splash/box.
 </p>
@@ -891,7 +917,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/tabsbox"
+   title = 'splash/tabsbox'
 -%]<p>
 Add a splash/tabset to the top of a splash/box.
 </p>
@@ -954,7 +980,7 @@ The following items default to the relevant style values:
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "splash/tabspanel"
+   title = 'splash/tabspanel'
 -%]<p>
 As per splash/tabsbox, but attached to a splash/panel instead of a
 splash/box.
@@ -962,14 +988,14 @@ splash/box.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="EXAMPLES"
+    title='EXAMPLES'
 -%]<p>
 See the examples in the 'examples' sub-directory of the installation 
 for comprehensive examples showing use of the Splash! library.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -978,14 +1004,14 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.28, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.29, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -994,10 +1020,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Library::HTML', 'Template::Library::HTML') -%]
 </p>
 [%- END %]
+
 
 

@@ -12,18 +12,25 @@
         page = 'Plugin_Autoformat'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="EXAMPLES";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="AUTHORS";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'EXAMPLES';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'AUTHORS';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE autoformat(options) [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] autoformat(text, more_text, ..., options) [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] FILTER autoformat(options) [% tt_end_tag %]
@@ -31,7 +38,7 @@
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="EXAMPLES"
+    title='EXAMPLES'
 -%]<pre>    # define some text for the examples
     [% tt_start_tag %] text = BLOCK [% tt_end_tag %]
        Be not afeard.  The isle is full of noises, sounds and sweet 
@@ -69,7 +76,7 @@
     [% tt_start_tag %] autoformat(10, 20.32, 11.35) [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The autoformat plugin is an interface to Damian Conway's Text::Autoformat 
 Perl module which provides advanced text wrapping and formatting.  
@@ -126,7 +133,7 @@ See [% ttlink('Text::Autoformat') -%] for further details.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHORS"
+    title='AUTHORS'
 -%]<p>
 Robert McArthur &lt;mcarthur@dstc.edu.au&gt; wrote the original plugin 
 code, with some modifications and additions from Andy Wardley 
@@ -138,14 +145,14 @@ module (in his copious spare time :-) which does all the clever stuff.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-2.29, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.30, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 Copyright (C) 2000 Robert McArthur &amp; Andy Wardley.  All Rights Reserved.
 </p>
@@ -155,10 +162,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Text::Autoformat', 'Text::Autoformat') -%]
 </p>
 [%- END %]
+
 
 

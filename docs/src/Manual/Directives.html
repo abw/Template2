@@ -12,22 +12,32 @@
         page = 'Directives'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="DESCRIPTION"
-                         subs=["Accessing and Updating Template Variables", "Processing Other Template Files and Blocks", "Conditional Processing", "Loop Processing", "Filters, Plugins, Macros and Perl", "Exception Handling and Flow Control", "Miscellaneous"];
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
+		INCLUDE tocitem 
+			title = 'DESCRIPTION'
+ 			subs  = [ 'Accessing and Updating Template Variables',
+			          'Processing Other Template Files and Blocks',
+			          'Conditional Processing',
+			          'Loop Processing',
+			          'Filters, Plugins, Macros and Perl',
+			          'Exception Handling and Flow Control',
+			          'Miscellaneous' ];
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This section provides a reference of all Template Toolkit directives,
 complete with examples of use.
 </p>
 [% WRAPPER subsection
-   title = "Accessing and Updating Template Variables"
+   title = 'Accessing and Updating Template Variables'
 -%]
 <ul>
 
@@ -149,7 +159,7 @@ undefined variables.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Processing Other Template Files and Blocks"
+   title = 'Processing Other Template Files and Blocks'
 -%]
 <ul>
 
@@ -538,7 +548,7 @@ enclosing block is processed each time the macro is called.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Conditional Processing"
+   title = 'Conditional Processing'
 -%]
 <ul>
 
@@ -611,7 +621,7 @@ is no drop-through between CASE statements.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Loop Processing"
+   title = 'Loop Processing'
 -%]
 <ul>
 
@@ -826,7 +836,7 @@ and can be set to a higher value if necessary.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Filters, Plugins, Macros and Perl"
+   title = 'Filters, Plugins, Macros and Perl'
 -%]
 <ul>
 
@@ -1377,7 +1387,7 @@ and available for use within RAWPERL code.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Exception Handling and Flow Control"
+   title = 'Exception Handling and Flow Control'
 -%]
 <ul>
 
@@ -1831,7 +1841,7 @@ from a TRY block up to the point where the error occurred.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Miscellaneous"
+   title = 'Miscellaneous'
 -%]
 <ul>
 
@@ -1934,7 +1944,7 @@ See the TAGS and TAG_STYLE configuration options for further details.
 [%- END %]
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Andy Wardley &lt;abw@kfs.org&gt;
 </p>
@@ -1943,13 +1953,13 @@ Andy Wardley &lt;abw@kfs.org&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-Template Toolkit version 2.05b, released on 21 September 2001.
+Template Toolkit version 2.05d, released on 05 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -1957,5 +1967,6 @@ This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 </p>
 [%- END %]
+
 
 
