@@ -497,6 +497,7 @@ sub _fetch_path {
 	# search the INCLUDE_PATH for the file, in cache or on disk
 	foreach $dir (@$paths) {
 	    $path = "$dir/$name";
+            $path =~ s[//][/]g;
 
 	    $self->debug("searching path: $path\n") if $self->{ DEBUG };
 
