@@ -110,8 +110,10 @@ $TT_DVIPS_PATH    = '';
 $TT_QUIET         = 'n';
 $TT_ACCEPT        = 'n';
 
-my $TT_SPLASH_FG    = '';
-my $TT_SPLASH_BG    = '';
+my $TT_SPLASH_FG  = '';
+my $TT_SPLASH_BG  = '';
+my $TT_SPLASH_FT  = '';
+my $TT_SPLASH_BT  = '';
 
 my $DEFAULTS_FILE   = '.defaults.cfg';
 my $DBI_CONFIG_FILE = 't/dbi_test.cfg';
@@ -155,6 +157,7 @@ my $SPLASH_STYLES = {
     blue    => [ 'grey75', 'blue75'  ],
     red     => [ 'grey75', 'red75'   ],
     green   => [ 'grey75', 'green75' ],
+    leon    => [ 'red75',  'orange', 'white', 'black' ],
 };
 
 
@@ -440,17 +443,19 @@ a Perl XS module which can evaluate templates about twice as fast as
 the pure-Perl version.  Although still strictly "experimental", it
 has been widely tested and is thought to be stable and reliable.
 
-You may choose to build the XS module, but it won't be enabled by 
-default. Instead, the recommended usage is something like this:
+You can choose to build the XS stash module and enable it by default
+so that it is used automatically for all templates.  If you build it
+but don't enable it by default then you can use it something like
+this:
 
     use Template;
     use Template::Stash::XS;
 
     my \$tt = new Template ({ STASH => new Template::Stash::XS, ... });
 
-However, if you are feeling brave, the XS version can be set as the 
-default stash for all Template objects. (Also see \$STASH in the
-Template/Config.pm module, e.g. 'perldoc Template::Config').
+You can also enable the XS stash by setting the \$STASH package
+variable in the Template/Config.pm module.  See 'perldoc
+Template::Config' for further details.
 
 EOF
 
@@ -738,7 +743,13 @@ EOF
 		message("! No such scheme\n"), $TT_SPLASH_THEME = 'default'
 		    unless ($splash_style = $SPLASH_STYLES->{ $TT_SPLASH_THEME });
 	    }
-	    ($TT_SPLASH_BG, $TT_SPLASH_FG) = @$splash_style;
+
+	    ( $TT_SPLASH_BG, $TT_SPLASH_FG, $TT_SPLASH_BT, $TT_SPLASH_FT ) 
+		= @$splash_style;
+
+	    # default background (unselected) text is black, fore is white
+	    $TT_SPLASH_BT ||= 'black';
+	    $TT_SPLASH_FT ||= 'white';
 
 	    $style = 'splash';
 	    $style_cfg = <<EOF;
@@ -746,6 +757,8 @@ EOF
 pre_process  = splash/config
 define splash_fg = '$TT_SPLASH_FG'
 define splash_bg = '$TT_SPLASH_BG'
+define splash_ft = '$TT_SPLASH_FT'
+define splash_bt = '$TT_SPLASH_BT'
 EOF
 	}
     }
