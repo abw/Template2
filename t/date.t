@@ -190,7 +190,8 @@ In French, today's day is: [% nowloc(time, '%A', 'fr_FR') +%]
 [% day.format('4:20:00 9-13-2000') %]
 
 -- expect --
-Tuesday
+-- process --
+[% nowloc(time, '%A', 'en_GB') %]
 
 -- test --
 [% TRY %]
