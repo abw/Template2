@@ -108,7 +108,6 @@ $QUOTED_ESCAPES = {
 sub new {
     my $class  = shift;
     my $config = $_[0] && UNIVERSAL::isa($_[0], 'HASH') ? shift(@_) : { @_ };
-
     my ($tagstyle, $start, $end, $defaults, $grammar, $hash, $key, $udef);
 
     my $self = bless { 
@@ -137,6 +136,15 @@ sub new {
 	require Template::Grammar;
 	Template::Grammar->new();
     };
+
+    # build a FACTORY object to include any NAMESPACE definitions,
+    # but only if FACTORY isn't already an object
+    if ($config->{ NAMESPACE } && ! ref $self->{ FACTORY }) {
+	my $fclass = $self->{ FACTORY };
+	$self->{ FACTORY } = $fclass->new( NAMESPACE => $config->{ NAMESPACE } )
+	    || return $class->error($fclass->error());
+    }
+
 
 #    # determine START_TAG and END_TAG for specified (or default) TAG_STYLE
 #    $tagstyle = $self->{ TAG_STYLE } || 'default';
