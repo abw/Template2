@@ -400,7 +400,7 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-2.26, distributed as part of the
+2.27, distributed as part of the
 Template Toolkit version 2.05b, released on 21 September 2001.
 
 
