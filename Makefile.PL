@@ -4,13 +4,20 @@ select STDERR;
 $| = 1;
 select STDOUT;
 
-# beep!
-print STDERR "\a";
+warn(<<EOF);
+    Template Toolkit Version 2.00 beta 3
+    ------------------------------------
+
+    This is stable beta code.  Please read the README and Changes files.
+
+EOF
+
 
 eval "use Template";
 unless ($@) {
     warn(<<EOF) unless $Template::VERSION =~ /^2/;
-IMPORTANT NOTE:
+    IMPORTANT NOTE:
+    --------------
 
     Version $Template::VERSION of the Template Toolkit detected.
 
@@ -39,22 +46,16 @@ IMPORTANT NOTE:
 EOF
 }
 
-warn(<<EOF);
-    This is stable beta code.  Please read the README and Changes files 
-    for details of the current status.
-
-EOF
-
-
 
 my $man3pods = {
-    map { ("docs/pod/$_.pod" => "\$(INST_MAN3DIR)/Template::$_.\$(MAN3EXT)") }
+    map { ("docs/pod/$_.pod" 
+	=> "\$(INST_MAN3DIR)/Template::$_.\$(MAN3EXT)") }
     qw( Base Config Constants Context Document Exception Filters 
 	Iterator Parser Plugin Plugins Provider Service Stash Test )
 };
 $man3pods->{'docs/pod/Template.pod'} = '$(INST_MAN3DIR)/Template.$(MAN3EXT)';
 
-WriteMakefile(
+my %opts = (
     'NAME'	   => 'Template',
     'DISTNAME'     => 'Template-Toolkit',
     'VERSION_FROM' => 'lib/Template.pm',
@@ -69,7 +70,16 @@ WriteMakefile(
     },
 );
 
-#   'DIR'	   => [ 'clib' ],
+if ($ExtUtils::MakeMaker::VERSION >= 5.43) {
+    $opts{ AUTHOR }   = 'Andy Wardley <abw@kfs.org>';
+    $opts{ ABSTRACT } = 
+	'a fast, flexible and extensible template processing system',
+}
+
+WriteMakefile( %opts );
+
+
+#------------------------------------------------------------------------
 
 sub build_docs {
     return <<EOF;

@@ -2,6 +2,12 @@
 # KNOWN BUGS AND/OR LIMITATIONS
 #------------------------------------------------------------------------
 
+* The .pod form of the documentation doesn't get installed properly
+  because it lives in docs/pod instead of lib.  The man pages should
+  get built and installed OK, which is fine as long as you have 'man'
+  on your system.  I've tried various ExtUtils::MakeMaker options 
+  to make the Makefile.PL do the right thing, ut so far to no avail.
+
 * Template process($file) method returns a string if the named
   template ($file) can't be found, rather than an exception.  This
   should be changed so that an exception is returned whatever?
