@@ -38,11 +38,12 @@
 	    valign='middle' width=0
 	    pad=0 space=0 border=0;
 
-	    INCLUDE splash/icon 
-		img  = 'left'
-		link = navigate.0.link
-	    WRAPPER html/cell 
-		width=0;
+	    WRAPPER html/cell width=0;
+		INCLUDE splash/icon 
+		    img  = 'left'
+		    link = navigate.0.link;
+		'&nbsp;';
+	    END;
 
 	    INCLUDE splash/text
 		content=navigate.0.text
@@ -64,11 +65,12 @@
 	    WRAPPER html/cell 
 		width=0;
 
-	    INCLUDE splash/icon 
-		img='right'
-		link = h.link
-	    WRAPPER html/cell 
-	        width=0;
+	    WRAPPER html/cell width=0;
+		'&nbsp;';
+		INCLUDE splash/icon 
+		    img='right'
+		    link = h.link;
+	    END;
 	END;
     END;
 -%]
