@@ -101,7 +101,18 @@ sub process {
 	    last SERVICE
 		unless defined ($procout = $self->_recover(\$error));
 	}
-	$output .= $procout if defined $procout;
+
+        if (defined $procout) {
+            # WRAPPER
+            eval {
+                foreach $name (reverse @{ $self->{ WRAPPER } }) {
+                    $self->debug("WRAPPER: $name") if $self->{ DEBUG };
+                    $procout = $context->process($name, { content => $procout });
+                }
+            };
+            last SERVICE if ($error = $@);
+            $output .= $procout;
+        }
 
 	# POST_PROCESS
 	eval {
@@ -148,7 +159,7 @@ sub _init {
 
     # coerce PRE_PROCESS, PROCESS and POST_PROCESS to arrays if necessary, 
     # by splitting on non-word characters
-    foreach $item (qw( PRE_PROCESS PROCESS POST_PROCESS )) {
+    foreach $item (qw( PRE_PROCESS PROCESS POST_PROCESS WRAPPER )) {
 	$data = $config->{ $item };
         $self->{ $item } = [ ], next unless (defined $data);
 	$data = [ split($delim, $data || '') ]
