@@ -18,6 +18,22 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.04f - 06 Sep 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in the Date plugin which was performing one localtime() too 
+  many when a date was passed in to the format() method.  e.g. the result 
+  from date.format('12:59::00 30/09/2001', '%H:%M') was 13:59 not 12:59.
+  Thanks to Thierry-Michel Barral and Matthew Tuck for reporting the
+  problem.
+
+* Incorporated Doug's new version of the XS Stash.  It fixes the problem 
+  with strings not being recognized as integers (and the item = item + 1 
+  problem). It also adds a few additional tests for this situation to 
+  t/stash-xs.t
+
+
+#------------------------------------------------------------------------
 # Version 2.04e - 06 Sep 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
