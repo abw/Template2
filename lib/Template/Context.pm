@@ -139,8 +139,14 @@ sub template {
 	    ($template, $error) = $provider->fetch($shortname, $prefix);
 	    if ($error) {
 		if ($error == Template::Constants::STATUS_ERROR) {
-		    $self->throw($template) if ref $template;
-		    $self->throw(Template::Constants::ERROR_FILE, $template);
+                    # $template contains exception object
+                    if (UNIVERSAL::isa($template, 'Template::Exception')
+                        && $template->type() eq Template::Constants::ERROR_FILE) {
+                        $self->throw($template);
+                    }
+                    else {
+                        $self->throw( Template::Constants::ERROR_FILE => $template );
+                    }
 		}
 		# DECLINE is ok, carry on
 	    }
@@ -267,8 +273,8 @@ sub view {
 
 
 #------------------------------------------------------------------------
-# process($template, \%params)            [% PROCESS template   var = val, ... %]
-# process($template, \%params, $localize) [% INCLUDE template   var = val, ... %]
+# process($template, \%params)         [% PROCESS template var=val ... %]
+# process($template, \%params, $local) [% INCLUDE template var=val ... %]
 #
 # Processes the template named or referenced by the first parameter.
 # The optional second parameter may reference a hash array of variable
@@ -1516,8 +1522,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.74, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.75, distributed as part of the
+Template Toolkit version 2.08d, released on 18 March 2003.
 
 =head1 COPYRIGHT
 
