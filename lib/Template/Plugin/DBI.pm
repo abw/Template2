@@ -30,11 +30,13 @@ use Template::Plugin;
 use Template::Exception;
 use DBI;
 
-use vars qw( $VERSION $DEBUG );
+use vars qw( $VERSION $DEBUG $QUERY $ITERATOR );
 use base qw( Template::Plugin );
 
-$VERSION = 1.05;
-$DEBUG   = 0 unless defined $DEBUG;
+$VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$DEBUG    = 0 unless defined $DEBUG;
+$QUERY    = 'Template::Plugin::DBI::Query';
+$ITERATOR = 'Template::Plugin::DBI::Iterator';
 
 
 #------------------------------------------------------------------------
@@ -52,6 +54,7 @@ sub new {
     my $context = shift;
     my $self    = ref $class ? $class : bless { 
 	_CONTEXT => $context, 
+	_STH     => [ ],
     }, $class;
 
     $self->connect(@_) if @_;
@@ -73,9 +76,6 @@ sub connect {
     my $self   = shift;
     my $params = ref $_[-1] eq 'HASH' ? pop(@_) : { };
     my ($dbh, $dsn, $user, $pass);
-
-	# delete the disconnected marker if it exists
-	delete $self->{ _DISCONNECTED };
 
     # set debug flag
     $DEBUG = $params->{ debug } if exists $params->{ debug };
@@ -153,9 +153,7 @@ sub _connect {
 
 sub _getDBH() {
     my $self = shift;
-    my $dbh = $self->{ _DBH } || $self->_throw('data source not defined');
-
-	$self->_throw('data source not defined') if $self->{ _DISCONNECTED };
+    my $dbh = $self->{ _DBH };
 
     unless ($dbh) {
         $self->connect;
@@ -174,8 +172,6 @@ sub _getDBH() {
 
 sub disconnect {
     my $self = shift;
-	# SAM
-	$self->{ _DISCONNECTED } = 1;
     $self->{ _DBH }->disconnect() 
 	if $self->{ _DBH };
     delete $self->{ _DBH };
@@ -202,7 +198,10 @@ sub prepare {
 	|| return $self->_throw("DBI prepare failed: $DBI::errstr");
     
     # create wrapper object around handle to return to template client
-    $self->{ _STH } = Template::Plugin::DBI::Query->new($sth);
+    $sth = $QUERY->new($sth);
+    push(@{ $self->{ _STH } }, $sth);
+
+    return $sth;
 }
 
 
@@ -215,8 +214,8 @@ sub prepare {
 sub execute {
     my $self = shift;
 
-    my $sth = $self->{ _STH } 
-		|| return $self->_throw('no query prepared');
+    my $sth = $self->{ _STH }->[-1]
+	|| return $self->_throw('no query prepared');
 
     $sth->execute(@_) 
 }
@@ -284,7 +283,7 @@ sub quote {
 
 sub DESTROY {
     my $self = shift;
-    delete($self->{ _STH });       # first DESTROY any query
+    delete($self->{ _STH });       # first DESTROY any queries
     $self->{ _DBH }->disconnect() if $self->{ _DBH };
 }
 
@@ -310,24 +309,24 @@ sub _throw {
 #========================================================================
 
 package Template::Plugin::DBI::Query;
-use vars qw( $DEBUG );
+use vars qw( $DEBUG $ITERATOR );
 
-*DEBUG = \$Template::Plugin::DBI::DEBUG;
+*DEBUG    = \$Template::Plugin::DBI::DEBUG;
+*ITERATOR = \$Template::Plugin::DBI::ITERATOR;
 
 
 sub new {
     my ($class, $sth) = @_;
-    bless { _QSTH => $sth }, $class;
+    bless \$sth, $class;
 }
 
 sub execute {
     my $self = shift;
-	my $sth = $self->{ _QSTH };
 
-    $sth->execute(@_) 
+    $$self->execute(@_) 
 	|| return Template::Plugin::DBI->_throw("execute failed: $DBI::errstr");
 
-    Template::Plugin::DBI::Iterator->new($sth);
+    $ITERATOR->new($$self);
 }
 
 sub DESTROY {
@@ -352,9 +351,9 @@ use vars qw( $DEBUG );
 sub new {
     my ($class, $sth, $params) = @_;
     my $self = bless { 
-		_ISTH => $sth,
+	_STH => $sth,
     }, $class;
-
+    
     return $self;
 }
 
@@ -450,7 +449,7 @@ sub get {
 
 sub get_all {
     my $self = shift;
-    my $sth  = $self->{ _ISTH };
+    my $sth  = $self->{ _STH };
     my $error;
 
     my $data = $sth->fetchall_arrayref({});
@@ -472,13 +471,13 @@ sub get_all {
 
 sub _fetchrow {
     my $self = shift;
-    my $sth  = $self->{ _ISTH };
+    my $sth  = $self->{ _STH };
 
     my $data = $sth->fetchrow_hashref() || do {
-		$self->{ LAST } = 1;
-		$self->{ NEXT } = undef;
-		$sth->finish();
-		return;
+	$self->{ LAST } = 1;
+	$self->{ NEXT } = undef;
+	$sth->finish();
+	return;
     };
     $self->{ NEXT } = $data;
     return;
@@ -696,9 +695,7 @@ E<lt>abw@kfs.orgE<gt>.
 =head1 VERSION
 
 1.04, distributed as part of the
-Template Toolkit version 2.05c, released on 23 October 2001.
-
-
+Template Toolkit version 2.06a, released on 16 November 2001.
 
 =head1 HISTORY
 
