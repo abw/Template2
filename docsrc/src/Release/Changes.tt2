@@ -32,6 +32,9 @@
   http://tt2.org/pipermail/templates/2003-April/004553.html
   http://tt2.org/pipermail/templates/2003-May/004572.html
 
+* Applied patch from Jim Cromie to t/autoform.t to skip tests on all
+  versions of Perl from 5.8.0 onwards.
+
 
 #------------------------------------------------------------------------
 # Version 2.10 - 24th July 2003
