@@ -50,8 +50,8 @@ class) instantiates a new Template object.  A reference to a hash
 array of configuration items may be passed as a parameter.
 
     my $tt = Template->new({
-	INCLUDE_PATH => '/usr/local/templates',
-	EVAL_PERL    => 1,
+    	INCLUDE_PATH => '/usr/local/templates',
+	    EVAL_PERL    => 1,
     }) || die $Template::ERROR, "\n";
 
 A reference to a new Template object is returned, or undef on error.
@@ -123,8 +123,8 @@ Examples:
 
     # reference to output subroutine
     sub myout {
-	my $output = shift;
-	...
+    	my $output = shift;
+	    ...
     }
     $tt->process('welcome.tt2', $vars, \&myout)
         || die $tt->error(), "\n";
@@ -167,13 +167,19 @@ binary mode.
     $tt->process($infile, $vars, $outfile, binmode => 1)
         || die $tt->error(), "\n";
 
+Alternately, the binmode argument can specify a particular IO layer such 
+as ":utf8".
+
+    $tt->process($infile, $vars, $outfile, binmode => ':utf8')
+        || die $tt->error(), "\n";
+
 The OUTPUT configuration item can be used to specify a default output 
 location other than \*STDOUT.  The OUTPUT_PATH specifies a directory
 which should be prefixed to all output locations specified as filenames.
 
     my $tt = Template->new({
-	OUTPUT      => sub { ... },       # default
-	OUTPUT_PATH => '/tmp',
+    	OUTPUT      => sub { ... },       # default
+	    OUTPUT_PATH => '/tmp',
 	...
     }) || die Template->error(), "\n";
 
@@ -219,10 +225,10 @@ operator allowing the object reference itself to be printed to return
 the formatted error string.
 
     $tt->process('somefile') || do {
-	my $error = $tt->error();
-	print "error type: ", $error->type(), "\n";
-	print "error info: ", $error->info(), "\n";
-	print $error, "\n";
+    	my $error = $tt->error();
+	    print "error type: ", $error->type(), "\n";
+    	print "error info: ", $error->info(), "\n";
+	    print $error, "\n";
     };
 
 =head2 service()
