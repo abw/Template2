@@ -45,3 +45,9 @@ ok( $e2->text() eq 'text to prepend the current output buffer' );
 my @handlers = ('something', 'e2', 'e1.type');
 ok( $e1->select_handler(@handlers) eq 'e1.type' );
 ok( $e2->select_handler(@handlers) eq 'e2' );
+
+my $e3 = Template::Exception->new('e3.type', 'e3.info', undef);
+ok( $e3 );
+ok( $e3->text() eq '');
+ok( $e3->as_string() eq 'e3.type error - e3.info' );
+
