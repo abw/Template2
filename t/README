@@ -34,9 +34,11 @@ output.t        OUTPUT_PATH and OUTPUT options
 parser.t        Template::Parser module
 plugins.t       Template::Plugins provider module (incomplete)
 provider.t      Template::Provider module
+ref.t           Test the \ reference operator (currently undocumented)
 rss.t           XML::RSS plugin (Template::Plugin::XML::RSS)
 service.t       Template::Service module
 skel.t          Skeleton test file.  Copy and edit to create your own tests.
+stash.t         Template::Stash module
 stop.t          STOP directive and throwing 'stop' exception
 switch.t        SWITCH / CASE directives
 table.t         Table plugin (Template::Plugin::Table)
@@ -47,10 +49,7 @@ try.t           TRY / THROW / CATCH / FINAL directives
 url.t           URL plugin (Template::Plugin::URL)
 vars.t          Variable usage and GET / SET / CALL / DEFAULT directives
 varsv1.t        As above, using version 1 handling of leading '$'
+vmeth.t         Virtual scalar/hash/list methods
 while.t         WHILE directive
 wrapper.t       WRAPPER directive
-
-TODO:
-  anonymous blocks
-  return/stop/break
 
