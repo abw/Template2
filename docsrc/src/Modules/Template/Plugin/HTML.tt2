@@ -50,3 +50,10 @@ it is useful to have attributes generated in a deterministic order
 rather than whatever order the hash happened to feel like returning
 the keys in.
 
+    [% USE HTML(sorted=1) %]
+    [% HTML.element( foo => { charlie => 1, bravo => 2, alpha => 3 } ) %]
+
+generates:
+
+    <foo alpha="3" bravo="2" charlie="1">
+
