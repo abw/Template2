@@ -546,7 +546,7 @@ sub delocalise {
 
 
 #------------------------------------------------------------------------
-# visit($blocks)
+# visit($document, $blocks)
 #
 # Each Template::Document calls the visit() method on the context
 # before processing itself.  It passes a reference to the hash array
@@ -557,7 +557,7 @@ sub delocalise {
 #------------------------------------------------------------------------
 
 sub visit {
-    my ($self, $blocks) = @_;
+    my ($self, $document, $blocks) = @_;
     unshift(@{ $self->{ BLKSTACK } }, $blocks)
 }
 
@@ -1533,8 +1533,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.81, distributed as part of the
-Template Toolkit version 2.10, released on 24 July 2003.
+2.82, distributed as part of the
+Template Toolkit version 2.10a, released on 09 October 2003.
 
 =head1 COPYRIGHT
 
