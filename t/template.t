@@ -40,4 +40,28 @@ my $error = $tt->error();
 ok( $error->type() eq 'file' );
 ok( $error->info() eq 'this_file_does_not_exist: not found' );
 
+sub myout {
+  my $output = shift;
+  ok($output)
+}
 
+ok($tt->process('header', undef, \&myout));
+
+my $out = Myout->new();
+
+ok($tt->process('header', undef, $out));
+
+package Myout;
+use Template::Test;
+
+sub new {
+  my $proto = shift;
+  my $class = ref($proto) || $proto;
+  my $self = {};
+  bless($self, $class);
+  return $self;
+}
+sub print {
+  my $output = shift;
+  ok($output);
+}

@@ -168,4 +168,14 @@ foo
 [% dir %]/src/foo
 [% mtime %]
 
+-- test --
+[% TRY -%]
+[% USE f = File('') -%]
+n: [% f.name %]
+[% CATCH -%]
+Drat, there was a [% error.type %] error.
+[% END %]
+-- expect --
+Drat, there was a File error.
+
 
