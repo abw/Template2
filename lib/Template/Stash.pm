@@ -250,6 +250,29 @@ sub hash_import {
     return '';
 }
 
+#------------------------------------------------------------------------
+# define_vmethod($type, $name, \&sub)
+#
+# Defines a virtual method of type $type (SCALAR, HASH, or LIST), with
+# name $name, that invokes &sub when called.  It is expected that &sub
+# be able to handle the type that it will be called upon.
+#------------------------------------------------------------------------
+sub define_vmethod {
+    my ($class, $type, $name, $sub) = @_;
+    my $op;
+
+    if (($type = lc $type) eq 'scalar') {
+        $op = $SCALAR_OPS;
+    }
+    elsif ($type eq 'hash') {
+        $op = $HASH_OPS;
+    }
+    elsif ($type eq 'array') {
+        $op = $LIST_OPS;
+    }
+
+    $op->{ $name } = $sub if $op;
+}
 
 
 #========================================================================

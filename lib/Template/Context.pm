@@ -649,6 +649,17 @@ sub stash {
 
 
 #------------------------------------------------------------------------
+# define_vmethod($type, $name, \&sub)
+#
+# Passes $type, $name, and &sub on to stash->define_vmethod().
+#------------------------------------------------------------------------
+sub define_vmethod {
+    my $self = shift;
+    $self->stash->define_vmethod(@_);
+}
+
+
+#------------------------------------------------------------------------
 # debugging($command, @args, \%params)
 #
 # Method for controlling the debugging status of the context.  The first
@@ -1522,8 +1533,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.79, distributed as part of the
-Template Toolkit version 2.09b, released on 24 April 2003.
+2.80, distributed as part of the
+Template Toolkit version 2.09c, released on 29 April 2003.
 
 =head1 COPYRIGHT
 
