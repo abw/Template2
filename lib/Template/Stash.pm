@@ -89,7 +89,26 @@ $SCALAR_OPS = {
         return [ defined $split ? split($split, $str, @args)
                                 : split(' ', $str, @args) ];
     },
-    'commify' => \&commify,
+    'chunk' => sub {
+	my ($string, $size) = @_;
+	my @list;
+	$size ||= 1;
+	if ($size < 0) {
+	    # sexeger!  It's faster to reverse the string, search
+	    # it from the front and then reverse the output than to 
+	    # search it from the end, believe it nor not!
+	    $string = reverse $string;
+	    $size = -$size;
+	    unshift(@list, scalar reverse $1) 
+		while ($string =~ /((.{$size})|(.+))/g);
+	}
+	else {
+	    push(@list, $1) while ($string =~ /((.{$size})|(.+))/g);
+	}
+	return \@list;
+    },
+	
+
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
@@ -135,8 +154,16 @@ $LIST_OPS = {
     'shift'   => sub { my $list = shift; shift(@$list) },
     'max'     => sub { local $^W = 0; my $list = shift; $#$list; },
     'size'    => sub { local $^W = 0; my $list = shift; $#$list + 1; },
-    'first'   => sub { my $list = shift; $list->[0] },
-    'last'    => sub { my $list = shift; $list->[$#$list] },
+    'first'   => sub {
+	my $list = shift;
+	return $list->[0] unless @_;
+	return [ @$list[0..$_[0]-1] ];
+    },
+    'last'    => sub {
+	my $list = shift;
+	return $list->[-1] unless @_;
+	return [ @$list[-$_[0]..-1] ];
+    },
     'reverse' => sub { my $list = shift; [ reverse @$list ] },
     'grep'    => sub { 
 	my ($list, $pattern) = @_;
@@ -185,6 +212,33 @@ $LIST_OPS = {
 	my $list = shift;
 	return [ @$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_ ];
     },
+    'slice' => sub {
+	my ($list, $from, $to) = @_;
+	$from ||= 0;
+	$to = $#$list unless defined $to;
+	return [ @$list[$from..$to] ];
+    },
+    'splice'  => sub {
+	my ($list, $offset, $length, @replace) = @_;
+ 
+	if (@replace) {
+	    # @replace can contain a list of multiple replace items, or 
+	    # be a single reference to a list
+	    @replace = @{ $replace[0] }
+	        if @replace == 1 && ref $replace[0] eq 'ARRAY';
+	    return [ splice @$list, $offset, $length, @replace ];
+	}
+	elsif (defined $length) {
+	    return [ splice @$list, $offset, $length ];
+	}
+	elsif (defined $offset) {
+	    return [ splice @$list, $offset ];
+	}
+	else {
+	    return [ splice(@$list) ];
+	}
+    },
+
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
 
@@ -195,15 +249,6 @@ sub hash_import {
     return '';
 }
 
-# stolen from perlfaq 5
-sub commify {
-    local $_  = shift;
-    my $c = shift || ",";
-    my $n = int(shift || 3);
-    return $_ if $n<1;
-    1 while s/^([-+]?\d+)(\d{$n})/$1$c$2/;
-    return $_;
-}
 
 
 #========================================================================
