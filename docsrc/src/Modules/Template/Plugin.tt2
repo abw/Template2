@@ -195,6 +195,6 @@ MyClient object, primed to communicate with the creating MyServer.
 
 As of version 2.01, the Template::Plugin module no longer provides an
 AUTOLOAD method to delegate to other objects or classes.  This was a
-badly designed featured that caused more trouble than good.  You can
+badly designed feature that caused more trouble than good.  You can
 easily add your own AUTOLOAD method to perform delegation if you
 require this kind of functionality.
