@@ -212,6 +212,7 @@ sub print {
     my $method = $self->{ method };
     my $map = $self->{ map };
     my $output = '';
+    my $newType; 
     
     # print each argument
     foreach $item (@_) {
@@ -232,7 +233,14 @@ sub print {
 		return unless defined $present;
 		$output .= $present;
 		next;					## NEXT
+	    }   
+	    elsif ( defined($newType = $item->{$method}) &&
+                    defined($template = $map->{"$method=>$newType"}) ) {
 	    }
+	    elsif ( defined($newType = $item->{$method}) &&
+                    defined($template = $map->{"$method=>*"}) ) {
+                $template =~ s/\*/$newType/;
+            }    
 	    elsif (! ($template = $map->{ default })) {
 		# default not defined, so construct template name from type
 		($template = $type) =~ s/\W+/_/g;

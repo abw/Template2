@@ -107,7 +107,7 @@ was written by Grant McLean E<lt>grantm@web.co.nzE<gt>.
 
 =head1 VERSION
 
-2.10, distributed as part of the
+2.11, distributed as part of the
 Template Toolkit version 2.03b, released on 25 June 2001.
 
 =head1 COPYRIGHT
