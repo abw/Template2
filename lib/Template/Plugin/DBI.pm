@@ -254,7 +254,7 @@ sub DESTROY {
 
 sub _throw {
     my $self  = shift;
-    my $error = shift || die "DBI throw() called without an error string";
+    my $error = shift || die "DBI throw() called without an error string\n";
 
     # throw error as DBI exception
     die Template::Exception->new('DBI', $error);
@@ -280,7 +280,7 @@ sub execute {
     my $self = shift;
 
     $$self->execute(@_) 
-	|| return Template::Plugin::DBI::throw("execute failed: $DBI::errstr");
+	|| return Template::Plugin::DBI->_throw("execute failed: $DBI::errstr");
 
     Template::Plugin::DBI::Iterator->new($$self);
 }
@@ -626,8 +626,6 @@ modify it under the same terms as Perl itself.
   - rollback ?
 
 =back
-
-=end
 
 
 
