@@ -23,11 +23,27 @@
 # $Id$
 #========================================================================
 
+
 #------------------------------------------------------------------------
-# Version 2.08c - November 4th                    ## DEVELOPER RELEASE ##
+# Version 2.08d - March 18th                      ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Made Template::Exception DTRT with overloading (mark)
+
+* Applied a patch from Jonas Liljegren to lower the chunking limit of
+  the parser regex to prevent a segfault.  See
+  http://tt2.org/pipermail/templates/2003-February/004290.html
+
+* Applied Pudge's patch for the XS Stash bug.  See
+  http://tt2.org/pipermail/templates/2003-February/004289.html
+
+* Applied a patch from Gervase Markham to add the set_legend() method
+  to various GD::Graph::* modules.
+  
+
+#------------------------------------------------------------------------
+# Version 2.08c - November 4th                    ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
 
 * Applied a patch from Bradley Baetz to work around a bug in Perl when 
   using an overridden die(), as CGI::Carp does, for example.
