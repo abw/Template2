@@ -191,7 +191,9 @@ In French, today's day is: [% nowloc(time, '%A', 'fr_FR') +%]
 
 -- expect --
 -- process --
-[% nowloc(time, '%A', 'en_GB') %]
+[% USE date(time='4:20:00 9-13-2000', format='%s');
+   nowloc(date.format, '%A', 'en_GB') 
+%]
 
 -- test --
 [% TRY %]
