@@ -25,7 +25,7 @@
 package Template::Plugin::Date;
 
 use strict;
-use vars qw( @ISA $VERSION $FORMAT );
+use vars qw( $VERSION $FORMAT @LOCALE_SUFFIX );
 use base qw( Template::Plugin );
 use Template::Plugin;
 
@@ -33,7 +33,7 @@ use POSIX ();
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $FORMAT  = '%H:%M:%S %d-%b-%Y';    # default strftime() format
-
+@LOCALE_SUFFIX = qw( .ISO8859-1 .ISO_8859-15 .US-ASCII .UTF-8 );
 
 #------------------------------------------------------------------------
 # new(\%options)
@@ -109,12 +109,19 @@ sub format {
 	$time = &POSIX::mktime(@date);
     }
     
-
     if ($locale) {
 	# format the date in a specific locale, saving and subsequently
 	# restoring the current locale.
 	my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
-	&POSIX::setlocale(&POSIX::LC_ALL, $locale);
+
+        # some systems expect locales to have a particular suffix
+        for my $suffix ('', @LOCALE_SUFFIX) {
+            my $try_locale = $locale.$suffix;
+            if ($try_locale eq &POSIX::setlocale(&POSIX::LC_ALL, $try_locale)) {
+                $locale = $try_locale;
+                last;
+            }
+        }
 	$datestr = &POSIX::strftime($format, @date);
 	&POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
     }
@@ -301,8 +308,8 @@ fixups/enhancements, a test script and documentation.
 
 =head1 VERSION
 
-2.55, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.08a, released on 08 August 2002.
 
 
 
