@@ -286,6 +286,24 @@ sub html_break  {
 sub html_filter_factory {
     my $context = shift;
     my $opts = @_ && ref $_[-1] eq 'HASH' ? pop @_ : { };
+
+    # if a sufficiently mature version of Apache::Utils is installed
+    # which has escape_html then we use that
+    eval { 
+	require Apache::Util;
+        Apache::Utils::escape_html('');
+    };
+    return \&Apache::Util::escape_html
+	unless $@ || $opts->{ entity };
+
+    # otherwise if HTML::Entities is installed then we use that
+    eval {
+	require HTML::Entities;
+    };
+    return \&HTML::Entities::encode_entities
+	unless $@ || $opts->{ entity };
+
+    # failing that, we fall back on the existing usage
     return sub {
 	my $text = shift;
 	for ($text) {
@@ -1271,8 +1289,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.42, distributed as part of the
-Template Toolkit version 2.06d, released on 17 January 2002.
+2.43, distributed as part of the
+Template Toolkit version 2.06d, released on 21 January 2002.
 
 =head1 COPYRIGHT
 

@@ -25,6 +25,15 @@ $^W = 1;
 $Template::Test::DEBUG = 0;
 $Template::Test::PRESERVE = 1;
 
+#------------------------------------------------------------------------
+# behaviour of html filter depends on these being available
+#------------------------------------------------------------------------
+
+use constant HAS_HTML_Entities => eval { require HTML::Entities };
+use constant HAS_Apache_Util   => eval { require Apache::Util;
+				         Apache::Utils::escape_html(''); };
+
+
 my $html = -d 'templates' ? 'templates/html' : '../templates/html';
 die "cannot grok templates/html directory\n" unless $html;
 
@@ -35,7 +44,11 @@ my $cfg = {
     INCLUDE_PATH => $html,
 };
 
-test_expect(\*DATA, $cfg); 
+my $vars = {
+    entities => HAS_HTML_Entities || HAS_Apache_Util,
+};
+
+test_expect(\*DATA, $cfg, $vars); 
 
 __DATA__
 -- test --
@@ -64,6 +77,12 @@ OK
 [%- END %]
 -- expect --
 &lt;foo&gt; &lt;bar&gt; &lt;baz&gt; &lt;boz&gt;
+
+-- test --
+[% "Léon Brocard" | html %]
+-- expect --
+-- process --
+[% entities ? 'L&eacute;on Brocard' : 'Léon Brocard' %]
 
 -- test --
 [% USE html; html.url('my file.html') -%]
