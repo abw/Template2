@@ -22,7 +22,7 @@ use Template::Test;
 
 $Template::Test::DEBUG = 0;
 
-ntests(55);
+ntests(54);
 
 # script may be being run in distribution root or 't' directory
 my $dir   = -d 't' ? 't/test' : 'test';
@@ -130,9 +130,10 @@ ok( $row && ref $row eq 'ARRAY' );
 ok( $row->[0] == 1 );
 ok( $row->[1] == 3 );
 
-$plugin = $context->plugin('no_such_plugin');
-ok( ! $plugin );
-ok( $context->error() eq 'no_such_plugin: plugin not found' );
+eval {
+  $plugin = $context->plugin('no_such_plugin');
+};
+ok( "$@" eq 'plugin error - no_such_plugin: plugin not found' );
 
 #------------------------------------------------------------------------
 # filter()

@@ -25,6 +25,8 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
+$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 my $ttcfg = {
     INCLUDE_PATH => [ qw( t/test/lib test/lib ) ],	
@@ -87,3 +89,11 @@ A long time ago in a galaxy far, far away...
 <html><head><title>A New Beginning</title></head><body>
 A long time ago in a galaxy far, far away...
 </body></html>
+
+-- test --
+[% BLOCK foo:bar %]
+blah
+[% END %]
+[% PROCESS foo:bar %]
+-- expect --
+blah

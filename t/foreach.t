@@ -67,9 +67,12 @@ my $params   = {
 	one   => 'Section One',
 	two   => 'Section Two',
 	three => 'Section Three',
-	four  => 'Section Four'
+	four  => 'Section Four',
     },
-
+    nested => [
+	[ qw( a b c ) ],
+	[ qw( x y z ) ],
+    ],
 };
 
 sub format {
@@ -475,4 +478,27 @@ count: 10
 [% foreach [ 1 2 3 ] %]<blip>..[% END %]
 -- expect --
 <blip>..<blip>..<blip>..
+
+-- test -- 
+[% FOREACH outer = nested -%]
+outer start
+[% FOREACH inner = outer -%]
+inner [% inner +%]
+[% "last inner\n" IF loop.last -%]
+[% END %]
+[% "last outer\n" IF loop.last -%]
+[% END %]
+-- expect --
+outer start
+inner a
+inner b
+inner c
+last inner
+outer start
+inner x
+inner y
+inner z
+last inner
+last outer
+
 
