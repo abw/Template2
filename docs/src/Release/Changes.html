@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.06b, detailing
+#   Revision history for the Template Toolkit version 2.06c, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -21,7 +21,25 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06b - 29th November 2001              ## DEVELOPER RELEASE ##
+# Version 2.06c - 13th December 2001              ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Changed both Perl and XS Stash modules to try to apply a SCALAR_OPS
+  virtual method to a blessed object as a last-ditch chance if all else
+  fails.  Thanks to Tony Bowden for reporting the problem.  See
+  http://tt2.org/pipermail/templates/2001-December/002263.html
+
+* Added tie() method to DBI plugin which interfaces to the Tie::DBI 
+  module, based on some plugin code sent to me courtesy of Dave 
+  Hodgkinson.  Also made various minor cleanups to DBI code and updated 
+  documentation and tests.  Incidentally, this tickled the missing 
+  feature in the XS stash which doesn't yet support tied hashes.
+
+* Fixed up some of the ugliness in the docsrc tools.
+
+
+#------------------------------------------------------------------------
+# Version 2.06b - 2nd December 2001               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Added the Template::Plugin::Filter module to make plugin filters 
@@ -45,6 +63,9 @@
   the plugin returned was valid.  This can cause problems if your 
   object has an overloaded stringification operator which gets called
   (but shouldn't) and could return an untrue (but correct) value.
+
+* Fixed t/dumper.t to only have one entry in each hash to avoid hash 
+  ordering problems.  Thanks to Randal for reporting the problem.
 
 * Added the assert() subroutine to Template::Test.
 

@@ -460,7 +460,7 @@ CGI object and a 'get_user_projects' sub-routine.
 	INCLUDE_PATH =&gt; '/home/abw/websrc/src:/home/abw/websrc/lib',
 	PRE_PROCESS  =&gt; 'config',
     });</pre>
-<pre>    $template-&gt;process($userinfo, $vars)
+<pre>    $template-&gt;process($file, $vars)
 	|| die $template-&gt;error();</pre>
 <p>
 Here's a sample template file that we might create to build the output
@@ -774,7 +774,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06b, released on 29 November 2001.
+Template Toolkit version 2.06c, released on 13 December 2001.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -40,6 +40,9 @@ my $data = {
 	    biz => (shift || '<undef>'),
 	};
     },
+    obj => bless {
+	name => 'an object',
+    }, 'AnObject',
 };
 
 my $stash = Template::Stash->new($data);
@@ -184,50 +187,17 @@ one, three
 two, three, one
 
 
--- stop --
-#
-# NOTE: these were added for a developer release 2.04d, but the oeprators
-# 'gt', etc, never made it in
-#
+-- test --
+[% obj.name %]
+-- expect --
+an object
 
 -- test --
-[% 10 lt 20 ? 'foo' : 'bar' %]
+[% obj.name.list.first %]
 -- expect --
-foo
+an object
 
 -- test --
-[% 10 gt 20 ? 'foo' : 'bar' %]
+[% obj.list.first.name %]
 -- expect --
-bar
-
--- test --
-[% 10 ne 20 ? 'foo' : 'bar' %]
--- expect --
-foo
-
--- test --
-[% 10 eq 20 ? 'foo' : 'bar' %]
--- expect --
-bar
-
--- test --
-[% 10 le 20 ? 'foo' : 'bar' %]
--- expect --
-foo
-
--- test --
-[% 10 ge 20 ? 'foo' : 'bar' %]
--- expect --
-bar
-
--- test --
-[% 10 ge 10 ? 'foo' : 'bar' %]
--- expect --
-foo
-
--- test --
-[% 10 le 10 ? 'foo' : 'bar' %]
--- expect --
-foo
-
-
+an object

@@ -531,10 +531,10 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 		}
 
 	    } 
-	    else if ((SvTYPE(SvRV(root)) == SVt_PVAV)
-		     && (list_op(root, item, args, &result) == TT_RET_UNDEF)) {
-		if (flags & TT_DEBUG_FLAG)
-		    result = (SV *) mk_mortal_av(&PL_sv_undef, NULL, ERRSV);
+	    else if (SvTYPE(SvRV(root)) == SVt_PVAV) {
+		if ((list_op(root, item, args, &result) == TT_RET_UNDEF)
+		    && (flags & TT_DEBUG_FLAG))
+		  result = (SV *) mk_mortal_av(&PL_sv_undef, NULL, ERRSV);
 	    }
 	    else 
 		scalar_op(root, item, args, &result);
@@ -573,8 +573,9 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
     } 
 
     if ((flags & TT_DEBUG_FLAG) 
-	&& (!result || !SvOK(result) || (result == &PL_sv_undef)))
+	&& (!result || !SvOK(result) || (result == &PL_sv_undef))) {
 	croak("%s is undefined\n", item);
+}
 
     return result;
 }

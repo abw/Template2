@@ -166,7 +166,7 @@ Interface to the CGI module
 
 =item L<Template::Plugin::DBI|Template::Plugin::DBI>
 
-Interface to the DBI module
+Template interface to the DBI module
 
 
 
@@ -401,7 +401,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.06b, released on 29 November 2001.
+Template Toolkit version 2.06c, released on 13 December 2001.
 
 =head1 COPYRIGHT
 

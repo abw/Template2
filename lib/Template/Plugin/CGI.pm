@@ -107,8 +107,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.34, distributed as part of the
-Template Toolkit version 2.06b, released on 29 November 2001.
+2.35, distributed as part of the
+Template Toolkit version 2.06c, released on 13 December 2001.
 
 =head1 COPYRIGHT
 
@@ -120,4 +120,4 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template::Plugin|Template::Plugin>, L<CPAN::CGI|CPAN::CGI>
+L<Template::Plugin|Template::Plugin>, L<CGI|CGI>

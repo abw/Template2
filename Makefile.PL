@@ -401,6 +401,7 @@ EOF
 		       [ 'GD::Graph3d' => undef         ],
 		       [ 'Date::Calc'  => undef         ],
 		       [ 'Pod::POM'    => undef         ],
+		       [ 'Tie::DBI'    => undef         ],
 		       [ 'XML::DOM'    => \&check_dom   ],
 		       [ 'XML::RSS'    => \&check_rss   ],
 		       [ 'XML::XPath'  => \&check_xpath ],
@@ -441,8 +442,9 @@ XS Stash: TT2 now twice as fast!
 
 We have a new high speed version of the Template::Stash. It's 
 a Perl XS module which can evaluate templates about twice as fast as 
-the pure-Perl version.  It is still officially "experimental" but 
-is thought to be generally stable and reliable.
+the pure-Perl version.  It is stable and reliable but be warned that
+it doesn't yet support access to tied hashes (e.g. Tie::DBI) so for
+certain applications you may need to explicitly use the regular stash.
 
 You can choose to build the XS stash module and enable it by default
 so that it is used automatically for all templates.  If you build it
@@ -454,9 +456,10 @@ this:
 
     my \$tt = new Template ({ STASH => new Template::Stash::XS, ... });
 
-You can also enable the XS stash by setting the \$STASH package
-variable in the Template/Config.pm module.  See 'perldoc
-Template::Config' for further details.
+You can also enable the XS stash (or the regular stash if you opt to
+use the XS stash by default) by setting the \$STASH package variable
+in the Template/Config.pm module.  See 'perldoc Template::Config' for
+further details.
 
 EOF
 

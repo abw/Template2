@@ -1,15 +1,15 @@
 [%
 docset => {
-    id    => 'tt2',
-    title => 'Template Toolkit',
-    about => 'A fast, powerful and extensible template processing system',
+    id    => '[% docset.id %]',
+    title => '[% docset.title %]',
+    about => '[% docset.about %]',
     books => {
         Tutorial => {
             id     => 'Tutorial',
             name   => 'Tutorial',
             title  => 'Template Tutorials',
             url    => 'Tutorial',
-            uplink  => '',
+            uplink => '',
             author => 'abw',
             about  => 'Template Toolkit Tutorials',
             prev   => '',
@@ -24,6 +24,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Generating Web Content Using the Template Toolkit',
+                
                     prev    => '',
                     next    => 'Datafile',
                 },
@@ -36,9 +37,11 @@ docset => {
                     uplink  => '..',
                     author  => 'dave',
                     about   => 'Creating Data Output Files Using the Template Toolkit',
+                
                     prev    => 'Web',
                     next    => '',
                 },
+        
                 index => {
                     id      => 'index',
                     name    => '',
@@ -48,19 +51,19 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template Toolkit Tutorials',
-                },
-            },
+        
+        	}
+        
+            }
             pagelist => [
-                'Web',
-                'Datafile',
-            ],
-	},
+        	'Web', 'Datafile',     ]
+        }
         Manual => {
             id     => 'Manual',
             name   => 'Manual',
             title  => 'User Manual',
             url    => 'Manual',
-            uplink  => '',
+            uplink => '',
             author => 'abw',
             about  => 'User guide and reference manual for the Template Toolkit',
             prev   => 'Tutorial',
@@ -75,6 +78,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Introduction to the Template Toolkit',
+                
                     prev    => '',
                     next    => 'Syntax',
                 },
@@ -87,6 +91,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Directive syntax, structure and semantics',
+                
                     prev    => 'Intro',
                     next    => 'Variables',
                 },
@@ -99,6 +104,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template variables and code bindings',
+                
                     prev    => 'Syntax',
                     next    => 'Directives',
                 },
@@ -111,6 +117,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template directives',
+                
                     prev    => 'Variables',
                     next    => 'Config',
                 },
@@ -123,6 +130,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Configuration options',
+                
                     prev    => 'Directives',
                     next    => 'Filters',
                 },
@@ -135,6 +143,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Standard filters',
+                
                     prev    => 'Config',
                     next    => 'Plugins',
                 },
@@ -147,6 +156,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Standard plugins',
+                
                     prev    => 'Filters',
                     next    => 'Internals',
                 },
@@ -159,6 +169,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template Toolkit internals',
+                
                     prev    => 'Plugins',
                     next    => 'Views',
                 },
@@ -171,6 +182,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template Toolkit views (experimental)',
+                
                     prev    => 'Internals',
                     next    => 'Refs',
                 },
@@ -183,6 +195,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Related modules, projects and other resources',
+                
                     prev    => 'Views',
                     next    => 'Credits',
                 },
@@ -195,9 +208,11 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Author and contributor credits',
+                
                     prev    => 'Refs',
                     next    => '',
                 },
+        
                 index => {
                     id      => 'index',
                     name    => '',
@@ -207,28 +222,19 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'User guide and reference manual for the Template Toolkit',
-                },
-            },
+        
+        	}
+        
+            }
             pagelist => [
-                'Intro',
-                'Syntax',
-                'Variables',
-                'Directives',
-                'Config',
-                'Filters',
-                'Plugins',
-                'Internals',
-                'Views',
-                'Refs',
-                'Credits',
-            ],
-	},
+        	'Intro', 'Syntax', 'Variables', 'Directives', 'Config', 'Filters', 'Plugins', 'Internals', 'Views', 'Refs', 'Credits',     ]
+        }
         Modules => {
             id     => 'Modules',
             name   => 'Modules',
             title  => 'Module Documentation',
             url    => 'Modules',
-            uplink  => '',
+            uplink => '',
             author => 'abw',
             about  => 'Core modules comprising the Template Toolkit',
             prev   => 'Manual',
@@ -243,6 +249,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Front-end module to the Template Toolkit',
+                
                     prev    => '',
                     next    => 'Base',
                 },
@@ -255,6 +262,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Base class module implementing common functionality',
+                
                     prev    => 'Template',
                     next    => 'Config',
                 },
@@ -267,6 +275,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Factory module for instantiating other TT2 modules',
+                
                     prev    => 'Base',
                     next    => 'Constants',
                 },
@@ -279,6 +288,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Defines constants for the Template Toolkit',
+                
                     prev    => 'Config',
                     next    => 'Context',
                 },
@@ -291,6 +301,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Runtime context in which templates are processed',
+                
                     prev    => 'Constants',
                     next    => 'Document',
                 },
@@ -303,6 +314,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Compiled template document object',
+                
                     prev    => 'Context',
                     next    => 'Exception',
                 },
@@ -315,6 +327,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Exception handling class module',
+                
                     prev    => 'Document',
                     next    => 'Filters',
                 },
@@ -327,6 +340,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Post-processing filters for template blocks',
+                
                     prev    => 'Exception',
                     next    => 'Iterator',
                 },
@@ -339,6 +353,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Data iterator used by the FOREACH directive',
+                
                     prev    => 'Filters',
                     next    => 'Parser',
                 },
@@ -351,6 +366,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'LALR(1) parser for compiling template documents',
+                
                     prev    => 'Iterator',
                     next    => 'Plugin',
                 },
@@ -363,6 +379,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Base class for Template Toolkit plugins',
+                
                     prev    => 'Parser',
                     next    => 'Plugins',
                 },
@@ -375,6 +392,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Plugin provider module',
+                
                     prev    => 'Plugin',
                     next    => 'Provider',
                 },
@@ -387,6 +405,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Provider module for loading/compiling templates',
+                
                     prev    => 'Plugins',
                     next    => 'Service',
                 },
@@ -399,6 +418,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'General purpose template processing service',
+                
                     prev    => 'Provider',
                     next    => 'Stash',
                 },
@@ -411,6 +431,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Magical storage for template variables',
+                
                     prev    => 'Service',
                     next    => 'Stash_Context',
                 },
@@ -423,6 +444,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Experimetal stash allowing list/scalar context definition',
+                
                     prev    => 'Stash',
                     next    => 'Stash_XS',
                 },
@@ -435,6 +457,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Experimetal high-speed stash written in XS',
+                
                     prev    => 'Stash_Context',
                     next    => 'Test',
                 },
@@ -447,6 +470,7 @@ docset => {
                     uplink  => '../..',
                     author  => 'abw',
                     about   => 'Module for automating TT2 test scripts',
+                
                     prev    => 'Stash_XS',
                     next    => 'Plugin_Autoformat',
                 },
@@ -459,6 +483,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Interface to Text::Autoformat module',
+                
                     prev    => 'Test',
                     next    => 'Plugin_CGI',
                 },
@@ -471,6 +496,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Interface to the CGI module',
+                
                     prev    => 'Plugin_Autoformat',
                     next    => 'Plugin_DBI',
                 },
@@ -482,7 +508,8 @@ docset => {
                     url     => 'Modules/Template/Plugin/DBI.html',
                     uplink  => '../../..',
                     author  => 'abw',
-                    about   => 'Interface to the DBI module',
+                    about   => 'Template interface to the DBI module',
+                
                     prev    => 'Plugin_CGI',
                     next    => 'Plugin_Datafile',
                 },
@@ -495,6 +522,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to construct records from a simple data file',
+                
                     prev    => 'Plugin_DBI',
                     next    => 'Plugin_Date',
                 },
@@ -507,6 +535,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to generate formatted date strings',
+                
                     prev    => 'Plugin_Datafile',
                     next    => 'Plugin_Directory',
                 },
@@ -519,6 +548,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin for generating directory listings',
+                
                     prev    => 'Plugin_Date',
                     next    => 'Plugin_Dumper',
                 },
@@ -531,6 +561,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin interface to Data::Dumper',
+                
                     prev    => 'Plugin_Directory',
                     next    => 'Plugin_File',
                 },
@@ -543,6 +574,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin providing information about files',
+                
                     prev    => 'Plugin_Dumper',
                     next    => 'Plugin_Filter',
                 },
@@ -555,6 +587,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Base class for plugin filters',
+                
                     prev    => 'Plugin_File',
                     next    => 'Plugin_Format',
                 },
@@ -567,6 +600,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to create formatting functions',
+                
                     prev    => 'Plugin_Filter',
                     next    => 'Plugin_GD_Image',
                 },
@@ -579,6 +613,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'craig',
                     about   => 'Interface to GD Graphics Library',
+                
                     prev    => 'Plugin_Format',
                     next    => 'Plugin_GD_Polygon',
                 },
@@ -591,6 +626,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'craig',
                     about   => 'Interface to GD module Polygon class',
+                
                     prev    => 'Plugin_GD_Image',
                     next    => 'Plugin_GD_Constants',
                 },
@@ -603,6 +639,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'craig',
                     about   => 'Interface to GD module constants',
+                
                     prev    => 'Plugin_GD_Polygon',
                     next    => 'Plugin_GD_Text',
                 },
@@ -615,6 +652,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'craig',
                     about   => 'Text utilities for use with GD',
+                
                     prev    => 'Plugin_GD_Constants',
                     next    => 'Plugin_GD_Text_Align',
                 },
@@ -627,6 +665,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Draw aligned strings in GD images',
+                
                     prev    => 'Plugin_GD_Text',
                     next    => 'Plugin_GD_Text_Wrap',
                 },
@@ -639,6 +678,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Break and wrap strings in GD images',
+                
                     prev    => 'Plugin_GD_Text_Align',
                     next    => 'Plugin_GD_Graph_lines',
                 },
@@ -651,6 +691,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create line graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Text_Wrap',
                     next    => 'Plugin_GD_Graph_lines3d',
                 },
@@ -663,6 +704,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create 3D line graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Graph_lines',
                     next    => 'Plugin_GD_Graph_bars',
                 },
@@ -675,6 +717,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create bar graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Graph_lines3d',
                     next    => 'Plugin_GD_Graph_bars3d',
                 },
@@ -687,6 +730,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create 3D bar graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Graph_bars',
                     next    => 'Plugin_GD_Graph_points',
                 },
@@ -699,6 +743,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create point graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Graph_bars3d',
                     next    => 'Plugin_GD_Graph_linespoints',
                 },
@@ -711,6 +756,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create line/point graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Graph_points',
                     next    => 'Plugin_GD_Graph_area',
                 },
@@ -723,6 +769,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create area graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Graph_linespoints',
                     next    => 'Plugin_GD_Graph_mixed',
                 },
@@ -735,6 +782,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create mixed graphs with axes and legends',
+                
                     prev    => 'Plugin_GD_Graph_area',
                     next    => 'Plugin_GD_Graph_pie',
                 },
@@ -747,6 +795,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create pie charts with legends',
+                
                     prev    => 'Plugin_GD_Graph_mixed',
                     next    => 'Plugin_GD_Graph_pie3d',
                 },
@@ -759,6 +808,7 @@ docset => {
                     uplink  => '../../../../..',
                     author  => 'craig',
                     about   => 'Create 3D pie charts with legends',
+                
                     prev    => 'Plugin_GD_Graph_pie',
                     next    => 'Plugin_HTML',
                 },
@@ -771,6 +821,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to create HTML elements',
+                
                     prev    => 'Plugin_GD_Graph_pie3d',
                     next    => 'Plugin_Iterator',
                 },
@@ -783,6 +834,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to create iterators (Template::Iterator)',
+                
                     prev    => 'Plugin_HTML',
                     next    => 'Plugin_Pod',
                 },
@@ -795,6 +847,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin interface to Pod::POM (Pod Object Model)',
+                
                     prev    => 'Plugin_Iterator',
                     next    => 'Plugin_String',
                 },
@@ -807,6 +860,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Object oriented interface for string manipulation',
+                
                     prev    => 'Plugin_Pod',
                     next    => 'Plugin_Table',
                 },
@@ -819,6 +873,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to present data in a table',
+                
                     prev    => 'Plugin_String',
                     next    => 'Plugin_URL',
                 },
@@ -831,6 +886,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to construct complex URLs',
+                
                     prev    => 'Plugin_Table',
                     next    => 'Plugin_View',
                 },
@@ -843,6 +899,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin to create views (Template::View)',
+                
                     prev    => 'Plugin_URL',
                     next    => 'Plugin_Wrap',
                 },
@@ -855,6 +912,7 @@ docset => {
                     uplink  => '../../..',
                     author  => 'abw',
                     about   => 'Plugin interface to Text::Wrap',
+                
                     prev    => 'Plugin_View',
                     next    => 'Plugin_XML_DOM',
                 },
@@ -867,6 +925,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'abw',
                     about   => 'Plugin interface to XML::DOM',
+                
                     prev    => 'Plugin_Wrap',
                     next    => 'Plugin_XML_RSS',
                 },
@@ -879,6 +938,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'abw',
                     about   => 'Plugin interface to XML::RSS',
+                
                     prev    => 'Plugin_XML_DOM',
                     next    => 'Plugin_XML_Simple',
                 },
@@ -891,6 +951,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'abw',
                     about   => 'Plugin interface to XML::Simple',
+                
                     prev    => 'Plugin_XML_RSS',
                     next    => 'Plugin_XML_Style',
                 },
@@ -903,6 +964,7 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'abw',
                     about   => 'Simple XML stylesheet transfomations',
+                
                     prev    => 'Plugin_XML_Simple',
                     next    => 'Plugin_XML_XPath',
                 },
@@ -915,9 +977,11 @@ docset => {
                     uplink  => '../../../..',
                     author  => 'abw',
                     about   => 'Plugin interface to XML::XPath',
+                
                     prev    => 'Plugin_XML_Style',
                     next    => '',
                 },
+        
                 index => {
                     id      => 'index',
                     name    => '',
@@ -927,74 +991,19 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Core modules comprising the Template Toolkit',
-                },
-            },
+        
+        	}
+        
+            }
             pagelist => [
-                'Template',
-                'Base',
-                'Config',
-                'Constants',
-                'Context',
-                'Document',
-                'Exception',
-                'Filters',
-                'Iterator',
-                'Parser',
-                'Plugin',
-                'Plugins',
-                'Provider',
-                'Service',
-                'Stash',
-                'Stash_Context',
-                'Stash_XS',
-                'Test',
-                'Plugin_Autoformat',
-                'Plugin_CGI',
-                'Plugin_DBI',
-                'Plugin_Datafile',
-                'Plugin_Date',
-                'Plugin_Directory',
-                'Plugin_Dumper',
-                'Plugin_File',
-                'Plugin_Filter',
-                'Plugin_Format',
-                'Plugin_GD_Image',
-                'Plugin_GD_Polygon',
-                'Plugin_GD_Constants',
-                'Plugin_GD_Text',
-                'Plugin_GD_Text_Align',
-                'Plugin_GD_Text_Wrap',
-                'Plugin_GD_Graph_lines',
-                'Plugin_GD_Graph_lines3d',
-                'Plugin_GD_Graph_bars',
-                'Plugin_GD_Graph_bars3d',
-                'Plugin_GD_Graph_points',
-                'Plugin_GD_Graph_linespoints',
-                'Plugin_GD_Graph_area',
-                'Plugin_GD_Graph_mixed',
-                'Plugin_GD_Graph_pie',
-                'Plugin_GD_Graph_pie3d',
-                'Plugin_HTML',
-                'Plugin_Iterator',
-                'Plugin_Pod',
-                'Plugin_String',
-                'Plugin_Table',
-                'Plugin_URL',
-                'Plugin_View',
-                'Plugin_Wrap',
-                'Plugin_XML_DOM',
-                'Plugin_XML_RSS',
-                'Plugin_XML_Simple',
-                'Plugin_XML_Style',
-                'Plugin_XML_XPath',
-            ],
-	},
+        	'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath',     ]
+        }
         Library => {
             id     => 'Library',
             name   => 'Library',
             title  => 'Libraries',
             url    => 'Library',
-            uplink  => '',
+            uplink => '',
             author => 'abw',
             about  => 'Template libraries',
             prev   => 'Modules',
@@ -1009,6 +1018,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template library for building basic HTML pages',
+                
                     prev    => '',
                     next    => 'Splash',
                 },
@@ -1021,6 +1031,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template library for building stylish HTML user interfaces',
+                
                     prev    => 'HTML',
                     next    => 'PostScript',
                 },
@@ -1033,9 +1044,11 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template library for generating PostScript',
+                
                     prev    => 'Splash',
                     next    => '',
                 },
+        
                 index => {
                     id      => 'index',
                     name    => '',
@@ -1045,20 +1058,19 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template libraries',
-                },
-            },
+        
+        	}
+        
+            }
             pagelist => [
-                'HTML',
-                'Splash',
-                'PostScript',
-            ],
-	},
+        	'HTML', 'Splash', 'PostScript',     ]
+        }
         Tools => {
             id     => 'Tools',
             name   => 'Tools',
             title  => 'Tools',
             url    => 'Tools',
-            uplink  => '',
+            uplink => '',
             author => 'abw',
             about  => 'Template Tools',
             prev   => 'Library',
@@ -1073,6 +1085,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Process templates from command line',
+                
                     prev    => '',
                     next    => 'ttree',
                 },
@@ -1085,9 +1098,11 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Process entire directory trees of templates',
+                
                     prev    => 'tpage',
                     next    => '',
                 },
+        
                 index => {
                     id      => 'index',
                     name    => '',
@@ -1097,19 +1112,19 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Template Tools',
-                },
-            },
+        
+        	}
+        
+            }
             pagelist => [
-                'tpage',
-                'ttree',
-            ],
-	},
+        	'tpage', 'ttree',     ]
+        }
         FAQ => {
             id     => 'FAQ',
             name   => 'FAQ',
             title  => 'Frequently Asked Questions',
             url    => 'FAQ',
-            uplink  => '',
+            uplink => '',
             author => 'abw',
             about  => 'Frequently Asked Questions',
             prev   => 'Tools',
@@ -1124,9 +1139,11 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Frequently Asked Questions about the Template Toolkit',
+                
                     prev    => '',
                     next    => '',
                 },
+        
                 index => {
                     id      => 'FAQ',
                     name    => 'FAQ',
@@ -1136,20 +1153,21 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Frequently Asked Questions about the Template Toolkit',
-                },
-            },
+        
+        	}
+        
+            }
             pagelist => [
-                'FAQ',
-            ],
-	},
+        	'FAQ',     ]
+        }
         Release => {
             id     => 'Release',
             name   => 'Release',
             title  => 'Release Notes',
             url    => 'Release',
-            uplink  => '',
+            uplink => '',
             author => 'abw',
-            about  => 'Release notes: README, Changes, TODO',
+            about  => 'Release notes: README, Changes, TODO, etc.',
             prev   => 'FAQ',
             next   => '',
             pages  => {
@@ -1162,6 +1180,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'General information',
+                
                     prev    => '',
                     next    => 'INSTALL',
                 },
@@ -1174,6 +1193,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Installation and configuration guide',
+                
                     prev    => 'README',
                     next    => 'Changes',
                 },
@@ -1186,6 +1206,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Change history',
+                
                     prev    => 'INSTALL',
                     next    => 'TODO',
                 },
@@ -1198,6 +1219,7 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Known bugs, planned features, etc.',
+                
                     prev    => 'Changes',
                     next    => 'HACKING',
                 },
@@ -1210,9 +1232,11 @@ docset => {
                     uplink  => '..',
                     author  => 'abw',
                     about   => 'Pointers for people wishing to hack on TT',
+                
                     prev    => 'TODO',
                     next    => '',
                 },
+        
                 index => {
                     id      => 'index',
                     name    => '',
@@ -1221,27 +1245,18 @@ docset => {
                     url     => 'Release/index.html',
                     uplink  => '..',
                     author  => 'abw',
-                    about   => 'Release notes: README, Changes, TODO',
-                },
-            },
+                    about   => 'Release notes: README, Changes, TODO, etc.',
+        
+        	}
+        
+            }
             pagelist => [
-                'README',
-                'INSTALL',
-                'Changes',
-                'TODO',
-                'HACKING',
-            ],
-	},
+        	'README', 'INSTALL', 'Changes', 'TODO', 'HACKING',     ]
+        }
+
     },
     booklist => [ 
-        'Tutorial',
-        'Manual',
-        'Modules',
-        'Library',
-        'Tools',
-        'FAQ',
-        'Release',
-    ],
+'Tutorial', 'Manual', 'Modules', 'Library', 'Tools', 'FAQ', 'Release',     ],
     links => {
 	'Template::Tutorial::Web' => 'Tutorial/Web.html',
 	'Template::Tutorial::Datafile' => 'Tutorial/Datafile.html',

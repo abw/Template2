@@ -282,8 +282,8 @@ fixups/enhancements, a test script and documentation.
 
 =head1 VERSION
 
-2.36, distributed as part of the
-Template Toolkit version 2.06b, released on 29 November 2001.
+2.37, distributed as part of the
+Template Toolkit version 2.06c, released on 13 December 2001.
 
 
 
@@ -296,5 +296,5 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template::Plugin|Template::Plugin>, L<CPAN::POSIX|CPAN::POSIX>
+L<Template::Plugin|Template::Plugin>, L<POSIX|POSIX>
 

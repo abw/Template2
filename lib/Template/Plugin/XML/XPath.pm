@@ -222,8 +222,8 @@ The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
 
 =head1 VERSION
 
-2.35, distributed as part of the
-Template Toolkit version 2.06b, released on 29 November 2001.
+2.36, distributed as part of the
+Template Toolkit version 2.06c, released on 13 December 2001.
 
 =head1 COPYRIGHT
 

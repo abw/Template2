@@ -18,7 +18,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06c -                ## DEVELOPER RELEASE ##
+# Version 2.06c - 13th December 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed both Perl and XS Stash modules to try to apply a SCALAR_OPS
@@ -26,9 +26,13 @@
   fails.  Thanks to Tony Bowden for reporting the problem.  See
   http://tt2.org/pipermail/templates/2001-December/002263.html
 
-* Added tie() method to DBI plugin based on some plugin code sent to me
-  courtesy of Dave Hodgkinson.  Also made various minor cleanups to DBI
-  code and updated documentation and tests.
+* Added tie() method to DBI plugin which interfaces to the Tie::DBI 
+  module, based on some plugin code sent to me courtesy of Dave 
+  Hodgkinson.  Also made various minor cleanups to DBI code and updated 
+  documentation and tests.  Incidentally, this tickled the missing 
+  feature in the XS stash which doesn't yet support tied hashes.
+
+* Fixed up some of the ugliness in the docsrc tools.
 
 
 #------------------------------------------------------------------------
