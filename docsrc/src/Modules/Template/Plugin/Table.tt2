@@ -146,6 +146,21 @@ the data across.
     .  .
     .
 
+Example code to do so would be much like the following:
+
+    [% USE table(alphabet, rows=3) %]
+    [% FOREACH cols = table.cols %]
+      [% FOREACH item = cols %]
+        [% item %]
+      [% END %]
+    [% END %]
+
+    a  b  c
+    d  e  f
+    g  h  i
+    j  .  .
+    .
+
 In addition to a list reference, the Table plugin constructor may be 
 passed a reference to a Template::Iterator object or subclass thereof.
 The get_all() method is first called on the iterator to return all 
