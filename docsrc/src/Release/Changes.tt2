@@ -33,6 +33,10 @@
   file or other errors.
   http://tt2.org/pipermail/templates/2003-March/004359.html
 
+* applied a patch from Gervase Markham to add set_legend() to the
+  various GD::Graph modules that works with a list of arguments.
+  http://tt2.org/pipermail/templates/2003-March/004316.html
+
 
 #------------------------------------------------------------------------
 # Version 2.08d - March 18th                      ## DEVELOPER RELEASE ##
