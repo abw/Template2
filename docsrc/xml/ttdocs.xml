@@ -101,6 +101,16 @@
 	    </intro>
 	</page>
 
+	<!-- Template::Manual::Directives -->
+	<page id="Directives"
+	      standalone="1"
+	      about="Template directives">
+	    <intro>
+	      This section provides a reference of all Template Toolkit 
+	      directives, complete with examples of use.
+	    </intro>
+	</page>
+
 	<!-- Template::Manual::Variables -->
 	<page id="Variables"
 	      standalone="1"
@@ -123,16 +133,6 @@
 	      This section describes the different virtual methods
 	      that can be applied to scalar, list and hash values.
             </intro>
-	</page>
-
-	<!-- Template::Manual::Directives -->
-	<page id="Directives"
-	      standalone="1"
-	      about="Template directives">
-	    <intro>
-	      This section provides a reference of all Template Toolkit 
-	      directives, complete with examples of use.
-	    </intro>
 	</page>
 
 	<!-- Template::Manual::Config -->
