@@ -24,6 +24,7 @@ package Template::Plugin::Pod;
 require 5.004;
 
 use strict;
+use Template::Plugin;
 use vars qw( $VERSION );
 use base qw( Template::Plugin );
 
@@ -89,8 +90,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.55, distributed as part of the
-Template Toolkit version 2.09b, released on 24 April 2003.
+2.56, distributed as part of the
+Template Toolkit version 2.09c, released on 29 April 2003.
 
 =head1 COPYRIGHT
 
