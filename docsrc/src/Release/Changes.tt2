@@ -27,6 +27,10 @@
 # Version 2.15
 #------------------------------------------------------------------------
 
+* Changed $element to $component in Template::Context to fix callers bug, 
+  thanks to Andy Maas who identified the problem and found the solution:
+  http://tt2.org/pipermail/templates/2004-December/007020.html
+
 * Applied a single character patch from Lubomir Host which fixes the 
   user attribute in Template::Plugin::File.
 
