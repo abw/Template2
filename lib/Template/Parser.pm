@@ -380,10 +380,10 @@ sub interpolate_text {
     my ($pre, $var, $dir);
 
 
-    while ($text =~ 
-	   /
-	   ( (?: \\. | [^\$] )+ )   # escaped or non-'$' character [$1]
-	   | 
+   while ($text =~
+           /
+           ( (?: \\. | [^\$] ){1,4000} ) # escaped or non-'$' character [$1]
+           |
 	   ( \$ (?:		    # embedded variable	           [$2]
 	     (?: \{ ([^\}]*) \} )   # ${ ... }                     [$3]
 	     |
@@ -391,27 +391,27 @@ sub interpolate_text {
 	     )
 	   )
 	/gx) {
-    
-		($pre, $var, $dir) = ($1, $3 || $4, $2);
 
-		# preceding text
-		if (defined($pre) && length($pre)) {
-			$line += $pre =~ tr/\n//;
-			$pre =~ s/\\\$/\$/g;
-			push(@tokens, 'TEXT', $pre);
-		}
-		# $variable reference
+	($pre, $var, $dir) = ($1, $3 || $4, $2);
+
+	# preceding text
+	if (defined($pre) && length($pre)) {
+	    $line += $pre =~ tr/\n//;
+	    $pre =~ s/\\\$/\$/g;
+	    push(@tokens, 'TEXT', $pre);
+	}
+	# $variable reference
         if ($var) {
-			$line += $dir =~ tr/\n/ /;
-			push(@tokens, [ $dir, $line, $self->tokenise_directive($var) ]);
-		}
-		# other '$' reference - treated as text
-		elsif ($dir) {
-			$line += $dir =~ tr/\n//;
-			push(@tokens, 'TEXT', $dir);
-		}
+	    $line += $dir =~ tr/\n/ /;
+	    push(@tokens, [ $dir, $line, $self->tokenise_directive($var) ]);
+	}
+	# other '$' reference - treated as text
+	elsif ($dir) {
+	    $line += $dir =~ tr/\n//;
+	    push(@tokens, 'TEXT', $dir);
+	}
     }
-	
+
     return \@tokens;
 }
 
@@ -1276,8 +1276,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.49, distributed as part of the
-Template Toolkit version 2.06f, released on 13 March 2002.
+2.50, distributed as part of the
+Template Toolkit version 2.06g, released on 15 April 2002.
 
  
 
