@@ -186,3 +186,27 @@ one, three
 -- expect --
 two, three, one
 
+-- test --
+[% i = 0 %]
+[%- a = [ 0, 1, 2 ] -%]
+[%- WHILE i < 3 -%]
+[%- i %][% a.$i -%]
+[%- i = i + 1 -%]
+[%- END %]
+-- expect --
+001122
+
+-- test --
+[%- a = [ "alpha", "beta", "gamma", "delta" ] -%]
+[%- b = "foo" -%]
+[%- a.$b -%]
+-- expect --
+
+
+-- test --
+[%- a = [ "alpha", "beta", "gamma", "delta" ] -%]
+[%- b = "2" -%]
+[%- a.$b -%]
+-- expect --
+gamma
+
