@@ -33,7 +33,7 @@
 * Added an eval wrapper around mkpath() in Template::Provider to handle
   errors more nicely.
 
-* Added Math Plugin to MANIFEST.
+* Added the Math Plugin to MANIFEST.
 
 
 
