@@ -6,10 +6,16 @@ TODO
 bin/README
 bin/tpage
 bin/ttree
+#clib/MANIFEST
+#clib/Makefile.PL
+#clib/README
+#clib/Stash.xs
+docs/lib/acks
 docs/lib/author
 docs/lib/contents
 docs/lib/copyright
 docs/lib/exceptions
+docs/lib/filters
 docs/lib/footer
 docs/lib/option/absolute
 docs/lib/option/blocks
@@ -18,6 +24,7 @@ docs/lib/option/case
 docs/lib/option/chomp
 docs/lib/option/compile
 docs/lib/option/context
+docs/lib/option/default
 docs/lib/option/delim
 docs/lib/option/error
 docs/lib/option/evalperl
@@ -48,6 +55,8 @@ docs/lib/option/version
 docs/lib/overview
 docs/lib/plugins
 docs/lib/ref/despat
+docs/lib/related
+docs/lib/resource
 docs/lib/revision
 docs/lib/seealso
 docs/lib/summary
@@ -139,6 +148,7 @@ t/date.t
 t/directive.t
 t/document.t
 t/dom.t
+t/error.t
 t/evalperl.t
 t/exception.t
 t/filter.t
@@ -166,6 +176,7 @@ t/test/lib/badrawperl
 t/test/lib/barfed
 t/test/lib/blockdef
 t/test/lib/config
+t/test/lib/default
 t/test/lib/error
 t/test/lib/footer
 t/test/lib/header
@@ -186,6 +197,9 @@ t/test/src/complex
 t/test/src/foo
 t/test/src/foobar
 t/test/src/golf
+t/test/src/metadata
+t/test/src/mywrap
+t/test/src/recurse
 t/test/tmp/README
 t/test/xml/example.rdf
 t/test/xml/testfile.xml
@@ -195,3 +209,4 @@ t/url.t
 t/vars.t
 t/varsv1.t
 t/while.t
+t/wrapper.t

@@ -53,7 +53,6 @@ WriteMakefile(
     'VERSION_FROM' => 'lib/Template.pm',
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
     'PMLIBDIRS'    => [ 'lib' ], 
-#   'DIR'	   => [ 'clib' ],
     'PREREQ_PM'    => { 'AppConfig' => 1.52 },
     'MAN3PODS'	   => $man3pods,
     'dist'         => {
@@ -62,6 +61,8 @@ WriteMakefile(
 	'PREOP'    =>  build_docs(),
     },
 );
+
+#   'DIR'	   => [ 'clib' ],
 
 sub build_docs {
     return <<EOF;
