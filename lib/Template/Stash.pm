@@ -179,7 +179,7 @@ $LIST_OPS = {
                map  { [ $_, lc $_ ] } 
                @$list
     },
-    'uniq'    => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
+    'unique'  => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
 
@@ -869,7 +869,7 @@ restore the state of a stash as described above.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+Andy Wardley E<lt>abw@andywardley.comE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
@@ -878,8 +878,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.60, distributed as part of the
-Template Toolkit version 2.07b, released on 07 July 2002.
+2.61, distributed as part of the
+Template Toolkit version 2.07c, released on 08 July 2002.
 
 =head1 COPYRIGHT
 
