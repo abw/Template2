@@ -130,23 +130,47 @@ Template::Plugin::XML::Style - Simple XML stylesheet transfomations
 
 =head1 SYNOPSIS
 
-    [% USE xmlstyle 
-           table = { 
-               attributes = { 
-                   border      = 0
-                   cellpadding = 4
-                   cellspacing = 1
-               }
-           }
+    # use plugin to define xmlstyle filter
+    [% USE xmlstyle
+    	   video = {
+    	       element    = 'table'
+    	       attributes = { class='videoTable' },
+    	   }
+     
+    	   title = {
+    	       pre_start  = "<tr>\n    <td>Title:</td>\n    "
+    	       element    = 'td'
+    	       attributes = { class='videoTitle' }
+    	       post_end   = "\n  </tr>"
+    	   }
+    
+    	   price = {
+    	       pre_start  = "<tr>\n    <td>Price:</td>\n    "
+    	       element    = 'td'
+    	       attributes = { class='videoPrice' }
+    	       post_end   = "\n  </tr>"
+    	   }
     %]
 
+    # transform XML through xmlstyle filter
     [% FILTER xmlstyle %]
-    <table>
-    <tr>
-      <td>Foo</td> <td>Bar</td> <td>Baz</td>
-    </tr>
-    </table>
+    <video>
+      <title>Buffy Series 1</title>
+      <price>10.99</price>
+    </video>
     [% END %]
+
+    # generates the following output
+    <table class="videoTable">
+      <tr>
+        <td>Title:</td>
+        <td class="videoTitle">Buffy Series 1</td>
+      </tr>
+      <tr>
+        <td>Price:</td>
+        <td class="videoPrice">10.99</td>
+      </tr>
+    </table>
 
 =head1 DESCRIPTION
 
@@ -331,7 +355,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.13, distributed as part of the
+2.14, distributed as part of the
 Template Toolkit version 2.06g, released on 15 April 2002.
 
 =head1 COPYRIGHT
