@@ -29,7 +29,10 @@
 
 * Changed example in synopsis of Template::Plugin::XML::Style to one 
   based on that posted to the mailing list by Tony Bowden.
- 
+
+* Fixed a single/double quoting bug in docsrc which prevented [% and %]
+  being correctly displayed in the tables of contents in HTML docs. 
+
 
 #------------------------------------------------------------------------
 # Version 2.06g - April 15th 2002                 ## DEVELOPER RELEASE ##
