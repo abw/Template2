@@ -543,7 +543,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
 			result = (SV *) mk_mortal_av(aTHX_ &PL_sv_undef, NULL, ERRSV);
 		}
 		else 
-		    scalar_op(root, item, args, &result);
+		    scalar_op(aTHX_ root, item, args, &result);
 	    }
 	}
     }
