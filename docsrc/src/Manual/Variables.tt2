@@ -657,6 +657,15 @@ function.
 
     [% items.join(', ') %]
 
+=item grep
+
+Returns a list of the items in the list that match a regular expression
+pattern.
+
+    [% FOREACH directory.files.grep('\.txt$') %]
+       ...
+    [% END %]
+
 =item sort, nsort
 
 Returns the items in alpha (sort) or numerical (nsort) order.
