@@ -611,3 +611,16 @@ last outer
 -%]
 -- expect --
 1
+
+-- test --
+[% FOREACH prime IN [2, 3, 5, 7, 11, 13];
+     "$prime\n";
+    END
+-%]
+-- expect --
+2
+3
+5
+7
+11
+13
