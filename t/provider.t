@@ -179,6 +179,13 @@ sub dpaths {
     return [ "$lib/one", "$lib/two" ],
 }
 
+# this one is designed to test the $MAX_DIRS runaway limit
+$Template::Provider::MAX_DIRS = 42;
+
+sub badpaths {
+    return [ \&badpaths ],
+}
+
 my $dpaths = My::DPaths->new("$lib/two", "$lib/one");
 
 my $ttd1 = Template->new({
@@ -193,9 +200,15 @@ my $ttd2 = Template->new({
 }) || die "$Template::ERROR\n";
 ok( $ttd1, 'dynamic path (obj) template object created' );
 
+my $ttd3 = Template->new({
+    INCLUDE_PATH => [ \&badpaths ],
+    PARSER => $parser,
+}) || die "$Template::ERROR\n";
+ok( $ttd3, 'dynamic path (bad) template object created' );
+
 
 my $uselist = [ ttinc => $ttinc, ttabs => $ttabs, ttrel => $ttrel,
-		ttd1 => $ttd1, ttd2 => $ttd2 ];
+		ttd1 => $ttd1, ttd2 => $ttd2, ttdbad => $ttd3 ];
 
 test_expect(\*DATA, $uselist, $vars);
 
@@ -362,3 +375,9 @@ bar: [% INSERT bar | trim +%]
 -- expect --
 foo: This is two/foo
 bar: This is two/bar
+
+-- test --
+-- use ttdbad --
+[% TRY; INCLUDE foo; CATCH; e; END %]
+-- expect --
+file error - INCLUDE_PATH exceeds 42 directories
