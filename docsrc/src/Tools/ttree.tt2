@@ -181,8 +181,10 @@ Andy Wardley E<lt>abw@andywardley.comE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
-Dylan William Hardison E<lt>dylanwh@tampabay.rr.comE<gt>
-added support for dependencies.
+With contributions from Dylan William Hardison (support for
+dependencies), Bryce Harrington (C<absolute> and C<relative> options),
+Mark Anderson (C<suffix> and C<debug> options), Harald Joerg and Leon
+Brocard who gets everywhere, it seems.
 
 [% PROCESS misc/version
          + misc/copyright
