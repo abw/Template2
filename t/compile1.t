@@ -64,5 +64,10 @@ This is a more complex file which includes some BLOCK definitions
 This is the footer, author: abw, version: 3.14
 - 3 - 2 - 1 
 
+-- test --
+[% INCLUDE baz %]
+-- expect --
+This is the baz file, a: 
+
 
 

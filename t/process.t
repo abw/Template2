@@ -85,8 +85,3 @@ header.tt2:
   title: Joe Random Title
   menu: This is the menu, defined in 'config'
 footer
-
-
-
-
-

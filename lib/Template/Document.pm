@@ -237,7 +237,7 @@ sub write_perl_file {
 		       map { 
 			   my $x = $metadata->{ $_ }; 
 			   $x =~ s/['\\]/\\$1/g; 
-			   "'$_' => '$x',";
+			   "'$_' => '$x',\n";
 		       } keys %$metadata);
 
     local *CFH;

@@ -129,3 +129,13 @@ List of items:
    * waz
 End of list
 
+
+-- test --
+[% FOREACH i = [ 'foo' 'bar' 'baz' 'qux' ] %]
+[% "$loop.prev<-" IF loop.prev -%][[% i -%]][% "->$loop.next" IF loop.next +%]
+[% END %]
+-- expect --
+[foo]->bar
+foo<-[bar]->baz
+bar<-[baz]->qux
+baz<-[qux]

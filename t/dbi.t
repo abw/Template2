@@ -17,16 +17,19 @@
 #========================================================================
 
 use strict;
-use lib qw( . ./t ./blib/lib ../blib/lib );
+use lib qw( . ./t ../lib ./blib/lib ../blib/lib );
 use vars qw( $DEBUG $run $dsn $user $pass );
 use Template::Test;
 
 $^W = 1;
 $DEBUG = 0;
-#$Template::Test::PRESERVE = 1;
+$Template::Test::PRESERVE = 1;
 
 eval "use DBI";
-exit if $@;
+if ($@) {
+    print "1..0\n";
+    exit(0);
+}
 
 # load the configuration file created by Makefile.PL which defines
 # the $run, $dsn, $user and $pass variables.
@@ -36,11 +39,31 @@ unless ($run) {
     exit(0);
 }
 
+my $attr = { 
+    PrintError => 0,
+    ChopBlanks => 1,
+};
 
-my $dbh = DBI->connect($dsn, $user, $pass, { PrintError => 0 }) || do {
+my $dbh;
+eval {
+    $dbh = DBI->connect($dsn, $user, $pass, $attr);
+};
+
+if ($@ || ! $dbh) {
+    warn <<EOF;
+DBI connect() failed:
+    $DBI::errstr
+
+Please ensure that your database server is running and that you specified
+the correct connection parameters.  If necessary, re-run the Makefile.PL
+and specify new parameters, or answer 'n' when prompted: 
+
+  - Do you want to run the DBI tests?
+
+EOF
     ntests(1);
     ok(0);
-    die "DBI connect() failed: $DBI::errstr\n";
+    exit(0);
 };
 
 init_database($dbh);
@@ -50,6 +73,7 @@ my $vars = {
     dsn  => $dsn,
     user => $user,
     pass => $pass,
+    attr => $attr,
 };
 
 test_expect(\*DATA, undef, $vars);
@@ -64,6 +88,10 @@ $dbh->disconnect();
 
 sub init_database {
     my $dbh = shift;
+
+    # ensure tables don't already exist (in case previous test run failed).
+    sql_query($dbh, 'DROP TABLE usr', 1);
+    sql_query($dbh, 'DROP TABLE grp', 1);
 
     # create some tables
     sql_query($dbh, 'CREATE TABLE grp ( 
@@ -96,17 +124,17 @@ sub init_database {
 
 
 #------------------------------------------------------------------------
-# sql_query($dbh, $sql)
+# sql_query($dbh, $sql, $quiet)
 #------------------------------------------------------------------------
 
 sub sql_query {
-    my ($dbh, $sql) = @_;
+    my ($dbh, $sql, $quiet) = @_;
 
     my $sth = $dbh->prepare($sql) 
 	|| warn "prepare() failed: $DBI::errstr\n";
 
     $sth->execute() 
-	|| warn "execute() failed: $DBI::errstr\n";
+	|| $quiet || warn "execute() failed: $DBI::errstr\n";
     
     $sth->finish();
 }
@@ -134,7 +162,7 @@ __END__
 
 -- test --
 [% USE DBI -%]
-[% DBI.connect(dsn, user, pass) -%]
+[% DBI.connect(dsn, user, pass, ChopBlanks => 1) -%]
 [% FOREACH user = DBI.query("SELECT name FROM usr WHERE id='abw'") -%]
 * [% user.name %]
 [% END %]
@@ -144,7 +172,7 @@ __END__
 
 -- test --
 [% USE dbi -%]
-[% dbi.connect(dsn, user, pass) -%]
+[% dbi.connect(dsn, user, pass, ChopBlanks => 1) -%]
 [% FOREACH user = dbi.query("SELECT name FROM usr WHERE id='sam'") -%]
 * [% user.name %]
 [% END %]
@@ -154,7 +182,7 @@ __END__
 
 -- test --
 [% USE db = DBI -%]
-[% db.connect(dsn, user, pass) -%]
+[% db.connect(dsn, user, pass, ChopBlanks => 1) -%]
 [% FOREACH user = db.query("SELECT name FROM usr WHERE id='hans'") -%]
 * [% user.name %]
 [% END %]
@@ -163,7 +191,10 @@ __END__
 * Hans von Lengerke
 
 -- test --
-[% USE db = DBI(data_source => dsn, username => user, password => pass)  -%]
+[% USE db = DBI(data_source => dsn, 
+		username    => user, 
+		password    => pass,
+		ChopBlanks  => 1)  -%]
 [% FOREACH user = db.query("SELECT name FROM usr WHERE id='mrp'") -%]
 * [% user.name %]
 [% END %]
@@ -173,7 +204,7 @@ __END__
 
 -- test --
 [% USE dbi -%]
-[% dbi.connect(dsn=dsn, user=user, pass=pass) -%]
+[% dbi.connect(dsn=dsn, user=user, pass=pass ChopBlanks=1) -%]
 [% FOREACH user = dbi.query("SELECT name FROM usr WHERE id='abw'") -%]
 * [% user.name %]
 [% END %]
@@ -198,7 +229,7 @@ DBI error - no connection
 #------------------------------------------------------------------------
 
 -- test --
-[% USE DBI(dsn, user, pass) -%]
+[% USE DBI(dsn, user, pass, attr) -%]
 [% DBI.disconnect -%]
 [% TRY;
      DBI.query('blah blah'); 
@@ -210,9 +241,9 @@ DBI error - no connection
 DBI error - no connection
 
 -- test --
-[% USE DBI(dsn, user, pass) -%]
+[% USE DBI(dsn, user, pass, attr) -%]
 [% DBI.disconnect -%]
-[% DBI.connect(dsn, user, pass) -%] 
+[% DBI.connect(dsn, user, pass, attr) -%] 
 [% FOREACH user = DBI.query("SELECT name FROM usr WHERE id='abw'") -%]
 * [% user.name %]
 [% END %]
@@ -226,7 +257,7 @@ DBI error - no connection
 #------------------------------------------------------------------------
 
 -- test --
-[% USE dbi(dsn, user, pass) -%]
+[% USE dbi(dsn, user, pass, attr) -%]
 [% FOREACH user = dbi.query('SELECT * FROM usr ORDER BY id') -%]
 [% loop.number %]: [% user.id %] - [% user.name %]
 [% END %]
@@ -238,7 +269,7 @@ DBI error - no connection
 
 -- test --
 # DBI plugin before TT 2.00 used 'count' instead of 'number'
-[% USE dbi(dsn, user, pass) -%]
+[% USE dbi(dsn, user, pass, attr) -%]
 [% FOREACH user = dbi.query('SELECT * FROM usr ORDER BY id') -%]
 [% loop.count %]: [% user.id %] - [% user.name %]
 [% END %]
@@ -254,7 +285,7 @@ DBI error - no connection
 #------------------------------------------------------------------------
 
 -- test --
-[% USE dbi(dsn, user, pass) -%]
+[% USE dbi(dsn, user, pass, attr) -%]
 [% FOREACH group = dbi.query('SELECT * FROM grp
                               ORDER BY id')      -%]
 Group [% loop.number %]: [% group.name %] ([% group.id %])
@@ -275,11 +306,29 @@ Group 2: The Foo Group (foo)
 
 
 #------------------------------------------------------------------------
+# test prev and next iterator methods
+#------------------------------------------------------------------------
+
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+[% FOREACH user = dbi.query('SELECT * FROM usr ORDER BY id') -%]
+[% loop.prev ? "[$loop.prev.id] " : "[no prev] " -%]
+[% user.id %] - [% user.name -%]
+[% loop.next ? " [$loop.next.id]" : " [no next]" %]
+[% END %]
+-- expect --
+[no prev] abw - Andy Wardley [hans]
+[abw] hans - Hans von Lengerke [mrp]
+[hans] mrp - Martin Portman [sam]
+[mrp] sam - Simon Matthews [no next]
+
+
+#------------------------------------------------------------------------
 # test do() to perform SQL queries without returning results
 #------------------------------------------------------------------------
 
 -- test --
-[% USE DBI(dsn, user, pass) -%]
+[% USE DBI(dsn, user, pass, attr) -%]
 [% CALL DBI.do("INSERT INTO usr VALUES ('numb', 'Numb Nuts', 'bar')") -%]
 [% FOREACH user = DBI.query("SELECT * FROM usr 
                              WHERE grp = 'bar'
@@ -293,7 +342,7 @@ Group 2: The Foo Group (foo)
 * Numb Nuts (numb)
 
 -- test --
-[% USE dbi(dsn, user, pass) -%]
+[% USE dbi(dsn, user, pass, attr) -%]
 [% IF dbi.do("DELETE FROM usr WHERE id = 'numb'") -%]
 deleted the user
 [% ELSE -%]
@@ -315,7 +364,7 @@ deleted the user
 #------------------------------------------------------------------------
 
 -- test --
-[% USE dbi(dsn=dsn, user=user, pass=pass) -%]
+[% USE dbi(dsn=dsn, user=user, pass=pass, ChopBlanks=1) -%]
 [% user_query  = dbi.prepare('SELECT * FROM usr 
                               WHERE grp = ?
 			      ORDER BY id') -%]
@@ -341,7 +390,7 @@ Bar:
 
 
 -- test --
-[% USE dbi(dsn, user, pass) -%]
+[% USE dbi(dsn, user, pass, attr) -%]
 [% group_query = dbi.prepare('SELECT * FROM grp
                               ORDER BY id') -%]
 [% user_query  = dbi.prepare('SELECT * FROM usr 
@@ -365,7 +414,7 @@ Group 2 : The Foo Group
 
 
 -- test --
-[% USE dbi(dsn, user, pass) -%]
+[% USE dbi(dsn, user, pass, attr) -%]
 [% CALL dbi.prepare('SELECT * FROM usr WHERE id = ?') -%]
 [% FOREACH uid = [ 'abw', 'sam' ] -%]
 ===
@@ -390,10 +439,10 @@ Group 2 : The Foo Group
 
 -- test --
 [% USE dbi(dbh => dbh) -%]
-[% FOREACH user = dbi.query("SELECT * FROM usr WHERE id = 'abw'") -%]
-* [% user.name %]
+[% FOREACH dbi.query("SELECT * FROM usr WHERE id = 'abw'") -%]
+* [% name %]
 [% END -%]
-[% dbi.connect(dsn, user, pass) -%]
+[% dbi.connect(dsn, user, pass, ChopBlanks=1) -%]
 [% FOREACH user = dbi.query("SELECT * FROM usr WHERE id = 'abw'") -%]
 * [% user.name %]
 [% END -%]

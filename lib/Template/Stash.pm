@@ -69,6 +69,14 @@ $HASH_OPS = {
 		      @$hash{ keys %$imp } = values %$imp;
 		      return '';
 		  },
+    'sort'    => sub {
+	my ($hash) = @_;
+        [ sort { lc $hash->{$a} cmp lc $hash->{$b} } (keys %$hash) ];
+    },
+    'nsort'    => sub {
+	my ($hash) = @_;
+        [ sort { $hash->{$a} <=> $hash->{$b} } (keys %$hash) ];
+    },
     defined $HASH_OPS ? %$HASH_OPS : (),
 };
 
@@ -435,7 +443,7 @@ sub _dotop {
 	    @result = &$value(@$args);
 	}
 	elsif ($@) {
-	    die $@;					    ## DIE
+	    @result = (undef, $@);
 	}
     }
     elsif (($value = $SCALAR_OPS->{ $item }) && ! $lvalue) {

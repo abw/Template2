@@ -33,7 +33,8 @@ use XML::DOM;
 use base qw( Template::Plugin );
 use vars qw( $VERSION );
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+#$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION = 2.5;
 
 
 #------------------------------------------------------------------------
@@ -116,9 +117,11 @@ sub parse {
     eval { $doc = $parser->$method($content) } and not $@
 	or return $self->_throw("failed to parse $about: $@");
 
-    # update XML::DOM::Document to contain config details
-    my @args = qw( _CONTEXT _PREFIX _SUFFIX _VERBOSE _NOSPACE _DEEP _DEFAULT );
-    @$doc{ @args } = @$self{ @args };
+    # update XML::DOM::Document _UserData to contain config details
+    $doc->[ XML::DOM::Node::_UserData ] = {
+	map { ( $_ => $self->{ $_ } ) } 
+	qw( _CONTEXT _PREFIX _SUFFIX _VERBOSE _NOSPACE _DEEP _DEFAULT ),
+    };
 
     # keep track of all DOM docs for subsequent dispose()
     push(@{ $self->{ _DOCS } }, $doc);
@@ -152,7 +155,7 @@ sub DESTROY {
 
     # call dispose() on each document produced by this parser
     foreach my $doc (@{ $self->{ _DOCS } }) {
-	delete $doc->{ _CONTEXT };
+	delete $doc->[ XML::DOM::Node::_UserData ]->{ _CONTEXT };
 	$doc->dispose();
     }
     delete $self->{ _CONTEXT };
@@ -215,16 +218,18 @@ sub allChildrenToTemplate {
 
 sub _args {
     my $self = shift;
-    my $doc  = $self->{ Doc };
     my $args = ref $_[-1] eq 'HASH' ? pop(@_) : { };
+    my $doc  = $self->getOwnerDocument() || $self;
+    my $data = $doc->[ XML::DOM::Node::_UserData ];
 
     return {
-	prefix  => @_ ? shift : $args->{ prefix  } || $doc->{ _PREFIX  },
-	suffix  => @_ ? shift : $args->{ suffix  } || $doc->{ _SUFFIX  },
-	verbose =>              $args->{ verbose } || $doc->{ _VERBOSE },
-	nospace =>              $args->{ nospace } || $doc->{ _NOSPACE },
-	deep    =>              $args->{ deep    } || $doc->{ _DEEP    },
-	default =>              $args->{ default } || $doc->{ _DEFAULT },
+	prefix  => @_ ? shift : $args->{ prefix  } || $data->{ _PREFIX  },
+	suffix  => @_ ? shift : $args->{ suffix  } || $data->{ _SUFFIX  },
+	verbose =>              $args->{ verbose } || $data->{ _VERBOSE },
+	nospace =>              $args->{ nospace } || $data->{ _NOSPACE },
+	deep    =>              $args->{ deep    } || $data->{ _DEEP    },
+	default =>              $args->{ default } || $data->{ _DEFAULT },
+	context =>                                    $data->{ _CONTEXT },
     };
 }
 
@@ -248,14 +253,14 @@ sub _args {
 
 sub _template_node {
     my $node = shift || die "no XML::DOM::Node reference\n";
-    my $args = shift || { };
+    my $args = shift || die "no XML::DOM args passed to _template_node\n";
     my $vars = shift || { };
-    my $context = $node->{ Doc }->{ _CONTEXT };
+    my $context = $args->{ context } || die "no context in XML::DOM args\n";
     my $template;
     my $output = '';
 
-    # if this is not a tag then it is text so output it
-    unless ($node->{ TagName }) {
+    # if this is not an element then it is text so output it
+    unless ($node->getNodeType() == XML::DOM::ELEMENT_NODE ) {
 	if ($args->{ verbose }) {
 	    $output = $node->toString();
 	    $output =~ s/\s+$// if $args->{ nospace };
@@ -263,7 +268,7 @@ sub _template_node {
     }
     else {
 	my $element = ( $args->{ prefix  } || '' )
-	            .   $node->{ TagName }
+	            .   $node->getTagName()
                     . ( $args->{ suffix  } || '' );
 
 	# locate a template by name built from prefix, tagname and suffix
@@ -274,8 +279,11 @@ sub _template_node {
 	$template = $element unless $template;
 
 	# copy 'children' and 'prune' callbacks into node object (see AUTOLOAD)
-	$node->{ _TT_CHILDREN } = $vars->{ children };
-	$node->{ _TT_PRUNE } = $vars->{ prune };
+	my $doc  = $node->getOwnerDocument() || $node;
+	my $data = $doc->[ XML::DOM::Node::_UserData ];
+
+	$data->{ _TT_CHILDREN } = $vars->{ children };
+	$data->{ _TT_PRUNE } = $vars->{ prune };
 
 	# add node reference to existing vars hash
 	$vars->{ node } = $node;
@@ -284,8 +292,8 @@ sub _template_node {
 	
 	# break any circular references
 	delete $vars->{ node };
-	delete $node->{ _TT_CHILDREN };
-	delete $node->{ _TT_PRUNE };
+	delete $data->{ _TT_CHILDREN };
+	delete $data->{ _TT_PRUNE };
     }
 
     return $output;
@@ -311,8 +319,8 @@ sub _template_node {
 
 sub _template_kids {
     my $node = shift || die "no XML::DOM::Node reference\n";
-    my $args = shift || { };
-    my $context = $node->{ Doc }->{ _CONTEXT };
+    my $args = shift || die "no XML::DOM args passed to _template_kids\n";
+    my $context = $args->{ context } || die "no context in XML::DOM args\n";
     my $output = '';
 
     foreach my $kid ( $node->getChildNodes() ) {
@@ -352,10 +360,13 @@ sub AUTOLOAD {
     $method =~ s/.*:://;
     return if $method eq 'DESTROY';
 
+    my $doc  = $self->getOwnerDocument() || $self;
+    my $data = $doc->[ XML::DOM::Node::_UserData ];
+
     # call 'content' or 'prune' callbacks, if defined (see _template_node())
     return &$attrib()
 	if ($method =~ /^children|prune$/)
-	    && defined($attrib = $self->{ "_TT_\U$method" })
+	    && defined($attrib = $data->{ "_TT_\U$method" })
 		&& ref $attrib eq 'CODE';
 
     return $attrib
@@ -410,10 +421,13 @@ Template::Plugin::XML::DOM - Template Toolkit plugin to the XML::DOM module
 
 =head1 PRE-REQUISITES
 
-This plugin requires that the XML::Parser and XML::DOM modules be 
-installed.  These are available from CPAN:
+This plugin requires that the XML::Parser (2.19 or later) and XML::DOM
+(1.27 or later) modules be installed.  These are available from CPAN:
 
     http://www.cpan.org/modules/by-module/XML
+
+Note that the XML::DOM module is now distributed as part of the
+'libxml-enno' bundle.
 
 =head1 DESCRIPTION
 
@@ -425,11 +439,11 @@ called on the plugin to parse an XML stream into a DOM document.
     [% USE dom = XML.DOM %]
     [% doc = dom.parse('/tmp/myxmlfile') %]
 
-NOTE: previous versions of this XML::DOM plugin expected a filename to
-be passed as an argument to the constructor.  This is no longer supported
-due to the fact that it caused a serious memory leak.  We apologise for 
-the inconvenience but must insist that you change your templates as 
-shown:
+NOTE: earlier versions of this XML::DOM plugin expected a filename to
+be passed as an argument to the constructor.  This is no longer
+supported due to the fact that it caused a serious memory leak.  We
+apologise for the inconvenience but must insist that you change your
+templates as shown:
 
     # OLD STYLE: now fails with a warning
     [% USE dom = XML.DOM('tmp/myxmlfile') %]
@@ -607,15 +621,7 @@ Similar to childrenToTemplate() but processing all descendants (i.e. children
 of children and so on) recursively.  This is identical to calling the 
 childrenToTemplate() method with the 'deep' flag set to any true value.
 
-=head1 BUGS
-
-The childrenToTemplate() and allChildrenToTemplate() methods can easily
-slip into deep recursion.
-
-The 'verbose' and 'nospace' options are not documented.  They may 
-change in the near future.
-
-=head1 AUTHOR
+=head1 AUTHORS
 
 This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>
 and Simon Matthews E<lt>sam@knowledgepool.comE<gt>.
@@ -625,13 +631,36 @@ Cooper E<lt>coopercl@sch.ge.comE<gt>.  It extends the the XML::Parser
 module, also by Clark Cooper which itself is built on James Clark's expat
 library.
 
-=head1 REVISION
+=head1 VERSION
 
-$Revision$
+This is version 2.5 of the XML::DOM plugin.
+
+=head1 HISTORY
+
+Version 2.5 : updated for use with version 1.27 of the XML::DOM module.
+
+=over 4
+
+=item *
+
+XML::DOM 1.27 now uses array references as the underlying data type
+for DOM nodes instead of hash array references.  User data is now
+bound to the _UserData node entry instead of being forced directly
+into the node hash.
+
+=back
+
+=head1 BUGS
+
+The childrenToTemplate() and allChildrenToTemplate() methods can easily
+slip into deep recursion.
+
+The 'verbose' and 'nospace' options are not documented.  They may 
+change in the near future.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 Andy Wardley.  All Rights Reserved.
+Copyright (C) 2000 Andy Wardley, Simon Matthews.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

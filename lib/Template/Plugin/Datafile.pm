@@ -34,7 +34,6 @@ use Template::Plugin;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-
 sub new {
     my ($class, $context, $filename, $params) = @_;
     my ($delim, $line, @fields, @data, @results);
@@ -77,11 +76,13 @@ sub new {
 	push(@$self, \%record);
     }
 
+#    return $self;
     bless $self, $class;
 }	
 
 
-sub AUTOLOAD {
+sub as_list {
+    return $_[0];
 }
 
 

@@ -81,7 +81,10 @@ sub new {
 	$data = [ map { { key => $_, value => $data->{ $_ } } }
 		  sort keys %$data ];
     }
-    elsif (! UNIVERSAL::isa($data, 'ARRAY')) {
+    elsif (UNIVERSAL::can($data, 'as_list')) {
+	$data = $data->as_list();
+    }
+    elsif (ref $data ne 'ARRAY') {
 	# coerce any non-list data into an array reference
 	$data  = [ $data ] ;
     }
@@ -118,7 +121,8 @@ sub get_first {
 
     # initialise various counters, flags, etc.
     @$self{ qw( SIZE MAX INDEX COUNT FIRST LAST ) } 
-	    = ( $size, $size - 1, $index, 1, 1, $size > 1 ? 0 : 1 );
+	    = ( $size, $size - 1, $index, 1, 1, $size > 1 ? 0 : 1, undef );
+    @$self{ qw( PREV NEXT ) } = ( undef, $self->{ _DATASET }->[ $index + 1 ]);
 
     return $self->{ _DATASET }->[ $index ];
 }
@@ -136,6 +140,7 @@ sub get_first {
 sub get_next {
     my $self = shift;
     my ($max, $index) = @$self{ qw( MAX INDEX ) };
+    my $data = $self->{ _DATASET };
 
     # warn about incorrect usage
     unless (defined $index) {
@@ -150,8 +155,8 @@ sub get_next {
 	$index++;
 	@$self{ qw( INDEX COUNT FIRST LAST ) }
 	        = ( $index, $index + 1, 0, $index == $max ? 1 : 0 );
-
-	return $self->{ _DATASET }->[ $index ];		    ## RETURN ##
+	@$self{ qw( PREV NEXT ) } = @$data[ $index - 1, $index + 1 ];
+	return $data->[ $index ];			    ## RETURN ##
     }
     else {
 	return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##

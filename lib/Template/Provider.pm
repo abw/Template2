@@ -676,7 +676,12 @@ sub _compile {
 
     # call parser to compile template into Perl code
     if ($parsedoc = $parser->parse($text, $data)) {
-	# NOTE: probably shouldn't write the file until we know it compiled OK
+
+	$parsedoc->{ METADATA } = { 
+	    'name'    => $data->{ name },
+	    'modtime' => $data->{ time },
+	    %{ $parsedoc->{ METADATA } },
+	};
 	
 	# write the Perl code to the file $compfile, if defined
 	if ($compfile) {
@@ -690,15 +695,7 @@ sub _compile {
 							   $parsedoc);
 	    print STDERR "error: $error" if $error;
 	}
-	
-	# call Template::Document constructor to compile Perl code and 
-	# return a cohesive object encapsulating the template, additional
-	# BLOCKs and metadata
-	$parsedoc->{ METADATA } = { 
-	    'name'    => $data->{ name },
-	    'modtime' => $data->{ time },
-	    %{ $parsedoc->{ METADATA } },
-	};
+
 	unless ($error) {
 	    return $data				        ## RETURN ##
 		if $data->{ data } = Template::Document->new($parsedoc);

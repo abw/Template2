@@ -18,20 +18,23 @@
 
 use strict;
 use lib qw( ./lib ../lib );
+use lib qw( /home/abw/perl/modules/XML/libxml-enno-1.02/lib );
 use Template;
 use Template::Test;
 use Cwd qw( abs_path );
 $^W = 1;
 
 #$Template::Test::DEBUG = 1;
+$Template::Test::PRESERVE = 1;
 
 # I hate having to do this
 my $shut_up_warnings = $XML::DOM::VERSION;
 
 eval "use XML::DOM";
-
-# XML::DOM version 1.25 (and earlier?) dump core with Perl 5.006
-exit if $@ || ($] == 5.006 && $XML::DOM::VERSION <= 1.25);
+if ($@ ||  $XML::DOM::VERSION < 1.27) {
+    print "1..0\n";
+    exit(0);
+}
 
 # account for script being run in distribution root or 't' directory
 my $file = abs_path( -d 't' ? 't/test/xml' : 'test/xml' );
@@ -160,7 +163,6 @@ Section name: [% node.name %]  title: [% node.title %]
 <b>[% node.childrenToTemplate(verbose=1) %]</b>
 [% END %]
 
-
 -- expect --
 Section name: alpha  title: The Alpha Zone
 <a href="/foo/bar">The Foo Page</a>
@@ -173,7 +175,6 @@ Section name: alpha  title: The Alpha Zone
 <xml>
 <section id="a" title="First Section">>
   <page id="a1" title="page 1">
-
     <head><author>Andy Wardley</author></head>
     <body>
     This is the first page

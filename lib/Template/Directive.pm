@@ -70,7 +70,7 @@ sub template {
 
     return <<EOF;
 sub {
-    my \$context = shift;
+    my \$context = shift || die "template sub called without context\n";
     my \$stash   = \$context->stash;
     my \$output  = '';
     my \$error;

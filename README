@@ -1,8 +1,8 @@
                           Template Toolkit
 
-                            Version 2.00
+                          Version 2.00-rc2
 
-                         1st November 2000
+                         14th November 2000
 
         Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
@@ -108,7 +108,7 @@ actually require this module to use the Template Toolkit itself, but
 will do if you plan to use the 'ttree' utility (which you really
 should).  It is available from CPAN:
 
-    http://www.cpan.org/modules/by-module/AppConfig/
+    http://www.cpan.org/authors/Andy_Wardley/
 
 The Template Toolkit implements a "plugin" architecture which allow
 you to incorporate the functionality of virtually any Perl module into
@@ -126,11 +126,16 @@ all available from CPAN, should be installed:
 
     Plugin		Requires
     ------              --------
-    Autoformat	        Text::Autoformat 1.02+
+    Autoformat	        Text::Autoformat 1.03+
     DBI			DBI 1.14+ and relevant DBD drivers
-    XML::DOM            XML::DOM 1.25+   (requires XML::Parser 2.23+)
+    XML::DOM            XML::DOM 1.27+   (requires XML::Parser 2.23+)
     XML::RSS            XML::RSS 0.9+    (ditto)
     XML::XPath          XML::XPath 1.00+ (ditto)
+
+NOTE: The Text::Autoformat plugin may fail on tests 23 and 25 with 
+versions of Perl prior to 5.6.0 when using a locale which has a decimal
+separator other than '.'.  See the KNOWN BUGS section of the TODO file 
+for further information.
 
 
 OBTAINING AND INSTALLING THE TEMPLATE TOOLKIT

@@ -54,7 +54,7 @@ available on your system.
 
 EOF
 
-foreach my $mods ( Text::Autoformat,
+foreach my $mods ( [ Text::Autoformat => \&check_taf ],
 		   [ XML::DOM   => \&check_dom   ],
 		   [ XML::RSS   => \&check_rss   ],
 		   [ XML::XPath => \&check_xpath ],
@@ -144,14 +144,37 @@ sub nope {
 
 
 #------------------------------------------------------------------------
+# check_taf()
+#
+# There are some problems with Text::Autoformat with version of Perl 
+# prior to 5.6.0 not working properly with locales that use a numerical 
+# separator other than '.' (e.g. Swedish)
+#------------------------------------------------------------------------
+
+sub check_taf {
+    use POSIX qw( localeconv );
+    my $loc = localeconv;
+    my $dec = $loc->{ decimal_point };
+
+    yep("version $Text::Autoformat::VERSION installed");
+
+    if ($] <= 5.006 && $dec ne '.') {
+	print ' ' x 6, 
+	"NOTE: tests 23 and 25 may fail under your locale, see TODO file.\n";
+    }
+}
+
+
+#------------------------------------------------------------------------
 # check_dom()
 #
-# XML::DOM version 1.25 (and earlier?) dump core with Perl 5.6.0
+# XML::DOM changed from HASH to ARRAY objects somewhere between versions
+# 1.25 and 1.27, so the latter version is an absolute necessity.
 #------------------------------------------------------------------------
 
 sub check_dom {
-    if ($] >= 5.006 && $XML::DOM::VERSION <= 1.25) {
-	nope("version $XML::DOM::VERSION may not work with Perl $]");
+    if ($XML::DOM::VERSION < 1.27) {
+	nope("requires version 1.27 or later ($XML::DOM::VERSION installed)");
     }
     else {
 	yep("version $XML::DOM::VERSION installed");
@@ -213,10 +236,14 @@ sub dbi_config {
 	local $" = ', ';
 
 	my $default = (grep(/m.?sql/i, @drivers))[0];
+	
+	print <<EOF;
+  - Please enter the driver name for the test database.
+    The DBD drivers installed on your system are
 
-	print "  - Please enter the driver name for the test database.\n";
-	print "    The DBD drivers installed on your system are\n\n";
-	print "      @drivers\n\n";
+      @drivers
+
+EOF
 
 	while (! $driver) {
 	    $driver = prompt("  - Enter driver name: ", $default);
@@ -224,8 +251,17 @@ sub dbi_config {
 		unless grep(/^$driver$/, @drivers);
 	}
 
+	print <<EOF;
+  - Please enter the data source (DSN) of the test database.
+    Many DBD drivers require only a database name (e.g. 'test') while
+    others may require an alternate format or additional parameters
+    (e.g. 'dbname=test').  Please consult your DBD documentation for
+    further details.
+EOF
+
+	my $dbname_eg = $driver eq 'Pg' ? 'dbname=test' : 'test';
 	while (! $dbname) {
-	    $dbname = prompt('  - Enter database name: ', 'test');
+	    $dbname = prompt('  - Database name: ', $dbname_eg);
 	}
     
 	$dsn = "dbi:$driver:$dbname";

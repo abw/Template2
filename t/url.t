@@ -36,12 +36,12 @@ sub sort_params {
 
     print STDERR "sort_parms(\"$query\")\n" if $Template::Test::DEBUG;
 
-    @args = split('&', $args);
+    @args = split('&amp;', $args);
     @keys = map { (split('=', $_))[0] } @args;
     @argtab{ @keys } = @args;
     @keys = sort keys %argtab;
     @args = map { $argtab{ $_ } } @keys;
-    $args = join('&', @args);
+    $args = join('&amp;', @args);
     $query = join('?', length $base ? ($base, $args) : $args);
 
     print STDERR "returning [$query]\n" if $Template::Test::DEBUG;
@@ -83,7 +83,7 @@ here
 there
 here?any=where
 every?which=way
-every?which=way&you=can
+every?which=way&amp;you=can
 
 -- test --
 [% USE url('there', name='fred') -%]
@@ -95,8 +95,8 @@ every?which=way&you=can
 -- expect --
 there?name=fred
 there?name=tom
-there?age=24&name=fred
-there?age=42&name=frank
+there?age=24&amp;name=fred
+there?age=42&amp;name=frank
 
 -- test --
 [% USE url('/cgi-bin/woz.pl') -%]

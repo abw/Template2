@@ -17,7 +17,67 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.00
+# Version 2.00-rc2  14th November 2000
+#------------------------------------------------------------------------
+
+* Added the 'prev' and 'next' methods to Template::Iterator and 
+  Template::Plugin::DBI::Iterator to return the previous and next 
+  items from the data set.
+
+* Added the 'sort' and 'nsort' virtual methods for hash arrays, 
+  thanks to a patch provided by Leon Brocard.
+
+* Various fixes to DBI plugin, configuration and test:- modified
+  Makefile.PL to prompt for DBI DSN specific to user's DBD; changed
+  DBI plugin to accept DBI attributes (e.g. ChopBlanks) as named
+  parameters to connect method; fixed t/dbi.t to not munge 'user'
+  variable in final test; added 'ChopBlanks' attributes to satisfy
+  tests under certain DBD's (e.g.  Pg).  Thanks to Jonas Liljegren and
+  Chris Nandor for their efforts in finding, testing and fixing the
+  problems.
+
+* Modified the XML::DOM plugin to work with XML::DOM version 1.27
+  which now uses blessed array references instead of hashes as the 
+  underlying data types.  Changed Makefile.PL and t/dom.t to require
+  version 1.27 or later.
+
+* Changed the Template::Iterator module to *NOT* automatically expand
+  the contents of blessed ARRAY objects to construct the iteration data
+  set.  The previous behaviour caused problems with modules such as 
+  XML::DOM where a single object passed to the iterator constructor
+  would be expanded into a list of the member data, rather than being
+  treated as a single item list containing that one object.  A blessed
+  ARRAY reference can now provide the as_list() method which the
+  iterator constructor will call to return list data.
+
+* Fixed a bug in Template::Provider to ensure that template metadata 
+  (e.g. name, modtime, etc.) is written to compiled template files.
+  Thanks to Steven Hetland for reporting the problem.
+
+* Changed the Template::Directive::template() generator method to 
+  raise an error if a context reference isn't passed to a template 
+  subroutine as the first argument.
+
+* Fixed t/autoformat.t to use locale dependant numerical formatting.
+  Note that versions of Perl prior to 5.6.0 still have problems and 
+  will cause t/autoform.t tests 23 and 25 to fail under locales that 
+  use a decimal separator other than '.'.  The Makefile.PL will issue
+  a warning in such cases.  Thanks to Jonas Liljegren for reporting 
+  the problem.
+
+* Applied a patch from Leon Brocard which corrects the behaviour of 
+  the URL plugin to join parameters with '&amp;' instead of '&'.
+
+* Fixed a bug in the AUTOLOAD method of the Template::Plugin base 
+  class which caused warnings about not finding _DELEGATE pseudo-hash
+  method under Perl 5.6.0.
+
+* Various minor documentation fixes, thanks to Henrik Edlund and Leon
+  Brocard.
+
+
+#------------------------------------------------------------------------
+# Version 2.00-rc1  1st November 2000
 #------------------------------------------------------------------------
 
 * Added the push(), pop(), unshift() and shift() virtual list methods

@@ -66,7 +66,10 @@ my $params = {
 		  { id => 'dick',  name => 'Richard' },
 		  { id => 'larry', name => 'Larry' },
 		],
-    primes  => [ 13, 11, 17, 19, 2, 3, 5, 7 ],, 
+    primes   => [ 13, 11, 17, 19, 2, 3, 5, 7 ],
+    phones   => { 3141 => 'Leon', 5131 => 'Andy', 4131 => 'Simon' },
+    groceries => { 'Flour' => 3, 'Milk' => 1, 'Peanut Butter' => 21 },
+
 };
 
 test_expect(\*DATA, undef, $params);
@@ -229,3 +232,22 @@ Tom
 [% primes.odd.nsort.join(', ') %]
 -- expect --
 3, 5, 7, 11, 13, 17, 19
+
+-- test --
+[% FOREACH n = phones.sort -%]
+[% phones.$n %] is [% n %],
+[% END %]
+-- expect --
+Andy is 5131,
+Leon is 3141,
+Simon is 4131,
+
+-- test --
+[% FOREACH n = groceries.nsort.reverse -%]
+I want [% groceries.$n %] kilos of [% n %],
+[% END %]
+-- expect --
+I want 21 kilos of Peanut Butter,
+I want 3 kilos of Flour,
+I want 1 kilos of Milk,
+

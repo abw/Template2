@@ -133,11 +133,17 @@ sub fail {
 sub AUTOLOAD {
     my $self     = shift;
     my $method   = $AUTOLOAD;
-    my $delegate = $self->{ _DELEGATE } || return;
 
     $method =~ s/.*:://;
     return if $method eq 'DESTROY';
-    $delegate->$method(@_);
+
+    if (ref $self eq 'HASH') {
+	my $delegate = $self->{ _DELEGATE } || return;
+	return $delegate->$method(@_);
+    }
+    my ($pkg, $file, $line) = caller();
+    warn "no such '$method' method called on $self at $file line $line\n";
+    return undef;
 }
 
 

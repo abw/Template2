@@ -20,6 +20,7 @@ use strict;
 use lib qw( ../lib );
 use Template qw( :status );
 use Template::Test;
+use POSIX qw( localeconv );
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
@@ -32,7 +33,18 @@ if ($@) {
     exit(0);
 }
 
-test_expect(\*DATA, { POST_CHOMP => 1 });
+# for testing known bug with locales that don't use '.' as a decimal 
+# separator - see TODO file.
+# POSIX::setlocale( &POSIX::LC_ALL, 'sv_SE' );
+
+my $loc = localeconv;
+my $dec = $loc->{ decimal_point };
+
+my $vars = {
+    decimal => $dec,
+};
+
+test_expect(\*DATA, { POST_CHOMP => 1 }, $vars);
  
 
 #------------------------------------------------------------------------
@@ -154,10 +166,11 @@ Item      Description          Cost
 [% autoformat('foo', 'The Foo Item', 123.545) %]
 [% autoformat('bar', 'The Bar Item', 456.789) %]
 -- expect --
+-- process --
 Item      Description          Cost
 ===================================
-foo       The Foo Item       123.55
-bar       The Bar Item       456.79
+foo       The Foo Item       123[% decimal %]55
+bar       The Bar Item       456[% decimal %]79
 
 -- test --
 [% USE autoformat(form => '>>>.<<', numeric => 'AllPlaces') %]
@@ -165,11 +178,10 @@ bar       The Bar Item       456.79
     FOREACH n = [ 123, 34.54, 99 ] +%]
 [% autoformat(987, 654.32) %]
 -- expect --
-123.00
- 34.54
- 99.00
+-- process --
+123[% decimal %]00
+ 34[% decimal %]54
+ 99[% decimal %]00
 
-987.00
-654.32
-
-
+987[% decimal %]00
+654[% decimal %]32

@@ -34,7 +34,7 @@ use vars qw( $VERSION $DEBUG );
 use base qw( Template::Plugin );
 
 #$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/) - 1;
-$VERSION = 1.0;
+$VERSION = 1.02;
 $DEBUG   = 0 unless defined $DEBUG;
 
 
@@ -62,7 +62,7 @@ sub new {
 
 
 #------------------------------------------------------------------------
-# connect( $data_source, $username, $password )
+# connect( $data_source, $username, $password, $attributes )
 # connect( { data_source => 'dbi:driver:database' 
 #	     username    => 'foo' 
 #	     password    => 'bar' } )
@@ -116,8 +116,9 @@ sub connect {
 	    if $self->{ _DBH } && $self->{ _DBH_CONNECT };
 	    
 	# open new connection
-	$self->{ _DBH } = DBI->connect( $dsn, $user, $pass, 
-					{ PrintError => 0 } ) 
+	$params->{ PrintError } = 0 
+	    unless defined $params->{ PrintError };
+	$self->{ _DBH } = DBI->connect( $dsn, $user, $pass, $params )
 	    || return $self->_throw("DBI connect failed: $DBI::errstr");
 
 	# store the connection parameters
@@ -326,14 +327,11 @@ sub get_first {
     my $self = shift;
 
     # set some status variables into $self
-    $self->{ FIRST  } = 2;
-    $self->{ LAST   } = 0;
-    $self->{ NUMBER } = 0;
-    $self->{ INDEX  } = -1;
+    @$self{ qw(  PREV   ITEM FIRST LAST COUNT INDEX ) } 
+            = ( undef, undef,    2,   0,    0,   -1 );
 
-    # 'number' is the official iterator counter name but earlier version
-    # of the DBI plugin used 'count' 
-    $self->{ COUNT  } = 0;
+    # support 'number' as an alias for 'count' for backwards compatability
+    $self->{ NUMBER  } = 0;
 
     # NOTE: 'size' and 'max' should also be supported.  This should 
     # probably trigger a get_all() to determine the size of the result
@@ -362,23 +360,20 @@ sub get_next {
     my $self = shift;
     my ($data, $fixup);
 
-    print STDERR "get_next() called\n" if $DEBUG;
-
-    # increment the 'index' and 'number' counts
+    # increment the 'index' and 'count' counts
     $self->{ INDEX  }++;
-    $self->{ NUMBER }++;
-
-    # support 'count' for backwards compatability
-    $self->{ COUNT }++;
+    $self->{ COUNT  }++;
+    $self->{ NUMBER }++;   # 'number' is old name for 'count'
 
     # decrement the 'first-record' flag
     $self->{ FIRST }-- if $self->{ FIRST };
 
-    # we should have a row already cache in _ROWCACHE
+    # we should have a row already cache in NEXT
     return (undef, Template::Constants::STATUS_DONE)
-	unless $data = $self->{ _ROWCACHE };
+	unless $data = $self->{ NEXT };
 
-    print STDERR "get_next() calling _fetchrow()\n" if $DEBUG;
+    # set PREV to be current ITEM from last iteration
+    $self->{ PREV } = $self->{ ITEM };
 
     # look ahead to the next row so that the rowcache is refilled
     $self->_fetchrow();
@@ -392,8 +387,7 @@ sub get_next {
 	}
     }
 
-    print STDERR "get_next() returning $data (STATUS_OK)\n" if $DEBUG;
-
+    $self->{ ITEM } = $data;
     return ($data, Template::Constants::STATUS_OK);
 }
 
@@ -411,11 +405,11 @@ sub _fetchrow {
 
     my $data = $sth->fetchrow_hashref() || do {
 	$self->{ LAST } = 1;
-	$self->{ _ROWCACHE } = undef;
+	$self->{ NEXT } = undef;
 	$sth->finish();
 	return;
     };
-    $self->{ _ROWCACHE } = $data;
+    $self->{ NEXT } = $data;
     return;
 }
 
@@ -489,6 +483,11 @@ forms of 'username' and 'password', respectively.
     [% USE DBI(connect => 'dbi:driver:database',
                user    => 'username',
                pass    => 'password')  %]
+
+Any additional DBI attributes can be specified as named parameters.
+The 'PrintError' attribute defaults to 0 unless explicitly set true.
+
+    [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
 
 Methods can then be called on the plugin object using the familiar dotted
 notation:
@@ -599,9 +598,27 @@ L<Template> and L<DBI>.
 
 =head1 AUTHORS
 
-The DBI plugin was written by Simon A Matthews, 
-E<lt>sam@knowledgepool.comE<gt>, with minor modifications and further 
-documentation provided by Andy Wardley E<lt>abw@kfs.orgE<gt>.
+The DBI plugin was written by Simon A Matthews,
+E<lt>sam@knowledgepool.comE<gt>, with contributions from Andy Wardley
+E<lt>abw@kfs.orgE<gt>.
+
+=head1 HISTORY
+
+=over 4
+
+=item 1.01  2000/11/03  abw
+
+Modified connect method to pass all named arguments to DBI.  e.g.
+
+    [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
+
+=item 1.02  2000/11/14  abw
+
+Added prev() and next() methods to Template::Plugin::DBI:Iterator to
+return the previous and next items in the iteration set or undef if
+not available.
+
+=back
 
 =head1 COPYRIGHT
 

@@ -40,10 +40,11 @@ enhancements planned for the Template Toolkit.
 # point in the future.
 #------------------------------------------------------------------------
 
-* URL plugin may be incorrect in not escaping certain characters such as 
-  '&'.  I need to check the standards, or wait for someone more 
-  knowledgeable in these matters to fix it for me, or otherwise give it 
-  a clean bill of health (hint, hint :-).
+* The Text::Autoformat module has some problems with versions of Perl
+  prior to 5.6.0 when using a locale which has a decimal separator
+  other than '.' (e.g. Swedish, which uses ',').  Damian has been made
+  aware of the problem.  For now, the Makefile.PL issues a warning but
+  continues regardless.
 
 * The childrenTotemplate() and allChildrenToTemplate() methods of the 
   XML::DOM can send Perl into a deep recursive loop.  This will be 
@@ -84,6 +85,22 @@ enhancements planned for the Template Toolkit.
 * A 'FOR', like 'FOREACH' but without using an iterator.  You wouldn't get 
   the 'loop' reference to test 'first', 'last', etc., against, but it would
   be faster for those cases when you didn't need it.
+
+* It should be possible to access template BLOCK definitions via the 
+  'template' variable.  This would be particularly useful in conjunction
+  with the PRE_PROCESS, PROCESS and/or POST_PROCESS options, e.g.
+
+    <table>
+    <tr>
+      <td>[% INCLUDE $template.blocks.sidebar %]</td>
+      <td>[% INCLUDE $template %]
+    </tr>
+    </table>
+
+  Currently you *can* access these blocks, but the stash automatically
+  calls these unblessed subs, generating an error due to the fact that 
+  no context reference is passed to the sub to allow it to act as a 
+  template.
 
 * It would be useful if template components had some notion of inheritance
   so that a 'derived' component could call on the 'super' component.  
