@@ -30,12 +30,12 @@ my $config = {
 my $tt1 = Template->new($config);
 
 $config->{ PRE_PROCESS  } = 'config';
-$config->{ PROCESS      } = 'header,content';
+$config->{ PROCESS      } = 'header:content';
 $config->{ POST_PROCESS } = 'footer';
 $config->{ TRIM } = 0;
 my $tt2 = Template->new($config);
 
-$config->{ PRE_PROCESS } = 'config,header';
+$config->{ PRE_PROCESS } = 'config:header.tt2';
 $config->{ PROCESS } = '';
 my $tt3 = Template->new($config);
 
@@ -81,7 +81,7 @@ footer
 [% META title = 'Test 3' -%]
 This is the third test
 -- expect --
-header:
+header.tt2:
   title: Joe Random Title
   menu: This is the menu, defined in 'config'
 footer

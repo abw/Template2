@@ -140,7 +140,7 @@ sub _init {
     foreach $item (qw( PRE_PROCESS PROCESS POST_PROCESS )) {
 	$data = $config->{ $item };
 	next unless defined $data;
-	$data = [ split(/$delim/, $data || '') ]
+	$data = [ split($delim, $data || '') ]
 	    unless ref $data eq 'ARRAY';
         $self->{ $item } = $data;
     }

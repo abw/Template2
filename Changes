@@ -20,13 +20,27 @@
 # Version 2.00
 #------------------------------------------------------------------------
 
+* Updated the Makefile.PL to check for external modules, prompt for 
+  DBI test parameters, and various other niceties.
+
+* Fixed a bug in the Template::Service module which was using any 
+  non-word characters to delimit lists of PRE/POST_PROCESS files.
+  A value such as 'config, header.html' would be interpreted as 
+  [ 'config', 'header', 'html' ].  It now uses the DELIMITER value
+  which is ':' by default, e.g. PRE_PROCESS => 'config:header.html'
+  is interpreted as [ 'config', 'header.html' ].
+
 * Incorporated the DBI plugin module, written by Simon Matthews.  This 
   features a major reorganisation of the code, fixes a few bugs, removes
   some dead wood, and has improved documentation and test script.
 
 * Rewrote the XML::DOM plugin, fixing the memory leakage problems and 
   adding the toTemplate() method and friends, as provided by Simon 
-  Matthews.
+  Matthews.  Note that it's quite easy to send Perl into a deep
+  recursive loop via the childrenToTemplate() and allChildrenToTemplate()
+  methods due to a misfeature was added by Andy Wardley.  This will be 
+  fixed in a future release and may result in behavioural changes to 
+  these methods.  So don't rely on them for now.
 
 * Incorporated the Dumper plugin from Simon Matthews which interfaces to
   the Data::Dumper module.
@@ -46,10 +60,15 @@
   decided that count() was the better name (shorter and more obvious).
   Also changed internal Template::Iterator counter variables to UPPER
   CASE to allow AUTOLOAD to be more easily reused by derived iterators
-  such as the on for the DBI plugin.
+  such as the one for the DBI plugin.
 
 * Fixed a bug in the Table plugin which caused an "undefined variable..."
   warning to be emitted when an empty list was provided.
+
+* Documented the problem identified by Chris Winters where an IF 
+  used as a side-effect to an implied SET directive doesn't behave as
+  expected.  A directive of the form  [% foo = 'bar' IF condition %]
+  should be written explicitly as [% SET foo = 'bar' IF condition %]
 
 
 #------------------------------------------------------------------------

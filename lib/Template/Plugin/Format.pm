@@ -30,7 +30,6 @@ use strict;
 use vars qw( @ISA $VERSION );
 use base qw( Template::Plugin );
 use Template::Plugin;
-use CGI;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 

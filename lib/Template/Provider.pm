@@ -258,8 +258,9 @@ sub _init {
     my ($self, $params) = @_;
     my $size = $params->{ CACHE_SIZE   };
     my $path = $params->{ INCLUDE_PATH } || '.';
-    my $dlim = $params->{ DELIMITER    } || ':';
     my $cdir = $params->{ COMPILE_DIR  } || '';
+    my $dlim = $params->{ DELIMITER    };
+    $dlim = ':' unless defined $dlim;
 
     # coerce INCLUDE_PATH to an array ref, if not already so
     $path = [ split($dlim, $path) ]

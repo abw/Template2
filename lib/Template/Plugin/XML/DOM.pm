@@ -608,6 +608,9 @@ childrenToTemplate() method with the 'deep' flag set to any true value.
 
 =head1 BUGS
 
+The childrenToTemplate() and allChildrenToTemplate() methods can easily
+slip into deep recursion.
+
 The 'verbose' and 'nospace' options are not documented.  They may 
 change in the near future.
 
