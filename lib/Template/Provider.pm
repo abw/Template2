@@ -873,7 +873,8 @@ sub _compile {
 	}
     }
     else {
-	$error = 'parse error: ' . $data->{ name } . ' ' . $parser->error();
+	$error = Template::Exception->new( 'parse', "$data->{ name } " .
+                                           $parser->error() );
     }
 
     # return STATUS_ERROR, or STATUS_DECLINED if we're being tolerant
@@ -1416,8 +1417,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.65, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.66, distributed as part of the
+Template Toolkit version 2.08d, released on 18 March 2003.
 
 =head1 COPYRIGHT
 
