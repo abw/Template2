@@ -36,8 +36,11 @@ and each will be processed in turn, writing the generated output to a
 corresponding file in the B<dest> directory.  If no files are
 explicitly named then all files in the B<src> directory will be
 processed.  The B<-r> (recurse) option will also cause sub-directories
-to be searched for files.  A source file is only processed if it has a
-later modification time than any corresponding destination file.
+to be searched for files.  A source file is only processed if it
+or a file it depends on has a later modification time than any
+corresponding destination file. Consult L<ttree/"FILE DEPENDANCIES">
+for further information on dependencies.
+
 Files will always be processed, regardless of modification times, if
 they are named explicitly on the command line, or the B<-a> (all)
 option is used.
@@ -83,3 +86,69 @@ For example:
    perl5lib     = /home/abw/lib/perl5
 
 See B<ttree --help> for a summary of options.
+
+=head1 FILE DEPENDENCIES
+
+The B<depend> and B<depend_file> parameters lets one specify
+how any given file depends on another file or group of files. 
+B<depend> lets one express the dependency on the command
+line or in the config file, while B<depend_file>
+lets one use a separate file for the dependancy information.
+
+=head2 Usage of B<depend>
+
+  $ ttree --depend foo=bar,baz --depend crash=bang,wallop
+
+This command line example shows the C<--depend> option being 
+used to specify that the F<foo> file is dependant on the F<bar>
+and F<baz> files, and that F<crash> is dependant on F<bang>
+and F<wallop>.
+
+In a ttree configuration file those options would be specified as
+follows:
+
+  # .ttreerc
+  depend foo=bar,baz
+  depend carash=bang,wallop
+
+=head2 Format of B<depend_file>
+
+The C<depend_file> option can be used to specify a file that contains
+dependency information.  The format of this file is as follows.
+
+Comments are started with '#', only optional whitespace may precede
+it. Comments are ended with a newline char.  Lines may be continued
+with the backslash ('\'). Blank lines are ignored.  All other lines
+are expected to be in the following format:
+
+   file: file1 file2
+
+Files that contain spaces can be quoted. That is only necessary for
+files after the colon (':'). The file before the colon may be quoted
+if it contains a colon. Any leading space will be stripped regardless.
+This quoting mechanism is implemented by
+L<Text::ParseWords|Text::ParseWords>.
+
+The following shows the syntax for the dependfile files:
+
+   # Example dependfile file.
+   # This is a comment. It is ignored.
+
+   index.html: header footer menubar 
+
+   header: titlebar hotlinks
+
+   menubar: menuitem
+
+   # spanning multiple lines with the backslash
+   another.html: header footer menubar \
+   sidebar searchform
+
+In this example, F<index.html> depends on F<header>, F<footer>
+and F<menubar>.  The F<header> in turn depends on F<titlebar> and 
+F<hotlinks>, while F<menubar> depends on F<menuitem>.
+
+The F<index.html> template will only be processed if it or any of its
+dependant files has a modification time greater than the current
+F<index.html> output file.
+
