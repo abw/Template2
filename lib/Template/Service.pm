@@ -33,6 +33,7 @@ use base qw( Template::Base );
 use Template::Base;
 use Template::Config;
 use Template::Exception;
+use Template::Constants;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0 unless defined $DEBUG;
@@ -59,6 +60,10 @@ sub process {
     my ($name, $output, $procout, $error);
     $output = '';
 
+    $self->debug("process($template, ", 
+                 defined $params ? $params : '<no params>',
+                 ')') if $self->{ DEBUG };
+
     $context->reset()
 	if $self->{ AUTO_RESET };
 
@@ -79,6 +84,7 @@ sub process {
 	# PRE_PROCESS
 	eval {
 	    foreach $name (@{ $self->{ PRE_PROCESS } }) {
+                $self->debug("PRE_PROCESS: $name") if $self->{ DEBUG };
 		$output .= $context->process($name);
 	    }
 	};
@@ -87,6 +93,7 @@ sub process {
 	# PROCESS
 	eval {
 	    foreach $name (@{ $self->{ PROCESS } || [ $template ] }) {
+                $self->debug("PROCESS: $name") if $self->{ DEBUG };
 		$procout .= $context->process($name);
 	    }
 	};
@@ -99,6 +106,7 @@ sub process {
 	# POST_PROCESS
 	eval {
 	    foreach $name (@{ $self->{ POST_PROCESS } }) {
+                $self->debug("POST_PROCESS: $name") if $self->{ DEBUG };
 		$output .= $context->process($name);
 	    }
 	};
@@ -154,6 +162,8 @@ sub _init {
     $self->{ ERROR      } = $config->{ ERROR } || $config->{ ERRORS };
     $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
 			  ? $config->{ AUTO_RESET } : 1;
+    $self->{ DEBUG      } = ( $config->{ DEBUG } || 0 )
+                            & Template::Constants::DEBUG_SERVICE;
 
     $context = $self->{ CONTEXT } = $config->{ CONTEXT }
         || Template::Config->context($config)
@@ -196,9 +206,11 @@ sub _recover {
     if (ref $handlers eq 'HASH') {
 	if ($hkey = $$error->select_handler(keys %$handlers)) {
 	    $handler = $handlers->{ $hkey };
+            $self->debug("using error handler for $hkey") if $self->{ DEBUG };
 	}
 	elsif ($handler = $handlers->{ default }) {
 	    # use default handler
+            $self->debug("using default error handler") if $self->{ DEBUG };
 	}
 	else {
 	    return undef;					## RETURN
@@ -206,6 +218,7 @@ sub _recover {
     }
     else {
 	$handler = $handlers;
+        $self->debug("using default error handler") if $self->{ DEBUG };
     }
 
     eval { $handler = $context->template($handler) };
