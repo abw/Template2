@@ -5,8 +5,8 @@
 * DESCRIPTION
 *   This is an XS implementation of the Template::Stash module.
 *   It is an alternative version of the core Template::Stash methods
-*   ''get'' and ''set'' (the ones that should benefit most from a 
-*   speedy C implementation), along with some virtual methods (like 
+*   ''get'' and ''set'' (the ones that should benefit most from a
+*   speedy C implementation), along with some virtual methods (like
 *   first, last, reverse, etc.)
 *
 * AUTHORS
@@ -321,8 +321,9 @@ static TT_RET tt_fetch_item(SV *root, SV *key_sv, AV *args, SV **result) {
 	break;
 
     case SVt_PVAV:
-	if (SvIOK(key_sv))
+	if (looks_like_number(key_sv)) {
 	    value = av_fetch((AV *) SvRV(root), SvIV(key_sv), FALSE);
+	}
 	break;
     }
 
@@ -338,6 +339,7 @@ static TT_RET tt_fetch_item(SV *root, SV *key_sv, AV *args, SV **result) {
 	    return TT_RET_OK;
 	}
     } 
+
     *result = &PL_sv_undef;
     return TT_RET_UNDEF;
 }
@@ -452,8 +454,8 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
 
 		    for (i = 0; i <= av_len(k_av); i++) {
 			if ((svp = av_fetch(k_av, i, FALSE))) {
-			    if (SvIOK(*svp)
-				&& (svp = av_fetch(r_av, SvIV(*svp), FALSE)))
+			    if (looks_like_number(*svp) && 
+				(svp = av_fetch(r_av, SvIV(*svp), FALSE)))
 				av_push(a_av, SvREFCNT_inc(*svp));
 			}
 		    }
@@ -639,7 +641,6 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 	    newsv = newSVsv(value); 
 	    if (!hv_store(roothv, key, key_len, newsv, 0))
 	        SvREFCNT_dec(newsv);
-
 	    return value;
 	    break;
 
@@ -648,12 +649,13 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 
 	    /* check for any existing value if default flag set */
 	    if ((flags & TT_DEFAULT_FLAG)
-	        && SvIOK(key_sv)
-	        && (svp = av_fetch(rootav, SvIV(key_sv), FALSE))
+		&& looks_like_number(key_sv)
+		&& (svp = av_fetch(rootav, SvIV(key_sv), FALSE))
 		&& SvTRUE(*svp))
 		return &PL_sv_undef;
 
-	    if (SvIOK(key_sv) && av_store(rootav, SvIV(key_sv), value))
+	    if (looks_like_number(key_sv) 
+		&& av_store(rootav, SvIV(key_sv), value))
 		return SvREFCNT_inc(value);
 	    else
 		return &PL_sv_undef;
@@ -662,12 +664,14 @@ static SV *assign(SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 
 	default:				    /* BARF */
 	    /* TODO: fix [ %s ] */
-	    croak("don't know how to assign to [ %s ].%s", SvRV(root), key);
+	    croak("don't know how to assign to [ %s ].%s", 
+		SvPV(SvRV(root), PL_na), key);
 	}
     }
     else {					    /* SCALAR */
 	/* TODO: fix [ %s ] */
-	croak("don't know how to assign to [ %s ].%s", SvRV(root), key);
+	croak("don't know how to assign to [ %s ].%s", 
+		SvPV(SvRV(root), PL_na), key);
     }
 
     /* not reached */
@@ -799,7 +803,7 @@ static SV *do_getset(root, ident_av, value, flags)
 	    return root;
     }
 
-    if (value) {
+    if (value && SvROK(root)) {
 	/* call assign() to resolve the last item */
 	if (!(svp = av_fetch(ident_av, size - 1, FALSE)))
 	    croak(TT_STASH_PKG ": set bad ident element at %d", i);
