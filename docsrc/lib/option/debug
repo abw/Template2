@@ -7,8 +7,9 @@
 
 The DEBUG option can be used to enable debugging within the various
 different modules that comprise the Template Toolkit.  The
-Template::Constants module defines a set of DEBUG_XXXX constants
-which can be combined using the logical OR operator, '|'.
+L<Template::Constants|Template::Constants> module defines a set of
+DEBUG_XXXX constants which can be combined using the logical OR
+operator, '|'.
 
     use Template::Constants qw( :debug );
 
@@ -65,6 +66,3 @@ The DEBUG directive can also be used to set a debug format within
 a template.
 
     [% DEBUG format '<!-- $file line $line : [% $text %] -->' %]
-
-
-
