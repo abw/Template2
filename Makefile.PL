@@ -374,10 +374,10 @@ EOF
     }
 
     eval "use File::Spec";
-    if ($@ or $File::Spec::VERSION < 0.6) {
+    if ($@ or $File::Spec::VERSION < 0.8) {
 	warn(<<EOF);
 
-The Template Toolkit requires that the File::Spec module (version 0.6
+The Template Toolkit requires that the File::Spec module (version 0.8
 or later) first be installed.  This is used by the File plugin.  It is
 available from CPAN:
 
@@ -385,8 +385,20 @@ available from CPAN:
 
 EOF
     }
-}
 
+    eval "use File::Temp";
+    if ($@ or $File::Temp::VERSION < 0.12) {
+        warn(<<EOF);
+
+The Template Toolkit requires that the File::Temp module (version 0.12
+or later) first be installed.  This is used by the Template::Document
+class for storing compiled templates.  It is available from CPAN:
+
+    http://search.cpan.org/search?dist=File-Temp
+
+EOF
+    }
+}
 
 
 #------------------------------------------------------------------------
