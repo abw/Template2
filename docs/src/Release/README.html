@@ -7,7 +7,7 @@
 
                               Version 2.03
 
-                             14 June 2001
+                             15 June 2001
 
         Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
@@ -99,7 +99,22 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
-Version 2.02 follows shortly on the heels of version 2.01, fixing up
+Version 2.03 includes Craig Barratt's 'latex' filter and GD plugins.
+The latex filter allow you to create PostScript/PDF/DVI output from 
+LaTeX source templates.  The GD plugins allow you to access the GD::*
+modules to create dynamic images using template.  
+
+There have been some improvements to VIEWs and they now work
+harmoniously with the XML::XPath and XML::DOM plugins for doing
+template based transformations of XML to other formats.  The HTML
+plugin is new (but currently very basic) and some of the Splash! and
+HTML library templates have been updated and some new components added.
+
+There's a new tutorial from Dave Cross on using the Template Toolkit for
+creating and reusing data files.  There's various other updates to the 
+documentation, numerous minor bug fixes and other general improvements.
+
+Version 2.02 followed shortly on the heels of version 2.01, fixing up
 some of the minor installation bugs and other problems that came to
 light.  Here's a quick summary of what's new since version 2.00.
 See the Changes file for more details.
@@ -344,6 +359,30 @@ data source parameters (name, user, password) required to connect to
 the relevant database.  Please ensure that your database server is
 running and that the database you specify exists before executing
 'make test' (otherwise, expect a failure for the t/dbi.t test).
+
+The latex filter, new to release 2.03, allows you to generate
+PostScript, PDF and DVI files directly from LaTeX source templates.
+It relies on 3 external programs which the Makefile.PL script 
+will attempt to locate.  You will then be prompted to enable or
+disable the latex filter:
+
+    TT2 supports PDF, DVI and PostScript output using the latex
+    filter, implemented with the programs pdflatex, latex and dvips.
+
+    Because the latex filter runs latex and pdflatex, template authors
+    could use this feature to include any arbitrary file in their
+    latex input, or also open an arbitrary output file, independent of
+    the ABSOLUTE or RELATIVE configuration settings. This might create
+    a security concern at your site. If you don't trust your template
+    authors then don't enable the latex filter.
+
+   I found the following locations for pdflatex, latex and dvips:
+     + pdflatex =&gt; /usr/bin/pdflatex
+     + latex    =&gt; /usr/bin/latex
+     + dvips    =&gt; /usr/bin/dvips
+
+   Do you want to enable the latex filter? [y] 
+   Are the pdflatex, latex and dvips paths ok? [y] 
 
 In additional to the Perl modules and POD documentation installed in
 the usual way, the Template Toolkit distribution also contains a
@@ -712,10 +751,13 @@ Individual sections can be viewed as, for example,
     perldoc Template::Manual::Directives
     perldoc Template::Manual::Plugins
 
-The Template::Tutorial page gives a general overview and &quot;Quick Start&quot;
-guide to using the Template Toolkit.
+The Template::Tutorial provides an index to the tutorial documents.
+There are currently 2 tutorials, on generating web content, and on
+creating and using data files.
 
     perldoc Template::Tutorial
+    perldoc Template::Tutorial::Web
+    perldoc Template::Tutorial::Datafile
 
 The new template libraries distributed with the Template Toolkit have
 some documentation, but be warned that it is rather spartan at
@@ -749,8 +791,8 @@ Toolkit.
 
     perldoc Template::FAQ
 
-The bad news is that it doesn't (yet) contain very many questions or answers.
-Patches welcome.  :-)
+It's now got a few question in it, and better still, some answers!
+Further contributions welcome.
 
 Most of the documentation is stable and reliable.  Where it's not then
 it's usually marked as such.  In particular, the documentation for the
@@ -796,8 +838,8 @@ Toolkit, please contact the author.
 VERSION COMPATABILITY
 ---------------------
 
-In language and feature terms, versions 2.02 and 2.01 should be fully
-backwardly compatible with version 2.00.  Internally, the only
+In language and feature terms, versions 2.03, 2.02 and 2.01 should be
+fully backwardly compatible with version 2.00.  Internally, the only
 significant difference is that the Template::Plugin base class no
 longer implements an AUTOLOAD method.  If you've written a plugin
 derived from the base class that relies on it (probably a bad idea

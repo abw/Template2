@@ -101,6 +101,7 @@ Please let me know if you think anyone is missing from this list.
   Lyle Brooks               <brooks@deseret.com>
   Piers Cawley              <pdcawley@bofh.org.uk>
   Eric Cholet               <cholet@logilune.com>
+  Dave Cross                <dave@dave.org.uk>
   Chris Dean                <ctdean@babycenter.com>  
   Francois Desarmenien      <desar@club-internet.fr>
   Horst Dumcke              <hdumcke@cisco.com> 
@@ -141,7 +142,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.03, released on 14 June 2001.
+Template Toolkit version 2.03, released on 15 June 2001.
 
 =head1 COPYRIGHT
 

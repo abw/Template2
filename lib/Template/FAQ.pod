@@ -18,7 +18,7 @@
 #   modify it under the same terms as Perl itself.
 #
 # REVISION
-#   2.09
+#   2.10
 #
 #========================================================================
 
@@ -98,7 +98,7 @@ To do the job properly, you should sublcass Template::Provider to
 Template::Provider::HTTP and use a PREFIX_MAP option to bind the 
 'http' template prefix to that particular provider (you may want to 
 go digging around in the F<Changes> file around version 2.01 for 
-more info on PREFIX_MAP - it may not be properly documented anywher
+more info on PREFIX_MAP - it may not be properly documented anywhere
 else...yet!).  e.g. (untested due to lack of existing HTTP Provider
 - patches welcome!).
 
@@ -202,8 +202,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.09, distributed as part of the
-Template Toolkit version 2.03, released on 14 June 2001.
+2.10, distributed as part of the
+Template Toolkit version 2.03, released on 15 June 2001.
 
 =head1 COPYRIGHT
 

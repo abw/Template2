@@ -21,7 +21,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.03 - 
+# Version 2.03 - 15th June 2001
 #------------------------------------------------------------------------
 
 * Added new virtual methods 'item', 'list', 'hash' to each of scalar, 
@@ -131,8 +131,14 @@
   Khera &lt;khera@kcilink.com&gt;.  Changed Makefile.PL to accept File::Spec
   version 0.6 or later.
 
+* Fixed a bug in the FOREACH directive which would barf with the error
+  &quot;undef error - loop is undefined&quot; when DEBUG was enabled.
+
 * Applied a patch from Eric Cholet to fix a bug in META data items not
   correctly escaping ' and \ characters.
+
+* Applied another patch from Eric to fix &quot;Use of uninitialised value&quot;
+  warning when using a subclassed parser.
 
 * Applied a patch to ttree from Leon Brocard print full path for ignored 
   files.

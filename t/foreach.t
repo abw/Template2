@@ -24,7 +24,7 @@ $^W = 1;
 
 #$Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 1;
-$Template::Directive::PRETTY = 1;
+#$Template::Directive::PRETTY = 1;
 
 my ($a, $b, $c, $d, $l, $o, $r, $u, $w ) = 
 	qw( alpha bravo charlie delta lima oscar romeo uncle whisky );
