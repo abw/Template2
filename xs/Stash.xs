@@ -41,6 +41,7 @@ extern "C" {
 #define PERL_NO_GET_CONTEXT
 #include "EXTERN.h"
 #include "perl.h"
+#include "ppport.h"
 #include "XSUB.h"
 
 #ifdef TT_PERF_ENABLE
@@ -372,6 +373,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
     STRLEN item_len;
     char *item = SvPV(key_sv, item_len);
     SV *result = &PL_sv_undef;
+    I32 atroot;
     TT_PERF_INIT;
 
 
@@ -380,172 +382,175 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
         return &PL_sv_undef;
      }
 
-    if (SvROK(root) && ((sv_derived_from(root, TT_STASH_PKG) ||
-	((SvTYPE(SvRV(root)) == SVt_PVHV) && !sv_isobject(root))))) {
+    if (SvROK(root)) {
+	atroot = sv_derived_from(root, TT_STASH_PKG);
 
-        /* root is a HASH or Template::Stash */
+	if (atroot
+	    || ((SvTYPE(SvRV(root)) == SVt_PVHV) && !sv_isobject(root))) {
+ 
+	    /* root is a HASH or Template::Stash */
 
-	switch(tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
-	case TT_RET_OK:
-	    /* return immediately */
-	    return result;
-	    break;
-
-	case TT_RET_CODEREF:
-	    /* fall through */
-	    break;
-
-	default:
-	    /* for lvalue, create an intermediate hash */
-	    if (flags & TT_LVALUE_FLAG) {
-		SV *newhash;
-		HV *roothv = (HV *) SvRV(root);
-
-		newhash = SvREFCNT_inc((SV *) newRV_noinc((SV *) newHV()));
-		if (! hv_store(roothv, item, item_len, newhash, 0)) {
-		    /* trigger any tied magic to STORE value */
-	            SvSETMAGIC(newhash);
-		    SvREFCNT_dec(newhash);
-		}
-		return sv_2mortal(newhash);
-	    }
-
-	    /* try hash pseudo-method */
-	    if (hash_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF) {
-		/* try hash slice */ 
-		if (SvROK(key_sv) && SvTYPE(SvRV(key_sv)) == SVt_PVAV) {
-		    AV *a_av = newAV();
-		    AV *k_av = (AV *) SvRV(key_sv);
-		    HV *r_hv = (HV *) SvRV(root);
-		    char *t;
-		    I32 i;
-		    STRLEN tlen;
-		    SV **svp;
-
-		    /* TODO: SvGETMAGIC x 2 below */
-
-		    for (i = 0; i <= av_len(k_av); i++) {
-			if ((svp = av_fetch(k_av, i, 0))) {
-			    t = SvPV(*svp, tlen);
-			    if((svp = hv_fetch(r_hv, t, tlen, FALSE)))
-				av_push(a_av, SvREFCNT_inc(*svp));
-			}
-		    }
-
-		    return sv_2mortal(newRV_noinc((SV *) a_av));
-	    	}
-	    }
-	}
-
-    }
-    else if (SvROK(root) && (SvTYPE(SvRV(root)) == SVt_PVAV) 
-		&& !sv_isobject(root)) {
-
-	/* root is an ARRAY */
-
-        /* try list pseudo-method, but not for lvalues */
-	if ((flags & TT_LVALUE_FLAG) ||
-		(list_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF)) {
-
-	    switch (tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
+	    switch(tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
 	    case TT_RET_OK:
+		/* return immediately */
 		return result;
 		break;
 
 	    case TT_RET_CODEREF:
+		/* fall through */
 		break;
 
 	    default:
-		/* try array slice */ 
-		if (SvROK(key_sv) && SvTYPE(SvRV(key_sv)) == SVt_PVAV) {
-		    AV *a_av = newAV();
-		    AV *k_av = (AV *) SvRV(key_sv);
-		    AV *r_av = (AV *) SvRV(root);
-		    I32 i;
-		    SV **svp;
+		/* for lvalue, create an intermediate hash */
+		if (flags & TT_LVALUE_FLAG) {
+		    SV *newhash;
+		    HV *roothv = (HV *) SvRV(root);
 
-		    /* TODO: SvGETMAGIC x 2 below */
-
-		    for (i = 0; i <= av_len(k_av); i++) {
-			if ((svp = av_fetch(k_av, i, FALSE))) {
-			    if (looks_like_number(*svp) && 
-				(svp = av_fetch(r_av, SvIV(*svp), FALSE)))
-				av_push(a_av, SvREFCNT_inc(*svp));
-			}
+		    newhash = SvREFCNT_inc((SV *) newRV_noinc((SV *) newHV()));
+		    if (! hv_store(roothv, item, item_len, newhash, 0)) {
+			/* trigger any tied magic to STORE value */
+			SvSETMAGIC(newhash);
+			SvREFCNT_dec(newhash);
 		    }
+		    return sv_2mortal(newhash);
+		}
 
-		    return sv_2mortal(newRV_noinc((SV *) a_av));
+		/* try hash pseudo-method (not at stash root, except import) */
+		if ((! atroot || (strcmp(item, "import") == 0))
+		    && hash_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF) {
+		    /* try hash slice */ 
+		    if (SvROK(key_sv) && SvTYPE(SvRV(key_sv)) == SVt_PVAV) {
+			AV *a_av = newAV();
+			AV *k_av = (AV *) SvRV(key_sv);
+			HV *r_hv = (HV *) SvRV(root);
+			char *t;
+			I32 i;
+			STRLEN tlen;
+			SV **svp;
+			
+			/* TODO: SvGETMAGIC x 2 below */
+
+			for (i = 0; i <= av_len(k_av); i++) {
+			    if ((svp = av_fetch(k_av, i, 0))) {
+				t = SvPV(*svp, tlen);
+				if((svp = hv_fetch(r_hv, t, tlen, FALSE)))
+				    av_push(a_av, SvREFCNT_inc(*svp));
+			    }
+			}
+			
+			return sv_2mortal(newRV_noinc((SV *) a_av));
+		    }
 		}
 	    }
+	    
 	}
-    }
-    else if (SvROK(root) && sv_isobject(root)) {
+	else if ((SvTYPE(SvRV(root)) == SVt_PVAV) && !sv_isobject(root)) {
 
-        /* root is an object */
+	    /* root is an ARRAY */
 
-	I32 n, i;
-	SV **svp;
-	HV *stash = SvSTASH((SV *) SvRV(root));
-	GV *gv;
-	result = NULL;
-
-	if ((gv = gv_fetchmethod_autoload(stash, item, 1))) {
-
-	    /* eval { @result = $root->$item(@$args); }; */
-
-	    TT_PERF_START_METHOD(item);
-	    PUSHMARK(SP);
-	    XPUSHs(root);
-	    n = (args && args != Nullav) ? av_len(args) : -1;
-	    for (i = 0; i <= n; i++)
-	        if ((svp = av_fetch(args, i, 0))) XPUSHs(*svp);
-	    PUTBACK;
-	    n = perl_call_method(item, G_ARRAY | G_EVAL);
-	    TT_PERF_END;
-	    SPAGAIN;
-
-	    if (SvTRUE(ERRSV)) {
-		(void) POPs;		/* remove undef from stack */
-		PUTBACK;
-		result = NULL;
-
-		/* temporary hack - required to propogate errors thrown
-	           by views; if $@ is a ref (e.g. Template::Exception)
-	           object then we assume it's a real error that needs
-	           real throwing */
-
-		if (SvROK(ERRSV) || !strstr(SvPV(ERRSV, PL_na), 
-			"Can't locate object method")) {
- 		    die_object(aTHX_ ERRSV);
-		}
-	    } else {
- 		result = fold_results(aTHX_ n);
-	    }
-	}
-
-	if (!result) {
-	    /* failed to call object method, so try some fallbacks */
-	    if ((SvTYPE(SvRV(root)) == SVt_PVHV)
- 		&& ((n = tt_fetch_item(aTHX_ root, key_sv, args, &result)) != TT_RET_UNDEF)) {
-		if (n == TT_RET_OK) {
+	    /* try list pseudo-method, but not for lvalues */
+	    if ((flags & TT_LVALUE_FLAG) ||
+		(list_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF)) {
+		
+		switch (tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
+		case TT_RET_OK:
 		    return result;
+		    break;
+		    
+		case TT_RET_CODEREF:
+		    break;
+		    
+		default:
+		    /* try array slice */ 
+		    if (SvROK(key_sv) && SvTYPE(SvRV(key_sv)) == SVt_PVAV) {
+			AV *a_av = newAV();
+			AV *k_av = (AV *) SvRV(key_sv);
+			AV *r_av = (AV *) SvRV(root);
+			I32 i;
+			SV **svp;
+			
+			/* TODO: SvGETMAGIC x 2 below */
+			
+			for (i = 0; i <= av_len(k_av); i++) {
+			    if ((svp = av_fetch(k_av, i, FALSE))) {
+				if (looks_like_number(*svp) && 
+				    (svp = av_fetch(r_av, SvIV(*svp), FALSE)))
+				    av_push(a_av, SvREFCNT_inc(*svp));
+			    }
+			}
+			
+			return sv_2mortal(newRV_noinc((SV *) a_av));
+		    }
 		}
-
-	    } 
-	    else if (SvTYPE(SvRV(root)) == SVt_PVAV) {
-		if ((list_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF)
-		    && (flags & TT_DEBUG_FLAG))
-             	  result = (SV *) mk_mortal_av(aTHX_ &PL_sv_undef, NULL, ERRSV);
 	    }
-	    else 
-		scalar_op(root, item, args, &result);
+	}
+	else if (sv_isobject(root)) {
+
+	    /* root is an object */
+
+	    I32 n, i;
+	    SV **svp;
+	    HV *stash = SvSTASH((SV *) SvRV(root));
+	    GV *gv;
+	    result = NULL;
+	    
+	    if ((gv = gv_fetchmethod_autoload(stash, item, 1))) {
+		
+		/* eval { @result = $root->$item(@$args); }; */
+		
+		TT_PERF_START_METHOD(item);
+		PUSHMARK(SP);
+		XPUSHs(root);
+		n = (args && args != Nullav) ? av_len(args) : -1;
+		for (i = 0; i <= n; i++)
+		    if ((svp = av_fetch(args, i, 0))) XPUSHs(*svp);
+		PUTBACK;
+		n = perl_call_method(item, G_ARRAY | G_EVAL);
+		TT_PERF_END;
+		SPAGAIN;
+		
+		if (SvTRUE(ERRSV)) {
+		    (void) POPs;		/* remove undef from stack */
+		    PUTBACK;
+		    result = NULL;
+		    
+		    /* temporary hack - required to propogate errors thrown
+		       by views; if $@ is a ref (e.g. Template::Exception)
+		       object then we assume it's a real error that needs
+		       real throwing */
+		    
+		    if (SvROK(ERRSV) || !strstr(SvPV(ERRSV, PL_na), 
+						"Can't locate object method")) {
+			die_object(aTHX_ ERRSV);
+		    }
+		} else {
+		    result = fold_results(aTHX_ n);
+		}
+	    }
+	    
+	    if (!result) {
+		/* failed to call object method, so try some fallbacks */
+		if ((SvTYPE(SvRV(root)) == SVt_PVHV)
+		    && ((n = tt_fetch_item(aTHX_ root, key_sv, args, &result)) != TT_RET_UNDEF)) {
+		    if (n == TT_RET_OK) {
+			return result;
+		    }
+		    
+		} 
+		else if (SvTYPE(SvRV(root)) == SVt_PVAV) {
+		    if ((list_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF)
+			&& (flags & TT_DEBUG_FLAG))
+			result = (SV *) mk_mortal_av(aTHX_ &PL_sv_undef, NULL, ERRSV);
+		}
+		else 
+		    scalar_op(root, item, args, &result);
+	    }
 	}
     }
-
     /* it doesn't look like we've got a reference to anything we know about,
      * so let's try the SCALAR_OPS pseudo-methods (but not for l-values) 
      */
-
+    
     else if (!(flags & TT_LVALUE_FLAG) 
 	     && (scalar_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF)) {
 	if (flags & TT_DEBUG_FLAG)
@@ -573,7 +578,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
     if ((flags & TT_DEBUG_FLAG) 
 	&& (!result || !SvOK(result) || (result == &PL_sv_undef))) {
 	croak("%s is undefined\n", item);
-}
+    }
 
     return result;
 }
