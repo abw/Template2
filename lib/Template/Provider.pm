@@ -36,7 +36,7 @@ package Template::Provider;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $ERROR $STAT_TTL );
+use vars qw( $VERSION $DEBUG $ERROR $DOCUMENT $STAT_TTL );
 use base qw( Template::Base );
 use Template::Config;
 use Template::Constants;
@@ -45,6 +45,9 @@ use File::Basename;
 use File::Spec;
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+
+# name of document class
+$DOCUMENT = 'Template::Document' unless defined $DOCUMENT;
 
 # maximum time between performing stat() on file to check staleness
 $STAT_TTL = 1 unless defined $STAT_TTL;
@@ -312,20 +315,21 @@ sub _init {
 	}
     }
 
-    $self->{ LOOKUP }       = { };
-    $self->{ SLOTS  }       = 0;
-    $self->{ SIZE }         = $size;
+    $self->{ LOOKUP       } = { };
+    $self->{ SLOTS        } = 0;
+    $self->{ SIZE         } = $size;
     $self->{ INCLUDE_PATH } = $path;
-    $self->{ DELIMITER }    = $dlim;
-    $self->{ COMPILE_DIR }  = $cdir;
-    $self->{ COMPILE_EXT }  = $params->{ COMPILE_EXT } || '';
-    $self->{ ABSOLUTE }     = $params->{ ABSOLUTE } || 0;
-    $self->{ RELATIVE }     = $params->{ RELATIVE } || 0;
-    $self->{ TOLERANT }     = $params->{ TOLERANT } || 0;
-    $self->{ PARSER }       = $params->{ PARSER };
-    $self->{ DEFAULT }      = $params->{ DEFAULT };
-#   $self->{ PREFIX }       = $params->{ PREFIX };
-    $self->{ PARAMS }       = $params;
+    $self->{ DELIMITER    } = $dlim;
+    $self->{ COMPILE_DIR  } = $cdir;
+    $self->{ COMPILE_EXT  } = $params->{ COMPILE_EXT } || '';
+    $self->{ ABSOLUTE     } = $params->{ ABSOLUTE } || 0;
+    $self->{ RELATIVE     } = $params->{ RELATIVE } || 0;
+    $self->{ TOLERANT     } = $params->{ TOLERANT } || 0;
+    $self->{ DOCUMENT     } = $params->{ DOCUMENT } || $DOCUMENT;
+    $self->{ PARSER       } = $params->{ PARSER };
+    $self->{ DEFAULT      } = $params->{ DEFAULT };
+#   $self->{ PREFIX       } = $params->{ PREFIX };
+    $self->{ PARAMS       } = $params;
 
     return $self;
 }
@@ -763,10 +767,11 @@ sub _compile {
 	    $basedir = $1;
 	    &File::Path::mkpath($basedir) unless -d $basedir;
 
+	    my $docclass = $self->{ DOCUMENT };
 	    $error = 'cache failed to write '
 		    . &File::Basename::basename($compfile)
-		    . ": $Template::Document::ERROR"
-		unless Template::Document::write_perl_file($compfile, $parsedoc);
+		    . ': ' . $docclass->error()
+		unless $docclass->write_perl_file($compfile, $parsedoc);
  
 	    # set atime and mtime of newly compiled file, don't bother
 	    # if time is undef
@@ -812,26 +817,39 @@ sub _compile {
 sub _dump {
     my $self = shift;
     my $size = $self->{ SIZE };
-    my $parser = $self->{ PARSER }->_dump();
+    my $parser = $self->{ PARSER };
+    $parser = $parser ? $parser->_dump() : '<no parser>';
     $parser =~ s/\n/\n    /gm;
     $size = 'unlimited' unless defined $size;
 
+    my $output = "[Template::Provider] {\n";
+    my $format = "    %-16s => %s\n";
+    my $key;
+
+    $output .= sprintf($format, 'INCLUDE_PATH', 
+		       '[ ' . join(', ', @{ $self->{ INCLUDE_PATH } }) . ' ]');
+    $output .= sprintf($format, 'CACHE_SIZE', $size);
+
+    foreach $key (qw( ABSOLUTE RELATIVE TOLERANT DELIMITER
+		      COMPILE_EXT COMPILE_DIR )) {
+	$output .= sprintf($format, $key, $self->{ $key });
+    }
+    $output .= sprintf($format, 'PARSER', $parser);
+
+
     local $" = ', ';
-    return <<EOF;
-$self
-INCLUDE_PATH => [ @{ $self->{ INCLUDE_PATH } } ]
-ABSOLUTE     => $self->{ ABSOLUTE }
-RELATIVE     => $self->{ RELATIVE }
-TOLERANT     => $self->{ TOLERANT }
-DELIMITER    => $self->{ DELIMITER }
-COMPILE_EXT  => $self->{ COMPILE_EXT }
-COMPILE_DIR  => $self->{ COMPILE_DIR }
-CACHE_SIZE   => $size
-SLOTS        => $self->{ SLOTS }
-LOOKUP       => $self->{ LOOKUP }
-PARSER       => $parser
-EOF
-#    join("\n", $self, map { "$_ => $self->{ $_ }" } keys %$self) . "\n";
+    my $lookup = $self->{ LOOKUP };
+    $lookup = join('', map { 
+	sprintf("    $format", $_, defined $lookup->{ $_ }
+		? ('[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
+			       @{ $lookup->{ $_ } }) . ' ]') : '<undef>');
+    } sort keys %$lookup);
+    $lookup = "{\n$lookup    }";
+    
+    $output .= sprintf($format, LOOKUP => $lookup);
+
+    $output .= '}';
+    return $output;
 }
 
 
