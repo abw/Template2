@@ -84,6 +84,7 @@ docs/src/Modules/Template/Plugin/GD/Text/Wrap.html
 docs/src/Modules/Template/Plugin/HTML.html
 docs/src/Modules/Template/Plugin/Iterator.html
 docs/src/Modules/Template/Plugin/Pod.html
+docs/src/Modules/Template/Plugin/Procedural.html
 docs/src/Modules/Template/Plugin/String.html
 docs/src/Modules/Template/Plugin/Table.html
 docs/src/Modules/Template/Plugin/URL.html
@@ -423,6 +424,7 @@ lib/Template/Plugin/GD/Text/Wrap.pm
 lib/Template/Plugin/HTML.pm
 lib/Template/Plugin/Iterator.pm
 lib/Template/Plugin/Pod.pm
+lib/Template/Plugin/Procedural.pm
 lib/Template/Plugin/String.pm
 lib/Template/Plugin/Table.pm
 lib/Template/Plugin/URL.pm
@@ -500,6 +502,8 @@ t/latex2dvi.t
 t/latex2pdf.t
 t/latex2ps.t
 t/leak.t
+t/lib/Template/Plugin/ProcBar.pm
+t/lib/Template/Plugin/ProcFoo.pm
 t/list.t
 t/macro.t
 t/object.t
@@ -509,6 +513,7 @@ t/plugins.t
 t/plusfile.t
 t/pod.t
 t/prefix.t
+t/proc.t
 t/process.t
 t/provider.t
 t/ref.t
