@@ -93,6 +93,45 @@ sub _throw {
 }
 
 
+#========================================================================
+package XML::XPath::Node::Element;
+#========================================================================
+
+#------------------------------------------------------------------------
+# present($view)
+#
+# Method to present an element node via a view.
+#------------------------------------------------------------------------
+
+sub present {
+    my ($self, $view) = @_;
+    $view->view($self->getName(), $self);
+}
+
+sub content {
+    my ($self, $view) = @_;
+    my $output = '';
+    foreach my $node (@{ $self->getChildNodes }) {
+	$output .= $node->present($view);
+    }
+    return $output;
+}
+
+#========================================================================
+package XML::XPath::Node::Text;
+#========================================================================
+
+#------------------------------------------------------------------------
+# present($view)
+#
+# Method to present a text node via a view.
+#------------------------------------------------------------------------
+
+sub present {
+    my ($self, $view) = @_;
+    $view->view('text', $self->string_value);
+}
+
 1;
 
 __END__
@@ -130,6 +169,32 @@ Template::Plugin::XML::XPath - Plugin interface to XML::XPath
        [% page.getAttribute('title') %]
     [% END %]
 
+    # define VIEW to present node(s)
+    [% VIEW repview notfound='xmlstring' %]
+       # handler block for a <report>...</report> element
+       [% BLOCK report %]
+          [% item.content(view) %]
+       [% END %]
+
+       # handler block for a <section title="...">...</section> element
+       [% BLOCK section %]
+       <h1>[% item.getAttribute('title') %]</h1>
+       [% item.content(view) %]
+       [% END %]
+
+       # default template block converts item to string representation
+       [% BLOCK xmlstring; item.toString; END %]
+       
+       # block to generate simple text
+       [% BLOCK text; item; END %]
+    [% END %]
+
+    # now present node (and children) via view
+    [% repview.print(page) %]
+
+    # or print node content via view
+    [% page.content(repview) %]
+
 =head1 PRE-REQUISITES
 
 This plugin requires that the XML::Parser and XML::XPath modules be 
@@ -141,6 +206,13 @@ installed.  These are available from CPAN:
 
 This is a Template Toolkit plugin interfacing to the XML::XPath module.
 
+All methods implemented by the XML::XPath modules are available.  In
+addition, the XML::XPath::Node::Element module implements
+present($view) and content($view) methods method for seamless
+integration with Template Toolkit VIEWs.  The XML::XPath::Node::Text
+module is also adorned with a present($view) method which presents
+itself via the view using the 'text' template.
+
 =head1 AUTHORS
 
 This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>.
@@ -149,8 +221,8 @@ The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
 
 =head1 VERSION
 
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.08, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 

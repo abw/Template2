@@ -39,7 +39,7 @@ use File::Path;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.02';
+$VERSION     = '2.03b';
 $ERROR       = '';
 $DEBUG       = 0;
 
@@ -884,9 +884,12 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -895,6 +898,4 @@ Template Toolkit version 2.02, released on 06 April 2001.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
-
-
 

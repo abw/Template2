@@ -29,6 +29,7 @@ use strict;
 use base qw( Template::Base );
 use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
 	     $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
+             $LATEX_PATH $PDFLATEX_PATH $DVIPS_PATH
 	     $STASH $SERVICE $CONTEXT );
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -45,6 +46,12 @@ $STASH    = 'Template::Stash';
 
 # the following is set at installation time by the Makefile.PL 
 $INSTDIR  = '/usr/local/tt2';
+
+# LaTeX executable paths set at installation time by the Makefile.PL
+# Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
+$LATEX_PATH    = '/usr/bin/latex';
+$PDFLATEX_PATH = '/usr/bin/pdflatex';
+$DVIPS_PATH    = '/usr/bin/dvips';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -235,6 +242,18 @@ sub instdir {
     return $inst;
 }
 
+#------------------------------------------------------------------------
+# latexpaths()
+#
+# Returns a reference to a three element array:
+#    [latex_path,  pdf2latex_path, dvips_path]
+# These values are determined by Makefile.PL at installation time
+# and are used by the latex(pdf|dvi|ps) filters.
+#------------------------------------------------------------------------
+
+sub latexpaths {
+    return [$LATEX_PATH, $PDFLATEX_PATH, $DVIPS_PATH];
+}
 
 #========================================================================
 # This should probably be moved somewhere else in the long term, but for
@@ -368,10 +387,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.08, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.09, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -384,5 +406,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>
-
-

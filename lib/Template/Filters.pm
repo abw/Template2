@@ -52,6 +52,7 @@ $FILTERS = {
     'lower'      => sub { lc $_[0] },
     'stderr'     => sub { print STDERR @_; return '' },
     'trim'       => sub { for ($_[0]) { s/^\s+//; s/\s+$// }; $_[0] },
+    'null'       => sub { return '' },
     'collapse'   => sub { for ($_[0]) { s/^\s+//; s/\s+$//; s/\s+/ /g };
 			  $_[0] },
 
@@ -68,6 +69,8 @@ $FILTERS = {
     'evalperl'   => [ \&perl_filter_factory,     1 ],	# alias
     'redirect'   => [ \&redirect_filter_factory, 1 ],
     'file'       => [ \&redirect_filter_factory, 1 ],   # alias
+    'stdout'     => [ \&stdout_filter_factory,   1 ],
+    'latex'      => [ \&latex_filter_factory,    1 ],
 };
 
 
@@ -428,7 +431,175 @@ sub redirect_filter_factory {
 }
 
 
+#------------------------------------------------------------------------
+# stdout_filter_factory($context, $binmode)    [% Filter stdout(binmode) %]
+#
+# Create a filter to print a block to stdout, with an optional binmode.
+#------------------------------------------------------------------------
 
+sub stdout_filter_factory {
+    my ($context, $binmode) = @_;
+
+    sub {
+	my $text = shift;
+        binmode STDOUT if ( $binmode );
+        print STDOUT $text;
+	return '';
+    }
+}
+
+#------------------------------------------------------------------------
+# latex_filter_factory($context, $outputType)   [% Filter latex(outputType) %]
+#
+# Return a filter sub that converts a (hopefully) complete LaTeX source
+# file to either "ps", "dvi", or "pdf".  Output type should be "ps", "dvi"
+# or "pdf" (pdf is default).
+#
+# Creates a temporary directory below File::Spec->tmpdir() (often /tmp)
+# and writes the text into doc.tex. It then runs either pdflatex or
+# latex and optionally dvips. Based on the exit status either returns
+# the entire doc.(pdf|ps|dvi) output or throws an error with a summary
+# of the error messages from doc.log.
+#
+# Written by Craig Barratt, Apr 28 2001.
+# Win32 additions by Richard Tietjen.
+#------------------------------------------------------------------------
+use File::Path;
+use File::Spec;
+use Cwd;
+
+sub latex_filter_factory
+{
+    my($context, $output) = @_;
+
+    $output = lc($output);
+    my $fName = "latex";
+    my($LaTeXPath, $PdfLaTeXPath, $DviPSPath)
+                        = @{Template::Config->latexpaths()};
+    if ( $output eq "ps" || $output eq "dvi" ) {
+        $context->throw($fName,
+                "latex not installed (see Template::Config::LATEX_PATH)")
+                                if ( $LaTeXPath eq "" );
+    } else {
+        $output = "pdf";
+        $LaTeXPath = $PdfLaTeXPath;
+        $context->throw($fName,
+                "pdflatex not installed (see Template::Config::PDFLATEX_PATH)")
+                                if ( $LaTeXPath eq "" );
+    }
+    if ( $output eq "ps" && $DviPSPath eq "" ) {
+        $context->throw($fName,
+                "dvips not installed (see Template::Config::DVIPS_PATH)");
+    }
+    if ( $^O !~ /^(MacOS|os2|VMS)$/i ) {
+        return sub {
+            local(*FH);
+            my $text = shift;
+            my $tmpRootDir = File::Spec->tmpdir();
+            my $cnt = 0;
+            my($tmpDir, $fileName, $devnull);
+            my $texDoc = 'doc';
+
+            do {
+                $tmpDir = File::Spec->catdir($tmpRootDir,
+                                             "tt2latex$$" . "_$cnt");
+                $cnt++;
+            } while ( -e $tmpDir );
+            mkpath($tmpDir, 0, 0700);
+            $context->throw($fName, "can't create temp dir $tmpDir")
+                    if ( !-d $tmpDir );
+            $fileName = File::Spec->catfile($tmpDir, "$texDoc.tex");
+            $devnull  = File::Spec->devnull();
+            if ( !open(FH, ">$fileName") ) {
+                rmtree($tmpDir);
+                $context->throw($fName, "can't open $fileName for output");
+            }
+            print(FH $text);
+            close(FH);
+
+            # latex must run in tmpDir directory
+            my $currDir = cwd();
+            if ( !chdir($tmpDir) ) {
+                rmtree($tmpDir);
+                $context->throw($fName, "can't chdir $tmpDir");
+            }
+            #
+            # We don't need to quote the backslashes on windows, but we
+            # do on other OSs
+            #
+            my $LaTeX_arg = "\\nonstopmode\\input{$texDoc}";
+            $LaTeX_arg = "'$LaTeX_arg'" if ( $^O !~ /win/i );
+            if ( system("$LaTeXPath $LaTeX_arg"
+                   . " 1>$devnull 2>$devnull 0<$devnull") ) {
+                my $texErrs = "";
+                $fileName = File::Spec->catfile($tmpDir, "$texDoc.log");
+                if ( open(FH, "<$fileName") ) {
+                    my $state = 0;
+                    #
+                    # Try to extract just the interesting errors from
+                    # the verbose log file
+                    #
+                    while ( <FH> ) {
+                        #
+                        # TeX errors seems to start with a "!" at the
+                        # start of the line, and are followed several
+                        # lines later by a line designator of the
+                        # form "l.nnn" where nnn is the line number.
+                        # We make sure we pick up every /^!/ line, and
+                        # the first /^l.\d/ line after each /^!/ line.
+                        #
+                        if ( /^(!.*)/ ) {
+                            $texErrs .= $1 . "\n";
+                            $state = 1;
+                        }
+                        if ( $state == 1 && /^(l\.\d.*)/ ) {
+                            $texErrs .= $1 . "\n";
+                            $state = 0;
+                        }
+                    }
+                    close(FH);
+                } else {
+                    $texErrs = "Unable to open $fileName\n";
+                }
+                my $ok = chdir($currDir);
+                rmtree($tmpDir);
+                $context->throw($fName, "can't chdir $currDir") if ( !$ok );
+                $context->throw($fName, "latex exited with errors:\n$texErrs");
+            }
+            if ( $output eq "ps" ) {
+                $fileName = File::Spec->catfile($tmpDir, "$texDoc.dvi");
+                if ( system("$DviPSPath $texDoc -o"
+                       . " 1>$devnull 2>$devnull 0<$devnull") ) {
+                    my $ok = chdir($currDir);
+                    rmtree($tmpDir);
+                    $context->throw($fName, "can't chdir $currDir") if ( !$ok );
+                    $context->throw($fName, "can't run $DviPSPath $fileName");
+                }
+            }
+            if ( !chdir($currDir) ) {
+                rmtree($tmpDir);
+                $context->throw($fName, "can't chdir $currDir");
+            }
+
+            my $retStr;
+            $fileName = File::Spec->catfile($tmpDir, "$texDoc.$output");
+            if ( open(FH, $fileName) ) {
+                local $/ = undef;       # slurp file in one go
+                binmode(FH);
+                $retStr = <FH>;
+                close(FH);
+            } else {
+                rmtree($tmpDir);
+                $context->throw($fName, "Can't open output file $fileName");
+            }
+            rmtree($tmpDir);
+            return $retStr;
+        }
+    } else {
+        $context->throw("$fName not yet supported on $^O OS."
+                      . "  Please contribute code!!");
+    }
+}
 
 1;
 
@@ -637,9 +808,8 @@ comply, then a 'E<lt>resourceE<gt> not found' exception is raised.
 The following standard filters are distributed with the Template Toolkit.
 
 
-=over 4
 
-=item format(format)
+=head2 format(format)
 
 The 'format' filter takes a format string as a parameter (as per
 printf()) and formats each line of text accordingly.
@@ -654,7 +824,7 @@ output:
     <!-- This is a block of text filtered        -->
     <!-- through the above format.               -->
 
-=item upper
+=head2 upper
 
 Folds the input to UPPER CASE.
 
@@ -664,7 +834,7 @@ output:
 
     HELLO WORLD
 
-=item lower
+=head2 lower
 
 Folds the input to lower case.
 
@@ -674,7 +844,7 @@ output:
 
     hello world
 
-=item trim
+=head2 trim
 
 Trims any leading or trailing whitespace from the input text.  Particularly 
 useful in conjunction with INCLUDE, PROCESS, etc., having the same effect
@@ -682,7 +852,7 @@ as the TRIM configuration option.
 
     [% INCLUDE myfile | trim %]
 
-=item collapse
+=head2 collapse
 
 Collapse any whitespace sequences in the input text into a single space.
 Leading and trailing whitespace (which would be reduced to a single space)
@@ -702,7 +872,7 @@ output:
 
     The cat sat on the mat
 
-=item html
+=head2 html
 
 Converts the characters 'E<lt>', 'E<gt>' and '&' to '&lt;', '&gt;' and
 '&amp', respectively, protecting them from being interpreted as
@@ -716,7 +886,7 @@ output:
 
     Binary "&lt;=&gt;" returns -1, 0, or 1 depending on...
 
-=item html_para
+=head2 html_para
 
 This filter formats a block of text into HTML paragraphs.  A sequence of 
 two or more newlines is used as the delimiter for paragraphs which are 
@@ -738,7 +908,7 @@ output:
     Mary had a little lamb.
     </p>
 
-=item html_break
+=head2 html_break
 
 Similar to the html_para filter described above, but uses the HTML tag
 sequence E<lt>brE<gt>E<lt>brE<gt> to join paragraphs.
@@ -756,7 +926,7 @@ output:
     <br>
     Mary had a little lamb.
 
-=item indent(pad)
+=head2 indent(pad)
 
 Indents the text block by a fixed pad string or width.  The 'pad' argument
 can be specified as a string, or as a numerical value to indicate a pad
@@ -772,7 +942,7 @@ output:
     ME> blah blah blah
     ME> cabbages, rhubard, onions
 
-=item truncate(length)
+=head2 truncate(length)
 
 Truncates the text block to the length specified, or a default length of
 32.  Truncated text will be terminated with '...' (i.e. the '...' falls
@@ -787,7 +957,7 @@ output:
 
     I have much to say...
 
-=item repeat(iterations)
+=head2 repeat(iterations)
 
 Repeats the text block for as many iterations as are specified (default: 1).
 
@@ -803,7 +973,7 @@ output:
     We want more beer and we want more beer,
     We are the more beer wanters!
 
-=item remove(string) 
+=head2 remove(string) 
 
 Searches the input text for any occurrences of the specified string and 
 removes them.  A Perl regular expression may be specified as the search 
@@ -815,7 +985,7 @@ output:
 
     Thecatsatonthemat
 
-=item replace(search, replace) 
+=head2 replace(search, replace) 
 
 Similar to the remove filter described above, but taking a second parameter
 which is used as a replacement string for instances of the search string.
@@ -826,7 +996,7 @@ output:
 
     The_cat_sat_on_the_mat
 
-=item redirect(file)
+=head2 redirect(file)
 
 The 'redirect' filter redirects the output of the block into a separate
 file, specified relative to the OUTPUT_PATH configuration item.
@@ -846,7 +1016,7 @@ or more succinctly, using side-effect notation:
 
 A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
 
-=item eval(template_text)
+=head2 eval(template_text)
 
 The 'eval' filter evaluates the block as template text, processing
 any directives embedded within it.  This allows template variables to
@@ -869,7 +1039,7 @@ is therefore equivalent to
 
 The 'evaltt' filter is provided as an alias for 'eval'.
 
-=item perl(perlcode)
+=head2 perl(perlcode)
 
 The 'perl' filter evaluates the block as Perl code.  The EVAL_PERL
 option must be set to a true value or a 'perl' exception will be
@@ -895,12 +1065,103 @@ as well as
 The 'evalperl' filter is provided as an alias for 'perl' for backwards
 compatibility.
 
-=item stderr
+=head2 stdout(binmode)
 
-The stderr filter prints the output generating by the enclosing block to
-STDERR 
+The stdout filter prints the output generated by the enclosing block to
+STDOUT.  If binmode is set, binary mode on STDOUT is turned on (see the
+binmode perl function.
 
-=back
+The stdout filter can be used to force binmode on STDOUT, or also inside
+redirect, null or stderr blocks to make sure that particular output goes
+to stdout. See the null filter below for an example.
+
+=head2 stderr
+
+The stderr filter prints the output generated by the enclosing block to
+STDERR.
+
+=head2 null
+
+The null filter prints nothing.  This is useful for plugins whose
+methods return values that you don't want to appear in the output.
+Rather than assigning every plugin method call to a dummy variable
+to silence it, you can wrap the block in a null filter:
+
+    [% FILTER null;
+        USE im = GD.Image(100,100);
+        black = im.colorAllocate(0,   0, 0);
+        red   = im.colorAllocate(255,0,  0);
+        blue  = im.colorAllocate(0,  0,  255);
+        im.arc(50,50,95,75,0,360,blue);
+        im.fill(50,50,red);
+        im.png | stdout(1);
+       END;
+    -%]
+
+Notice the use of the stdout filter to ensure that a particular expression
+generates output to stdout (in this case in binary mode).
+
+=head2 latex(outputType)
+
+Passes the text block to LaTeX and produces either PDF, DVI or
+PostScript output.  The 'outputType' argument determines the output
+format and it should be set to one of the strings: "pdf" (default),
+"dvi", or "ps".
+
+The text block should be a complete LaTeX source file.
+
+    [% FILTER latex("pdf") -%]
+    \documentclass{article}
+
+    \begin{document}
+
+    \title{A Sample TT2 \LaTeX\ Source File}
+    \author{Craig Barratt}
+    \maketitle
+
+    \section{Introduction}
+    This is some text.
+
+    \end{document}
+    [% END -%]
+
+The output will be a PDF file. You should be careful not to prepend or
+append any extraneous characters or text outside the FILTER block,
+since this text will wrap the (binary) output of the latex filter.
+Notice the END directive uses '-%]' for the END_TAG to remove the
+trailing new line.
+
+One example where you might prepend text is in a CGI script where
+you might include the Content-Type before the latex output, eg:
+
+    Content-Type: application/pdf
+
+    [% FILTER latex("pdf") -%]
+    \documentclass{article}
+    \begin{document}
+    ...
+    \end{document}
+    [% END -%]
+
+In other cases you might use the redirect filter to put the output
+into a file, rather than delivering it to stdout.  This might be
+suitable for batch scripts:
+
+    [% output = FILTER latex("pdf") -%]
+    \documentclass{article}
+    \begin{document}
+    ...
+    \end{document}
+    [% END; output | redirect("document.pdf", 1) -%]
+
+(Notice the second argument to redirect to force binary mode.)
+
+Note that the latex filter runs one or two external programs, so it
+isn't very fast.  But for modest documents the performance is adequate,
+even for interactive applications.
+
+A error of type 'latex' will be thrown if there is an error reported
+by latex, pdflatex or dvips.
 
 =head1 AUTHOR
 
@@ -908,10 +1169,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.11, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.12, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -924,5 +1188,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Context|Template::Context>
-
-

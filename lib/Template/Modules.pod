@@ -134,6 +134,12 @@ Magical storage for template variables
 
 
 
+=item L<Template::Stash::Context|Template::Stash::Context>
+
+Experimetal stash allowing list/scalar context definition
+
+
+
 =item L<Template::Test|Template::Test>
 
 Module for automating TT2 test scripts
@@ -191,6 +197,108 @@ Plugin providing information about files
 =item L<Template::Plugin::Format|Template::Plugin::Format>
 
 Plugin to create formatting functions
+
+
+
+=item L<Template::Plugin::GD::Image|Template::Plugin::GD::Image>
+
+Interface to GD Graphics Library
+
+
+
+=item L<Template::Plugin::GD::Polygon|Template::Plugin::GD::Polygon>
+
+Interface to GD module Polygon class
+
+
+
+=item L<Template::Plugin::GD::Constants|Template::Plugin::GD::Constants>
+
+Interface to GD module constants
+
+
+
+=item L<Template::Plugin::GD::Text|Template::Plugin::GD::Text>
+
+Text utilities for use with GD
+
+
+
+=item L<Template::Plugin::GD::Text::Align|Template::Plugin::GD::Text::Align>
+
+Draw aligned strings in GD images
+
+
+
+=item L<Template::Plugin::GD::Text::Wrap|Template::Plugin::GD::Text::Wrap>
+
+Break and wrap strings in GD images
+
+
+
+=item L<Template::Plugin::GD::Graph::lines|Template::Plugin::GD::Graph::lines>
+
+Create line graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::lines3d|Template::Plugin::GD::Graph::lines3d>
+
+Create 3D line graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::bars|Template::Plugin::GD::Graph::bars>
+
+Create bar graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::bars3d|Template::Plugin::GD::Graph::bars3d>
+
+Create 3D bar graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::points|Template::Plugin::GD::Graph::points>
+
+Create point graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::linespoints|Template::Plugin::GD::Graph::linespoints>
+
+Create line/point graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::area|Template::Plugin::GD::Graph::area>
+
+Create area graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::mixed|Template::Plugin::GD::Graph::mixed>
+
+Create mixed graphs with axes and legends
+
+
+
+=item L<Template::Plugin::GD::Graph::pie|Template::Plugin::GD::Graph::pie>
+
+Create pie charts with legends
+
+
+
+=item L<Template::Plugin::GD::Graph::pie3d|Template::Plugin::GD::Graph::pie3d>
+
+Create 3D pie charts with legends
+
+
+
+=item L<Template::Plugin::HTML|Template::Plugin::HTML>
+
+Plugin to create HTML elements
 
 
 
@@ -264,9 +372,12 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -275,6 +386,4 @@ Template Toolkit version 2.02, released on 06 April 2001.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
-
-
 

@@ -1,0 +1,77 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE g = GD.Graph.bars(x_size, y_size); %]
+
+=head1 EXAMPLES
+
+    [% FILTER null;
+        data = [  
+            ["1st","2nd","3rd","4th","5th","6th","7th", "8th", "9th"],
+            [    1,    2,    5,    6,    3,  1.5,    1,     3,     4],
+        ];
+        
+        USE my_graph = GD.Graph.bars();
+        
+        my_graph.set(
+            x_label         => 'X Label',
+            y_label         => 'Y label',
+            title           => 'A Simple Bar Chart',
+            y_max_value     => 8,
+            y_tick_number   => 8, 
+            y_label_skip    => 2,
+
+            # shadows
+            bar_spacing     => 8,
+            shadow_depth    => 4, 
+            shadowclr       => 'dred',
+
+            transparent     => 0,
+        );      
+        my_graph.plot(data).png | stdout(1);
+       END;
+    -%]
+
+    [% FILTER null;
+        data = [
+            ["1st","2nd","3rd","4th","5th","6th","7th", "8th", "9th"],
+            [    5,   12,   24,   33,   19,    8,    6,    15,    21],
+            [    1,    2,    5,    6,    3,  1.5,    1,     3,     4],
+        ];      
+        
+        USE my_graph = GD.Graph.bars();
+
+        my_graph.set(
+            x_label         => 'X Label',
+            y_label         => 'Y label',
+            title           => 'Two data sets',
+        
+            # shadows
+            bar_spacing     => 8,
+            shadow_depth    => 4,
+            shadowclr       => 'dred',
+
+            long_ticks      => 1,
+            y_max_value     => 40,
+            y_tick_number   => 8,
+            y_label_skip    => 2,
+            bar_spacing     => 3,
+
+            accent_treshold => 200,
+
+            transparent     => 0,
+        );
+        my_graph.set_legend( 'Data set 1', 'Data set 2' );
+        my_graph.plot(data).png | stdout(1);
+       END;
+    -%]
+
+=head1 DESCRIPTION
+
+The GD.Graph.bars plugin provides an interface to the GD::Graph::bars
+class defined by the GD::Graph module. It allows one or more (x,y) data
+sets to be plotted with each point represented by a bar, in addition
+to axes and legends.
+
+See L<GD::Graph> for more details.
+

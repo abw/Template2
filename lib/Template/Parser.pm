@@ -301,9 +301,14 @@ sub split_text {
 	    my $space = $postchomp == &Template::Constants::CHOMP_COLLAPSE 
 		? ' ' : '';
 
-	    # only chomp newline if it's not the last character
-	    $chomp and $text =~ s/^([ \t]*)\n(.|\n)/(($1||$2) ? $space : '') . $2/e
-		   and $postlines++;
+	    $postlines++ 
+		if $chomp and $text =~ s/ 
+		    ^
+		    ([ \t]*)\n    # whitespace to newline
+		    (?:(.|\n)|$)      # any char (not EOF)
+		    / 
+		    (($1||$2) ? $space : '') . (defined $2 ? $2 : '')
+		    /ex;
 	}
 
 	# any text preceding the directive can now be added
@@ -1257,10 +1262,13 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 
 
+
+
+
 =head1 VERSION
 
-2.12, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.13, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
  
 

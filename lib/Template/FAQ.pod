@@ -18,7 +18,7 @@
 #   modify it under the same terms as Perl itself.
 #
 # REVISION
-#   2.07
+#   2.08
 #
 #========================================================================
 
@@ -106,6 +106,51 @@ info.
 
 =back
 
+=item Can I fetch templates via http?
+
+    To: Adam Theo <adamtheo@theoretic.com> 
+    From: Craig Barratt <craig@arraycomm.com>
+    Date: Fri, 18 May 2001 17:06:59 -0700
+      
+    > i was wondering if there is anyway to fetch a file using http:// or
+    > ftp:// and include that?
+      
+    Here's one way.  Set the LOAD_PERL option:
+      
+    	use Template;
+     
+    	my $template = Template->new({  
+    	    LOAD_PERL => 1
+    	});  
+    	$template->process("example.tt", { stdout => *STDOUT })
+    				     || die $template->error();
+     
+    and then use LWP::UserAgent and HTTP::Request:
+     
+    	[% 
+    	    USE ua = LWP.UserAgent; 
+    	    ua.proxy("http", "http://your_proxy/");
+    	    USE req = HTTP.Request("GET", "http://www.cpan.org");
+    	    ua.request(req).content;
+    	-%]
+     
+    For FTP use Net::FTP:
+     
+    	[%   
+    	    USE ftp = Net.FTP("ftp.cpan.org");
+    	    x = ftp.login("anonymous", "me@here.there");
+    	    x = ftp.cwd("/");
+    	    x = ftp.get("welcome.msg", stdout);
+    	    x = ftp.quit;
+    	-%]
+     
+    Normally ftp.get would write the file into the current directory.
+    Instead we pass stdout as a second argument so that it is written
+    to stdout.  We set stdout to STDOUT in the variables we pass to
+    process. 
+     
+    Craig
+
 =head2 Miscellaneous
 
 =over 4
@@ -122,10 +167,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.08, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -134,6 +182,4 @@ Template Toolkit version 2.02, released on 06 April 2001.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
-
-
 

@@ -1,0 +1,42 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE HTML %]
+
+    [% HTML.escape("if (a < b && c > d) ..." %]
+
+    [% HTML.element(table => { border => 1, cellpadding => 2 }) %]
+
+    [% HTML.attributes(border => 1, cellpadding => 2) %]
+
+=head1 DESCRIPTION
+
+The HTML plugin is very new and very basic, implementing a few useful
+methods for generating HTML.  It is likely to be extended in the future
+or integrated with a larger project to generate HTML elements in a generic
+way (as discussed recently on the mod_perl mailing list).
+
+=head1 METHODS
+
+=head2 escape(text)
+
+Returns the source text with any HTML reserved characters such as 
+E<lt>, E<gt>, etc., correctly esacped to their entity equivalents.
+
+=head2 attributes(hash)
+
+Returns the elements of the hash array passed by reference correctly
+formatted (e.g. values quoted and correctly escaped) as attributes for
+an HTML element.
+
+=head2 element(type, attributes)
+
+Generates an HTML element of the specified type and with the attributes
+provided as an optional hash array reference as the second argument or
+as named arguments.
+
+    [% HTML.element(table => { border => 1, cellpadding => 2 }) %]
+    [% HTML.element('table', border=1, cellpadding=2) %]
+    [% HTML.element(table => attribs) %]
+
+

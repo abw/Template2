@@ -277,6 +277,19 @@ square corners on the other.  Default has rounded at the top, set
     default   = 'col, textcol, font, size, bold, width, align'
 *]
 
+=head2 splash/hair
+
+Generates a frame enclosing the content within crosshair corners.
+
+    [% INCLUDE splash/hair
+           content = 'Template Toolkit'
+    %]
+
+[* INCLUDE item/config
+    container = 'Hair'
+    items     = 'content, style'
+    default   = 'col, bgcol, align'
+*]
 
 =head2 splash/menu
 
@@ -541,6 +554,10 @@ Width of tabs.
 [*#------------------------------------------------------------------------*]
 [* BLOCK default/col *]
 =item col (style.col.text)
+
+[* END -*]
+[* BLOCK default/bgcol *]
+=item bgcol (style.col.back)
 
 [* END -*]
 [* BLOCK default/fill *]

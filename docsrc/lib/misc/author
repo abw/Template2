@@ -3,4 +3,7 @@
 [% author.name %] E<lt>[% author.email %]E<gt>
 [% IF author.home %]
 L<[% author.home %]|[% author.home %]>
-[% END -%]
+[% END %]
+[% "\n${page.authadd}" IF page.authadd %]
+
+

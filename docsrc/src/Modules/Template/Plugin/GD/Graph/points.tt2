@@ -1,0 +1,41 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE g = GD.Graph.points(x_size, y_size); %]
+
+=head1 EXAMPLES
+
+    [% FILTER null; 
+        data = [
+            ["1st","2nd","3rd","4th","5th","6th","7th", "8th", "9th"],
+            [    5,   12,   24,   33,   19,    8,    6,    15,    21],
+            [    1,    2,    5,    6,    3,  1.5,    2,     3,     4],
+        ];
+        USE my_graph = GD.Graph.points();
+        my_graph.set(
+                x_label => 'X Label',
+                y_label => 'Y label',
+                title => 'A Points Graph',
+                y_max_value => 40,
+                y_tick_number => 8,
+                y_label_skip => 2,
+                legend_placement => 'RC',
+                long_ticks => 1,
+                marker_size => 6, 
+                markers => [ 1, 7, 5 ],
+            
+                transparent => 0,
+        );  
+        my_graph.set_legend('one', 'two');
+        my_graph.plot(data).png | stdout(1);
+       END; 
+    -%]
+
+=head1 DESCRIPTION
+
+The GD.Graph.points plugin provides an interface to the GD::Graph::points
+class defined by the GD::Graph module. It allows one or more (x,y) data
+sets to be plotted as points, in addition to axes and legends.
+
+See L<GD::Graph> for more details.
+

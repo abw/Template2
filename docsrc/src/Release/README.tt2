@@ -12,7 +12,7 @@ QUICK START
 
 The latest version of the Template Toolkit can be retrieved from:
 
-    http://www.cpan.org/modules/Template/
+    http://www.cpan.org/modules/by-module/Template/
 
 Fetch and install AppConfig 1.52 if you don't already have it installed.
 Available from CPAN in:
@@ -26,6 +26,10 @@ need to install them.  They're all available from CPAN if you do.
 
     Text::Autoformat 1.03+
     DBI 1.14+ (and relevant DBD drivers)
+    GD 1.32+
+    GD::Text 0.80+
+    GD::Graph 1.33+
+    GD::Graph3d 0.55+
     Pod::POM 0.1+
     XML::Parser 2.23+
     XML::DOM 1.27+ (in libxml-enno)
@@ -237,6 +241,10 @@ all available from CPAN, should be installed:
     ------              --------
     Autoformat	        Text::Autoformat 1.03+
     DBI			DBI 1.14+ and relevant DBD drivers
+    GD                  GD 1.32+
+    GD::Text            GD::Text 0.80+
+    GD::Graph           GD::Graph 1.33+
+    GD::Graph::lines3d  GD::Graph3d 0.55+
     Pod	                Pod::POM 0.1+
     XML::DOM            XML::DOM 1.27+   (requires XML::Parser 2.23+)
     XML::RSS            XML::RSS 0.9+    (ditto)

@@ -36,15 +36,18 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $STD_PLUGINS   = {
     'autoformat' => 'Template::Plugin::Autoformat',
     'cgi'        => 'Template::Plugin::CGI',
-    'date'       => 'Template::Plugin::Date',
-    'dbi'        => 'Template::Plugin::DBI',
-    'url'        => 'Template::Plugin::URL',
-    'pod'        => 'Template::Plugin::Pod',
-    'format'     => 'Template::Plugin::Format',
-    'table'      => 'Template::Plugin::Table',
-    'iterator'   => 'Template::Plugin::Iterator',
     'datafile'   => 'Template::Plugin::Datafile',
+    'date'       => 'Template::Plugin::Date',
+    'directory'  => 'Template::Plugin::Directory',
+    'dbi'        => 'Template::Plugin::DBI',
     'dumper'     => 'Template::Plugin::Dumper',
+    'file'       => 'Template::Plugin::File',
+    'format'     => 'Template::Plugin::Format',
+    'html'       => 'Template::Plugin::HTML',
+    'iterator'   => 'Template::Plugin::Iterator',
+    'pod'        => 'Template::Plugin::Pod',
+    'table'      => 'Template::Plugin::Table',
+    'url'        => 'Template::Plugin::URL',
     'view'       => 'Template::Plugin::View',
     'wrap'       => 'Template::Plugin::Wrap',
 };
@@ -483,9 +486,7 @@ Toolkit.  Some of the plugins interface to external modules (detailed
 below) which should be downloaded from any CPAN site and installed
 before using the plugin.
 
-=over 4
-
-=item Autoformat
+=head2 Autoformat
 
 The Autoformat plugin is an interface to Damian Conway's Text::Autoformat 
 Perl module which provides advanced text wrapping and formatting.  See
@@ -500,7 +501,7 @@ The Text::Autoformat module is available from CPAN:
 
     http://www.cpan.org/modules/by-module/Text/
 
-=item CGI
+=head2 CGI
 
 The CGI plugin is a wrapper around Lincoln Stein's 
 E<lt>lstein@genome.wi.mit.eduE<gt> CGI.pm module.  The plugin is 
@@ -515,7 +516,7 @@ or is available from CPAN.
                        Values => [ 'Green', 'Brown' ] ) %]
     [% CGI.end_form %]
 
-=item Datafile
+=head2 Datafile
 
 Provides an interface to data stored in a plain text file in a simple
 delimited format.  The first line in the file specifies field names
@@ -540,7 +541,7 @@ example:
        [% user.name %] ([% user.id %])
     [% END %]
 
-=item Date
+=head2 Date
 
 The Date plugin provides an easy way to generate formatted time and date
 strings by delegating to the POSIX strftime() routine.   See
@@ -551,7 +552,21 @@ L<Template::Plugin::Date> and L<POSIX> for further details.
 
     File last modified: [% date.format(template.modtime) %]
 
-=item DBI
+=head2 Directory
+
+The Directory plugin provides a simple interface to a directory and
+the files within it.  See L<Template::Plugin::Directory> for further
+details.
+
+    [% USE dir = Directory('/tmp') %]
+    [% FOREACH file = dir.files %]
+        # all the plain files in the directory
+    [% END %]
+    [% FOREACH file = dir.dirs %]
+        # all the sub-directories
+    [% END %]
+
+=head2 DBI
 
 The DBI plugin, developed by Simon Matthews
 E<lt>sam@knowledgepool.comE<gt>, brings the full power of Tim Bunce's
@@ -568,7 +583,7 @@ The DBI and relevant DBD modules are available from CPAN:
 
   http://www.cpan.org/modules/by-module/DBI/
 
-=item Dumper
+=head2 Dumper
 
 The Dumper plugin provides an interface to the Data::Dumper module.  See
 L<Template::Plugin::Dumper> and L<Data::Dumper> for futher details.
@@ -576,7 +591,18 @@ L<Template::Plugin::Dumper> and L<Data::Dumper> for futher details.
     [% USE dumper(indent=0, pad="<br>") %]
     [% dumper.dump(myvar, yourvar) %]
 
-=item Format
+=head2 File
+
+The File plugin provides a general abstraction for files and can be
+used to fetch information about specific files within a filesystem.
+See L<Template::Plugin::File> for further details.
+
+    [% USE File('/tmp/foo.html') %]
+    [% File.name %]     # foo.html
+    [% File.dir %]      # /tmp
+    [% File.mtime %]    # modification time
+
+=head2 Format
 
 The Format plugin provides a simple way to format text according to a
 printf()-like format.   See L<Template::Plugin::Format> for further 
@@ -585,7 +611,141 @@ details.
     [% USE bold = format('<b>%s</b>') %]
     [% bold('Hello') %]
 
-=item Iterator
+=head2 GD::Image, GD::Polygon, GD::Constants
+
+These plugins provide access to the GD graphics library via Lincoln
+D. Stein's GD.pm interface.  These plugins allow PNG, JPEG and other
+graphical formats to be generated.
+
+    [% FILTER null;
+        USE im = GD.Image(100,100);
+        # allocate some colors
+        black = im.colorAllocate(0,   0, 0);
+        red   = im.colorAllocate(255,0,  0);
+        blue  = im.colorAllocate(0,  0,  255);
+        # Draw a blue oval
+        im.arc(50,50,95,75,0,360,blue);
+        # And fill it with red
+        im.fill(50,50,red);
+        # Output image in PNG format
+        im.png | stdout(1);
+       END;
+    -%]
+
+See L<Template::Plugin::GD::Image> for further details.
+
+=head2 GD::Text, GD::Text::Align, GD::Text::Wrap
+
+These plugins provide access to Martien Verbruggen's GD::Text,
+GD::Text::Align and GD::Text::Wrap modules. These plugins allow the
+layout, alignment and wrapping of text when drawing text in GD images.
+
+    [% FILTER null;
+        USE gd  = GD.Image(200,400);
+        USE gdc = GD.Constants;
+        black = gd.colorAllocate(0,   0, 0);
+        green = gd.colorAllocate(0, 255, 0);
+        txt = "This is some long text. " | repeat(10);
+        USE wrapbox = GD.Text.Wrap(gd,
+         line_space  => 4,
+         color       => green,
+         text        => txt,
+        );
+        wrapbox.set_font(gdc.gdMediumBoldFont);
+        wrapbox.set(align => 'center', width => 160);
+        wrapbox.draw(20, 20);
+        gd.png | stdout(1);
+      END;
+    -%]
+
+See L<Template::Plugin::GD::Text>, L<Template::Plugin::GD::Text::Align>
+and L<Template::Plugin::GD::Text::Wrap> for further details.
+
+=head2 GD::Graph::lines, GD::Graph::bars, GD::Graph::points, GD::Graph::linespoin
+ts, GD::Graph::area, GD::Graph::mixed, GD::Graph::pie
+
+These plugins provide access to Martien Verbruggen's GD::Graph module
+that allows graphs, plots and charts to be created. These plugins allow
+graphs, plots and charts to be generated in PNG, JPEG and other
+graphical formats.
+
+    [% FILTER null;
+        data = [
+            ["1st","2nd","3rd","4th","5th","6th"],
+            [    4,    2,    3,    4,    3,  3.5]
+        ];
+        USE my_graph = GD.Graph.pie(250, 200);
+        my_graph.set(
+                title => 'A Pie Chart',
+                label => 'Label',
+                axislabelclr => 'black',
+                pie_height => 36,
+                transparent => 0,
+        );
+        my_graph.plot(data).png | stdout(1);
+      END;
+    -%]
+
+See
+L<Template::Plugin::GD::Graph::lines>,
+L<Template::Plugin::GD::Graph::bars>,
+L<Template::Plugin::GD::Graph::points>,
+L<Template::Plugin::GD::Graph::linespoints>,
+L<Template::Plugin::GD::Graph::area>,
+L<Template::Plugin::GD::Graph::mixed>,
+L<Template::Plugin::GD::Graph::pie>, and
+L<GD::Graph>,
+for more details.
+
+=head2 GD::Graph::bars3d, GD::Graph::lines3d, GD::Graph::pie3d
+
+These plugins provide access to Jeremy Wadsack's GD::Graph3d
+module.  This allows 3D bar charts and 3D lines plots to
+be generated.
+
+    [% FILTER null;
+        data = [
+            ["1st","2nd","3rd","4th","5th","6th","7th", "8th", "9th"],
+            [    1,    2,    5,    6,    3,  1.5,    1,     3,     4],
+        ];
+        USE my_graph = GD.Graph.bars3d();
+        my_graph.set(
+            x_label         => 'X Label',
+            y_label         => 'Y label',
+            title           => 'A 3d Bar Chart',
+            y_max_value     => 8,
+            y_tick_number   => 8,
+            y_label_skip    => 2,
+            # shadows
+            bar_spacing     => 8,
+            shadow_depth    => 4,
+            shadowclr       => 'dred',
+            transparent     => 0,
+        my_graph.plot(data).png | stdout(1);
+      END;
+    -%]
+
+See
+L<Template::Plugin::GD::Graph::lines3d>,
+L<Template::Plugin::GD::Graph::bars3d>, and
+L<Template::Plugin::GD::Graph::pie3d>
+for more details.
+
+=head2 HTML
+
+The HTML plugin is very new and very basic, implementing a few useful
+methods for generating HTML.  It is likely to be extended in the future
+or integrated with a larger project to generate HTML elements in a generic
+way (as discussed recently on the mod_perl mailing list).
+
+    [% USE HTML %]
+    [% HTML.escape("if (a < b && c > d) ..." %]
+    [% HTML.attributes(border => 1, cellpadding => 2) %]
+    [% HTML.element(table => { border => 1, cellpadding => 2 }) %]
+
+See L<Template::Plugin::Iterator> for further details.
+
+=head2 Iterator
 
 The Iterator plugin provides a way to create a Template::Iterator
 object to iterate over a data set.  An iterator is created
@@ -602,7 +762,7 @@ L<Template::Plugin::Iterator> for further details.
        [% '</ul>' IF iterator.last %]
     [% END %]
 
-=item Table
+=head2 Table
 
 The Table plugin allows you to format a list of data items into a 
 virtual table by specifying a fixed number of rows or columns, with 
@@ -615,7 +775,7 @@ details.
        [% item %]
     [% END %]
 
-=item URL
+=head2 URL
 
 The URL plugin provides a simple way of contructing URLs from a base
 part and a variable set of parameters.  See L<Template::Plugin::URL>
@@ -629,7 +789,7 @@ for further details.
     [% mycgi(mode='submit') %]
        # ==> /cgi/bin/bar.pl?mode=submit&debug=1
 
-=item Wrap
+=head2 Wrap
 
 The Wrap plugin uses the Text::Wrap module by David Muir Sharnoff 
 E<lt>muir@idiom.comE<gt> (with help from Tim Pierce and many many others)
@@ -644,7 +804,7 @@ The Text::Wrap module is available from CPAN:
 
     http://www.cpan.org/modules/by-module/Text/
 
-=item XML::DOM
+=head2 XML::DOM
 
 The XML::DOM plugin gives access to the XML Document Object Module via
 Clark Cooper E<lt>cooper@sch.ge.comE<gt> and Enno Derksen's 
@@ -662,7 +822,7 @@ The plugin requires the XML::DOM module, available from CPAN:
 
     http://www.cpan.org/modules/by-module/XML/
 
-=item XML::XPath
+=head2 XML::XPath
 
 The XML::XPath plugin provides an interface to Matt Sergeant's
 E<lt>matt@sergeant.orgE<gt> XML::XPath module.  See 
@@ -677,7 +837,7 @@ The plugin requires the XML::XPath module, available from CPAN:
 
     http://www.cpan.org/modules/by-module/XML/
 
-=item XML::RSS
+=head2 XML::RSS
 
 The XML::RSS plugin is a simple interface to Jonathan Eisenzopf's
 E<lt>eisen@pobox.comE<gt> XML::RSS module.  A RSS (Rich Site Summary)
@@ -695,8 +855,6 @@ See L<Template::Plugin::XML::RSS> and L<XML::RSS> for further details.
 The XML::RSS module is available from CPAN:
 
     http://www.cpan.org/modules/by-module/XML/
-
-=back
 
 
 
@@ -720,10 +878,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.11, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.12, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -736,5 +897,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Plugin|Template::Plugin>, L<Template::Context|Template::Context>
-
-

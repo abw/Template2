@@ -136,13 +136,148 @@ if defined, in preference to any other template of the same name.
     [% plain.foo %]	    # plain foo block 
     [% fancy.foo %]	    # fancy foo block 
 
+In addition to BLOCK definitions, a VIEW can contain any other
+template directives.  The entire VIEW definition block is processed to
+initialise the view but no output is generated (this may change RSN -
+and get stored as 'output' item, subsequently accessible as [%
+view.output %]).  However, directives that have side-effects, such as
+those that update a variable, will have noticable consequences.
+
+=head2 Preserving Variable State within Views
+
+Views can also be used to save the values of any existing variables,
+or to create new ones at the point at which the view is defined.
+Unlike simple template metadata (META) which can only contain static
+string values, the view initialisation block can contain any template
+directives and generate any kind of dynamic output and/or data items.
+
+    [% VIEW my_web_site %]
+       [% view.title   = title or 'My Cool Web Site' %]
+       [% view.author  = "$abw.name, $abw.email" %]
+       [% view.sidebar = INCLUDE my/sidebar.tt2 %]
+    [% END %]
+
+Note that additional data items can be specified as arguments to the VIEW
+directive.  Anything that doesn't look like a configuration parameter is 
+assumed to be a data item.  This can be a little hazardous, of course, because
+you never know when a new configuration item might get added which interferes 
+with your data.
+
+    [% VIEW my_web_site
+	    # config options
+	    prefix = 'my/'
+	    # misc data
+	    title   = title or 'My Cool Web Site'
+	    author  = "$abw.name, $abw.email"
+	    sidebar = INCLUDE my/sidebar.tt2 
+    %]
+       ...
+    [% END %]
+
+Outside of the view definition you can access the view variables as, for
+example:
+
+    [% my_web_site.title %]
+
+One important feature is the equivalence of simple variables and templates.
+You can implement the view item 'title' as a simple variable, a template
+defined in an external file, possibly with a prefix/suffix automatically
+appended, or as a local BLOCK definition within the [% VIEW %] ... [% END %]
+definition.  If you use the syntax above then the view will Do The Right
+Thing to return the appropriate output.
+
+At the END of the VIEW definition the view is "sealed" to prevent you
+from accidentally updating any variable values.  If you attempt to change
+the value of a variable after the END of the VIEW definition block then
+an 'view' error will be thrown.
+
+    [% TRY; 
+         my_web_site.title = 'New Title';
+       CATCH;
+         error;
+       END
+    %]
+
+The error above will be reported as:
+
+    view error - cannot update item in sealed view: title
+
+The same is true if you pass a parameter to a view variable.  This is
+interpreted as an attempt to update the variable and will raise the same
+warning.
+
+    [% my_web_site.title('New Title') %]    # view error!
+
+You can set the 'silent' parameter to have the view ignore these
+parameters and simply return the variable value. 
+
+    [% VIEW my_web_site
+            silent = 1
+	    title  = title or 'My Cool Web Site'
+	    # ... ;
+       END
+    %]
+
+    [% my_web_site.title('Blah Blah') %]   # My Cool Web Site
+
+Alternately, you can specify that a view is unsealed allowing existing
+variables to be updated and new variables defined.
+
+    [% VIEW my_web_site
+            sealed = 0
+	    title  = title or 'My Cool Web Site'
+	    # ... ;
+       END
+    %]
+
+    [% my_web_site.title('Blah Blah') %]   # Blah Blah
+    [% my_web_site.title %]                # Blah Blah
+
 =head2 Inheritance, Delegation and Reuse
 
-You can use this feature to implement inheritance, delegation or other
-reuse patterns.  Note that the regular INCLUDE/PROCESS/WRAPPER
-directives work entirely independantly of views and will always get
-the original, unaltered template rather than any local per-view
-definition.
+Views can be inherited from previously defined views by use of the 'base'
+parameter.  This example shows how a base class view is defined which 
+applies a 'view/default/' prefix to all template names.
+
+    [% VIEW my.view.default
+            prefix = 'view/default/';
+       END
+    %]
+
+Thus the directive:
+
+    [% my.view.default.header(title='Hello World') %]
+
+is now equivalent to:
+
+    [% INCLUDE view/default/header title='Hello World' %]
+
+A second view can be defined which specifies the default view as a 
+base.
+
+    [% VIEW my.view.fancy
+            base   = my.view.default
+            prefix = 'view/fancy/';
+       END
+    %]
+
+Now the directive:
+
+    [% my.view.fancy.header(title='Hello World') %]
+
+will resolve to:
+
+    [% INCLUDE view/fancy/header title='Hello World' %]
+
+or if that doesn't exist, it will be handled by the base view as:
+
+    [% INCLUDE view/default/header title='Hello World' %]
+
+When a parent view is specified via the 'base' parameter, the
+delegation of a view to its parent for fetching templates and accessing
+user defined variables is automatic.  You can also implement your own
+inheritance, delegation or other reuse patterns by explicitly
+delegating to other views.
 
     [% BLOCK foo %]
        public foo block
@@ -163,12 +298,9 @@ definition.
     [% plain.foo %]	# <plain>public foo block</plain>
     [% fancy.foo %]	# <fancy>public foo block</fancy>
 
-In addition to BLOCK definitions, a VIEW can contain any other
-template directives.  The entire VIEW definition block is processed to
-initialise the view but no output is generated (this may change RSN -
-and get stored as 'output' item, subsequently accessible as [%
-view.output %]).  However, directives that have side-effects, such as
-those that update a variable, will have noticable consequences.
+Note that the regular INCLUDE/PROCESS/WRAPPER directives work entirely
+independantly of views and will always get the original, unaltered
+template name rather than any local per-view definition.
 
 =head2 Self-Reference
 
@@ -257,41 +389,10 @@ has been changed.
     [% plain = 'blah' %]    # no problem
     [% fancy.foo %]	    # => <fancy>public foo block</fancy>
 
-=head2 Preserving Variable State within Views
-
-In general, you can use view data to save the values of any existing
-variables, or to define new ones, at the point at which the view is
-defined.  Unlike simple template metadata (META) which can only
-contain static string values, the view initialisation block can
-contain any template directives and generate any kind of dynamic
-output and/or data items.
-
-    [% VIEW my_web_site %]
-       [% view.title   = title or 'My Cool Web Site' %]
-       [% view.author  = "$abw.name, $abw.email" %]
-       [% view.sidebar = INCLUDE my/sidebar.tt2 %]
-    [% END %]
-
-Note that additional data items can be specified as arguments to the VIEW
-directive.  Anything that doesn't look like a configuration parameter is 
-assumed to be a data item.  This can be a little hazardous, of course, because
-you never know when a new configuration item might get added which interferes 
-with your data.
-
-    [% VIEW my_web_site
-	    # config options
-	    prefix = 'my/'
-	    # misc data
-	    title   = title or 'My Cool Web Site'
-	    author  = "$abw.name, $abw.email"
-	    sidebar = INCLUDE my/sidebar.tt2 
-    %]
-       ...
-    [% END %]
 
 =head2 Views as Data Presenters
 
-The second role of a view is to act as a dispatcher to automatically
+Another key role of a view is to act as a dispatcher to automatically
 apply the correct template to present a particular object or data
 item.  This is handled via the print() method.
 
@@ -428,11 +529,9 @@ themselves, via the present() method, can implement the internal iterators
 to guide the view along the right path to presentation happiness.
 
 The upshot is that you can use views to greatly simplify the display
-of data structures like XML::DOM trees.
-
-(NOTE: no you can't - I haven't added this facility to the XML::DOM plugin
-yet, but expect it Real Soon Now.  The other examples like File, Directory
-and Pod all work in 2.01).
+of data structures like XML::DOM trees.  The documentation for the 
+Template::Plugins::XML::DOM module contains an example of this.  In 
+essence, it looks something like this:
 
 XML source:
 
@@ -515,9 +614,12 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -526,6 +628,4 @@ Template Toolkit version 2.02, released on 06 April 2001.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
-
-
 

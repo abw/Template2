@@ -1,0 +1,44 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE g = GD.Graph.linespoints(x_size, y_size); %]
+
+=head1 EXAMPLES
+
+    [% FILTER null;
+        data = [
+            ["1st","2nd","3rd","4th","5th","6th","7th", "8th", "9th"],
+            [50,  52,  53,  54,  55,  56,  57,  58,  59],
+            [60,  61,  61,  63,  68,  66,  65,  61, 58],
+            [70,  72,  71,  74,  78,  73,  75,  71, 68],   
+        ];  
+        
+        USE my_graph = GD.Graph.linespoints;
+        
+        my_graph.set(
+            x_label => 'X Label',
+            y_label => 'Y label',
+            title => 'A Lines and Points Graph',
+            y_max_value => 80,
+            y_tick_number => 6, 
+            y_label_skip => 2,
+            y_long_ticks => 1,  
+            x_tick_length => 2,  
+            markers => [ 1, 5 ],
+            skip_undef => 1,
+            transparent => 0,
+        );  
+        my_graph.set_legend('data set 1', 'data set 2', 'data set 3');
+        my_graph.plot(data).png | stdout(1);
+       END;
+    -%]
+
+=head1 DESCRIPTION
+
+The GD.Graph.linespoints plugin provides an interface to the
+GD::Graph::linespoints class defined by the GD::Graph module. It allows
+one or more (x,y) data sets to be plotted as y versus x lines, plus
+symbols placed at each point, in addition to axes and legends.
+
+See L<GD::Graph> for more details.
+

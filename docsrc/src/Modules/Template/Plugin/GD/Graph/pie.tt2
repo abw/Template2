@@ -1,0 +1,35 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE g = GD.Graph.pie(x_size, y_size); %]
+
+=head1 EXAMPLES
+
+    [% FILTER null;
+        data = [
+            ["1st","2nd","3rd","4th","5th","6th"],
+            [    4,    2,    3,    4,    3,  3.5]
+        ];
+
+        USE my_graph = GD.Graph.pie( 250, 200 );
+
+        my_graph.set(
+                title => 'A Pie Chart',
+                label => 'Label',
+                axislabelclr => 'black',
+                pie_height => 36,
+
+                transparent => 0,
+        );
+        my_graph.plot(data).png | stdout(1);
+       END;
+    -%]
+
+=head1 DESCRIPTION
+
+The GD.Graph.pie plugin provides an interface to the GD::Graph::pie
+class defined by the GD::Graph module. It allows an (x,y) data set to
+be plotted as a pie chart. The x values are typically strings.
+
+See L<GD::Graph> for more details.
+

@@ -50,6 +50,9 @@ $ROOT_OPS = {
 };
 
 $SCALAR_OPS = {
+    'item'    => sub {   $_[0] },
+    'list'    => sub { [ $_[0] ] },
+    'hash'    => sub { { value => $_[0] } },
     'length'  => sub { length $_[0] },
     'defined' => sub { return 1 },
     'repeat'  => sub { 
@@ -81,9 +84,21 @@ $SCALAR_OPS = {
 };
 
 $HASH_OPS = {
+    'item'   => sub { my ($hash, $item) = @_; 
+		      $item = '' unless defined $item;
+		      $hash->{ $item };
+		  },
+    'hash'   => sub { $_[0] },
     'keys'   => sub { [ keys   %{ $_[0] } ] },
     'values' => sub { [ values %{ $_[0] } ] },
     'each'   => sub { [        %{ $_[0] } ] },
+    'list'   => sub { my ($hash, $what) = @_;  $what ||= '';
+		      return ($what eq 'keys')   ? [   keys %$hash ]
+			   : ($what eq 'values') ? [ values %$hash ]
+			   : ($what eq 'each')   ? [ values %$hash ]
+			   : [ map { { key => $_ , value => $hash->{ $_ } } }
+			       keys %$hash ];
+		},
     'import' => sub { my ($hash, $imp) = @_;
 		      $imp = {} unless ref $imp eq 'HASH';
 		      @$hash{ keys %$imp } = values %$imp;
@@ -101,6 +116,10 @@ $HASH_OPS = {
 };
 
 $LIST_OPS = {
+    'item'    => sub { $_[0]->[ $_[1] || 0 ] },
+    'list'    => sub { $_[0] },
+    'hash'    => sub { my $list = shift; my $n = 0; 
+		       return { map { ($n++, $_) } @$list }; },
     'push'    => sub { my $list = shift; push(@$list, shift); return '' },
     'pop'     => sub { my $list = shift; pop(@$list) },
     'unshift' => sub { my $list = shift; unshift(@$list, shift); return '' },
@@ -770,10 +789,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.16, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.17, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -786,5 +808,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Context|Template::Context>
-
-

@@ -268,7 +268,7 @@ sub process {
     foreach $name (@$template) {
 	$compiled = shift @compiled;
 	my $element = ref $compiled eq 'CODE' 
-	    ? { (name => (ref $name ? () : $name), modtime => time()) }
+	    ? { (name => (ref $name ? '' : $name), modtime => time()) }
 	: $compiled;
 	$stash->set('component', $element);
 	
@@ -1413,10 +1413,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.15, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.16, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -1429,5 +1432,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Document|Template::Document>, L<Template::Exception|Template::Exception>, L<Template::Filters|Template::Filters>, L<Template::Plugins|Template::Plugins>, L<Template::Provider|Template::Provider>, L<Template::Service|Template::Service>, L<Template::Stash|Template::Stash>
-
-

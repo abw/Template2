@@ -77,8 +77,15 @@ sub _init {
     $self->{ method } = defined $config->{ method } 
 	                      ? $config->{ method } : 'present';
     
+    # view is sealed by default preventing variable update after 
+    # definition, however we don't actually seal a view until the 
+    # END of the view definition
+    my $sealed = $config->{ sealed };
+    $sealed = 1 unless defined $sealed;
+    $self->{ sealed } = $sealed ? 1 : 0;
+
     # copy remaining config items from $config or set defaults
-    foreach my $arg (qw( prefix suffix notfound )) {
+    foreach my $arg (qw( base prefix suffix notfound silent )) {
 	$self->{ $arg } = $config->{ $arg } || '';
     }
 
@@ -99,9 +106,11 @@ sub _init {
     # the view is initially unsealed, allowing directives in the initial 
     # view template to create data items via the AUTOLOAD; once sealed via
     # call to seal(), the AUTOLOAD will not update any internal items.
-    delete @$config{ qw( method map default prefix suffix notfound item 
-			 include_prefix include_naked
+    delete @$config{ qw( base method map default prefix suffix notfound item 
+			 include_prefix include_naked silent sealed
 			 view_prefix view_naked blocks ) };
+    $config = { %{ $self->{ base }->{ data } }, %$config }
+	if $self->{ base };
     $self->{ data   } = $config;
     $self->{ SEALED } = 0;
 
@@ -119,7 +128,7 @@ sub _init {
 
 sub seal {
     my $self = shift;
-    $self->{ SEALED } = 1;
+    $self->{ SEALED } = $self->{ sealed };
 }
 
 sub unseal {
@@ -155,7 +164,7 @@ sub clone {
         if defined $config->{ default };
 
     # update any remaining config items
-    my @args = qw( prefix suffix notfound item method include_prefix 
+    my @args = qw( base prefix suffix notfound item method include_prefix 
 		   include_naked view_prefix view_naked );
     foreach my $arg (@args) {
 	$clone->{ $arg } = $config->{ $arg } if defined $config->{ $arg };
@@ -292,22 +301,29 @@ sub include {
 #------------------------------------------------------------------------
 
 sub template {
-    my ($self, $template) = @_;
+    my ($self, $name) = @_;
     my $context = $self->{ _CONTEXT };
     return $context->throw(Template::Constants::ERROR_VIEW,
 			   "no view template specified")
-	unless $template;
+	unless $name;
 
     my $notfound = $self->{ notfound };
-    my ($block, $error);
+    my $base = $self->{ base };
+    my ($template, $block, $error);
 
     return $block
-	if ($block = $self->{ _BLOCKS }->{ $template });
+	if ($block = $self->{ _BLOCKS }->{ $name });
     
     # try the named template
-    $template = $self->template_name($template);
+    $template = $self->template_name($name);
     $self->DEBUG("looking for $template\n") if $DEBUG;
     eval { $template = $context->template($template) };
+
+    # try asking the base view if not found
+    if (($error = $@) && $base) {
+	$self->DEBUG("asking base for $name\n") if $DEBUG;
+	eval { $template = $base->template($name) };
+    }
 
     # try the 'notfound' template (if defined) if that failed
     if (($error = $@) && $notfound) {
@@ -396,9 +412,13 @@ sub AUTOLOAD {
     }
     elsif (exists $self->{ data }->{ $item }) {
 	# get/update existing data item (must be unsealed to update)
-	return $self->{ _CONTEXT }->throw(Template::Constants::ERROR_VIEW,
+	if (@_ && $self->{ SEALED }) {
+	    return $self->{ _CONTEXT }->throw(Template::Constants::ERROR_VIEW,
 				  "cannot update item in sealed view: $item")
-	    if @_ && $self->{ SEALED };
+		unless $self->{ silent };
+	    # ignore args if silent
+	    @_ = ();
+	}
 	$self->DEBUG(@_ ? "updating data item: $item <= $_[0]\n" 
 		        : "returning data item: $item\n") if $DEBUG;
 	return @_ ? ($self->{ data }->{ $item } = shift) 

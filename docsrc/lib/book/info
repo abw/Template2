@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------
 Generating book: [% book.name %] ([% book.id %])
-[%- IF verbose %]
+[% IF verbose %]
           title: [% book.title %]
          prefix: [% book.prefix %]
 	    src: [% book.src %]  

@@ -103,10 +103,35 @@ about preserving variable values, or you trust the templates you're
 including then you might prefer to use the PROCESS directive which is
 faster by virtue of not performing any localisation.
 
-From version 2.01 onwards, it is possible to specify multiple template
-names within an INCLUDE to have them automatically processed in order.
-The template names (quoted or unquoted names only, no unquoted
-'$variables') should be delimited by '+'.
+From version 2.04 onwards, you can specify dotted variables as "local"
+variables to an INCLUDE directive.  However, be aware that because of
+the localisation issues explained above (if you skipped the previous
+Technical Note above then you might want to go back and read it or
+skip this section too), the variables might not actualy be "local".
+If the first element of the variable name already references a hash
+array then the variable update will affect the original variable.
+
+    [% foo = {
+           bar = 'Baz'
+       }
+    %]
+  
+    [% INCLUDE somefile foo.bar='Boz' %]
+
+    [% foo.bar %]	    # Boz
+
+This behaviour can be a little unpredictable (and may well be improved
+upon in a future version).  If you know what you're doing with it and 
+you're sure that the variables in question are defined (nor not) as you 
+expect them to be, then you can rely on this feature to implement some
+powerful "global" data sharing techniques.  Otherwise, you might prefer
+to steer well clear and always pass simple (undotted) variables as 
+parameters to INCLUDE and other similar directives.
+
+If you want to process several templates in one go then you can 
+specify each of their names (quoted or unquoted names only, no unquoted
+'$variables') joined together by '+'.  The INCLUDE directive
+will then process them in order.
 
     [% INCLUDE html/header + "site/$header" + site/menu
          title = "My Groovy Web Site"

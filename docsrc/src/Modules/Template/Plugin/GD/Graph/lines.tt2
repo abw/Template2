@@ -1,0 +1,64 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE g = GD.Graph.lines(x_size, y_size); %]
+
+=head1 EXAMPLES
+
+    [% FILTER null;
+        USE g = GD.Graph.lines(300,200);
+        x = [1, 2, 3, 4];
+        y = [5, 4, 2, 3];
+        g.set(
+                x_label => 'X Label',
+                y_label => 'Y label',
+                title => 'Title'
+        );
+        g.plot([x, y]).png | stdout(1);
+       END;
+    -%]
+
+    [% FILTER null;
+        data = [
+            ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+                                         "Sep", "Oct", "Nov", "Dec", ],
+            [-5, -4, -3, -3, -1,  0,  2,  1,  3,  4,  6,  7],
+            [4,   3,  5,  6,  3,1.5, -1, -3, -4, -6, -7, -8],
+            [1,   2,  2,  3,  4,  3,  1, -1,  0,  2,  3,  2],
+        ];
+        
+        USE my_graph = GD.Graph.lines();
+
+        my_graph.set(
+                x_label => 'Month',
+                y_label => 'Measure of success',
+                title => 'A Simple Line Graph',
+
+                y_max_value => 8,
+                y_min_value => -8,
+                y_tick_number => 16,
+                y_label_skip => 2,
+                box_axis => 0,
+                line_width => 3,
+                zero_axis_only => 1,
+                x_label_position => 1,
+                y_label_position => 1,
+
+                x_label_skip => 3,
+                x_tick_offset => 2,
+
+                transparent => 0,
+        );
+        my_graph.set_legend("Us", "Them", "Others");
+        my_graph.plot(data).png | stdout(1);
+       END;
+    -%]
+
+=head1 DESCRIPTION
+
+The GD.Graph.lines plugin provides an interface to the GD::Graph::lines
+class defined by the GD::Graph module. It allows one or more (x,y) data
+sets to be plotted as y versus x lines with axes and legends.
+
+See L<GD::Graph> for more details.
+

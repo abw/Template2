@@ -94,6 +94,12 @@ epoch.
 
     [% date.format(date.now, '%A') %]
 
+The calc() method can be used to create an interface to the Date::Calc
+module (if installed on your system).
+
+    [% calc = date.calc %]
+    [% calc.Monday_of_Week(22, 2001).join('/') %]
+
 =head1 AUTHORS
 
 Thierry-Michel Barral E<lt>kktos@electron-libre.comE<gt> wrote the original

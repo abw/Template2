@@ -33,8 +33,7 @@ use XML::DOM;
 use base qw( Template::Plugin );
 use vars qw( $VERSION $DEBUG );
 
-#$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$VERSION  = 2.5;
+$VERSION  = 2.6;
 $DEBUG    = 0 unless defined $DEBUG;
 
 
@@ -177,6 +176,37 @@ sub DESTROY {
 package XML::DOM::Node;
 #========================================================================
 
+
+#------------------------------------------------------------------------
+# present($view)
+#
+# Method to present node via a view (supercedes all that messy toTemplate
+# stuff below).
+#------------------------------------------------------------------------
+
+sub present {
+    my ($self, $view) = @_;
+
+    if ($self->getNodeType() == XML::DOM::ELEMENT_NODE) {
+	# it's an element
+	$view->view($self->getTagName(), $self);
+    }
+    else {
+	my $text = $self->toString();
+	$view->view('text', $text);
+    }
+}
+
+sub content {
+    my ($self, $view) = @_;
+    my $output = '';
+    foreach my $node (@{ $self->getChildNodes }) {
+	$output .= $node->present($view);
+    }
+    return $output;
+}
+
+
 #------------------------------------------------------------------------
 # toTemplate($prefix, $suffix, \%named_params)
 #
@@ -242,6 +272,7 @@ sub _args {
 	context =>                                    $data->{ _CONTEXT },
     };
 }
+
 
 
 #------------------------------------------------------------------------
@@ -423,23 +454,40 @@ Template::Plugin::XML::DOM - Plugin interface to XML::DOM
     [% doc = dom.parse(text => xmltext) %]
 
     # call any XML::DOM methods on document/element nodes
-    [% FOREACH node = doc.getElementsByTagName('CODEBASE') %]
-       * [% node.getAttribute('href') %]     # or just '[% node.href %]'
+    [% FOREACH node = doc.getElementsByTagName('report') %]
+       * [% node.getAttribute('title') %]     # or just '[% node.title %]'
     [% END %]
 
-    # process template for DOM node (template name is node TagName)
+    # define VIEW to present node(s)
+    [% VIEW report notfound='xmlstring' %]
+       # handler block for a <report>...</report> element
+       [% BLOCK report %]
+          [% item.content(view) %]
+       [% END %]
+
+       # handler block for a <section title="...">...</section> element
+       [% BLOCK section %]
+       <h1>[% item.title %]</h1>
+       [% item.content(view) %]
+       [% END %]
+
+       # default template block converts item to string representation
+       [% BLOCK xmlstring; item.toString; END %]
+       
+       # block to generate simple text
+       [% BLOCK text; item; END %]
+    [% END %]
+
+    # now present node (and children) via view
+    [% report.print(node) %]
+
+    # or print node content via view
+    [% node.content(report) %]
+
+    # following methods are soon to be deprecated in favour of views
     [% node.toTemplate %]
-
-    # process templates for all children of DOM node
     [% node.childrenToTemplate %]
-
-    # process templates recursively for all descendants of DOM node
     [% node.allChildrenToTemplate %]
-
-    # examples of processing options
-    [% node.toTemplate(verbose=>1) %]
-    [% node.childrenToTemplate(prefix=>'mytemplates/' suffix=>'.tt2') %]
-    [% node.allChildrenToTemplate(default=>'mytemplates/anynode.tt2') %]
 
 =head1 PRE-REQUISITES
 
@@ -548,6 +596,9 @@ in place of
 
 =head2 toTemplate()
 
+B<NOTE: This method will soon be deprecated in favour of the VIEW based
+approach desribed below.>
+
 This method will process a template for the current node on which it is 
 called.  The template name is constructed from the node TagName with any
 optional 'prefix' and/or 'suffix' options applied.  A 'default' template 
@@ -571,6 +622,9 @@ the output of calling toTemplate() on the E<lt>pageE<gt> node would be:
     Page: Hello World!
 
 =head2 childrenToTemplate()
+
+B<NOTE: This method will soon be deprecated in favour of the VIEW based
+approach desribed below.>
 
 Effectively calls toTemplate() for the current node and then for each of 
 the node's children.  By default, the parent template is processed first,
@@ -639,9 +693,97 @@ from being further processed.
 
 =head2 allChildrenToTemplate()
 
+B<NOTE: This method will soon be deprecated in favour of the VIEW based
+approach desribed below.>
+
 Similar to childrenToTemplate() but processing all descendants (i.e. children
 of children and so on) recursively.  This is identical to calling the 
 childrenToTemplate() method with the 'deep' flag set to any true value.
+
+=head1 PRESENTING DOM NODES USING VIEWS
+
+You can define a VIEW to present all or part of a DOM tree by automatically
+mapping elements onto templates.  Consider a source document like the
+following:
+
+    <report>
+      <section title="Introduction">
+        <p>
+        Blah blah.
+        <ul>
+          <li>Item 1</li>
+          <li>item 2</li>
+        </ul>
+        </p>
+      </section>
+      <section title="The Gory Details">
+        ...
+      </section>
+    </report>
+
+We can load it up via the XML::DOM plugin and fetch the node for the 
+E<lt>reportE<gt> element.
+
+    [% USE dom = XML.DOM;
+       doc = dom.parse(file => filename);
+       report = doc.getElementsByTagName('report')
+    %]
+
+We can then define a VIEW as follows to present this document fragment in 
+a particular way.  The L<Template::Manual::Views> documentation
+contains further details on the VIEW directive and various configuration
+options it supports.
+
+    [% VIEW report_view notfound='xmlstring' %]
+       # handler block for a <report>...</report> element
+       [% BLOCK report %]
+          [% item.content(view) %]
+       [% END %]
+
+       # handler block for a <section title="...">...</section> element
+       [% BLOCK section %]
+       <h1>[% item.title %]</h1>
+       [% item.content(view) %]
+       [% END %]
+
+       # default template block converts item to string representation
+       [% BLOCK xmlstring; item.toString; END %]
+       
+       # block to generate simple text
+       [% BLOCK text; item; END %]
+    [% END %]
+
+Each BLOCK defined within the VIEW represents a presentation style for 
+a particular element or elements.  The current node is available via the
+'item' variable.  Elements that contain other content can generate it
+according to the current view by calling [% item.content(view) %].
+Elements that don't have a specific template defined are mapped to the
+'xmlstring' template via the 'notfound' parameter specified in the VIEW
+header.  This replicates the node as an XML string, effectively allowing
+general XML/XHTML markup to be passed through unmodified.
+
+To present the report node via the view, we simply call:
+
+    [% report_view.print(report) %]
+
+The output from the above example would look something like this:
+
+    <h1>Introduction</h1>
+    <p>
+    Blah blah.
+    <ul>
+      <li>Item 1</li>
+      <li>item 2</li>
+    </ul>
+    </p>
+  
+    <h1>The Gory Details</h1>
+    ...
+
+To print just the content of the report node (i.e. don't process the
+'report' template for the report node), you can call:
+
+    [% report.content(report_view) %]
 
 =head1 AUTHORS
 
@@ -655,8 +797,8 @@ library.
 
 =head1 VERSION
 
-2.5, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.6, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 
 

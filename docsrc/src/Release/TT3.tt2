@@ -203,3 +203,167 @@ thus TEMPLATE defines one in a unique namespace, or a cloned
 namespace?
 
 That implies META fixes the metadata of the current template?
+
+
+#------------------------------------------------------------------------
+# some more ideas by abw 01 May 2001
+#------------------------------------------------------------------------
+
+Parser should be able to run multiple concurrent parser styles, allowing 
+different tags to be interweaved.  
+
+e.g.
+
+[%  foo = 10
+    bar = 20
+    # -- debug --
+    DEBUG = 1
+    "Debugging mode activated\n" | stderr;
+    # -- end_debug --
+%]
+
+Here, you can have regular TT2 handling the '[%' ... '%]' block, but
+within that, you have another parser handling the directive with a
+START_TAG of '-- debug --' and an END_TAG of '-- end_debug --'.  The
+facility that implements this feature returns the content intact or
+ignores it completely depending on the value of some DEBUG flag.  Thus
+the 'debug' parser is an input filter operating only on the contents
+[% *inside* directive blocks %].
+
+Another filter is the INTERPOLATE parser which turns '$var' and '${var}'
+references in plain text into the appropriate variable value.  This operates
+only *outside* [% directive blocks %] (when the INTERPOLATE flag is set). 
+
+This technique can be used to solve the problem Stas raised with
+comments not being properly parsed out.  Now you can define whatever
+commenting style you like.  Rather than just comment blocks out, give
+them meaningful semantic names like 'debug', 'testing', 'guest', etc.,
+and have them switched in or out automatically depending on flags.
+
+#------------------------------------------------------------------------
+
+NOTE: Make things like 'http:' and 'file:' first class objects.
+
+    [% INCLUDE file://foo/bar.tt3 %]
+
+    [% PROCESS http://www.blahblah.com/xyz.tt3 %]
+
+and make tt3 one of them:
+
+    [% INCLUDE tt3://page/header %]
+
+this is the same as:
+
+    [% INCLUDE page/header %]
+
+because 'tt3' is simply the default view, that is all the public
+providers in turn.
+
+These are represented by objects which you can hold reference to:
+
+    [% page = http://www.blahblah.com/ %]   # may fetch lazy...
+    [% page.header %]	# ok, he wants the header, go fetch it
+    [% page.body %]     # now the body content
+
+    [% file = file://foo/bar/ %]      # file not loaded... yet...
+    [% Date.format(file.modified) %]  # stat file
+    [% file %]			      # trigger print method: contents
+
+Different objects can implement different methods.  e.g. a file may
+print the contents, an http also, but a tt3 might do an INCLUDE by
+default.
+
+    [% header = tt3://page/header %]	# fetch template object 
+    [% header.title = 'My Big Title' %] # set local variable
+    [% header.include %]
+or  [% INCLUDE $header %]
+or  [% header %]
+
+#------------------------------------------------------------------------
+Providers:
+
+A number of providers should be, er, provided.  :-)
+
+* Template::Provider
+
+  Old faithful base class, but stripped down to bare essentials.
+  Only accesses files in specified INCLUDE_PATH directories.  No
+  ABSOLUTE.  No RELATIVE.  Caching by delegation to Template::Cache
+  or subclass.
+
+* Template::Provider::File
+
+  Provides access to files on filesystem, e.g. ABSOLUTE and RELATIVE.
+
+* Template::Provider::HTTP
+
+  Access files via HTTP.
+
+* Template::Provider::DBI
+
+  You guessed it.
+
+Template::Cache and various subclasses can be used by providers for
+caching stuff.
+
+#------------------------------------------------------------------------
+DO
+
+Another directive type should be introduced called 'DO'.  This processes
+a template in an isolated context.  In other words, the template cannot 
+access or update any variables from the calling context.  The main incentive
+for this is to help isolate commonly used templates from global variable 
+collisions.
+
+Example:
+
+    [% # I decide to set some variables
+       col = { 
+	  back = 'white'
+          fore = 'black'
+          edge = 'blue'
+       }
+    %]
+
+and then some time later, I INCLUDE/PROCESS a library template:
+
+    [% INCLUDE splash/button text="Hello World" %]
+
+but this component sees my 'col' definition as one of its valid
+parameters:
+
+    [% DEFAULT col = 'green' %]   # ! col is set to 'HASH(0x...)'
+    <!-- splash.button -->
+      ....all sorts of crazy magic [% col %] yah yah ayh
+    <!-- /splash.buton -->
+
+So if instead you use DO:
+
+    [% DO splash/button text='Hello World' %]
+
+Then you process the component template in a totally isolated
+variable namespace in which it sees only the variables you 
+pass in (text) and anything in the 'global' namespace.
+
+You also save on typing.  :-)
+
+#------------------------------------------------------------------------
+XML/TT2 Weaving
+
+Have an outer XML block process the content according to a schema and
+execute various operations according to a corresponding schedule.
+
+[% XML schema   = http://...
+       schedule = http://...
+%]
+<products>
+    [% FOREACH product = dbi.query(sql.products) %]
+    <product id="[% product.id %]" name="[% product.name %]">
+	[% FOREACH feature = product.features %]
+	<feature>[% feature %]</feature>
+	[% END %]
+    </product>
+    [% END %]
+</products>
+[% END %]
+

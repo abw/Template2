@@ -10,20 +10,24 @@
 
 
     <!-- TUTORIAL -->
-    <book id="Tutorial" title="Template Tutorial"
-	  about="Introductory tutorial for the Template Toolkit">
+    <book id="Tutorial" prefix="Template/Tutorial" title="Template Tutorials"
+	  about="Template Toolkit Tutorials">
 
         <intro>
-	    The tutorial section provides a general overview of the
-	    Template Toolkit, showing users how to get quickly up to
-	    speed without getting bogged down in too much detail.
+            This section includes tutorials on using the Template 
+            Toolkit.  Subjects currently include an general overview
+	    of the Template Toolkit, showing users how to get quickly
+            up to speed building web content, and a tutorial on generating
+            and using data files, with particular reference to XML.
 	</intro>
 
 	<!-- Template::Tutorial -->
-	<page id="Tutorial"
+	<index pod="Template::Tutorial" podfile="Template/Tutorial.pod"/>
+
+	<!-- Template::Tutorial::Web -->
+	<page id="Web"
 	      standalone="1"
-	      podfile="Template/Tutorial.pod"
-	      about="Tutorial on using and abusing the Template Toolkit">
+	      about="Generating Web Content Using the Template Toolkit">
 	    <intro>
 		This tutorial provides an introduction to the Template
 		Toolkit and a "quick start" guide to getting up to speed.
@@ -32,6 +36,21 @@
                 and ttree; using the Template.pm module in CGI scripts;
 		writing Apache/mod_perl handlers; and extending the toolkit
                 by writing plugins.
+	    </intro>
+	</page>
+
+	<!-- Template::Tutorial::Datafile -->
+	<page id="Datafile"
+	      standalone="1"
+	      about="Creating Data Output Files Using the Template Toolkit"
+	      author="dave" copyright="2001">
+	    <intro>
+              This tutorial gives an overview of the Template Toolkit,
+              showing in particular how to use it to read and write
+              data files in various different formats and styles.  It
+              was written by Dave Cross &lt;dave@dave.org.uk&gt; and
+              first appeared as a lead article at http://www.perl.com/ 
+              earlier in the year (2001).
 	    </intro>
 	</page>
     </book>
@@ -298,6 +317,13 @@
 	      module="1"
 	      seealso="Template, Template::Context"/>
 
+	<!-- Template::Stash::Context -->
+	<page id="Stash_Context" 
+	      name="Template::Stash::Context"
+	      about="Experimetal stash allowing list/scalar context definition"
+	      module="1"
+	      seealso="Template::Stash"/>
+
 	<!-- Template::Test -->
 	<page id="Test" 
 	      name="Template::Test"
@@ -373,6 +399,372 @@
 	<page id="Plugin_Format" 
 	      name="Template::Plugin::Format"
 	      about="Plugin to create formatting functions"
+	      module="1"
+	      seealso="Template::Plugin"/>
+
+	<!-- Template::Plugin::GD::Image -->
+	<page id="Plugin_GD_Image" 
+	      name="Template::Plugin::GD::Image"
+	      about="Interface to GD Graphics Library"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Polygon,
+                      Template::Plugin::GD::Constants, GD"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            Lincoln D. Stein wrote the GD.pm interface to the GD library.
+            </authadd>
+	    <copyadd>
+	    The GD.pm interface is copyright 1995-2000, Lincoln D. Stein.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Polygon -->
+	<page id="Plugin_GD_Polygon" 
+	      name="Template::Plugin::GD::Polygon"
+	      about="Interface to GD module Polygon class"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Image,
+                      Template::Plugin::GD::Constants, GD"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            Lincoln D. Stein wrote the GD.pm interface to the GD library.
+            </authadd>
+	    <copyadd>
+	    The GD.pm interface is copyright 1995-2000, Lincoln D. Stein.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Constants -->
+	<page id="Plugin_GD_Constants" 
+	      name="Template::Plugin::GD::Constants"
+	      about="Interface to GD module constants"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Image,
+                      Template::Plugin::GD::Polygon, GD"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            Lincoln D. Stein wrote the GD.pm interface to the GD library.
+            </authadd>
+	    <copyadd>
+	    The GD.pm interface is copyright 1995-2000, Lincoln D. Stein.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Text -->
+	<page id="Plugin_GD_Text" 
+	      name="Template::Plugin::GD::Text"
+	      about="Text utilities for use with GD"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Text::Wrap,
+                      Template::Plugin::GD::Text::Align,
+                      GD, GD::Text"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Text module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Text is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Text::Align -->
+	<page id="Plugin_GD_Text_Align" 
+	      name="Template::Plugin::GD::Text::Align"
+	      about="Draw aligned strings in GD images"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Text,
+                      Template::Plugin::GD::Text::Wrap,
+                      GD, GD::Text::Align"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Text module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Text is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Text::Wrap -->
+	<page id="Plugin_GD_Text_Wrap" 
+	      name="Template::Plugin::GD::Text::Wrap"
+	      about="Break and wrap strings in GD images"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Text::Align,
+                      GD, GD::Text::Wrap"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Text module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Text is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::lines -->
+	<page id="Plugin_GD_Graph_lines" 
+	      name="Template::Plugin::GD::Graph::lines"
+	      about="Create line graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::lines3d -->
+	<page id="Plugin_GD_Graph_lines3d" 
+	      name="Template::Plugin::GD::Graph::lines3d"
+	      about="Create 3D line graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph, GD::Graph3d"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph3d module was written by Jeremy Wadsack.
+            </authadd>
+	    <copyadd>
+	    GD::Graph3d is copyright (C) 1999,2000 Wadsack-Allen.  
+            All Rights Reserved.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::bars -->
+	<page id="Plugin_GD_Graph_bars" 
+	      name="Template::Plugin::GD::Graph::bars"
+	      about="Create bar graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::bars3d -->
+	<page id="Plugin_GD_Graph_bars3d" 
+	      name="Template::Plugin::GD::Graph::bars3d"
+	      about="Create 3D bar graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph, GD::Graph3d"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph3d module was written by Jeremy Wadsack.
+            </authadd>
+	    <copyadd>
+	    GD::Graph3d is copyright (C) 1999,2000 Wadsack-Allen.  
+            All Rights Reserved.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::points -->
+	<page id="Plugin_GD_Graph_points" 
+	      name="Template::Plugin::GD::Graph::points"
+	      about="Create point graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::linespoints -->
+	<page id="Plugin_GD_Graph_linespoints" 
+	      name="Template::Plugin::GD::Graph::linespoints"
+	      about="Create line/point graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::area -->
+	<page id="Plugin_GD_Graph_area" 
+	      name="Template::Plugin::GD::Graph::area"
+	      about="Create area graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::mixed -->
+	<page id="Plugin_GD_Graph_mixed" 
+	      name="Template::Plugin::GD::Graph::mixed"
+	      about="Create mixed graphs with axes and legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::pie,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::pie -->
+	<page id="Plugin_GD_Graph_pie" 
+	      name="Template::Plugin::GD::Graph::pie"
+	      about="Create pie charts with legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie3d,
+                      GD::Graph"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+            The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::GD::Graph::pie3d -->
+	<page id="Plugin_GD_Graph_pie3d" 
+	      name="Template::Plugin::GD::Graph::pie3d"
+	      about="Create 3D pie charts with legends"
+	      seealso="Template::Plugin, Template::Plugin::GD,
+                      Template::Plugin::GD::Graphs::lines,
+                      Template::Plugin::GD::Graphs::lines3d,
+                      Template::Plugin::GD::Graphs::bars,
+                      Template::Plugin::GD::Graphs::bars3d,
+                      Template::Plugin::GD::Graphs::points,
+                      Template::Plugin::GD::Graphs::linespoints,
+                      Template::Plugin::GD::Graphs::area,
+                      Template::Plugin::GD::Graphs::mixed,
+                      Template::Plugin::GD::Graphs::pie,
+                      GD::Graph, GD::Graph3d"
+	      module="1"
+	      author="craig" copyright="2001">
+	    <authadd>
+	    The GD::Graph3d module was written by Jeremy Wadsack.
+	    The GD::Graph module was written by Martien Verbruggen.
+            </authadd>
+	    <copyadd>
+	    GD::Graph3d is copyright (c) 1999,2000 Wadsack-Allen.  
+            All Rights Reserved.
+	    GD::Graph is copyright 1999 Martien Verbruggen.
+            </copyadd>
+	</page>
+
+	<!-- Template::Plugin::HTML -->
+	<page id="Plugin_HTML" 
+	      name="Template::Plugin::HTML"
+	      about="Plugin to create HTML elements"
 	      module="1"
 	      seealso="Template::Plugin"/>
 

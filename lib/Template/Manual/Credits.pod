@@ -94,11 +94,13 @@ Please let me know if you think anyone is missing from this list.
 
   Chuck Adams               <scrytch@uswest.net>
   Thierry-Michel Barral     <kktos@electron-libre.com>
-  Stas Beckman		    <stas@stason.org>
+  Craig Barratt             <craig@arraycomm.com>
+  Stas Beckman              <stas@stason.org>
   Neil Bowers               <neilb@cre.canon.co.uk>
   Leon Brocard              <acme@astray.com>  
   Lyle Brooks               <brooks@deseret.com>
   Piers Cawley              <pdcawley@bofh.org.uk>
+  Eric Cholet               <cholet@logilune.com>
   Chris Dean                <ctdean@babycenter.com>  
   Francois Desarmenien      <desar@club-internet.fr>
   Horst Dumcke              <hdumcke@cisco.com> 
@@ -124,6 +126,7 @@ Please let me know if you think anyone is missing from this list.
   Michael Stevens           <michael@etla.org>
   Drew Taylor               <dtaylor@vialogix.com>   
   Swen Thuemmler            <Swen.Thuemmler@paderlinx.de>   
+  Richard Tietjen           <Richard_Tietjen@mcgraw-hill.com>
   Jim Vaughan               <jim@mrjim.com> 
   Chris Winters             <cwinters@intes.net>
 
@@ -133,9 +136,12 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-Template Toolkit version 2.02, released on 06 April 2001.
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -144,6 +150,4 @@ Template Toolkit version 2.02, released on 06 April 2001.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
-
-
 

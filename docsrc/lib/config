@@ -1,6 +1,6 @@
 [%  USE date;
     tt = {
-	version => 2.02
+	version => '2.03b'
         release => date.format(format = '%d %B %Y')
     }
     authors = {
@@ -8,6 +8,14 @@
 	    name  = 'Andy Wardley' 
 	    email = 'abw@kfs.org'
 	    home  = 'http://www.andywardley.com/'
+	}
+	craig = {
+	    name  = 'Craig Barratt' 
+	    email = 'craig@arraycomm.com'
+	}
+	dave = {
+	    name  = 'Dave Cross' 
+	    email = 'dave@dave.org.uk'
 	}
     };
 %]

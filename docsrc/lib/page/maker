@@ -31,13 +31,17 @@ $stash->set('modver' => $ver);
         module  = xpage.module
 	version = modver
     	podfile = pod
-    	podname = pod.replace('\/', '::').replace('\.pod$', '')
+    	podname = xpage.podname or 
+	          pod.replace('\/', '::').replace('\.pod$', '')
 	about   = xpage.about or xcontent(xpage, 'about')
 	intro   = xcontent(xpage, 'intro')
     	html    = xpage.html 
     	     or ( book.html ? "$book.html/${file}.html"
     			    : "${file}.html" )
 	standalone = xpage.standalone
+        copyright = xpage.copyright
+        copyadd   = xcontent(xpage, 'copyadd')
+        authadd   = xcontent(xpage, 'authadd')
     };
 
     IF debug;

@@ -65,6 +65,51 @@ info.
 
 =back
 
+=item Can I fetch templates via http?
+
+    To: Adam Theo <adamtheo@theoretic.com> 
+    From: Craig Barratt <craig@arraycomm.com>
+    Date: Fri, 18 May 2001 17:06:59 -0700
+      
+    > i was wondering if there is anyway to fetch a file using http:// or
+    > ftp:// and include that?
+      
+    Here's one way.  Set the LOAD_PERL option:
+      
+    	use Template;
+     
+    	my $template = Template->new({  
+    	    LOAD_PERL => 1
+    	});  
+    	$template->process("example.tt", { stdout => *STDOUT })
+    				     || die $template->error();
+     
+    and then use LWP::UserAgent and HTTP::Request:
+     
+    	[% 
+    	    USE ua = LWP.UserAgent; 
+    	    ua.proxy("http", "http://your_proxy/");
+    	    USE req = HTTP.Request("GET", "http://www.cpan.org");
+    	    ua.request(req).content;
+    	-%]
+     
+    For FTP use Net::FTP:
+     
+    	[%   
+    	    USE ftp = Net.FTP("ftp.cpan.org");
+    	    x = ftp.login("anonymous", "me@here.there");
+    	    x = ftp.cwd("/");
+    	    x = ftp.get("welcome.msg", stdout);
+    	    x = ftp.quit;
+    	-%]
+     
+    Normally ftp.get would write the file into the current directory.
+    Instead we pass stdout as a second argument so that it is written
+    to stdout.  We set stdout to STDOUT in the variables we pass to
+    process. 
+     
+    Craig
+
 =head2 Miscellaneous
 
 =over 4

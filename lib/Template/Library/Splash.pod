@@ -18,7 +18,7 @@
 #   modify it under the same terms as Perl itself.
 #
 # REVISION
-#   2.07
+#   2.08
 #
 #========================================================================
 
@@ -548,6 +548,48 @@ The following items default to the relevant style values:
 =back
 
 
+=head2 splash/hair
+
+Generates a frame enclosing the content within crosshair corners.
+
+    [% INCLUDE splash/hair
+           content = 'Template Toolkit'
+    %]
+
+
+Configuration items:
+
+=over 4
+
+
+=item content
+
+Hair content.
+
+
+=item style
+
+Reference to a style hash.
+
+
+=back
+
+The following items default to the relevant style values:
+
+=over 4
+
+
+=item col (style.col.text)
+
+
+=item bgcol (style.col.back)
+
+
+=item align (style.button.align)
+
+
+=back
+
 
 =head2 splash/menu
 
@@ -957,10 +999,13 @@ Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 L<http://www.andywardley.com/|http://www.andywardley.com/>
 
+
+
+
 =head1 VERSION
 
-2.07, distributed as part of the
-Template Toolkit version 2.02, released on 06 April 2001.
+2.08, distributed as part of the
+Template Toolkit version 2.03, released on 14 June 2001.
 
 =head1 COPYRIGHT
 
@@ -973,5 +1018,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template::Library::HTML|Template::Library::HTML>
-
-
