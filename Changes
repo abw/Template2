@@ -116,9 +116,11 @@
   prevent newlines in test output from being automatically mangled to
   literal '\n'.
 
-* Completed and corrected all knows bugs in the documentation which now
-  weighs in at around 100 pages for the Template.pm module alone.
-  The POD documentation should now be installed by default.
+* Completed and corrected all knows bugs in the documentation which
+  now weighs in at around 100 pages for the Template.pm module alone.
+  The POD documentation should now be installed by default.  The
+  Template::Tutorial document is once again included in the
+  distribution.
 
 
 #------------------------------------------------------------------------
