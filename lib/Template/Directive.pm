@@ -453,9 +453,9 @@ sub while {
     return <<EOF;
 
 # WHILE
-$OUTPUT do {
+do {
     my \$failsafe = $WHILE_MAX;
-    while (\$failsafe-- && ($expr)) {
+    while (--\$failsafe && ($expr)) {
         $block
     }
     die "WHILE loop terminated (> $WHILE_MAX iterations)\\n"

@@ -191,7 +191,7 @@ sub _init {
     $self->{ SIZE }         = $size;
     $self->{ INCLUDE_PATH } = $path;
     $self->{ DELIMITER }    = $dlim;
-    $self->{ PREFIX }       = $params->{ PREFIX };
+#   $self->{ PREFIX }       = $params->{ PREFIX };
     $self->{ ABSOLUTE }     = $params->{ ABSOLUTE } || 0;
     $self->{ RELATIVE }     = $params->{ RELATIVE } || 0;
     $self->{ TOLERANT }     = $params->{ TOLERANT } || 0;

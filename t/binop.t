@@ -130,6 +130,11 @@ yes
 -- expect --
 yes
 
+-- test --
+[% "yes" UNLESS no %]
+-- expect --
+yes
+
 
 -- test --
 [% IF ! yes %]

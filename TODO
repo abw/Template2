@@ -1,3 +1,4 @@
+
 Pending
 -------
 
@@ -12,6 +13,9 @@ Pending
                                    
 Misc
 ----
+* No \refs.
+
+* faster parser back end which bypasses the stash, based on Doug's code.
 
 * Fix Plugin.pm - it's still basically v1 code and much can be discarded
 
@@ -76,21 +80,8 @@ Misc
 
 * Template::Context include()/process() should work with raw CODE refs.
 
-* Complete Template::Service error handling.
-
 * any OUTPUT_PATH in Template.pm should be prepended to OUTPUT when OUTPUT
   is a file name.
-
-* add new TAG_STYLE entries and allows [% TAGS style %] directive
-
-* Template::Document's handling of STOP needs looking at
-
-* ERROR may be a single value instead of a hash (default)
-
-* fixed if/elsif generation
-
-* optimised FOREACH to only use an iterator if already so (but note that
-  this got changed again later)
 
 * cleaned up Template::Iterator.  Now derived from Template::Base.
   Removed ACTION and ORDER now that they are supported as list pseudo
@@ -116,9 +107,6 @@ Misc
   through service invocations (AUTO_RESET => 0).
 
 * fix \@ quoting (and others) in Directive (Perrin reported / Chuck patched)
-
-* BLOCK caching is still a little messy - it works, but with belt and braces.
-  Need to finalise behaviour wrt importing BLOCK defs via INCLUDE/PROCESS.
 
 * Added Date plugin and test, as provided by Thierry-Michel Barral and abw.
 

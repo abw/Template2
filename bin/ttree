@@ -83,6 +83,11 @@ my %ttopts   = $config->varlist('^template_', 1);
 my %ucttopts;
 @ucttopts{ map { uc } keys %ttopts } = values %ttopts;
 
+# get all template variable definitions
+my $replace = $config->get('define');
+print "replace hash: ", join(', ', map { "$_ => $replace->{ $_ }"} 
+			     keys %$replace), "\n";
+
 # now create complete parameter hash for creating template processor
 my $ttopts   = {
     %ucttopts,
@@ -92,10 +97,6 @@ my $ttopts   = {
 #    ERROR        => \&error,
 };
 
-my $ttdata = {
-    # TODO: this is lava flow...
-    'sys' => { 'time' => sub { time } },
-};
 
 sub error {
     my $error = join('', @_);
@@ -151,7 +152,7 @@ if (@ARGV) {
     # explicitly process files specified on command lines 
     foreach my $file (@ARGV) {
 	print "  + $file\n" if $verbose;
-	$template->process("$file", $ttdata, $file)
+	$template->process("$file", $replace, $file)
 	    || print "  ! ", $template->error(), "\n";
     }
 }
@@ -286,7 +287,7 @@ sub process_file {
 
     # process file
     unless ($dryrun) {
-        $template->process("./$file", $ttdata, $file)
+        $template->process("./$file", $replace, $file)
 	    || print("  ! ", $template->error(), "\n");
 
 	if ($preserve) {
@@ -307,7 +308,8 @@ sub read_config {
     my $file = shift;
 
     my $config = AppConfig->new({ 
-	ERROR => sub { die @_, "\ntry `$NAME --help'\n" }   }, 
+	GLOBAL => { ARGCOUNT => 1 },
+	ERROR  => sub { die @_, "\ntry `$NAME --help'\n" }   }, 
 	'help|h'      => { ACTION => \&help },
 	'src|s=s'     => { EXPAND => EXPAND_ALL },
 	'dest|d=s'    => { EXPAND => EXPAND_ALL },
@@ -319,6 +321,7 @@ sub read_config {
 	'preserve|p'  => { DEFAULT => 0 },
 	'all|a'       => { DEFAULT => 0 },
         'debug|dbg'   => { DEFAULT => 0 },
+	'define=s%',
 	'ignore=s@',
 	'copy=s@',
 	'accept=s@',
@@ -484,6 +487,7 @@ File search specifications (all may appear multiple times):
    --accept=REGEX           Process only files matching REGEX 
 
 Additional options to set Template Toolkit configuration items:
+   --define var=value       Define template variable
    --interpolate            Interpolate '\$var' references in text
    --case                   Case sensitivity of reserved words
    --eval_perl              Evaluate [% PERL %] ... [% END %] code blocks

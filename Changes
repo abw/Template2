@@ -87,7 +87,7 @@ New Language Features
   template or enclosing block.
 
 * New META directive allowing you to define metadata items for your
-  template.  These are attached to the compiled template and wrapped
+  templates.  These are attached to the compiled template and wrapped
   up as a Template::Document object.  The 'template' variable is a
   reference to the current parent document and metadata items may be
   accessed directly.  Of particular note is the fact that the
@@ -123,6 +123,16 @@ New Language Features
   (e.g. PERL...END processes the block and filters the output into
   Perl evaluation at runtime).
 
+* Comments now only extend to the end of the current line.
+
+    [%
+
+* The TAGS directive can now be used to switch tag styles by name.
+  Several new tag styles are defined (e.g. html, asp, php, mason).
+
+    [% TAGS html %]
+    <!-- INCLUDE header -->
+
 * The output from any directive or block can now be captured and assigned to 
   a variable.
 
@@ -138,7 +148,8 @@ New Language Features
     [% END %]
 
 * The handling of complex expressions has been improved, permitting
-  basic directives to contain logical shortcut operators, etc.
+  basic directives to contain logical shortcut operators, etc.  All 
+  binary operators now have the same precedence rules as Perl.
 
     [% foo or bar %]             # GET foo, or bar if foo is false (0/undef)
     [% CALL func1 and func2 %]   # func2 only called if func1 returns true
@@ -149,12 +160,27 @@ New Language Features
 
     [% foo = bar ? baz : qux %]
 
+* A leading '$' on a variable is now used to indicate pre-interpolation
+  of that element.  This simplifies the syntax and makes it consistent
+  with double-quoted string interpolation and text block interpolation
+  via the INTERPOLATE flag.  If you've been relying on the version 1
+  "feature" that ignores the leading '$' then you'll need to change your
+  templates to remove the '$' characters (except where you really want 
+  them) or set the V1DOLLAR flag to 1 to revert to the version 1 
+  behaviour.  See the 'Gotchas' section below for more details.
+
+    # version 1
+    [% hash.${key} %]  [% hash.${complex.key} %]
+
+    # version 2
+    [% hash.$key %]    [% hash.${complex.key} %]
+
 * Various new pseudo-methods have been added for inspecting and manipulating
   data.  The full list now looks something like this:
 
-      [% value.defined %]                  # value is defined
-      [% value.length %]                   # length of string
-      [% value.split(delimiter, limit) %]  # split string as Perl does
+      [% var.defined %]                    # variable is defined
+      [% var.length %]                     # length of string
+      [% var.split(delimiter, limit) %]    # split string as Perl does
 
       [% hash.keys %]                      # return list of hash keys
       [% hash.values %]                    # ditto hash values
@@ -171,67 +197,139 @@ New Language Features
 Templates Compiled to Perl Code
 -------------------------------
 
-* Templates are now compiled to Perl code, with credit and respect due
-  to Doug Steinwand for providing an implementation around which the
-  new parser was built.  This brings a number of important benefits:
+Templates are now compiled to Perl code, with credit and respect due
+to Doug Steinwand for providing an implementation around which the
+new parser was built.  This brings a number of important benefits:
 
-  - Speed and Memory Efficiency
+* Speed and Memory Efficiency
 
-    Version 1 used a list of opcodes to represent directives and
-    lower-level operations.  These were evaluated by the hideously
-    contrived, and darkly sinister Template::Context::_evaluate()
-    method.  In version 2, all templates are parsed and rebuilt as
-    Perl code.  This is then evaluated and stored as a reference to a
-    Perl sub-routine which can then be executed and re-executed 
-    significantly faster and with far less memory overhead.
+  Version 1 used a list of opcodes to represent directives and
+  lower-level operations.  These were evaluated by the hideously
+  contrived, and darkly sinister Template::Context::_evaluate()
+  method.  In version 2, all templates are parsed and rebuilt as Perl
+  code.  This is then evaluated and stored as a reference to a Perl
+  sub-routine which can then be executed and re-executed significantly
+  faster and with far less memory overhead.
 
-  - Persistance.
+* Persistance.
 
-    Once a template has been compiled to Perl code it can be saved to
-    disk as a "compiled template" by defining the COMPILE_EXT option.
-    This allows you to specify a filename extension (e.g. '.ttc')
-    which is added to the template filename and used to create a new
-    file containg the Perl code.  Next time you use the template, even
-    if you've shut down your program/server/computer in the mean time,
-    the compiled template is there in a file as Perl code and is
-    simply require()d and executed.  It all happens significantly
-    faster because there's no Template::Parser to run.  In fact, if
-    all your templates are "compiled" on disk then the
-    Template::Parser and Template::Grammar modules won't even be
-    loaded, further reducing startup time and memory consumption (the
-    grammar file, in particular is rather large).  The
-    Template::Provider module handles the loading, caching and
-    persistance of templates, and will examine file timestamps and
-    re-compiled modified templates as required.
+  Once a template has been compiled to Perl code it can be saved to
+  disk as a "compiled template" by defining the COMPILE_EXT option.
+  This allows you to specify a filename extension (e.g. '.ttc') which
+  is added to the template filename and used to create a new file
+  containg the Perl code.  Next time you use the template, even if
+  you've shut down your program/server/computer in the mean time, the
+  compiled template is there in a file as Perl code and is simply
+  require()d and executed.  It all happens significantly faster
+  because there's no Template::Parser to run.  In fact, if all your
+  templates are "compiled" on disk then the Template::Parser and
+  Template::Grammar modules won't even be loaded, further reducing
+  startup time and memory consumption (the grammar file, in particular
+  is rather large).  The Template::Provider module handles the
+  loading, caching and persistance of templates, and will examine file
+  timestamps and re-compiled modified templates as required.
 
-  - Flexibility.  
+* Flexibility.  
 
-    Because "compiled templates" are now nothing more than Perl
-    sub-routines, you can use anyone or anything to generate them and
-    run them all under the same roof.  Different parser back-ends can 
-    generate Perl code optimised for speed or functionality, for example.
-    Or different parsers can compile different template languages 
-    (PHP, ASP, Mason, roll-your-own, etc.) and run them alongside
-    regular templates.  Or if you don't trust a parser, you can wri
-    even write your own Perl code and have your templates execute 
-    as fast as the code you can write.
-
-* Templates (i.e. sub-routines) now return their generated output,
-  rather than sending it to $context->output().  This speeds things 
-  up and makes the code simpler, as well as allowing greater 
-  flexibility in how template sub-routines can work.
-
-* Exceptions (errors) are now raised via Perl's die() and caught by
-  an enclosing eval { } block.  Again, this simplifies the code generated
-  and improves runtime efficiency.
-
-* The directives [% RETURN %] and [% STOP %] are now implemented as 
-  special case exceptions which are caught in the appropriate place 
-  and handled accordingly.
+  Because "compiled templates" are now nothing more than Perl
+  sub-routines, you can use anyone or anything to generate them and
+  run them all under the same roof.  Different parser back-ends can
+  generate Perl code optimised for speed or functionality, for
+  example.  Or different parsers can compile different template
+  languages (PHP, ASP, Mason, roll-your-own, etc.) and run them
+  alongside regular templates.  Or if you don't trust a parser, you
+  can even write your own Perl code and have your templates execute as
+  fast as the code you can write.
 
 
-Miscellaneous Features
-----------------------
+Configuration Options
+---------------------
+
+* Template blocks may be pre-defined using the new BLOCKS option.  These
+  may be specified as template text or as references to sub-routines or
+  Template::Document objects.
+
+    my $template = Template->new({
+	BLOCKS => {
+	    header => '<html><head><title>[% title %]</title></head><body>',
+	    footer => '</body></html>',
+	    funky  => sub { blah_blah($blah); return $some_text },
+	}
+    });
+
+* Automatic error handling can be provided with the ERROR option.  This
+  allows you to specify a single template or hash array of templates which
+  should be used in the case of an uncaught exception being raised in the
+  a template.  In other words, if something in one of your templates
+  throws a 'dbi' error then you can define an ERROR template to catch
+  this.  The original template output is discarded and the ERROR template
+  processed in its place.  PRE_PROCESS and POST_PROCESS templates (e.g.
+  header and footers) are left intact.  This provides a particularly 
+  useful high-level error handling abstraction where you simply create
+  templates to handle particular exceptions and provide the mapping 
+  through the ERROR hash.
+
+    my $template = Template->new({
+	ERROR => {
+	    dbi      => 'error/database.html',	 # DBI error
+	    user.pwd => 'error/badpasswd.html',  # invalid user password
+	    user     => 'user/index.html',	 # general 'user' handler
+	    default  => 'error/error.html',      # default error template
+	}
+    });
+
+* The INCLUDE_PATH is now fully dynamic and can be changed at any time.
+  The new Template::Provider which manages the loading of template files
+  will correctly adapt to chahges in the INCLUDE_PATH and act accordingly.
+
+* The TEMPLATES option allows you to specify a list of one or more
+  Template::Provider object which will take responsibility for loading
+  templates.  Each provider can have it's own INCLUDE_PATH, caching
+  options (e.g CACHE_SIZE) and so on.  You can sub-class the
+  Template::Provider module to allow templates to be loaded from a
+  database, for example, and then define your new provider in the
+  TEMPLATES list.  The providers are queried in order as a "Chain of
+  Responsiblity".  Each may return a compiled template, raise an
+  error, or decline to serve the template and pass control onto the
+  next provider in line.
+
+* The CACHE_SIZE option defines a maximum number of templates that will
+  be cached by the provider.  It is undefined by default, causing all
+  templates to be cached.  A value of 0 disables caching altogether while
+  a positive integer defines a maximum limit.  The cache (now built into
+  Template::Provider) is much smarter and will automatically reload and
+  compile modified source templates.
+
+* The Template::Provider cache can write compiled templates (e.g. Perl code)
+  to disk to create a persistant cache.  The COMPILE_EXT may be used to 
+  specify a filename extension (e.g. '.ttc') which is used to create
+  compiled template files.  These compiled template files 
+  can then be reloaded on subsequent invocations using via Perl's 
+  require() (which is about as fast as it can get).  The Template::Parser 
+  and Template::Grammar modules are loaded on demand, so if all templates
+  have been pre-compiled then the modules don't get loaded at all.  This 
+  is a big win, given that Template::Grammar is the biggy.
+
+* The ABSOLUTE and RELATIVE options are now used to enable the loading of
+  template files (via INCLUDE or PROCESS) that are specifies with absolute
+  (e.g. /tmp/somefile) or relative (e.g. ../tmp/another) filenames.  Both
+  are disabled by default.
+
+* The PLUGINS option is similar to TEMPLATES but allows you to specify 
+  one or more plugin providers.  These take responsibility for loading
+  and instantiating plugins.  The Template::Plugins module is the default
+  provider and multiplexes requests out to other Template::Plugin::* 
+  plugin modules.
+
+* The FILTERS option is the same but for providing filters.  The 
+  Template::Filters module is the default provider here.
+
+* The TOLERANT option can be used to tailor the behaviour of providers
+  (e.g. Template::Provider, Template::Plugins, Template::Filters) when
+  they encounter an error.  By default, providers are not TOLERANT (0)
+  and will report all failures as errors.  When TOLERANT is set to 1,
+  they will ignore errors and return STATUS_DECLINED to give the next
+  provider a chance to deliver a valid resource.
 
 * The INTERPOLATE option is now automatically disabled within PERL and 
   RAWPERL blocks to prevent Perl $variables from being interpreted as 
@@ -245,7 +343,7 @@ Miscellaneous Features
        my $bar = 'another value';
        # etc...
     [% END %]
-    no we're interpolating variables again, like $var
+    now we're interpolating variables again, like $var
 
 * Added the TRIM option to automatically removed leading and trailing 
   whitespace from the output of templates and BLOCKs.  This was suggested
@@ -253,14 +351,21 @@ Miscellaneous Features
   moment.  I'll check and fill in this **gap**, but thanks to him anwyay.
 
 
-
 Plugins and Filters
 -------------------
 
 * Added the 'upper' and 'lower' filters for case folding text.
 
+* Added the Date plugin, as provided by Thierry-Michel Barral.
 
-  
+Tools
+-----
+
+* Added the --define var=val option to ttree  
+
+Gotchas
+-------
+
   * Bare CATCH blocks are no longer permitted and must be explicitly 
     scoped with a matching TRY.  In most cases, this simply means adding
     a [% TRY %] to the start of any templates that define CATCH blocks, 
@@ -391,128 +496,95 @@ In addition to those changes, the main new features of the language are:
 There are a number of other significant changes in the architecture
 and implementation.
 
+Other Enhancements and Internal Features
+----------------------------------------
 
-  * Local named BLOCK definitions are better behaved and don't permanently
-    mask any real files.  Currently, INCLUDE does not import BLOCKs, but
-    PROCESS does (as per variables), although this may change slightly.
+* Templates (i.e. sub-routines) now return their generated output,
+  rather than sending it to $context->output().  This speeds things 
+  up and makes the code simpler, as well as allowing greater 
+  flexibility in how template sub-routines can work.
 
-  * The Template::Stash object now encapsulates all the magical variable
-    resolution code.  Both simple and compound variables can be accessed
-    or updated using the get() and set() methods, with all "variable magic"
-    happening automatically.
+* Exceptions are now raised via Perl's die() and caught by an
+  enclosing eval { } block.  Again, this simplifies the code generated
+  and improves runtime efficiency.  The [% RETURN %] and [% STOP %]
+  directives are now implemented as special case exceptions which are
+  caught in the appropriate place and handled accordingly.
 
-  * The Template::Context object is now greatly simplified.  This acts
-    as a general interface to the Template Toolkit functionality, being
-    a collection of the various other modules that actually implement 
-    the functionality (e.g. Template::Stash, Template::Provider, 
-    Template::Document, Template::Plugins, etc.)
+* Local named BLOCK definitions are better behaved and don't permanently
+  mask any real files.  BLOCK definitions remain local to the template in 
+  which they're defined, although they can be accessed from templates 
+  INCLUDEd or PROCESSed from within.  The PROCESS directive will export 
+  defined BLOCKs to the caller (as with variables) whereas INCLUDE will
+  keep them "private".
 
-  * The Template::Provider object provides a general facility for
-    retrieving templates from disk (or other source), and if necessary
-    compiling via a call to a Template::Parser helper object.
-    Multiple Template::Provider objects may be specified as the
-    TEMPLATES option to a Template::Context.  These form a
-    chain-of-command in which each successive provider is asked to
-    fetch() a template and may return a compiled template, an error,
-    or decline to service the request, thereby deferring to the next
-    provider in the chain.  The Template::Provider also handles
-    caching of compiled templates and has many improvements over the
-    version 1 Template::Cache, most significant of which is the
-    ability to limit the cache to a maximum number of templates.
+* The Template::Stash object now encapsulates all the magical variable
+  resolution code.  Both simple and compound variables can be accessed
+  or updated using the get() and set() methods, with all variable binding
+  magic happening automatically.
 
-  * The Template::Parser object now compiles template text into Perl code
-    and then evaluates it into a sub-routine reference using Perl's
-    eval().  This is then wrapped up into a Template::Document object,
-    including any metadata items and/or additional named BLOCKs defined
-    in the input template.
+* The Template::Context object is now greatly simplified.  This acts
+  as a general interface to the Template Toolkit functionality, being
+  a collection of the various other modules that actually implement
+  the functionality (e.g. Template::Stash, Template::Provider,
+  Template::Document, Template::Plugins, etc.)
 
-  * The Template::Document object is a thin wrapper around a compiled
-    template sub-routine.  It provides a process() method for processing
-    the template and a blocks() method for returning a reference to the
-    hash array of any additional named BLOCKs defined in the original 
-    template text.  An AUTOLOAD method returns values of metadata items,
-    allowing a Template::Document reference to be used as the 'template'
-    variable.
+* The Template::Provider object provides a general facility for
+  retrieving templates from disk (or other source), and if necessary
+  compiling via a call to a Template::Parser helper object.  Multiple
+  Template::Provider objects may be chained together, each with their
+  own caching options, and so on.
 
-  * The Template::Service module provides a high-level service for
-    processing templates, using an underlying Template::Context
-    reference to access the toolkit functionality.  PRE_PROCESS and
-    POST_PROCESS templates may be specified which are added to all
-    templates processed via this service.  An ERROR template may also
-    be specified, or as a reference to a hash array mapping error
-    types to template names.  This is then used to provide consistent
-    and automatic error handling in response to uncaught errors thrown
-    from templates.  In such a case, the approporiate error template
-    is processed in place of the original template.  PRE_PROCESS and 
-    POST_PROCESS templates are added to the error template to maintain
-    the expected consistency of the service.  The Template::Service 
-    module may be sub-classed, or replaced by other modules to implement
-    different template based services.
+* The Template::Parser object now compiles template text into Perl
+  code and then evaluates it into a sub-routine reference using Perl's
+  eval().  This is then wrapped up into a Template::Document object,
+  including any metadata items and/or additional named BLOCKs defined
+  in the input template.
 
-  * The Template::Plugins module is a special purpose provider variant 
-    for loading and instantiating plugins.  Multiple plugin providers 
-    may be specified as the PLUGINS option to a context and these act
-    in a chain-of-command as per the TEMPLATES providers.
+* The Template::Document object is a thin wrapper around a compiled
+  template sub-routine.  It provides a process() method for processing
+  the template and a blocks() method for returning a reference to the
+  hash array of any additional named BLOCKs defined in the original
+  template text.  An AUTOLOAD method returns values of metadata items,
+  allowing a Template::Document reference to be used as the 'template'
+  variable.
 
-  * The Template::Filters module is similar to Template::Plugins, but
-    for providing access to filters.  The FILTERS options may also 
-    contain multiple entries as above.
-   
-  * The Template::Base module defines a common base class for many of
-    the toolkit modules.  It implements shared functionality such as a
-    constructor, error reporting and handling, etc.  Modules are now
-    much easier to sub-class, all using separate new() and _init()
-    methods.
+* The Template::Service module provides a high-level service for
+  processing templates, allowing PRE_PROCESS and POST_PROCESS templates
+  to be specified along with an ERROR handling hash.
 
-  * The Template::Config module (name may change) provides methods for
-    loading and instantiating different Template Toolkit modules.  Using
-    this factory-based approach makes it far easier to change the default
-    object class for a specific part of the toolkit.  e.g.
+* The Template::Base module defines a common base class for many of
+  the toolkit modules.  It implements shared functionality such as a
+  constructor, error reporting and handling, etc.  Modules are now
+  much easier to sub-class, all using separate new() and _init()
+  methods.
+
+* The Template::Config module provides methods for loading and
+  instantiating different Template Toolkit modules.  Using this
+  factory-based approach makes it far easier to change the default
+  object class for a specific part of the toolkit.  e.g.
 
       use Template;
       use Template::Config;
 
-      $Template::Config::PARSER = 'MyTemplate::MyParser';
+      $Template::Config::PARSER = 'MyOrg::Template::MyParser';
 
+      # $tt object will create and use a MyOrg::Template::MyParser 
+      # object as PARSER
       my $tt = Template->new({ ... })
-	...
 
-      # $tt object will use a MyTemplate::MyParser object for PARSER
-    
-  * The Template module remains, as it ever was, a simple front-end
-    to the Template Toolkit.  This creates a single Template::Service
-    to which it delegates control for processing templates.  Output
-    is returned according to the OUTPUT options specified for the module
-    and/or any output option passed explicitly to the process() method.
-
-There's still some debug code in the wrong places, and some things that
-need to be tidied up to boost performance.  In particular, the parser
-goes out of its way to pretty-print generated Perl code (for the sake of
-easy debugging - set $Template::Parser::DEBUG to see the generated code)
-so expect it to run a little sluggish.  Once the templates are compiled, 
-they should execute measurably faster than before but unless you're 
-running a persistant server, you probably won't notice how fast they
-run because the process time is overshadowed by the parse time.
-I did some very rough benchmarks and had it processing templates 
-around 2 - 3 times faster than version 1.  This still falls short of
-what's possible, but for now it represents a good start.  :-)=  
+* The Template module remains, as it ever was, a simple front-end to
+  the Template Toolkit.  This creates a single Template::Service to
+  which it delegates control for processing templates.  Output is
+  returned according to the OUTPUT options specified for the module
+  and/or any output option passed explicitly to the process() method.
 
 
-
-
-
-This list isn't complete - it's more of a reminder to me at the moment.
 ----------------------------------------------------------------------
-
-* All directives now compile to Perl code and run
 
 * USERDIR and USERBLOCK are currently not supported (and may never be,
   given that they're experimental features of TT1 anyway). 
 
-* Fixed parser to not INTERPOLATE within PERL blocks.
-
-* Added TAG_STYLEs html, mason, asp and php, as provided by some kind 
-  dude on the list whose names escapes me at the moment.  Changed default 
+* Changed default TAGS to 
   to [% %] and changed names of some others
 
 * Changed how error/return values should be returned from user code.
@@ -520,21 +592,16 @@ This list isn't complete - it's more of a reminder to me at the moment.
 
     die $error_msg;
     die Template::Exception->new($type, $info);
-
-* All binary operators have the same precedence as Perl.
-
+    $context->throw($msg);
+    $context->throw($type, $info);
+    $context->throw($exception);
+    
 * Added '-- use name --' to Template::Test to switch between multiple
   Template objects specified as a list reference as the second arg
   to test_expect()
 
-* must explicitly use iterator if you want to access .first .last, etc.
-  in a loop.
-
-* note that parser is not loaded at startup time.
-
-
-
-
+* $Template::Directive::While::MAXITER is now 
+  $Template::Directive::WHILE_MAX
 
 changes from alpha to beta
 --------------------------

@@ -13,6 +13,7 @@ context.t       Template::Context module
 datafile.t      Datafile plugin (Template::Plugin::Datafile)
 directive.t     Directive layout, chomping, comments, etc.
 document.t      Template::Document module
+dom.t           XML::DOM plugin (Template::Plugin::XML::DOM)
 evalperl.t      Evaluation of PERL and RAWPERL blocks
 exception.t     Template::Exception module
 filter.t        FILTER directive and various filters
@@ -24,32 +25,37 @@ list.t          List definition and access via various methods
 object.t        Binding objects to template variables
 output.t        OUTPUT_PATH and OUTPUT options
 provider.t      Template::Provider module
+rss.t           XML::RSS plugin (Template::Plugin::XML::RSS)
+service.t       Template::Service module
 stop.t          STOP directive and throwing 'stop' exception
 table.t         Table plugin (Template::Plugin::Table)
 tags.t          TAGS directive
 url.t           URL plugin (Template::Plugin::URL)
 vars.t          Variable usage and GET / SET / CALL / DEFAULT directives
 varsv1.t        As above, using version 1 handling of leading '$'
+while.t         WHILE directive
 
 TODO:
 
 if.t            IF / UNLESS / ELSEIF / ELSE directives
 parser.t        Template::Parser module
-service.t       Template::Service module
 switch.t        SWITCH / CASE directives
 plugins.t       Template::Plugins provider module
 template.t      Template module
 try.t           TRY / THROW / CATCH / FINAL directives
 code.t          binding code to variables (or covered in vars.t?)
-dom.t           copy from v1
-rss.t           copy from v1
 
-literal :     'foo' = bar
-directive + multi + comment + block -> directives
-interpolate options
-break into while/foreach/if, etc.
-comments
+literal :     'foo' = bar, @ characters, escaping, etc.
 named params with object.t and code.t
+
+===
+anonblock
+macro
+cache
+recursion                    << OPTION
+return/stop/etc
+
+
 
 format => plugins
 -------------------------------
@@ -122,4 +128,5 @@ fix    url
 ok     vars          merge of many tests
 ok     varsv1        ditto for VERSION => 1 compatability
 fix    while         mainly ok, but broken due to (a = b) not working
+
 

@@ -298,3 +298,13 @@ this is block foo
 this is block bar
 end
 
+-- start --
+[% r; r = s; "-"; r %].
+-- expect --
+romeo-sierra.
+
+-- test --
+[% IF a; b; ELSIF c; d; ELSE; s; END %]
+-- expect --
+bravo
+

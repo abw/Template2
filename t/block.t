@@ -30,6 +30,8 @@ my $ttcfg = {
     INCLUDE_PATH => [ qw( t/test/lib test/lib ) ],	
     POST_CHOMP   => 1,
     BLOCKS       => {
+	header   => '<html><head><title>[% title %]</title></head><body>',
+	footer   => '</body></html>',
 	block_a  => sub { return 'this is block a' },
 	block_b  => sub { return 'this is block b' },
     },
@@ -74,3 +76,14 @@ This is block 1, defined in blockdef, a is alpha
 this is block a
 this is block b
 
+-- test --
+[% INCLUDE header 
+   title = 'A New Beginning'
++%]
+A long time ago in a galaxy far, far away...
+[% PROCESS footer %]
+
+-- expect --
+<html><head><title>A New Beginning</title></head><body>
+A long time ago in a galaxy far, far away...
+</body></html>
