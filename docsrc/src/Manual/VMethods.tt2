@@ -119,7 +119,7 @@ a no-op.
 
 Return the value as a hash reference containing a single entry with
 the key 'value' indicating the original scalar value.  As with the 
-'hash' virtual method, this is generally used to help massage data
+'list' virtual method, this is generally used to help massage data
 into different formats.
 
 =item size
@@ -203,8 +203,9 @@ passed to indicate the desired items required in the list: 'keys' to
 return a list of the keys (same as hash.keys), 'values' to return a
 list of the values (same as hash.values), or 'each' to return as list
 of (key, value) pairs (same as hash.each).  When called without an
-argument it returns a list of hash references each containing a 'key'
-and 'value' item representing 
+argument it returns a list of hash references, each of which contains
+a 'key' and 'value' item representing a single key =E<gt> value pair
+in the hash.
 
 =back
 
@@ -219,6 +220,11 @@ Returns the first/last item in the list.  The item is not removed from the
 list.
 
     [% results.first %] to [% results.last %]
+
+If either is given a numeric argument C<n>, they return the first or
+last C<n> elements:
+
+    The first 5 results are [% results.first(5).join(", ") %].
 
 =item size, max
 
@@ -291,7 +297,7 @@ as in the list itself.
     [% numbers = mylist.unique %]
 
 While this can be explicitly sorted, it is not required that the list
-be sorted before the unique elements pulled out (unlike the Unix
+be sorted before the unique elements are pulled out (unlike the Unix
 command line utility).
 
     [% numbers = mylist.unique.sort %]
