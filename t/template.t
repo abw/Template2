@@ -40,6 +40,10 @@ my $error = $tt->error();
 ok( $error->type() eq 'file' );
 ok( $error->info() eq 'this_file_does_not_exist: not found' );
 
+my @output;
+$tt->process('header', undef, \@output);
+ok(length($output[-1]));
+
 sub myout {
   my $output = shift;
   ok($output)

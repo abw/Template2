@@ -153,6 +153,10 @@ sub _output {
     elsif ($reftype eq 'SCALAR') {
 	$$where .= $text;
     }
+    # push onto ARRAY ref
+    elsif ($reftype eq 'ARRAY') {
+	push @$where, $text;
+    }
     # call the print() method on an object that implements the method
     # (e.g. IO::Handle, Apache::Request, etc)
     elsif (UNIVERSAL::can($where, 'print')) {

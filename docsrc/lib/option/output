@@ -12,7 +12,8 @@ working directory if not specified absolutely); a file handle
 (e.g. GLOB or IO::Handle) opened for writing; a reference to a text
 string to which the output is appended (the string isn't cleared); a
 reference to a subroutine which is called, passing the output text as
-an argument; or as a reference to any object that supports the print()
+an argument; as a refernce to an array, onto which the content will be
+push()ed; or as a reference to any object that supports the print()
 method.  This latter option includes the Apache::Request object which
 is passed as the argument to Apache/mod_perl handlers.
 
@@ -46,7 +47,13 @@ example 4 (subroutine):
 	OUTPUT => \&output,
     });
 
-example 5 (Apache/mod_perl handler):
+example 5 (array reference):
+
+    my [* obj *] = [* pkg *]->new({
+	OUTPUT => \@output,
+    })
+
+example 6 (Apache/mod_perl handler):
 
     sub handler {
 	my $r = shift;
@@ -64,6 +71,7 @@ above argument types.
     $t->process($file, $vars, "/tmp/foo");
     $t->process($file, $vars, "bar");
     $t->process($file, $vars, \*MYGLOB);
+    $t->process($file, $vars, \@output); 
     $t->process($file, $vars, $r);  # Apache::Request
     ...
 
