@@ -764,7 +764,7 @@ a list.
 The upshot is that you can continue to use existing Perl modules or
 code that returns lists of items, without having to refactor it
 just to keep the Template Toolkit happy (by returning references
-to list).  Class::DBI module is just one example of a paricularly 
+to list).  Class::DBI module is just one example of a particularly 
 useful module which returns values this way.
 
 If only a single item is returned from a subroutine then the 
