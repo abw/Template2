@@ -1,3 +1,0 @@
-id    => '[% docset.id %]',
-title => '[% docset.title %]',
-about => '[% docset.about %]',
