@@ -8,7 +8,7 @@ WriteMakefile(
     'C'        => [ qw( Stash.c ) ],
     'XS'       => { 'Stash.xs' => 'Stash.c' },
     'OBJECT'   => 'Stash.o',
-    'VERSION'  => '2.04d',
+    'VERSION'  => '2.04e',
     'NORECURS' => 1,
     'MAN3PODS' => 'none'
 );

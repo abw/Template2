@@ -183,7 +183,13 @@ one, three
 -- expect --
 two, three, one
 
--- start --
+
+-- stop --
+#
+# NOTE: these were added for a developer release 2.04d, but the oeprators
+# 'gt', etc, never made it in
+#
+
 -- test --
 [% 10 lt 20 ? 'foo' : 'bar' %]
 -- expect --

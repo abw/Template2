@@ -58,22 +58,15 @@ my ($factory, $rawstart);
 # for historical reasons, != and == are converted to ne and eq to perform 
 # stringwise comparison (mainly because it doesn't generate "non-numerical 
 # comparison" warnings which != and == can) but the others (e.g. < > <= >=)
-# are not converted to their stringwise equivalents.  When I added 'gt' et
-# al, I realised it was all a little inconsistent, but I'm loathed to change
-# it now and risk breaking existing code.  That's something else for v3.
+# are not converted to their stringwise equivalents.  I added 'gt' et al, 
+# briefly for v2.04d and then took them out again in 2.04e.
 
 %CMPOP = qw( 
-    ne ne
     != ne
-    eq eq
     == eq
-    lt lt
     <  <
-    gt gt
     >  >
-    ge ge
     >= >=
-    le le
     <= <=
 );
 
@@ -350,13 +343,16 @@ $STATES = [
 	},
 	{#State 17
 		ACTIONS => {
+			"\${" => 49,
 			'LITERAL' => 99,
-			'IDENT' => 98
+			'IDENT' => 28,
+			"\$" => 7
 		},
 		DEFAULT => -116,
 		GOTOS => {
 			'param' => 101,
 			'params' => 97,
+			'item' => 98,
 			'hash' => 100
 		}
 	},
@@ -1182,12 +1178,15 @@ $STATES = [
 	{#State 97
 		ACTIONS => {
 			'COMMA' => 186,
+			"\${" => 49,
 			'LITERAL' => 99,
-			'IDENT' => 98
+			'IDENT' => 28,
+			"\$" => 7
 		},
 		DEFAULT => -115,
 		GOTOS => {
-			'param' => 187
+			'param' => 187,
+			'item' => 98
 		}
 	},
 	{#State 98
@@ -2106,7 +2105,7 @@ $STATES = [
 		ACTIONS => {
 			'NUMBER' => 2,
 			"\"" => 45,
-			'IDENT' => 244,
+			'IDENT' => 28,
 			"\$" => 7,
 			'REF' => 32,
 			"\${" => 49,
@@ -2119,7 +2118,7 @@ $STATES = [
 		GOTOS => {
 			'sterm' => 1,
 			'param' => 247,
-			'item' => 25,
+			'item' => 244,
 			'ident' => 243,
 			'term' => 248,
 			'lterm' => 20,
@@ -2453,7 +2452,7 @@ $STATES = [
 			"\"" => 45,
 			'LITERAL' => 245,
 			"[" => 53,
-			'IDENT' => 244,
+			'IDENT' => 28,
 			"\$" => 7,
 			'COMMA' => 246,
 			"{" => 17,
@@ -2463,7 +2462,7 @@ $STATES = [
 		GOTOS => {
 			'sterm' => 1,
 			'param' => 247,
-			'item' => 25,
+			'item' => 244,
 			'ident' => 243,
 			'term' => 248,
 			'lterm' => 20,
@@ -3060,7 +3059,7 @@ $STATES = [
 			"\"" => 45,
 			'LITERAL' => 245,
 			"[" => 53,
-			'IDENT' => 244,
+			'IDENT' => 28,
 			"\$" => 7,
 			'COMMA' => 246,
 			"{" => 17,
@@ -3071,7 +3070,7 @@ $STATES = [
 		GOTOS => {
 			'sterm' => 1,
 			'param' => 247,
-			'item' => 25,
+			'item' => 244,
 			'ident' => 243,
 			'term' => 248,
 			'lterm' => 20,
@@ -3216,7 +3215,7 @@ $STATES = [
 		ACTIONS => {
 			'NUMBER' => 2,
 			"\"" => 45,
-			'IDENT' => 244,
+			'IDENT' => 28,
 			"\$" => 7,
 			'REF' => 32,
 			"\${" => 49,
@@ -3229,7 +3228,7 @@ $STATES = [
 		GOTOS => {
 			'sterm' => 1,
 			'param' => 247,
-			'item' => 25,
+			'item' => 244,
 			'ident' => 243,
 			'term' => 248,
 			'lterm' => 20,
@@ -3251,9 +3250,10 @@ $STATES = [
 	},
 	{#State 244
 		ACTIONS => {
+			"(" => 117,
 			'ASSIGN' => 188
 		},
-		DEFAULT => -127
+		DEFAULT => -125
 	},
 	{#State 245
 		ACTIONS => {
@@ -3277,7 +3277,7 @@ $STATES = [
 			"\"" => 45,
 			'LITERAL' => 245,
 			"[" => 53,
-			'IDENT' => 244,
+			'IDENT' => 28,
 			"\$" => 7,
 			'COMMA' => 246,
 			"{" => 17,
@@ -3287,7 +3287,7 @@ $STATES = [
 		GOTOS => {
 			'sterm' => 1,
 			'param' => 247,
-			'item' => 25,
+			'item' => 244,
 			'ident' => 243,
 			'term' => 248,
 			'lterm' => 20,
@@ -4258,7 +4258,7 @@ $STATES = [
 			"\"" => 45,
 			'LITERAL' => 245,
 			"[" => 53,
-			'IDENT' => 244,
+			'IDENT' => 28,
 			"\$" => 7,
 			'COMMA' => 246,
 			"{" => 17,
@@ -4269,7 +4269,7 @@ $STATES = [
 		GOTOS => {
 			'sterm' => 1,
 			'param' => 247,
-			'item' => 25,
+			'item' => 244,
 			'ident' => 243,
 			'term' => 248,
 			'lterm' => 20,
@@ -5633,25 +5633,25 @@ sub
 	[#Rule 120
 		 'param', 3,
 sub
-#line 328 "Parser.yp"
+#line 325 "Parser.yp"
 { "$_[1] => $_[3]"                    }
 	],
 	[#Rule 121
 		 'param', 3,
 sub
-#line 329 "Parser.yp"
-{ "'$_[1]' => $_[3]"                  }
+#line 326 "Parser.yp"
+{ "$_[1] => $_[3]"                    }
 	],
 	[#Rule 122
 		 'ident', 3,
 sub
-#line 332 "Parser.yp"
+#line 329 "Parser.yp"
 { push(@{$_[1]}, @{$_[3]}); $_[1]     }
 	],
 	[#Rule 123
 		 'ident', 3,
 sub
-#line 333 "Parser.yp"
+#line 330 "Parser.yp"
 { push(@{$_[1]}, 
 					   map {($_, 0)} split(/\./, $_[3]));
 				      $_[1];			          }
@@ -5662,31 +5662,31 @@ sub
 	[#Rule 125
 		 'node', 1,
 sub
-#line 339 "Parser.yp"
+#line 336 "Parser.yp"
 { [ $_[1], 0 ]                        }
 	],
 	[#Rule 126
 		 'node', 4,
 sub
-#line 340 "Parser.yp"
+#line 337 "Parser.yp"
 { [ $_[1], $factory->args($_[3]) ]    }
 	],
 	[#Rule 127
 		 'item', 1,
 sub
-#line 343 "Parser.yp"
+#line 340 "Parser.yp"
 { "'$_[1]'"                           }
 	],
 	[#Rule 128
 		 'item', 3,
 sub
-#line 344 "Parser.yp"
+#line 341 "Parser.yp"
 { $_[2]                               }
 	],
 	[#Rule 129
 		 'item', 2,
 sub
-#line 345 "Parser.yp"
+#line 342 "Parser.yp"
 { $_[0]->{ V1DOLLAR }
 				       ? "'$_[2]'" 
 				       : $factory->ident(["'$_[2]'", 0])  }
@@ -5694,73 +5694,73 @@ sub
 	[#Rule 130
 		 'expr', 3,
 sub
-#line 350 "Parser.yp"
+#line 347 "Parser.yp"
 { "$_[1] $_[2] $_[3]"                 }
 	],
 	[#Rule 131
 		 'expr', 3,
 sub
-#line 351 "Parser.yp"
+#line 348 "Parser.yp"
 { "$_[1] $_[2] $_[3]"                 }
 	],
 	[#Rule 132
 		 'expr', 3,
 sub
-#line 352 "Parser.yp"
+#line 349 "Parser.yp"
 { "$_[1] $_[2] $_[3]"                 }
 	],
 	[#Rule 133
 		 'expr', 3,
 sub
-#line 353 "Parser.yp"
+#line 350 "Parser.yp"
 { "int($_[1] / $_[3])"                }
 	],
 	[#Rule 134
 		 'expr', 3,
 sub
-#line 354 "Parser.yp"
+#line 351 "Parser.yp"
 { "$_[1] % $_[3]"                     }
 	],
 	[#Rule 135
 		 'expr', 3,
 sub
-#line 355 "Parser.yp"
+#line 352 "Parser.yp"
 { "$_[1] $CMPOP{ $_[2] } $_[3]"       }
 	],
 	[#Rule 136
 		 'expr', 3,
 sub
-#line 356 "Parser.yp"
+#line 353 "Parser.yp"
 { "($_[1]) && ($_[3])"                }
 	],
 	[#Rule 137
 		 'expr', 3,
 sub
-#line 357 "Parser.yp"
+#line 354 "Parser.yp"
 { "($_[1]) || ($_[3])"                }
 	],
 	[#Rule 138
 		 'expr', 2,
 sub
-#line 358 "Parser.yp"
+#line 355 "Parser.yp"
 { "!($_[2])"                          }
 	],
 	[#Rule 139
 		 'expr', 5,
 sub
-#line 359 "Parser.yp"
+#line 356 "Parser.yp"
 { "(($_[1]) ? ($_[3]) : ($_[5]))"     }
 	],
 	[#Rule 140
 		 'expr', 3,
 sub
-#line 360 "Parser.yp"
+#line 357 "Parser.yp"
 { $factory->assign(@{$_[2]})          }
 	],
 	[#Rule 141
 		 'expr', 3,
 sub
-#line 361 "Parser.yp"
+#line 358 "Parser.yp"
 { "($_[2])"                           }
 	],
 	[#Rule 142
@@ -5769,7 +5769,7 @@ sub
 	[#Rule 143
 		 'setlist', 2,
 sub
-#line 365 "Parser.yp"
+#line 362 "Parser.yp"
 { push(@{$_[1]}, @{$_[2]}); $_[1]     }
 	],
 	[#Rule 144
@@ -5781,50 +5781,50 @@ sub
 	[#Rule 146
 		 'assign', 3,
 sub
-#line 371 "Parser.yp"
+#line 368 "Parser.yp"
 { [ $_[1], $_[3] ]                    }
 	],
 	[#Rule 147
 		 'assign', 3,
 sub
-#line 372 "Parser.yp"
+#line 369 "Parser.yp"
 { [ @_[1,3] ]                         }
 	],
 	[#Rule 148
 		 'args', 2,
 sub
-#line 379 "Parser.yp"
+#line 376 "Parser.yp"
 { push(@{$_[1]}, $_[2]); $_[1]        }
 	],
 	[#Rule 149
 		 'args', 2,
 sub
-#line 380 "Parser.yp"
+#line 377 "Parser.yp"
 { push(@{$_[1]->[0]}, $_[2]); $_[1]   }
 	],
 	[#Rule 150
 		 'args', 4,
 sub
-#line 381 "Parser.yp"
+#line 378 "Parser.yp"
 { push(@{$_[1]->[0]}, "'', " . 
 				      $factory->assign(@_[2,4])); $_[1]  }
 	],
 	[#Rule 151
 		 'args', 2,
 sub
-#line 383 "Parser.yp"
+#line 380 "Parser.yp"
 { $_[1]                               }
 	],
 	[#Rule 152
 		 'args', 0,
 sub
-#line 384 "Parser.yp"
+#line 381 "Parser.yp"
 { [ [ ] ]                             }
 	],
 	[#Rule 153
 		 'lnameargs', 3,
 sub
-#line 394 "Parser.yp"
+#line 391 "Parser.yp"
 { push(@{$_[3]}, $_[1]); $_[3]        }
 	],
 	[#Rule 154
@@ -5836,7 +5836,7 @@ sub
 	[#Rule 156
 		 'lvalue', 3,
 sub
-#line 399 "Parser.yp"
+#line 396 "Parser.yp"
 { $factory->quoted($_[2])             }
 	],
 	[#Rule 157
@@ -5845,43 +5845,43 @@ sub
 	[#Rule 158
 		 'nameargs', 3,
 sub
-#line 403 "Parser.yp"
+#line 400 "Parser.yp"
 { [ [$factory->ident($_[2])], $_[3] ]   }
 	],
 	[#Rule 159
 		 'nameargs', 2,
 sub
-#line 404 "Parser.yp"
+#line 401 "Parser.yp"
 { [ @_[1,2] ] }
 	],
 	[#Rule 160
 		 'nameargs', 4,
 sub
-#line 405 "Parser.yp"
+#line 402 "Parser.yp"
 { [ @_[1,3] ] }
 	],
 	[#Rule 161
 		 'names', 3,
 sub
-#line 408 "Parser.yp"
+#line 405 "Parser.yp"
 { push(@{$_[1]}, $_[3]); $_[1] }
 	],
 	[#Rule 162
 		 'names', 1,
 sub
-#line 409 "Parser.yp"
+#line 406 "Parser.yp"
 { [ $_[1] ]                    }
 	],
 	[#Rule 163
 		 'name', 3,
 sub
-#line 412 "Parser.yp"
+#line 409 "Parser.yp"
 { $factory->quoted($_[2])  }
 	],
 	[#Rule 164
 		 'name', 1,
 sub
-#line 413 "Parser.yp"
+#line 410 "Parser.yp"
 { "'$_[1]'" }
 	],
 	[#Rule 165
@@ -5890,7 +5890,7 @@ sub
 	[#Rule 166
 		 'filename', 3,
 sub
-#line 425 "Parser.yp"
+#line 422 "Parser.yp"
 { "$_[1].$_[3]" }
 	],
 	[#Rule 167
@@ -5908,32 +5908,32 @@ sub
 	[#Rule 171
 		 'quoted', 2,
 sub
-#line 439 "Parser.yp"
+#line 436 "Parser.yp"
 { push(@{$_[1]}, $_[2]) 
 				          if defined $_[2]; $_[1]         }
 	],
 	[#Rule 172
 		 'quoted', 0,
 sub
-#line 441 "Parser.yp"
+#line 438 "Parser.yp"
 { [ ]                                 }
 	],
 	[#Rule 173
 		 'quotable', 1,
 sub
-#line 444 "Parser.yp"
+#line 441 "Parser.yp"
 { $factory->ident($_[1])              }
 	],
 	[#Rule 174
 		 'quotable', 1,
 sub
-#line 445 "Parser.yp"
+#line 442 "Parser.yp"
 { $factory->text($_[1])               }
 	],
 	[#Rule 175
 		 'quotable', 1,
 sub
-#line 446 "Parser.yp"
+#line 443 "Parser.yp"
 { undef                               }
 	]
 ];

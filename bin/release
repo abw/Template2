@@ -1,6 +1,6 @@
    docsrc/bin/ttmkdocs \
 && docsrc/bin/ttpodglu \
-&& perl Makefile.PL TT_ACCEPT=y TT_XS_DEFAULT=n TT_LATEX=y \
+&& perl Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n TT_LATEX=y \
 && make                \
 && make test           \
 && bin/fixconfig -v -y \
