@@ -32,4 +32,20 @@ driven template.
 
     http://slashcode.org/
 
+=item OpenFrame
+
+OpenFrame is an open source application framework for distributed
+media applications. It ships with a generator for the Template
+Toolkit.
+
+    http://openframe.fotango.com/
+
+=item PCMT
+
+PCMT is the Personal Content Management Toolkit. It uses the Template
+Toolkit as the presentation engine.
+
+    http://pcmt.sf.net/
+
 =back
+
