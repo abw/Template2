@@ -64,6 +64,9 @@ my ($factory, $rawstart);
 %CMPOP = qw( 
     != ne
     == eq
+#    eq eq  # uncomment these lines to enable the eq, lt and gt operators      
+#    lt lt
+#    gt gt
     <  <
     >  >
     >= >=
