@@ -92,6 +92,7 @@ my $params = {
 		   qw( Tom Dick Larry ) ],
     numbers   => [ map { My::Object->new($_) }
 		   qw( 1 02 10 12 021 ) ],
+    duplicates => [ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
 
 };
 
@@ -309,6 +310,10 @@ Tom
 -- expect --
 2, 3, 5, 7, 11, 13, 17, 19
 
+-- test --
+[% duplicates.unique.join(', ') %]
+--expect --
+1, 2, 3, 4, 5
 
 # USER DEFINED LIST OPS
 
