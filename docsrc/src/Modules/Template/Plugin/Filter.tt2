@@ -179,7 +179,7 @@ data.
 	my ($self, $text, $args, $conf) = @_;
 
 	$args = $self->merge_args($args); 
-	$conf = $self->merge_conf($conf);
+	$conf = $self->merge_config($conf);
 
 	# $args = [ 'foo', 'bar' ]	
 	# $conf = { wiz => 'waz', biz => 'baz' }	
