@@ -99,3 +99,19 @@ foo: <!-- input text line 1 : [% foo %] -->10
 <!-- input text line 2 : [% INCLUDE foo a=10 %] -->This is the foo file, a is <!-- foo line 1 : [% a %] -->10
 <!-- input text line 3 : [% DEBUG off %] -->foo: 10
 This is the foo file, a is <!-- foo line 1 : [% a %] -->20
+
+-- test --
+-- use default --
+[% DEBUG on -%]
+[% DEBUG format '[ $file line $line ]' %]
+[% foo %]
+-- expect --
+<!-- input text line 2 : [% DEBUG format '[ $file line $line ]' %] -->
+[ input text line 3 ]10
+
+-- test --
+-- use default --
+[% DEBUG on + format '[ $file line $line ]' -%]
+[% foo %]
+-- expect --
+[ input text line 2 ]10
