@@ -17,13 +17,17 @@
 #------------------------------------------------------------------------
 
 use strict;
-use lib qw( /home/abw/src/pmod/Pod-POM/lib );    ### TODO ###
 use lib qw( ./lib ../lib ../../lib );
 use Template;
 use XML::DOM;
 use Getopt::Std;
 use File::Basename;
 use Cwd;
+
+# Template::Test gets loaded to grok the version number for building
+# its manpage.  this disables the autoflush option.
+use Template::Test;
+$Template::Test::NO_FLUSH = 1;
 
 my $VERSION = 0.01;
 my $PROGRAM = basename($0);
@@ -120,6 +124,8 @@ my $scrub;
 $template->process('docset/maker', $vars, \$scrub)
     || die "error: ", $template->error(), "\n";
 
+print "all done\n";
+exit(0);
 
 #------------------------------------------------------------------------
 # filters to fix any TT tags like [% this %] in the input, changing them

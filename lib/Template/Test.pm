@@ -30,7 +30,7 @@ require 5.004;
 
 use strict;
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
-	     $VERSION $DEBUG $EXTRA $PRESERVE $REASON
+	     $VERSION $DEBUG $EXTRA $PRESERVE $REASON $NO_FLUSH
 	     $loaded %callsign);
 use Template qw( :template );
 use Exporter;
@@ -44,6 +44,7 @@ $DEBUG   = 0;
 $| = 1;
 
 $REASON   = 'not applicable on this platform';
+$NO_FLUSH = 0;
 $EXTRA    = 0;   # any extra tests to come after test_expect()
 $PRESERVE = 0	 # don't mangle newlines in output/expect
     unless defined $PRESERVE;
@@ -52,7 +53,7 @@ my @results = ();
 my ($ntests, $ok_count);
 *is = \&match;
 
-sub END {
+END {
     # ensure flush() is called to print any cached results 
     flush();
 }
@@ -159,7 +160,7 @@ sub match {
 
 sub flush {
     ntests(0)
-	unless ($ok_count);
+	unless $ok_count || $NO_FLUSH;
 }
 
 
@@ -680,8 +681,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.56, distributed as part of the
-Template Toolkit version 2.08a, released on 08 August 2002.
+2.57, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 =head1 COPYRIGHT
 

@@ -557,8 +557,7 @@ Directory into which output files can be written.
 
 =item DEBUG
 
-Flag which, when enabled, causes any access to an undefined variable
-to be raised as an 'undef' error.
+Enable debugging messages.
 
 =back
 
@@ -908,7 +907,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08, released on 30 July 2002.
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 =head1 COPYRIGHT
 

@@ -127,12 +127,13 @@ Please let me know if you think anyone is missing from this list.
   Eugene Miretskiy          <eugene@invision.net>
   Keith G. Murphy           <keithmur@mindspring.com>
   Chris Nandor              <pudge@pobox.com>
-  Briac Pilpr√©              <briac@pilpre.com>
+  Briac PilprÈ              <briac@pilpre.com>
   Martin Portman            <mrp@cre.canon.co.uk>
+  Slaven Rezic              <slaven.rezic@berlin.de>
   Christian Schaffner       <schaffner@eeh.ee.ethz.ch>
   Randal L. Schwartz        <merlyn@stonehenge.com>
   Paul Sharpe               <paul@miraclefish.com>
-  Ville Skytt√§              <ville.skytta@iki.fi>
+  Ville Skytt‰              <ville.skytta@iki.fi>
   Doug Steinwand            <dsteinwand@etoys.com>
   Michael Stevens           <michael@etla.org>
   Drew Taylor               <dtaylor@vialogix.com>   
@@ -154,7 +155,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08, released on 30 July 2002.
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 =head1 COPYRIGHT
 

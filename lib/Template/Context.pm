@@ -1287,6 +1287,52 @@ version 1.
 
 
 
+=item DEBUG
+
+The DEBUG option can be used to enable various debugging features
+of the Template::Context module.  
+
+    use Template::Constants qw( :debug );
+
+    my $template = Template->new({
+	DEBUG => DEBUG_CONTEXT | DEBUG_DIRS,
+    });
+
+The DEBUG value can include any of the following.  Multiple values
+should be combined using the logical OR operator, '|'.
+
+=over 4
+
+=item DEBUG_CONTEXT
+
+Enables general debugging messages for the
+L<Template::Context|Template::Context> module.
+
+=item DEBUG_DIRS
+
+This option causes the Template Toolkit to generate comments
+indicating the source file, line and original text of each directive
+in the template.  These comments are embedded in the template output
+using the format defined in the DEBUG_FORMAT configuration item, or a
+simple default format if unspecified.
+
+For example, the following template fragment:
+
+    
+    Hello World
+
+would generate this output:
+
+    ## input text line 1 :  ##
+    Hello 
+    ## input text line 2 : World ##
+    World
+
+
+=back
+
+
+
 
 
 =back
@@ -1470,8 +1516,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.67, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.70, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 =head1 COPYRIGHT
 

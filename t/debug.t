@@ -24,7 +24,7 @@ use Template::Constants qw( :debug );
 
 my $DEBUG = grep(/-d/, @ARGV);
 #$Template::Parser::DEBUG = 1; #$DEBUG;
-$Template::Directive::Pretty = $DEBUG;
+#$Template::Directive::Pretty = $DEBUG;
 $Template::Test::PRESERVE = 1;
 
 my $dir   = -d 't' ? 't/test' : 'test';

@@ -22,7 +22,8 @@
 	        title ="PUBLIC METHODS"
                 subs  = [
                     "new(\\%config)",
-		    "error(\$msg)"
+		    "error(\$msg, ...)",
+		    "debug(\$msg, ...)"
 		];
 	PROCESS tocitem 
 	        title ="AUTHOR"
@@ -41,7 +42,7 @@
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
     title="SYNOPSIS"
--%]<pre>    package Template::MyModule;
+-%]<pre>    package My::Module;
     use base qw( Template::Base );</pre>
 <pre>    sub _init {
 	my ($self, $config) = @_;
@@ -49,6 +50,9 @@
 	    || return $self-&gt;error(&quot;No 'doodah' specified&quot;);
 	return $self;
     }</pre>
+<pre>    package main;</pre>
+<pre>    my $object = My::Module-&gt;new({ doodah =&gt; 'foobar' })
+        || die My::Module-&gt;error();</pre>
 [%- END %]
 [% WRAPPER section
     title="DESCRIPTION"
@@ -70,20 +74,20 @@ is returned, or undef on error.  Any error message raised can be examined
 via the error() class method or directly via the package variable ERROR
 in the derived class.
 </p>
-<pre>    my $module = Template::MyModule-&gt;new({ ... })
-        || die Template::MyModule-&gt;error(), &quot;\n&quot;;</pre>
-<pre>    my $module = Template::MyModule-&gt;new({ ... })
-        || die &quot;constructor error: $Template::MyModule::ERROR\n&quot;;</pre>
+<pre>    my $module = My::Module-&gt;new({ ... })
+        || die My::Module-&gt;error(), &quot;\n&quot;;</pre>
+<pre>    my $module = My::Module-&gt;new({ ... })
+        || die &quot;constructor error: $My::Module::ERROR\n&quot;;</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "error(\$msg)"
+   title = "error(\$msg, ...)"
 -%]<p>
 May be called as an object method to get/set the internal _ERROR member
 or as a class method to get/set the $ERROR variable in the derived class's
 package.
 </p>
-<pre>    my $module = Template::MyModule-&gt;new({ ... })
-        || die Template::MyModule-&gt;error(), &quot;\n&quot;;</pre>
+<pre>    my $module = My::Module-&gt;new({ ... })
+        || die My::Module-&gt;error(), &quot;\n&quot;;</pre>
 <pre>    $module-&gt;do_something() 
 	|| die $module-&gt;error(), &quot;\n&quot;;</pre>
 <p>
@@ -91,15 +95,47 @@ When called with parameters (multiple params are concatenated), this
 method will set the relevant variable and return undef.  This is most
 often used within object methods to report errors to the caller.
 </p>
-<pre>    package Template::MyModule;</pre>
-<pre>    ...</pre>
+<pre>    package My::Module;</pre>
 <pre>    sub foobar {
-	my $self = shift;
-	...
-	return $self-&gt;error('some kind of error...')
+	my $self = shift;</pre>
+<pre>	# some other code...</pre>
+<pre>	return $self-&gt;error('some kind of error...')
 	    if $some_condition;
-	...
     }</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "debug(\$msg, ...)"
+-%]<p>
+Generates a debugging message by concatenating all arguments
+passed into a string and printing it to STDERR.  A prefix is
+added to indicate the module of the caller.
+</p>
+<pre>    package My::Module;</pre>
+<pre>    sub foobar {
+	my $self = shift;</pre>
+<pre>	$self-&gt;debug('called foobar()');</pre>
+<pre>	# some other code...
+    }</pre>
+<p>
+When the foobar() method is called, the following message
+is sent to STDERR:
+</p>
+<pre>    [My::Module] called foobar()</pre>
+<p>
+Objects can set an internal DEBUG value which the debug()
+method will examine.  If this value sets the relevant bits
+to indicate DEBUG_CALLER then the file and line number of
+the caller will be appened to the message.
+</p>
+<pre>    use Template::Constants qw( :debug );</pre>
+<pre>    my $module = My::Module-&gt;new({
+        DEBUG =&gt; DEBUG_SERVICE | DEBUG_CONTEXT | DEBUG_CALLER,
+    });</pre>
+<pre>    $module-&gt;foobar();</pre>
+<p>
+This generates an error message such as:
+</p>
+<pre>    [My::Module] called foobar() at My/Module.pm line 6</pre>
 [%- END %]
 [%- END %]
 [% WRAPPER section
@@ -114,8 +150,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.54, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 </p>
 [%- END %]
 [% WRAPPER section

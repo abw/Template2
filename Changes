@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.08, detailing
+#   Revision history for the Template Toolkit version 2.08a, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -21,6 +21,27 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Totally re-implemented the handling of the DEBUG parameter.  Added 
+  DEBUG_* constants to Template::Constants which can be used to enable
+  different debugging options and messages.
+
+* Added skip_all($reason) to Template::Test and fixed up a whole bunch
+  of tests to use it.  Also made other minor fixes to the tests to run
+  nicely (or bail politely) under Perl 5.8.0
+
+* Applied patch from Slaven Rezic to Template::Plugin::Data which 
+  modifies the locale loading to append various suffixes (e.g. '.UTF-8')
+  in the case that the unadorned locale can't be loaded.
+
+* Bumped version number of File::Spec to 0.8 in Makefile.PL PREREQ_PM.
+  Previous versions didn't include splitdir().  Thanks to Slaven Rezic
+  for reporting the problem.
+
 
 #------------------------------------------------------------------------
 # Version 2.08 - July 30th 2002

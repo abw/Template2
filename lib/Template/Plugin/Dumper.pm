@@ -159,8 +159,8 @@ Simon Matthews E<lt>sam@knowledgepool.comE<gt>
 
 =head1 VERSION
 
-2.51, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.52, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 
 

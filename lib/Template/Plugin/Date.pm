@@ -111,8 +111,8 @@ sub format {
     
     if ($locale) {
 	# format the date in a specific locale, saving and subsequently
-	# restoring the current locale.
-	my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
+        # restoring the current locale.
+        my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
 
         # some systems expect locales to have a particular suffix
         for my $suffix ('', @LOCALE_SUFFIX) {
@@ -122,11 +122,11 @@ sub format {
                 last;
             }
         }
-	$datestr = &POSIX::strftime($format, @date);
-	&POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
+        $datestr = &POSIX::strftime($format, @date);
+        &POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
     }
     else {
-	$datestr = &POSIX::strftime($format, @date);
+        $datestr = &POSIX::strftime($format, @date);
     }
 
     return $datestr;
@@ -308,8 +308,8 @@ fixups/enhancements, a test script and documentation.
 
 =head1 VERSION
 
-2.56, distributed as part of the
-Template Toolkit version 2.08a, released on 08 August 2002.
+2.57, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 
 

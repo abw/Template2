@@ -160,7 +160,7 @@ Template::Base - Base class module implementing common functionality
 
 =head1 SYNOPSIS
 
-    package Template::MyModule;
+    package My::Module;
     use base qw( Template::Base );
 
     sub _init {
@@ -169,6 +169,11 @@ Template::Base - Base class module implementing common functionality
 	    || return $self->error("No 'doodah' specified");
 	return $self;
     }
+
+    package main;
+
+    my $object = My::Module->new({ doodah => 'foobar' })
+        || die My::Module->error();
 
 =head1 DESCRIPTION
 
@@ -187,20 +192,20 @@ is returned, or undef on error.  Any error message raised can be examined
 via the error() class method or directly via the package variable ERROR
 in the derived class.
 
-    my $module = Template::MyModule->new({ ... })
-        || die Template::MyModule->error(), "\n";
+    my $module = My::Module->new({ ... })
+        || die My::Module->error(), "\n";
 
-    my $module = Template::MyModule->new({ ... })
-        || die "constructor error: $Template::MyModule::ERROR\n";
+    my $module = My::Module->new({ ... })
+        || die "constructor error: $My::Module::ERROR\n";
 
-=head2 error($msg)
+=head2 error($msg, ...)
 
 May be called as an object method to get/set the internal _ERROR member
 or as a class method to get/set the $ERROR variable in the derived class's
 package.
 
-    my $module = Template::MyModule->new({ ... })
-        || die Template::MyModule->error(), "\n";
+    my $module = My::Module->new({ ... })
+        || die My::Module->error(), "\n";
 
     $module->do_something() 
 	|| die $module->error(), "\n";
@@ -209,17 +214,54 @@ When called with parameters (multiple params are concatenated), this
 method will set the relevant variable and return undef.  This is most
 often used within object methods to report errors to the caller.
 
-    package Template::MyModule;
-
-    ...
+    package My::Module;
 
     sub foobar {
 	my $self = shift;
-	...
+
+	# some other code...
+
 	return $self->error('some kind of error...')
 	    if $some_condition;
-	...
     }
+
+=head2 debug($msg, ...)
+
+Generates a debugging message by concatenating all arguments
+passed into a string and printing it to STDERR.  A prefix is
+added to indicate the module of the caller.
+
+    package My::Module;
+
+    sub foobar {
+	my $self = shift;
+
+	$self->debug('called foobar()');
+
+	# some other code...
+    }
+
+When the foobar() method is called, the following message
+is sent to STDERR:
+
+    [My::Module] called foobar()
+
+Objects can set an internal DEBUG value which the debug()
+method will examine.  If this value sets the relevant bits
+to indicate DEBUG_CALLER then the file and line number of
+the caller will be appened to the message.
+
+    use Template::Constants qw( :debug );
+
+    my $module = My::Module->new({
+        DEBUG => DEBUG_SERVICE | DEBUG_CONTEXT | DEBUG_CALLER,
+    });
+
+    $module->foobar();
+
+This generates an error message such as:
+
+    [My::Module] called foobar() at My/Module.pm line 6
 
 =head1 AUTHOR
 
@@ -232,8 +274,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.54, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 =head1 COPYRIGHT
 

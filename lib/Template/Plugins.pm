@@ -497,6 +497,21 @@ comply, then a 'E<lt>resourceE<gt> not found' exception is raised.
 
 
 
+=item DEBUG
+
+The DEBUG option can be used to enable debugging messages from the
+Template::Plugins module by setting it to include the DEBUG_PLUGINS
+value.
+
+    use Template::Constants qw( :debug );
+
+    my $template = Template->new({
+	DEBUG => DEBUG_FILTERS | DEBUG_PLUGINS,
+    });
+
+
+
+
 =back
 
 
@@ -999,8 +1014,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.57, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.59, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 =head1 COPYRIGHT
 

@@ -84,11 +84,29 @@ The following tag sets and associated constants are defined:
     ERROR_RETURN              # return a status code (e.g. 'stop')
     ERROR_FILE                # file error: I/O, parse, recursion
     ERROR_UNDEF               # undefined variable value used
-    ERROR_PERL                # error in [% tt_start_tag %] PERL [% tt_end_tag %] block</pre>
+    ERROR_PERL                # error in [% tt_start_tag %] PERL [% tt_end_tag %] block
+    ERROR_FILTER              # filter error
+    ERROR_PLUGIN              # plugin error</pre>
 <pre>  :chomp                      # for PRE_CHOMP and POST_CHOMP
     CHOMP_NONE                # do not remove whitespace
     CHOMP_ALL                 # remove whitespace
     CHOMP_COLLAPSE            # collapse whitespace to a single space</pre>
+<pre>  :debug
+    DEBUG_OFF                 # do nothing
+    DEBUG_ON                  # basic debugging flag
+    DEBUG_UNDEF               # throw undef on undefined variables
+    DEBUG_VARS                # general variable debugging
+    DEBUG_DIRS                # directive debugging
+    DEBUG_STASH               # general stash debugging
+    DEBUG_CONTEXT             # context debugging
+    DEBUG_PARSER              # parser debugging
+    DEBUG_PROVIDER            # provider debugging
+    DEBUG_PLUGINS             # plugins debugging
+    DEBUG_FILTERS             # filters debugging
+    DEBUG_SERVICE             # context debugging
+    DEBUG_ALL                 # everything
+    DEBUG_CALLER              # add caller file/line info
+    DEBUG_FLAGS               # bitmap used internally</pre>
 <pre>  :all         All the above constants.</pre>
 [%- END %]
 [% WRAPPER section
@@ -103,8 +121,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.53, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.55, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 </p>
 [%- END %]
 [% WRAPPER section

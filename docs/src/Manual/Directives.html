@@ -1965,16 +1965,18 @@ See the TAGS and TAG_STYLE configuration options for further details.
 
 <li><b>DEBUG</b><br>
 <p>
-The DEBUG directive can be used to control debugging options within a template.
-The DEBUG configuration option must be set to a true value for the DEBUG 
-directives to have any effect.  If DEBUG is set false then the parser will
-automatically ignore and remove any DEBUG directives.
+The DEBUG directive can be used to enable or disable directive debug
+messages within a template.  The DEBUG configuration option must be
+set to include DEBUG_DIRS for the DEBUG directives to have any effect.
+If DEBUG_DIRS is not set then the parser will automatically ignore and
+remove any DEBUG directives.
 </p>
 <p>
-The DEBUG directive can be used with an 'on' or 'off' parameter to enable
-or disable directive debugging messages from that point forward.  When enabled,
-the output of each directive in the generated output will be prefixed by a comment
-indicate the file, line and original directive text.
+The DEBUG directive can be used with an 'on' or 'off' parameter to
+enable or disable directive debugging messages from that point
+forward.  When enabled, the output of each directive in the generated
+output will be prefixed by a comment indicate the file, line and
+original directive text.
 </p>
 <pre>    [% tt_start_tag %] DEBUG on [% tt_end_tag %]
     directive debugging is on (assuming DEBUG option is set true)
@@ -2002,7 +2004,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.08, released on 30 July 2002.
+Template Toolkit version 2.08a, released on 14 August 2002.
 </p>
 [%- END %]
 [% WRAPPER section

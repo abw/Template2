@@ -361,7 +361,7 @@ sub html_entity_filter_factory {
     return \&HTML::Entities::encode_entities
 	unless $@;
 
-    return (undef, Template::Exception->new( html_all => 
+    return (undef, Template::Exception->new( html_entity => 
       	            'cannot locate Apache::Util or HTML::Entities' ));
 
 }
@@ -922,6 +922,21 @@ comply, then a 'E<lt>resourceE<gt> not found' exception is raised.
 
 
 
+=item DEBUG
+
+The DEBUG option can be used to enable debugging messages from the
+Template::Filters module by setting it to include the DEBUG_FILTERS
+value.
+
+    use Template::Constants qw( :debug );
+
+    my $template = Template->new({
+	DEBUG => DEBUG_FILTERS | DEBUG_PLUGINS,
+    });
+
+
+
+
 =back
 
 =head1 TEMPLATE TOOLKIT FILTERS
@@ -1037,7 +1052,7 @@ equally as comprehensive) to perform the encoding.  If one or other of
 these modules are installed on your system then the text will be
 encoded (via the escape_html() or encode_entities() subroutines
 respectively) to convert all extended characters into their
-appropriate HTML entities (e.g. converting 'Ã©' to '&eacute;').  If
+appropriate HTML entities (e.g. converting 'é' to '&eacute;').  If
 neither module is available on your system then an 'html_all' exception
 will be thrown reporting an appropriate message.   
 
@@ -1351,8 +1366,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.58, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.60, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 
 =head1 COPYRIGHT
 

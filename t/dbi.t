@@ -32,7 +32,10 @@ my $tiedbi = $@ ? 0 : 1;
 
 # load the configuration file created by Makefile.PL which defines
 # the $run, $dsn, $user and $pass variables.
-require 'dbi_test.cfg';
+eval { require 'dbi_test.cfg' };
+if ($@) {
+    skip_all("cannot load t/dbi_test.cfg");
+}
 unless ($run) {
     skip_all('skipping DBI tests at user request');
 }

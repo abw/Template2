@@ -264,6 +264,17 @@ either through tolerated failure or a genuine disinclination to
 comply, then a '&lt;resource&gt; not found' exception is raised.
 </p>
 
+<li><b>DEBUG</b><br>
+<p>
+The DEBUG option can be used to enable debugging messages from the
+Template::Plugins module by setting it to include the DEBUG_PLUGINS
+value.
+</p>
+<pre>    use Template::Constants qw( :debug );</pre>
+<pre>    my $template = Template-&gt;new({
+	DEBUG =&gt; DEBUG_FILTERS | DEBUG_PLUGINS,
+    });</pre>
+
 </ul>
 [%- END %]
 [% WRAPPER section
@@ -779,8 +790,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.57, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.59, distributed as part of the
+Template Toolkit version 2.08a, released on 14 August 2002.
 </p>
 [%- END %]
 [% WRAPPER section
