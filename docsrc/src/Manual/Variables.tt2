@@ -952,6 +952,83 @@ hash are visible across all templates.
 
     [% global.version = 123 %]
 
+=head2 Compile Time Constant Folding
+
+In addition to variables that get resolved each time a template is
+processed, you can also define variables that get resolved just once
+when the template is compiled.  This generally results in templates
+processing faster because there is less work to be done.
+
+To define compile-time constants, specify a CONSTANTS hash as a
+constructor item as per VARIABLES.  The CONSTANTS hash can contain any
+kind of complex, nested, or dynamic data structures, just like regular
+variables.
+
+    my $tt = Template->new({
+	CONSTANTS => {
+	    version => 3.14,
+	    release => 'skyrocket',
+	    col     => {
+		back => '#ffffff',
+		fore => '#000000',
+	    },
+	    myobj => My::Object->new(),
+	    mysub => sub { ... },
+	    joint => ', ',
+	},
+    });
+
+Within a template, you access these variables using the 'constants'
+namespace prefix.
+
+    Version [% constants.version %] ([% constants.release %])
+
+    Background: [% constants.col.back %]
+
+When the template is compiled, these variable references are replaced
+with the corresponding value.  No further variable lookup is then 
+required when the template is processed.
+
+You can call subroutines, object methods, and even virtual methods on
+constant variables.
+
+    [% constants.mysub(10, 20) %]
+    [% constants.myobj(30, 40) %]
+    [% constants.col.keys.sort.join(', ') %]
+
+One important proviso is that any arguments you pass to subroutines
+or methods must also be literal values or compile time constants.
+
+For example, these are both fine:
+
+    # literal argument
+    [% constants.col.keys.sort.join(', ') %]
+
+    # constant argument
+    [% constants.col.keys.sort.join(constants.joint) %]
+
+But this next example will raise an error at parse time because
+'joint' is a runtime variable and cannot be determined at compile
+time.
+
+    # ERROR: runtime variable argument!
+    [% constants.col.keys.sort.join(joint) %]
+
+The CONSTANTS_NAMESPACE option can be used to provide a different 
+namespace prefix for constant variables.  For example:
+
+    my $tt = Template->new({
+	CONSTANTS => {
+	    version => 3.14,
+	    # ...etc...
+	},
+	CONSTANTS_NAMESPACE => 'const',
+    });
+
+Constants would then be referenced in templates as:
+
+    [% const.version %]
+
 =head2 Special Variables
 
 A number of special variables are automatically defined by the Template 

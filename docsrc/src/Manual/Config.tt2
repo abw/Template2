@@ -48,6 +48,8 @@
 
 [% PROCESS option/variables %]
 
+[% PROCESS option/constants %]
+
 =back
 
 =head2 Runtime Processing Options
