@@ -128,6 +128,15 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 				        : ($_[0]->{ INWHILE }
                                            ? 'next LOOP;'
                                            : 'next;')                     }
+	|   DEBUG nameargs          { if ($_[2]->[0]->[0] =~ /^'(on|off)'$/) {
+				          $_[0]->{ DEBUG } = ($1 eq 'on');
+#					  print STDERR "turned DEBUG ", $_[0]->{ DEBUG } ? 'on' : 'off', "\n";
+					  $factory->debug($_[2]);
+				      }
+				      else {
+					  $_[0]->{ DEBUG } ? $factory->debug($_[2]) : '';
+				      }
+				    }
         |   wrapper
 	|   filter
 ;
