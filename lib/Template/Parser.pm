@@ -111,26 +111,27 @@ sub new {
     my ($tagstyle, $debug, $start, $end, $defaults, $grammar, $hash, $key, $udef);
 
     my $self = bless { 
-	START_TAG   => undef,
-	END_TAG     => undef,
-	TAG_STYLE   => 'default',
-	ANYCASE     => 0,
-	INTERPOLATE => 0,
-	PRE_CHOMP   => 0,
-	POST_CHOMP  => 0,
-	V1DOLLAR    => 0,
-	EVAL_PERL   => 0,
-	GRAMMAR     => undef,
-	_ERROR      => '',
-	FACTORY     => 'Template::Directive',
+        START_TAG   => undef,
+        END_TAG     => undef,
+        TAG_STYLE   => 'default',
+        ANYCASE     => 0,
+        INTERPOLATE => 0,
+        PRE_CHOMP   => 0,
+        POST_CHOMP  => 0,
+        V1DOLLAR    => 0,
+        EVAL_PERL   => 0,
+        FILE_INFO   => 1,
+        GRAMMAR     => undef,
+        _ERROR      => '',
+        FACTORY     => 'Template::Directive',
     }, $class;
 
     # update self with any relevant keys in config
     foreach $key (keys %$self) {
-	$self->{ $key } = $config->{ $key } if defined $config->{ $key };
+        $self->{ $key } = $config->{ $key } if defined $config->{ $key };
     }
     $self->{ FILEINFO } = [ ];
-
+    
     # DEBUG config item can be a bitmask
     if (defined ($debug = $config->{ DEBUG })) {
         $self->{ DEBUG } = $debug & ( Template::Constants::DEBUG_PARSER
@@ -150,34 +151,24 @@ sub new {
     }
 
     $grammar = $self->{ GRAMMAR } ||= do {
-	require Template::Grammar;
-	Template::Grammar->new();
+        require Template::Grammar;
+        Template::Grammar->new();
     };
 
     # build a FACTORY object to include any NAMESPACE definitions,
     # but only if FACTORY isn't already an object
     if ($config->{ NAMESPACE } && ! ref $self->{ FACTORY }) {
-	my $fclass = $self->{ FACTORY };
-	$self->{ FACTORY } = $fclass->new( NAMESPACE => $config->{ NAMESPACE } )
-	    || return $class->error($fclass->error());
+        my $fclass = $self->{ FACTORY };
+        $self->{ FACTORY } = $fclass->new( NAMESPACE => $config->{ NAMESPACE } )
+            || return $class->error($fclass->error());
     }
-
-
-#    # determine START_TAG and END_TAG for specified (or default) TAG_STYLE
-#    $tagstyle = $self->{ TAG_STYLE } || 'default';
-#    return $class->error("Invalid tag style: $tagstyle")
-#	unless defined ($start = $TAG_STYLE->{ $tagstyle });
-#    ($start, $end) = @$start;
-#
-#    $self->{ START_TAG } ||= $start;
-#    $self->{   END_TAG } ||= $end;
-
+    
     # load grammar rules, states and lex table
     @$self{ qw( LEXTABLE STATES RULES ) } 
-	= @$grammar{ qw( LEXTABLE STATES RULES ) };
+        = @$grammar{ qw( LEXTABLE STATES RULES ) };
     
     $self->new_style($config)
-	|| return $class->error($self->error());
+        || return $class->error($self->error());
 	
     return $self;
 }
@@ -201,15 +192,15 @@ sub new_style {
 
     # expand START_TAG and END_TAG from specified TAG_STYLE
     if ($tagstyle = $config->{ TAG_STYLE }) {
-	return $self->error("Invalid tag style: $tagstyle")
-	    unless defined ($tags = $TAG_STYLE->{ $tagstyle });
-	($start, $end) = @$tags;
-	$config->{ START_TAG } ||= $start;
-	$config->{   END_TAG } ||= $end;
+        return $self->error("Invalid tag style: $tagstyle")
+            unless defined ($tags = $TAG_STYLE->{ $tagstyle });
+        ($start, $end) = @$tags;
+        $config->{ START_TAG } ||= $start;
+        $config->{   END_TAG } ||= $end;
     }
 
     foreach $key (keys %$DEFAULT_STYLE) {
-	$style->{ $key } = $config->{ $key } if defined $config->{ $key };
+        $style->{ $key } = $config->{ $key } if defined $config->{ $key };
     }
     push(@$styles, $style);
     return $style;
@@ -227,7 +218,7 @@ sub old_style {
     my $self = shift;
     my $styles = $self->{ STYLE };
     return $self->error('only 1 parser style remaining')
-	unless (@$styles > 1);
+        unless (@$styles > 1);
     pop @$styles;
     return $styles->[-1];
 }
@@ -258,7 +249,7 @@ sub parse {
 
     # split file into TEXT/DIRECTIVE chunks
     $tokens = $self->split_text($text)
-	|| return undef;				    ## RETURN ##
+        || return undef;				    ## RETURN ##
 
     push(@{ $self->{ FILEINFO } }, $info);
 
@@ -270,12 +261,12 @@ sub parse {
     return undef unless $block;				    ## RETURN ##
 
     $self->debug("compiled main template document block:\n$block")
-	if $self->{ DEBUG } & Template::Constants::DEBUG_PARSER;
+        if $self->{ DEBUG } & Template::Constants::DEBUG_PARSER;
 
     return {
-	BLOCK     => $block,
-	DEFBLOCKS => $defblock,
-	METADATA  => { @$metadata },
+        BLOCK     => $block,
+        DEFBLOCKS => $defblock,
+        METADATA  => { @$metadata },
     };
 }
 
@@ -652,6 +643,24 @@ sub add_metadata {
     push(@$metadata, @$setlist);
     
     return undef;
+}
+
+
+#------------------------------------------------------------------------
+# location()
+#
+# Return Perl comment indicating current parser file and line
+#------------------------------------------------------------------------
+
+sub location {
+    my $self = shift;
+    return "\n" unless $self->{ FILE_INFO };
+    my $line = ${ $self->{ LINE } };
+    my $info = $self->{ FILEINFO }->[-1];
+    my $file = $info->{ path } || $info->{ name } 
+        || '(unknown template)';
+    $line =~ s/\-.*$//; # might be 'n-n'
+    return "#line $line \"$file\"\n";
 }
 
 
