@@ -74,6 +74,7 @@ package Template::Stash::Context;
 require 5.004;
 
 use strict;
+use Template::Stash;
 use vars qw( $VERSION $DEBUG $ROOT_OPS $SCALAR_OPS $HASH_OPS $LIST_OPS );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -84,135 +85,30 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 #========================================================================
 
 #------------------------------------------------------------------------
-# Definitions of various pseudo-methods.  ROOT_OPS are merged into all
-# new Template::Stash objects, and are thus default global functions.
-# SCALAR_OPS are methods that can be called on a scalar, and ditto 
-# respectively for LIST_OPS and HASH_OPS
+# copy virtual methods from those in the regular Template::Stash
 #------------------------------------------------------------------------
 
-$ROOT_OPS = {
-    'inc'  => sub { local $^W = 0; my $item = shift; ++$item }, 
-    'dec'  => sub { local $^W = 0; my $item = shift; --$item }, 
+$ROOT_OPS = { 
+    %$Template::Stash::ROOT_OPS,
     defined $ROOT_OPS ? %$ROOT_OPS : (),
 };
 
-$SCALAR_OPS = {
-    'item'    => sub {   $_[0] },
-    'list'    => sub { [ $_[0] ] },
-    'hash'    => sub { { 0 => $_[0] } },
-    'length'  => sub { length $_[0] },
-    'defined' => sub { return 1 },
-    'array'   => sub { return [$_[0]] },
-    'repeat'  => sub { 
-        my ($str, $count) = @_;
-        $str = '' unless defined $str;  $count ||= 1;
-        return $str x $count;
-    },
-    'search'  => sub { 
-        my ($str, $pattern) = @_;
-        return $str unless defined $str and $pattern;
-        return $str unless defined $str and defined $pattern;
-        return $str =~ /$pattern/;
-    },
-    'replace'  => sub { 
-        my ($str, $search, $replace) = @_;
-        $replace = '' unless defined $replace;
-        return $str unless defined $str and defined $search;
-        $str =~ s/$search/$replace/g;
-#       print STDERR "s [ $search ] [ $replace ] g\n";
-#       eval "\$str =~ s$search$replaceg";
-        return $str;
-    },
-    'split'   => sub { 
-        my ($str, $split, @args) = @_;
-        $str = '' unless defined $str;
-        return [ defined $split ? split($split, $str, @args)
-                                : split(' ', $str, @args) ];
-    },
+$SCALAR_OPS = { 
+    %$Template::Stash::SCALAR_OPS,
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
-$HASH_OPS = {
-    'item'   => sub { my ($hash, $item) = @_; 
-                      $item = '' unless defined $item;
-                      $hash->{ $item };
-                  },
-    'hash'   => sub { $_[0] },
-    'keys'   => sub { [ keys   %{ $_[0] } ] },
-    'values' => sub { [ values %{ $_[0] } ] },
-    'each'   => sub { [        %{ $_[0] } ] },
-    'list'   => sub { my ($hash, $what) = @_;  $what ||= '';
-                      return ($what eq 'keys')   ? [   keys %$hash ]
-                           : ($what eq 'values') ? [ values %$hash ]
-                           : ($what eq 'each')   ? [        %$hash ]
-                           : [ map { { key => $_ , value => $hash->{ $_ } } }
-                               keys %$hash ];
-                },
-    'import' => sub { my ($hash, $imp) = @_;
-                      $imp = {} unless ref $imp eq 'HASH';
-                      @$hash{ keys %$imp } = values %$imp;
-                      return '';
-                  },
-    'sort'    => sub {
-        my ($hash) = @_;
-        [ sort { lc $hash->{$a} cmp lc $hash->{$b} } (keys %$hash) ];
-    },
-    'nsort'    => sub {
-        my ($hash) = @_;
-        [ sort { $hash->{$a} <=> $hash->{$b} } (keys %$hash) ];
-    },
-    defined $HASH_OPS ? %$HASH_OPS : (),
-};
-
-$LIST_OPS = {
-    'item'    => sub { $_[0]->[ $_[1] || 0 ] },
-    'list'    => sub { $_[0] },
-    'hash'    => sub { my $list = shift; my $n = 0; 
-                       return { map { ($n++, $_) } @$list }; },
-    'push'    => sub { my $list = shift; push(@$list, shift); return '' },
-    'pop'     => sub { my $list = shift; pop(@$list) },
-    'unshift' => sub { my $list = shift; unshift(@$list, shift); return '' },
-    'shift'   => sub { my $list = shift; shift(@$list) },
-    'max'     => sub { local $^W = 0; my $list = shift; $#$list; },
-    'size'    => sub { local $^W = 0; my $list = shift; $#$list + 1; },
-    'first'   => sub { my $list = shift; $list->[0] },
-    'last'    => sub { my $list = shift; $list->[$#$list] },
-    'reverse' => sub { my $list = shift; [ reverse @$list ] },
-    'array'   => sub { return $_[0] },
-    'join'    => sub { 
-            my ($list, $joint) = @_; 
-            join(defined $joint ? $joint : ' ', 
-                 map { defined $_ ? $_ : '' } @$list) 
-    },
-    'sort'    => sub {
-        my ($list, $field) = @_;
-        return $list unless $#$list;        # no need to sort 1 item lists
-        return $field                       # Schwartzian Transform 
-            ?  map  { $_->[0] }             # for case insensitivity
-               sort { $a->[1] cmp $b->[1] }
-               map  { [ $_, lc $_->{ $field } ] } 
-               @$list 
-            :  map  { $_->[0] }
-               sort { $a->[1] cmp $b->[1] }
-               map  { [ $_, lc $_ ] } 
-               @$list
-   },
-   'nsort'    => sub {
-        my ($list, $field) = @_;
-        return $list unless $#$list;        # no need to sort 1 item lists
-        return $field                       # Schwartzian Transform 
-            ?  map  { $_->[0] }             # for case insensitivity
-               sort { $a->[1] <=> $b->[1] }
-               map  { [ $_, lc $_->{ $field } ] } 
-               @$list 
-            :  map  { $_->[0] }
-               sort { $a->[1] <=> $b->[1] }
-               map  { [ $_, lc $_ ] } 
-               @$list
-    },
+$LIST_OPS = { 
+    %$Template::Stash::LIST_OPS,
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
-
+		    
+};
+$HASH_OPS = { 
+    %$Template::Stash::HASH_OPS,
+    defined $HASH_OPS ? %$HASH_OPS : (),
+};
+ 
 
 #========================================================================
 #                      -----  CLASS METHODS -----
