@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.14 - 17th September
+# Version 2.14 -
 #------------------------------------------------------------------------
 
 * Applied patch from Harald Joerg to prevent ttree from spewing warnings 
@@ -46,6 +46,10 @@
 
 * Added full range of command line options to tpage.
   http://template-toolkit.org/pipermail/templates/2004-September/006545.html
+
+* Applied patches from Tosh Cooey, Simon Wilcox and Kenny Gatdula to fix
+  XML::Simple to allow direct access to XMLin() and XMLout() methods. See
+  http://template-toolkit.org/pipermail/templates/2004-September/006620.html
 
 
 #------------------------------------------------------------------------
