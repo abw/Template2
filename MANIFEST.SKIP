@@ -20,8 +20,11 @@
 ^lib/Template/Docset
 ^lib/Template/Map
 ^lib/Template/Plugin/XML/View
+^lib/Template/Plugin/Math
+^lib/Template/Plugin/List
 ^pm_to_blib$
 ^bin/prep
+^bin/bundle
 ^bin/release
 ^bin/docsrc
 ^bin/tskel
@@ -39,6 +42,7 @@
 ^t/dbi_test.cfg
 ^t/shout.t
 ^t/map.t
+^t/math.t
 ^t/docset.t
 ^t/xmlview.t
 ^t/test/src/complex.org
@@ -48,3 +52,4 @@
 ^xs/XS.bs
 ^xs/pm_to_blib
 ^templates/xhtml
+^templates/jscript
