@@ -118,6 +118,28 @@ sub content {
     return $output;
 }
 
+#----------------------------------------------------------------------
+# starttag(), endtag()
+#
+# Methods to output the start & end tag, e.g. <foo bar="baz"> & </foo>
+#----------------------------------------------------------------------
+
+sub starttag {
+    my ($self) = @_;
+    my $output =  "<". $self->getName();
+    foreach my $attr ($self->getAttributes())
+    {
+	$output .= $attr->toString();
+    }
+    $output .= ">";
+    return $output;
+}
+
+sub endtag {
+    my ($self) = @_;
+    return "</". $self->getName() . ">";
+}
+
 #========================================================================
 package XML::XPath::Node::Text;
 #========================================================================
@@ -222,8 +244,8 @@ The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
 
 =head1 VERSION
 
-2.39, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.40, distributed as part of the
+Template Toolkit version 2.06d, released on 22 January 2002.
 
 =head1 COPYRIGHT
 
