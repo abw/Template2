@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.13a - 17th September                  ## DEVELOPER RELEASE ##
+# Version 2.14 - 17th September
 #------------------------------------------------------------------------
 
 * Applied patch from Harald Joerg to prevent ttree from spewing warnings 
@@ -41,6 +41,11 @@
 * Applied a patch from Mark Fowler to add support for Unicode to TT.
   http://template-toolkit.org/pipermail/templates/2004-June/006270.html
 
+* Changed the fourth argument to process() to accept named IO layers for
+  binmode, e.g. process($in, $vars, $out, binmode => ':utf8');
+
+* Added full range of command line options to tpage.
+  http://template-toolkit.org/pipermail/templates/2004-September/006545.html
 
 
 #------------------------------------------------------------------------
