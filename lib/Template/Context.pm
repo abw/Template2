@@ -1436,8 +1436,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.63, distributed as part of the
-Template Toolkit version 2.07c, released on 09 July 2002.
+2.66, distributed as part of the
+Template Toolkit version 2.07c, released on 19 July 2002.
 
 =head1 COPYRIGHT
 
@@ -1450,4 +1450,3 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Document|Template::Document>, L<Template::Exception|Template::Exception>, L<Template::Filters|Template::Filters>, L<Template::Plugins|Template::Plugins>, L<Template::Provider|Template::Provider>, L<Template::Service|Template::Service>, L<Template::Stash|Template::Stash>
-

@@ -109,10 +109,10 @@ static const struct xs_arg {
        --------	 ----------------  ---------------  ------------------  */
     { "defined", NULL,		   NULL,	    scalar_dot_defined	},
     { "each",	 NULL,		   hash_dot_each,   NULL		},
-    { "first",	 list_dot_first,   NULL,	    NULL		},
+/*  { "first",	 list_dot_first,   NULL,	    NULL		}, */
     { "join",	 list_dot_join,    NULL,	    NULL		}, 
     { "keys",	 NULL,		   hash_dot_keys,   NULL		},
-    { "last",	 list_dot_last,	   NULL,	    NULL		},
+/*  { "last",	 list_dot_last,	   NULL,	    NULL		}, */
     { "length",	 NULL,		   NULL,	    scalar_dot_length	},
     { "max",	 list_dot_max,	   NULL,	    NULL		},
     { "reverse", list_dot_reverse, NULL,	    NULL		},

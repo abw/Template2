@@ -567,6 +567,30 @@ strings.
        [% dir %]
     [% END %]
 
+=item chunk(size)
+
+Splits the value into a list of chunks of a certain size.
+
+    [% ccard_no = "1234567824683579";
+       ccard_no.chunk(4).join
+    %]
+
+Output:
+
+    1234 5678 2468 3579
+
+If the size is specified as a negative number then the text will
+be chunked from right-to-left.  This gives the correct grouping 
+for numbers, for example.
+
+    [% number = 1234567;
+       number.chunk(-3).join(',')
+    %]
+
+Output:
+
+    1,234,567
+
 =item list
 
 Return the value as a single element list.  This can be useful if you
@@ -755,6 +779,71 @@ be sorted before the unique elements pulled out (unlike the Unix
 command line utility).
 
     [% numbers = mylist.unique.sort %]
+
+=item merge
+
+Returns a list composed of zero or more other lists:
+
+    [% list_one = [ 1 2 3 ];
+       list_two = [ 4 5 6 ];
+       list_three = [ 7 8 9 ];
+       list_four = list_one.merge(list_two, list_three);
+    %]
+
+The original lists are not modified.
+
+=item slice(from, to)
+
+Returns a slice of items in the list between the bounds passed as
+arguments.  If the second argument, 'to', isn't specified, then it
+defaults to the last item in the list.  The original list is not 
+modified.
+
+    [% first_three = list.slice(0,2) %]
+
+    [% last_three  = list.slice(-3, -1) %]
+
+=item splice(offset, length, list)
+
+Behaves just like Perl's splice() function allowing you to selectively
+remove and/or replace elements in a list.  It removes 'length' items
+from the list, starting at 'offset' and replaces them with the items
+in 'list'.
+
+   [% play_game = [ 'play', 'scrabble' ];
+      ping_pong = [ 'ping', 'pong' ];
+      redundant = play_game.splice(1, 1, ping_pong);
+
+      redundant.join;     # scrabble
+      play_game.join;     # play ping pong
+   %]
+
+The method returns a list of the items removed by the splice.
+You can use the CALL directive to ignore the output if you're
+not planning to do anything with it.
+
+    [% CALL play_game.splice(1, 1, ping_pong) %]
+
+As well as providing a reference to a list of replacement values,
+you can pass in a list of items.
+
+   [% CALL list.splice(-1, 0, 'foo', 'bar') %]
+
+Be careful about passing just one item in as a replacement value.
+If it is a reference to a list then the contents of the list will
+be used.  If it's not a list, then it will be treated as a single 
+value.  You can use square brackets around a single item if you 
+need to be explicit:
+
+  [% # push a single item, an_item
+     CALL list.splice(-1, 0, an_item);
+
+     # push the items from another_list
+     CALL list.splice(-1, 0, another_list);
+
+     # push a reference to another_list
+     CALL list.splice(-1, 0, [ another_list ]);
+  %]
 
 =back
 
@@ -1193,7 +1282,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07c, released on 09 July 2002.
+Template Toolkit version 2.07c, released on 19 July 2002.
 
 =head1 COPYRIGHT
 

@@ -69,6 +69,15 @@ This section describes the different ways in which Perl data can be
 bound to template variables and accessed via Template Toolkit
 directives.
 
+=item L<Template::Manual::VMethods|Template::Manual::VMethods>
+
+Virtual Methods
+
+The Template Toolkit provides virtual methods for manipulating variable
+values. Most of them are analogous to regular Perl functions of the
+same names. This section describes the different virtual methods that
+can be applied to scalar, list and hash values.
+
 =item L<Template::Manual::Directives|Template::Manual::Directives>
 
 Template directives
@@ -148,7 +157,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.07c, released on 09 July 2002.
+Template Toolkit version 2.07c, released on 19 July 2002.
 
 =head1 COPYRIGHT
 

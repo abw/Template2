@@ -18,8 +18,6 @@
 # Miscellaneous
 #------------------------------------------------------------------------
 
-* mylist.sort.uniq
-
 * Errors thrown via the Error module are not correctly caught.  I looked
   at this briefly but the problem wasn't immediately obvious and needs some
   more considered investigation.  There are also problems with CGI::Carp

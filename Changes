@@ -23,7 +23,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.07c - July 9th 2002                   ## DEVELOPER RELEASE ##
+# Version 2.07c - July 19th 2002                  ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in Date plugin introduced in last version which caused
@@ -38,9 +38,25 @@
   the namespace prefix intact on the ident list which then gets 
   passed to the handler's ident() method.  Modified the ident()
   method of Template::Namespace::Constants to expect and remove it.
+  Constant folding now *doesn't* happen for constants that return
+  a reference or undefined value.  These get compiled as regular
+  runtime variable lookups.
 
-* Added the 'unique' list virtual method to cull multiple identical
-  items from a list (darren)
+* Added new list virtual methods: 'unique' to cull multiple identical
+  items, 'merge' to merge lists together, 'splice' which acts 
+  just like Perl's splice, and 'slice' which returns a slice of the 
+  list.  Also modified first and last virtual methods to take an
+  argument indicating the number of items to return from the start or
+  end of the list.  Added the 'chunk' scalar virtual method to split a
+  string into chunks of a particular flushed either left or right.
+  (darren, mark, abw)
+
+* Modifed Template::Test to allow -- name testname -- comments to 
+  be added to tests to give them names, reported by test harness
+  (darren)
+
+* Merged functionality of process() and include() methods into 
+  process() with optional third $localize flag.  (darren)
 
 * Modified the OUTPUT option to accept a reference to a list (darren)
 

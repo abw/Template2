@@ -564,6 +564,30 @@ strings.
        [% tt_start_tag %] dir [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
+<li><b>chunk(size)</b><br>
+<p>
+Splits the value into a list of chunks of a certain size.
+</p>
+<pre>    [% tt_start_tag %] ccard_no = &quot;1234567824683579&quot;;
+       ccard_no.chunk(4).join
+    [% tt_end_tag %]</pre>
+<p>
+Output:
+</p>
+<pre>    1234 5678 2468 3579</pre>
+<p>
+If the size is specified as a negative number then the text will
+be chunked from right-to-left.  This gives the correct grouping 
+for numbers, for example.
+</p>
+<pre>    [% tt_start_tag %] number = 1234567;
+       number.chunk(-3).join(',')
+    [% tt_end_tag %]</pre>
+<p>
+Output:
+</p>
+<pre>    1,234,567</pre>
+
 <li><b>list</b><br>
 <p>
 Return the value as a single element list.  This can be useful if you
@@ -754,6 +778,68 @@ be sorted before the unique elements pulled out (unlike the Unix
 command line utility).
 </p>
 <pre>    [% tt_start_tag %] numbers = mylist.unique.sort [% tt_end_tag %]</pre>
+
+<li><b>merge</b><br>
+<p>
+Returns a list composed of zero or more other lists:
+</p>
+<pre>    [% tt_start_tag %] list_one = [ 1 2 3 ];
+       list_two = [ 4 5 6 ];
+       list_three = [ 7 8 9 ];
+       list_four = list_one.merge(list_two, list_three);
+    [% tt_end_tag %]</pre>
+<p>
+The original lists are not modified.
+</p>
+
+<li><b>slice(from, to)</b><br>
+<p>
+Returns a slice of items in the list between the bounds passed as
+arguments.  If the second argument, 'to', isn't specified, then it
+defaults to the last item in the list.  The original list is not 
+modified.
+</p>
+<pre>    [% tt_start_tag %] first_three = list.slice(0,2) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] last_three  = list.slice(-3, -1) [% tt_end_tag %]</pre>
+
+<li><b>splice(offset, length, list)</b><br>
+<p>
+Behaves just like Perl's splice() function allowing you to selectively
+remove and/or replace elements in a list.  It removes 'length' items
+from the list, starting at 'offset' and replaces them with the items
+in 'list'.
+</p>
+<pre>   [% tt_start_tag %] play_game = [ 'play', 'scrabble' ];
+      ping_pong = [ 'ping', 'pong' ];
+      redundant = play_game.splice(1, 1, ping_pong);</pre>
+<pre>      redundant.join;     # scrabble
+      play_game.join;     # play ping pong
+   [% tt_end_tag %]</pre>
+<p>
+The method returns a list of the items removed by the splice.
+You can use the CALL directive to ignore the output if you're
+not planning to do anything with it.
+</p>
+<pre>    [% tt_start_tag %] CALL play_game.splice(1, 1, ping_pong) [% tt_end_tag %]</pre>
+<p>
+As well as providing a reference to a list of replacement values,
+you can pass in a list of items.
+</p>
+<pre>   [% tt_start_tag %] CALL list.splice(-1, 0, 'foo', 'bar') [% tt_end_tag %]</pre>
+<p>
+Be careful about passing just one item in as a replacement value.
+If it is a reference to a list then the contents of the list will
+be used.  If it's not a list, then it will be treated as a single 
+value.  You can use square brackets around a single item if you 
+need to be explicit:
+</p>
+<pre>  [% tt_start_tag %] # push a single item, an_item
+     CALL list.splice(-1, 0, an_item);</pre>
+<pre>     # push the items from another_list
+     CALL list.splice(-1, 0, another_list);</pre>
+<pre>     # push a reference to another_list
+     CALL list.splice(-1, 0, [ another_list ]);
+  [% tt_end_tag %]</pre>
 
 </ul>
 <p>
@@ -1203,7 +1289,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.07c, released on 09 July 2002.
+Template Toolkit version 2.07c, released on 19 July 2002.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -27,7 +27,7 @@ my $DEBUG = grep(/-d/, @ARGV);
 #$Template::Parser::DEBUG = $DEBUG;
 #$Template::Directive::PRETTY = $DEBUG;
 $Template::Provider::DEBUG = $DEBUG;
-$Template::Context::DEBUG = $DEBUG;
+#$Template::Context::DEBUG = $DEBUG;
 
 my $path = cwd;
 my $dir  = -d 'test/lib' ? "$path/test/lib" : "$path/t/test/lib";

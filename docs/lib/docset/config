@@ -75,7 +75,7 @@ docset => {
             prev   => 'Tutorial',
             next   => 'Modules',
         
-            pagelist => [ 'Intro', 'Syntax', 'Variables', 'Directives', 'Config', 'Filters', 'Plugins', 'Internals', 'Views', 'Refs', 'Credits' ],
+            pagelist => [ 'Intro', 'Syntax', 'Variables', 'VMethods', 'Directives', 'Config', 'Filters', 'Plugins', 'Internals', 'Views', 'Refs', 'Credits' ],
         
             pages  => {
                 Intro => {
@@ -115,6 +115,19 @@ docset => {
                     about   => 'Template variables and code bindings',
                 
                     prev    => 'Syntax',
+                    next    => 'VMethods',
+                },
+                VMethods => {
+                    id      => 'VMethods',
+                    name    => 'VMethods',
+                    title   => 'VMethods',
+                    podname => 'Template::Manual::VMethods',
+                    url     => 'Manual/VMethods.html',
+                    uplink  => '..',
+                    author  => 'abw',
+                    about   => 'Virtual Methods',
+                
+                    prev    => 'Variables',
                     next    => 'Directives',
                 },
                 Directives => {
@@ -127,7 +140,7 @@ docset => {
                     author  => 'abw',
                     about   => 'Template directives',
                 
-                    prev    => 'Variables',
+                    prev    => 'VMethods',
                     next    => 'Config',
                 },
                 Config => {
@@ -1294,6 +1307,7 @@ docset => {
 	'Template::Manual::Intro' => 'Manual/Intro.html',
 	'Template::Manual::Syntax' => 'Manual/Syntax.html',
 	'Template::Manual::Variables' => 'Manual/Variables.html',
+	'Template::Manual::VMethods' => 'Manual/VMethods.html',
 	'Template::Manual::Directives' => 'Manual/Directives.html',
 	'Template::Manual::Config' => 'Manual/Config.html',
 	'Template::Manual::Filters' => 'Manual/Filters.html',

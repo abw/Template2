@@ -39,6 +39,7 @@ docs/src/Manual/Intro.html
 docs/src/Manual/Plugins.html
 docs/src/Manual/Refs.html
 docs/src/Manual/Syntax.html
+docs/src/Manual/VMethods.html
 docs/src/Manual/Variables.html
 docs/src/Manual/Views.html
 docs/src/Manual/index.html
@@ -386,6 +387,7 @@ lib/Template/Manual/Intro.pod
 lib/Template/Manual/Plugins.pod
 lib/Template/Manual/Refs.pod
 lib/Template/Manual/Syntax.pod
+lib/Template/Manual/VMethods.pod
 lib/Template/Manual/Variables.pod
 lib/Template/Manual/Views.pod
 lib/Template/Modules.pod
