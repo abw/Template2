@@ -415,6 +415,7 @@ EOF
 		       [ 'GD::Text'    => undef         ],
 		       [ 'GD::Graph'   => undef         ],
 		       [ 'GD::Graph3d' => undef         ],
+		       [ 'Image::Info' => undef         ],
 		       [ 'Image::Size' => undef         ],
 		       [ 'Date::Calc'  => undef         ],
 		       [ 'Pod::POM'    => undef         ],
