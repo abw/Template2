@@ -260,12 +260,12 @@ sub process_tree {
                 # create target directory if required
                 $target = "$destdir/$path";
                 unless (-d $target || $dryrun) {
-                    mkdir $target, $mode || do { 
-                        warn "mkdir  ($target): $!\n";
-                        next;
-                    };
-# commented out by abw on 2000/12/04 - seems to raise a warning?   
-#           chown($uid, $gid, $target) || warn "chown($target): $!\n";
+                    mkpath $target, $mode or 
+                             die "Could not mkpath ($target): $!\n";
+
+                    # commented out by abw on 2000/12/04 - seems to raise a warning?
+                    # chown($uid, $gid, $target) || warn "chown($target): $!\n";
+
                     printf "  + %-32s (created target directory)\n", $path
                         if $verbose;
                 }
@@ -351,17 +351,18 @@ sub process_file {
     
     # check against copy list
     if ($copy_file) {
-        printf "  > %-32s (copied, matches /$check/)\n", $file
-            if $verbose;
-
         unless ($dryrun) {
-            copy($absfile, $dest);
+            copy($absfile, $dest) or die "Could not copy ($absfile to $dest) : $!\n";
 
             if ($preserve) {
                 chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
                 chmod($mode, $dest) || warn "chmod($dest): $!\n";
             }
         }
+
+        printf "  > %-32s (copied, matches /$check/)\n", $file
+            if $verbose;
+
         return;
     }
 
