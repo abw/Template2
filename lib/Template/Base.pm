@@ -137,6 +137,19 @@ sub debug {
     print STDERR "[$pkg] $msg";
 }
 
+#------------------------------------------------------------------------
+# version()
+#
+# Returns the current version number.
+#------------------------------------------------------------------------
+
+sub version {
+    my $self = shift;
+    my $class = ref $self || $self;
+    no strict 'refs';
+    return ${"${class}::VERSION"};
+}
+
 
 1;
 
@@ -274,8 +287,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.63, distributed as part of the
-Template Toolkit version 2.11, released on 06 January 2004.
+2.64, distributed as part of the
+Template Toolkit version 2.11b, released on 07 January 2004.
 
 =head1 COPYRIGHT
 
