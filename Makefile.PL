@@ -588,7 +588,7 @@ specify a separate directory for them.
 
 EOF
 
-    if (ttprompt('Do you want to install these components?', 'y') =~ /^y/i) {
+    if (ttprompt('Do you want to install these components?', 'n') =~ /^y/i) {
 	message(<<EOF);
 
 You can chose any directory for the installation of the additional
