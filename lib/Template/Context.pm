@@ -17,9 +17,8 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 # 
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
@@ -103,12 +102,11 @@ sub template {
 	$prefix = undef;
 
 	if ($^O eq 'MSWin32') {
-	    $prefix = $1	# let C:/foo through
-		if $name =~ /^(\w{2,}):/o;
+	    # let C:/foo through
+	    $prefix = $1 if $name =~ s/^(\w{2,})://o;
 	}
 	else {
-	    $prefix = $1 
-		if $name =~ /^(\w+):/;
+	    $prefix = $1 if $name =~ s/^(\w+)://;
 	}
 
 	if (defined $prefix) {
@@ -125,7 +123,7 @@ sub template {
     # handle references to files, text, etc., as well as templates
     # reference by name
     foreach my $provider (@$providers) {
-	($template, $error) = $provider->fetch($name);
+	($template, $error) = $provider->fetch($name, $prefix);
 	return $template unless $error;
 	if ($error == Template::Constants::STATUS_ERROR) {
 	    $self->throw($template) if ref $template;
@@ -380,19 +378,28 @@ sub include {
 
 sub insert {
     my ($self, $file) = @_;
-    my ($providers, $text, $error);
+    my ($prefix, $providers, $text, $error);
     my $output = '';
 
     my $files = ref $file eq 'ARRAY' ? $file : [ $file ];
 
     FILE: foreach $file (@$files) {
-	if ($file =~ /^(\w{2,}):/o) {
-	    $providers = $self->{ PREFIX_MAP }->{ $1 } 
-		|| return $self->throw(Template::Constants::ERROR_FILE,
-				      "no providers for file prefix '$1'");
+	if ($^O eq 'MSWin32') {
+	    # let C:/foo through
+	    $prefix = $1 if $file =~ s/^(\w{2,})://o;
 	}
 	else {
-	    $providers = $self->{ LOAD_TEMPLATES };
+	    $prefix = $1 if $file =~ s/^(\w+)://;
+	}
+
+	if (defined $prefix) {
+	    $providers = $self->{ PREFIX_MAP }->{ $prefix } 
+	    || return $self->throw(Template::Constants::ERROR_FILE,
+				   "no providers for file prefix '$prefix'");
+	}
+	else {
+	    $providers = $self->{ PREFIX_MAP }->{ default }
+	    || $self->{ LOAD_TEMPLATES };
 	}
 
 	foreach my $provider (@$providers) {
