@@ -172,13 +172,16 @@ sub load {
     }
     else {
       INCPATH: {
-	# otherwise, it's a file name relative to INCLUDE_PATH
-	foreach my $dir (@{ $self->{ INCLUDE_PATH } }) {
-	    $path = "$dir/$name";
-	    last INCPATH
-		if -f $path;
-	}
-	undef $path;	    # not found
+	  # otherwise, it's a file name relative to INCLUDE_PATH
+	  my $paths = $self->paths()
+	      || return ($self->error(), Template::Constants::STATUS_ERROR);
+
+	  foreach my $dir (@$paths) {
+	      $path = "$dir/$name";
+	      last INCPATH
+		  if -f $path;
+	  }
+	  undef $path;	    # not found
       }
     }
 
@@ -221,6 +224,50 @@ sub include_path {
      my ($self, $path) = @_;
      $self->{ INCLUDE_PATH } = $path if $path;
      return $self->{ INCLUDE_PATH };
+}
+
+
+#------------------------------------------------------------------------
+# paths()
+#
+# Evaluates the INCLUDE_PATH list, ignoring any blank entries, and 
+# calling and subroutine or object references to return dynamically
+# generated path lists.  Returns a reference to a new list of paths 
+# or undef on error.
+#------------------------------------------------------------------------
+
+sub paths {
+    my $self   = shift;
+    my @ipaths = @{ $self->{ INCLUDE_PATH } };
+    my (@opaths, $dpaths, $dir);
+    
+    while (@ipaths) {
+	$dir = shift @ipaths || next;
+
+	# $dir can be a sub or object ref which returns a reference
+	# to a dynamically generated list of search paths.
+	
+	if (ref $dir eq 'CODE') {
+	    eval { $dpaths = &$dir() };
+	    if ($@) {
+		chomp $@;
+		return $self->error($@);
+	    }
+	    unshift(@ipaths, @$dpaths);
+	    next;
+	}
+	elsif (UNIVERSAL::can($dir, 'paths')) {
+	    $dpaths = $dir->paths() 
+		|| return $self->error($dir->error());
+	    unshift(@ipaths, @$dpaths);
+	    next;
+	}
+	else {
+	    push(@opaths, $dir);
+	}
+    }
+
+    return \@opaths;
 }
 
 
@@ -308,6 +355,7 @@ sub _init {
 
 	require File::Path;
 	foreach my $dir (@$path) {
+	    next if ref $dir;
 	    my $wdir = $dir;
             $wdir =~ s[:][]g if $^O eq 'MSWin32';
 	    $wdir =~ /(.*)/;  # untaint
@@ -407,7 +455,7 @@ sub _fetch_path {
     my ($self, $name) = @_;
     my ($size, $compext, $compdir) = 
 	@$self{ qw( SIZE COMPILE_EXT COMPILE_DIR ) };
-    my ($dir, $path, $compiled, $slot, $data, $error);
+    my ($dir, $paths, $path, $compiled, $slot, $data, $error);
     local *FH;
 
     print STDERR "_fetch_path($name)\n"
@@ -427,11 +475,16 @@ sub _fetch_path {
 	    last INCLUDE;
 	}
 
+	$paths = $self->paths() || do {
+	    $error = Template::Constants::STATUS_ERROR;
+	    $data  = $self->error();
+	    last INCLUDE;
+	};
+
 	# search the INCLUDE_PATH for the file, in cache or on disk
-	foreach $dir (@{ $self->{ INCLUDE_PATH } }) {
-	    next unless $dir;
+	foreach $dir (@$paths) {
 	    $path = "$dir/$name";
-	    
+
 	    print STDERR "looking for $path\n" if $DEBUG;
 
 	    if ($caching && ($slot = $self->{ LOOKUP }->{ $path })) {
