@@ -13,12 +13,18 @@
 # AUTHOR
 #   Andy Wardley   <abw@kfs.org>
 #
+# NOTE
+#   This file is built from a source template distributed as part of 
+#   the docsrc bundle (docsrc/src/Release/Changes) which is available 
+#   from http://www.template-toolkit.org/download.html#docsrc.
+#   Any changes you make here may be lost!
+#
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06d                                   ## DEVELOPER RELEASE ##
+# Version 2.06d - 17th January 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch to the DBI plugin from Simon Matthews to stop it 
@@ -28,6 +34,10 @@
   which were never being loaded due to a '<' comparison of timestamps
   rather than '<='.  See
   http://tt2.org/pipermail/templates/2002-January/002361.html
+
+* Applied a patch from Doug Steinwand which fixes a minor bug in the 
+  XS Stash as reported by Andrey Brindeew:
+  http://tt2.org/pipermail/templates/2002-January/002475.html
 
 * Changed URL plugin to accept multiple values for CGI parameters, e.g.
   [% USE URL('/cgi-bin/foo', items=[10,20]) %] generates a URL like:
