@@ -25,11 +25,11 @@ use Template::Test;
 $^W = 1;
 
 eval {
-  require Template::Stash::XS;
+    require Template::Stash::XS;
 };
 if ($@) {
-  warn $@;
-  exit(0);
+    warn $@;
+    skip_all('cannot load Template::Stash::XS');
 }
 
 my $count = 20;

@@ -28,7 +28,7 @@ my($LaTeXPath, $PdfLaTeXPath, $DviPSPath) = @{Template::Config->latexpaths()};
 # We need a non-empty $PdfLaTeXPath to convert to PDF
 #
 if ( $PdfLaTeXPath eq "" ) {
-    exit(0);
+    skip_all('LaTeX not installed');
 }
 
 test_expect(\*DATA, { FILTERS => {

@@ -23,7 +23,7 @@ $Template::Test::PRESERVE = 1;
 
 eval "use DBI";
 if ($@) {
-    exit(0);
+    skip_all("DBI module not installed");
 }
 eval "use Tie::DBI";
 my $tiedbi = $@ ? 0 : 1;
@@ -34,7 +34,7 @@ my $tiedbi = $@ ? 0 : 1;
 # the $run, $dsn, $user and $pass variables.
 require 'dbi_test.cfg';
 unless ($run) {
-    exit(0);
+    skip_all('skipping DBI tests at user request');
 }
 
 # new feature in DBI plugin v2.30+ is to allow user to drop initial 'dbi:'

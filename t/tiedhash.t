@@ -23,10 +23,11 @@ use Template::Stash;
 $^W = 1;
 
 eval {
-  require Template::Stash::XS;
+    require Template::Stash::XS;
 };
 if ($@) {
-  exit(0);
+    warn $@;
+    skip_all('cannot load Template::Stash::XS');
 }
 
 #print "stash: $Template::Config::STASH\n";

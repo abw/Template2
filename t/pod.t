@@ -27,7 +27,7 @@ $Template::Test::PRESERVE = 1;
 
 eval "use Pod::POM";
 if ($@) {
-    exit(0);
+    skip_all('Pod::POM not installed');
 }
 
 my $config = {

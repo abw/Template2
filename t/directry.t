@@ -22,8 +22,7 @@ use Cwd;
 $^W = 1;
 
 if ($^O eq 'MSWin32') {
-    print "1..0\n";
-    exit(0);
+    skip_all('skipping tests on MS Win 32 platform');
 }
 
 #$Template::Test::PRESERVE = 1;

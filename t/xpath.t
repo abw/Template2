@@ -29,7 +29,7 @@ my $shut_up_warnings = $XML::XPath::VERSION;
 eval "use XML::XPath";
 
 if ($@ || $XML::XPath::VERSION < 1.0) {
-    exit(0);
+    skip_all('XML::XPath v1.0 or later not installed');
 }
 
 # account for script being run in distribution root or 't' directory

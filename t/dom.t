@@ -32,7 +32,7 @@ my $shut_up_warnings = $XML::DOM::VERSION;
 
 eval "use XML::DOM";
 if ($@ ||  $XML::DOM::VERSION < 1.27) {
-    exit(0);
+    skip_all("XML::DOM v1.27 or later not installed");
 }
 
 # account for script being run in distribution root or 't' directory

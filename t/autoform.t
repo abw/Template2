@@ -29,7 +29,10 @@ $Template::Test::PRESERVE = 1;
 eval "use Text::Autoformat";
 
 if ($@) {
-    exit(0);
+    skip_all('Text::Autoformat module not installed');
+}
+if ($] == 5.008) {
+     skip_all('Text::Autoformat tests unreliable under 5.8.0');
 }
 
 # for testing known bug with locales that don't use '.' as a decimal 

@@ -28,8 +28,7 @@ $Template::Test::DEBUG = 0;
 eval "use Text::Wrap";
 
 if ($@) {
-    print "1..0\n";
-    exit(0);
+    skip_all('Text::Wrap not installed');
 }
 
 test_expect(\*DATA);

@@ -29,7 +29,7 @@ my($LaTeXPath, $PdfLaTeXPath, $DviPSPath) = @{Template::Config->latexpaths()};
 # We need a non-empty $LaTeXPath and $DviPSPath to convert to PS
 #
 if ( $LaTeXPath eq "" || $DviPSPath eq "" ) {
-    exit(0);
+    skip_all('LaTeX not installed');
 }
 
 test_expect(\*DATA, { FILTERS => {

@@ -24,7 +24,7 @@ $^W = 1;
 eval "use GD; use GD::Graph;";
 
 if ( $@ || $GD::VERSION < 1.20 ) {
-    exit(0);
+    skip_all('GD module(s) not installed');
 }
 
 test_expect(\*DATA, { FILTERS => {

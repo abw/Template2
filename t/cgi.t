@@ -28,8 +28,7 @@ $^W = 1;
 
 eval "use CGI";
 if ($@) {
-    print "1..0\n";
-    exit(0);
+    skip_all("no CGI module");
 }
 
 

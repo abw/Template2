@@ -22,7 +22,7 @@ use Template::Test;
 use Template::Plugin::HTML;
 $^W = 1;
 
-$Template::Test::DEBUG = 0;
+$Template::Test::DEBUG = 1;
 $Template::Test::PRESERVE = 1;
 
 #------------------------------------------------------------------------
@@ -52,12 +52,14 @@ test_expect(\*DATA, $cfg, $vars);
 
 __DATA__
 -- test --
+-- name html plugin --
 [% USE HTML -%]
 OK
 -- expect --
 OK
 
 -- test --
+-- name html filter --
 [% FILTER html -%]
 < &amp; >
 [%- END %]
@@ -65,6 +67,7 @@ OK
 &lt; &amp;amp; &gt;
 
 -- test --
+-- name html entity --
 [% TRY; 
       "Léon Brocard" | html_entity;
    CATCH;
@@ -75,8 +78,10 @@ OK
 -- process --
 [%  IF entities -%]
 L&eacute;on Brocard
+[% "IN ENTITIES" | stderr -%]
 [%- ELSE -%]
-html_all error - cannot locate Apache::Util or HTML::Entities
+[% "NOT IN ENTITIES" | stderr -%]
+html_entity error - cannot locate Apache::Util or HTML::Entities
 [%- END %]
 
 -- test --
@@ -85,18 +90,21 @@ html_all error - cannot locate Apache::Util or HTML::Entities
 my%20file.html
 
 -- test --
+-- name escape --
 [% USE HTML -%]
 [% HTML.escape("if (a < b && c > d) ...") %]
 -- expect --
 if (a &lt; b &amp;&amp; c &gt; d) ...
 
 -- test --
+-- name sorted --
 [% USE HTML(sorted=1) -%]
 [% HTML.element(table => { border => 1, cellpadding => 2 }) %]
 -- expect --
 <table border="1" cellpadding="2">
 
 -- test --
+-- name attributes --
 [% USE HTML -%]
 [% HTML.attributes(border => 1, cellpadding => 2).split.sort.join %]
 -- expect --

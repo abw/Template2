@@ -27,7 +27,8 @@ $^W = 1;
 my $shut_up_warnings = $XML::RSS::VERSION;
 
 eval "use XML::RSS";
-exit if $@ || ($] == 5.006 && $XML::RSS::VERSION < 0.9);
+skip_all('XML::RSS v 0.9 or later not installed')
+    if $@ || ($] == 5.006 && $XML::RSS::VERSION < 0.9);
 
 # account for script being run in distribution root or 't' directory
 my $file = abs_path( -d 't' ? 't/test/xml' : 'test/xml' );
