@@ -165,7 +165,7 @@ my $SPLASH_STYLES = {
 
 welcome_message();
 version_check();
-mandatory_modules();
+# mandatory_modules();
 optional_modules();
 optional_stash_xs();
 optional_latex();
@@ -237,7 +237,10 @@ my %opts = (
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
     'PMLIBDIRS'    => [ 'lib' ], 
     'DIR'          => [ ],
-    'PREREQ_PM'    => { 'AppConfig' => 1.52 },
+    'PREREQ_PM'    => { 
+	'AppConfig'  => 1.52,
+	'File::Spec' => 0.6,
+    },
     'dist'         => {
 	'COMPRESS' => 'gzip',
 	'SUFFIX'   => 'gz',
