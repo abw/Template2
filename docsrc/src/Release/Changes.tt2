@@ -18,7 +18,19 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06c - 16th December 2001              ## DEVELOPER RELEASE ##
+# Version 2.06d                                   ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied a patch to the DBI plugin from Simon Matthews to stop it 
+  from closing a DBH which was passed in open from an external source.
+
+* Changed URL plugin to accept multiple values for CGI parameters, e.g.
+  [% USE URL('/cgi-bin/foo', items=[10,20]) %] generates a URL like:
+  /cgi-bin/foo?item=10&amp;item=20
+
+
+#------------------------------------------------------------------------
+# Version 2.06c - 20th December 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed both Perl and XS Stash modules to try to apply a SCALAR_OPS
