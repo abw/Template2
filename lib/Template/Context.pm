@@ -76,7 +76,7 @@ $DEBUG_FORMAT = "\n## \$file line \$line : [% \$text %] ##\n";
 sub template {
     my ($self, $name) = @_;
     my ($prefix, $blocks, $defblocks, $provider, $template, $error);
-    my ($shortname, $providers);
+    my ($shortname, $blockname, $providers);
 
     # references to Template::Document (or sub-class) objects objects, or
     # CODE references are assumed to be pre-compiled templates and are
@@ -120,16 +120,36 @@ sub template {
 	      || $self->{ LOAD_TEMPLATES }
         unless $providers;
 
-    # finally we try the regular template providers which will 
+
+    # Finally we try the regular template providers which will 
     # handle references to files, text, etc., as well as templates
-    # reference by name
-    foreach my $provider (@$providers) {
-	($template, $error) = $provider->fetch($shortname, $prefix);
-	return $template unless $error;
-	if ($error == Template::Constants::STATUS_ERROR) {
-	    $self->throw($template) if ref $template;
-	    $self->throw(Template::Constants::ERROR_FILE, $template);
+    # reference by name.  If
+
+    $blockname = '';
+    while ($shortname) {
+	$self->DEBUG("looking for [$shortname] [$blockname]\n") if $DEBUG;
+
+	foreach my $provider (@$providers) {
+	    ($template, $error) = $provider->fetch($shortname, $prefix);
+	    if ($error) {
+		if ($error == Template::Constants::STATUS_ERROR) {
+		    $self->throw($template) if ref $template;
+		    $self->throw(Template::Constants::ERROR_FILE, $template);
+		}
+		# DECLINE is ok, carry on
+	    }
+	    elsif (length $blockname) {
+		return $template 
+		    if $template = $template->blocks->{ $blockname };
+	    }
+	    else {
+		return $template;
+	    }
 	}
+
+	last if ref $shortname || ! $self->{ EXPOSE_BLOCKS };
+	$shortname =~ s{/([^/]+)$}{} || last;
+	$blockname = length $blockname ? "$1/$blockname" : $1;
     }
 
     $self->throw(Template::Constants::ERROR_FILE, "$name: not found");
@@ -785,8 +805,10 @@ sub _init {
     $self->{ TRIM      } = $config->{ TRIM } || 0;
     $self->{ BLKSTACK  } = [ ];
     $self->{ CONFIG    } = $config;
-    $self->{ DEBUG_FORMAT } = $config->{ DEBUG_FORMAT };
-
+    $self->{ DEBUG_FORMAT  } = $config->{ DEBUG_FORMAT  };
+    $self->{ EXPOSE_BLOCKS } = defined $config->{ EXPOSE_BLOCKS }
+                                     ? $config->{ EXPOSE_BLOCKS } 
+                                     : 0;
     return $self;
 }
 
