@@ -84,6 +84,7 @@ docs/src/Modules/Template/Plugin/GD/Text/Wrap.html
 docs/src/Modules/Template/Plugin/HTML.html
 docs/src/Modules/Template/Plugin/Image.html
 docs/src/Modules/Template/Plugin/Iterator.html
+docs/src/Modules/Template/Plugin/Math.html
 docs/src/Modules/Template/Plugin/Pod.html
 docs/src/Modules/Template/Plugin/Procedural.html
 docs/src/Modules/Template/Plugin/String.html
