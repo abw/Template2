@@ -682,33 +682,38 @@ sub _assign {
 
 sub _dump {
     my $self   = shift;
-    my $indent = shift || 1;
+    return "[Template::Stash] " . $self->_dump_frame(2);
+}
+
+sub _dump_frame {
+    my ($self, $indent) = @_;
+    $indent ||= 1;
     my $buffer = '    ';
     my $pad    = $buffer x $indent;
-    my $text   = '';
+    my $text   = "{\n";
     local $" = ', ';
 
     my ($key, $value);
-
 
     return $text . "...excessive recursion, terminating\n"
 	if $indent > 32;
 
     foreach $key (keys %$self) {
-
 	$value = $self->{ $key };
 	$value = '<undef>' unless defined $value;
-
-	if (ref($value) eq 'ARRAY') {
-	    $value = "$value [@$value]";
-	}
-	$text .= sprintf("$pad%-8s => $value\n", $key);
 	next if $key =~ /^\./;
-	if (UNIVERSAL::isa($value, 'HASH')) {
-	    $text .= _dump($value, $indent + 1);
+	if (ref($value) eq 'ARRAY') {
+	    $value = '[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
+				 @$value) . ' ]';
 	}
+	elsif (ref $value eq 'HASH') {
+	    $value = _dump_frame($value, $indent + 1);
+	}
+
+	$text .= sprintf("$pad%-16s => $value\n", $key);
     }
-    $text;
+    $text .= $buffer x ($indent - 1) . '}';
+    return $text;
 }
 
 
@@ -866,13 +871,13 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.55, distributed as part of the
+2.56, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
