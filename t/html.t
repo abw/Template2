@@ -22,8 +22,9 @@ use Template::Test;
 use Template::Plugin::HTML;
 $^W = 1;
 
-$Template::Test::DEBUG = 1;
-$Template::Test::PRESERVE = 1;
+our $DEBUG = grep(/-d/, @ARGV);
+$Template::Test::DEBUG =  $DEBUG;
+$Template::Test::PRESERVE = $DEBUG;
 
 #------------------------------------------------------------------------
 # behaviour of html filter depends on these being available
@@ -78,9 +79,7 @@ OK
 -- process --
 [%  IF entities -%]
 L&eacute;on Brocard
-[% "IN ENTITIES" | stderr -%]
 [%- ELSE -%]
-[% "NOT IN ENTITIES" | stderr -%]
 html_entity error - cannot locate Apache::Util or HTML::Entities
 [%- END %]
 
