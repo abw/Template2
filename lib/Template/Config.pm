@@ -79,7 +79,8 @@ sub load {
 
 sub parser {
     my $class  = shift;
-    my $params = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    my $params = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
 
     return undef unless $class->load($PARSER);
     return $PARSER->new($params) 
@@ -96,7 +97,8 @@ sub parser {
 
 sub provider {
     my $class  = shift;
-    my $params = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    my $params = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
 
     return undef unless $class->load($PROVIDER);
     return $PROVIDER->new($params) 
@@ -114,7 +116,8 @@ sub provider {
 
 sub plugins {
     my $class  = shift;
-    my $params = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    my $params = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
 
     return undef unless $class->load($PLUGINS);
     return $PLUGINS->new($params)
@@ -132,7 +135,8 @@ sub plugins {
 
 sub filters {
     my $class  = shift;
-    my $params = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    my $params = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
 
     return undef unless $class->load($FILTERS);
     return $FILTERS->new($params)
@@ -149,7 +153,8 @@ sub filters {
 
 sub stash {
     my $class  = shift;
-    my $params = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    my $params = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
 
     return undef unless $class->load($STASH);
     return $STASH->new($params) 
@@ -166,7 +171,8 @@ sub stash {
 
 sub context {
     my $class  = shift;
-    my $params = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    my $params = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
 
     return undef unless $class->load($CONTEXT);
     return $CONTEXT->new($params) 
@@ -182,7 +188,8 @@ sub context {
 
 sub service {
     my $class  = shift;
-    my $params = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    my $params = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') 
+	       ? shift : { @_ };
 
     return undef unless $class->load($SERVICE);
     return $SERVICE->new($params) 
@@ -191,104 +198,3 @@ sub service {
 
 
 1;
-__END__
-
-#========================================================================
-#                           -- DOCUMENTATION --
-#========================================================================
-
-=head1 NAME
-
-Template::Config - factory module for creating other toolkit modules
-
-=head1 SYNOPSIS
-
-    use Template::Config;
-
-=head1 DESCRIPTION
-
-This module implements various methods for loading and instantiating
-other modules that comprise the Template Toolkit.  It provides a consistent
-way to create toolkit components and allows custom modules to be used in 
-place of the regular ones.
-
-Package variables such as $STASH, $SERVICE, $CONTEXT, etc., contain
-the default module/package name for each component (Template::Stash,
-Template::Service and Template::Context, respectively) and are used by
-the various factory methods (stash(), service() and context()) to load
-the appropriate module.  Changing these package variables will cause
-subsequent calls to the relevant factory method to load and instantiate
-an object from the new class.
-
-=head1 PUBLIC METHODS
-
-=head2 load($module)
-
-Load a module via require().  Any occurences of '::' in the module name
-are be converted to '/' and '.pm' is appended.  Returns 1 on success
-or undef on error.  Use $class->error() to examine the error string.
-
-=head2 parser(\%config)
-
-Instantiate a new parser object of the class whose name is denoted by
-the package variable $PARSER (default: Template::Parser).  Returns
-a reference to a newly instantiated parser object or undef on error.
-
-=head2 provider(\%config)
-
-Instantiate a new template provider object (default: Template::Provider).
-Returns an object reference or undef on error, as above.
-
-=head2 plugins(\%config)
-
-Instantiate a new plugins provider object (default: Template::Plugins).
-Returns an object reference or undef on error, as above.
-
-=head2 filters(\%config)
-
-Instantiate a new filter provider object (default: Template::Filters).
-Returns an object reference or undef on error, as above.
-
-=head2 stash(\%vars)
-
-Instantiate a new stash object (default: Template::Templates) using the 
-contents of the optional hash array passed by parameter as initial variable
-definitions.  Returns an object reference or undef on error, as above.
-
-=head2 context(\%config)
-
-Instantiate a new template context object (default: Template::Context).
-Returns an object reference or undef on error, as above.
-
-=head2 service(\%config)
-
-Instantiate a new template service object (default: Template::Service).
-Returns an object reference or undef on error, as above.
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@kfs.orgE<gt>
-
-=head1 REVISION
-
-$Revision$
-
-=head1 COPYRIGHT
-
-Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-=head1 SEE ALSO
-
-L<Template|Template> 
-
-=cut
-
-
-
-
-
-

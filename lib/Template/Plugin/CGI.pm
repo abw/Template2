@@ -37,9 +37,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 sub new {
     my $class   = shift;
     my $context = shift;
-    my $cgi = CGI->new(@_);
-    print STDERR "cgi: $cgi ", ref($cgi) ? "is a ref\n" : "is *NOT* a ref\n";
-    return $cgi;
+    CGI->new(@_);
 }
 
 1;

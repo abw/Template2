@@ -28,7 +28,7 @@ package Template::Service;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $AUTOLOAD );
+use vars qw( $VERSION $DEBUG $ERROR $AUTOLOAD );
 use base qw( Template::Base );
 use Template::Base;
 use Template::Config;
@@ -47,7 +47,10 @@ $DEBUG   = 0;
 # Process a template within a service framework.  A service may encompass
 # PRE_PROCESS and POST_PROCESS templates and an ERROR hash which names
 # templates to be substituted for the main template document in case of
-# an error.  TODO: more on this...
+# Each service invocation begins by resetting the state of the context 
+# object via a call to reset(), passing any BLOCKS definitions to pre-
+# define blocks for the templates.  The AUTO_RESET option may be set to
+# 0 (default: 1) to bypass this step.
 #------------------------------------------------------------------------
 
 sub process {
@@ -55,8 +58,9 @@ sub process {
     my $context = $self->{ CONTEXT };
     my ($name, $output, $procout, $error);
 
-    # clear any BLOCK definitions back to the known default
-    $context->reset($self->{ BLOCKS });
+    # clear any BLOCK definitions back to the known default if 
+    $context->reset($self->{ BLOCKS })
+	if $self->{ AUTO_RESET };
 
     # pre-request compiled template from context so that we can alias it 
     # in the stash for pre-processed templates to reference
@@ -205,13 +209,13 @@ sub _init {
         $self->{ $item } = $data;
     }
     
-    $self->{ ERROR   } = $config->{ ERROR   };
-    $self->{ BLOCKS  } = $config->{ BLOCKS  } || { };
-    $self->{ CONTEXT } = $config->{ CONTEXT }
+    $self->{ ERROR      } = $config->{ ERROR   };
+    $self->{ BLOCKS     } = $config->{ BLOCKS  } || { };
+    $self->{ CONTEXT    } = $config->{ CONTEXT }
         || Template::Config->context($config)
 	|| return $self->error(Template::Config->error);
-
-    $self->{ AUTO_RESET } = 
+    $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
+			          ? $config->{ AUTO_RESET } : 1;
 
     return $self;
 }
@@ -224,41 +228,3 @@ sub _dump {
 
 
 1;
-__END__
-
-=head1 NAME
-
-Template::Service - customised template delivery service
-
-=head1 SYNOPSIS
-
-    use Template::Service;
-
-    my $service = Template::
-
-=head1 DESCRIPTION
-
-TODO
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@kfs.orgE<gt>
-
-=head1 REVISION
-
-$Revision$
-
-=head1 COPYRIGHT
-
-Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-=head1 SEE ALSO
-
-L<Template|Template>
-
-=cut
-

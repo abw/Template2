@@ -68,7 +68,7 @@ sub fetch {
     if (ref $factory eq 'CODE') {
 	# call the factory sub-routine
 	eval {
-	    ($filter, $error) = &$factory($args ? @$args : ());
+	    $filter = &$factory($args ? @$args : ());
 	};
 	$error = $@;
 	$error = "invalid FILTER '$name' (not a CODE ref)"
@@ -277,65 +277,4 @@ sub html_break  {
 
 
 1;
-
-__END__
-
-=head1 NAME
-
-Template::Filters - defines post-processing filters for template blocks
-
-=head1 SYNOPSIS
-
-    use Template::Filters;
-
-    $filters = Template::Filters->new(\%config);
-
-    ($filter, $error) = $filters->fetch($name, \@args, $alias);
-
-=head1 DESCRIPTION
-
-The Template::Filters module implements a generic provider for creating
-filter sub-routines.
-
-=head1 BUGS / ISSUES
-
-=over 4
-
-=item *
-
-Should be possible to create filter objects which can maintain state
-and/or reference to the calling context.  At present we can't, so this
-breaks the 'redirect' filter.  That probably shouldn't be a filter,
-anyway, or perhaps it's a slightly different class of filter (like
-error handling, logging, redirection, etc.
-
-=back
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@kfs.orgE<gt>
-
-=head1 REVISION
-
-$Revision$
-
-=head1 COPYRIGHT
-
-Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-=head1 SEE ALSO
-
-L<Template>,
-L<Template::Context|Template::Context>
-
-=cut
-
-
-
-
-
 

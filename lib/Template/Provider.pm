@@ -37,7 +37,7 @@ package Template::Provider;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG );
+use vars qw( $VERSION $DEBUG $ERROR );
 use base qw( Template::Base );
 use Template::Constants;
 use Template::Config;
@@ -95,13 +95,19 @@ sub fetch {
 	# absolute paths (starting '/') allowed if ABSOLUTE set
 	($data, $error) = $self->{ ABSOLUTE } 
 	    ? $self->_fetch($name) 
-	    : (undef, Template::Constants::STATUS_DECLINED);
+	    : $self->{ TOLERANT } 
+		? (undef, Template::Constants::STATUS_DECLINED)
+		: ("absolute paths are not allowed (set ABSOLUTE option): $name",
+		   Template::Constants::STATUS_ERROR);
     }
     elsif ($name =~ m[^\.+/]) {
 	# anything starting "./" is relative to cwd, allowed if RELATIVE set
 	($data, $error) = $self->{ RELATIVE } 
 	    ? $self->_fetch($name) 
-	    : (undef, Template::Constants::STATUS_DECLINED);
+	    : $self->{ TOLERANT } 
+		? (undef, Template::Constants::STATUS_DECLINED)
+		: ("relative paths are not allowed (set RELATIVE option): $name",
+		   Template::Constants::STATUS_ERROR);
     }
     else {
 	# otherwise, it's a file name relative to INCLUDE_PATH
@@ -566,7 +572,7 @@ sub _compile {
 	$error = $Template::Document::ERROR;
     }
     else {
-	$error = 'parse error: ' . $data->{ name } . $parser->error();
+	$error = 'parse error: ' . $data->{ name } . ' ' . $parser->error();
     }
 
     # return STATUS_ERROR, or STATUS_DECLINED if we're being tolerant
@@ -640,127 +646,4 @@ sub _dump_cache {
 }
 
 1;
-
-__END__
-
-
-=head1 NAME
-
-Template::Provider - repository for compiled templates, loaded from disk.
-
-=head1 SYNOPSIS
-
-    $provider = Template::Provider->new(\%options);
-
-    ($template, $error) = $provider->fetch($name);
-
-=head1 DESCRIPTION
-
-The Template::Provider is used to load, parse, compile and cache template
-documents.  This object may be sub-classed to provide more specific 
-facilities for loading, or otherwise providing access to templates.
-
-The Template::Context objects maintain a list of Template::Provider 
-objects which are polled in turn (via fetch()) to return a requested
-template.  Each may return a compiled template, raise an error, or 
-decline to serve the reqest, giving subsequent providers a chance to
-do so.
-
-This is the "Chain of Command" pattern.  See 'Design Patterns' for
-further information.
-
-=head1 PUBLIC METHODS
-
-=head2 new(\%options) 
-
-Constructor method which instantiates and returns a new Template::Provider
-object.  The optional parameter may be a hash reference containing any of
-the following items:
-
-=over 4
-
-=item INCLUDE_PATH
-
-A string containing one or more directories, delimited by ':', from
-which templates should be loaded.  Alternatively, a list reference
-of directories may be provided.
-
-=item CACHE_SIZE
-
-The maximum number of compiled templates that the object should cache.
-A zero value indicates that no caching should be performed.  If undefined
-then all templates will be cached.
-
-=item ABSOLUTE
-
-Flag used to indicate if files specified by absolute filename (e.g. 
-'/foo/bar') should be loaded.
-
-=item RELATIVE
-
-Flag used to indicate if files specified by relative filename (e.g. 
-'./foo/bar') should be loaded.
-
-=item PARSER
-
-Used to provide a reference to a Template::Parser object, or derivative,
-which should be used to compile template documents as they are loaded.
-A default Template::Parser object is created if unspecified.
-
-=item TOLERANT
-
-If the TOLERANT flag is set then all errors will downgraded to declines.
-
-=item DELIMITER
-
-Alternative character(s) for delimiting INCLUDE_PATH (default ':').
-May be useful for operating systems that use ':' in file names.
-
-=back
-
-=head2 fetch($name)
-
-Returns a compiled template for the name specified.  If the template 
-cannot be found then (undef, STATUS_DECLINED) is returned.  If an error
-occurs (e.g. read error, parse error) then ($error, STATUS_ERROR) is 
-returned, where $error is the error message generated.  If the TOLERANT
-flag is set the the method returns (undef, STATUS_DECLINED) instead of
-returning an error.
-
-=head2 store($name, $template)
-
-Stores the compiled template, $template, in the cache under the name, 
-$name.  Susbequent calls to fetch($name) will return this template in
-preference to any disk-based file.
-
-=head2 include_path(\@newpath))
-
-Accessor method for the INCLUDE_PATH setting.  If called with an
-argument, this method will replace the existing INCLUDE_PATH with
-the new value.
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@kfs.orgE<gt>
-
-=head1 REVISION
-
-$Revision$
-
-=head1 COPYRIGHT
-
-Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-=head1 SEE ALSO
-
-L<Template|Template>
-
-=cut
-
-
-
 
