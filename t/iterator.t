@@ -73,6 +73,41 @@ __DATA__
    * qux
 
 -- test --
+[% items = [ 'foo' 'bar' 'baz' 'qux' ] %]
+[% FOREACH i = items %]
+   #[% loop.index %]/[% loop.max %] [% i +%]
+[% END %]
+-- expect --
+   #0/3 foo
+   #1/3 bar
+   #2/3 baz
+   #3/3 qux
+
+-- test --
+[% items = [ 'foo' 'bar' 'baz' 'qux' ] %]
+[% FOREACH i = items %]
+   #[% loop.count %]/[% loop.size %] [% i +%]
+[% END %]
+-- expect --
+   #1/4 foo
+   #2/4 bar
+   #3/4 baz
+   #4/4 qux
+
+-- test --
+# test that 'number' is supported as an alias to 'count', for backwards
+# compatability
+[% items = [ 'foo' 'bar' 'baz' 'qux' ] %]
+[% FOREACH i = items %]
+   #[% loop.number %]/[% loop.size %] [% i +%]
+[% END %]
+-- expect --
+   #1/4 foo
+   #2/4 bar
+   #3/4 baz
+   #4/4 qux
+
+-- test --
 [% USE iterator(data) %]
 [% FOREACH i = iterator %]
 [% IF iterator.first %]

@@ -45,7 +45,10 @@ my $vars = {
     wxyz => [ { id => $z, name => 'Zebedee', rank => 'aa' },
 	      { id => $y, name => 'Yinyang', rank => 'ba' },
 	      { id => $x, name => 'Xeexeez', rank => 'ab' },
-	      { id => $w, name => 'Warlock', rank => 'bb' }, ]
+	      { id => $w, name => 'Warlock', rank => 'bb' }, ],
+    inst => [ { name => 'piano', url => '/roses.html'  },
+	      { name => 'flute', url => '/blow.html'   },
+	      { name => 'organ', url => '/tulips.html' }, ],
 };
 
 my $config = {};
@@ -134,4 +137,31 @@ nsort: [% data.nsort.join(', ') %]
 -- expect --
  sort: 1, 10, 11, 2, 5, 50, 52, 6, 70, 8, 90
 nsort: 1, 2, 5, 6, 8, 10, 11, 50, 52, 70, 90
+
+-- test --
+[% ilist = [] -%]
+[% ilist.push("<a href=\"$i.url\">$i.name</a>") FOREACH i = inst -%]
+[% ilist.join(",\n") -%]
+[% global.ilist = ilist -%]
+-- expect --
+<a href="/roses.html">piano</a>,
+<a href="/blow.html">flute</a>,
+<a href="/tulips.html">organ</a>
+
+-- test -- 
+[% global.ilist.pop %]
+-- expect --
+<a href="/tulips.html">organ</a>
+
+-- test -- 
+[% global.ilist.shift %]
+-- expect --
+<a href="/roses.html">piano</a>
+
+-- test -- 
+[% global.ilist.unshift('another') -%]
+[% global.ilist.join(', ') %]
+-- expect --
+another, <a href="/blow.html">flute</a>
+
 

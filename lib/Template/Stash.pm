@@ -70,6 +70,10 @@ $HASH_OPS = {
 };
 
 $LIST_OPS = {
+    'push'    => sub { my $list = shift; push(@$list, shift); return '' },
+    'pop'     => sub { my $list = shift; pop(@$list) },
+    'unshift' => sub { my $list = shift; unshift(@$list, shift); return '' },
+    'shift'   => sub { my $list = shift; shift(@$list) },
     'max'     => sub { local $^W = 0; my $list = shift; $#$list; },
     'size'    => sub { local $^W = 0; my $list = shift; $#$list + 1; },
     'first'   => sub { my $list = shift; $list->[0] },

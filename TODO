@@ -2,6 +2,11 @@
 # PENDING TODO ITEMS
 #------------------------------------------------------------------------
 
+* document push/pop/shift/unshift as list methods and add any others 
+  such as splice, etc.
+
+* Stas' docs.
+
 * fix parser to accept quoted blocknames
 
 * fix PRE_PROCESS, etc., to allow 'foo.html'.  Should PRE_PROCESS etc., 
@@ -23,12 +28,6 @@
   required.  new() would then be used to parse a file/text and return 
   the data tree.  There may be cleanup issues.  Haven't looked at writing
   an XML::XPath plugin yet, but it should be reasonably similar.
-
-* XML::DOM plugin may leak memory due to it not properly cleaning up
-  the data model which has massively circular references.  Simon
-  Matthews <sam@knowledgepool.com> has fixed this problem and also
-  added a wonderfully powerful to_template() method.  Will integrate
-  his changes before V2 proper.
 
 * DBI plugin, also by Simon Matthews, will be distributed with V2 proper,
   or some time shortly afterwards.  Makefile.PL will need some hacking to 

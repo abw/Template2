@@ -54,14 +54,14 @@ Users:
 [% USE userlist = datafile(datafile.1, delim = '|') %]
 Users:
 [% FOREACH user = userlist %]
-  * $user.id: $user.name
+  * $user.id: $user.name <$user.email>
 [% END %]
 
 -- expect --
 Users:
-  * way: Wendy Yardley
-  * mop: Marty Proton
-  * nellb: Nell Browser
+  * way: Wendy Yardley <way@cre.canon.co.uk>
+  * mop: Marty Proton <mop@cre.canon.co.uk>
+  * nellb: Nell Browser <nellb@cre.canon.co.uk>
 
 
 

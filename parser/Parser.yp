@@ -262,7 +262,8 @@ term:	    lterm
 
 lterm:	    '[' list  ']'	    { "[ $_[2] ]"                         }
 	|   '[' range ']'           { "[ $_[2] ]"                         }
-	|   '{' hash  '}'	    { "{ $_[2] }"                         }
+	|   '['       ']'           { "[ ]"                               }
+	|   '{' hash  '}'	    { "{ $_[2]  }"                        }
 ;
 
 sterm:	    ident		    { $factory->ident($_[1])              }
@@ -282,7 +283,7 @@ range:	    sterm TO sterm	    { $_[1] . '..' . $_[3]                }
 
 
 hash:	    params
-	|   /* NULL */
+	|   /* NULL */		    { "" }
 ;
 
 params:	    params param	    { "$_[1], $_[2]"                      }

@@ -117,12 +117,8 @@ sub get_first {
     return (undef, Template::Constants::STATUS_DONE) unless $size;
 
     # initialise various counters, flags, etc.
-    @$self{ qw( _MAX _INDEX 
-		size max index number 
-		first last ) } 
-	= ( $size - 1, $index, 
-	    $size, $size - 1, $index, 1, 
-	    1, $size > 1 ? 0 : 1 );
+    @$self{ qw( SIZE MAX INDEX COUNT FIRST LAST ) } 
+	    = ( $size, $size - 1, $index, 1, 1, $size > 1 ? 0 : 1 );
 
     return $self->{ _DATASET }->[ $index ];
 }
@@ -139,7 +135,7 @@ sub get_first {
 
 sub get_next {
     my $self = shift;
-    my ($max, $index) = @$self{ qw( _MAX _INDEX ) };
+    my ($max, $index) = @$self{ qw( MAX INDEX ) };
 
     # warn about incorrect usage
     unless (defined $index) {
@@ -152,10 +148,8 @@ sub get_next {
     if ($index < $max) {
 	# update counters and flags
 	$index++;
-	@$self{ qw( _INDEX index number 
-		    first last ) }
-	        = ( $index, $index, $index + 1, 
-		    0, $index == $max ? 1 : 0 );
+	@$self{ qw( INDEX COUNT FIRST LAST ) }
+	        = ( $index, $index + 1, 0, $index == $max ? 1 : 0 );
 
 	return $self->{ _DATASET }->[ $index ];		    ## RETURN ##
     }
@@ -177,7 +171,7 @@ sub get_next {
 
 sub get_all {
     my $self = shift;
-    my ($max, $index) = @$self{ qw( _MAX _INDEX ) };
+    my ($max, $index) = @$self{ qw( MAX INDEX ) };
     my @data;
 
     # if there's still some data to go...
@@ -186,8 +180,8 @@ sub get_all {
 	@data = @{ $self->{ _DATASET } } [ $index..$max ];
 
 	# update counters and flags
-	@$self{ qw( _INDEX index number first last ) }
-	    = ( $max, $max, $max + 1, 0, 1 );
+	@$self{ qw( INDEX COUNT FIRST LAST ) }
+	        = ( $max, $max + 1, 0, 1 );
 
 	return \@data;					    ## RETURN ##
     }
@@ -208,7 +202,11 @@ sub AUTOLOAD {
     my $item = $AUTOLOAD;
     $item =~ s/.*:://;
     return if $item eq 'DESTROY';
-    return $self->{ $item };
+
+    # alias NUMBER to COUNT for backwards compatability
+    $item = 'COUNT' if $item =~ /NUMBER/i;
+
+    return $self->{ uc $item };
 }
 
 
@@ -226,13 +224,13 @@ sub AUTOLOAD {
 sub _dump {
     my $self = shift;
     join('',
-	 "  Data: ", $self->{ _DATA }, "\n",
-	 " Index: ", $self->{ _INDEX }, "\n",
-	 "Number: ", $self->{'number'}, "\n",
-	 "   Max: ", $self->{ _MAX }, "\n",
-	 "  Size: ", $self->{'size'}, "\n",
-	 " First: ", $self->{'is_first'}, "\n",
-	 "  Last: ", $self->{'is_last'}, "\n",
+	 "  Data: ", $self->{ _DATA  }, "\n",
+	 " Index: ", $self->{ INDEX  }, "\n",
+	 "Number: ", $self->{ NUMBER }, "\n",
+	 "   Max: ", $self->{ MAX    }, "\n",
+	 "  Size: ", $self->{ SIZE   }, "\n",
+	 " First: ", $self->{ FIRST  }, "\n",
+	 "  Last: ", $self->{ LAST   }, "\n",
 	 "\n"
      );
 }

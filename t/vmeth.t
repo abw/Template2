@@ -191,6 +191,16 @@ Richard
 Tom
 
 -- test --
+[% folk = [] -%]
+[% folk.push("<a href=\"${person.id}.html\">$person.name</a>")
+    FOREACH person = people.sort('id') -%]
+[% folk.join(",\n") %]
+-- expect --
+<a href="dick.html">Richard</a>,
+<a href="larry.html">Larry</a>,
+<a href="tom.html">Tom</a>
+
+-- test --
 [% primes.sort.join(', ') %]
 -- expect --
 11, 13, 17, 19, 2, 3, 5, 7

@@ -24,6 +24,7 @@ $Template::Test::DEBUG = 0;
 
 my $params = { 
     alphabet => [ 'a'..'z' ],
+    empty    => [ ],
 };
 
 test_expect(\*DATA, { POST_CHOMP => 1 }, $params);
@@ -138,3 +139,17 @@ v w x y z
 [% END %]
 -- expect --
 1, 3, 5
+
+-- test --
+>
+[% USE table(empty, rows=3) -%]
+[% FOREACH col = table.cols -%]
+col
+[% FOREACH item = col -%]
+item: [% item -%]
+[% END -%]
+[% END -%]
+<
+-- expect --
+>
+<
