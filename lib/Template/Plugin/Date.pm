@@ -91,10 +91,10 @@ sub format {
     if ($time =~ /^\d+$/) {
 	# $time is now in seconds since epoch
         if ($gmt) {
-	    @date = (gmtime)[0..6];
+	    @date = (gmtime($time))[0..6];
         }
 	else {
-	    @date = (localtime)[0..6];
+	    @date = (localtime($time))[0..6];
 	}
     }
     else {
