@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.14 -
+# Version 2.14 - 4th October 2004
 #------------------------------------------------------------------------
 
 * Applied patch from Harald Joerg to prevent ttree from spewing warnings 
@@ -50,6 +50,13 @@
 * Applied patches from Tosh Cooey, Simon Wilcox and Kenny Gatdula to fix
   XML::Simple to allow direct access to XMLin() and XMLout() methods. See
   http://template-toolkit.org/pipermail/templates/2004-September/006620.html
+
+* Fixed a bug in the 'callers' list maintained by a template component
+  which was failing to remove callers from the list after processing.
+  http://template-toolkit.org/pipermail/templates/2004-April/006070.html
+
+* Applied a doc patch from Dave Cash documenting caller and callers.
+  http://template-toolkit.org/pipermail/templates/2004-March/005960.html
 
 
 #------------------------------------------------------------------------
