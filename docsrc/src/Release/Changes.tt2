@@ -48,6 +48,9 @@
   all the Template::* modules typically used.  Also added call to 
   preload() from Template module if $ENV{MOD_PERL} is set.
 
+* Applied a patch from Randal Schwartz to fix rowspan attribute in 
+  templates/html/cell and templates/html/row
+
 
 #------------------------------------------------------------------------
 # Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
@@ -119,6 +122,7 @@
 
 * Modified the OUTPUT option to accept a reference to a list (darren)
 
+
 #------------------------------------------------------------------------
 # Version 2.07b - July 7th 2002                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
@@ -169,6 +173,7 @@
 * Applied Makefile.PL portability patch from Chris Nandor.
 
 * Minor documentation fixes.
+
 
 #------------------------------------------------------------------------
 # Version 2.07 - April 17th 2002 
