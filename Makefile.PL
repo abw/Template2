@@ -622,6 +622,7 @@ for other platforms welcome).
 
 EOF
 	$TT_PREFIX = ttprompt('Installation directory', $TT_PREFIX || $PREFIX);
+        $TT_PREFIX =~ s[/$][];
     }
     else {
 	$TT_PREFIX = '';
