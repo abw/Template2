@@ -32,7 +32,9 @@ use Template;
 use AppConfig qw( :expand );
 use File::Copy;
 use File::Path;
+use File::Spec;
 use File::Basename;
+use Text::ParseWords qw(quotewords);
 
 
 #------------------------------------------------------------------------
@@ -70,6 +72,8 @@ my $accept   = $config->accept;
 my $absolute = $config->absolute;
 my $relative = $config->relative;
 my $suffix   = $config->suffix;
+my $depends  = $config->depend;
+my $depsfile = $config->depend_file;
 my $srcdir   = $config->src
 	       || die "Source directory not set (-s)\n";
 my $destdir  = $config->dest
@@ -102,6 +106,16 @@ my $ttopts   = {
     INCLUDE_PATH => [ $srcdir, @$libdir ],
     OUTPUT_PATH  => $destdir,
 };
+
+if ($depsfile or $depends) {
+	$depends = read_depends($depsfile, $depends);
+    print "depends: ", join(', ', map { "$_ => [ @{$depends->{ $_ }} ]"} 
+                                 keys %$depends), "\n";
+} 
+else {
+	$depends = undef;
+}
+
 
 #------------------------------------------------------------------------
 # pre-amble
@@ -268,11 +282,19 @@ sub process_file {
     if (! $all && ! $options{ force } && -f $dest) {
         $desttime = ( stat($dest) )[9];
 
-        if ($desttime >= $srctime) {
-            printf "  - %-32s (not modified)\n", $file
+		if (defined $depends) {
+			my $depfiles = get_dependant_files($file, $depends);
+			my $time  = get_newest_file($depfiles);
+			if (defined $time && ($srctime < $time)) {
+				$srctime = $time;
+			}
+		}
+	
+		if ($desttime >= $srctime) {
+			printf "  - %-32s (not modified)\n", $file
                 if $verbose;
-            return;
-        }
+			return;
+		}
     }
 	
     # check against copy list
@@ -322,6 +344,158 @@ sub process_file {
 
 
 #------------------------------------------------------------------------
+# read_depends($file)
+# 
+# Reads the dependency file and returns a hash of arrays.
+#------------------------------------------------------------------------
+
+sub read_depends {
+	my ($file, $depend) = @_;
+	my %depends = ();
+
+	if (defined $file) {
+		my ($fh, $line);
+
+		open $fh, $file or die "Can't open $file, $!";
+		
+		while (defined( $line = getline($fh) )) {
+			next if $line =~ /^\s*#/;
+			my ($file, @files) = quotewords('\s*:\s*', 0, $line);
+			$file =~ s/^\s+//;
+			@files = grep(defined, quotewords('\s+', 0, @files));
+			$depends{$file} = \@files;
+		}
+
+		close $fh;
+	}
+
+	if (defined $depend) {
+		my ($key);
+
+		foreach $key (keys %$depend) {
+			$depends{$key} = [ quotewords(',', 0, $depend->{$key}) ];
+		}
+	}
+
+	return \%depends;
+}
+
+
+#------------------------------------------------------------------------
+# get_newest_file(\@files)
+#
+# Returns the mtime of the ``newest'' file in @files.
+#------------------------------------------------------------------------
+
+sub get_newest_file {
+    my $files = shift;
+    my @absfiles;
+
+    FILE: foreach my $file (@$files) {
+        if (File::Spec->file_name_is_absolute($file)) {
+            push(@absfiles, $file);
+            next FILE;
+        }
+        foreach my $dir ($srcdir, @$libdir) {
+            my $absfile = File::Spec->catfile($dir, $file);
+            if (-f $absfile) {
+                push(@absfiles, $absfile);
+                next FILE;
+            }
+        }
+    }
+	my @mtimes = map { (stat($_))[9] } @absfiles;
+
+	# Get the index of the file with the largest mtime.
+	my $i = do {
+		my ($max, $m, $i, $index);
+		$max = $i = 0;
+
+		foreach $m (@mtimes) {
+			if ($max < $m) {
+				$max = $m;
+				$index = $i;
+			}
+			$i++;
+		}
+
+		$index;
+	};
+
+	if (defined $i) {
+		return $mtimes[$i];
+	} else {
+		return undef;
+	}
+}
+
+
+
+#------------------------------------------------------------------------
+# get_dependant_files($file, $depends)
+#
+# Gathers and returns a list of files that $file depends on from the
+# hash of arrays, $depends.
+#------------------------------------------------------------------------
+
+sub get_dependant_files {
+	my ($file, $depends) = @_;
+	my @files = ();
+	$depends = { %{$depends} }; # Copy $depends, because be modify it.
+
+	if (exists $depends->{$file}) {
+		my ($i) = 0;
+		# [dylan] No, this doesn't delete a real file, hehe!
+		@files = (@{ delete $depends->{$file} });
+
+		while (exists $files[$i]) {
+			my $file = $files[$i];
+			if (not defined $file) {
+				die "dependant file $i is undefined!!\n";
+			}
+			if (exists $depends->{$file}) {
+				push(@files, @{ delete $depends->{$file} });
+			}
+		} 
+        continue {
+			$i++;
+		}
+	}
+	
+	return \@files;
+}
+
+
+#------------------------------------------------------------------------
+# getline($fh)
+# 
+# This is a wrapper around readline($fh) that returns a single line, but
+# allows that 'line' to span several newsline if the continuation
+# charecter \ is used.
+#------------------------------------------------------------------------
+
+sub getline {
+	my ($fh) = @_;
+	my ($buf, @buffer);
+
+	while (defined ( $buf = readline($fh) ) ) {
+		chomp $buf;
+		if (substr($buf, -1, 1) ne '\\') {
+			push(@buffer, $buf);
+			last;
+		} else {
+			chop $buf;
+			push(@buffer, $buf);
+		}
+	}
+
+	
+	return @buffer ? join('', @buffer, "\n") : undef;
+}
+
+
+
+#------------------------------------------------------------------------
 # read_config($file)
 #
 # Handles reading of config file and/or command line arguments.
@@ -351,6 +525,8 @@ sub read_config {
     	'ignore=s@',
     	'copy=s@',
     	'accept=s@',
+        'depend=s%',
+     	'depend_file|depfile=s',
     	'template_anycase|anycase',
     	'template_eval_perl|eval_perl',
     	'template_load_perl|load_perl',
@@ -520,6 +696,11 @@ File search specifications (all may appear multiple times):
    --ignore=REGEX           Ignore files matching REGEX
    --copy=REGEX             Copy files matching REGEX
    --accept=REGEX           Process only files matching REGEX 
+
+File Dependencies Options:
+   --depend foo=bar,baz     Specify that 'foo' depends on 'bar' and 'baz'.
+   --depend_file FILE       Read file dependancies from FILE.
++
 
 File suffix rewriting (may appear multiple times)
    --suffix old=new         Change any '.old' suffix to '.new'
