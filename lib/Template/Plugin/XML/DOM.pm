@@ -801,7 +801,7 @@ library.
 =head1 VERSION
 
 2.6, distributed as part of the
-Template Toolkit version 2.04e, released on 06 September 2001.
+Template Toolkit version 2.04f, released on 10 September 2001.
 
 
 

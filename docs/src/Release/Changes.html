@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.04e, detailing
+#   Revision history for the Template Toolkit version 2.04f, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -19,6 +19,26 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.04f - 10 Sep 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in the Date plugin which was performing one localtime() too 
+  many when a date was passed in to the format() method.  e.g. the result 
+  from date.format('12:59::00 30/09/2001', '%H:%M') was 13:59 not 12:59.
+  Thanks to Thierry-Michel Barral and Matthew Tuck for reporting the
+  problem.
+
+* Incorporated Doug's new version of the XS Stash.  It fixes the problem 
+  with strings not being recognized as integers (and the item = item + 1 
+  problem). It also adds a few additional tests for this situation to 
+  t/stash-xs.t
+
+* Fixed a minor bug in Makefile.PL which looked for 'msql' or 'mysql' as
+  the default DBD for testing DBI but didn't select a suitable default
+  if the above drivers weren't available.
+
 
 #------------------------------------------------------------------------
 # Version 2.04e - 06 Sep 2001                     ## DEVELOPER RELEASE ##
@@ -53,6 +73,13 @@
   those names, I decided it was best to strip them out again and think
   more carefully about adding them to an official release.  Hence they're
   not going to be in 2.05.
+
+* Fixed an outrageous oversight in the HTML 'rgb' template by defining
+  'orange' as a valid colour (I can't believe Leon hasn't already sent
+  me a patch for this!)  Created a new custom colour scheme in the 
+  Makefile.PL which uses it.  Hacked the Makefile.PL and the generated 
+  ttree config file to allow text colours to be specified as well as
+  button background colours.
 
 
 #------------------------------------------------------------------------

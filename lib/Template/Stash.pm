@@ -810,8 +810,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.30, distributed as part of the
-Template Toolkit version 2.04e, released on 06 September 2001.
+2.31, distributed as part of the
+Template Toolkit version 2.04f, released on 10 September 2001.
 
 =head1 COPYRIGHT
 

@@ -43,6 +43,19 @@ And then print each item in the column going across the output rows
 	<td>[% item %]</td>
     [% END %]
 
+=head2 Accessing Cookies
+
+Jeff Boes E<lt>boes@nexcerpt.comE<gt> writes:
+
+    Does anyone have a quick-n-dirty approach to accessing 
+    cookies from templates? 
+
+Jonas Liljegren replies:
+
+    [% USE CGI %]
+    
+    <p>The value is [% CGI.cookie('cookie_name') | html %]
+
 =head1 Extending the Template Toolkit
 
 =head2 Can I serve templates from a database?

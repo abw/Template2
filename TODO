@@ -3,7 +3,7 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.04e, containing
+#   TODO list for the Template Toolkit version 2.04f, containing
 #   known bugs, limitations, planned enhancements, long term visions 
 #   and a few whacky ideas.
 #
@@ -166,6 +166,11 @@
 #------------------------------------------------------------------------
 # Stash
 #------------------------------------------------------------------------
+
+* The XS Stash may have problems trying to access tied hashes.  Also note
+  that enabling the XS Stash cause all the Template::* modules to be 
+  installed in an architecture-dependant directory.  For info, see
+  http://www.tt2.org/pipermail/templates/2001-September/001568.html
 
 * Stas Bekman raised the issue of the Stash not being able to correctly
   differentiate between scalar/list context and in particular, the 

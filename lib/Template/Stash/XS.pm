@@ -126,7 +126,7 @@ Doug Steinwand E<lt>dsteinwand@citysearch.comE<gt>
 
 =head1 VERSION
 
-Template Toolkit version 2.04e, released on 06 September 2001.
+Template Toolkit version 2.04f, released on 10 September 2001.
 
 
 

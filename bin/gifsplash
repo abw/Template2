@@ -6,7 +6,7 @@
 # Template Toolkit (images/splash/black/*) into the colours specified
 # in the html/rgb template (templates/html/rgb).  It is run at "make
 # install" time and operates on the TT2 installation directory.  Note
-# that the main loop uns in template space where there is convenient
+# that the main loop runs in template space where there is convenient
 # access to the RGB definitions.
 #
 #  
@@ -16,7 +16,7 @@ use Template;
 use Getopt::Std;
 
 my $PROGRAM = 'gifsplash';
-my $VERSION = 0.02;
+my $VERSION = 0.03;
 my $MASKDIR = 'black';
 
 
