@@ -197,13 +197,7 @@ sub _recover {
 
     $context->stash->set('error', $$error);
     eval {
-	if (ref $handler eq 'CODE') {
-	    $output = &$handler($context);
-	}
-	else {
-	    $output = $handler->process($context);
-	}
-	# TODO: plus other options...
+	$output .= $context->process($handler);
     };
     if ($@) {
 	$$error = $@;

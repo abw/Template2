@@ -154,6 +154,34 @@ sub include_path {
 }
 
 
+#------------------------------------------------------------------------
+# DESTROY
+#
+# The provider cache is implemented as a doubly linked list which Perl
+# cannot free by itself due to the circular references between NEXT <=> 
+# PREV items.  This cleanup method walks the list deleting all the NEXT/PREV 
+# references, allowing the proper cleanup to occur and memory to be 
+# repooled.
+#------------------------------------------------------------------------
+
+sub DESTROY {
+    my $self = shift;
+    my ($slot, $next);
+
+    $slot = $self->{ HEAD };
+    while ($slot) {
+	$next = $slot->[ NEXT ];
+	undef $slot->[ PREV ];
+	undef $slot->[ NEXT ];
+	$slot = $next;
+    }
+    undef $self->{ HEAD };
+    undef $self->{ TAIL };
+}
+
+
+
+
 #========================================================================
 #                        -- PRIVATE METHODS --
 #========================================================================
@@ -166,9 +194,10 @@ sub include_path {
 
 sub _init {
     my ($self, $params) = @_;
-    my $size = $params->{ CACHE_SIZE };
+    my $size = $params->{ CACHE_SIZE   };
     my $path = $params->{ INCLUDE_PATH } || '.';
-    my $dlim = $params->{ DELIMITER }    || ':';
+    my $dlim = $params->{ DELIMITER    } || ':';
+    my $cdir = $params->{ COMPILE_DIR  } || '';
 
     # coerce INCLUDE_PATH to an array ref, if not already so
     $path = [ split($dlim, $path) ]
@@ -186,17 +215,29 @@ sub _init {
 	      " slots for [ @$path ]\n");
     }
 
+    # create COMPILE_DIR and sub-directories representing each INCLUDE_PATH
+    # element in which to store compiled files
+    if ($cdir) {
+	require File::Path;
+	foreach my $dir (@$path) {
+	    &File::Path::mkpath("$cdir/$dir");
+	}
+	# ensure $cdir is terminated with '/' for subsequent path building
+	$cdir .= '/';
+    }
+
     $self->{ LOOKUP }       = { };
     $self->{ SLOTS  }       = 0;
     $self->{ SIZE }         = $size;
     $self->{ INCLUDE_PATH } = $path;
     $self->{ DELIMITER }    = $dlim;
-#   $self->{ PREFIX }       = $params->{ PREFIX };
+    $self->{ COMPILE_DIR }  = $cdir;
+    $self->{ COMPILE_EXT }  = $params->{ COMPILE_EXT } || '';
     $self->{ ABSOLUTE }     = $params->{ ABSOLUTE } || 0;
     $self->{ RELATIVE }     = $params->{ RELATIVE } || 0;
     $self->{ TOLERANT }     = $params->{ TOLERANT } || 0;
-    $self->{ COMPILE_EXT }  = $params->{ COMPILE_EXT } || 0;
     $self->{ PARSER }       = $params->{ PARSER };
+#   $self->{ PREFIX }       = $params->{ PREFIX };
     $self->{ PARAMS }       = $params;
 
     return $self;
@@ -256,7 +297,8 @@ sub _fetch {
 
 sub _fetch_path {
     my ($self, $name) = @_;
-    my ($size, $compext) = @$self{ qw( SIZE COMPILE_EXT ) };
+    my ($size, $compext, $compdir) = 
+	@$self{ qw( SIZE COMPILE_EXT COMPILE_DIR ) };
     my ($dir, $path, $compiled, $slot, $data, $error);
     local *FH;
 
@@ -289,8 +331,11 @@ sub _fetch_path {
 		last INCLUDE;
 	    }
 	    elsif (-f $path) {
-		if ($compext && -f ($compiled = "$path$compext")
-			&& (stat($path))[9] < (stat($compiled))[9]) {
+		if (($compext || $compdir) 
+		    && -f ($compiled = "$compdir$path$compext")
+		    && (stat($path))[9] < (stat($compiled))[9]) {
+
+		    # load compiled template via require()
 		    eval { $data = require $compiled };
 		    if ($data && ! $@) {
 			# store in cache
@@ -302,13 +347,6 @@ sub _fetch_path {
 			warn "failed to load compiled template $compiled: $@\n";
 			# leave $compiled set to regenerate template
 		    }
-# previously we returned an error...
-#		     elsif ($@ && ! $self->{ TOLERANT }) {
-#			 $data  = $@;
-#			 $error = Template::Constants::STATUS_ERROR;
-#			 last INCLUDE;
-#		     }
-
 		}
 		# $compiled is set if an attempt to write the compiled 
 		# template to disk should be made
@@ -605,6 +643,7 @@ RELATIVE     => $self->{ RELATIVE }
 TOLERANT     => $self->{ TOLERANT }
 DELIMITER    => $self->{ DELIMITER }
 COMPILE_EXT  => $self->{ COMPILE_EXT }
+COMPILE_DIR  => $self->{ COMPILE_DIR }
 CACHE_SIZE   => $size
 SLOTS        => $self->{ SLOTS }
 LOOKUP       => $self->{ LOOKUP }

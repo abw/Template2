@@ -66,7 +66,7 @@ ok( &{ $doc->block }   eq 'some output' );
 ok( &{ $doc->blocks->{ foo } } eq 'the foo block' );
 ok( &{ $doc->blocks->{ bar } } eq 'the bar block' );
 
-test_expect(\*DATA);
+test_expect(\*DATA, undef, { mydoc => $doc });
 
 __END__
 -- test --
@@ -116,3 +116,8 @@ title: [% title or template.title  %]
 title: A New Title
 
 title: My Template Title
+
+-- test --
+[% INCLUDE $mydoc %]
+-- expect --
+some output

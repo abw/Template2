@@ -1,9 +1,6 @@
-===========================================
-It's a real mess in here.  Don't even look.
-===========================================
-                                   
-TODO
-----
+#------------------------------------------------------------------------
+# TO-DO
+#------------------------------------------------------------------------
 
 * move v1 Template::* to Template::v1::*.  Add 'version1' load flag
   as an EXPORT_FAIL to Tempate.pm to load v1.
@@ -11,27 +8,45 @@ TODO
 * Add :preload use option to Template.pm to preload all modules.  Or should
   it be :noload and have preload by default?
 
-* Note that \refs are not supported.  I don't know if they ever should
-  be, but I think that some of the problems for which refs were conceived
-  are still valid.
+* Alternate parser back end which bypasses the stash, based on Doug
+  Steinwand's code.  The V2 generated Perl code is much faster than V1
+  but still falls short of what Doug has shown is possible.  His
+  parser gets the massive speed-up by bypassing the stash altogether
+  (which in V1 was particularly hideous) and directly generating code
+  to walk the stash structure and do the right thing.  A little magic
+  was lost, so for this version I've stuck with the full-blown stash
+  approach which provides all the magic for backwards compatibility,
+  albeit at some trade-off in speed.  Nevertheless, compiled V2
+  templates should easily run twice as fast as under V1.  My current
+  idea is to re-write the parser to generate more explicit stash
+  navigation code which uses direct access where the type can be
+  grokked in advanced (i.e. a NUMBER implies the parent is an ARRAY).
+  I'm also in favour of propose adding the '->' operator as a clue to
+  the parser to do direct access rather than stash access.  
+  e.g.  
+    [% something->first %] => $stash->{'something'}->{'first'} 
+    [% something.first %] => $stash->get('something', 0, 'first', 0)
+  
+  The second example is as per the current V2 bet and allows
+  'something' to be either a hash with a 'first' member (which may be
+  a sub-routine which is then run), or an object with a 'first'
+  method, or a list from which the first item is returned.  All magic
+  is intact.  The first example runs much faster and in those cases 
+  when you know you haven't got any magical variables, this is a 
+  Good Thing.  Doug used a combination of -> and () to give enough
+  clues to Do The Right Thing most of the time, so I'm hoping that
+  we will be able to incorporate some of those ideas soon.
 
-* Alternate parser back end which bypasses the stash, based on Doug's code.
+* Alternative parser front-end written in C/YACC.  This is entirely feasible
+  now that we only have to transform the input text (template) to
+  output text (Perl) and don't have to build any significant Perl 
+  structure.  It's not entirely trivial - the scanner in particular has
+  to handle CHOMP options and user-definable TAGS, but it's certainly 
+  possible. 
 
 * A 'FOR', like 'FOREACH' but without using an iterator.  You wouldn't get 
   the 'loop' reference to test 'first', 'last', etc., against, but it would
   be faster for those cases when you didn't need that.
-
-* Memory leaks (there's something creating circular references and it's 
-  probably glaringly obvious but I haven't bothered to look yet) (time 
-  passes... I've bothered to look now - it looks like the Template::Provider
-  but I haven't bothered to fix it yet)
-
-* Change ttree to have knowledge of new config options.
-
-* Improve tpage to do the same (i.e. have --define,  at least)
-
-* A COMPILE_DIR option to compliment COMPILE_EXT, specifying an alternate
-  directory in which to store compiled template documents. 
 
 * Change filter factory interface to accept $context as first parameter.
   Dynamic dynamic filters can't grab context reference and some of them 
@@ -42,9 +57,17 @@ TODO
 * Filters and plugins cache may bloat.  Perhaps reset() should accept
   flags to clear BLOCKS, PLUGINS, FILTERS, etc.
 
+* Change ttree to have knowledge of new config options.
+
+* Improve tpage to do the same (i.e. have --define,  at least)
+
+* Note that \refs are not supported.  I don't know if they ever should
+  be, but I think that some of the problems for which refs were conceived
+  are still valid.
+
 * Do something (i.e. mail Lincoln) about the CGI special case in
   Template::Stash to work around the problem of CGI objects disclaiming
-  membership of the UNVIERSAL class after the first method call.
+  membership of the UNIVERSAL class after the first method call. 
 
 * Note that no recursion checking is performed for BLOCKs, only 
   Template::Document instances.  Should be documented.
@@ -55,19 +78,17 @@ TODO
   DONT_USE_CACHE, DONT_CACHE, DONT_COMPILE.  Or should there be public 
   interfaces for load(), compile(), etc.?  Not sure.
 
-* should output redirection be handled by the service rather than 
-  Template.pm?
-
 * change all hardcoded object isa tests to use $Template::Config:XXXXX
   e.g. if (UNIVERSAL::isa($foo, $Template::Config::CONTEXT)) 
-
-* check [% INCLUDE $template %] works where $template is a Template::Document
 
 * merge Directive into Parse.yp via template process?
 
 
+#------------------------------------------------------------------------
+# TO-DONE
+#------------------------------------------------------------------------
 
--- TODONE --
+-- v2.00 beta 1 --
 
 * Template::Context include()/process() should work with raw CODE refs.
 
@@ -97,7 +118,8 @@ TODO
 * block persistance - sometimes need to define BLOCKs that persist 
   through service invocations (AUTO_RESET => 0).
 
-* fix \@ quoting (and others) in Directive (Perrin reported / Chuck patched)
+* fix \@ quoting (and others) in Directive (Perrin Harkins reported / Chuck 
+  Adams patched)
 
 * Added Date plugin and test, as provided by Thierry-Michel Barral and abw.
 
@@ -134,4 +156,17 @@ TODO
 * [% CASE DEFAULT %] is now an alias for [% CASE %] (the default case),
   in consistency with [% CATCH DEFAULT %] / [% CATCH %]
 
+
+-- v2.00 beta 2 --
+
+* A COMPILE_DIR option to compliment COMPILE_EXT, specifying an alternate
+  directory in which to store compiled template documents. 
+
+* Memory leaks (there's something creating circular references and it's 
+  probably glaringly obvious but I haven't bothered to look yet) (time 
+  passes... I've bothered to look now - it looks like the Template::Provider
+  but I haven't bothered to fix it yet)  (more time passes... now I have)
+
+* check [% INCLUDE $template %] works where $template is a 
+  Template::Document
 

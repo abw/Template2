@@ -353,11 +353,12 @@ sub _dotop {
 	    return undef;				    ## RETURN
 	}
     }
-    # for the sake of "optimization" (so I'm told), the CGI module 
-    # doesn't claim to be a UNIVERSAL object after the first method call,
-    # hence the special-case
-    elsif (UNIVERSAL::isa($root, 'UNIVERSAL')
-	|| UNIVERSAL::isa($root, 'CGI')) {
+
+    # NOTE: we do the can-can because UNIVSERAL::isa($something, 'UNIVERSAL')
+    # doesn't appear to work with CGI, returning true for the first call
+    # and false for all subsequent calls. 
+
+    elsif (UNIVERSAL::can($root, 'can')) {
 
 	# if $root is a blessed reference (i.e. inherits from the 
 	# UNIVERSAL object base class) then we call the item as a method.

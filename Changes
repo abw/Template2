@@ -12,6 +12,46 @@
 # $Id$
 #========================================================================
 
+#========================================================================
+# Changes from version 2.00-beta1 to 2.00-beta2
+#========================================================================
+
+* Added COMPILE_DIR option.  This allows you to specify a separate 
+  directory in which compiled templates should be written.  The COMPILE_DIR
+  is used as a root directory and each of the INCLUDE_PATH elements is 
+  created below that point.  e.g. the following options
+
+    COMPILE_DIR  => '/tmp/ttcache', 
+    INCLUDE_PATH => '/user/foo/bar:/usr/share/templates',
+
+  would create the following cache directories:
+
+    /tmp/ttcache/user/foo/bar
+    /tmp/ttcache/usr/share/templates
+
+  Templates originating from source files in the INCLUDE_PATH are thus 
+  written in their compiled form (i.e. Perl) to the relevant COMPILE_DIR
+  directory.  The COMPILE_EXT option may also be used in conjunction with
+  COMPILE_DIR to append a filename extension to all compiled files.
+  
+* Fixed memory leaks caused by the huge circular reference that is the 
+  Template::Provider's linked list of cache slots.  Added a DESTROY method 
+  which walks the list and explicitly breaks the chains (i.e. the NEXT/PREV
+  links), thus allowing the compiled Template::Document objects to be 
+  correctly destroyed and their memory repooled.  Thanks to Perrin Harkins
+  for spotting the problem.
+
+* Added a work-around in Template::Stash _dotop() to the problem of the 
+  CGI module denying membership of the UNIVERSAL class on subsequent calls
+  to UNIVERSAL::isa($cgi, 'UNIVERSAL').  It works correctly the first time,
+  but returns false for all subsequent calls.  Changed this generic
+  "is-an-object" test to UNIVERSAL::can($cgi, 'can') on the suggestion
+  of Drew Taylor who identified the problem.
+
+* Added t/macro.t to test MACRO directive, t/compile4.t and t/compile5.t
+  to test the COMPILE_DIR option.
+
+* More complete documentation, but not yet fully complete.
 
 
 #========================================================================
@@ -608,4 +648,6 @@ out.
 
 * $Template::Directive::While::MAXITER is now 
   $Template::Directive::WHILE_MAX and may change again.
+
+
 
