@@ -1,0 +1,146 @@
+From: Jonas Liljegren <jonas@liljegren.org>
+In-Reply-To: <20010911161151.A98848@dog.ourshack.com>
+Message-ID: <87zo806s05.fsf@jonas.rit.se>
+User-Agent: Gnus/5.0808 (Gnus v5.8.8) Emacs/20.7
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: templates-admin@template-toolkit.org
+Errors-To: templates-admin@template-toolkit.org
+X-BeenThere: templates@template-toolkit.org
+X-Mailman-Version: 2.0rc1
+Precedence: bulk
+List-Help: <mailto:templates-request@template-toolkit.org?subject=help>
+List-Post: <mailto:templates@template-toolkit.org>
+List-Subscribe: <http://www.template-toolkit.org/mailman/listinfo/templates>,
+	<mailto:templates-request@template-toolkit.org?subject=subscribe>
+List-Id: Template Toolkit mailing list <templates.template-toolkit.org>
+List-Unsubscribe: <http://www.template-toolkit.org/mailman/listinfo/templates>,
+	<mailto:templates-request@template-toolkit.org?subject=unsubscribe>
+List-Archive: <http://www.template-toolkit.org/pipermail/templates/>
+Date: 12 Sep 2001 23:03:54 +0200
+Status: RO
+Content-Length: 3626
+Lines: 115
+
+I tested and tested and tested...
+
+And finaly found the source for the problem.
+
+Here is a small program that segfaults on my system:
+
+------------------------------------
+
+#!/usr/bin/perl -w
+use strict;
+use Template 2;
+use Carp;
+
+my $th = Template->new();
+
+my $params =
+{
+ 'myfunc'   => \&confess,
+};
+
+$th->process(\*DATA, $params);
+
+__DATA__
+[% myfunc() %]
+
+------------------------------------
+
+
+In contrast; this program does not segfault:
+
+------------------------------------
+
+#!/usr/bin/perl -w
+use strict;
+use Template 2;
+use Carp;
+
+use Template::Stash;
+my $stash = Template::Stash->new();
+my $th = Template->new(
+		       STASH => $stash,
+		      );
+
+my $params =
+{
+ 'myfunc'   => \&confess,
+};
+
+$th->process(\*DATA, $params);
+
+__DATA__
+[% myfunc() %]
+
+------------------------------------
+
+
+
+
+This is for Template 2.04f, perl 5.6.1 (perl 5.6.1-5 in debian)
+
+Summary of my perl5 (revision 5.0 version 6 subversion 1) configuration:
+  Platform:
+    osname=linux, osvers=2.4.5-ac9, archname=i386-linux
+    uname='linux duende 2.4.5-ac9 #1 thu jun 21 00:52:39 est 2001 i686 unknown '
+    config_args='-Dccflags=-DDEBIAN -Dcccdlflags=-fPIC -Darchname=i386-linux -Dprefix=/usr -Dprivlib=/usr/share/perl/5.6.1 -Darchlib=/usr/lib/perl/5.6.1 -Dvendorprefix=/usr -Dvendorlib=/usr/share/perl5 -Dvendorarch=/usr/lib/perl5 -Dsiteprefix=/usr/local -Dsitelib=/usr/local/share/perl/5.6.1 -Dsitearch=/usr/local/lib/perl/5.6.1 -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 -Dman1ext=1 -Dman3ext=3perl -Dpager=/usr/bin/sensible-pager -Uafs -Ud_csh -Uusesfio -Dotherlibdirs=/usr/lib/perl5/5.6:/usr/lib/perl5/5.005 -Duseshrplib -Dlibperl=libperl.so.5.6.1 -Dd_dosuid -des'
+    hint=recommended, useposix=true, d_sigaction=define
+    usethreads=undef use5005threads=undef useithreads=undef usemultiplicity=undef
+    useperlio=undef d_sfio=undef uselargefiles=define usesocks=undef
+    use64bitint=undef use64bitall=undef uselongdouble=undef
+  Compiler:
+    cc='cc', ccflags ='-DDEBIAN -fno-strict-aliasing -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64',    optimize='-O2',
+    cppflags='-DDEBIAN -fno-strict-aliasing -I/usr/local/include'
+    ccversion='', gccversion='2.95.4 20010604 (Debian prerelease)', gccosandvers=''
+    intsize=4, longsize=4, ptrsize=4, doublesize=8, byteorder=1234
+    d_longlong=define, longlongsize=8, d_longdbl=define, longdblsize=12
+    ivtype='long', ivsize=4, nvtype='double', nvsize=8, Off_t='off_t', lseeksize=8
+    alignbytes=4, usemymalloc=n, prototype=define
+  Linker and Libraries:
+    ld='cc', ldflags =' -L/usr/local/lib'
+    libpth=/usr/local/lib /lib /usr/lib
+    libs=-lgdbm -ldbm -ldb -ldl -lm -lc -lcrypt
+    perllibs=-ldl -lm -lc -lcrypt
+    libc=/lib/libc-2.2.3.so, so=so, useshrplib=true, libperl=libperl.so.5.6.1
+  Dynamic Linking:
+    dlsrc=dl_dlopen.xs, dlext=so, d_dlsymun=undef, ccdlflags='-rdynamic'
+    cccdlflags='-fPIC', lddlflags='-shared -L/usr/local/lib'
+
+
+Characteristics of this binary (from libperl): 
+  Compile-time options: USE_LARGE_FILES
+  Built under linux
+  Compiled at Jun 22 2001 18:52:37
+  @INC:
+    /usr/local/lib/perl/5.6.1
+    /usr/local/share/perl/5.6.1
+    /usr/lib/perl5
+    /usr/share/perl5
+    /usr/lib/perl/5.6.1
+    /usr/share/perl/5.6.1
+    /usr/local/lib/site_perl
+    /usr/lib/perl5/5.6/i386-linux
+    /usr/lib/perl5/5.6
+    /usr/lib/perl5/5.005/i386-linux
+    /usr/lib/perl5/5.005
+    .
+
+
+
+
+
+
+
+
+-- 
+/ Jonas  -  http://jonas.liljegren.org/myself/en/index.html
+
+_______________________________________________
+templates mailing list
+templates@template-toolkit.org
+http://www.template-toolkit.org/mailman/listinfo/templates
+
+

@@ -1,0 +1,152 @@
+From: Leon Brocard <acme@astray.com>
+To: Template Toolkit List <templates@template-toolkit.org>
+Message-ID: <20010116114805.D29563@ns0.astray.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+User-Agent: Mutt/1.2.4i
+X-Perl-Mongers: Bath.pm
+Subject: [Templates] Template::Plugin::Page
+Sender: templates-admin@template-toolkit.org
+Errors-To: templates-admin@template-toolkit.org
+X-BeenThere: templates@template-toolkit.org
+X-Mailman-Version: 2.0rc1
+Precedence: bulk
+List-Help: <mailto:templates-request@template-toolkit.org?subject=help>
+List-Post: <mailto:templates@template-toolkit.org>
+List-Subscribe: <http://www.template-toolkit.org/mailman/listinfo/templates>,
+	<mailto:templates-request@template-toolkit.org?subject=subscribe>
+List-Id: Template Toolkit mailing list <templates.template-toolkit.org>
+List-Unsubscribe: <http://www.template-toolkit.org/mailman/listinfo/templates>,
+	<mailto:templates-request@template-toolkit.org?subject=unsubscribe>
+List-Archive: <http://www.template-toolkit.org/pipermail/templates/>
+Date: Tue, 16 Jan 2001 11:48:05 +0000
+Status: RO
+Content-Length: 6545
+Lines: 124
+
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+I have a plugin which is really handy for paging through a set of
+results. It's too simple for CPAN apparently, so I offer it as a
+Template Toolkit plugin, which is where we were using it anyway. Some
+of the docs follow, and the code, with a patch to Template::Plugins
+(v2.0) and lots of tests are attached.
+
+Do you consider this general enough to go in the main distribution?
+
+=head1 NAME
+
+Template::Plugin::Page - a plugin to help when paging through sets of results
+
+=head1 SYNOPSIS
+
+  [% USE page($total_entries, $entries_per_page, $current_page) %]
+
+           First page: [% page.first_page %]
+            Last page: [% page.last_page %]
+  First entry on page: [% page.first %]
+   Last entry on page: [% page.last %]
+
+  my $page = Template::Plugin::Page->new(15, 10, 1);
+  my $last_page = $page->last_page;
+
+=head1 DESCRIPTION
+
+When searching through large amounts of data, it is often the case
+that a result set is returned that is larger than we want to display
+on one page. This results in wanting to page through various pages of
+data. The maths behind this is unfortunately fiddly, hence this
+module.
+
+The main concept is that you pass in the number of total entries, the
+number of entries per page, and the current page number. You can then
+call methods to find out how many pages of information there are, and
+what number the first and last entries on the current page really are.
+...
+
+Cheers, Leon
+--
+Leon Brocard.............................http://www.astray.com/
+yapc::Europe............................http://yapc.org/Europe/
+
+... All new improved Brocard, now with Template Toolkit!
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/x-tar-gz
+Content-Disposition: attachment; filename="template_plugin_page.tar.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--NzB8fVQJ5HfG6fxh--
+
+_______________________________________________
+templates mailing list
+templates@template-toolkit.org
+http://www.template-toolkit.org/mailman/listinfo/templates
+

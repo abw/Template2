@@ -1,0 +1,146 @@
+From jonas@jonas.rit.se  Sat May 19 15:44:34 2001
+Received: from horatio.cre.canon.co.uk (horatio.cre.canon.co.uk [194.131.191.5])
+	by cre.canon.co.uk (8.9.3/8.9.3) with ESMTP id PAA15657
+	for <abw@cre.canon.co.uk>; Sat, 19 May 2001 15:44:34 +0100 (BST)
+Received: (from uucp@localhost)
+	by horatio.cre.canon.co.uk (8.9.3/8.9.1) id PAA08014
+	for <abw@cre.canon.co.uk>; Sat, 19 May 2001 15:42:49 +0100 (BST)
+Received: from jonas.rit.se( 213.88.136.203) by horatio via smap (V2.0)
+	id xma008011; Sat, 19 May 01 15:42:37 +0100
+Received: from jonas by jonas.rit.se with local (Exim 3.22 #1 (Debian))
+	id 15181V-0005Bu-00; Sat, 19 May 2001 16:48:05 +0200
+To: Andy Wardley <abw@cre.canon.co.uk>
+Cc: templates@template-toolkit.org
+Subject: Re: [Templates] TPC5 Tutorial
+References: <20010517090155.F9769@bandanna.cre.canon.co.uk>
+From: Jonas Liljegren <jonas@liljegren.org>
+Date: 19 May 2001 16:48:05 +0200
+Message-ID: <87ae49z97e.fsf@jonas.rit.se>
+User-Agent: Gnus/5.0808 (Gnus v5.8.8) Emacs/20.7
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Sender: Jonas Liljegren <jonas@jonas.rit.se>
+Status: RO
+X-Status: A
+Content-Length: 3674
+Lines: 118
+
+Andy Wardley <abw@cre.canon.co.uk> writes:
+
+> I've been putting together some content for a TT tutorial for the
+> Perl Conference later this year.  Eventually, I plan to work this 
+> all into a new Template::Tutorial document(s).
+
+http://www.tt2.org/tpc5/tt2/intro/tdirs.html =~ s/outut/output/
+
+
+The intro/vdirs.html and intro/tdirs.html is a little confusing.  All
+those diffrent words with no explanation to why they are necessary.
+And it may not be celar what it means process a template with
+localised varables.
+
+I think one could get the impression that a lot of those directives
+could be skiped, since many of them do similar things.  Examples of
+their use would be good.
+
+
+***
+
+interface/ttreecfg.html : All these absolute paths feels wrong.  Why
+not just define the relationship between the config file and the base,
+and then define the other files in relation to the base dir?
+Ok.  That's not a comment on the tutorial.  But the first thing I
+would do would be to try relative URIs.  You should at least comment
+on that.
+
+It would be nice to do:
+
+  etc/ttree.cfg 
+
+        # ttree directory/file options
+        base = ..
+        src  = src
+        dest = html
+        lib  = lib
+        lib  = /home/abw/tt2/templates
+           .
+           .
+           .
+        define  dir = .
+        define  url = /~abw/tpc5
+        pre_process = config
+
+
+And you could go with almost no required configuration.
+I also think that it should be easier for the generated html pages to
+use relative paths.  You shouldn't have to know the base URL. (And
+that would result in no need to touch the config file at all.)  This
+is important since it makes it easier to develop the site in one place
+and deploy it in another place.
+
+***
+
+interface/process.html
+
+I understand the notes. But I think the '$' explanation came out
+confusing.  Try to explan that there is no template called 'template',
+but htere is a *magic variable* called template.  And the use of '$'
+to use variables inside strings...
+
+***
+
+interface/splash.html
+
+This is also confusing.  "PROCESS html/header" says to me that it will
+process the file html/header, but that file is in the html directory;
+the directory there the result should be placed.  (Maby explaining
+where this template is located?)
+
+The WRAPPER example also needs an explanation. By now, I guess that
+many has forgotten what WRAPPER does.  And the [% title %] should be
+indented!
+
+The END tag can easily lead the mind to "This is the end of the
+template. Stop processing now."  And what leads to that you think of
+WRAPPER as a standalone directive, followed by the [% title %] thing,
+all by itself.  And then the template ends with END...  (Repetition of
+the basics maby?)
+
+And what is the value of $title?  Is it the value it got in the
+PROCESS tag?  That doesn't sound like localized variables.  I think it
+should be explained...
+
+***
+
+content/generator.html and content/skeleton.html
+
+Some illustration of the relationship between these two is needed.
+Maby mention the two files ( src/product/index.html and
+lib/product/page ) on the first page.  Or some sort of diagram of how
+the pages are built.
+
+***
+
+content/viewfiles.html
+
+I would like to see the resulting page here.  It looks like there is a
+name and price template missing.  Or is there a default view template?
+
+I would like to see the whole process in one page.  data ->
+main_template -> products -> product -> name.
+
+***
+
+
+And thats all.  The rest is good.
+
+
+I would have send these comments the same day.  But some part of the
+network stopped me from reaching tt2.org... (A problem that lasted
+more than a day.)
+
+
+
+-- 
+/ Jonas  -  http://jonas.liljegren.org/myself/en/index.html
+

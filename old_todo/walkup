@@ -1,0 +1,27 @@
+Date: Tue, 19 Jun 2001 16:47:01 -0400
+From: darren chamberlain <dlc@users.sourceforge.net>
+To: Andy Wardley <abw@cre.canon.co.uk>
+Cc: templates@template-toolkit.org
+Subject: Re: [Templates] Apache::Template v0.03
+Message-ID: <20010619164701.D25965@boston.com>
+
+[...]
+
+  * For historical reasons, our HTML developers require that
+    files that are INCLUDEd or PROCESSed be searched for in a
+    tree-walking manner, starting with the directory of
+    $r->filename and ascending to /. This has the effect of
+    including the closest copy of files declared in TT2PreProcess
+    and TT2PostProcess, which works out very well for using a
+    single set of header and footer files for an entire site,
+    while having section specific navigation bars and features
+    that get included without having to specify paths and the
+    like.
+
+abw: I like the idea of implementing this in the provider
+someone.  Maybe specify a flag on an INCLUDE_PATH like:
+INCLUDE_PATH => '/usr/web/tt2/lib/+' or '/usr/web/tt2/lib/-'
+where the '+' is 'walkdown' (from root to leaf) and '-' is
+'walkup' (from leaf to root) based on the current template
+location.
+
