@@ -353,8 +353,28 @@ foo%20bar
 [% String.filter('replace', 'bar', 'baz') %]
 [% String.output_filter('uri') -%]
 [% String %]
+[% String.output_filter({ repeat => [3] }) -%]
+[% String %]
 -- expect --
 foo bar
 foo%20bar
 foo baz
 foo%20bar
+foo%20barfoo%20barfoo%20bar
+
+-- test --
+[% USE String;
+   a = 'HeLLo';
+   b = 'hEllO';
+   a == b ? "not ok 0\n" : "ok 0\n";
+   String.new(a) == String.new(b) ? "not ok 1\n" : "ok 1\n";
+   String.new(a).lower == String.new(b).lower ? "ok 2\n" : "not ok 2\n";
+   String.new(a).lower.equals(String.new(b).lower) ? "ok 3\n" : "not ok 3\n";
+   a.search("(?i)^$b\$") ? "ok 4\n" : "not ok 4\n";
+-%]
+-- expect --
+ok 0
+ok 1
+ok 2
+ok 3
+ok 4
