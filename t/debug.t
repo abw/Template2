@@ -24,7 +24,7 @@ use Template::Directive;
 no warnings;
 
 my $DEBUG = grep(/-d/, @ARGV);
-$Template::Parser::DEBUG = $DEBUG;
+#$Template::Parser::DEBUG = $DEBUG;
 $Template::Directive::Pretty = $DEBUG;
 $Template::Test::PRESERVE = 1;
 
@@ -66,6 +66,22 @@ __DATA__
 -- test --
 Hello World
 foo: [% foo %]
+-- expect --
+Hello World
+foo: 10
+
+-- test --
+-- use debug --
+Hello World
+foo: [% foo %]
+-- expect --
+Hello World
+foo: <!-- input text line 2 : [% foo %] -->10
+
+-- test --
+-- use default --
+Hello World
+foo: [% foo %]
 [% DEBUG on -%]
 Debugging enabled
 foo: [% foo %]
@@ -73,29 +89,35 @@ foo: [% foo %]
 Hello World
 foo: 10
 Debugging enabled
-foo: <!-- input text line 5 : [% foo %] -->10
+foo: 10
+
+-- test --
+-- use debug --
+[% DEBUG off %]
+Hello World
+foo: [% foo %]
+[% DEBUG on -%]
+Debugging enabled
+foo: [% foo %]
+-- expect --
+<!-- input text line 1 : [% DEBUG off %] -->
+Hello World
+foo: 10
+Debugging enabled
+foo: <!-- input text line 6 : [% foo %] -->10
 
 -- test --
 foo: [% foo %]
-[% DEBUG on -%]
 hello [% "$baz.ping/$baz.pong" %] world
 [% DEBUG off %]
-bar: [% bar %]
+bar: [% bar %][% DEBUG on %]
 -- expect --
-foo: 10
-hello <!-- input text line 3 : [% "$baz.ping/$baz.pong" %] -->100/200 world
-<!-- input text line 4 : [% DEBUG off %] -->
+foo: <!-- input text line 1 : [% foo %] -->10
+hello <!-- input text line 2 : [% "$baz.ping/$baz.pong" %] -->100/200 world
+<!-- input text line 3 : [% DEBUG off %] -->
 bar: 20
 
--- test --
-[% INCLUDE foo a=10 %]
-[% DEBUG on -%]
-[% INCLUDE foo a=20 %]
-[% foo %]
--- expect --
-This is the foo file, a is 10
-<!-- input text line 3 : [% INCLUDE foo a=20 %] -->This is the foo file, a is 20
-<!-- input text line 4 : [% foo %] -->10
+
 
 -- test --
 -- use debug --
@@ -106,9 +128,14 @@ foo: [% foo %]
 [% INCLUDE foo a=20 %]
 -- expect --
 foo: <!-- input text line 1 : [% foo %] -->10
-<!-- input text line 2 : [% INCLUDE foo a=10 %] -->This is the foo file, a is <!-- foo line 1 : [% a %] -->10
+<!-- input text line 2 : [% INCLUDE foo a=10 %] -->This is the foo file, a is 10
 <!-- input text line 3 : [% DEBUG off %] -->foo: 10
-This is the foo file, a is <!-- foo line 1 : [% a %] -->20
+This is the foo file, a is 20
+
+
+-- stop --
+
+
 
 -- test --
 -- use default --
@@ -118,6 +145,7 @@ This is the foo file, a is <!-- foo line 1 : [% a %] -->20
 -- expect --
 <!-- input text line 2 : [% DEBUG format '[ $file line $line ]' %] -->
 [ input text line 3 ]10
+
 
 -- test --
 -- use default --
