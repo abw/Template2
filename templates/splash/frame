@@ -13,9 +13,9 @@
         align   = style.frame.align  or default.frame.align
     ;
     SET
-	border  = border.defined ? border 
-			         : style.border.defined ? style.border
-					                : default.border
+    border  = border.defined ? border 
+                     : style.border.defined ? style.border
+                                    : default.border
         rgbfore = splash.rgb.$col
         rgbback = splash.rgb.$bgcol
         imgbase = "$splash.images/$bgcol"
@@ -25,25 +25,25 @@
 -%]
 <!-- tt2.splash.frame -->  
 [%  IF border;
-	WRAPPER html/table + html/row + html/cell
-                col    = rgbfore
-	        border = 0
-	        space  = 0
-	        pad    = 0	
-    	    ;
-    	    INCLUDE html/table
-    		    col    = rgbback
-    		    width  = width ? '100%' : ''
-    		    border = 0
-    		    space  = border
-    	    ;
-	END;
+        WRAPPER html/table + html/row + html/cell
+            col    = rgbfore
+            border = 0
+            space  = border
+            pad    = 0  
+            ;
+            INCLUDE html/table
+                col    = rgbback
+                width  = width ? '100%' : ''
+                border = 0
+                space  = 0
+            ;
+        END;
     ELSE;
-    	INCLUDE html/table
-    	        col    = rgbback
-    		border = 0
-    		space  = 0
-    	;
+        INCLUDE html/table
+                col    = rgbback
+            border = 0
+            space  = 0
+        ;
     END
 %]
 <!-- /tt2.splash.frame -->  
