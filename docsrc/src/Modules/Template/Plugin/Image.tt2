@@ -10,8 +10,8 @@
 
 =head1 DESCRIPTION
 
-This plugin provides an interface to the Image::Size module for 
-determining the size of image files.
+This plugin provides an interface to the Image::Info or Image::Size
+modules for determining the size of image files.
 
 You can specify the plugin name as either 'Image' or 'image'.  The
 plugin object created will then have the same name.  The file name of
@@ -67,6 +67,13 @@ Typical output:
 
     <img src="foo.gif" width="60" height="20" border="0" class="logo" />
 
+The 'modtime' method returns the ctime of the file in question, suitable
+for use with date.format:
+
+    [% USE image 'foo.gif' %]
+    [% USE date %]
+    [% date.format(image.modtime, "%B, %e %Y") %]
+
 =head1 CATCHING ERRORS
 
 If the image file cannot be found then the above methods will throw an
@@ -80,4 +87,97 @@ TRY...CATCH block to catch any potential errors.
        END
     %]
 
+=head1 USING Image::Info
+
+At run time, the plugin tries to load Image::Info in preference to
+Image::Size. If Image::Info is found, then some additional methods are
+available, in addition to 'size', 'width', 'height', 'attr', and 'tag'.
+These additional methods are named after the elements that Image::Info
+retrieves from the image itself; see L<Image::Info> for more details
+-- the types of methods available depend on the type of image.
+These additional methods will always include the following:
+
+=over 4
+
+=item file_media_type
+
+This is the MIME type that is appropriate for the given file format.
+The corresponding value is a string like: "image/png" or "image/jpeg".
+
+=item file_ext
+
+The is the suggested file name extention for a file of the given
+file format.  The value is a 3 letter, lowercase string like
+"png", "jpg".
+
+
+=item color_type
+
+The value is a short string describing what kind of values the pixels
+encode.  The value can be one of the following:
+
+  Gray
+  GrayA
+  RGB
+  RGBA
+  CMYK
+  YCbCr
+  CIELab
+
+These names can also be prefixed by "Indexed-" if the image is
+composed of indexes into a palette.  Of these, only "Indexed-RGB" is
+likely to occur.
+
+(It is similar to the TIFF field PhotometricInterpretation, but this
+name was found to be too long, so we used the PNG inpired term
+instead.)
+
+=item resolution
+
+The value of this field normally gives the physical size of the image
+on screen or paper. When the unit specifier is missing then this field
+denotes the squareness of pixels in the image.
+
+The syntax of this field is:
+
+   <res> <unit>
+   <xres> "/" <yres> <unit>
+   <xres> "/" <yres>
+
+The <res>, <xres> and <yres> fields are numbers.  The <unit> is a
+string like C<dpi>, C<dpm> or C<dpcm> (denoting "dots per
+inch/cm/meter).
+
+=item SamplesPerPixel
+
+This says how many channels there are in the image.  For some image
+formats this number might be higher than the number implied from the
+C<color_type>.
+
+=item BitsPerSample
+
+This says how many bits are used to encode each of samples.  The value
+is a reference to an array containing numbers. The number of elements
+in the array should be the same as C<SamplesPerPixel>.
+
+=item Comment
+
+Textual comments found in the file.  The value is a reference to an
+array if there are multiple comments found.
+
+=item Interlace
+
+If the image is interlaced, then this tell which interlace method is
+used.
+
+=item Compression
+
+This tell which compression algorithm is used.
+
+=item Gamma
+
+A number.
+
+
+=back
 
