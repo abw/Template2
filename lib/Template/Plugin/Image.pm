@@ -22,10 +22,13 @@ package Template::Plugin::Image;
 require 5.004;
 
 use strict;
+use Template::Exception;
 use Template::Plugin;
 use File::Spec;
-use base qw( Template::Plugin );
+#use Image::Info;
+#use Image::Size;
 
+use base qw( Template::Plugin );
 use vars qw( $VERSION $AUTOLOAD );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -62,7 +65,7 @@ BEGIN {
 sub new {
     my $config = ref($_[-1]) eq 'HASH' ? pop(@_) : { };
     my ($class, $context, $name) = @_;
-    my ($root, $file);
+    my ($root, $file, $type);
 
     # name can be a positional or named argument
     $name = $config->{ name } unless defined $name;
@@ -79,6 +82,10 @@ sub new {
     else {
         $file = $name;
     }
+
+    # Make a note of whether we are using Image::Size or
+    # Image::Info -- at least for the test suite
+    $type = $INC{"Image/Size.pm"} ? "Image::Size" : "Image::Info";
         
     # do we want to check to see if file exists?
 
@@ -86,6 +93,7 @@ sub new {
         name => $name,
         file => $file,
         root => $root,
+        type => $type,
     }, $class;
 }
 

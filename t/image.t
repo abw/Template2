@@ -22,9 +22,9 @@ use Cwd;
 use File::Spec;
 $^W = 1;
 
-eval "use Image::Size";
+eval "use Image::Info" || eval "use Image::Size";
 if ($@) {
-    skip_all('Image::Size not installed');
+    skip_all('Neither Image::Info nor Image::Size installed');
 }
 
 my $dir  = -d 't' ? 'images' : File::Spec->catfile(File::Spec->updir(), 'images');
