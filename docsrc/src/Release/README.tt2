@@ -53,9 +53,18 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
-Version 2.08 adds compile time constant folding which can result in a
+Version 2.10 provides a few trivial new features and applies fixes to
+some small bugs.  For example, you can now use IN instead of = in a
+loop, e.g. FOREACH item IN list.  The WRAPPER configuration option is
+new, and Template::Context and Template::Stash now both implement
+define_vmethod() methods which make it easier to define new virtual
+methods.
+
+Version 2.09 contained mostly bug fixes and minor enhancements.
+
+Version 2.08 added compile time constant folding which can result in a
 significant performance boost when processing templates.  It also 
-offers several other minor enhancements and bug fixes.
+offered several other minor enhancements and bug fixes.
 
 Version 2.07 was a major maintenance release, fixing numerous minor bugs
 and smoothing out various rough edges.  Version 2.06 was a very minor
