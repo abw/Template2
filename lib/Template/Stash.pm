@@ -520,7 +520,7 @@ sub _dotop {
 	    # object then we assume it's a real error that needs
 	    # real throwing
 
-	    die $@ if ref $@;
+	    die $@ if ref($@) || ($@ !~ /Can't locate object method/);
 
 	    # failed to call object method, so try some fallbacks
 	    if (UNIVERSAL::isa($root, 'HASH')
@@ -810,8 +810,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.20, distributed as part of the
-Template Toolkit version 2.03a, released on 18 June 2001.
+2.21, distributed as part of the
+Template Toolkit version 2.03b, released on 25 June 2001.
 
 =head1 COPYRIGHT
 

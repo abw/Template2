@@ -44,4 +44,16 @@ OK
 -- expect --
 OK
 
+-- test --
+[% FILTER html -%]
+< &amp; >
+[%- END %]
+-- expect --
+&lt; &amp;amp; &gt;
 
+-- test --
+[% FILTER html(entity = 1) -%]
+< &amp; >
+[%- END %]
+-- expect --
+&lt; &amp; &gt;

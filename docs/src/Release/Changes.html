@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.03a, detailing
+#   Revision history for the Template Toolkit version 2.03b, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -19,6 +19,71 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.03b - 25th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##
+#------------------------------------------------------------------------
+
+* Applied a patch from Craig Barratt to both the regular
+  Template::Stash and the alternate Template::Stash::Context which
+  allows array indexes into hashes and arrays (slices) in the same
+  manner as Perl.  For example:
+
+    [% tt_start_tag %] keys = [ 'foo', 'bar' ]
+       vals = hash.$keys	# [ hash.foo, hash.bar ]
+
+       keys = [ 2, 3, 7 ]
+       vals = list.$keys        # [ list.2, list.3, list.7 ]
+    [% tt_end_tag %]
+
+* Applied another patch from Craig to Parser.pm which fixes a bug
+  relating to text strings being interpolated in a numerical context.
+  See: http://www.tt2.org/pipermail/templates/2001-April/000901.html
+
+* Applied yet another patch from Craig (&quot;Man of the Patch&quot; for v2.04 :-),
+  to fix a problem with NEXT not working inside switch:
+
+    FOREACH and WHILE now get a LOOP: label, and NEXT and LAST now
+    generate &quot;next LOOP;&quot; and &quot;last LOOP;&quot;.  However, the original
+    code allows naked &quot;NEXT&quot; or &quot;LAST&quot; (which behave like STOP).  I
+    didn't want to change this behavior, so NEXT and LAST only get the
+    LOOP label inside loops (except in the top-level atomexpr FOREACH
+    and atomexpr WHILE cases, which should be ok).
+
+* Applied a patch from Mark Fowler, which fixes the problem with 
+  search/replace virtual methods incorrectly returning with a search
+  pattern of '0'.  e.g. [% tt_start_tag %] bob = '0'; bob.replace('0', 'zero') [% tt_end_tag %] 
+  now returns 'zero' instead of ''.
+
+* Applied a patch from Doug Steinwand to prevent the Stash from 
+  raising undef error reporting 'Can't locate object methof &quot;bar&quot; via 
+  package &quot;Foo&quot;' unless $DEBUG is enabled.
+
+* Applied a patch to the DBI plugin from Rafael Kitover which calls
+  the DBI connect_cached() method instead of connect() to allow 
+  connection caching in a persistant server environment (e.g. Apache
+  mod_perl).
+
+* Changed html filter to be a dynamic filter factory, allowing the 
+  'entity' option to be set to prevent entities of the form 
+  '&amp;word;' being converted to '&amp;amp;word;'
+
+    [% tt_start_tag %] FILTER html(entity = 1) [% tt_end_tag %]
+       &lt; &amp;amp; &gt;		    # &amp;lt; &amp;amp; &amp;gt;
+    [% tt_start_tag %] END [% tt_end_tag %]
+
+* Changed Template::Stash to propogate any object errors that 
+  are references (e.g. Template::Exception objects or otherwise)
+  or string that don't look like &quot;Can't locate object method ...&quot;.
+
+* Fixed various typos in docsrc/xml/ttdocsrc with a deft:
+  s/Plugin::GD::Graphs/Plugin::GD::Graph/g;
+
+* Applied a patch from Leon Brocard to remove a suspect test from
+  t/filter.t which Chris Nandor reported as causing problems.
+
+* Added Craig's comments on replace backreferences and TT grammar to
+  TODO list.
 
 #------------------------------------------------------------------------
 # Version 2.03a - 18th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##

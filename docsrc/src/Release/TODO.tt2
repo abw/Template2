@@ -83,6 +83,40 @@
   (e.g. $1) but it would be nice to find a rock-solid way to implement
   it without relying on unusual ^A delimiter character.
 
+* Further to the above, Craig Barratt has this solution which will be 
+  going into the next verion (2.05) unless anyone has any further 
+  suggestions to make before then.
+
+    It would be great if replace handled backreferences.  I don't like
+    the ^A solution since the string could contain ^A, plus it is a
+    security hole.  The attempt I posted only works for up to 9
+    backreferences and doesn't handle an escaped '\$' and uses nested
+    evals:
+
+        $str =~ s{$search}{
+		my $r = $replace;
+		my @d = (0, $1, $2, $3, $4, $5, $6, $7, $8, $9);
+		$r =~ s/\$(\d+)/$d[$1]/eg;
+		$r;
+	      }eg;
+
+    I wish there was a perl predefined variable array containing all
+    the backreferences (is there one?).  You can avoid the hard-coded
+    limit of 9 with extra evals, and a bit of work on the re could
+    handle the escaped '\$' case, so maybe that would be good enough.
+
+* Craig also notes, in fixing the problem with NEXT not working 
+  inside SWITCH (see Changes v2.04):
+
+    By the way, I came across another arcane bug:
+
+	NEXT FOREACH k = [1];
+
+    is legal syntax but is an infinite loop, since $_[0]->{ INFOR } in
+    Parser.yp is not set when the NEXT is parsed, so it generates a
+    plain "next;" rather than calling $factor->next().  I don't see an
+    easy, clean fix.
+
 
 #------------------------------------------------------------------------
 # Documentation
@@ -164,7 +198,8 @@
 #------------------------------------------------------------------------
 
 * Lists don't accept arbitrary expressions as elements.  In other words
-  you can't do this:   [% foo(bar + 1) %]
+  you can't do this:   [% foo(bar + 1) %].  This has been fixed in the v3
+  parser.  See http://www.tt2.org/v3/
 
 * Stas reported a problem with spacing, something like : [% a =b+10 %] but
   I can't seem to reproduce it (or remember exactly what the problem 
@@ -251,6 +286,95 @@
   aren't that many issues to consider (syntax perhaps being the only
   major one) but I haven't really considered them yet so watch this
   space for details.
+
+* Craig Barratt reports the following:
+
+  I looked at Parse.yp to see how hard it would be to push FILTER
+  evaluation down into the expr rule, so that you could put filters
+  inside expressions (eg: using repeat() just like &quot;x&quot; in
+  perl).  More about that later.
+
+  In browsing through Parser.yp I noticed several issues:
+
+  - The operator precedence is very different to perl, C etc.
+    For example, these expressions evaluate differently in
+    TT2 versus perl, C etc:
+
+      + "1 || 0 && 0" evaluates to 0 in TT2 and 1 in perl or C.  
+        TT2 parses it as (1||0) && 0; in perl and C && is higher
+        precedence than ||.
+
+      + "1 + !0 + 1" evaluates to 1 in TT2 and 3 in perl or C.
+        TT2 parses it as 1 + !(0 + 1); in perl and C ! is higher
+        precedence than +.
+
+      + Many other expressions parse incorrectly, but the effect
+        is benign since most rules return flat text that perl
+        correctly re-parses.  Eg, 2 * 3 + 4 is incorrectly parsed
+        as (2 * (3 + 4)), but happily just the string "2 * 3 + 4"
+        is compiled by perl, which correctly evaluates it as
+        (2 * 3) + 4.
+
+  - There is no unary minus and the NUMBER token is signed. So you can
+    write "x = -2;" but not "x = -y;". Moreover, "x = 1 -1;" is a syntax
+    error (since "1 -1" returns just two tokens NUMBER, NUMBER). (As a
+    workaround you can rewrite these as "x = 0-y;" and "x = 1 - 1".)
+
+  - You cannot have expressions in lists ([..]) and function arguments.
+
+  I have modified the Parser.pm (to make NUMBER unsigned) and modified
+  Grammar.pm.skel and Parser.yp to fix most of these issues (improved
+  operator precedence, unary minus and plus), and also to allow
+  expressions in a few more places (eg: range).  But the last item
+  has me stuck.
+
+  The parse rules for lists and function arguments make COMMA optional,
+  so you can equivalently write [1 2 3 4] or [1,,,,,2 3 4] or [1,2,3,4].
+  This makes it very difficult to make each term an expression, because
+  the resulting grammar has many ambiguities.  For example, is [1 -1]
+  two elements [1, -1] or a single element [0]?  One partial solution is
+  to move the bracketed expression rule '(' expr ')' to the term rule,
+  allowing expressions to be included via parens.  But there are also
+  ambiguities, eg: does [foo (1+1)] have 2 elements or is it a function
+  call to foo?
+
+  Without allowing expressions in lists or function arguments, the unary
+  minus change I've made means that the NUMBER token is unsigned, so with
+  my changes you cannot write [-1, 2, 3].  Not a good thing.
+
+  One solution is to change the grammar so that COMMAs are required in
+  lists and arguments, but that would break several test cases and
+  probably break lots of old templates.  But this might be the only
+  way to produce a grammar that is a lot more similar to perl.
+
+  Another solution is to ignore these issues altogether and use temporary
+  variables to precompute expressions that you need in lists or function
+  arguments, or use explicit lvalue assignments, eg:
+
+    foo(x + 2);             becomes    temp = x + 2;
+                                       foo(temp);
+
+  or
+
+    List = [x+1,x+2,x+4];   becomes    List   = [];
+                                       List.0 = x+1;
+                                       List.1 = x+2;
+                                       List.2 = x+4;
+
+  Both of these look ugly to me.
+
+  Back to the FILTER issues. Ultimately I'd like to be able to embed filters
+  as low precedence operators in expressions, and write:
+
+    List = [
+        "foo" | repeat(10),
+        "bar" | repeat(10)
+    ];
+
+  but I doubt there is a non-ambiguous upward compatible grammar that
+  supports this.
+
+  Comments?
 
 
 #------------------------------------------------------------------------

@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( lib ../lib );
+use lib qw( ./lib ../lib );
 use Template;
 use Template::Test;
 use Cwd qw( abs_path );
@@ -42,7 +42,7 @@ __END__
 -- test --
 [% TRY;
      USE xpath = XML.XPath('no_such_file');
-     xpath.findvalue('/foo/bar');
+     xpath.find('/foo/bar');
    CATCH;
      "ok";
    END

@@ -94,7 +94,9 @@ sub connect {
 	$dsn = shift 
 	     || $params->{ data_source } 
 	     || $params->{ connect } 
-             || $params->{ dsn };
+             || $params->{ dsn }
+	     || $ENV{DBI_DSN}
+	     || return $self->_throw('data source not defined');
 	$user = shift
 	     || $params->{ username } 
 	     || $params->{ user };
@@ -103,7 +105,7 @@ sub connect {
 	     || $params->{ pass };
 
 	# reuse existing database handle if connection params match
-	my $connect = join(':', $dsn, $user, $pass);
+	my $connect = join(':', $dsn || '', $user || '', $pass || '');
 	return ''
 	    if $self->{ _DBH } && $self->{ _DBH_CONNECT } eq $connect;
 	
@@ -480,6 +482,9 @@ Template::Plugin::DBI - Interface to the DBI module
     [% USE DBI %]
     [% DBI.connect(dsn, user, pass) %]
 
+    # Or don't connect at all, and when necessary DBI will connect
+    # automatically using the environment variable DBI_DSN. See below.
+
     [% FOREACH item = DBI.query( 'SELECT rows FROM table' ) %]
        Here's some row data: [% item.field %]
     [% END %]
@@ -533,6 +538,16 @@ Any additional DBI attributes can be specified as named parameters.
 The 'PrintError' attribute defaults to 0 unless explicitly set true.
 
     [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
+
+The DBI connect_cached() method is used instead of the connect()
+method.  This allows for connection caching in a server environment,
+such as when the Template Toolkit is used from an Apache mod_perl
+handler.   In such a case, simply enable the mod_env module and put in a
+line such as:
+
+SetEnv DBI_DSN "dbi:DBDriver:DBName;host=DBHost;user=User;password=Password"
+
+Then use the DBI plugin without any parameters and without calling connect.
 
 Methods can then be called on the plugin object using the familiar dotted
 notation:
@@ -645,7 +660,7 @@ E<lt>abw@kfs.orgE<gt>.
 =head1 VERSION
 
 1.04, distributed as part of the
-Template Toolkit version 2.03a, released on 18 June 2001.
+Template Toolkit version 2.03b, released on 25 June 2001.
 
 
 

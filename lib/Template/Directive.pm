@@ -417,7 +417,7 @@ do {
     $loop_save;
     \$stash->set('loop', \$list);
     eval {
-	while (! \$error) {
+LOOP:	while (! \$error) {
 	    $loop_set;
 $block;
 	    (\$value, \$error) = \$list->get_next();
@@ -440,7 +440,7 @@ EOF
 sub next {
     return <<EOF;
 (\$value, \$error) = \$list->get_next();
-next;
+next LOOP;
 EOF
 }
 
@@ -518,6 +518,7 @@ sub while {
 # WHILE
 do {
     my \$failsafe = $WHILE_MAX;
+LOOP:
     while (--\$failsafe && ($expr)) {
 $block
     }
@@ -699,7 +700,7 @@ sub clear {
 #------------------------------------------------------------------------
 
 sub break {
-    return 'last;';
+    return 'last LOOP;';
 }
 
 #------------------------------------------------------------------------

@@ -18,7 +18,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.03b -   th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##
+# Version 2.03b - 25th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##
 #------------------------------------------------------------------------
 
 * Applied a patch from Craig Barratt to both the regular
@@ -37,6 +37,16 @@
   relating to text strings being interpolated in a numerical context.
   See: http://www.tt2.org/pipermail/templates/2001-April/000901.html
 
+* Applied yet another patch from Craig ("Man of the Patch" for v2.04 :-),
+  to fix a problem with NEXT not working inside switch:
+
+    FOREACH and WHILE now get a LOOP: label, and NEXT and LAST now
+    generate "next LOOP;" and "last LOOP;".  However, the original
+    code allows naked "NEXT" or "LAST" (which behave like STOP).  I
+    didn't want to change this behavior, so NEXT and LAST only get the
+    LOOP label inside loops (except in the top-level atomexpr FOREACH
+    and atomexpr WHILE cases, which should be ok).
+
 * Applied a patch from Mark Fowler, which fixes the problem with 
   search/replace virtual methods incorrectly returning with a search
   pattern of '0'.  e.g. [% bob = '0'; bob.replace('0', 'zero') %] 
@@ -48,13 +58,29 @@
 
 * Applied a patch to the DBI plugin from Rafael Kitover which calls
   the DBI connect_cached() method instead of connect() to allow 
-  connection caching in a persistant server environemnt.
+  connection caching in a persistant server environment (e.g. Apache
+  mod_perl).
+
+* Changed html filter to be a dynamic filter factory, allowing the 
+  'entity' option to be set to prevent entities of the form 
+  '&word;' being converted to '&amp;word;'
+
+    [% FILTER html(entity = 1) %]
+       < &amp; >		    # &lt; &amp; &gt;
+    [% END %]
+
+* Changed Template::Stash to propogate any object errors that 
+  are references (e.g. Template::Exception objects or otherwise)
+  or string that don't look like "Can't locate object method ...".
 
 * Fixed various typos in docsrc/xml/ttdocsrc with a deft:
   s/Plugin::GD::Graphs/Plugin::GD::Graph/g;
 
 * Applied a patch from Leon Brocard to remove a suspect test from
   t/filter.t which Chris Nandor reported as causing problems.
+
+* Added Craig's comments on replace backreferences and TT grammar to
+  TODO list.
 
 #------------------------------------------------------------------------
 # Version 2.03a - 18th June 2001    ## DEVELOPER PRE-RELEASE FOR v2.04 ##

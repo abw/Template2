@@ -36,6 +36,8 @@
 <pre>    # ...or call connect() explicitly
     [% tt_start_tag %] USE DBI [% tt_end_tag %]
     [% tt_start_tag %] DBI.connect(dsn, user, pass) [% tt_end_tag %]</pre>
+<pre>    # Or don't connect at all, and when necessary DBI will connect
+    # automatically using the environment variable DBI_DSN. See below.</pre>
 <pre>    [% tt_start_tag %] FOREACH item = DBI.query( 'SELECT rows FROM table' ) [% tt_end_tag %]
        Here's some row data: [% tt_start_tag %] item.field [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
@@ -89,6 +91,19 @@ Any additional DBI attributes can be specified as named parameters.
 The 'PrintError' attribute defaults to 0 unless explicitly set true.
 </p>
 <pre>    [% tt_start_tag %] USE DBI(dsn, user, pass, ChopBlanks=1) [% tt_end_tag %]</pre>
+<p>
+The DBI connect_cached() method is used instead of the connect()
+method.  This allows for connection caching in a server environment,
+such as when the Template Toolkit is used from an Apache mod_perl
+handler.   In such a case, simply enable the mod_env module and put in a
+line such as:
+</p>
+<p>
+SetEnv DBI_DSN &quot;dbi:DBDriver:DBName;host=DBHost;user=User;password=Password&quot;
+</p>
+<p>
+Then use the DBI plugin without any parameters and without calling connect.
+</p>
 <p>
 Methods can then be called on the plugin object using the familiar dotted
 notation:
@@ -216,7 +231,7 @@ The DBI plugin was written by Simon A Matthews,
     title="VERSION"
 -%]<p>
 1.04, distributed as part of the
-Template Toolkit version 2.03a, released on 18 June 2001.
+Template Toolkit version 2.03b, released on 25 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section

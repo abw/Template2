@@ -119,10 +119,14 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 	|   RETURN		    { $factory->return()                  }
 	|   STOP		    { $factory->stop()                    }
 	|   CLEAR                   { "\$output = '';";                   }
-	|   LAST                    { 'last;'                             }
+	|   LAST                    { $_[0]->{ INFOR } || $_[0]->{ INWHILE }
+                                        ? 'last LOOP;'
+                                        : 'last;'                         }
 	|   NEXT		    { $_[0]->{ INFOR }
 					? $factory->next()
-				        : 'next;'                         }
+				        : ($_[0]->{ INWHILE }
+                                           ? 'next LOOP;'
+                                           : 'next;')                     }
         |   wrapper
 	|   filter
 ;
@@ -160,8 +164,9 @@ loop:	    FOR loopvar ';'         { $_[0]->{ INFOR }++                  }
 #loop:	    FOR loopvar ';'
 #		block END	    { $factory->foreach(@{$_[2]}, $_[4])  }
 	|   atomexpr FOR loopvar    { $factory->foreach(@{$_[3]}, $_[1])  }
-	|   WHILE expr ';' 
-	      block END		    { $factory->while(@_[2, 4])           }
+	|   WHILE expr ';'          { $_[0]->{ INWHILE }++                }
+	      block END		    { $_[0]->{ INWHILE }--;
+                                      $factory->while(@_[2, 5])           }
 	|   atomexpr WHILE expr	    { $factory->while(@_[3, 1])           }
 ;
 

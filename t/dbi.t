@@ -220,7 +220,7 @@ __END__
    END 
 %]
 -- expect --
-DBI error - no connection
+DBI error - data source not defined
 
 
 #------------------------------------------------------------------------
@@ -237,7 +237,7 @@ DBI error - no connection
    END 
 %]
 -- expect --
-DBI error - no connection
+DBI error - data source not defined
 
 -- test --
 [% USE DBI(dsn, user, pass, attr) -%]
