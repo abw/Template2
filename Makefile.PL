@@ -996,7 +996,8 @@ sub dbi_config {
 	my @drivers = DBI->available_drivers();
 	local $" = ', ';
 
-	my $default = (grep(/m.?sql/i, @drivers))[0];
+	my $default = (grep(/m.?sql/i, @drivers))[0] 
+	    || $drivers[0] || '';
 	
 	message(<<EOF);
 
