@@ -4,11 +4,6 @@
 #
 # Test script for the DBI plugin.
 #
-# The DBI plugin and test scripts were written by Simon Matthews 
-# <sam@knowledgepool.com> with some minor modifications by Andy 
-# Wardley <abw@kfs.org> for inclusion in the Template Toolkit from
-# version 2.00 onwards.
-#
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 #
@@ -518,5 +513,27 @@ rest: Hans von Lengerke
 rest: Martin Portman
 rest: Simon Matthews
 
+#------------------------------------------------------------------------
+# test tie() method to interface to Tie::DBI
+#------------------------------------------------------------------------
 
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+[% people = dbi.tie('usr', 'id') -%]
+[% people.abw.name %]
+-- expect --
+Andy Wardley
+
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+[% people = dbi.tie('usr', 'id') -%]
+[% FOREACH id = people.keys.sort -%]
+[% id %]: [% people.${id}.name +%]
+[% END %]
+-- expect --
+abw: Andy Wardley
+craig: Craig Barratt
+hans: Hans von Lengerke
+mrp: Martin Portman
+sam: Simon Matthews
 
