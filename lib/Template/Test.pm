@@ -30,7 +30,7 @@ require 5.004;
 
 use strict;
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
-	     $VERSION $DEBUG $EXTRA $PRESERVE 
+	     $VERSION $DEBUG $EXTRA $PRESERVE $REASON
 	     $loaded %callsign);
 use Template qw( :template );
 use Exporter;
@@ -38,11 +38,12 @@ use Exporter;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG   = 0;
 @ISA     = qw( Exporter );
-@EXPORT  = qw( ntests ok is match flush test_expect callsign banner );
+@EXPORT  = qw( ntests ok is match flush skip_all test_expect callsign banner );
 @EXPORT_OK = ( 'assert' );
 %EXPORT_TAGS = ( all => [ @EXPORT_OK, @EXPORT ] );
 $| = 1;
 
+$REASON   = 'not applicable on this platform';
 $EXTRA    = 0;   # any extra tests to come after test_expect()
 $PRESERVE = 0	 # don't mangle newlines in output/expect
     unless defined $PRESERVE;
@@ -74,7 +75,7 @@ sub ntests {
     # the grand total of tests
     $ntests += $EXTRA + scalar @results;	 
     $ok_count = 1;
-    print "1..$ntests\n";
+    print $ntests ? "1..$ntests\n" : "1..$ntests # skipped: $REASON\n";
     # flush cached results
     foreach my $pre_test (@results) {
 	ok(@$pre_test);
@@ -159,6 +160,20 @@ sub match {
 sub flush {
     ntests(0)
 	unless ($ok_count);
+}
+
+
+#------------------------------------------------------------------------
+# skip_all($reason)
+#
+# Skip all tests, setting $REASON to contain any message passed.  Calls
+# exit(0) which triggers flush() which generates a "1..0 # $REASON"
+# string to keep to test harness happy.
+#------------------------------------------------------------------------
+
+sub skip_all {
+    $REASON = join('', @_);
+    exit(0);
 }
 
 
@@ -665,8 +680,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.55, distributed as part of the
-Template Toolkit version 2.08, released on 30 July 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.08a, released on 08 August 2002.
 
 =head1 COPYRIGHT
 
