@@ -1,0 +1,127 @@
+[%#
+  # IMPORTANT NOTE
+  #   This documentation is generated automatically from source
+  #   templates.  Any changes you make here may be lost.
+  # 
+  #   The 'docsrc' documentation source bundle is available for download
+  #   from http://www.template-toolkit.org/docs.html and contains all
+  #   the source templates, XML files, scripts, etc., from which the
+  #   documentation for the Template Toolkit is built.
+-%]
+[% META book = 'Modules'
+        page = 'Stash_Context'
+%]
+[%  WRAPPER toc;
+	INCLUDE tocitem title="SYNOPSIS";
+	INCLUDE tocitem title="DESCRIPTION";
+	INCLUDE tocitem title="AUTHOR";
+	INCLUDE tocitem title="VERSION";
+	INCLUDE tocitem title="COPYRIGHT";
+	INCLUDE tocitem title="SEE ALSO";
+    END
+%]
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% WRAPPER section
+    title="SYNOPSIS"
+-%]<pre>    use Template;
+    use Template::Stash::Context;</pre>
+<pre>    my $stash = Template::Stash::Context-&gt;new(\%vars);
+    my $tt2   = Template-&gt;new({ STASH =&gt; $stash });</pre>
+[%- END %]
+[% WRAPPER section
+    title="DESCRIPTION"
+-%]<p>
+This is an alternate stash object which includes a patch from 
+Craig Barratt to implement various new virtual methods to allow
+dotted template variable to denote if object methods and subroutines
+should be called in scalar or list context.  It adds a little overhead
+to each stash call and I'm a little wary of applying that to the core
+default stash without investigating the effects first. So for now,
+it's implemented as a separate stash module which will allow us to 
+test it out, benchmark it and switch it in or out as we require.
+</p>
+<p>
+This is what Craig has to say about it:
+</p>
+<p>
+Here's a better set of features for the core.  Attached is a new version
+of Stash.pm (based on TT2.02) that:
+</p>
+<p>
+* supports the special op &quot;scalar&quot; that forces scalar context on
+function calls, eg:
+</p>
+<pre>    cgi.param(&quot;foo&quot;).scalar</pre>
+<p>
+calls cgi.param(&quot;foo&quot;) in scalar context (unlike my wimpy
+scalar op from last night).  Array context is the default.
+</p>
+<p>
+With non-function operands, scalar behaves like the perl
+version (eg: no-op for scalar, size for arrays, etc).
+</p>
+<p>
+* supports the special op &quot;ref&quot; that behaves like the perl ref.
+If applied to a function the function is not called.  Eg:
+</p>
+<pre>    cgi.param(&quot;foo&quot;).ref</pre>
+<p>
+does *not* call cgi.param and evaluates to &quot;CODE&quot;.  Similarly,
+HASH.ref, ARRAY.ref return what you expect.
+</p>
+<p>
+* adds a new scalar and list op called &quot;array&quot; that is a no-op for
+arrays and promotes scalars to one-element arrays.
+</p>
+<p>
+* allows scalar ops to be applied to arrays and hashes in place,
+eg: ARRAY.repeat(3) repeats each element in place.
+</p>
+<p>
+* allows list ops to be applied to scalars by promoting the scalars
+to one-element arrays (like an implicit &quot;array&quot;).  So you can
+do things like SCALAR.size, SCALAR.join and get a useful result.
+</p>
+<p>
+This also means you can now use x.0 to safely get the first element
+whether x is an array or scalar.
+</p>
+<p>
+The new Stash.pm passes the TT2.02 test suite.  But I haven't tested the
+new features very much.  One nagging implementation problem is that the
+&quot;scalar&quot; and &quot;ref&quot; ops have higher precedence than user variable names.
+</p>
+[%- END %]
+[% WRAPPER section
+    title="AUTHOR"
+-%]<p>
+Andy Wardley &lt;abw@kfs.org&gt;
+</p>
+<p>
+[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+</p>
+[%- END %]
+[% WRAPPER section
+    title="VERSION"
+-%]<p>
+1.18, distributed as part of the
+Template Toolkit version 2.05b, released on 21 September 2001.
+</p>
+[%- END %]
+[% WRAPPER section
+    title="COPYRIGHT"
+-%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
+<p>
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+</p>
+[%- END %]
+[% WRAPPER section
+    title="SEE ALSO"
+-%]<p>
+[% ttlink('Template::Stash', 'Template::Stash') -%]
+</p>
+[%- END %]
+
+
