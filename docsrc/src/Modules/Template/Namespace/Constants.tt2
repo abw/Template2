@@ -1,0 +1,51 @@
+[% TAGS [* *] -%]
+
+=head1 SYNOPSIS
+
+    # easy way to define constants
+    use Template;
+
+    my $tt = Template->new({
+	CONSTANTS => {
+	    pi => 3.14,
+	    e  => 2.718,
+	},
+    });
+
+    # nitty-gritty, hands-dirty way
+    use Template::Namespace::Constants;
+
+    my $tt = Template->new({
+	NAMESPACE => {
+	    constants => Template::Namespace::Constants->new({
+		pi => 3.14,
+	        e  => 2.718,
+            },
+	},
+    });
+
+=head1 DESCRIPTION
+
+The Template::Namespace::Constants module implements a namespace handler
+which is plugged into the Template::Directive compiler module.  This then
+performs compile time constant folding of variables in a particular namespace.
+
+=head1 PUBLIC METHODS
+
+=head2 new(\%constants)
+
+The new() constructor method creates and returns a reference to a new
+Template::Namespace::Constants object.  This creates an internal stash
+to store the constant variable definitions passed as arguments.
+
+    my $handler = Template::Namespace::Constants->new({
+	pi => 3.14,
+	e  => 2.718,
+    });
+
+=head2 ident(\@ident)
+
+Method called to resolve a variable identifier into a compiled form.  In this
+case, the method fetches the corresponding constant value from its internal
+stash and returns it.
+
