@@ -23,8 +23,8 @@ use Template;
 use Template::Test;
 $^W = 1;
 
-$Template::Test::DEBUG = 0;
-$Template::Context::DEBUG = 0;
+#$Template::Test::DEBUG = 0;
+#$Template::Context::DEBUG = 0;
 
 # sample data
 my ($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, 
@@ -33,7 +33,7 @@ my ($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l, $m,
 	    juliet kilo lima mike november oscar papa quebec romeo 
 	    sierra tango umbrella victor whisky x-ray yankee zulu );
 
-my $params = { 
+my $replace = { 
     'a' => $a,
     'b' => $b,
     'c' => {
@@ -49,23 +49,27 @@ my $params = {
     't'    => $t,
 };
 
+# script may be being run in distribution root or 't' directory
+my $dir   = -d 't' ? 't/test' : 'test';
 my $tproc = Template->new({ 
-    INTERPOLATE => 1,
-    CACHE_DIR   => '/tmp/tt',
-    INCLUDE_PATH => [ qw( t/test/src test/src ) ],
-    RESET_BLOCKS => 0,
+    INTERPOLATE  => 1,
+    INCLUDE_PATH => "$dir/src:$dir/lib",
+    TRIM         => 1,
+    AUTO_RESET   => 0,
 });
-test_expect(\*DATA, $tproc, $params);
+
+my $tt_reset = Template->new({ 
+    INTERPOLATE  => 1,
+    INCLUDE_PATH => "$dir/src:$dir/lib",
+    TRIM         => 1,
+});
+
+test_expect(\*DATA, [ default => $tproc, reset => $tt_reset ], $replace);
 
 __DATA__
+-- test --
 [% a %]
-[% BLOCK first_block -%]
-this is my first block, a is set to '[% a %]'
-[%- END -%]
-[% BLOCK second_block; DEFAULT b = 99 m = 98 -%]
-this is my second block, a is initially set to '[% a %]' and 
-then set to [% a = s %]'[% a %]'  b is $b  m is $m
-[%- END -%]
+[% PROCESS incblock -%]
 [% b %]
 -- expect --
 alpha
@@ -105,11 +109,11 @@ then set to 'sierra'  b is golf  m is 97
 alpha
 
 -- test --
-FOO: [% INCLUDE foo -%]
+FOO: [% INCLUDE foo +%]
 FOO: [% INCLUDE foo a = b -%]
 -- expect --
-FOO: This is foo  a is alpha
-FOO: This is foo  a is bravo
+FOO: This is the foo file, a is alpha
+FOO: This is the foo file, a is bravo
 
 -- test --
 GOLF: [% INCLUDE $c.f.g %]
@@ -156,3 +160,28 @@ End
 Block defined...
 This is bamboozle
 End
+
+
+# test that BLOCK definitions get AUTO_RESET (i.e. cleared) by default
+-- test --
+-- use reset --
+[% a %]
+[% PROCESS incblock -%]
+[% INCLUDE first_block %]
+[% INCLUDE second_block %]
+[% b %]
+-- expect --
+alpha
+this is my first block, a is set to 'alpha'
+this is my second block, a is initially set to 'alpha' and 
+then set to 'sierra'  b is bravo  m is 98
+bravo
+
+-- test --
+[% TRY %]
+[% INCLUDE first_block %]
+[% CATCH file %]
+ERROR: [% error.info %]
+[% END %]
+-- expect --
+ERROR: first_block: not found

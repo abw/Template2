@@ -2,7 +2,17 @@
 #
 # t/evalperl.t
 #
-# Test templates compiled to perl code.
+# Test the evaluation of PERL and RAWPERL blocks.
+#
+# Written by Andy Wardley <abw@kfs.org>
+#
+# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#
+# This is free software; you can redistribute it and/or modify it
+# under the same terms as Perl itself.
+#
+# $Id$
 #
 #========================================================================
 
@@ -11,8 +21,8 @@ use lib qw( ./lib ../lib );
 use Template::Test;
 $^W = 1;
 
-$Template::Parser::DEBUG = 1;
-$Template::Context::DEBUG = 1;
+#$Template::Parser::DEBUG = 0;
+#$Template::Context::DEBUG = 0;
 
 my $tt_no_perl = Template->new({ 
     INTERPOLATE => 1, 

@@ -22,8 +22,8 @@ use Template qw( :status );
 use Template::Test;
 $^W = 1;
 
-$Template::Test::DEBUG = 0;
-$Template::Parser::DEBUG = 0;
+#$Template::Test::DEBUG = 0;
+#$Template::Parser::DEBUG = 0;
 
 my ($a, $b, $c, $d, $l, $o, $r, $u, $w ) = 
 	qw( alpha bravo charlie delta lima oscar romeo uncle whisky );

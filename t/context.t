@@ -20,30 +20,45 @@ use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
 
-#ntests(3);
+$Template::Test::DEBUG = 0;
 
+ntests(55);
+
+# script may be being run in distribution root or 't' directory
+my $dir   = -d 't' ? 't/test' : 'test';
 my $tt = Template->new({
-    INCLUDE_PATH => [ qw( t/test/lib test/lib ) ],	
+    INCLUDE_PATH => "$dir/src:$dir/lib",	
     TRIM         => 1,
     POST_CHOMP   => 1,
 });
 
 my $ttperl = Template->new({
-    INCLUDE_PATH => [ qw( t/test/lib test/lib ) ],	
+    INCLUDE_PATH => "$dir/src:$dir/lib",
     TRIM         => 1,
     EVAL_PERL    => 1,
     POST_CHOMP   => 1,
 });
 
+#------------------------------------------------------------------------
+# misc
+#------------------------------------------------------------------------
+
 # test we created a context object and check internal values
 my $context = $tt->service->context();
 ok( $context );
+ok( $context eq $tt->context() );
 ok( $context->trim() );
 ok( ! $context->eval_perl() );
 
 ok( $context = $ttperl->service->context() );
 ok( $context->trim() );
 ok( $context->eval_perl() );
+
+#------------------------------------------------------------------------
+# template()
+#------------------------------------------------------------------------
+
+banner('testing template()');
 
 # test we can fetch a template via template()
 my $template = $context->template('header');
@@ -53,7 +68,7 @@ ok( UNIVERSAL::isa($template, 'Template::Document') );
 # test that non-existance of a template is reported
 $template = $context->template('no_such_template');
 ok( ! $template );
-ok( $context->error() eq 'no_such_template: template not found' );
+ok( $context->error() eq 'no_such_template: not found' );
 
 # check that template() returns CODE and Template::Document refs intact
 my $code = sub { return "this is a hard-coded template" };
@@ -100,20 +115,80 @@ $context->reset();
 ok( ! $context->template('some_block_1') );
 ok( ! $context->template('some_block_2') );
 
-#test_expect(\*DATA, $tt, &callsign);
+#------------------------------------------------------------------------
+# plugin()
+#------------------------------------------------------------------------
 
-__DATA__
+banner('testing plugin()');
+
+my $plugin = $context->plugin('Table', [ [1,2,3,4], { rows => 2 } ]);
+ok( $plugin );
+ok( ref $plugin eq 'Template::Plugin::Table' );
+
+my $row = $plugin->row(0);
+ok( $row && ref $row eq 'ARRAY' );
+ok( $row->[0] == 1 );
+ok( $row->[1] == 3 );
+
+$plugin = $context->plugin('no_such_plugin');
+ok( ! $plugin );
+ok( $context->error() eq 'no_such_plugin: plugin not found' );
+
+#------------------------------------------------------------------------
+# filter()
+#------------------------------------------------------------------------
+
+banner('testing filter()');
+
+my $filter = $context->filter('html');
+ok( $filter );
+ok( ref $filter eq 'CODE' );
+ok( &$filter('<input/>') eq '&lt;input/&gt;' );
+
+$filter = $context->filter('replace', [ 'foo', 'bar' ]);
+ok( $filter );
+ok( ref $filter eq 'CODE' );
+ok( &$filter('this is foo, so it is') eq 'this is bar, so it is' );
+
+# check filter got cached
+$filter = $context->filter('replace');
+ok( $filter );
+ok( ref $filter eq 'CODE' );
+ok( &$filter('this is foo, so it is') eq 'this is bar, so it is' );
 
 
+#------------------------------------------------------------------------
+# include() and process()
+#------------------------------------------------------------------------
 
-__END__
-Methods:
-   template()  - ok
-   plugin()
-   filter()
-   process()
-   include()
-   throw()
-   catch()
-   localise()/delocalise()
-   visit()/leave()/reset - ok
+banner('testing include()');
+
+$context = $tt->context();
+ok( $context );
+
+my $stash = $context->stash();
+ok( $stash );
+
+$stash->set('a', 'alpha');
+ok( $stash->get('a') eq 'alpha' );
+
+my $text = $context->include('baz');
+ok( $text eq 'This is the baz file, a: alpha' );
+
+$text = $context->include('baz', { a => 'bravo' });
+ok( $text eq 'This is the baz file, a: bravo' );
+
+# check stash hasn't been altered
+ok( $stash->get('a') eq 'alpha' );
+
+$text = $context->process('baz');
+ok( $text eq 'This is the baz file, a: alpha' );
+
+# check stash *has* been altered
+ok( $stash->get('a') eq 'charlie' );
+
+$text = $context->process('baz', { a => 'bravo' });
+ok( $text eq 'This is the baz file, a: bravo' );
+ok( $stash->get('a') eq 'charlie' );
+
+

@@ -66,11 +66,6 @@ ok( &{ $doc->block }   eq 'some output' );
 ok( &{ $doc->blocks->{ foo } } eq 'the foo block' );
 ok( &{ $doc->blocks->{ bar } } eq 'the bar block' );
 
-
-#------------------------------------------------------------------------
-# test metadata access via 'template' variable
-#------------------------------------------------------------------------
-
 test_expect(\*DATA);
 
 __END__

@@ -252,9 +252,7 @@ The cat...
 [% global.blocktext FILTER truncate %]
 
 -- expect --
-The cat sat on the mat
-
-Mary ...
+The cat...
 
 -- test --
 [% "foo..." FILTER repeat(5) %]

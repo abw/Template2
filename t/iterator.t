@@ -23,8 +23,8 @@ use Template::Test;
 use Template::Iterator;
 $^W = 1;
 
-$Template::Parser::DEBUG = 0;
-$Template::Test::DEBUG = 0;
+#$Template::Parser::DEBUG = 0;
+#$Template::Test::DEBUG = 0;
 
 my $data = [ qw( foo bar baz qux wiz woz waz ) ];
 my $vars = {

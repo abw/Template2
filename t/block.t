@@ -29,6 +29,10 @@ $Template::Test::DEBUG = 0;
 my $ttcfg = {
     INCLUDE_PATH => [ qw( t/test/lib test/lib ) ],	
     POST_CHOMP   => 1,
+    BLOCKS       => {
+	block_a  => sub { return 'this is block a' },
+	block_b  => sub { return 'this is block b' },
+    },
 };
 
 test_expect(\*DATA, $ttcfg, &callsign);
@@ -67,5 +71,10 @@ start of blockdef
 end of blockdef
 This is block 1, defined in blockdef, a is alpha
 
-
+-- test --
+[% INCLUDE block_a +%]
+[% INCLUDE block_b %]
+-- expect --
+this is block a
+this is block b
 

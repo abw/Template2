@@ -20,10 +20,9 @@ use strict;
 use lib qw( ../lib );
 use Template;
 use Template::Test;
-use Template::Parser;
 $^W = 1;
 
-$Template::Parser::DEBUG = 1;
+#$Template::Parser::DEBUG = 0;
 
 eval "use CGI";
 if ($@) {
@@ -31,13 +30,11 @@ if ($@) {
     exit(0);
 }
 
-
 test_expect(\*DATA);
 
 __END__
 -- test --
 [% USE cgi = CGI('id=abw&name=Andy+Wardley') -%]
-name: [% cgi.param('name') %]
 name: [% cgi.param('name') %]
 
 [% FOREACH x = cgi.checkbox_group(
@@ -49,6 +46,8 @@ name: [% cgi.param('name') %]
 name: [% cgi.param('name') %]
 
 -- expect --
+name: Andy Wardley
+
 <INPUT TYPE="checkbox" NAME="words" VALUE="eenie" CHECKED>eenie
 <INPUT TYPE="checkbox" NAME="words" VALUE="meenie" CHECKED>meenie
 <INPUT TYPE="checkbox" NAME="words" VALUE="minie">minie

@@ -1,6 +1,6 @@
 #============================================================= -*-perl-*-
 #
-# t/compile.t
+# t/compile1.t
 #
 # Test the facility for the Template::Provider to maintain a persistance
 # cache of compiled templates by writing generated Perl code to files.
@@ -20,22 +20,29 @@
 use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
-
 $^W = 1;
-$Template::Test::DEBUG = 0;
-$Template::Config::DEBUG = 0;
-$Template::Provider::DEBUG = 0;
-my $DEBUG = 0;
+
+# declare extra tests to follow test_expect();
+$Template::Test::EXTRA = 2;
 
 # script may be being run in distribution root or 't' directory
-my $dir     = -d 't' ? 't/test/src' : 'test/src';
+my $dir   = -d 't' ? 't/test/src' : 'test/src';
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => $dir,
     COMPILE_EXT => '.ttc',
 };
 
+# delete any existing files
+foreach my $f ( "$dir/foo.ttc", "$dir/complex.ttc" ) {
+    ok( unlink($f) ) if -f $f;
+}
+
 test_expect(\*DATA, $ttcfg);
+
+# $EXTRA tests
+ok( -f "$dir/foo.ttc" );
+ok( -f "$dir/complex.ttc" );
 
 
 __DATA__
@@ -46,7 +53,7 @@ __DATA__
 Error: [% error.type %] - [% error.info %]
 [% END %]
 -- expect --
-This is the foo file
+This is the foo file, a is 
 
 -- test --
 [% META author => 'abw' version => 3.14 %]

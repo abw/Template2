@@ -1,3 +1,26 @@
+base.t          Test the Template::Base.pm module.
+binop.t         Test binary operators
+block.t         Test BLOCK definition
+capture.t       Capture directive output and assign to a variable
+cgi.t           Test the CGI script
+compile1.t      Compile templates to Perl code and save to file
+compile2.t      Reload above compiled templates without re-parsing
+compile3.t      Test that touching source template causes re-compilation 
+config.t        Test the Template::Config factory module
+context.t       Test the Template::Context module
+datafile.t      Test the Datafile plugin (Template::Plugin::Datafile)
+document.t      Test the Template::Document module
+evalperl.t      Test the evaluation of PERL and RAWPERL blocks
+except.t        Test the Template::Exception module
+filter.t        Test the FILTER directive and various filters
+foreach.t       Test the FOREACH directive
+format.t        Test the Format plugin (Template::Plugin::Format)
+include.t       Test the INCLUDE directive
+iterator.t
+TODO:
+
+plugins.t to test PLUGIN_BASE, etc.
+
 NOTE: this is an older list.  Bit of a mess, don't trust anything here.
 
 merged literal.t into vars.t

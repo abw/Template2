@@ -22,9 +22,9 @@ use vars qw( $DEBUG );
 use Template::Test;
 use Template::Config;
 
-ntests(37);
+ntests(38);
 $DEBUG = 0;
-$Template::Config::DEBUG = 1;
+$Template::Config::DEBUG = 0;
 
 my $factory = 'Template::Config';
 
@@ -72,6 +72,11 @@ $provider = $factory->provider({
 
 ok( $provider );
 ok( join('...', @{ $provider->{ INCLUDE_PATH } }) eq 'cat...mat' );
+
+# force provider to instantiate a parser and check it uses the correct
+# parameters.
+my $text = 'The cat sat on the mat';
+ok( $provider->fetch(\$text) );
 ok( $provider->{ PARSER }->{ CASE        } == 1);
 ok( $provider->{ PARSER }->{ INTERPOLATE } == 1);
 
