@@ -18,7 +18,8 @@
                     "Template Style and Parsing Options",
 		    "Template Files and Blocks",
 		    "Template Variables",
-		    "Runtime Processing Options",
+		    "Template Processing Options",
+		    "Template Runtime Options",
 		    "Caching and Compiling Options",
 		    "Plugins and Filters",
 		    "Compatibility, Customisation and Extension"
@@ -624,66 +625,57 @@ for an example of what a namespace handler looks like on the inside.
 </ul>
 [%- END %]
 [% WRAPPER subsection
-   title = "Runtime Processing Options"
--%]<ul>
-<li><b>EVAL_PERL</b><br>
-<p>
-This flag is used to indicate if PERL and/or RAWPERL blocks should be
-evaluated.  By default, it is disabled and any PERL or RAWPERL blocks
-encountered will raise exceptions of type 'perl' with the message
-'EVAL_PERL not set'.  Note however that any RAWPERL blocks should
-always contain valid Perl code, regardless of the EVAL_PERL flag.  The
-parser will fail to compile templates that contain invalid Perl code
-in RAWPERL blocks and will throw a 'file' exception.
+   title = "Template Processing Options"
+-%]<p>
+The following options are used to specify any additional templates
+that should be processed before, after, around or instead of the
+template passed as the first argument to the Template process()
+method.  These options can be perform various useful tasks such as
+adding standard headers or footers to all pages, wrapping page output
+in other templates, pre-defining variables or performing
+initialisation or cleanup tasks, automatically generating page summary
+information, navigation elements, and so on.
 </p>
 <p>
-When using compiled templates (see 
-[% ttlink('Template::Manual::Config/Caching_and_Compiling_Options', 'COMPILE_EXT') -%] and 
-[% ttlink('Template::Manual::Config/Caching_and_Compiling_Options', 'COMPILE_DIR') -%]),
-the EVAL_PERL has an affect when the template is compiled, and again
-when the templates is subsequently processed, possibly in a different
-context to the one that compiled it.
+The task of processing the template is delegated internally to the
+Template::Service module which, unsurprisingly, also has a process()
+method.  Any templates defined by the PRE_PROCESS option are processed
+first and any output generated is added to the output buffer.  Then
+the main template is processed, or if one or more PROCESS templates
+are defined then they are instead processed in turn.  In this case,
+one of the PROCESS templates is responsible for processing the main
+template, by a directive such as:
+</p>
+<pre>    [% tt_start_tag %] PROCESS $template [% tt_end_tag %]</pre>
+<p>
+The output of processing the main template or the PROCESS template(s)
+is then wrapped in any WRAPPER templates, if defined.  WRAPPER
+templates don't need to worry about explicitly processing the template
+because it will have been done for them already.  Instead WRAPPER
+templates access the content they are wrapping via the 'content'
+variable.
+</p>
+<pre>    wrapper before
+    [% tt_start_tag %] content [% tt_end_tag %]
+    wrapper after</pre>
+<p>
+This output generated from processing the main template, and/or any
+PROCESS or WRAPPER templates is added to the output buffer.  Finally,
+any POST_PROCESS templates are processed and their output is also
+added to the output buffer which is then returned.
 </p>
 <p>
-If the EVAL_PERL is set when a template is compiled, then all PERL and
-RAWPERL blocks will be included in the compiled template.  If the 
-EVAL_PERL option isn't set, then Perl code will be generated which 
-<b>always</b> throws a 'perl' exception with the message 'EVAL_PERL not
-set' <b>whenever</b> the compiled template code is run.
+If the main template throws an exception during processing then any
+relevant template(s) defined via the ERROR option will be processed
+instead.  If defined and successfully processed, the output from the
+error template will be added to the output buffer in place of the
+template that generated the error and processing will continue,
+applying any WRAPPER and POST_PROCESS templates.  If no relevant ERROR
+option is defined, or if the error occurs in one of the PRE_PROCESS,
+WRAPPER or POST_PROCESS templates, then the process will terminate
+immediately and the error will be returned.
 </p>
-<p>
-Thus, you must have EVAL_PERL set if you want your compiled templates
-to include PERL and RAWPERL blocks.
-</p>
-<p>
-At some point in the future, using a different invocation of the
-Template Toolkit, you may come to process such a pre-compiled
-template.  Assuming the EVAL_PERL option was set at the time the
-template was compiled, then the output of any RAWPERL blocks will be
-included in the compiled template and will get executed when the
-template is processed.  This will happen regardless of the runtime
-EVAL_PERL status.
-</p>
-<p>
-Regular PERL blocks are a little more cautious, however.  If the 
-EVAL_PERL flag isn't set for the <i>current</i> context, that is, the 
-one which is trying to process it, then it will throw the familiar 'perl'
-exception with the message, 'EVAL_PERL not set'.
-</p>
-<p>
-Thus you can compile templates to include PERL blocks, but optionally
-disable them when you process them later.  Note however that it is 
-possible for a PERL block to contain a Perl &quot;BEGIN { # some code }&quot;
-block which will always get run regardless of the runtime EVAL_PERL
-status.  Thus, if you set EVAL_PERL when compiling templates, it is
-assumed that you trust the templates to Do The Right Thing.  Otherwise
-you must accept the fact that there's no bulletproof way to prevent 
-any included code from trampling around in the living room of the 
-runtime environment, making a real nuisance of itself if it really
-wants to.  If you don't like the idea of such uninvited guests causing
-a bother, then you can accept the default and keep EVAL_PERL disabled.
-</p>
-
+<ul>
 <li><b>PRE_PROCESS, POST_PROCESS</b><br>
 <p>
 These values may be set to contain the name(s) of template files
@@ -820,6 +812,122 @@ output:
     &lt;/body&gt;
     &lt;/html&gt;</pre>
 
+<li><b>WRAPPER</b><br>
+<p>
+The WRAPPER option can be used to specify one or more templates which
+should be used to wrap around the output of the main page template.
+The main template is processed first (or any PROCESS template(s)) and
+the output generated is then passed as the 'content' variable to the
+WRAPPER template(s) as they are processed.
+</p>
+<pre>    my $template = Template-&gt;new({
+	WRAPPER =&gt; 'wrapper',
+    };</pre>
+<pre>    # process 'foo' then wrap in 'wrapper'
+    $template-&gt;process('foo', { message =&gt; 'Hello World!' });</pre>
+<p>
+wrapper:
+</p>
+<pre>    &lt;wrapper&gt;
+    [% tt_start_tag %] content [% tt_end_tag %]
+    &lt;/wrapper&gt;</pre>
+<p>
+foo:
+</p>
+<pre>    This is the foo file!
+    Message: [% tt_start_tag %] message [% tt_end_tag %]</pre>
+<p>
+The output generated from this example is:
+</p>
+<pre>    &lt;wrapper&gt;
+    This is the foo file!
+    Message: Hello World!
+    &lt;/wrapper&gt;</pre>
+<p>
+You can specify more than one WRAPPER template by setting the value to
+be a reference to a list of templates.  The WRAPPER templates will be
+processed in reverse order with the output of each being passed to the
+next (or previous, depending on how you look at it) as the 'content'
+variable.  It sounds complicated, but the end result is that it just
+&quot;Does The Right Thing&quot; to make wrapper templates nest in the order you
+specify.
+</p>
+<pre>    my $template = Template-&gt;new({
+	WRAPPER =&gt; [ 'outer', 'inner' ],
+    };</pre>
+<pre>    # process 'foo' then wrap in 'inner', then in 'outer'
+    $template-&gt;process('foo', { message =&gt; 'Hello World!' });</pre>
+<p>
+outer:
+</p>
+<pre>    &lt;outer&gt;
+    [% tt_start_tag %] content [% tt_end_tag %]
+    &lt;/outer&gt;</pre>
+<p>
+inner:
+</p>
+<pre>    &lt;inner&gt;
+    [% tt_start_tag %] content [% tt_end_tag %]
+    &lt;/inner&gt;</pre>
+<p>
+The output generated is then:
+</p>
+<pre>    &lt;outer&gt;
+    &lt;inner&gt;
+    This is the foo file!
+    Message: Hello World!
+    &lt;/inner&gt;
+    &lt;/outer&gt;</pre>
+<p>
+One side-effect of the &quot;inside-out&quot; processing of the WRAPPER
+configuration item (and also the WRAPPER directive) is that any
+variables set in the template being wrapped will be visible to the
+template doing the wrapping, but not the other way around.
+</p>
+<p>
+You can use this to good effect in allowing page templates to set
+pre-defined values which are then used in the wrapper templates.  For
+example, our main page template 'foo' might look like this:
+</p>
+<p>
+foo:
+</p>
+<pre>    [% tt_start_tag %] page = {
+           title    = 'Foo Page'
+           subtitle = 'Everything There is to Know About Foo'
+           author   = 'Frank Oliver Octagon'
+       }
+    [% tt_end_tag %]</pre>
+<pre>    &lt;p&gt;
+    Welcome to the page that tells you everything about foo
+    blah blah blah...
+    &lt;/p&gt;</pre>
+<p>
+The 'foo' template is processed before the wrapper template meaning
+that the 'page' data structure will be defined for use in the wrapper
+template.
+</p>
+<p>
+wrapper:
+</p>
+<pre>    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;[% tt_start_tag %] page.title [% tt_end_tag %]&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;h1&gt;[% tt_start_tag %] page.title [% tt_end_tag %]&lt;/h1&gt;
+        &lt;h2&gt;[% tt_start_tag %] page.subtitle [% tt_end_tag %]&lt;/h1&gt;
+        &lt;h3&gt;by [% tt_start_tag %] page.author [% tt_end_tag %]&lt;/h3&gt;</pre>
+<pre>        [% tt_start_tag %] content [% tt_end_tag %]
+      &lt;/body&gt;
+    &lt;/html&gt;</pre>
+<p>
+It achieves the same effect as defining META items which are then 
+accessed via the 'template' variable (which you are still free to 
+use within WRAPPER templates), but gives you more flexibility in 
+the type and complexity of data that you can define.
+</p>
+
 <li><b>ERROR</b><br>
 <p>
 The ERROR (or ERRORS if you prefer) configuration item can be used to
@@ -899,6 +1007,69 @@ automagically caught and converted to an  exception of 'undef'
 type which can then be handled in the usual way.
 </p>
 <pre>    die &quot;I'm sorry Dave, I can't do that&quot;;</pre>
+
+</ul>
+[%- END %]
+[% WRAPPER subsection
+   title = "Template Runtime Options"
+-%]<ul>
+<li><b>EVAL_PERL</b><br>
+<p>
+This flag is used to indicate if PERL and/or RAWPERL blocks should be
+evaluated.  By default, it is disabled and any PERL or RAWPERL blocks
+encountered will raise exceptions of type 'perl' with the message
+'EVAL_PERL not set'.  Note however that any RAWPERL blocks should
+always contain valid Perl code, regardless of the EVAL_PERL flag.  The
+parser will fail to compile templates that contain invalid Perl code
+in RAWPERL blocks and will throw a 'file' exception.
+</p>
+<p>
+When using compiled templates (see 
+[% ttlink('Template::Manual::Config/Caching_and_Compiling_Options', 'COMPILE_EXT') -%] and 
+[% ttlink('Template::Manual::Config/Caching_and_Compiling_Options', 'COMPILE_DIR') -%]),
+the EVAL_PERL has an affect when the template is compiled, and again
+when the templates is subsequently processed, possibly in a different
+context to the one that compiled it.
+</p>
+<p>
+If the EVAL_PERL is set when a template is compiled, then all PERL and
+RAWPERL blocks will be included in the compiled template.  If the 
+EVAL_PERL option isn't set, then Perl code will be generated which 
+<b>always</b> throws a 'perl' exception with the message 'EVAL_PERL not
+set' <b>whenever</b> the compiled template code is run.
+</p>
+<p>
+Thus, you must have EVAL_PERL set if you want your compiled templates
+to include PERL and RAWPERL blocks.
+</p>
+<p>
+At some point in the future, using a different invocation of the
+Template Toolkit, you may come to process such a pre-compiled
+template.  Assuming the EVAL_PERL option was set at the time the
+template was compiled, then the output of any RAWPERL blocks will be
+included in the compiled template and will get executed when the
+template is processed.  This will happen regardless of the runtime
+EVAL_PERL status.
+</p>
+<p>
+Regular PERL blocks are a little more cautious, however.  If the 
+EVAL_PERL flag isn't set for the <i>current</i> context, that is, the 
+one which is trying to process it, then it will throw the familiar 'perl'
+exception with the message, 'EVAL_PERL not set'.
+</p>
+<p>
+Thus you can compile templates to include PERL blocks, but optionally
+disable them when you process them later.  Note however that it is 
+possible for a PERL block to contain a Perl &quot;BEGIN { # some code }&quot;
+block which will always get run regardless of the runtime EVAL_PERL
+status.  Thus, if you set EVAL_PERL when compiling templates, it is
+assumed that you trust the templates to Do The Right Thing.  Otherwise
+you must accept the fact that there's no bulletproof way to prevent 
+any included code from trampling around in the living room of the 
+runtime environment, making a real nuisance of itself if it really
+wants to.  If you don't like the idea of such uninvited guests causing
+a bother, then you can accept the default and keep EVAL_PERL disabled.
+</p>
 
 <li><b>OUTPUT</b><br>
 <p>
@@ -1769,7 +1940,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.09, released on 23 April 2003.
+Template Toolkit version 2.09a, released on 23 April 2003.
 </p>
 [%- END %]
 [% WRAPPER section

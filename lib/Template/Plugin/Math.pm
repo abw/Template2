@@ -125,53 +125,29 @@ the Perl core:
 
 =over 4
 
-=item o
+=item abs
 
-abs
+=item atan2
 
-=item o
+=item cos
 
-atan2
+=item exp
 
-=item o
+=item hex
 
-cos
+=item int
 
-=item o
+=item log
 
-exp
+=item oct
 
-=item o
+=item rand
 
-hex
+=item sin
 
-=item o
+=item sqrt
 
-int
-
-=item o
-
-log
-
-=item o
-
-oct
-
-=item o
-
-rand
-
-=item o
-
-sin
-
-=item o
-
-sqrt
-
-=item o
-
-srand
+=item srand
 
 =back
 
@@ -180,153 +156,79 @@ functions are also available:
 
 =over 4
 
-=item o
+=item pi
 
-pi
+=item tan
 
-=item o
+=item csc
 
-tan
+=item cosec
 
-=item o
+=item sec
 
-csc
+=item cot
 
-=item o
+=item cotan
 
-cosec
+=item asin
 
-=item o
+=item acos
 
-sec
+=item atan
 
-=item o
+=item acsc
 
-cot
+=item acosec
 
-=item o
+=item asec
 
-cotan
+=item acot
 
-=item o
+=item acotan
 
-asin
+=item sinh
 
-=item o
+=item cosh
 
-acos
+=item tanh
 
-=item o
+=item csch
 
-atan
+=item cosech
 
-=item o
+=item sech
 
-acsc
+=item coth
 
-=item o
+=item cotanh
 
-acosec
+=item asinh
 
-=item o
+=item acosh
 
-asec
+=item atanh
 
-=item o
+=item acsch
 
-acot
+=item acosech
 
-=item o
+=item asech
 
-acotan
+=item acoth
 
-=item o
+=item acotanh
 
-sinh
+=item rad2deg
 
-=item o
+=item rad2grad
 
-cosh
+=item deg2rad
 
-=item o
+=item deg2grad
 
-tanh
+=item grad2rad
 
-=item o
-
-csch
-
-=item o
-
-cosech
-
-=item o
-
-sech
-
-=item o
-
-coth
-
-=item o
-
-cotanh
-
-=item o
-
-asinh
-
-=item o
-
-acosh
-
-=item o
-
-atanh
-
-=item o
-
-acsch
-
-=item o
-
-acosech
-
-=item o
-
-asech
-
-=item o
-
-acoth
-
-=item o
-
-acotanh
-
-=item o
-
-rad2deg
-
-=item o
-
-rad2grad
-
-=item o
-
-deg2rad
-
-=item o
-
-deg2grad
-
-=item o
-
-grad2rad
-
-=item o
-
-grad2deg
+=item grad2deg
 
 =back
 
@@ -346,8 +248,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-1.02, distributed as part of the
-Template Toolkit version 2.09, released on 23 April 2003.
+1.03, distributed as part of the
+Template Toolkit version 2.09a, released on 23 April 2003.
 
 =head1 COPYRIGHT
 
