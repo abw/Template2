@@ -132,7 +132,7 @@ output:
 =head2 html
 
 Converts the characters 'E<lt>', 'E<gt>' and '&' to '&lt;', '&gt;' and
-'&amp', respectively, protecting them from being interpreted as
+'&amp;', respectively, protecting them from being interpreted as
 representing HTML tags or entities.
 
     [% FILTER html %]
@@ -142,6 +142,23 @@ representing HTML tags or entities.
 output:
 
     Binary "&lt;=&gt;" returns -1, 0, or 1 depending on...
+
+=head2 html_entity
+
+The html filter is fast and simple but it doesn't encode the full
+range of HTML entities that your text may contain.  The html_entity
+filter uses either the Apache::Util module (which is written in C and
+is therefore faster) or the HTML::Entities module (written in Perl but
+equally as comprehensive) to perform the encoding.  If one or other of
+these modules are installed on your system then the text will be
+encoded (via the escape_html() or encode_entities() subroutines
+respectively) to convert all extended characters into their
+appropriate HTML entities (e.g. converting 'é' to '&eacute;').  If
+neither module is available on your system then an 'html_all' exception
+will be thrown reporting an appropriate message.   
+
+For further information on HTML entity encoding, see
+http://www.w3.org/TR/REC-html40/sgml/entities.html.
 
 =head2 html_para
 
@@ -450,7 +467,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.06d, released on 21 January 2002.
+Template Toolkit version 2.06e, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

@@ -714,6 +714,13 @@ in such a FOREACH loop will be lost at the end of the loop, when the
 previous context and variable values are restored.
 </p>
 <p>
+However, under normal operation, the loop variable remains in scope
+after the FOREACH loop has ended (caveat: overwriting any variable
+previously in scope). This is useful as the loop variable is secretly
+an iterator object (see below) and can be used to analyse the last
+entry processed by the loop.
+</p>
+<p>
 The FOREACH directive can also be used to iterate through the entries
 in a hash array.  Each entry in the hash is returned in sorted order
 (based on the key) as a hash array containing 'key' and 'value' items.
@@ -1974,7 +1981,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06d, released on 21 January 2002.
+Template Toolkit version 2.06e, released on 12 March 2002.
 </p>
 [%- END %]
 [% WRAPPER section

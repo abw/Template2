@@ -58,14 +58,17 @@
        [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <pre>       # handler block for a &lt;section title=&quot;...&quot;&gt;...&lt;/section&gt; element
        [% tt_start_tag %] BLOCK section [% tt_end_tag %]
-       &lt;h1&gt;[% tt_start_tag %] item.getAttribute('title') [% tt_end_tag %]&lt;/h1&gt;
+       &lt;h1&gt;[% tt_start_tag %] item.getAttribute('title') | html [% tt_end_tag %]&lt;/h1&gt;
        [% tt_start_tag %] item.content(view) [% tt_end_tag %]
        [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<pre>       # default template block converts item to string representation
-       [% tt_start_tag %] BLOCK xmlstring; item.toString; END [% tt_end_tag %]
+<pre>       # default template block passes tags through and renders
+       # out the children recursivly
+       [% tt_start_tag %] BLOCK xmlstring; 
+          item.starttag; item.content(view); item.endtag
+       END [% tt_end_tag %]
        
        # block to generate simple text
-       [% tt_start_tag %] BLOCK text; item; END [% tt_end_tag %]
+       [% tt_start_tag %] BLOCK text; item | html; END [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <pre>    # now present node (and children) via view
     [% tt_start_tag %] repview.print(page) [% tt_end_tag %]</pre>
@@ -93,6 +96,16 @@ integration with Template Toolkit VIEWs.  The XML::XPath::Node::Text
 module is also adorned with a present($view) method which presents
 itself via the view using the 'text' template.
 </p>
+<p>
+To aid the reconstruction of XML, methods starttag and endtag are
+added to XML::XPath::Node::Element which return the start and
+end tag for that element.  This means that you can easily do:
+</p>
+<pre>  [% tt_start_tag %] item.starttag [% tt_end_tag %][% tt_start_tag %] item.content(view) [% tt_end_tag %][% tt_start_tag %] item.endtag [% tt_end_tag %]</pre>
+<p>
+To render out the start tag, followed by the content rendered in the
+view &quot;view&quot;, followed by the end tag.
+</p>
 [%- END %]
 [% WRAPPER section
     title='AUTHORS'
@@ -106,8 +119,8 @@ The XML::XPath module is by Matt Sergeant &lt;matt@sergeant.org&gt;.
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-2.39, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.41, distributed as part of the
+Template Toolkit version 2.06e, released on 12 March 2002.
 </p>
 [%- END %]
 [% WRAPPER section

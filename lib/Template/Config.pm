@@ -45,13 +45,13 @@ $SERVICE  = 'Template::Service';
 $STASH    = 'Template::Stash';
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+$INSTDIR  = '/usr/local/tt2';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
-$LATEX_PATH    = '';
-$PDFLATEX_PATH = '';
-$DVIPS_PATH    = '';
+$LATEX_PATH    = '/usr/bin/latex';
+$PDFLATEX_PATH = '/usr/bin/pdflatex';
+$DVIPS_PATH    = '/usr/bin/dvips';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -392,8 +392,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.40, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.41, distributed as part of the
+Template Toolkit version 2.06e, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

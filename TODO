@@ -3,11 +3,9 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.06d, containing
+#   TODO list for the Template Toolkit version 2.06e, containing
 #   known bugs, limitations, planned enhancements, long term visions 
 #   and a few whacky ideas.
-# 
-#   This list seems to keep growing...
 #
 # AUTHOR
 #   Andy Wardley   <abw@kfs.org>
@@ -19,14 +17,6 @@
 #------------------------------------------------------------------------
 # Miscellaneous
 #------------------------------------------------------------------------
-
-* Need to find a proper solution to the problem of HTML entity encoding
-  over-escaping things that are already entities, like &amp; being
-  turned into &amp;amp;  I had hacked this into the html filter as the
-  undocumented entity=1 option, but now that I've reverted the original
-  html filter back to being a fast and simple static filter and provided
-  html_entity to do the complete implementation via Apache::Utils or
-  HTML::Entities, it doesn't really fit anywhere.
 
 * mylist.sort.uniq
 

@@ -26,6 +26,7 @@
 		    'trim',
 		    'collapse',
 		    'html',
+		    'html_entity',
 		    'html_para',
 		    'html_break',
 		    'uri',
@@ -153,7 +154,7 @@ output:
    title = 'html'
 -%]<p>
 Converts the characters '&lt;', '&gt;' and '&amp;' to '&amp;lt;', '&amp;gt;' and
-'&amp;amp', respectively, protecting them from being interpreted as
+'&amp;amp;', respectively, protecting them from being interpreted as
 representing HTML tags or entities.
 </p>
 <pre>    [% tt_start_tag %] FILTER html [% tt_end_tag %]
@@ -163,6 +164,26 @@ representing HTML tags or entities.
 output:
 </p>
 <pre>    Binary &quot;&amp;lt;=&amp;gt;&quot; returns -1, 0, or 1 depending on...</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = 'html_entity'
+-%]<p>
+The html filter is fast and simple but it doesn't encode the full
+range of HTML entities that your text may contain.  The html_entity
+filter uses either the Apache::Util module (which is written in C and
+is therefore faster) or the HTML::Entities module (written in Perl but
+equally as comprehensive) to perform the encoding.  If one or other of
+these modules are installed on your system then the text will be
+encoded (via the escape_html() or encode_entities() subroutines
+respectively) to convert all extended characters into their
+appropriate HTML entities (e.g. converting 'é' to '&amp;eacute;').  If
+neither module is available on your system then an 'html_all' exception
+will be thrown reporting an appropriate message.   
+</p>
+<p>
+For further information on HTML entity encoding, see
+http://www.w3.org/TR/REC-html40/sgml/entities.html.
+</p>
 [%- END %]
 [% WRAPPER subsection
    title = 'html_para'
@@ -492,7 +513,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title='VERSION'
 -%]<p>
-Template Toolkit version 2.06d, released on 21 January 2002.
+Template Toolkit version 2.06e, released on 12 March 2002.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -135,3 +135,37 @@ FOO {
 }
 
 }
+
+-- test --
+[% xmltext = BLOCK -%]
+<foo>
+<bar baz="10" fud="11">
+  <list>
+  <item>one</item>
+  <item>two</item>
+  </list>
+</bar>
+</foo>
+[% END -%]
+[% VIEW xview notfound='xmlstring' -%]
+[% BLOCK item -%]
+* [% item.content(view) -%]
+[% END -%]
+[% BLOCK xmlstring; item.starttag; item.content(view); item.endtag; END %]
+[% BLOCK text; item; END %]
+[% END -%]
+
+[%- USE xpath = XML.XPath(xmltext);
+    foo = xpath.findnodes('/foo');
+    xview.print(foo);
+-%]
+
+-- expect --
+<foo>
+<bar baz="10" fud="11">
+  <list>
+  * one
+  * two
+  </list>
+</bar>
+</foo>

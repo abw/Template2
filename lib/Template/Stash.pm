@@ -108,7 +108,9 @@ $HASH_OPS = {
                            : [ map { { key => $_ , value => $hash->{ $_ } } }
                                keys %$hash ];
                 },
-    'import' => sub { my ($hash, $imp) = @_;
+    'exists'  => sub { exists $_[0]->{ $_[1] } },
+    'defined' => sub { defined $_[0]->{ $_[1] } },
+    'import'  => sub { my ($hash, $imp) = @_;
                       $imp = {} unless ref $imp eq 'HASH';
                       @$hash{ keys %$imp } = values %$imp;
                       return '';
@@ -138,10 +140,15 @@ $LIST_OPS = {
     'first'   => sub { my $list = shift; $list->[0] },
     'last'    => sub { my $list = shift; $list->[$#$list] },
     'reverse' => sub { my $list = shift; [ reverse @$list ] },
+    'grep'    => sub { 
+	my ($list, $pattern) = @_;
+	$pattern ||= '';
+	return [ grep /$pattern/, @$list ];
+    },
     'join'    => sub { 
-            my ($list, $joint) = @_; 
-            join(defined $joint ? $joint : ' ', 
-                 map { defined $_ ? $_ : '' } @$list) 
+	my ($list, $joint) = @_; 
+	join(defined $joint ? $joint : ' ', 
+	     map { defined $_ ? $_ : '' } @$list) 
     },
     'sort'    => sub {
         my ($list, $field) = @_;
@@ -832,8 +839,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.49, distributed as part of the
-Template Toolkit version 2.06d, released on 22 January 2002.
+2.50, distributed as part of the
+Template Toolkit version 2.06e, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

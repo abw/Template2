@@ -201,15 +201,18 @@ Template::Plugin::XML::XPath - Plugin interface to XML::XPath
 
        # handler block for a <section title="...">...</section> element
        [% BLOCK section %]
-       <h1>[% item.getAttribute('title') %]</h1>
+       <h1>[% item.getAttribute('title') | html %]</h1>
        [% item.content(view) %]
        [% END %]
 
-       # default template block converts item to string representation
-       [% BLOCK xmlstring; item.toString; END %]
+       # default template block passes tags through and renders
+       # out the children recursivly
+       [% BLOCK xmlstring; 
+          item.starttag; item.content(view); item.endtag
+       END %]
        
        # block to generate simple text
-       [% BLOCK text; item; END %]
+       [% BLOCK text; item | html; END %]
     [% END %]
 
     # now present node (and children) via view
@@ -236,6 +239,15 @@ integration with Template Toolkit VIEWs.  The XML::XPath::Node::Text
 module is also adorned with a present($view) method which presents
 itself via the view using the 'text' template.
 
+To aid the reconstruction of XML, methods starttag and endtag are
+added to XML::XPath::Node::Element which return the start and
+end tag for that element.  This means that you can easily do:
+
+  [% item.starttag %][% item.content(view) %][% item.endtag %]
+
+To render out the start tag, followed by the content rendered in the
+view "view", followed by the end tag.
+
 =head1 AUTHORS
 
 This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>.
@@ -244,8 +256,8 @@ The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
 
 =head1 VERSION
 
-2.40, distributed as part of the
-Template Toolkit version 2.06d, released on 22 January 2002.
+2.41, distributed as part of the
+Template Toolkit version 2.06e, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

@@ -105,6 +105,7 @@ Please let me know if you think anyone is missing from this list.
   Chris Dean                <ctdean@babycenter.com>  
   Francois Desarmenien      <desar@club-internet.fr>
   Horst Dumcke              <hdumcke@cisco.com> 
+  Mark Fowler               <mark@indicosoftware.com>
   Michael Fowler            <michael@shoebox.net>    
   Axel Gerstmair            <anthill@web.de>
   Perrin Harkins            <pharkins@etoys.com>
@@ -126,12 +127,15 @@ Please let me know if you think anyone is missing from this list.
   Christian Schaffner       <schaffner@eeh.ee.ethz.ch>
   Randal L. Schwartz        <merlyn@stonehenge.com>
   Paul Sharpe               <paul@miraclefish.com>
+  Ville Skyttä              <ville.skytta@iki.fi>
   Doug Steinwand            <dsteinwand@etoys.com>
   Michael Stevens           <michael@etla.org>
   Drew Taylor               <dtaylor@vialogix.com>   
   Swen Thuemmler            <Swen.Thuemmler@paderlinx.de>   
   Richard Tietjen           <Richard_Tietjen@mcgraw-hill.com>
+  Stathy G. Touloumis       <stathy.touloumis@edventions.com>
   Jim Vaughan               <jim@mrjim.com> 
+  Simon Wilcox              <simonw@simonwilcox.co.uk>
   Chris Winters             <cwinters@intes.net>
 
 =head1 AUTHOR
@@ -145,7 +149,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.06d, released on 21 January 2002.
+Template Toolkit version 2.06e, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

@@ -54,16 +54,16 @@ sub new {
     # the data it contains
     if (UNIVERSAL::isa($data, 'Template::Iterator')) {
 	($data, $error) = $data->get_all();
-	return $class->fail("iterator failed to provide data for table: ",
-			    $error)
+	return $class->error("iterator failed to provide data for table: ",
+			     $error)
 	    if $error;
     }
 	
-    return $class->fail('invalid table data, expecting a list')
+    return $class->error('invalid table data, expecting a list')
 	unless ref $data eq 'ARRAY';
 
     $params ||= { };
-    return $class->fail('invalid table parameters, expecting a hash')
+    return $class->error('invalid table parameters, expecting a hash')
 	unless ref $params eq 'HASH';
 
     # ensure keys are folded to upper case
@@ -394,6 +394,21 @@ the data across.
     .  .
     .
 
+Example code to do so would be much like the following:
+
+    [% USE table(alphabet, rows=3) %]
+    [% FOREACH cols = table.cols %]
+      [% FOREACH item = cols %]
+        [% item %]
+      [% END %]
+    [% END %]
+
+    a  b  c
+    d  e  f
+    g  h  i
+    j  .  .
+    .
+
 In addition to a list reference, the Table plugin constructor may be 
 passed a reference to a Template::Iterator object or subclass thereof.
 The get_all() method is first called on the iterator to return all 
@@ -423,8 +438,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.39, distributed as part of the
-Template Toolkit version 2.06d, released on 21 January 2002.
+2.40, distributed as part of the
+Template Toolkit version 2.06e, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

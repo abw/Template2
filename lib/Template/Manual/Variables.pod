@@ -523,13 +523,40 @@ as a Perl regular expression) with the second.
     [% name = 'foo, bar & baz' %]
     [% name.replace('\W+', '_') %]    # foo_bar_baz
 
+=item match(pattern)
+
+Performs a regular expression match on the string using the pattern
+passed as an argument.  If the pattern matches the string then the
+method returns a reference to a list of any strings captured within
+parenthesis in the pattern.
+
+    [% name = 'Larry Wall' %]
+    [% matches = name.match('(\w+) (\w+)') %]
+    [% matches.1 %], [% matches.0 %]		# Wall, Larry
+
+If the pattern does not match then the method returns false, rather
+than returning an empty list which Perl and the Template Toolkit both
+consider to be a true value.  This allows you to write expression like
+this.
+
+    [% "We're not worthy!" IF name.match('Larry Wall') %]
+
+    [% IF (matches = name.match('(\w+) (\w+)')) %]
+       pattern matches: [% matches.join(', ') %]
+    [% ELSE %]
+       pattern does not match
+    [% END %]
+
 =item search(pattern)
 
-Returns true if the string matches the regular expression pattern passed 
-as an argument.
+Performs a similar function to 'match' but simply returns true if the 
+string matches the regular expression pattern passed as an argument.
 
     [% name = 'foo bar baz' %]
     [% name.search('bar') ? 'bar' : 'no bar' %]	    # bar
+
+This virtual method is now deprecated in favour of 'match'.  Move along
+now, there's nothing more to see here.
 
 =item split(pattern)
 
@@ -539,6 +566,28 @@ strings.
     [% FOREACH dir = mypath.split(':') %]
        [% dir %]
     [% END %]
+
+=item list
+
+Return the value as a single element list.  This can be useful if you
+have a variable which may contain a single item or a list and you want
+to treat them equally.  The 'list' method can be called against a list
+reference and will simply return the original reference, effectively
+a no-op.
+
+    [% thing.list.size %]  # thing can be a scalar or a list
+
+=item hash 
+
+Return the value as a hash reference containing a single entry with
+the key 'value' indicating the original scalar value.  As with the 
+'hash' virtual method, this is generally used to help massage data
+into different formats.
+
+=item size
+
+Always returns 1 for scalar values.  This method is provided for 
+consistency with the hash and list size methods.
 
 =back
 
@@ -590,6 +639,34 @@ into the current namespace hash.
     [% import(user) %]
     [% id %]: [% name %]		# lwall: Larry Wall
 
+=item defined, exists
+
+Returns a true or false value if an item in the hash denoted by the key
+passed as an argument is defined or exists, respectively.
+
+    [% hash.defined('somekey') ? 'yes' : 'no' %]
+    [% hash.exists('somekey') ? 'yes' : 'no' %]
+
+=item size
+
+Returns the number of key =E<gt> value pairs in the hash.
+
+=item item
+
+Returns an item from the hash using a key passed as an argument.
+
+    [% hash.item('foo') %]  # same as hash.foo
+
+=item list
+
+Returns the contents of the hash in list form.  An argument can be
+passed to indicate the desired items required in the list: 'keys' to
+return a list of the keys (same as hash.keys), 'values' to return a
+list of the values (same as hash.values), or 'each' to return as list
+of (key, value) pairs (same as hash.each).  When called without an
+argument it returns a list of hash references each containing a 'key'
+and 'value' item representing 
+
 =back
 
 The following virtual methods are provided for lists:
@@ -625,16 +702,31 @@ function.
 
     [% items.join(', ') %]
 
+=item grep
+
+Returns a list of the items in the list that match a regular expression
+pattern.
+
+    [% FOREACH directory.files.grep('\.txt$') %]
+       ...
+    [% END %]
+
 =item sort, nsort
 
 Returns the items in alpha (sort) or numerical (nsort) order.
 
     [% library = books.sort %]
 
-Where the list contains hash array references, a hash key can be 
-passed as an argument to specify the sort field.
+An argument can be provided to specify a search key.  Where an item in 
+the list is a hash reference, the search key will be used to retrieve a 
+value from the hash which will then be used as the comparison value.
+Where an item is an object which implements a method of that name, the
+method will be called to return a comparison value.
 
     [% library = books.sort('author') %]
+
+In the example, the 'books' list can contains hash references with 
+an 'author' key or objects with an 'author' method.
 
 =item unshift(item), push(item)
 
@@ -963,7 +1055,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.06d, released on 21 January 2002.
+Template Toolkit version 2.06e, released on 12 March 2002.
 
 =head1 COPYRIGHT
 

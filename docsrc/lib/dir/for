@@ -70,6 +70,12 @@ variables.  The imported definitions and any other variables defined
 in such a FOREACH loop will be lost at the end of the loop, when the 
 previous context and variable values are restored.
 
+However, under normal operation, the loop variable remains in scope
+after the FOREACH loop has ended (caveat: overwriting any variable
+previously in scope). This is useful as the loop variable is secretly
+an iterator object (see below) and can be used to analyse the last
+entry processed by the loop.
+
 The FOREACH directive can also be used to iterate through the entries
 in a hash array.  Each entry in the hash is returned in sorted order
 (based on the key) as a hash array containing 'key' and 'value' items.

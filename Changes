@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.06d, detailing
+#   Revision history for the Template Toolkit version 2.06e, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -23,7 +23,50 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06d - 17th January 2002               ## DEVELOPER RELEASE ##
+# Version 2.06e - March 12th 2002                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a minor bug in t/tiedhash.t which was trying to use the XS stash
+  even if it wasn't enabled.  Thanks to Lyle Brooks for the patch.
+
+* Added the 'match' virtual method for matching a string against a 
+  regex and returning a reference to a list of (captured) (backrefs).
+
+* Changed html filter back into a fast and simple static filter.  Added
+  html_entity filter which uses Apache::Util or HTML::Entities to do 
+  a complete and thorough (but slower) job.  The undocumented 'entity'
+  option of the html filter is now removed (but may appear elsewhere).
+
+* Added the size virtual method for scalars to prove a consistent way
+  of testing something.size to see if it has some value(s).  For scalars
+  it returns 1.
+
+* Modified the 'sort' and 'nsort' list virtual methods to allow a sort
+  key passed to represent a method to be called on objects in the list
+  as well as the key of a value to be fetched from hash references in 
+  the list.  e.g. [% books.sort('author') %] allows 'books' to contain 
+  a list of hash refs with an 'author' key or objects with an 'author'
+  method.  Thanks to Tony Bowden for suggesting this improvement.
+
+* Applied a patch from Simon Wilcox to strip MS-DOS \r characters from 
+  end of lines read by the Datafile plugin.
+
+* Applied a patch from Ville Skyttä <ville.skytta@iki.fi> which fixes
+  numerous minor bugs in various splash templates.
+
+* Added the 'defined' and 'exists' virtual hash methods for testing if
+  a value has a defined value, or exists in the hash, respectively.
+
+* Applied a patch from Stathy Touloumis to make the XS Stash thread safe.
+
+* Added the 'grep' virtual list method.
+
+* Applied a patch from Mark Fowler to improve the XML XPath plugin's
+  handling of nested elements.
+
+
+#------------------------------------------------------------------------
+# Version 2.06d - 22nd January 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch to the DBI plugin from Simon Matthews to stop it 
@@ -33,6 +76,10 @@
   which were never being loaded due to a '<' comparison of timestamps
   rather than '<='.  See
   http://tt2.org/pipermail/templates/2002-January/002361.html
+
+* Applied a patch from Doug Steinwand which fixes a minor bug in the 
+  XS Stash as reported by Andrey Brindeew:
+  http://tt2.org/pipermail/templates/2002-January/002475.html
 
 * Changed URL plugin to accept multiple values for CGI parameters, e.g.
   [% USE URL('/cgi-bin/foo', items=[10,20]) %] generates a URL like:
@@ -46,6 +93,9 @@
 * Fixed Makefile.PL to warn, not die, about mandatory modules, leaving
   it to the definitions in the PREREQ_PM which the CPAN module can 
   understand.  Thanks to Leon for waving the flag.
+
+* Applied Leon's doc patch to the Table plugin to demonstrate 
+  row/column transposition.
 
 * Added ucfirst and lcfirst filters to fold first character to upper
   or lower case respectively.  Thanks to Paul Makepeace for the patch.
