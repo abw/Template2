@@ -373,17 +373,11 @@ static SV *dotop(SV *root, SV *key_sv, AV *args, int flags) {
     SV *result = &PL_sv_undef;
     TT_PERF_INIT;
 
+
     /* ignore _private or .private members */
     if (!root || *item == '_' || *item == '.') {
         return &PL_sv_undef;
      }
-
-
-    /* ignore _private or .private members */
-    if (!root || !item_len || *item == '_' || *item == '.') {
-	return &PL_sv_undef;
-    }
-
 
     if (SvROK(root) && ((sv_derived_from(root, TT_STASH_PKG) ||
 	((SvTYPE(SvRV(root)) == SVt_PVHV) && !sv_isobject(root))))) {
