@@ -192,17 +192,17 @@ tt2_install ::
 	@$(PERL) bin/tt2inst -v "$(TT_PREFIX)"
 
 tt2_splash ::
-	@$(PERL) -I lib bin/gifsplash -v -i "$(TT_PREFIX)"
+	@$(PERL) -I$(INST_LIB) -I$(INST_ARCHLIB) bin/gifsplash -v -i "$(TT_PREFIX)"
 
 EOF
     $amble .=<<EOF if $main::TT_BUILD_DOCS;
 tt2_html_docs ::
-	\@\$(PERL) bin/ttree -v -f "\$(TT_PREFIX)/$TT_DOCS_CFG"
+	\@\$(PERL) -I\$(INST_LIB) -I\$(INST_ARCHLIB) bin/ttree -v -f "\$(TT_PREFIX)/$TT_DOCS_CFG"
 
 EOF
     $amble .=<<EOF if $main::TT_EXAMPLES;
 tt2_examples ::
-	\@\$(PERL) bin/ttree -v -f "\$(TT_PREFIX)/$TT_EXAMPLE_CFG"
+	\@\$(PERL) -I\$(INST_LIB) -I\$(INST_ARCHLIB) bin/ttree -v -f "\$(TT_PREFIX)/$TT_EXAMPLE_CFG"
 
 EOF
     return $amble;
