@@ -18,7 +18,7 @@ if you want to find out what's on offer.
 [% FOREACH page = library.order %]
 <li><b>
 [%- INCLUDE html/link 
-	link="$library.root/${page}.html"
+	link="${page}.html"
 	text = page %]:</b>
 [% library.pages.$page %]
 [% END %]

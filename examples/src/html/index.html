@@ -12,7 +12,7 @@ elements for building HTML pages.
 [% FOREACH page = library.order %]
 <li><b>
 [%- INCLUDE html/link 
-	link="$library.root/${page}.html"
+	link="${page}.html"
 	text = page %]:</b>
 [% library.pages.$page %]
 [% END %]
