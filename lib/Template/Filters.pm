@@ -203,12 +203,41 @@ sub _init {
 #------------------------------------------------------------------------
 # _dump()
 # 
-# Debug method - does nothing much atm.
+# Debug method
 #------------------------------------------------------------------------
 
 sub _dump {
     my $self = shift;
-    return "$self\n";
+    my $output = "[Template::Filters] {\n";
+    my $format = "    %-16s => %s\n";
+    my $key;
+
+    foreach $key (qw( TOLERANT )) {
+	my $val = $self->{ $key };
+	$val = '<undef>' unless defined $val;
+	$output .= sprintf($format, $key, $val);
+    }
+
+    my $filters = $self->{ FILTERS };
+    $filters = join('', map { 
+	sprintf("    $format", $_, $filters->{ $_ });
+    } keys %$filters);
+    $filters = "{\n$filters    }";
+    
+    $output .= sprintf($format, 'FILTERS (local)' => $filters);
+
+    $filters = $FILTERS;
+    $filters = join('', map { 
+	my $f = $filters->{ $_ };
+	my ($ref, $dynamic) = ref $f eq 'ARRAY' ? @$f : ($f, 0);
+	sprintf("    $format", $_, $dynamic ? 'dynamic' : 'static');
+    } sort keys %$filters);
+    $filters = "{\n$filters    }";
+    
+    $output .= sprintf($format, 'FILTERS (global)' => $filters);
+
+    $output .= '}';
+    return $output;
 }
 
 
@@ -1311,13 +1340,13 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.51, distributed as part of the
+2.52, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
