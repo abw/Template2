@@ -137,7 +137,7 @@ Output:
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@kfs.orgE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
 The Text::Wrap module was written by David Muir Sharnoff
 E<lt>muir@idiom.comE<gt> with help from Tim Pierce and many
@@ -145,8 +145,8 @@ others.
 
 =head1 VERSION
 
-2.54, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.55, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

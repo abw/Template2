@@ -50,6 +50,13 @@ sub set
 }
 
 
+sub set_legend
+{
+    my $self = shift;
+	
+    $self->SUPER::set_legend(ref $_[0] ? @{$_[0]} : @_);
+}
+
 1;
 
 __END__
@@ -120,8 +127,8 @@ The GD::Graph module was written by Martien Verbruggen.
 
 =head1 VERSION
 
-1.46, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+1.49, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

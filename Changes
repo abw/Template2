@@ -3,14 +3,14 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.08c, detailing
+#   Revision history for the Template Toolkit version 2.09, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
 #   look out for when upgrading between major versions.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # NOTE
 #   This file is built from a source template distributed as part of 
@@ -23,7 +23,43 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.08c - November 4th                    ## DEVELOPER RELEASE ##
+# Version 2.09 - April 23rd 2003
+#------------------------------------------------------------------------
+
+* Bumped version number for release.
+
+
+#------------------------------------------------------------------------
+# Version 2.08e - March 18th 2003                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* changed Template::Provider and Template::Context to propagate nested
+  exceptions (e.g. [ file => [ parse => 'blah blah' ] ]) to allow the 
+  caller to accurately differentiate between parse errors and missing
+  file or other errors.
+  http://tt2.org/pipermail/templates/2003-March/004359.html
+
+* applied a patch from Gervase Markham to add set_legend() to the
+  various GD::Graph modules that works with a list of arguments.
+  http://tt2.org/pipermail/templates/2003-March/004316.html
+
+
+#------------------------------------------------------------------------
+# Version 2.08d - March 18th 2003                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Made Template::Exception DTRT with overloading (mark)
+
+* Applied a patch from Jonas Liljegren to lower the chunking limit of
+  the parser regex to prevent a segfault.  See
+  http://tt2.org/pipermail/templates/2003-February/004290.html
+
+* Applied Pudge's patch for the XS Stash bug.  See
+  http://tt2.org/pipermail/templates/2003-February/004289.html
+
+
+#------------------------------------------------------------------------
+# Version 2.08c - November 4th 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch from Bradley Baetz to work around a bug in Perl when 

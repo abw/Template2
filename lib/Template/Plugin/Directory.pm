@@ -388,14 +388,14 @@ a subset of files.
 =head1 AUTHORS
 
 Michael Stevens E<lt>michael@etla.orgE<gt> wrote the original Directory plugin
-on which this is based.  Andy Wardley E<lt>abw@kfs.orgE<gt> split it into 
+on which this is based.  Andy Wardley E<lt>abw@wardley.orgE<gt> split it into 
 separate File and Directory plugins, added some extra code and documentation
 for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-2.55, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 
 

@@ -251,14 +251,14 @@ view "view", followed by the end tag.
 
 =head1 AUTHORS
 
-This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>.
+This plugin module was written by Andy Wardley E<lt>abw@wardley.orgE<gt>.
 
 The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
 
 =head1 VERSION
 
-2.58, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.60, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

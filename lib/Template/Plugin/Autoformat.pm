@@ -217,15 +217,15 @@ See L<Text::Autoformat> for further details.
 
 Robert McArthur E<lt>mcarthur@dstc.edu.auE<gt> wrote the original plugin 
 code, with some modifications and additions from Andy Wardley 
-E<lt>abw@kfs.orgE<gt>.
+E<lt>abw@wardley.orgE<gt>.
 
 Damian Conway E<lt>damian@conway.orgE<gt> wrote the Text::Autoformat 
 module (in his copious spare time :-) which does all the clever stuff.
 
 =head1 VERSION
 
-2.55, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 
 

@@ -121,6 +121,7 @@ Please let me know if you think anyone is missing from this list.
   Jonas Liljegren           <jonas@paranormal.se>
   Simon Luff                <simon@sports.com>
   Paul Makepeace            <Paul.Makepeace@realprogrammers.com>
+  Gervase Markham           <gerv@mozilla.org>
   Simon Matthews            <sam@knowledgepool.com>
   Robert McArthur           <mcarthur@dstc.edu.au>
   Craig McLane              <mclanec@oxy.edu>     
@@ -157,7 +158,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08c, released on 04 November 2002.
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

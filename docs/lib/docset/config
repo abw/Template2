@@ -261,7 +261,7 @@ docset => {
             prev   => 'Manual',
             next   => 'Library',
         
-            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Namespace_Constants', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Image', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_Procedural', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath' ],
+            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Namespace_Constants', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Image', 'Plugin_Iterator', 'Plugin_Math', 'Plugin_Pod', 'Plugin_Procedural', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath' ],
         
             pages  => {
                 Template => {
@@ -886,6 +886,19 @@ docset => {
                     about   => 'Plugin to create iterators (Template::Iterator)',
                 
                     prev    => 'Plugin_Image',
+                    next    => 'Plugin_Math',
+                },
+                Plugin_Math => {
+                    id      => 'Plugin_Math',
+                    name    => 'Template::Plugin::Math',
+                    title   => 'Template::Plugin::Math',
+                    podname => 'Template::Plugin::Math',
+                    url     => 'Modules/Template/Plugin/Math.html',
+                    uplink  => '../../..',
+                    author  => 'abw',
+                    about   => 'Plugin interface to mathematical functions',
+                
+                    prev    => 'Plugin_Iterator',
                     next    => 'Plugin_Pod',
                 },
                 Plugin_Pod => {
@@ -898,7 +911,7 @@ docset => {
                     author  => 'abw',
                     about   => 'Plugin interface to Pod::POM (Pod Object Model)',
                 
-                    prev    => 'Plugin_Iterator',
+                    prev    => 'Plugin_Math',
                     next    => 'Plugin_Procedural',
                 },
                 Plugin_Procedural => {
@@ -1391,6 +1404,7 @@ docset => {
 	'Template::Plugin::HTML' => 'Modules/Template/Plugin/HTML.html',
 	'Template::Plugin::Image' => 'Modules/Template/Plugin/Image.html',
 	'Template::Plugin::Iterator' => 'Modules/Template/Plugin/Iterator.html',
+	'Template::Plugin::Math' => 'Modules/Template/Plugin/Math.html',
 	'Template::Plugin::Pod' => 'Modules/Template/Plugin/Pod.html',
 	'Template::Plugin::Procedural' => 'Modules/Template/Plugin/Procedural.html',
 	'Template::Plugin::String' => 'Modules/Template/Plugin/String.html',

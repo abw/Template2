@@ -87,6 +87,22 @@ sub AUTOLOAD { return; }
 
 __END__
 
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/docs.html and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Plugin::Math - Plugin interface to mathematical functions
+
 =head1 NAME
 
 Template::Plugin::Math - Plugin providing mathematical functions
@@ -99,25 +115,239 @@ Template::Plugin::Math - Plugin providing mathematical functions
 
 =head1 DESCRIPTION
 
-The Math plugin provides numerous mathematical functions for use within
-templates.
+The Math plugin provides numerous mathematical functions for use
+within templates.
 
 =head1 METHODS
 
-=head2 sqrt($n)
+Template::Plugin::Math makes available the following functions from
+the Perl core:
 
-Returns the square root of a number.
+=over 4
 
-=head1 AUTHORS
+=item o
 
-Andy Wardley E<lt>abw@kfs.orgE<gt> provided the original skeleton
-plugin which was then fleshed out by Darren Chamberlain
-E<lt>dlc@users.sourceforge.netE<gt> one night when he had nothing
-bettwe to dp
+abs
+
+=item o
+
+atan2
+
+=item o
+
+cos
+
+=item o
+
+exp
+
+=item o
+
+hex
+
+=item o
+
+int
+
+=item o
+
+log
+
+=item o
+
+oct
+
+=item o
+
+rand
+
+=item o
+
+sin
+
+=item o
+
+sqrt
+
+=item o
+
+srand
+
+=back
+
+In addition, if the Math::Trig module can be loaded, the following
+functions are also available:
+
+=over 4
+
+=item o
+
+pi
+
+=item o
+
+tan
+
+=item o
+
+csc
+
+=item o
+
+cosec
+
+=item o
+
+sec
+
+=item o
+
+cot
+
+=item o
+
+cotan
+
+=item o
+
+asin
+
+=item o
+
+acos
+
+=item o
+
+atan
+
+=item o
+
+acsc
+
+=item o
+
+acosec
+
+=item o
+
+asec
+
+=item o
+
+acot
+
+=item o
+
+acotan
+
+=item o
+
+sinh
+
+=item o
+
+cosh
+
+=item o
+
+tanh
+
+=item o
+
+csch
+
+=item o
+
+cosech
+
+=item o
+
+sech
+
+=item o
+
+coth
+
+=item o
+
+cotanh
+
+=item o
+
+asinh
+
+=item o
+
+acosh
+
+=item o
+
+atanh
+
+=item o
+
+acsch
+
+=item o
+
+acosech
+
+=item o
+
+asech
+
+=item o
+
+acoth
+
+=item o
+
+acotanh
+
+=item o
+
+rad2deg
+
+=item o
+
+rad2grad
+
+=item o
+
+deg2rad
+
+=item o
+
+deg2grad
+
+=item o
+
+grad2rad
+
+=item o
+
+grad2deg
+
+=back
+
+If the Math::TrulyRandom module is available, and you've got the time
+to wait, the C<truly_random_number> method is available:
+
+    [% Math.truly_random_number %]
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@andywardley.comE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+
+
 
 =head1 VERSION
 
-This is version 0.01 of the Template::Plugin::Math module.
+1.02, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

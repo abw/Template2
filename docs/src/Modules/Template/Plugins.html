@@ -582,7 +582,7 @@ way (as discussed recently on the mod_perl mailing list).
     [% tt_start_tag %] HTML.attributes(border =&gt; 1, cellpadding =&gt; 2) [% tt_end_tag %]
     [% tt_start_tag %] HTML.element(table =&gt; { border =&gt; 1, cellpadding =&gt; 2 }) [% tt_end_tag %]</pre>
 <p>
-See [% ttlink('Template::Plugin::Iterator') -%] for further details.
+See [% ttlink('Template::Plugin::HTML') -%] for further details.
 </p>
 [%- END %]
 [% WRAPPER subsection
@@ -605,7 +605,7 @@ with a given name, or the default plugin name, 'iterator'.  See
 [% WRAPPER subsection
    title = "Pod"
 -%]<p>
-This plugin provides an interface to the [% ttlink('Pod::POD', 'Pod::POD') -%] module
+This plugin provides an interface to the [% ttlink('Pod::POM', 'Pod::POM') -%] module
 which parses POD documents into an internal object model which can
 then be traversed and presented through the Template Toolkit.
 </p>
@@ -790,8 +790,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.61, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.62, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 </p>
 [%- END %]
 [% WRAPPER section

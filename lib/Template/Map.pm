@@ -63,43 +63,43 @@ sub _init {
     $format = [ $format ] unless ref $format eq 'ARRAY';
     $self->{ format } = $format;
 
-    my $providers = $config->{ provider } || $config->{ providers } || [ ];
-    $providers = [ $providers ] unless ref $providers eq 'ARRAY';
-    $self->{ providers } = $providers;
-
-    # base?
+    my $map = $config->{ map } || { };
+    $self->{ map } = { %$MAP, %$map };
 
     return $self;
 }
 
 
 sub map {
-    my ($self, $name) = @_;
-    my @results;
+    my ($self, $item) = @_;
+    return $self->names( $self->name($item) );
+}
 
-    # $name can be a ref or object which must first be mapped to a name
-    $name = $self->name($name) || return 
-	if ref $name;
+
+sub names {
+    my ($self, $name) = @_;
+    my (@names);
 
     # apply each format
     foreach my $format (@{ $self->{ format } }) {
-	push(@results, sprintf($format, $name));
+	push(@names, sprintf($format, $name));
     }
 
     # also add the name with optional prefix/suffix added
-    push(@results, "$self->{ prefix }$name$self->{ suffix }");
+    push(@names, "$self->{ prefix }$name$self->{ suffix }")
+        unless @names;
 
     # finally add any default option
-    push(@results, $self->{ default }) if $self->{ default };
+    push(@names, $self->{ default }) if $self->{ default };
 
-    return \@results;
+    return \@names;
 }
 
 
 sub name {
     my ($self, $item) = @_;
-    my $type = ref $item || return $item;
-    my $map  = $MAP;
+    my $map    = $self->{ map } || $MAP;
+    my $type   = ref $item || return $map->{ TEXT };
     my $method = $METHOD;
     my $name;
 

@@ -790,7 +790,7 @@ To print just the content of the report node (i.e. don't process the
 
 =head1 AUTHORS
 
-This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>
+This plugin module was written by Andy Wardley E<lt>abw@wardley.orgE<gt>
 and Simon Matthews E<lt>sam@knowledgepool.comE<gt>.
 
 The XML::DOM module is by Enno Derksen E<lt>enno@att.comE<gt> and Clark 
@@ -801,7 +801,7 @@ library.
 =head1 VERSION
 
 2.6, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+Template Toolkit version 2.09, released on 23 April 2003.
 
 
 

@@ -332,6 +332,12 @@ Plugin to create iterators (Template::Iterator)
 
 
 
+=item L<Template::Plugin::Math|Template::Plugin::Math>
+
+Plugin interface to mathematical functions
+
+
+
 =item L<Template::Plugin::Pod|Template::Plugin::Pod>
 
 Plugin interface to Pod::POM (Pod Object Model)
@@ -419,7 +425,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08c, released on 04 November 2002.
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

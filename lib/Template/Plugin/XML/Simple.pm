@@ -100,15 +100,15 @@ installed.  These are available from CPAN:
 =head1 AUTHORS
 
 This plugin wrapper module was written by Andy Wardley
-E<lt>abw@kfs.orgE<gt>.
+E<lt>abw@wardley.orgE<gt>.
 
 The XML::Simple module which implements all the core functionality 
 was written by Grant McLean E<lt>grantm@web.co.nzE<gt>.
 
 =head1 VERSION
 
-2.53, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.54, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

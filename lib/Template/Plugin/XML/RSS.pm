@@ -167,7 +167,7 @@ The list of news items can be retrieved using the 'items' method:
 
 =head1 AUTHORS
 
-This plugin was written by Andy Wardley E<lt>abw@kfs.orgE<gt>,
+This plugin was written by Andy Wardley E<lt>abw@wardley.orgE<gt>,
 inspired by an article in Web Techniques by Randal Schwartz
 E<lt>merlyn@stonehenge.comE<gt>.
 
@@ -177,8 +177,8 @@ E<lt>eisen@pobox.comE<gt>.
 
 =head1 VERSION
 
-2.54, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+2.56, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

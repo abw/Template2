@@ -117,8 +117,8 @@ The GD::Graph3d module was written by Jeremy Wadsack. The GD::Graph module was w
 
 =head1 VERSION
 
-1.46, distributed as part of the
-Template Toolkit version 2.08c, released on 04 November 2002.
+1.47, distributed as part of the
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

@@ -64,7 +64,7 @@ Module' award at the Perl Conference last summer. Version 2.0 of
 the Template Toolkit (known as TT2 to its friends) was recently 
 released to the CPAN.
 
-TT2 was designed and written by Andy Wardley E<lt>abw@kfs.orgE<gt>. 
+TT2 was designed and written by Andy Wardley E<lt>abw@wardley.orgE<gt>. 
 It was born out of Andy's previous templating module, 
 Text::Metatext, in best Fred Brooks 'plan to throw one away' 
 manner; and aims to be the most useful (or, at least, the most 
@@ -438,7 +438,7 @@ Dave Cross E<lt>dave@dave.org.ukE<gt>
 
 =head1 VERSION
 
-Template Toolkit version 2.08c, released on 04 November 2002.
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

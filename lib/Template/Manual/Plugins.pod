@@ -340,7 +340,7 @@ way (as discussed recently on the mod_perl mailing list).
     [% HTML.attributes(border => 1, cellpadding => 2) %]
     [% HTML.element(table => { border => 1, cellpadding => 2 }) %]
 
-See L<Template::Plugin::Iterator> for further details.
+See L<Template::Plugin::HTML> for further details.
 
 =head2 Iterator
 
@@ -361,7 +361,7 @@ L<Template::Plugin::Iterator> for further details.
 
 =head2 Pod
 
-This plugin provides an interface to the L<Pod::POD|Pod::POD> module
+This plugin provides an interface to the L<Pod::POM|Pod::POM> module
 which parses POD documents into an internal object model which can
 then be traversed and presented through the Template Toolkit.
 
@@ -529,7 +529,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08c, released on 04 November 2002.
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 

@@ -284,7 +284,7 @@ $lib/config:
     [% root     = '~/abw'
        home     = "$root/index.html"
        images   = "$root/images"
-       email    = 'abw@kfs.org'
+       email    = 'abw@wardley.org'
        graphics = 1
        webpages = [
          { url => 'http://foo.org', title => 'The Foo Organsiation' }
@@ -360,7 +360,7 @@ $dest/newpage.html:
     <body bgcolor="#ffffff">
         
     <a href="~/abw/index.html">Home</a>
-    <a href="mailto:abw@kfs.org">Email me</a>
+    <a href="mailto:abw@wardley.org">Email me</a>
 
     <img src="~/abw/images/logo.gif" align=right width=60 height=40>
         
@@ -778,7 +778,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.08c, released on 04 November 2002.
+Template Toolkit version 2.09, released on 23 April 2003.
 
 =head1 COPYRIGHT
 
