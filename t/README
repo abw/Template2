@@ -1,16 +1,19 @@
 Script          Testing...
 -----------------------------------------------------------------------------
+args.t          Passing positional and named arguments to code/object methods
 base.t          Template::Base.pm module
 binop.t         Binary operators
 block.t         BLOCK definition
 capture.t       Capture directive output and assign to a variable
-cgi.t           Test the CGI script
+case.t          CASE option to switch case sensitivity
+cgi.t           CGI plugin (Template::Plugin::CGI)
 compile1.t      Compile templates to Perl code and save to file
 compile2.t      Reload above compiled templates without re-parsing
 compile3.t      Ensure that touching source template causes re-compilation 
 config.t        Template::Config factory module
 context.t       Template::Context module
 datafile.t      Datafile plugin (Template::Plugin::Datafile)
+date.t          Date plugin (Template::Plugin::Date)
 directive.t     Directive layout, chomping, comments, etc.
 document.t      Template::Document module
 dom.t           XML::DOM plugin (Template::Plugin::XML::DOM)
@@ -27,9 +30,12 @@ output.t        OUTPUT_PATH and OUTPUT options
 provider.t      Template::Provider module
 rss.t           XML::RSS plugin (Template::Plugin::XML::RSS)
 service.t       Template::Service module
+skelt.          Skeleton test file.  Copy and edit to create your own tests.
 stop.t          STOP directive and throwing 'stop' exception
 table.t         Table plugin (Template::Plugin::Table)
 tags.t          TAGS directive
+text.t          Plain text blocks, ensuring all characters are reproducable
+try.t           TRY / THROW / CATCH / FINAL directives
 url.t           URL plugin (Template::Plugin::URL)
 vars.t          Variable usage and GET / SET / CALL / DEFAULT directives
 varsv1.t        As above, using version 1 handling of leading '$'
@@ -37,16 +43,10 @@ while.t         WHILE directive
 
 TODO:
 
-if.t            IF / UNLESS / ELSEIF / ELSE directives
 parser.t        Template::Parser module
 switch.t        SWITCH / CASE directives
 plugins.t       Template::Plugins provider module
-template.t      Template module
-try.t           TRY / THROW / CATCH / FINAL directives
-code.t          binding code to variables (or covered in vars.t?)
-
-literal :     'foo' = bar, @ characters, escaping, etc.
-named params with object.t and code.t
+template.t      Template front-end module
 
 ===
 anonblock
@@ -55,78 +55,4 @@ cache
 recursion                    << OPTION
 return/stop/etc
 
-
-
 format => plugins
--------------------------------
-
-       abspaths
-del    accessor
-ok     binop
-m1     block
-m?     break
-m      cache
---     call          merged into vars.t and varsv1.t
-fix    case          CASE sensitivity of directive keywords
-m      catch         rename to TRAP
-fix    cgi           CGI plugin
-ok     chomp         merge in postchomp/prechomp?
--?     code          part merged into vars.t/varsv1.t, throwing to go in?
-m1     comment
-fix    constants
-fixm   context       new tests
-del?   datafile      Datafile plugin
---     default       merged into vars.t and varsv1.t
-fix    define
-m      directive
-fix    dom
-del?   error
-fix    exception
-ok     filter
-ok     foreach       
---     foriter       merged into with foreach
-fix/m  format
---     get           merged into vars.t and varsv1.t
---     global        merged into vars.t and varsv1.t
-ok     hash
-ok     if            if.t + unless.t
-m?     import
-fix    include
---     interp        merged into vars.t and varsv1.t
-m      iterator      merge with foreach or general iterator test?
-fix    list          broken because of BLOCK privatisation
-m      listndx       merge with list
-m      literal       merge into vars
-?      macro         MACRO not yet implemented
-m      multi         merge into directives
-m      named         merge with vars/code/get?
-fix    object        big mess
-fix    output        OUTPUT_PATH not yet implemented
-fix/d  parser
-fix    perl
-fix/m  postchomp
-fix/m  prechomp
-m?     predefs       merge into stash?
-       preproc
-m?     private       merge into stash/object/hash?
-       process
-       recurse
-?      ref           refs not implemented (yet/at all?)
-m      return        merge with break/stop/etc?
-fix    rss
---     set           merged into vars.t and varsv1.t
-m      stash
-       stop
-       table
-m      tag           merge with tags
-m      tags          merge with tag
-m      text          merge into directives
-fix/m  throw         merge with try/catch?
---     unless        merged into if.t
-fix    url
-       userdef
-ok     vars          merge of many tests
-ok     varsv1        ditto for VERSION => 1 compatability
-fix    while         mainly ok, but broken due to (a = b) not working
-
-

@@ -13,6 +13,13 @@ Pending
                                    
 Misc
 ----
+* move v1 Template::* to Template::v1::*
+
+* Add :preload use option to Template.pm
+
+* encorporate Service.pm into Context.pm as service() method?  Not yet 
+  sure if this is a good idea or not.
+
 * No \refs.
 
 * faster parser back end which bypasses the stash, based on Doug's code.

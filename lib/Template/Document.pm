@@ -29,7 +29,7 @@ package Template::Document;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $ERROR $DEBUG $AUTOLOAD );
+use vars qw( $VERSION $ERROR $COMPERR $DEBUG $AUTOLOAD );
 use base qw( Template::Base );
 use Template::Constants;
 
@@ -57,9 +57,13 @@ sub new {
 
     # evaluate Perl code in $block to create sub-routine reference if necessary
     unless (ref $block) {
+	local $SIG{__WARN__} = \&catch_warnings;
+	$COMPERR = '';
 	$block = eval $block;
+#	$COMPERR .= "[$@]" if $@;
+#	return $class->error($COMPERR)
 	return $class->error($@)
-	    if $@;
+	    unless defined $block;
     }
 
     # same for any additional BLOCK definitions
@@ -247,7 +251,17 @@ EOF
     return 1;
 }
 
-		
+
+#------------------------------------------------------------------------
+# catch_warnings($msg)
+#
+# Installed as
+#------------------------------------------------------------------------
+
+sub catch_warnings {
+    $COMPERR .= join('', @_); 
+}
+
     
 1;
 

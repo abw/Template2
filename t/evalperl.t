@@ -21,13 +21,14 @@ use lib qw( ./lib ../lib );
 use Template::Test;
 $^W = 1;
 
-#$Template::Parser::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
 #$Template::Context::DEBUG = 0;
 
 my $tt_no_perl = Template->new({ 
-    INTERPOLATE => 1, 
-    POST_CHOMP  => 1,
-    EVAL_PERL   => 0,
+    INTERPOLATE  => 1, 
+    POST_CHOMP   => 1,
+    EVAL_PERL    => 0,
+    INCLUDE_PATH => -d 't' ? 't/test/lib' : 'test/lib',
 });
 
 my $tt_do_perl = Template->new({ 
@@ -71,6 +72,25 @@ a: alpha
 b: bravo
 b: bravo
 
+-- test --
+nothing
+[% PERL %]
+We don't care about correct syntax within PERL blocks if EVAL_PERL isn't set.
+They're simply ignored.
+[% END %]
+-- expect --
+nothing
+
+-- test --
+some stuff
+[% TRY %]
+[% INCLUDE badrawperl %]
+[% CATCH %]
+ERROR: [[% error.type %]] [% error.info %]
+[% END %]
+-- expect --
+some stuff
+ERROR: [file] syntax error at RAWPERL block (starting line 2) line 2, at EOF
 
 -- test --
 -- use do_perl --

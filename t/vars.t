@@ -353,6 +353,14 @@ bravo charlie delta echo
 charlie delta echo
 
 -- test --
+[% 'a' = d
+   'include' = e
+   'INCLUDE' = f.g
+%][% a %]-[% ${'include'} %]-[% ${'INCLUDE'} %]
+-- expect --
+delta-echo-golf
+
+-- test --
 [% a = f.g %] $a
 [% a = f.i.j %] $a
 -- expect --

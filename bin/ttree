@@ -308,7 +308,6 @@ sub read_config {
     my $file = shift;
 
     my $config = AppConfig->new({ 
-	GLOBAL => { ARGCOUNT => 1 },
 	ERROR  => sub { die @_, "\ntry `$NAME --help'\n" }   }, 
 	'help|h'      => { ACTION => \&help },
 	'src|s=s'     => { EXPAND => EXPAND_ALL },

@@ -556,6 +556,8 @@ sub _compile {
 
     # call parser to compile template into Perl code
     if ($parsedoc = $parser->parse($text, $data)) {
+	# NOTE: probably shouldn't write the file until we know it compiled OK
+	
 	# write the Perl code to the file $compfile, if defined
 	if ($compfile) {
 	    $error = $Template::Document::ERROR

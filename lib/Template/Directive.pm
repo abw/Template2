@@ -34,7 +34,7 @@ package Template::Directive;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $WHILE_MAX );
+use vars qw( $VERSION $DEBUG $PRETTY $WHILE_MAX );
 use Template::Constants;
 use Template::Exception;
 use Template::Iterator;
@@ -42,12 +42,13 @@ use Template::Iterator;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $WHILE_MAX = 1000;
+$PRETTY    = 0;
 my $OUTPUT = '$output .= ';
 
 sub pad {
     my ($text, $pad) = @_;
     $pad = ' ' x ($pad * 4);
-    $text =~ s/\n(?!#line)/\n$pad/gm;
+    $text =~ s/^(?!#line)/$pad/gm;
     $text;
 }
 
@@ -63,7 +64,7 @@ sub pad {
 
 sub template {
     my ($class, $block) = @_;
-    $block = pad($block, 2);
+    $block = pad($block, 2) if $PRETTY;
 
     return <<EOF;
 sub {
@@ -73,7 +74,7 @@ sub {
     my \$error;
     
     eval { BLOCK: {
-        $block
+$block
     } };
     if (\$@) {
         \$error = \$context->catch(\$@, \\\$output);
@@ -92,7 +93,7 @@ EOF
 
 sub anon_block {
     my ($class, $block) = @_;
-    $block = pad($block, 2);
+    $block = pad($block, 2) if $PRETTY;
 
     return <<EOF;
 
@@ -102,7 +103,7 @@ $OUTPUT do {
     my \$error;
     
     eval { BLOCK: {
-        $block
+$block
     } };
     if (\$@) {
         \$error = \$context->catch(\$@, \\\$output);
@@ -244,7 +245,6 @@ sub set {
     while (my ($var, $val) = splice(@$setlist, 0, 2)) {
 	$output .= &assign($class, $var, $val) . ";\n";
     }
-#    $output = "$OUTPUT do {\n    " . pad("$output''\n", 1) . "};";
     chomp $output;
     return $output;
 }
@@ -260,7 +260,6 @@ sub default {
     while (my ($var, $val) = splice(@$setlist, 0, 2)) {
 	$output .= &assign($class, $var, $val, 1) . ";\n";
     }
-#    $output = "$OUTPUT do {\n    " . pad("$output''\n", 1) . "};";
     chomp $output;
     return $output;
 }
@@ -306,18 +305,18 @@ sub if {
     my ($class, $expr, $block, $else) = @_;
     my @else = $else ? @$else : ();
     $else = pop @else;
-    $block = pad($block, 1);
+    $block = pad($block, 1) if $PRETTY;
 
-    my $output = "if ($expr) {\n    $block\n}\n";
+    my $output = "if ($expr) {\n$block\n}\n";
 
     foreach my $elsif (@else) {
 	($expr, $block) = @$elsif;
-	$block = pad($block, 1);
-	$output .= "elsif ($expr) {\n    $block\n}\n";
+	$block = pad($block, 1) if $PRETTY;
+	$output .= "elsif ($expr) {\n$block\n}\n";
     }
     if (defined $else) {
-	$else = pad($else, 1);
-	$output .= "else {\n    $else\n}\n";
+	$else = pad($else, 1) if $PRETTY;
+	$output .= "else {\n$else\n}\n";
     }
 
     return $output;
@@ -325,69 +324,10 @@ sub if {
 
 
 #------------------------------------------------------------------------
-# for($target, $list, $args, $block)        [% FOREACH x = [ foo bar ] %]
+# foreach($target, $list, $args, $block)    [% FOREACH x = [ foo bar ] %]
 #                                              ...
 #                                           [% END %]
 #------------------------------------------------------------------------
-
-sub for {
-    my ($class, $target, $list, $args, $block) = @_;
-    $args  = shift @$args;
-    $args  = @$args ? ', { ' . join(', ', @$args) . ' }' : '';
-
-    my ($loop_save, $loop_set, $loop_restore, $setiter);
-    if ($target) {
-	$loop_save    = '$oldloop = ' . &ident($class, ["'loop'"]);
-	$loop_set     = "\$stash->{'$target'} = \$value";
-	$loop_restore = "\$stash->set('loop', \$oldloop)";
-    }
-    else {
-	$loop_save    = '$stash = $context->localise()';
-	$loop_set     = "\$stash->set('IMPORT', \$value)";
-	$loop_restore = '$stash = $context->delocalise()';
-    }
-    $block = pad($block, 2);
-
-    return <<EOF;
-
-# FOREACH 
-do {
-    my (\$value, \$error, \$oldloop);
-    my \$list = $list;
-    my \$block = sub {
-	my \$output;
-	$block;
-	return \$output;
-    };
-    
-    if (UNIVERSAL::isa(\$list, 'Template::Iterator')) {
-	(\$value, \$error) = \$list->get_first();
-	$loop_save;
-	eval {
-	    while (! \$error) {
-		$loop_set;
-		\$output .= &\$block;
-		(\$value, \$error) = \$list->get_next();
-	    }
-	};
-	$loop_restore;
-	die \$@ if \$@;
-	\$error = 0 if \$error eq Template::Constants::STATUS_DONE;
-	die \$error if \$error;
-    }
-    else {
-	\$list = [ \$list ] unless ref \$list eq 'ARRAY';
-	foreach \$value (\@\$list) {
-	    $loop_set;
-	    \$output .= &\$block;
-	}
-    }
-};
-EOF
-}
-
-
-
 
 sub foreach {
     my ($class, $target, $list, $args, $block) = @_;
@@ -406,7 +346,7 @@ sub foreach {
 	                . "if ref \$value eq 'HASH'";
 	$loop_restore = '$stash = $context->delocalise()';
     }
-    $block = pad($block, 3);
+    $block = pad($block, 3) if $PRETTY;
 
     return <<EOF;
 
@@ -426,7 +366,7 @@ do {
     eval {
 	while (! \$error) {
 	    $loop_set;
-	    $block;
+$block;
 	    (\$value, \$error) = \$list->get_next();
 	}
     };
@@ -448,7 +388,7 @@ EOF
 
 sub while {
     my ($class, $expr, $block) = @_;
-    $block = pad($block, 2);
+    $block = pad($block, 2) if $PRETTY;
 
     return <<EOF;
 
@@ -456,7 +396,7 @@ sub while {
 do {
     my \$failsafe = $WHILE_MAX;
     while (--\$failsafe && ($expr)) {
-        $block
+$block
     }
     die "WHILE loop terminated (> $WHILE_MAX iterations)\\n"
         unless \$failsafe;
@@ -482,12 +422,13 @@ sub switch {
 
     foreach $case (@case) {
 	$match = $case->[0];
-	$block = pad($case->[1], 1);
+	$block = $case->[1];
+	$block = pad($block, 1) if $PRETTY;
 	$caseblock .= <<EOF;
 \$match = $match;
 \$match = [ \$match ] unless ref \$match eq 'ARRAY';
 if (grep(/^\$result\$/, \@\$match)) {
-    $block
+$block
     last SWITCH;
 }
 EOF
@@ -495,7 +436,7 @@ EOF
 
     $caseblock .= $default
 	if defined $default;
-    $caseblock = pad($caseblock, 2);
+    $caseblock = pad($caseblock, 2) if $PRETTY;
 
 return <<EOF;
 
@@ -504,7 +445,7 @@ do {
     my \$result = $expr;
     my \$match;
     SWITCH: {
-        $caseblock
+$caseblock
     }
 };
 EOF
@@ -526,11 +467,11 @@ sub try {
     my $catchblock = '';
     my $handlers = [];
 
-    $block = pad($block, 2);
+    $block = pad($block, 2) if $PRETTY;
     $final = pop @catch;
     $final = "# FINAL\n" . ($final ? "$final\n" : '')
 	   . 'die $error if $error;' . "\n" . '$output;';
-    $final = pad($final, 1);
+    $final = pad($final, 1) if $PRETTY;
 
     $n = 0;
     foreach $catch (@catch) {
@@ -538,22 +479,23 @@ sub try {
 	    $default ||= $catch->[1];
 	    next;
 	};
-	$mblock = pad($catch->[1], 1);
+	$mblock = $catch->[1];
+	$mblock = pad($mblock, 1) if $PRETTY;
 	push(@$handlers, "'$match'");
 	$catchblock .= $n++ 
-	    ? "elsif (\$handler eq '$match') {\n    $mblock\n}\n" 
-	       : "if (\$handler eq '$match') {\n    $mblock\n}\n";
+	    ? "elsif (\$handler eq '$match') {\n$mblock\n}\n" 
+	       : "if (\$handler eq '$match') {\n$mblock\n}\n";
     }
     $catchblock .= "\$error = 0;";
-    $catchblock = pad($catchblock, 3);
+    $catchblock = pad($catchblock, 3) if $PRETTY;
     if ($default) {
-	$default = pad($default, 1);
-	$default = "else {\n    # DEFAULT\n    $default\n    \$error = '';\n}";
+	$default = pad($default, 1) if $PRETTY;
+	$default = "else {\n    # DEFAULT\n$default\n    \$error = '';\n}";
     }
     else {
 	$default = '# NO DEFAULT';
     }
-    $default = pad($default, 2);
+    $default = pad($default, 2) if $PRETTY;
 
     $handlers = join(', ', @$handlers);
 return <<EOF;
@@ -563,7 +505,7 @@ $OUTPUT do {
     my \$output = '';
     my (\$error, \$handler);
     eval {
-        $block
+$block
     };
     if (\$@) {
         \$error = \$context->catch(\$@, \\\$output);
@@ -571,7 +513,7 @@ $OUTPUT do {
         \$stash->set('error', \$error);
         \$stash->set('e', \$error);
         if (defined (\$handler = \$error->select_handler($handlers))) {
-  	    $catchblock
+$catchblock
         }
         $default
     }
@@ -657,7 +599,7 @@ sub use {
 
 sub perl {
     my ($class, $block) = @_;
-    $block = pad($block, 1);
+    $block = pad($block, 1) if $PRETTY;
 
     return <<EOF;
 
@@ -665,7 +607,7 @@ sub perl {
 $OUTPUT do {
     my \$output = "package Template::Perl;\\n";
 
-    $block
+$block
 
     \$Template::Perl::context = \$context;
     \$Template::Perl::stash   = \$stash;
@@ -685,17 +627,19 @@ EOF
 #------------------------------------------------------------------------
 
 sub rawperl {
-    my ($class, $block) = @_;
+    my ($class, $block, $line) = @_;
     for ($block) {
 	s/^\n+//;
 	s/\n+$//;
     }
-    $block = pad($block, 1);
-    
+    $block = pad($block, 1) if $PRETTY;
+    $line = $line ? " (starting line $line)" : '';
+
     return <<EOF;
 # RAWPERL
 if (\$context->eval_perl) {
-    $block
+#line 1 "RAWPERL block$line"
+$block
 }
 EOF
 }
@@ -713,7 +657,7 @@ sub filter {
     $args = $args ? "$args, $alias" : ", undef, $alias"
 	if $alias;
     $name .= ", $args" if $args;
-    $block = pad($block, 1);
+    $block = pad($block, 1) if $PRETTY;
  
     return <<EOF;
 
@@ -723,7 +667,7 @@ $OUTPUT do {
     my \$filter = \$context->filter($name)
               || \$context->throw(\$context->error);
 
-    $block
+$block
     
     &\$filter(\$output);
 };
@@ -746,14 +690,14 @@ sub capture {
 	    $name = '[' . join(', ', @$name) . ']';
 	}
     }
-    $block = pad($block, 1);
+    $block = pad($block, 1) if $PRETTY;
 
     return <<EOF;
 
 # CAPTURE
 \$stash->set($name, do {
     my \$output = '';
-    $block
+$block
     \$output;
 });
 EOF
@@ -767,7 +711,7 @@ EOF
 
 sub macro {
     my ($class, $ident, $block, $args) = @_;
-    $block = pad($block, 2);
+    $block = pad($block, 2) if $PRETTY;
 
     if ($args) {
 	my $nargs = scalar @$args;
@@ -789,7 +733,7 @@ sub macro {
 
     \$stash = \$context->localise(\$params);
     eval {
-        $block
+$block
     };
     \$stash = \$context->delocalise();
     die \$@ if \$@;
@@ -808,7 +752,7 @@ EOF
 
     \$stash = \$context->localise(\$params);
     eval {
-        $block
+$block
     };
     \$stash = \$context->delocalise();
     die \$@ if \$@;

@@ -33,6 +33,53 @@ test_expect(\*DATA, $ttobjs, callsign);
 
 __DATA__
 #------------------------------------------------------------------------
+# basic directives
+#------------------------------------------------------------------------
+-- test --
+[% a %]
+[%a%]
+-- expect --
+alpha
+alpha
+
+-- test --
+pre [% a %]
+pre[% a %]
+-- expect --
+pre alpha
+prealpha
+
+-- test --
+[% a %] post
+[% a %]post
+-- expect --
+alpha post
+alphapost
+
+-- test --
+pre [% a %] post
+pre[% a %]post
+-- expect --
+pre alpha post
+prealphapost
+
+-- test --
+[% a %][%b%][% c %]
+-- expect --
+alphabravocharlie
+
+-- test --
+[% 
+a %][%b
+%][%
+c
+%][%
+         d
+%]
+-- expect --
+alphabravocharliedelta
+
+#------------------------------------------------------------------------
 # comments
 #------------------------------------------------------------------------
 -- test --
@@ -298,7 +345,7 @@ this is block foo
 this is block bar
 end
 
--- start --
+-- test --
 [% r; r = s; "-"; r %].
 -- expect --
 romeo-sierra.

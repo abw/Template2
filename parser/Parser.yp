@@ -70,7 +70,7 @@ chunk:	    TEXT		    { $factory->textblock($_[1])          }
 ;
 
                           # { "#line ${$_[0]->{LINE} \"template\"\n$_[1]" }
-statement:  directive               
+statement:  directive      
 	|   defblock
 	|   anonblock
 	|   capture
@@ -178,9 +178,10 @@ perl:	    PERL ';'                { ${$_[0]->{ INPERL }}++;             }
 				      $factory->perl($_[4])               }
 ;
 
-rawperl:    RAWPERL ';'             { ${$_[0]->{ INPERL }}++;             }
-	      TEXT END		    { ${$_[0]->{ INPERL }}--;
-				      $factory->rawperl($_[4])            }
+rawperl:    RAWPERL                 { ${$_[0]->{ INPERL }}++; 
+				      $rawstart = ${$_[0]->{'LINE'}};     }
+	    ';' TEXT END	    { ${$_[0]->{ INPERL }}--;
+				      $factory->rawperl($_[4], $rawstart) }
 ;
 
 filter:	    FILTER lnameargs ';' 

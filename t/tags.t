@@ -32,8 +32,13 @@ my $params = {
     'e'  => 'echo',
 };
 
+my $tt = [
+    basic => Template->new(INTERPOLATE => 1),
+    htags => Template->new(TAG_STYLE => 'html'),
+    stags => Template->new(START_TAG => '\[\*',  END_TAG => '\*\]'),
+];
 
-test_expect(\*DATA, { INTERPOLATE => 1 }, $params);
+test_expect(\*DATA, $tt, $params);
 
 __DATA__
 [%a%] [% a %] [% a %]
@@ -150,6 +155,38 @@ delta
 <!-- c -->
 <% d %>
 echo
+
+#------------------------------------------------------------------------
+# test processor with pre-defined TAG_STYLE
+#------------------------------------------------------------------------
+-- test --
+-- use htags --
+[% TAGS ignored -%]
+[% a %]
+<!-- c -->
+more stuff
+-- expect --
+[% TAGS ignored -%]
+[% a %]
+charlie
+more stuff
+
+#------------------------------------------------------------------------
+# test processor with pre-defined START_TAG and END_TAG
+#------------------------------------------------------------------------
+-- test --
+-- use stags --
+[% TAGS ignored -%]
+<!-- also totally ignored and treated as text -->
+[* a *]
+blah [* b *] blah
+-- expect --
+[% TAGS ignored -%]
+<!-- also totally ignored and treated as text -->
+alpha
+blah bravo blah
+
+
 
 
 

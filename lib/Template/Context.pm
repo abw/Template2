@@ -105,6 +105,7 @@ sub template {
     foreach my $provider (@{ $self->{ TEMPLATES } }) {
 	($template, $error) = $provider->fetch($name);
 	return $template unless $error;
+#	print STDERR "template() error: $error\ntemplate: $template";
 	return $self->error($template)
 	    if $error == &Template::Constants::STATUS_ERROR;
     }
