@@ -42,10 +42,10 @@ $PARSER   = 'Template::Parser';
 $PLUGINS  = 'Template::Plugins';
 $PROVIDER = 'Template::Provider';
 $SERVICE  = 'Template::Service';
-$STASH    = 'Template::Stash';
+$STASH    = 'Template::Stash::XS';
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+$INSTDIR  = '/usr/local/tt2';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.

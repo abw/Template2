@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.04b, detailing
+#   Revision history for the Template Toolkit version 2.04d, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -19,6 +19,29 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.04d - 15 Aug 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Added gt, ge, lt and le as comparison operators which map directly 
+  to their Perl counterparts.  Added tests to t/stash.t and relevant
+  documentation to the IF directive.
+
+* Added 'sorted' as a flag to the HTML plugin to return attributes in 
+  sorted order.  Mainly for debugging purposes, as used in t/html.t.
+
+* Fixed Template::Parser.pm to recognise &quot;\r&quot; as a valid escape sequence
+  in double quoted strings.
+
+
+#------------------------------------------------------------------------
+# Version 2.04c - 04 Aug 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed t/dbi.t and t/latex*.t to not complain about &quot;Test header seen
+  twice&quot;.  Thanks to Leon.
+
 
 #------------------------------------------------------------------------
 # Version 2.04b - 04 Aug 2001                     ## DEVELOPER RELEASE ##

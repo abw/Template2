@@ -18,6 +18,29 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.04d - 15 Aug 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Added gt, ge, lt and le as comparison operators which map directly 
+  to their Perl counterparts.  Added tests to t/stash.t and relevant
+  documentation to the IF directive.
+
+* Added 'sorted' as a flag to the HTML plugin to return attributes in 
+  sorted order.  Mainly for debugging purposes, as used in t/html.t.
+
+* Fixed Template::Parser.pm to recognise "\r" as a valid escape sequence
+  in double quoted strings.
+
+
+#------------------------------------------------------------------------
+# Version 2.04c - 04 Aug 2001                     ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed t/dbi.t and t/latex*.t to not complain about "Test header seen
+  twice".  Thanks to Leon.
+
+
+#------------------------------------------------------------------------
 # Version 2.04b - 04 Aug 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 

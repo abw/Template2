@@ -14,24 +14,32 @@ select STDOUT;
 use vars qw( $TT_VERSION $TT_PREFIX $TT_IMAGES $TT_RUN_DBI
 	     $TT_BUILD_DOCS $TT_SPLASH_DOCS $TT_EXAMPLES
 	     $TT_LATEX_ENABLE $TT_LATEX_PATH $TT_PDFLATEX_PATH $TT_DVIPS_PATH 
+	     $TT_XS_ENABLE $TT_XS_DEFAULT
 	     $TT_SPLASH_THEME $TT_QUIET $TT_ACCEPT $TT_YES );
 
 # check O/S to set sensible defaults
-my ($WIN32, $FLAVOUR, $PREFIX, $MAKE);
+
+my ($WIN32, $FLAVOUR, $PREFIX, $IMAGES, $MAKE);
 if ($^O =~ /win/i) {
     $WIN32   = 1;
     $FLAVOUR = 'Win32';
     $PREFIX  = 'C:/Program Files/Template Toolkit 2';
+    $IMAGES  = '/tt2/images';
     $MAKE    = 'nmake';
 }
 else {
     $WIN32   = 0;
     $FLAVOUR = 'Unix';
     $PREFIX  = '/usr/local/tt2';
+    $IMAGES  = '/tt2/images';
     $MAKE    = 'make';
 }
 
-# read command line args
+
+# read command line args putting TT_* into $ttconfig and
+# everything else (regular Makefile.PL args, e.g. PREFIX)
+# goes into $config
+
 my (%config, %ttconfig);
 while ($_ = shift) {
     my ($k, $v) = split(/=/);
@@ -43,23 +51,33 @@ while ($_ = shift) {
     }
 };
 
+
+# print help if they asked for it
+
 if (exists $ttconfig{ TT_HELP }) {
     print <<EOF;
 The following options can be specified as command line 
 arguments to 'perl Makefile.PL'.  e.g.
 
-    perl Makefile.PL TT_PREFIX=/my/tt2/dir TT_ACCEPT=y
+  perl Makefile.PL TT_PREFIX=/my/tt2/dir TT_ACCEPT=y
 
-    TT_PREFIX    installation prefix   ($PREFIX)
-    TT_IMAGES    images URL            (/tt2/images)
-    TT_DOCS      build HTML docs       (y)
-    TT_SPLASH    use Splash! for docs  (y)
-    TT_THEME     Splash! theme         (default)
-    TT_EXAMPLES  build HTML examples   (y)
-    TT_DBI	 run DBI tests         (y if DBI installed)
-    TT_LATEX	 install LaTeX filter  (y if LaTeX found)
-    TT_QUIET     no messages	       (n)
-    TT_ACCEPT    accept defaults       (n)
+  TT_PREFIX      installation prefix     ($PREFIX)
+  TT_IMAGES      images URL              (/tt2/images)
+  TT_DOCS        build HTML docs         (y)
+  TT_SPLASH      use Splash! for docs    (y)
+  TT_THEME       Splash! theme           (default)
+  TT_EXAMPLES    build HTML examples     (y)
+  TT_XS_ENABLE   Enable XS Stash         (y)
+  TT_XS_DEFAULT  Use XS Stash by default (y)
+  TT_DBI         run DBI tests           (y if DBI installed)
+
+  TT_LATEX       install LaTeX filter    (y if LaTeX found)
+  TT_LATEX_PATH      path to latex       (system dependant)
+  TT_PDFLATEX_PATH   path to pdflatex    (  "     "     " )
+  TT_DVIPS_PATH      path to dvips       (  "     "     " )
+
+  TT_QUIET       no messages	         (n)
+  TT_ACCEPT      accept defaults         (n)
 
 By default, the Makefile.PL runs in interactive mode, 
 prompting for confirmation of the various configuration
@@ -72,15 +90,23 @@ EOF
     exit(0);
 }
 
+# these global package variables are the main flags used
+# in this script, here defaulted to sensible values
+
 $TT_VERSION       = $Template::VERSION;
 $TT_PREFIX        = $PREFIX;
-$TT_IMAGES        = '/tt2/images';
+$TT_IMAGES        = $IMAGES;
 $TT_RUN_DBI       = 'y';
 $TT_BUILD_DOCS    = 'y';
 $TT_SPLASH_DOCS   = 'y';
 $TT_EXAMPLES      = 'y';
 $TT_SPLASH_THEME  = 'default';
+$TT_XS_ENABLE     = 'y';
+$TT_XS_DEFAULT    = 'y';
 $TT_LATEX_ENABLE  = 'y';
+$TT_LATEX_PATH    = '';
+$TT_PDFLATEX_PATH = '';
+$TT_DVIPS_PATH    = '';
 $TT_QUIET         = 'n';
 $TT_ACCEPT        = 'n';
 
@@ -98,18 +124,24 @@ if (-f $DEFAULTS_FILE) {
     $DEFAULTS = " read from '$DEFAULTS_FILE'";
 }
 
-$TT_PREFIX        = $ttconfig{ TT_PREFIX   } if defined $ttconfig{ TT_PREFIX   };
-$TT_IMAGES        = $ttconfig{ TT_IMAGES   } if defined $ttconfig{ TT_IMAGES   };
-$TT_RUN_DBI       = $ttconfig{ TT_DBI      } if defined $ttconfig{ TT_DBI      };
-$TT_BUILD_DOCS    = $ttconfig{ TT_DOCS     } if defined $ttconfig{ TT_DOCS     };
-$TT_SPLASH_DOCS   = $ttconfig{ TT_SPLASH   } if defined $ttconfig{ TT_SPLASH   };
-$TT_EXAMPLES      = $ttconfig{ TT_EXAMPLES } if defined $ttconfig{ TT_EXAMPLES };
-$TT_SPLASH_THEME  = $ttconfig{ TT_THEME    } if defined $ttconfig{ TT_THEME    };
-$TT_LATEX_ENABLE  = $ttconfig{ TT_LATEX    } if defined $ttconfig{ TT_LATEX    };
-$TT_QUIET         = $ttconfig{ TT_QUIET    } if defined $ttconfig{ TT_QUIET    };
-$TT_ACCEPT        = $ttconfig{ TT_ACCEPT   } if defined $ttconfig{ TT_ACCEPT   };
+$TT_PREFIX        = $ttconfig{ TT_PREFIX     } if $ttconfig{ TT_PREFIX     };
+$TT_IMAGES        = $ttconfig{ TT_IMAGES     } if $ttconfig{ TT_IMAGES     };
+$TT_SPLASH_THEME  = $ttconfig{ TT_THEME      } if $ttconfig{ TT_THEME      };
+$TT_LATEX_PATH    = $ttconfig{ TT_LATEX_PATH } if $ttconfig{ TT_LATEX_PATH };
+$TT_PDFLATEX_PATH = $ttconfig{ TT_PDFLATEX_PATH } if $ttconfig{ TT_PDFLATEX_PATH };
+$TT_DVIPS_PATH    = $ttconfig{ TT_DVIPS_PATH } if $ttconfig{ TT_DVIPS_PATH };
+$TT_RUN_DBI       = $ttconfig{ TT_DBI        } if defined $ttconfig{ TT_DBI        };
+$TT_BUILD_DOCS    = $ttconfig{ TT_DOCS       } if defined $ttconfig{ TT_DOCS       };
+$TT_SPLASH_DOCS   = $ttconfig{ TT_SPLASH     } if defined $ttconfig{ TT_SPLASH     };
+$TT_EXAMPLES      = $ttconfig{ TT_EXAMPLES   } if defined $ttconfig{ TT_EXAMPLES   };
+$TT_LATEX_ENABLE  = $ttconfig{ TT_LATEX      } if defined $ttconfig{ TT_LATEX      };
+$TT_XS_ENABLE     = $ttconfig{ TT_XS_ENABLE  } if defined $ttconfig{ TT_XS_ENABLE  };
+$TT_XS_DEFAULT    = $ttconfig{ TT_XS_DEFAULT } if defined $ttconfig{ TT_XS_DEFAULT };
+$TT_QUIET         = $ttconfig{ TT_QUIET      } if defined $ttconfig{ TT_QUIET      };
+$TT_ACCEPT        = $ttconfig{ TT_ACCEPT     } if defined $ttconfig{ TT_ACCEPT     };
 
-foreach ($TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, $TT_LATEX_ENABLE) {
+foreach ($TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, 
+	 $TT_LATEX_ENABLE, $TT_XS_ENABLE, $TT_XS_DEFAULT ) {
     $_ = 'n' if ! $_;
 }
 $TT_ACCEPT = 0 if $TT_ACCEPT eq 'n';
@@ -132,6 +164,7 @@ welcome_message();
 version_check();
 mandatory_modules();
 optional_modules();
+optional_stash_xs();
 optional_latex();
 optional_extras();
 splash_images();
@@ -200,6 +233,7 @@ my %opts = (
     'VERSION_FROM' => 'lib/Template.pm',
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
     'PMLIBDIRS'    => [ 'lib' ], 
+    'DIR'          => [ ],
     'PREREQ_PM'    => { 'AppConfig' => 1.52 },
     'dist'         => {
 	'COMPRESS' => 'gzip',
@@ -207,6 +241,8 @@ my %opts = (
 #	'PREOP'    =>  build_docs(),
     },
 );
+
+push @{ $opts{'DIR'} }, 'xs' if $TT_XS_ENABLE;
 
 if ($ExtUtils::MakeMaker::VERSION >= 5.43) {
     $opts{ AUTHOR }   = 'Andy Wardley <abw@kfs.org>';
@@ -226,6 +262,10 @@ EOF
 }
 
 message(<<EOF) if $TT_BUILD_DOCS;
+
+
+Installation Notes
+------------------
 
 Please note that the installation of the optional components and
 building of the HTML documentation is performed at the "make install"
@@ -253,11 +293,11 @@ sub welcome_message {
                     =============================
 
 Using $FLAVOUR defaults$DEFAULTS.
+
+Run 'perl Makefile.PL TT_HELP' for a summary of options.
 EOF
     print "Messages suppressed (TT_QUIET).  " if $TT_QUIET;
     print "Accepting defaults automatically (TT_ACCEPT)." if $TT_ACCEPT;
-    print "\nRun 'perl Makefile.PL TT_HELP' for further info.\n"
-	if $TT_QUIET || $TT_ACCEPT;
 }
 
 
@@ -286,7 +326,7 @@ IMPORTANT NOTE:
     Please consult the README and Changes file for further details.
     Most of the changes are in the more obscure features and
     directives so hopefully you will find the upgrade process fairly
-    painless.
+    painless.  If you're feeling brave, then answer 'y', otherwise 'n'.
 
 EOF
 	exit unless ttprompt("Do you want to continue?", 'y') =~ /y/i;
@@ -340,6 +380,9 @@ EOF
 sub optional_modules {
     message(<<EOF);
 
+External Modules
+----------------
+
 The Template Toolkit includes a number of plugin modules, some of
 which interface to external Perl modules available from CPAN.  All the
 plugins will be installed regardless so that they will automatically
@@ -378,6 +421,56 @@ EOF
 }
 
 
+#------------------------------------------------------------------------
+# optional_stash_xs()
+#
+# Prompt for installation and default use of XS Stash.
+#------------------------------------------------------------------------
+
+sub optional_stash_xs {
+#    return if $TT_ACCEPT && (! $TT_XS_ENABLE || $TT_XS_ENABLE eq 'n');
+
+    message(<<EOF);
+
+
+XS Stash: TT2 now twice as fast!
+--------------------------------
+
+We have a new, high speed version of the Template::Stash. It's 
+a Perl XS module which can evaluate templates about twice as fast as 
+the pure-Perl version.  Although still strictly "experimental", it
+has been widely tested and is thought to be stable and reliable.
+
+You may choose to build the XS module, but it won't be enabled by 
+default. Instead, the recommended usage is something like this:
+
+    use Template;
+    use Template::Stash::XS;
+
+    my \$tt = new Template ({ STASH => new Template::Stash::XS, ... });
+
+However, if you are feeling brave, the XS version can be set as the 
+default stash for all Template objects. (Also see \$STASH in the
+Template/Config.pm module, e.g. 'perldoc Template::Config').
+
+EOF
+
+    $TT_XS_ENABLE = (ttprompt('Do you want to build the XS Stash module?', 
+			      $TT_XS_ENABLE) =~ /^y/i);
+
+    if ($TT_XS_ENABLE) {
+	
+	$TT_XS_DEFAULT = (ttprompt('Do you want to use the XS Stash for all Templates?', 
+				   $TT_XS_DEFAULT) =~ /^y/i); 
+
+	if ($TT_XS_DEFAULT) {
+	    fix_file('lib/Template/Config.pm',
+		     '$STASH', 
+		     'Template::Stash::XS');
+	}
+    }
+}
+
 
 #------------------------------------------------------------------------
 # optional_latex()
@@ -386,13 +479,17 @@ EOF
 #------------------------------------------------------------------------
 
 sub optional_latex {
-    return if ! $TT_LATEX_ENABLE || $TT_LATEX_ENABLE eq 'n';
+#    return if $TT_ACCEPT && (! $TT_LATEX_ENABLE || $TT_LATEX_ENABLE eq 'n');
 
-    $TT_LATEX_PATH    ||= findProgram($ENV{PATH}, "latex")    || '';
-    $TT_PDFLATEX_PATH ||= findProgram($ENV{PATH}, "pdflatex") || '';
-    $TT_DVIPS_PATH    ||= findProgram($ENV{PATH}, "dvips")    || '';
+    $TT_LATEX_PATH    ||= find_program($ENV{PATH}, "latex")    || '';
+    $TT_PDFLATEX_PATH ||= find_program($ENV{PATH}, "pdflatex") || '';
+    $TT_DVIPS_PATH    ||= find_program($ENV{PATH}, "dvips")    || '';
 
     message(<<EOF);
+
+
+LaTeX Support
+-------------
 
 TT2 supports PDF, DVI and PostScript output using the latex filter,
 implemented with the programs pdflatex, latex and dvips.
@@ -438,7 +535,6 @@ EOF
 }
 
 
-
 #------------------------------------------------------------------------
 # optional_extras()
 #
@@ -447,6 +543,10 @@ EOF
 
 sub optional_extras {
     message(<<EOF);
+
+
+Optional Extras
+---------------
 
 In additional to the Perl modules and POD documentation installed in
 the usual way, the Template Toolkit distribution also contains a
@@ -476,7 +576,7 @@ flavour to your operating system (suggestions for suitable defaults
 for other platforms welcome).
 
 EOF
-	$TT_PREFIX = ttprompt('Installation directory', $TT_PREFIX);
+	$TT_PREFIX = ttprompt('Installation directory', $TT_PREFIX || $PREFIX);
     }
     else {
 	$TT_PREFIX = '';
@@ -497,6 +597,10 @@ sub splash_images {
     return unless $TT_PREFIX;
 
     message(<<EOF);
+
+
+Splash!
+-------
 
 The Splash! template library uses a number of (very) small images to
 build user interface components.  These will be installed into the
@@ -538,7 +642,7 @@ manpage at your leisure to find out more).
 EOF
     }
 
-    $TT_IMAGES = ttprompt('URL base for TT2 images?', $TT_IMAGES);
+    $TT_IMAGES = ttprompt('URL base for TT2 images?', $TT_IMAGES || $IMAGES);
     $TT_IMAGES =~ s[/$][]g;	# just in case
     fix_file('templates/splash/config', 'images', "$TT_IMAGES/splash");
 }
@@ -558,6 +662,10 @@ sub html_docs {
     my $style_cfg = '';
 
     message(<<EOF);
+
+
+HTML Documentation
+------------------
 
 The modules comprising the Template Toolkit contain comprehensive POD
 documentation which can be browsed using 'perldoc' or 'man' (if your
@@ -683,6 +791,10 @@ sub html_examples {
 
     message(<<EOF);
 
+
+HTML Examples
+-------------
+
 A number of examples showing use of the HTML, Splash! and PostScript 
 libraries will be installed into:
 
@@ -734,8 +846,11 @@ EOF
 
 sub write_defaults {
     open(FP, "> $DEFAULTS_FILE") || die "$DEFAULTS_FILE: $!\n";
-    my ($ttdbi, $ttdocs, $ttsplash, $ttex, $ttlatex) = map { $_ ? 'y' : 'n' } 
-	( $TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, $TT_LATEX_ENABLE );
+    my ( $ttdbi, $ttdocs, $ttsplash, $ttex, 
+	 $ttlatex, $ttxs_enable, $ttxs_default ) 
+	    = map { $_ ? 'y' : 'n' } 
+       ( $TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, 
+	 $TT_LATEX_ENABLE, $TT_XS_ENABLE, $TT_XS_DEFAULT );
     print FP <<EOF;
 \$TT_PREFIX        = '$TT_PREFIX';
 \$TT_IMAGES        = '$TT_IMAGES';
@@ -748,6 +863,8 @@ sub write_defaults {
 \$TT_LATEX_PATH    = '$TT_LATEX_PATH';
 \$TT_PDFLATEX_PATH = '$TT_PDFLATEX_PATH';
 \$TT_DVIPS_PATH    = '$TT_DVIPS_PATH';
+\$TT_XS_ENABLE     = '$ttxs_enable';
+\$TT_XS_DEFAULT    = '$ttxs_default';
 \$TT_ACCEPT        = '$TT_ACCEPT';
 \$TT_QUIET         = '$TT_QUIET';
 1;
@@ -869,6 +986,9 @@ sub dbi_config {
 	
 	message(<<EOF);
 
+DBI Test Configuration
+----------------------
+
 Please enter the driver name for the test database.
 The DBD drivers installed on your system are
 
@@ -951,15 +1071,17 @@ sub fix_file {
 
 
 #------------------------------------------------------------------------
-# findProgram($path, $prog)
+# find_program($path, $prog)
 #
 # Find a program, $prog, by traversing the given directory path, $path.
 # Returns full path if the program is found.
 #
 # Written by Craig Barratt, Richard Tietjen add fixes for Win32.
+#
+# abw changed name from studly caps findProgram() to find_program() :-)
 #------------------------------------------------------------------------
 
-sub findProgram {
+sub find_program {
     my($path, $prog) = @_;
     my $sep = $WIN32 ? qr/;/ : qr/:/;
     foreach my $dir ( split($sep, $path) ) {

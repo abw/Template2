@@ -6,6 +6,7 @@ TODO
 bin/README
 bin/gifsplash
 bin/tpage
+bin/tt-bench.pl
 bin/tt2inst
 bin/ttree
 docs/README
@@ -422,6 +423,7 @@ lib/Template/Provider.pm
 lib/Template/Service.pm
 lib/Template/Stash.pm
 lib/Template/Stash/Context.pm
+lib/Template/Stash/XS.pm
 lib/Template/Test.pm
 lib/Template/Tools/tpage.pod
 lib/Template/Tools/ttree.pod
@@ -462,6 +464,7 @@ t/dumper.t
 t/error.t
 t/evalperl.t
 t/exception.t
+t/factory.t
 t/file.t
 t/filter.t
 t/foreach.t
@@ -494,6 +497,7 @@ t/ref.t
 t/rss.t
 t/service.t
 t/skel.t
+t/stash-xs.t
 t/stash.t
 t/stashc.t
 t/stop.t
@@ -643,3 +647,7 @@ templates/splash/tabset
 templates/splash/text
 templates/splash/ttdotorg
 templates/splash/ttpower
+xs/MANIFEST
+xs/Makefile.PL
+xs/README
+xs/Stash.xs

@@ -36,3 +36,8 @@
 ^t/shout.t
 ^t/docset.t
 ^t/test/src/complex.org
+^xs/Makefile$
+^xs/Stash.c
+^xs/Stash.o
+^xs/XS.bs
+^xs/pm_to_blib
