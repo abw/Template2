@@ -222,9 +222,11 @@ world]
 [% USE str=String('Hello World') -%]
 [[% str.copy.truncate(5) %]]
 [[% str.copy.truncate(8, '...') %]]
+[[% str.copy.truncate(20, '...') %]]
 -- expect --
 [Hello]
 [Hello...]
+[Hello World]
 
 -- test --
 [% USE String('foo') -%]
