@@ -82,6 +82,7 @@ docs/src/Modules/Template/Plugin/GD/Text.html
 docs/src/Modules/Template/Plugin/GD/Text/Align.html
 docs/src/Modules/Template/Plugin/GD/Text/Wrap.html
 docs/src/Modules/Template/Plugin/HTML.html
+docs/src/Modules/Template/Plugin/Image.html
 docs/src/Modules/Template/Plugin/Iterator.html
 docs/src/Modules/Template/Plugin/Pod.html
 docs/src/Modules/Template/Plugin/Procedural.html
@@ -422,6 +423,7 @@ lib/Template/Plugin/GD/Text.pm
 lib/Template/Plugin/GD/Text/Align.pm
 lib/Template/Plugin/GD/Text/Wrap.pm
 lib/Template/Plugin/HTML.pm
+lib/Template/Plugin/Image.pm
 lib/Template/Plugin/Iterator.pm
 lib/Template/Plugin/Pod.pm
 lib/Template/Plugin/Procedural.pm
@@ -496,6 +498,7 @@ t/gdtext.t
 t/gdtextalign.t
 t/gdtextwrap.t
 t/html.t
+t/image.t
 t/include.t
 t/iterator.t
 t/latex2dvi.t
