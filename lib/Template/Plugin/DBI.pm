@@ -341,7 +341,7 @@ sub _throw {
     my $error = shift || die "DBI throw() called without an error string\n";
 
     # throw error as DBI exception
-    die Template::Exception->new('DBI', $error);
+    die (Template::Exception->new('DBI', $error));
 }
 
 

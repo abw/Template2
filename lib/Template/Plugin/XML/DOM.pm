@@ -141,7 +141,7 @@ sub parse {
 
 sub _throw {
     my ($self, $error) = @_;
-    die Template::Exception->new('XML.DOM', $error);
+    die (Template::Exception->new('XML.DOM', $error));
 }
 
 

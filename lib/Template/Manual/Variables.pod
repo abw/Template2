@@ -461,7 +461,7 @@ template:
 The exception types 'stop' and 'return' are used to implement the 
 STOP and RETURN directives.  Throwing an exception as:
 
-    die Template::Exception->new('stop');
+    die (Template::Exception->new('stop'));
 
 has the same effect as the directive:
 

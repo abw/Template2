@@ -160,7 +160,7 @@ sub content {
 
 sub throw {
     my ($self, $error) = @_;
-    die Template::Exception->new('Directory', $error);
+    die (Template::Exception->new('Directory', $error));
 }
 
 __END__

@@ -140,7 +140,7 @@ sub present {
 
 sub throw {
     my ($self, $error) = @_;
-    die Template::Exception->new('File', $error);
+    die (Template::Exception->new('File', $error));
 }
 
 __END__

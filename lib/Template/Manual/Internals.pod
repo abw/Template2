@@ -212,7 +212,7 @@ Template::Exception object.  An exception object is really just a
 convenient wrapper for the 'type' and 'info' fields.
 
     sub my_solilique_template {
-	die Template::Exception->new('yorrick', 'Fellow of infinite jest');
+	die (Template::Exception->new('yorrick', 'Fellow of infinite jest'));
     }
 
 Templates generally need to do a lot more than just generate static

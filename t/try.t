@@ -31,7 +31,7 @@ my $ttcfg = {
 };
 my $replace = &callsign();
 $replace->{ throw_egg } = sub { 
-    die Template::Exception->new('egg', 'scrambled');
+    die (Template::Exception->new('egg', 'scrambled'));
 };
 $replace->{ throw_any } = sub { 
     die "undefined error\n";

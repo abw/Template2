@@ -146,7 +146,7 @@ sub barf_up {
 	die "keeled over\n";
     }
     else {
-	die Template::Exception->new('unwell', 'sick as a parrot');
+	die (Template::Exception->new('unwell', 'sick as a parrot'));
     }
 }
 

@@ -2604,7 +2604,7 @@ out.
   All errors should be thrown via one of the following:
 
     die $error_msg;
-    die Template::Exception->new($type, $info);
+    die (Template::Exception->new($type, $info));
     $context->throw($msg);
     $context->throw($type, $info);
     $context->throw($exception);

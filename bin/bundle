@@ -3,5 +3,5 @@
 && make test           \
 && bin/fixconfig -v -y \
 && make dist           \
-&& echo "Let a thousand flowers bloom!"
+&& echo "And now the bundle is complete..."
 

@@ -91,7 +91,7 @@ sub new {
 sub _throw {
     my ($self, $error) = @_;
 #    print STDERR "about to throw $error\n";
-    die Template::Exception->new('XML.XPath', $error);
+    die (Template::Exception->new('XML.XPath', $error));
 }
 
 

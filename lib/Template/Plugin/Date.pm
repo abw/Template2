@@ -150,7 +150,7 @@ sub manip {
 
 sub throw {
     my $self = shift;
-    die Template::Exception->new('date', join(', ', @_));
+    die (Template::Exception->new('date', join(', ', @_)));
 }
 
 

@@ -647,7 +647,7 @@ or by calling the throw() method on the current Template::Context object,
 
 or from Perl code by calling die() with a Template::Exception object,
 
-    die Template::Exception->new('user.denied', 'Invalid User ID');
+    die (Template::Exception->new('user.denied', 'Invalid User ID'));
 
 or by simply calling die() with an error string.  This is
 automagically caught and converted to an  exception of 'undef'

@@ -57,7 +57,7 @@ sub new {
 
 sub _throw {
     my ($self, $error) = @_;
-    die Template::Exception->new('XML.XPath', $error);
+    die (Template::Exception->new('XML.XPath', $error));
 }
 
 

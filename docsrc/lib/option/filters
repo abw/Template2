@@ -20,11 +20,11 @@ dynamic (1).  A filter may also be specified as a solitary subroutine
 reference and is assumed to be static.
 
     [* obj *] = [* pkg *]->new({
-  	FILTERS => {
-  	    'sfilt1' =>   \&static_filter,      # static
+        FILTERS => {
+            'sfilt1' =>   \&static_filter,      # static
             'sfilt2' => [ \&static_filter, 0 ], # same as above
-  	    'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
-  	},
+            'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
+        },
     });
 
 Additional filters can be specified at any time by calling the 
@@ -46,9 +46,9 @@ the output of a template block which is passed as the only argument.
 The subroutine should return the modified text.
 
     sub static_filter {
-  	my $text = shift;
-	# do something to modify $text...
-  	return $text;
+        my $text = shift;
+        # do something to modify $text...
+        return $text;
     }
 
 The following template fragment:
@@ -71,13 +71,13 @@ another subroutine reference (usually a closure) which implements the
 filter.
 
     sub dynamic_filter_factory {
-	my ($context, @args) = @_;
+        my ($context, @args) = @_;
 
-  	return sub {
-  	    my $text = shift;
-	    # do something to modify $text...
-	    return $text;	    
-  	}
+        return sub {
+            my $text = shift;
+            # do something to modify $text...
+            return $text;           
+        }
     }
 
 The following template fragment:

@@ -472,11 +472,11 @@ sub throw {
 	die $error;
     }
     elsif (defined $info) {
-	die Template::Exception->new($error, $info, $output);
+	die (Template::Exception->new($error, $info, $output));
     }
     else {
 	$error ||= '';
-	die Template::Exception->new('undef', $error, $output);
+	die (Template::Exception->new('undef', $error, $output));
     }
 
     # not reached

@@ -23,11 +23,11 @@ Template::Filters object.  A reference to a hash array of configuration
 items may be passed as a parameter.  These are described below.  
 
     my $filters = Template::Filters->new({
-	FILTERS => { ... },
+        FILTERS => { ... },
     });
 
     my $template = Template->new({
-	LOAD_FILTERS => [ $filters ],
+        LOAD_FILTERS => [ $filters ],
     });
 
 A default Template::Filters module is created by the Template.pm module

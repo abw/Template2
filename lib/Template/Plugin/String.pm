@@ -97,7 +97,7 @@ sub copy {
 sub throw {
     my $self = shift;
 
-    die Template::Exception->new('String', join('', @_));
+    die (Template::Exception->new('String', join('', @_)));
 }
 
 

@@ -98,7 +98,7 @@ sub copy {
 
 sub throw {
     my $self = CORE::shift;
-    die Template::Exception->new('List', CORE::join('', @_));
+    die (Template::Exception->new('List', CORE::join('', @_)));
 }
 
 
