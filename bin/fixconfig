@@ -1,10 +1,19 @@
 #!/usr/bin/perl -w                                         # -*- perl -*-
+#
+# Fixes the lib/Template/Config.pm file to restore the correct
+# (default) values for a distribution release.  Because the 
+# Makefile.PL updates this file, it means that I could send out
+# a "standard" lib/Template/Config.pm with, for example, LaTeX
+# paths pre-defined and XS Stash enabled by default.
+#
 
 use strict;
+use Getopt::Std;
 
-my $config = 'lib/Template/Config.pm';
+my $PROGRAM   = 'fixconfig';
+my $CONFIG = 'lib/Template/Config.pm';
 
-die $! unless -f $config;
+die $! unless -f $CONFIG;
 
 my $fixes = {
     '$STASH'         => 'Template::Stash',
@@ -14,7 +23,24 @@ my $fixes = {
     '$DVIPS_PATH'    => '',
 };
 
-fix_file($config, $fixes);
+my $args = { };
+getopts('vhy', $args);
+usage() if $args->{ h };
+my $verbose = $args->{ v };
+my $yes = $args->{ y };
+
+if ($verbose || ! $yes) {
+    print "About to make the following changes to ${CONFIG}:\n";
+    while (my ($key, $value) = each %$fixes) {
+	printf("    %-14s => %s\n", $key, $value);
+    }
+}
+if (! $yes) {
+    exit(1) unless ttprompt("Go ahead and make the changes?", 'n') =~ /y/i;
+}
+print "Fixing $CONFIG...\n" if $verbose;
+
+fix_file($CONFIG, $fixes);
 
 
 #------------------------------------------------------------------------
@@ -41,3 +67,44 @@ sub fix_file {
     print FP $text;
     close(FP);
 }
+
+
+#------------------------------------------------------------------------
+# ttprompt($message, $default)
+#------------------------------------------------------------------------
+
+sub ttprompt {
+    my ($msg, $def)=@_;
+    my $ISA_TTY = -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT)) ; # Pipe?
+    my $dispdef = defined $def ? "[$def] " : " ";
+    $def = defined $def ? $def : "";
+    my $ans = '';
+    local $|=1;
+    print "$msg $dispdef";
+    if (! $ISA_TTY) {
+	print "$def\n";
+    }
+    else {
+	chomp($ans = <STDIN>);
+    }
+    return ($ans ne '') ? $ans : $def;
+}
+
+
+#------------------------------------------------------------------------
+# usage
+#------------------------------------------------------------------------
+
+sub usage {
+    print STDERR <<EOF;
+$PROGRAM: restore $CONFIG to original for distribution
+
+usage: $PROGRAM [ -y | -v | -h ]
+
+    -y     yes, do it
+    -v     verbose mode
+    -h     this help
+EOF
+    exit();
+}
+

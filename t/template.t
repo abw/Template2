@@ -47,7 +47,7 @@ sub myout {
 
 ok($tt->process('header', undef, \&myout));
 
-my $out = Myout->new();
+$out = Myout->new();
 
 ok($tt->process('header', undef, $out));
 

@@ -23,6 +23,8 @@
 ^bin/release
 ^bin/docsrc
 ^bin/tskel
+^bin/fixconfig
+^bin/tt2prep
 ^parser/Parser\.output
 ^templates/skeleton
 ^docs/\w+\.cfg

@@ -10,8 +10,11 @@
 #
 
 # paths to Template version we want to test
-use lib './lib';
-use lib './blib/arch/auto/Template/Stash/XS';
+use lib qw( ./lib
+            ../lib 
+	    ./blib/arch/auto/Template/Stash/XS
+	    ../blib/arch/auto/Template/Stash/XS' 
+);
 
 use strict;
 use Template;
