@@ -28,6 +28,7 @@ require Exporter;
 
 use strict;
 use vars qw( $VERSION @ISA @EXPORT_OK %EXPORT_TAGS );
+use vars qw( $DEBUG_OPTIONS @STATUS @ERROR @CHOMP @DEBUG);
 
 @ISA     = qw( Exporter );
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -78,7 +79,7 @@ use constant DEBUG_ALL       => 2047; # everything
 use constant DEBUG_CALLER    => 4096; # add caller file/line
 use constant DEBUG_FLAGS     => 4096; # bitmask to extraxt flags
 
-our $DEBUG_OPTIONS  = {
+$DEBUG_OPTIONS  = {
     &DEBUG_OFF      => off      => off      => &DEBUG_OFF,
     &DEBUG_ON       => on       => on       => &DEBUG_ON,
     &DEBUG_UNDEF    => undef    => undef    => &DEBUG_UNDEF,
@@ -95,17 +96,17 @@ our $DEBUG_OPTIONS  = {
     &DEBUG_CALLER   => caller   => caller   => &DEBUG_CALLER,
 };
 
-our @STATUS  = qw( STATUS_OK STATUS_RETURN STATUS_STOP STATUS_DONE
-		   STATUS_DECLINED STATUS_ERROR );
-our @ERROR   = qw( ERROR_FILE ERROR_VIEW ERROR_UNDEF ERROR_PERL 
-		   ERROR_RETURN ERROR_FILTER ERROR_PLUGIN );
-our @CHOMP   = qw( CHOMP_NONE CHOMP_ALL CHOMP_COLLAPSE );
-our @DEBUG   = qw( DEBUG_OFF DEBUG_ON DEBUG_UNDEF DEBUG_VARS 
-                   DEBUG_DIRS DEBUG_STASH DEBUG_CONTEXT DEBUG_PARSER
-                   DEBUG_PROVIDER DEBUG_PLUGINS DEBUG_FILTERS DEBUG_SERVICE
-                   DEBUG_ALL DEBUG_CALLER DEBUG_FLAGS );
+@STATUS  = qw( STATUS_OK STATUS_RETURN STATUS_STOP STATUS_DONE
+               STATUS_DECLINED STATUS_ERROR );
+@ERROR   = qw( ERROR_FILE ERROR_VIEW ERROR_UNDEF ERROR_PERL 
+               ERROR_RETURN ERROR_FILTER ERROR_PLUGIN );
+@CHOMP   = qw( CHOMP_NONE CHOMP_ALL CHOMP_COLLAPSE );
+@DEBUG   = qw( DEBUG_OFF DEBUG_ON DEBUG_UNDEF DEBUG_VARS 
+               DEBUG_DIRS DEBUG_STASH DEBUG_CONTEXT DEBUG_PARSER
+               DEBUG_PROVIDER DEBUG_PLUGINS DEBUG_FILTERS DEBUG_SERVICE
+               DEBUG_ALL DEBUG_CALLER DEBUG_FLAGS );
 
-@EXPORT_OK   =   ( @STATUS, @ERROR, @CHOMP, @DEBUG );
+@EXPORT_OK   = ( @STATUS, @ERROR, @CHOMP, @DEBUG );
 %EXPORT_TAGS = (
     'all'      => [ @EXPORT_OK ],
     'status'   => [ @STATUS    ],
