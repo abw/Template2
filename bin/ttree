@@ -50,7 +50,7 @@ my $RCFILE   = $ENV{"\U${NAME}rc"} || "$HOME/.${NAME}rc";
 # has been specified on the command line
 unless (-f $RCFILE or grep(/^-f$/, @ARGV) ) {
     print("Do you want me to create a sample '.ttreerc' file for you?\n",
-	  "(file: $RCFILE)   [y/n]: ");
+      "(file: $RCFILE)   [y/n]: ");
     my $y = <STDIN>;
     if ($y =~ /^y(es)?/i) {
         write_config($RCFILE);
@@ -110,10 +110,10 @@ my $ttopts   = {
 #------------------------------------------------------------------------
 
 if ($depsfile or $depends) {
-	$depends = dependencies($depsfile, $depends);
+    $depends = dependencies($depsfile, $depends);
 } 
 else {
-	$depends = { };
+    $depends = { };
 }
 
 my $global_deps = $depends->{'*'} || [ ];
@@ -173,7 +173,7 @@ if ($verbose) {
     }
     print STDERR "\n";
     print(STDERR "NOTE: dry run, doing nothing...\n")
-    	if $dryrun;
+        if $dryrun;
 }
 
 #------------------------------------------------------------------------
@@ -250,7 +250,7 @@ sub process_tree {
                         next;
                     };
 # commented out by abw on 2000/12/04 - seems to raise a warning?   
-#		    chown($uid, $gid, $target) || warn "chown($target): $!\n";
+#           chown($uid, $gid, $target) || warn "chown($target): $!\n";
                     printf "  + %-32s (created target directory)\n", $path
                         if $verbose;
                 }
@@ -268,7 +268,7 @@ sub process_tree {
     }
     closedir(DIR);
 }
-	
+    
 
 #------------------------------------------------------------------------
 # process_file()
@@ -296,7 +296,7 @@ sub process_file {
         }
     }
     $dest = $destdir ? "$destdir/$destfile" : $destfile;
-			       
+                   
 #    print "proc $file => $dest\n";
 
     # stat the source file unconditionally, so we can preserve
@@ -308,20 +308,20 @@ sub process_file {
     if (! $all && ! $options{ force } && -f $dest) {
         $desttime = ( stat($dest) )[9];
 
-		if (defined $depends) {
-			my $deptime  = depend_time($file, $depends);
-			if (defined $deptime && ($srctime < $deptime)) {
-				$srctime = $deptime;
-			}
-		}
-	
-		if ($desttime >= $srctime) {
-			printf "  - %-32s (not modified)\n", $file
+        if (defined $depends) {
+            my $deptime  = depend_time($file, $depends);
+            if (defined $deptime && ($srctime < $deptime)) {
+                $srctime = $deptime;
+            }
+        }
+    
+        if ($desttime >= $srctime) {
+            printf "  - %-32s (not modified)\n", $file
                 if $verbose;
-			return;
-		}
+            return;
+        }
     }
-	
+    
     # check against copy list
     foreach $check (@$copy) {
         if ($filename =~ /$check/) {
@@ -376,34 +376,34 @@ sub process_file {
 #------------------------------------------------------------------------
 
 sub dependencies {
-	my ($file, $depend) = @_;
-	my %depends = ();
+    my ($file, $depend) = @_;
+    my %depends = ();
 
-	if (defined $file) {
-		my ($fh, $text, $line);
-		open $fh, $file or die "Can't open $file, $!";
+    if (defined $file) {
+        my ($fh, $text, $line);
+        open $fh, $file or die "Can't open $file, $!";
         local $/ = undef;
         $text = <$fh>;
         close($fh);
         $text =~ s[\\\n][]mg;
-		
+        
         foreach $line (split("\n", $text)) {
-			next if $line =~ /^\s*#/;
+            next if $line =~ /^\s*(#|$)/;
             chomp $line;
-			my ($file, @files) = quotewords('\s*:\s*', 0, $line);
-			$file =~ s/^\s+//;
-			@files = grep(defined, quotewords('(,|\s)\s*', 0, @files));
-			$depends{$file} = \@files;
-		}
-	}
+            my ($file, @files) = quotewords('\s*:\s*', 0, $line);
+            $file =~ s/^\s+//;
+            @files = grep(defined, quotewords('(,|\s)\s*', 0, @files));
+            $depends{$file} = \@files;
+        }
+    }
 
-	if (defined $depend) {
-		foreach my $key (keys %$depend) {
-			$depends{$key} = [ quotewords(',', 0, $depend->{$key}) ];
-		}
-	}
+    if (defined $depend) {
+        foreach my $key (keys %$depend) {
+            $depends{$key} = [ quotewords(',', 0, $depend->{$key}) ];
+        }
+    }
 
-	return \%depends;
+    return \%depends;
 }
 
 
@@ -415,7 +415,7 @@ sub dependencies {
 #------------------------------------------------------------------------
 
 sub depend_time {
-	my ($file, $depends) = @_;
+    my ($file, $depends) = @_;
     my ($deps, $absfile, $modtime);
     my $maxtime = 0;
     my @pending = ($file);
@@ -479,32 +479,32 @@ sub read_config {
         { 
             ERROR  => sub { die(@_, "\ntry `$NAME --help'\n") }
         }, 
-    	'help|h'      => { ACTION => \&help },
-    	'src|s=s'     => { EXPAND => EXPAND_ALL },
-    	'dest|d=s'    => { EXPAND => EXPAND_ALL },
-    	'lib|l=s@'    => { EXPAND => EXPAND_ALL },
-    	'cfg|c=s'     => { EXPAND => EXPAND_ALL, DEFAULT => '.' },
-    	'verbose|v'   => { DEFAULT => 0 },
-    	'recurse|r'   => { DEFAULT => 0 },
-    	'nothing|n'   => { DEFAULT => 0 },
-    	'preserve|p'  => { DEFAULT => 0 },
-    	'absolute'    => { DEFAULT => 0 },
-    	'relative'    => { DEFAULT => 0 },
-    	'all|a'       => { DEFAULT => 0 },
-    	'define=s%',
-    	'suffix=s%',
-    	'ignore=s@',
-    	'copy=s@',
-    	'accept=s@',
+        'help|h'      => { ACTION => \&help },
+        'src|s=s'     => { EXPAND => EXPAND_ALL },
+        'dest|d=s'    => { EXPAND => EXPAND_ALL },
+        'lib|l=s@'    => { EXPAND => EXPAND_ALL },
+        'cfg|c=s'     => { EXPAND => EXPAND_ALL, DEFAULT => '.' },
+        'verbose|v'   => { DEFAULT => 0 },
+        'recurse|r'   => { DEFAULT => 0 },
+        'nothing|n'   => { DEFAULT => 0 },
+        'preserve|p'  => { DEFAULT => 0 },
+        'absolute'    => { DEFAULT => 0 },
+        'relative'    => { DEFAULT => 0 },
+        'all|a'       => { DEFAULT => 0 },
+        'define=s%',
+        'suffix=s%',
+        'ignore=s@',
+        'copy=s@',
+        'accept=s@',
         'depend=s%',
-     	'depend_file|depfile=s',
-     	'depend_debug|depdbg',
-    	'template_anycase|anycase',
-    	'template_eval_perl|eval_perl',
-    	'template_load_perl|load_perl',
-    	'template_interpolate|interpolate',
-    	'template_pre_chomp|pre_chomp|prechomp',
-    	'template_post_chomp|post_chomp|postchomp',
+        'depend_file|depfile=s',
+        'depend_debug|depdbg',
+        'template_anycase|anycase',
+        'template_eval_perl|eval_perl',
+        'template_load_perl|load_perl',
+        'template_interpolate|interpolate',
+        'template_pre_chomp|pre_chomp|prechomp',
+        'template_post_chomp|post_chomp|postchomp',
         'template_trim|trim',
         'template_pre_process|pre_process|preprocess=s@',
         'template_post_process|post_process|postprocess=s@',
@@ -520,8 +520,8 @@ sub read_config {
         'template_tag_style|tag_style|tagstyle=s',
         'template_compile_ext|compile_ext=s',
         'template_compile_dir|compile_dir=s',
-    	'template_plugin_base|plugin_base|pluginbase=s@',
-    	'perl5lib|perllib=s@'
+        'template_plugin_base|plugin_base|pluginbase=s@',
+        'perl5lib|perllib=s@'
     );
 
     # add the 'file' option now that we have a $config object that we 
@@ -1039,4 +1039,12 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<tpage|Template::Tools::tpage>
+
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
 
