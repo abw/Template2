@@ -21,12 +21,19 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.04d - 15 Aug 2001                     ## DEVELOPER RELEASE ##
+# Version 2.04d - 29 Aug 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
+
+* Incorporated Doug Steinwand's XS Stash.  This adds the files in the 
+  'xs' directory, t/stash-xs.t, bin/tt-bench.pl and includes some work
+  on the Makefile.PL to incorporate the required prompting, etc.
 
 * Added gt, ge, lt and le as comparison operators which map directly 
   to their Perl counterparts.  Added tests to t/stash.t and relevant
   documentation to the IF directive.
+
+* Applied some patches from Leon and Doug to enhance the coverage of
+  the test suite.
 
 * Added 'sorted' as a flag to the HTML plugin to return attributes in 
   sorted order.  Mainly for debugging purposes, as used in t/html.t.

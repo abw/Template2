@@ -324,6 +324,14 @@
 	      module="1"
 	      seealso="Template::Stash"/>
 
+	<!-- Template::Stash::Context -->
+	<page id="Stash_XS" 
+	      name="Template::Stash::XS"
+	      about="Experimetal high-speed stash written in XS"
+	      module="1"
+	      nofoot="1"
+	      seealso="Template::Stash"/>
+
 	<!-- Template::Test -->
 	<page id="Test" 
 	      name="Template::Test"

@@ -95,87 +95,31 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
-Version 2.04 is mainly a bug fixing version.
+The most exciting new feature in version 2.05 is Doug Steinwand's
+high-speed drop-in replacement for Template::Stash written in 
+Perl XS.  With this in place, the Template Toolkit typically runs
+twice as fast as before!
 
-Version 2.03 includes Craig Barratt's 'latex' filter and GD plugins.
-The latex filter allow you to create PostScript/PDF/DVI output from 
-LaTeX source templates.  The GD plugins allow you to access the GD::*
-modules to create dynamic images using template.  
+Pretty much everything else in 2.05 and 2.04 before it consisted
+of minor bug fixes and improvements.
 
-There have been some improvements to VIEWs and they now work
-harmoniously with the XML::XPath and XML::DOM plugins for doing
-template based transformations of XML to other formats.  The HTML
-plugin is new (but currently very basic) and some of the Splash! and
-HTML library templates have been updated and some new components added.
+Version 2.03 includes Craig Barratt's 'latex' filter and GD plugins
+and Dave Cross's tutorial on using the Template Toolkit for creating
+and reusing XML data files.
 
-There's a new tutorial from Dave Cross on using the Template Toolkit for
-creating and reusing data files.  There's various other updates to the 
-documentation, numerous minor bug fixes and other general improvements.
+Version 2.02 was another bugfix release, following shortly on after
+version 2.01.  This was a major release which contained some of 
+the following:
 
-Version 2.02 followed shortly on the heels of version 2.01, fixing up
-some of the minor installation bugs and other problems that came to
-light.  Here's a quick summary of what's new since version 2.00.
-See the Changes file for more details.
+  * total overhaul of the documtation
 
-Documentation
+  * additional of template libraries: POD, HTML, Splash!
 
-  * Total overhaul of the documentation: existing content reorganised
-    into several different sections, documentation added for new
-    features, a FAQ and also a section on internals.  Now also
-    available in user-customisable HTML format, in addition to POD.
+  * various new language features including VIEWs
 
-Libraries
+  * new filters and plugins
 
-  * The Template Toolkit now includes template libraries for
-    generating HTML, PostScript and converting POD to HTML (and other
-    formats).  The Splash! library is a powerful HTML widget set for
-    generating stylish user interfaces.  Includes components for
-    elements like tables, menu buttons, panels with borders and
-    header/footer bars, edged boxes with index tabs, etc.
-
-Language
-
-  * Multiple templates can be specified to directives using '+'
-
-    [% PROCESS header + menu + body + footer
-         title = "Hello World"
-    %]
-
-  * Template variables for INCLUDE, etc., can now be full expressions.
-
-    [% INCLUDE header
-         title = my_title or your_title or default_title
-         bgcol = (style == 'dark' ? '#000000' : '#ffffff')
-    %]
-
-  * Namespace prefixes can be used to bind templates to a particular 
-    provider.
-
-    [% INCLUDE file:header + database:header %]
-    [% INCLUDE http://foo.com/bar %]   # alas no 'http' provider...yet
-
-  * Powerful new (but experimental) VIEW directive and/or plugin to
-    provide dynamic view objects.  These can be used to implement
-    "skins" and other general purpose objects to manage user interface
-    elements and present views of user data.  See Template::Manual::Views
-    manpage for further details.
-
-  * Various other language enhancements: CHOMP_COLLAPSE option, 
-    'import=myhash' as magical variable for INCLUDE, etc.
-
-  * New filters: indent, trim and collapse
-
-  * New plugins: File and Directory plugins for file/directory
-    information.  Pod plugin interfaces to Pod::POM for converting
-    Pod to other formats (e.g. HTML).
-
-Internals
-
-  * Template::Plugin base class no longer implements AUTOLOAD method.
-
-  * Numerous bugs fixed including some troublesome memory leaks.
-
-  * Various other minor internal improvements.
+For more information please consult the Changes file.
 
 
 GENERAL FEATURES
@@ -357,6 +301,19 @@ data source parameters (name, user, password) required to connect to
 the relevant database.  Please ensure that your database server is
 running and that the database you specify exists before executing
 'make test' (otherwise, expect a failure for the t/dbi.t test).
+
+The Template Toolkit now boast a high-speed implementation of 
+Template::Stash written in XS.  You can choose to build this as
+an optional module for using explicitly as an alternative to
+the regular pure-perl stash module.  In additional, you can opt
+to use the XS Stash as the default, typically making the Template
+Toolkit run twice as fast!
+
+When prompted, answer 'y' or 'n' to build and optionally use
+the XS Stash module by default:
+
+    Do you want to build the XS Stash module? [y] 
+    Do you want to use the XS Stash for all Templates? [n] 
 
 The latex filter, new to release 2.03, allows you to generate
 PostScript, PDF and DVI files directly from LaTeX source templates.

@@ -42,10 +42,10 @@ $PARSER   = 'Template::Parser';
 $PLUGINS  = 'Template::Plugins';
 $PROVIDER = 'Template::Provider';
 $SERVICE  = 'Template::Service';
-$STASH    = 'Template::Stash::XS';
+$STASH    = 'Template::Stash';
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '/usr/local/tt2';
+$INSTDIR  = '';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
@@ -392,7 +392,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.19, distributed as part of the
+2.21, distributed as part of the
 Template Toolkit version 2.04d, released on 29 August 2001.
 
 =head1 COPYRIGHT

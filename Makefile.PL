@@ -238,7 +238,6 @@ my %opts = (
     'dist'         => {
 	'COMPRESS' => 'gzip',
 	'SUFFIX'   => 'gz',
-#	'PREOP'    =>  build_docs(),
     },
 );
 
@@ -463,11 +462,9 @@ EOF
 	$TT_XS_DEFAULT = (ttprompt('Do you want to use the XS Stash for all Templates?', 
 				   $TT_XS_DEFAULT) =~ /^y/i); 
 
-	if ($TT_XS_DEFAULT) {
-	    fix_file('lib/Template/Config.pm',
-		     '$STASH', 
-		     'Template::Stash::XS');
-	}
+	fix_file('lib/Template/Config.pm',
+		 '$STASH', 
+		 $TT_XS_DEFAULT ? 'Template::Stash::XS' : 'Template::Stash');
     }
 }
 
@@ -528,7 +525,7 @@ EOF
 	#
 	$TT_PDFLATEX_PATH = $TT_LATEX_PATH = $TT_DVIPS_PATH = "";
     }
-    
+
     fix_file('lib/Template/Config.pm', '$PDFLATEX_PATH', $TT_PDFLATEX_PATH);
     fix_file('lib/Template/Config.pm', '$LATEX_PATH',    $TT_LATEX_PATH);
     fix_file('lib/Template/Config.pm', '$DVIPS_PATH',    $TT_DVIPS_PATH);
@@ -644,6 +641,7 @@ EOF
 
     $TT_IMAGES = ttprompt('URL base for TT2 images?', $TT_IMAGES || $IMAGES);
     $TT_IMAGES =~ s[/$][]g;	# just in case
+
     fix_file('templates/splash/config', 'images', "$TT_IMAGES/splash");
 }
 
@@ -1047,7 +1045,7 @@ EOF
 # fix_file($file, $find, $fix)
 #
 # Fixes a variable definition in a file.  e.g. 
-# fix_file('lib/Template/Config.pm', '$INSTDIR', '/usr/local/tt2')
+# fix_file('templates/splash/config', 'images', '/tt2/splash')
 #------------------------------------------------------------------------
 
 sub fix_file {

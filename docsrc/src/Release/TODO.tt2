@@ -170,7 +170,9 @@
 
 * Stas Bekman raised the issue of the Stash not being able to correctly
   differentiate between scalar/list context and in particular, the 
-  cgi.param examples not working as expected. 
+  cgi.param examples not working as expected.  This is fixed in v3 and 
+  in Craig's Stash/Context.pm which does the right lookahead to allow
+  'scalar' and 'list' postfix operators.  e.g. cgi.param.list
 
 * Richard Tietjen's patch for stash replace.  Allows back references
   (e.g. $1) but it would be nice to find a rock-solid way to implement
@@ -178,19 +180,6 @@
 
 * Have stash, etc., add current template name/line when reporting errors.
   (may be tricky under the current implementation)
-
-* I've written a version of Template::Stash in XS which should give a
-  significant speedup to the runtime processing.  It's 95% complete
-  (but hasn't been updated to keep up with more recent changes to the
-  stash) and just needs some minor debugging and testing.  The new
-  Template::Stash will automatically load the existing Perl version if
-  you don't have a C compiler on your platform (shame on you!).
-
-* And I'm now working on Yet Another Brand New Stash which should 
-  implement all the functionality of Craig's latest patches, rationalise
-  all sorts of stuff, improve debugging, *AND* run slightly faster.
-  Furthermore, the new architecture should be much easier to extend
-  and implement in XS.  Watch the mailing list for further details.
 
 
 #------------------------------------------------------------------------

@@ -153,6 +153,13 @@ it is useful to have attributes generated in a deterministic order
 rather than whatever order the hash happened to feel like returning
 the keys in.
 
+    [% USE HTML(sorted=1) %]
+    [% HTML.element( foo => { charlie => 1, bravo => 2, alpha => 3 } ) %]
+
+generates:
+
+    <foo alpha="3" bravo="2" charlie="1">
+
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@kfs.orgE<gt>
@@ -164,7 +171,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.11, distributed as part of the
+2.12, distributed as part of the
 Template Toolkit version 2.04d, released on 29 August 2001.
 
 =head1 COPYRIGHT

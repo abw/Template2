@@ -140,6 +140,12 @@ Experimetal stash allowing list/scalar context definition
 
 
 
+=item L<Template::Stash::XS|Template::Stash::XS>
+
+Experimetal high-speed stash written in XS
+
+
+
 =item L<Template::Test|Template::Test>
 
 Module for automating TT2 test scripts

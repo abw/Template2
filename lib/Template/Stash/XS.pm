@@ -51,17 +51,29 @@ sub AUTOLOAD {
 
 __END__
 
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/docs.html and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
 =head1 NAME
 
-Template::Stash::XS - Experimental high-speed stash
+Template::Stash::XS - Experimetal high-speed stash written in XS
 
 =head1 SYNOPSIS
 
- use Template::Stash;
- use Template::Stash::XS;
+    use Template;
+    use Template::Stash::XS;
 
- my $stash = Template::Stash::XS->new();
- my $tt    = Template->new({ STASH => $stash });
+    my $stash = Template::Stash::XS->new(\%vars);
+    my $tt2   = Template->new({ STASH => $stash });
 
 =head1 DESCRIPTION
 
@@ -88,7 +100,6 @@ object:
 
  $Template::Config::STASH = 'Template::Stash::XS';
 
-
 To use the original, pure-perl version restore this line in 
 Template/Config.pm:
 
@@ -98,18 +109,38 @@ Or in your code:
 
  $Template::Config::STASH = 'Template::Stash';
 
+You can elect to have this performed once for you at installation
+time by answering 'y' or 'n' to the question that asks if you want
+to make the XS Stash the default.
 
 =head1 BUGS
 
 Please report bugs to the Template Toolkit mailing list
 templates@template-toolkit.org
 
+=head1 AUTHORS
+
+Andy Wardley E<lt>abw@tt2.orgE<gt>
+
+Doug Steinwand E<lt>dsteinwand@citysearch.comE<gt>
+
 =head1 VERSION
 
-$Id$
+Template Toolkit version 2.04d, released on 29 August 2001.
+
+
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+
 
 =head1 SEE ALSO
 
 L<Template::Stash|Template::Stash>
-
 
