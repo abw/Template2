@@ -40,6 +40,10 @@
 
 * Added the params() method to the CGI plugin.
 
+* Changed File::Temp and File::Basename to be loaded dynamically in 
+  Template::Document as and when needed.  Thanks to a patch from 
+  Bradley Baetz.
+
 
 #------------------------------------------------------------------------
 # Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
