@@ -33,7 +33,7 @@ use DBI;
 use vars qw( $VERSION $DEBUG );
 use base qw( Template::Plugin );
 
-$VERSION = 1.04;
+$VERSION = 1.05;
 $DEBUG   = 0 unless defined $DEBUG;
 
 
@@ -73,6 +73,9 @@ sub connect {
     my $self   = shift;
     my $params = ref $_[-1] eq 'HASH' ? pop(@_) : { };
     my ($dbh, $dsn, $user, $pass);
+
+	# delete the disconnected marker if it exists
+	delete $self->{ _DISCONNECTED };
 
     # set debug flag
     $DEBUG = $params->{ debug } if exists $params->{ debug };
@@ -150,7 +153,9 @@ sub _connect {
 
 sub _getDBH() {
     my $self = shift;
-    my $dbh = $self->{ _DBH };
+    my $dbh = $self->{ _DBH } || $self->_throw('data source not defined');
+
+	$self->_throw('data source not defined') if $self->{ _DISCONNECTED };
 
     unless ($dbh) {
         $self->connect;
@@ -169,6 +174,8 @@ sub _getDBH() {
 
 sub disconnect {
     my $self = shift;
+	# SAM
+	$self->{ _DISCONNECTED } = 1;
     $self->{ _DBH }->disconnect() 
 	if $self->{ _DBH };
     delete $self->{ _DBH };
@@ -209,7 +216,7 @@ sub execute {
     my $self = shift;
 
     my $sth = $self->{ _STH } 
-	|| return $self->_throw('no query prepared');
+		|| return $self->_throw('no query prepared');
 
     $sth->execute(@_) 
 }
@@ -310,16 +317,17 @@ use vars qw( $DEBUG );
 
 sub new {
     my ($class, $sth) = @_;
-    bless \$sth, $class;
+    bless { _QSTH => $sth }, $class;
 }
 
 sub execute {
     my $self = shift;
+	my $sth = $self->{ _QSTH };
 
-    $$self->execute(@_) 
+    $sth->execute(@_) 
 	|| return Template::Plugin::DBI->_throw("execute failed: $DBI::errstr");
 
-    Template::Plugin::DBI::Iterator->new($$self);
+    Template::Plugin::DBI::Iterator->new($sth);
 }
 
 sub DESTROY {
@@ -344,9 +352,9 @@ use vars qw( $DEBUG );
 sub new {
     my ($class, $sth, $params) = @_;
     my $self = bless { 
-	_STH => $sth,
+		_ISTH => $sth,
     }, $class;
-    
+
     return $self;
 }
 
@@ -442,7 +450,7 @@ sub get {
 
 sub get_all {
     my $self = shift;
-    my $sth  = $self->{ _STH };
+    my $sth  = $self->{ _ISTH };
     my $error;
 
     my $data = $sth->fetchall_arrayref({});
@@ -464,13 +472,13 @@ sub get_all {
 
 sub _fetchrow {
     my $self = shift;
-    my $sth  = $self->{ _STH };
+    my $sth  = $self->{ _ISTH };
 
     my $data = $sth->fetchrow_hashref() || do {
-	$self->{ LAST } = 1;
-	$self->{ NEXT } = undef;
-	$sth->finish();
-	return;
+		$self->{ LAST } = 1;
+		$self->{ NEXT } = undef;
+		$sth->finish();
+		return;
     };
     $self->{ NEXT } = $data;
     return;
@@ -688,7 +696,7 @@ E<lt>abw@kfs.orgE<gt>.
 =head1 VERSION
 
 1.04, distributed as part of the
-Template Toolkit version 2.06a, released on 16 November 2001.
+Template Toolkit version 2.05c, released on 23 October 2001.
 
 
 
