@@ -146,3 +146,9 @@ two: [% title %] -> [% saveone %]
 -- expect --
 two: 2[The Title] -> one: 2[The Title]
 
+-- test --
+-- name number macro --
+[% MACRO number(n) GET n.chunk(-3).join(',') -%]
+[% number(1234567) %]
+-- expect --
+1,234,567
