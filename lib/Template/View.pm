@@ -299,7 +299,13 @@ sub include {
 
     $vars = { } unless ref $vars eq 'HASH';
     $vars->{ view } ||= $self;
+
     $context->include( $template, $vars );
+
+# DEBUGGING
+#    my $out = $context->include( $template, $vars );
+#    print STDERR "VIEW return [$out]\n";
+#    return $out;
 }
 
 

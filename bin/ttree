@@ -80,11 +80,19 @@ unshift(@INC, @{ $config->perl5lib });
 
 # get all template_* options from the config and fold keys to UPPER CASE
 my %ttopts   = $config->varlist('^template_', 1);
-my %ucttopts;
-@ucttopts{ map { uc } keys %ttopts } = values %ttopts;
+my $ucttopts = {
+    map { my $v = $ttopts{ $_ }; defined $v ? (uc $_, $v) : () }
+    keys %ttopts,
+};
 
-#print "TT config: ", join(', ', map { "$_ => $ucttopts{ $_ }"} 
-#			     keys %ucttopts), "\n";
+# special case
+$ucttopts->{ RECURSION } = $recurse if defined $recurse;
+
+#@ucttopts{ map { uc } keys %ttopts } = values %ttopts;
+
+#print STDERR("TT config: ", 
+#	     join(', ', map { "$_ => $ucttopts->{ $_ }"} keys %$ucttopts), 
+#	     "\n") if $debug;
 
 # get all template variable definitions
 my $replace = $config->get('define');
@@ -94,7 +102,7 @@ my $replace = $config->get('define');
 
 # now create complete parameter hash for creating template processor
 my $ttopts   = {
-    %ucttopts,
+    %$ucttopts,
     RELATIVE     => 1,
 #    INCLUDE_PATH => [ @$libdir, '.' ],
     INCLUDE_PATH => [ $srcdir, @$libdir ],
@@ -122,8 +130,8 @@ if ($verbose) {
 if ($debug) {
     local $" = ', ';
     print STDERR "Template Toolkit configuration:\n";
-    foreach (keys %ucttopts) {
-	my $val = $ucttopts{$_};
+    foreach (keys %$ucttopts) {
+	my $val = $ucttopts->{$_};
 	next unless $val;
 	if (ref($val) eq 'ARRAY') {
 	    next unless @$val;
@@ -627,8 +635,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.43, distributed as part of the
-Template Toolkit version 2.06f, released on 13 March 2002.
+2.44, distributed as part of the
+Template Toolkit version 2.06g, released on 15 April 2002.
 
 =head1 COPYRIGHT
 

@@ -89,7 +89,7 @@ sub new {
 
 sub _throw {
     my ($self, $error) = @_;
-    print STDERR "about to throw $error\n";
+#    print STDERR "about to throw $error\n";
     die Template::Exception->new('XML.XPath', $error);
 }
 
@@ -256,8 +256,8 @@ The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
 
 =head1 VERSION
 
-2.43, distributed as part of the
-Template Toolkit version 2.06f, released on 13 March 2002.
+2.44, distributed as part of the
+Template Toolkit version 2.06g, released on 15 April 2002.
 
 =head1 COPYRIGHT
 

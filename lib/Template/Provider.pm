@@ -307,7 +307,8 @@ sub _init {
 	foreach my $dir (@$path) {
 	    my $wdir = $dir;
             $wdir =~ s[:][]g if $^O eq 'MSWin32';
-	    &File::Path::mkpath("$cdir/$wdir");
+	    $wdir =~ /(.*)/;  # untaint
+	    &File::Path::mkpath($cdir . $1);
 	}
 	# ensure $cdir is terminated with '/' for subsequent path building
 	$cdir .= '/';
@@ -761,6 +762,8 @@ sub _compile {
 	# write the Perl code to the file $compfile, if defined
 	if ($compfile) {
 	    my $basedir = &File::Basename::dirname($compfile);
+	    $basedir =~ /(.*)/;
+	    $basedir = $1;
 	    &File::Path::mkpath($basedir) unless -d $basedir;
 
 	    $error = 'cache failed to write '
@@ -1238,8 +1241,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.46, distributed as part of the
-Template Toolkit version 2.06f, released on 13 March 2002.
+2.47, distributed as part of the
+Template Toolkit version 2.06g, released on 15 April 2002.
 
 =head1 COPYRIGHT
 

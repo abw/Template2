@@ -643,7 +643,27 @@ sub _assign {
     }
     elsif (UNIVERSAL::isa($root, 'UNIVERSAL')) {
 	# try to call the item as a method of an object
-	return $root->$item(@$args, $value);			## RETURN
+
+	return $root->$item(@$args, $value)			## RETURN
+	    unless $default && $root->$item();
+
+# 2 issues:
+#   - method call should be wrapped in eval { }
+#   - fallback on hash methods if object method not found
+#
+# 	  eval { $result = $root->$item(@$args, $value); };	    
+# 
+# 	  if ($@) {
+# 	      die $@ if ref($@) || ($@ !~ /Can't locate object method/);
+# 
+# 	      # failed to call object method, so try some fallbacks
+# 	      if (UNIVERSAL::isa($root, 'HASH') && exists $root->{ $item }) {
+# 		  $result = ($root->{ $item } = $value)
+# 		      unless $default && $root->{ $item };
+# 	      }
+# 	  }
+# 	  return $result;						## RETURN
+
     }
     else {
 	die "don't know how to assign to [$root].[$item]\n";	## DIE
@@ -846,8 +866,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.52, distributed as part of the
-Template Toolkit version 2.06f, released on 13 March 2002.
+2.53, distributed as part of the
+Template Toolkit version 2.06g, released on 15 April 2002.
 
 =head1 COPYRIGHT
 

@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.06f, detailing
+#   Revision history for the Template Toolkit version 2.06g, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,20 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.06g - March                           ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in ttree which prevented it from passing the recurse option
+  onto the Template object due to a name mismatch: recurse/recursion
+
+* Changed Template::Test to accept messages to ok().  Also added is()
+  as an alias for match().
+
+* Fixed an oversight/bug in the XS stash where a missing aTHX_ around 
+  line 546 caused compilation to fail under Win32.
+
 
 #------------------------------------------------------------------------
 # Version 2.06f - March 13th 2002                 ## DEVELOPER RELEASE ##

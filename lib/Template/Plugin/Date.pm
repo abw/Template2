@@ -282,8 +282,8 @@ fixups/enhancements, a test script and documentation.
 
 =head1 VERSION
 
-2.43, distributed as part of the
-Template Toolkit version 2.06f, released on 13 March 2002.
+2.44, distributed as part of the
+Template Toolkit version 2.06g, released on 15 April 2002.
 
 
 
