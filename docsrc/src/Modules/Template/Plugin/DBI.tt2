@@ -1,34 +1,86 @@
 [% TAGS star -%]
 =head1 SYNOPSIS
 
-    # use positional arguments...
+Making an implicit database connection:
+
+    # ...using positional arguments
     [% USE DBI('dbi:driver:database', 'username', 'password') %]
 
-    # ...or named parameters...
-    [% USE DBI(data_source = 'dbi:driver:database',
-               username    = 'username', 
-               password    = 'password') %]
+    # ...using named parameters
+    [% USE DBI( database = 'dbi:driver:database',
+                username = 'username', 
+                password = 'password' )
+    %]
 
-    # ...or call connect() explicitly
+    # ...using short named parameters (4 lzy ppl and bad typsits)
+    [% USE DBI( db   = 'driver:database',
+                user = 'username', 
+                pass = 'password' )
+    %]
+
+Making explicit database connections:
+
     [% USE DBI %]
-    [% DBI.connect(dsn, user, pass) %]
 
-    # Or don't connect at all, and when necessary DBI will connect
-    # automatically using the environment variable DBI_DSN. See below.
+    [% DBI.connect(db, user, pass) %]
+       ...
+
+    [% DBI.connect(new_db, new_user, new_pass) %]
+       ...
+
+    [% DBI.disconnect %]      # final disconnect is optional
+
+Making an automagical database connection using DBI_DSN environment variable:
+
+    [% USE DBI %]
+
+Making database queries:
 
     [% FOREACH item = DBI.query( 'SELECT rows FROM table' ) %]
        Here's some row data: [% item.field %]
     [% END %]
 
     [% query = DBI.prepare('SELECT * FROM user WHERE manager = ?') %]
+
     [% FOREACH user = query.execute('sam') %]
        ...
+    [% END %]
+
     [% FOREACH user = query.execute('abw') %]
        ...
-
-    [% IF DBI.do("DELETE FROM users WHERE uid = 'sam'") %]
-       Oh No!  The user was deleted!
     [% END %]
+
+    [% IF DBI.do("DELETE FROM users WHERE uid = '$uid'") %]
+       The user '[% uid %]' was successfully deleted.
+    [% END %]
+
+Using named DBI connections:
+
+    [% USE one = DBI(...) %]
+    [% USE two = DBI(...) %]
+
+    [% FOREACH one.query("SELECT ...etc...") %]
+       ...
+    [% END %]
+
+    [% FOREACH two.query("SELECT ...etc...") %]
+       ...
+    [% END %]
+
+Tieing to a database table (via Tie::DBI):
+
+    [% people = DBI.tie('table', 'key') %]
+
+    [% me = people.abw %]   # => SELECT * FROM table WHERE key='abw'
+
+    I am [% me.name %]
+
+    # clobber option allows table updates (see Tie::DBI)
+    [% people = DBI.tie(table, key, clobber=1) %]
+
+    [% people.abw.name = 'not a number' %]
+
+    I am [% people.abw.name %]   # I am a free man!
 
 =head1 DESCRIPTION
 
@@ -53,22 +105,31 @@ arguments to the constructor, called from the USE directive.
 You can also use named parameters to provide the data source connection 
 string, user name and password.
 
+    [% USE DBI(database => 'dbi:driver:database',
+               username => 'username',
+               password => 'password')  %]
+
+For backwards compatability with previous versions of this plugin, you can
+also spell 'database' as 'data_source'.
+
     [% USE DBI(data_source => 'dbi:driver:database',
                username    => 'username',
                password    => 'password')  %]
 
-Lazy Template hackers may prefer to use 'dsn' or 'connect' as a shorthand
-form of the 'data_source' parameter, and 'user' and 'pass' as shorthand
-forms of 'username' and 'password', respectively.
+Lazy Template hackers may prefer to use 'db', 'dsn' or 'connect' as a
+shorthand form of the 'database' parameter, and 'user' and 'pass' as
+shorthand forms of 'username' and 'password', respectively.  You can
+also drop the 'dbi:' prefix from the database connect string because
+the plugin will add it on for you automagically.
 
-    [% USE DBI(connect => 'dbi:driver:database',
-               user    => 'username',
-               pass    => 'password')  %]
+    [% USE DBI(db   => 'mysql:dbname',
+               user => 'username',
+               pass => 'password')  %]
 
 Any additional DBI attributes can be specified as named parameters.
 The 'PrintError' attribute defaults to 0 unless explicitly set true.
 
-    [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
+    [% USE DBI(db, user, pass, ChopBlanks=1) %]
 
 The DBI connect_cached() method is used instead of the connect()
 method.  This allows for connection caching in a server environment,
@@ -80,8 +141,9 @@ SetEnv DBI_DSN "dbi:DBDriver:DBName;host=DBHost;user=User;password=Password"
 
 Then use the DBI plugin without any parameters and without calling connect.
 
-Methods can then be called on the plugin object using the familiar dotted
-notation:
+Once you've loaded a DBI plugin and opened a database connection using 
+one of the techniques shown above, you can then make queries on the database
+using the familiar dotted notation:
 
     [% FOREACH item = DBI.query( 'SELECT rows FROM table' ) %]
        Here's some row data: [% item.field %]
@@ -109,17 +171,41 @@ called automatically when the plugin goes out of scope.  You can call
 connect() at any time to open a connection to another database.  The
 previous connection will be closed automatically.
 
+The plugin also allows you to create a tie to a table in the database
+using the Tie::DBI module.  Simply call the tie() method, passing the
+name of the table and the primary key as arguments.
+
+    [% people = DBI.tie('person', 'uid') %]
+
+If you prefer, you can use the 'table' and 'key' named parameters.
+
+    [% people = DBI.tie(table='person', key='uid') %]
+
+You can then access records in the database table as if they were
+entries in the 'people' hash.
+
+    [% me = people.abw %]
+    I am [% me.name %]
+
+With the 'clobber' (or 'CLOBBER') option set you can also update
+records in the database.  See L<Tie::DBI> for further details.
+
+    [% people = DBI.tie('person', 'uid', clobber=1) %]
+    [% people.abw.name = 'not a number' %]
+
+    I am [% people.abw.name %]  # I am a free man!
+
 =head1 OBJECT METHODS
 
-=head2 connect($data_source, $username, $password)
+=head2 connect($database, $username, $password)
 
 Establishes a database connection.  This method accepts both positional 
 and named parameter syntax.  e.g. 
 
-    [% DBI.connect(data_source, username, password) %]
-    [% DBI.connect(data_source = 'dbi:driver:database'
-                   username    = 'foo' 
-                   password    = 'bar' ) %]
+    [% DBI.connect(database, username, password) %]
+    [% DBI.connect(database = 'dbi:driver:database'
+                   username = 'foo' 
+                   password = 'bar' ) %]
 
 The connect method allows you to connect to a data source explicitly.
 It can also be used to reconnect an exisiting object to a different
@@ -169,6 +255,48 @@ returned.  It will return true if the statement was successful
        The user was successfully deleted.
     [% END %]
 
+=head2 tie($table, $key, \%args)
+
+Returns a reference to a hash array tied to a table in the database
+via the Tie::DBI module.
+
+    [% people = DBI.tie('person', 'uid') %]
+
+    [% me = people.abw %]
+
+In this example, the Tie::DBI module will convert the access into the 
+'people' hash to fetch the record identified by 'abw' into an SQL 
+query of the form:
+
+    SELECT * FROM person WHERE uid='abw'
+
+(actually the module uses DBI placeholders to make the queries more
+efficient, but this example gives you an idea of what's happening)
+
+The record returned can then be accessed just like a normal hash.
+
+    I am [% me.name %]
+
+If you set the 'clobber' (or 'CLOBBER') option then you can also 
+update the record and have those changes permeated back into the 
+database.  
+
+    [% people = DBI.tie('person', 'uid', clobber=1) %]
+
+    [% people.abw.name = 'not a number' %]
+
+    I am [% people.abw.name %]   # I am a free man!
+
+And you can also add new records.
+ 
+    [% people.newguy = {
+           name = 'Nobby Newguy'
+	   ...other fields...
+       }
+    %]
+
+See L<Tie::DBI> for further information on the 'CLOBBER' option.
+
 =head2 quote($value, $type)
 
 Calls the quote() method on the underlying DBI handle to quote the value
@@ -178,50 +306,16 @@ specified in the appropriate manner for its type.
 
 Disconnects the current database.
 
-=head1 PRE-REQUISITES
-
-Perl 5.005, Template-Toolkit 2.00, DBI 1.02
-
 =head1 AUTHORS
 
-The DBI plugin was written by Simon A Matthews,
-E<lt>sam@knowledgepool.comE<gt>, with contributions from Andy Wardley
-E<lt>abw@kfs.orgE<gt>.
+The DBI plugin was originally written by Simon A Matthews,
+E<lt>sam@knowledgepool.comE<gt>, and distributed as a separate
+module.  It was integrated into the Template Toolkit distribution
+for version 2.00 and has since been maintained jointly by SAM, 
+with contributions from Andy Wardley, Craig Barratt and Dave
+Hodgkinson.
 
 [* PROCESS misc/version *]
-
-=head1 HISTORY
-
-=over 4
-
-=item 1.04  2001/04/06  abw
-
-Removed duplicated $VERSION number.
-
-=item 1.03  2000/11/31  sam
-
-Added _connect method to Plugin::DBI for backwards compatability with code 
-from version 1 of Template that subclassed the plugin
-
-Changed the new method on the DBI plugin so that it checks to see if it is
-being called by a subclassed object.  
-
-Fixed the return value in the DBI plugin when connect is called more than
-once in the lifetime of the plugin.
-
-=item 1.02  2000/11/14  abw
-
-Added prev() and next() methods to Template::Plugin::DBI:Iterator to
-return the previous and next items in the iteration set or undef if
-not available.
-
-=item 1.01  2000/11/03  abw
-
-Modified connect method to pass all named arguments to DBI.  e.g.
-
-    [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
-
-=back
 
 =head1 COPYRIGHT
 
