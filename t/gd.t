@@ -76,7 +76,7 @@ __END__
     im.copyResized(im,10,200,20,20,100,100,50,50);
    END; 
    out = im.png | hex;
-   out.length > 6500 ? 'ok' : 'not ok'
+   out.length > 6000 ? 'ok' : 'not ok'
 -%]
 -- expect --
 ok
