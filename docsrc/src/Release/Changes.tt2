@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.08a - August nth 2002                 ## DEVELOPER RELEASE ##
+# Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Totally re-implemented the handling of the DEBUG parameter.  Added 
