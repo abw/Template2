@@ -20,7 +20,7 @@ use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
 
-ntests(21);
+ntests(24);
 
 
 #------------------------------------------------------------------------
@@ -55,6 +55,16 @@ sub _init {
 sub name {
     $_[0]->{ NAME };
 }
+
+
+#------------------------------------------------------------------------
+# module to test version
+#------------------------------------------------------------------------
+package Template::Version;
+use Template::Base;
+use base qw( Template::Base );
+use vars qw( $ERROR $VERSION );
+$VERSION = 3.14;
 
 
 #------------------------------------------------------------------------
@@ -110,3 +120,16 @@ ok( $pkg->error eq 'No name!' );
 $mod = $pkg->new({ name => 'bar' });
 ok( $mod && $mod->name eq 'bar' );
 ok( ! $mod->error );
+
+#------------------------------------------------------------------------
+# test version() method
+#------------------------------------------------------------------------
+
+$pkg = 'Template::Version';
+is( $pkg->version(), 3.14, 'package version' );
+
+my $obj = $pkg->new() || die $pkg->error();
+ok( $obj, 'created a version object' );
+is( $obj->version(), 3.14, 'object version' );
+
+
