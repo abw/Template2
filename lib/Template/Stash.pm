@@ -179,6 +179,7 @@ $LIST_OPS = {
                map  { [ $_, lc $_ ] } 
                @$list
     },
+    'uniq'    => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
 

@@ -697,6 +697,19 @@ Removes the first/last item from the list and returns it.
     [% first = mylist.shift %]
     [% last  = mylist.pop   %]
 
+=item uniq
+
+Returns a list of the unique elements in a list, in the same order
+as in the list itself.
+
+    [% mylist = [ 1, 2, 3, 2, 3, 4, 1, 4, 3, 4, 5 ] %]
+    [% numbers = mylist.uniq %]
+
+While this can be explicitly sorted, it is not required that the list
+be sorted before it be uniq'ed.
+
+    [% numbers = mylist.uniq.sort %]
+
 =back
 
 The following example demonstrates how an empty list ('folk') can be 
