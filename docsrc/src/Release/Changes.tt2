@@ -37,9 +37,6 @@
 * Applied Pudge's patch for the XS Stash bug.  See
   http://tt2.org/pipermail/templates/2003-February/004289.html
 
-* Applied a patch from Gervase Markham to add the set_legend() method
-  to various GD::Graph::* modules.
-  
 
 #------------------------------------------------------------------------
 # Version 2.08c - November 4th                    ## DEVELOPER RELEASE ##
