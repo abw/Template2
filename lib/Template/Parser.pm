@@ -208,7 +208,7 @@ sub old_style {
 
 
 #------------------------------------------------------------------------
-# parse($text)
+# parse($text, $data)
 #
 # Parses the text string, $text and returns a hash array representing
 # the compiled template block(s) as Perl code, in the format expected
@@ -216,9 +216,11 @@ sub old_style {
 #------------------------------------------------------------------------
 
 sub parse {
-    my $self = shift;
-    my $text = shift;
+    my ($self, $text, $info) = @_;
     my ($tokens, $block);
+
+    $self->{ FILEINFO } = $info;
+#    print "info: { ", join(', ', map { "$_ => $info->{ $_ }" } keys %$info), " }\n";
 
     # store for blocks defined in the template (see define_block())
     my $defblock = $self->{ DEFBLOCK } = { };
@@ -660,6 +662,8 @@ sub _parse {
     $self->{ INPERL } = \$inperl;
 
     $status = CONTINUE;
+    my $file = $self->{ FILEINFO }->{ name };
+    my $in_string = 0;
 
     while(1) {
 	# get state number and state
@@ -676,7 +680,7 @@ sub _parse {
 		if (ref $token) {
 		    ($text, $line, $token) = @$token;
 		    if (ref $token) {
-			if ($self->{ DEBUG }) {
+			if ($self->{ DEBUG } && ! $in_string) {
 			    # is this gnarly or what?  we're pushing
 			    # parse tokens to make it look like the author
 			    # added a DEBUG directive like this:
@@ -693,6 +697,9 @@ sub _parse {
 				    IDENT   => 'text',
 				    ASSIGN  => '=',
 				    LITERAL => "'$dtext'",
+				    IDENT   => 'file',
+				    ASSIGN  => '=',
+				    LITERAL => "'$file'",
 				    (';') x 2,
 				    @$token, 
 				    (';') x 2);
@@ -716,6 +723,9 @@ sub _parse {
 		    }
 		}
 		else {
+		    # toggle string flag to indicate if we're crossing
+		    # a string boundary
+		    $in_string = ! $in_string if $token eq '"';
 		    $value = shift(@$tokens);
 		}
 	    };
