@@ -7,6 +7,9 @@
 ^blib/
 ^pm_to_blib$
 ^parser/Parser\.output
-^docs/
+^docsrc/
+^docs/config/\w+\.cfg
+^docs/html/(?!README)
+^docs/ttree.cfg
 ^clib/
 ^t/test/src/complex.org

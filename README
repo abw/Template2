@@ -1,14 +1,57 @@
-                          Template Toolkit
 
-                            Version 2.00
+                            Template Toolkit
 
-                         1st December 2000
+                              Version 2.01
 
-        Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved
-        Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+                            28th March 2001
+
+        Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
+
+QUICK START
+-----------
+
+The latest version of the Template Toolkit can be retrieved from:
+
+    http://www.cpan.org/modules/Template/
+
+Fetch and install AppConfig 1.52 if you don't already have it installed.
+Available from CPAN in:
+
+    http://www.cpan.org/authors/Andy_Wardley/
+
+The following modules are optional.  If you have them installed then 
+you will be able to access them via the appropriate Template Toolkit 
+plugins.  If you don't have them and don't want them, then there's no
+need to install them.  They're all available from CPAN if you do.
+
+    Text::Autoformat 1.03+
+    DBI 1.14+ (and relevant DBD drivers)
+    Pod::POM 0.1+
+    XML::Parser 2.23+
+    XML::DOM 1.27+ (in libxml-enno)
+    XML::RSS 0.9+ 
+    XML::XPath 1.00+
+
+To install the Template Toolkit:
+
+    tar zxf Template-Toolkit-2.01.tar.gz
+    cd Template-Toolkit-2.01
+    perl Makefile.PL
+    make
+    make test
+    make install    
+
+The Makefile.PL will prompt for additional configuration options,
+including the installation of optional template libraries, HTML
+documentation and examples.  You can safely answer 'n' to all of these
+questions for a quick and basic installation.  
+
+For further details, see the sections below on CONFIGURATION, BUILDING
+AND TESTING, and INSTALLATION.
 
 
 DESCRIPTION
@@ -39,16 +82,87 @@ less memory than version 1.  This can only be described as a Good
 Thing.
 
 The Template Toolkit (version 1) received the award for "Best New Perl
-Module" at the 4th Perl Conference in Monterey, earlier this year.
+Module" at the 4th Perl Conference in Monterey last year (2000).
 Version 2 is even better and if it doesn't make your content funkier,
 your job easier, your life more fun and you more attractive to the
 appropriate sex, then you can always return it for a full refund. :-)
 
 
-FEATURES
---------
+WHAT'S NEW?
+-----------
 
-  * simple but powerful language syntax and semantics
+The long-awaited version 2.01 is the biggest, baddest and phattest
+version yet.  Here's a quick summary of what's new in version 2.01
+compared to 2.00.  See the Changes file for more details.
+
+Documentation
+
+  * Total overhaul of the documentation: existing content reorganised
+    into several different sections, documentation added for new
+    features, a FAQ and also a section on internals.  Now also
+    available in user-customisable HTML format, in addition to POD.
+
+Libraries
+
+  * The Template Toolkit now includes template libraries for
+    generating HTML, PostScript and converting POD to HTML (and other
+    formats).  The Splash! library is a powerful HTML widget set for
+    generating stylish user interfaces.  Includes components for
+    elements like tables, menu buttons, panels with borders and
+    header/footer bars, edged boxes with index tabs, etc.
+
+Language
+
+  * Multiple templates can be specified to directives using '+'
+
+    [% PROCESS header + menu + body + footer
+         title = "Hello World"
+    %]
+
+  * Template variables for INCLUDE, etc., can now be full expressions.
+
+    [% INCLUDE header
+         title = my_title or your_title or default_title
+         bgcol = (style == 'dark' ? '#000000' : '#ffffff')
+    %]
+
+  * Namespace prefixes can be used to bind templates to a particular 
+    provider.
+
+    [% INCLUDE file:header + database:header %]
+    [% INCLUDE http://foo.com/bar %]   # alas no 'http' provider...yet
+
+  * Powerful new (but experimental) VIEW directive and/or plugin to
+    provide dynamic view objects.  These can be used to implement
+    "skins" and other general purpose objects to manage user interface
+    elements and present views of user data.  See Template::Manual::Views
+    manpage for further details.
+
+  * Various other language enhancements: CHOMP_COLLAPSE option, 
+    'import=myhash' as magical variable for INCLUDE, etc.
+
+  * New filters: indent, trim and collapse
+
+  * New plugins: File and Directory plugins for file/directory
+    information.  Pod plugin interfaces to Pod::POM for converting
+    Pod to other formats (e.g. HTML).
+
+Internals
+
+  * Template::Plugin base class no longer implements AUTOLOAD method.
+
+  * Numerous bugs fixed including some troublesome memory leaks.
+
+  * Various other minor internal improvements.
+
+
+GENERAL FEATURES
+----------------
+
+Some of the key features of the Template Toolkit are listed below.
+See the documentation for further detail.
+
+  * simple but powerful template language
 
   * promotes a clear separation between application functionality and
     presentation elements
@@ -103,10 +217,8 @@ The Template Toolkit is written entirely in Perl and should run on any
 platform on which Perl is available.  It requires Perl 5.005 or later.
 
 The 'ttree' utility uses the AppConfig module (version 1.52 or above)
-for parsing command line options and configuration files.  You don't
-actually require this module to use the Template Toolkit itself, but
-will do if you plan to use the 'ttree' utility (which you really
-should).  It is available from CPAN:
+for parsing command line options and configuration files.  It is
+available from CPAN:
 
     http://www.cpan.org/authors/Andy_Wardley/
 
@@ -128,14 +240,15 @@ all available from CPAN, should be installed:
     ------              --------
     Autoformat	        Text::Autoformat 1.03+
     DBI			DBI 1.14+ and relevant DBD drivers
+    Pod	                Pod::POM 0.1+
     XML::DOM            XML::DOM 1.27+   (requires XML::Parser 2.23+)
     XML::RSS            XML::RSS 0.9+    (ditto)
     XML::XPath          XML::XPath 1.00+ (ditto)
 
-NOTE: The Text::Autoformat plugin may fail on tests 23 and 25 with 
-versions of Perl prior to 5.6.0 when using a locale which has a decimal
-separator other than '.'.  See the KNOWN BUGS section of the TODO file 
-for further information.
+NOTES:
+
+  * XML::DOM can be found in the 'libxml-enno' distribution, available
+    from http://www.cpan.org/modules/by-module/XML/
 
 
 OBTAINING AND INSTALLING THE TEMPLATE TOOLKIT
@@ -156,40 +269,215 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.00
+where <version> represents the current version number, e.g. 2.01.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    tar zxf Template-Toolkit-2.00.tar.gz
+    tar zxf Template-Toolkit-2.01.tar.gz
 or
-    gunzip Template-Toolkit-2.00.tar.gz
-    tar xf Template-Toolkit-2.00.tar
+    gunzip Template-Toolkit-2.01.tar.gz
+    tar xf Template-Toolkit-2.01.tar
 
 You can then 'cd' into the directory created,
 
-    cd Template-Toolkit-2.00
+    cd Template-Toolkit-2.01
 
 and perform the usual Perl installation procedure:
 
     perl Makefile.PL
     make
     make test
-    make install
+    make install	    # may need root access
 
-The 'make test' will run the test scripts in the 't' sub-directory,
-skipping any plugin tests that require external modules not available
-on your system.  If you have the DBI module installed then the
-Makefile.PL script will ask you if you want to run the DBI tests.  If
-you answer 'y' then it will prompt you for a database server to test
-against.  Please ensure that any database server you specify is
-running before executing 'make test', or expect a failure for the
-t/dbi.t test.
+The Makefile.PL performs various sanity checks and then prompts for a
+number of configuration items.  The following CONFIGURATION section
+covers this in greater detail.
+
+There are known to be a few minor issues with the test suite, with
+some tests failing in certain conditions.  None of these are thought
+to be serious problems.  The BUILDING AND TESTING section provides
+more detail on this.
+
+If you choose to install the optional components then you may need to
+perform some post-installation steps to ensure that the template
+libraries, HTML documentation and examples can be correctly viewed via
+your web browser.  The INSTALLATION section covers this.
+
+
+CONFIGURATION
+-------------
+
+This section covers the configuration of the Template Toolkit via
+the Makefile.PL program.  If you've successfully run this and didn't
+have any problems answering any of the questions then you probably 
+don't need to read this section.
+
+The Makefile.PL Perl program performs the module configuration and
+generates the Makefile which can then be used to build, test and
+install the Template Toolkit.  
+
+    perl Makefile.PL
+
+It first determines which modules you have installed to configure the
+test suite accordingly.  If you have the DBI module installed then it
+will ask you if you want to run the DBI tests.  
+
+    Do you want to run the DBI tests?\n" .
+    It requires access to an existing test database. [y]
+
+If you answer 'y' then it will prompt you for the DBD driver and the
+data source parameters (name, user, password) required to connect to
+the relevant database.  Please ensure that your database server is
+running and that the database you specify exists before executing
+'make test' (otherwise, expect a failure for the t/dbi.t test).
+
+In additional to the Perl modules and POD documentation installed in
+the usual way, the Template Toolkit distribution also contains a
+number of optional components.
+
+  * Template libaries for basic HTML, Pod -> HTML, and PostScript
+
+  * Splash! - a stylish HTML user interface template library / widget set
+
+  * HTML documentation - distributed in template form for customisation
+
+  * Stylesheet templates to generate docs as vanilla HTML or using Splash!
+
+  * Examples - numerous examples of using the template libraries
+
+The Makefile.PL will prompt to ask if you want these components installed.
+
+    Do you want to install these components? [y] 
+
+If you answer 'y' then you will first be asked to specify an
+installation directory.
+
+    Template Toolkit installation directory [/usr/local/tt2] 
+
+This should be a directory entirely separate from anything to do with
+your Perl installation.  The default value assumes a particular Unix
+flavour to your operating system for the simple reason that I have no
+idea what the appropriate defaults should be on other platforms
+(suggestions welcome).  Other typical values might look like
+'/opt/tt2', '/home/user/tt2', 'C:/Program Files/tt2', etc.
+
+The Splash! template library uses a number of very small images to
+build user interface components.  These will be installed (when you
+"make install") into the 'images' directory relative to the
+installation root specified above.  If you want to use the Splash!
+library then you'll need to copy this images directory, define an
+alias to it (e.g. in the httpd.conf) or create a symbolic link to it
+so that your web server can find and serve the images within.  The
+INSTALLATION section below gives further details about how you might
+go about doing that, but for now you just need to specify what URL 
+you plan to use.
+
+    URL base for TT2 images? [/tt2/images] 
+
+The default is '/tt2/images', but other typical values might be
+'/images/tt2', '/~user/tt2/images' or even something like
+'http://www.yourhost.org/images/tt2'.  If you haven't got a clue then
+it's probably best to accept the default and worry about it later when
+you get to the INSTALLATION section.  If you don't plan to use the
+Splash! library then you don't need to worry about this at all.  You
+can accept the default, or type in a silly message to bring some small
+amusement to an otherwise dull process.
+
+The modules comprising the Template Toolkit contain comprehensive POD
+documentation which can be browsed using 'perldoc' or 'man' (if your
+system supports it).  This is all installed as the regular Perl part
+of the Template Toolkit.
+
+The distribution also includes a set of source templates and style
+elements for generating the same documentation in HTML format.  These
+will be installed into the 'docs' directory relative to the
+installation root entered above.
+
+The HTML documentation can be built for you at "make install" time in
+a plain and simple HTML format or using the Splash! library.  You can
+see examples of these different styles and browse the documentation
+online at:
+
+    http://www.template-toolkit.org/docs/
+
+To have the HTML documentation built as part of the installation
+process, answer 'y' to the question:
+
+    Do you want to build the HTML documentation? [y] 
+
+and then specify if you want it built using the vanilla HTML style
+(answer: 'n') or using the Splash! library (answer: 'y').  The latter
+comes highly recommended for those readers who enjoy a small dose of
+of gratuitous eye candy served with their web pages, but if you answer
+'y' and select Splash! then you'll have to ensure that the images URL
+specified above is properly set.
+
+    Do you want to use the Splash! library? [y] 
+
+If you prefer your pages clean and simple and/or can't be bothered
+messing around configuring image directories, then select 'n' to
+generate the plain document style.  This generates a "text-only" HTML
+version, entirely free of graphics and embellished with no more 
+than textual navigatory links.
+
+See the README in the 'docs' directory for instructions on building the 
+HTML documentation manually and/or customising the templates to your own
+requirements.
+
+The final optional component is a set of examples showing use of the 
+HTML, Splash! and PostScript template libraries.  These are installed
+into the 'examples' directory under the installation root and can 
+also be automatically built at "make install" time.
+
+    Do you want to build the HTML example pages? [y] 
+
+Note that the examples rely on using the Splash! library and there is
+no vanilla HTML version (currently) available.  The examples mainly 
+focus on Splash! and other "advanced" HTML stuff so it probably wouldn't 
+make much sense, anyway.  Note that the PostScript examples are far from
+complete (only just begun, in fact).
+
+
+BUILDING AND TESTING
+--------------------
+
+This section describes the "make" and "make test" commands which build
+and test the Template Toolkit.  If you ran these without incident,
+then you can probably skip this section.
+
+The 'make' command will build the Template Toolkit modules in the 
+usual manner.  
+
+    make
+
+If you're installing the Template Toolkit on a Win32 machine, then 
+you should be using 'nmake' or an equivalent (e.g. 'dmake'?) instead.
+This is available from Microsoft's web site.
+
+The 'make test' command runs the test scripts in the 't' subdirectory.
+There are known to be a few failures under certain conditions:
+
+  * The Text::Autoformat plugin may fail on tests 23 and 25 with
+    versions of Perl prior to 5.6.0 when using a locale which has a
+    decimal separator other than '.'.
+
+  * A small number of tests (XML::XPath for one) may fail on Win32
+    platforms (and elsewhere?) due to the stupid author making silly
+    assumptions about filesystems and error message.  To be fixed RSN.
 
 You can set the TEST_VERBOSE flag when running 'make test' to see the
 results of the individual tests:
 
     make test TEST_VERBOSE=1
+
+
+INSTALLATION
+------------
+
+This section describes the final installation of the Template Toolkit
+via the "make install" and covers any additional steps you may need to
+take if you opted to build the HTML documentation and/or examples.
 
 The 'make install' will install the modules and scripts on your
 system.  You may need administrator privileges to perform this task.
@@ -204,8 +492,85 @@ e.g.
 
     use lib qw( /home/abw/lib/perl5/site_perl/5.6.0 );
 
-If you're installing on a Win32 platform then 'nmake' should be a
-suitable alternative to 'make', available from Microsoft's web site.
+If you chose to install the optional components then these will be
+installed as part of the "make install" procedure.  They are installed
+into the separate Template Toolkit directory (independant of any Perl
+location) specified during the configuration process. Note that you
+must have the correct permissions required to create and/or write to
+this directory.  If you run the "make install" as root, or some other
+privileged user, then the directory will be created (if it doesn't
+already exist) and all the files installed into it will be owned by
+that user.
+
+If you want to use the Splash! template library then you will need to
+ensure that the images URL base you specified during the configuration
+correctly maps onto the 'images' subdirectory of the installation.  If
+you built the HTML documentation then you'll also want to make that
+available via your web server.
+
+If you're using Apache then you might do something like this in the
+httpd.conf (in the <IfModule mod_alias.c> section, and here assumes
+/usr/local/tt2 is installation root)
+
+    Alias /tt2/images/   /usr/local/tt2/images/
+    Alias /tt2/docs/     /usr/local/tt2/docs/html/
+    Alias /tt2/examples/ /usr/local/tt2/examples/html/
+
+    <Directory /usr/local/tt2/>
+        Options Indexes
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+Another approach is to create a 'tt2' directory in your document root
+and create symbolic links to the relevant installation directories.  On a
+Unix system, it might be performed something like this:
+
+    cd /path/to/your/webserver/docroot
+    mkdir tt2
+    cd tt2
+
+either create symbolic links:
+
+    ln -s /usr/local/tt2/images images
+    ln -s /usr/local/tt2/docs/html docs
+    ln -s /usr/local/tt2/examples/html examples
+
+or copy in entirety:
+
+    cp -R /usr/local/tt2/images .
+    cp -R /usr/local/tt2/docs/html docs
+    cp -R /usr/local/tt2/example/html examples
+
+Note that if you use symbolic links, you'll have to make sure that you
+web server is configured to follow them.  For example, in Apache:
+
+    <Location /tt2>
+	Options Indexes FollowSymLinks
+    </Location>
+
+You should then be able to access the Template Toolkit documentation 
+as:
+
+    http://www.yourserver.org/tt2/docs/
+
+and examples as:
+
+    http://www.yourserver.org/tt2/examples/
+
+The examples and HTML docs (if you built them with Splash!) will
+reference the Splash! images using the URL base you specified in the
+configuration (e.g.  '/tt2/images').  If this value is incorrect then
+instead of smooth, rounded corners, the user interface components will
+have broken images links, square blocks of colour, or other ghastly
+abberations dotted across them.
+
+If necessary, you can re-install the Template Toolkit to specify a
+different image URL.  Alternately, you can fix the value in the 
+'templates/splash/config' file (under the installation directory)
+and rebuild the documentation and/or examples (see the README files
+in the 'docs' and 'examples' installation directories).
 
 
 DOCUMENTATION
@@ -219,45 +584,93 @@ changes between versions of the Template Toolkit.  See the section
 'VERSION COMPATABILITY' below for further details.
 
 The 'TODO' file, also in the distribution directory, lists known bugs,
-planned enhancements and possible new features.
+planned enhancements and possible new features for future versions.
 
-Having installed the module(s), the first port of call (if only
-briefly) should be the 'Template' manpage.  This contains
-comprehensive details of all the directives, syntax, configuration
-options, examples of use, etc., for the Template Toolkit.  If you're
-using a Unix system then you can use the 'man' command:
-
-    man Template
-
-Otherwise, 'perldoc' is your friend (and what we'll use for further
-examples):
+The rest of the documentation is distributed in Pod and HTML formats.
+The Pod pages are installed when you 'make install' and can be viewed
+using 'perldoc', e.g.
 
     perldoc Template
 
-If that document leaves you feeling overwhelmed then you might
-prefer to look at the Template::Tutorial which gives a general
-overview and "Quick Start" guide to using the Template Toolkit.
+IMPORTANT NOTE: if you've had a previous verion of the Template
+Toolkit installed (e.g. version 2.00) then perldoc might be displaying
+an old version of the Pod documentation.  This is because previous
+versions distributed the Pod in separate .pod files but it's now
+living back inside the relevant .pm files.  Alas, perldoc selects the
+older .pod files in preference over the newer .pm.  The only solution
+at present is to manually delete all the older .pod files in the
+Template part of you Perl installation directory.  Of course, if I had
+thought of this back when I decided to move all the .pod back into the
+.pm files...
+
+If you're using a Unix based system then the pages should also be
+converted to manpages suring the 'make install'.  Thus, you can also:
+
+    man Template
+
+(the man pages shouldn't have any problems relating to older versions)
+
+The HTML documentation and the means to rebuild it can be found in the
+'docs' sub-directory of the installation root.  If you opted to
+have it built at installation time, then there should be an 'html'
+directory within it containing the generated HTML built from the
+source templates.
+
+The documentation is now split into several sections.  The 'Template'
+page is now much shorter, containing information relating to the
+specifics of using the Template module, and a brief summary of
+everything else.  Information relating more generally to the Template
+Toolkit, features, syntax of the template language, plugins and so
+forth, have been split up into a number of Template::Manual::* pages.
+Template::Manual provides the index for the manual.
+
+    perldoc Template::Manual
+
+Individual sections can be viewed as, for example,
+
+    perldoc Template::Manual::Syntax
+    perldoc Template::Manual::Directives
+    perldoc Template::Manual::Plugins
+
+The Template::Tutorial page gives a general overview and "Quick Start"
+guide to using the Template Toolkit.
 
     perldoc Template::Tutorial
 
+The new template libraries distributed with the Template Toolkit have
+some documentation, but be warned that it is rather spartan at
+present.  If you're interested in using these libraries then the
+examples (in the 'examples' sub-directory) are likely to be much more
+useful until the documentation catches up.
+
+    perldoc Template::Library::HTML
+    perldoc Template::Library::Splash
+
 Each of the various modules that comprise the Template Toolkit has its
-own associated documention.  The 'Template' manpage lists these
-modules along with a brief description of their functions.  For
-example:
+own associated documention.  The 'Template::Modules' manpage lists
+these modules along with a brief description of their functions.
+
+    perldoc Template::Modules
+
+See the individual pages for further detail:
 
     perldoc Template::Context 
     perldoc Template::Parser 
     perldoc Template::Provider
 
-NOTE: At the time of writing there may be some minor inconsistencies
-between the documentation in these modules and that in the main
-'Template' manpage.  In general, the 'Template' documentation is
-updated and proof-read more often and is therefore more likely to be
-accurate.  Note however, that the documentation for the individual
-modules does tend to go into greater detail and may contain
-information not covered in the 'Template' manpage.  Please do report
-any errors or inconsistencies that you find or send patches to the 
-author.
+If you're interested in the internals of the Template Toolkit and want
+to know more about how it all works, then you might like to have a look 
+at the following:
+
+    perldoc Template::Manual::Internals
+
+The final bit of good news is that there is now a FAQ for the Template
+Toolkit.
+
+    perldoc Template::FAQ
+
+The bad news is that it doesn't (yet) contain very many questions or answers.
+Patches welcome.  :-)
 
 
 SUPPORT
@@ -291,15 +704,14 @@ for subscription and browsing the archives:
 
     http://www.template-toolkit.org/mailman/listinfo/templates-announce
 
-There is not yet a FAQ for the Template Toolkit but there definately 
-should be one.  This will be forthcoming in the very near future.
-
 For information about commercial support and consultancy for the Template 
 Toolkit, please contact the author.
 
 
 VERSION COMPATABILITY
 ---------------------
+
+Version 2.01 should be fully backwardly compatible with version 2.00.
 
 Version 2 is backwardly compatible with version 1 in all but a few
 minor areas.  The 'Changes' file details all the visible changes
@@ -354,15 +766,14 @@ AUTHOR
 
 The Template Toolkit was written by Andy Wardley <abw@kfs.org> with
 the invaluable assistance and contributions from many other people.
-Please see the 'ACKNOWLEDGMENTS' section of the 'Template' manpage for
-the extensive list of those people who made it possible.
+See Template::Manual::Credits for details.
 
 
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved
-Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

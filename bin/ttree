@@ -525,17 +525,23 @@ END_OF_HELP
     exit(0);
 }
 
-
-
 __END__
 
+
 #------------------------------------------------------------------------
-# POD
-#
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
 
 =head1 NAME
 
-ttree - template tree processor
+Template::Tools::ttree - Process entire directory trees of templates
 
 =head1 SYNOPSIS
 
@@ -558,7 +564,7 @@ variable.  Then, it processes any command line arguments, including
 any additional configuration files specified via the B<-f> (file) option.
 
 A typical F<.ttreerc> file might look like this:
-  
+
     src    = /home/abw/websrc/doc
     dest   = /home/abw/public_html
     lib    = /home/abw/websrc/lib
@@ -613,23 +619,22 @@ See B<ttree --help> for a summary of options.
 
 Andy Wardley E<lt>abw@kfs.orgE<gt>
 
-=head1 REVISION
+L<http://www.andywardley.com/|http://www.andywardley.com/>
 
-$Revision$
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 28th March 2001.
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template|Template>
-
-=cut
-
+L<tpage|Template::Tools::tpage>
 
 

@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.00, detailing
+#   Revision history for the Template Toolkit version 2.01, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -17,25 +17,78 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.01 - snapshot 0.1
+# Version 2.01 - 
 #------------------------------------------------------------------------
 
-* Added the Template::View module, the VIEW directive and the View plugin
-  which can be used collectively to create dynamic views.  This is a very
-  powerful tool which fulfills a number of requirements and makes possible 
-  a number of things that have previously been messy, difficult or not 
-  possible.  Views are primarily collections of templates.  You can define
-  BLOCKs within a view and they remain local to it, but can be called 
-  from outside the view.  This is still very experimental.  Things are 
-  likely to change.  Take a look at t/view.t for examples.
+* New Makefile.PL offers to install optional libraries, images, build
+  HTML docs, examples, etc.  Adds 'tt2_install', 'tt2_html_docs' and
+  'tt2_examples' as Makefile targets if requested.  These then get run
+  as part of "make install".
 
-* Fixed the parser to accept expressions on the right hand side of 
-  parameter definitions for INCLUDE, etc.  e.g.
+* Added the various template libraries in the 'templates' directory.
+  The 'html' library implements some generally useful HTML elements.
+  The 'pod/html' libraray contains some templates for converting POD to
+  HTML, used in building the TT2 HTML documentation, for example.  The
+  'ps' library contains templates defining a few useful marks and other 
+  procedures for generating PostScript pages.  The 'splash' directory
+  contains templates for the "Splash!" library which implements a 
+  widget set for building stylish HTML user interfaces.  
 
-    [% INCLUDE header
-         title = my_title or your_title or default_title
-         bgcol = (style == 'dark' ? '#000000' : '#ffffff')
+* Added a host of example pages in the 'examples' directory which 
+  demonstrate use of the above libraries.
+
+* Added an 'images' directory to contain the small images used to build
+  up the Splash! interface components.
+
+* Added the 'docs' directory containing templates and library elements
+  for building the TT2 documentation as HTML pages.
+
+* Totally re-organised the documentation, splitting the long user manual
+  into separate Template::Manual::* pages, adding the Template::FAQ, 
+  Template::Internals, and various other changes.  All POD and HTML
+  documentation is built from the same sources in the form of another
+  set of templates, POD files, XML files, scripts, etc., distributed 
+  separately as the 'docsrc' bundle, and available from the web site.
+  The POD documentation now gets glued onto the end of the .pm
+  modules and only creates separate .pod files for those manual pages
+  that don't have equivalent modules (e.g. Template::FAQ, etc.)
+  NOTE: this might mean that existing .pod files from earlier versions
+  of TT might mask documentation in newer .pm files... 
+
+* Added the Template::View module, the VIEW directive and the View
+  plugin which can be used collectively to create dynamic views.  This
+  is a very powerful tool which fulfills a number of requirements and
+  makes possible a number of things that have previously been messy,
+  difficult or not possible.  Views are primarily collections of
+  templates.  You can define BLOCKs within a view and they remain
+  local to it, but can be called from outside the view.  This is still
+  very experimental.  Things are likely to change.  See
+  Template::Views for (incomplete) documentation and take a look at
+  t/view.t for examples.
+
+    [% VIEW fancy_html
+	    prefix = 'splash/'		# template prefix/suffix
+	    suffix = '.tt2'		
+	    bgcol  = '#ffffff'		# and any other variables you 
+	    style  = 'Fancy HTML'       # care to define as view metadata,
+	    items  = [ foo, bar.baz ]	# including complex data and
+	    foo    = bar ? baz : x.y.z  # expressions
     %]
+
+	[% BLOCK header %]		# define "private" view blocks
+	   Title: [% title %]
+	[% END %]
+
+    [% END %]				# end of VIEW definition
+
+    [% v = fancy_html %]		# view is a regular object ref, re-
+    [% mycode(v) %]			# assign it, pass it around, etc.
+
+    [% v.title %]			# access view metadata
+
+    [% v.header(title = 'Foo!') %]	# view "methods" process blocks or
+    [% v.footer %]			# templates with prefix/suffix added
+					# => [% INCLUDE splash/footer.tt2 %]
 
 * Added the facility to specify multiple templates within a PROCESS,
   INCLUDE, INSERT or WRAPPER directive.  For all but WRAPPER, the 
@@ -86,13 +139,112 @@
   another.  It can also be used, of course, to provider special providers
   for certain file type, as in http://fetch.some.file.com/blah/blah/...
 
-* I *think* I identified the bug whereby non-exception objects were
-  be raised, causing an error in Template::Service...
+* Fixed the parser to accept expressions on the right hand side of 
+  parameter definitions for INCLUDE, etc.  e.g.
+
+    [% INCLUDE header
+         title = my_title or your_title or default_title
+         bgcol = (style == 'dark' ? '#000000' : '#ffffff')
+    %]
+
+* Added the PLUGIN_FACTORY configuration option to Template::Plugins
+  to allow class names or object prototypes to be specified for plugins.
+  No module loading is attempted, unlike the existing PLUGINS which 
+  assumes entries are module names which it tries to load.  This may
+  change in a future release (ideally by integration with PLUGINS) so
+  it remains undocumented for now.
+
+    package My::Plugin;
+    ...
+
+    package main;
+
+    my $tt = Template->new({
+	PLUGIN_FACTORY => {
+	    plugin1 => 'My::Plugin',	    # class name
+	    plugin2 =>  My::Plugin->new(),   # prototype obj
+	},
+    });
+
+* Added the File and Directory plugins which blossomed from the
+  Directory plugin written by Michael Stevens and posted to the
+  mailing list.  Many thanks to him for donating the code.  These give
+  you access to files and directories on your filesystem and also
+  allow you to create representations of abstract files/dirs.
+
+  WARNING: recognise that this gives the author of any templates you
+  run access to information about your filesystem.  We assume that the
+  author of your templates is you or someone you trust to have access
+  to that kind of information.  If you're running "untrusted"
+  templates (we assume you know what you're doing) then you'll very
+  probably want to disable these plugins.  Alas there is no easy way
+  to disable plugins at the moment other than deleting them or writing
+  null or error throwing plugins to mask them.  Making this easier is
+  a TODO.
+
+* Added the Pod plugin which uses the Pod::POM module to parse a Pod
+  file or text string and build an object model.  You can then walk 
+  it and present it in different ways using templates.  Great for 
+  building HTML documentation from Pod and unsurprisingly used to 
+  build the new TT2 docs.
+
+* Applied a patch from Chris Nandor to add a new feature to the
+  PRE_CHOMP and POST_CHOMP options.  When set to 1, they continue to
+  act as before.  When set to 2, all whitespace is collapsed into a
+  single space.  CHOMP_NONE, CHOMP_ALL and CHOMP_COLLAPSE are 
+  defined in Template::Constants and can be imported as the :chomp
+  tagset, for those who want them.
+
+* Applied a patch from Doug Steinwand to fix a problem in
+  Template::Provider which would server stale templates if the
+  modification time of the files went backwards.  In addition, it now
+  uses the $Template::Provider::STAT_TTL (time to live) variable
+  (default: 1) to determine how often to stat the files to check for
+  changes.
+
+* Applied a patch from Vivek Khera which fixes a memory leak in the 
+  MACRO directive, prevalent when using TT under mod_perl.  Also added 
+  t/leak.t to test that memory is properly freed and circular references
+  broken by the delocalisation of the stash.  All seems to work as expected
+  including plugins that contain context references, MACRO definitions, 
+  and so on (but note that this is the test suite run from the command
+  line, and doesn't explicitly test under mod_perl...)
+
+* Applied a patch from Axel Gerstmair to fix a bug in PERL blocks
+  and fitlers which caused references to the context and stash to be
+  kept in global package variables.  This meant they stayed alive for
+  far too long.  Added a couple of tests to t/leak.t to check this now 
+  works OK.
+
+* Fixed a bug in the parser triggered by [% CATCH DEFAULT %].  Thanks
+  to Vivek Khera for reporting the problem.  This also fixes a problem
+  reported by Thierry-Michel Barral which was causing bare 'CATCH'
+  blocks to not catch errors and instead pollute STDERR.
+
+* Fixed another bug in the parser preventing double quoted META attributes
+  from containing single quotes, e.g. [% META title="C'est un test" %].
+  Thanks to Philippe Bruhat for reporting the problem.
 
 * Added the 'indent' filter to indent a block by prefixing each line with
   a specified string, or a number of spaces when the argument is numerical.
 
+* Added the 'trim' filter to remove leading/trailing whitespace and 
+  'collapse' filter to additionally collapse multiple whitespace characters
+  to a single space.
+
+* Added escapes for ' (&apos;) and " (&quot;) to the html filter, thanks 
+  to Lyle Brooks and Vivek Khera.  Then, having done that, I removed
+  the &apos; escape because my browser didn't recognise &apos; as a 
+  valid entity.  What's going on here?  Need to check the HTML spec...
+
 * Added tag style 'star' of the form [* ... *]
+
+* Changed the Template::Stash get() and set() methods to accept a 
+  compound variables as a single parameter and automatically convert
+  it to an array.  Note that it doesn't correctly handle arguments
+  to dotted elements (e.g. foo(10).bar(20), but does mean that you can 
+  now write $stash->get('foo.bar.baz') instead of the more laborious
+  $stash->get(['foo', 0, 'bar', 0, 'baz', 0]).
 
 * Fixed a bug in Template::Stash which was raising an error when an 
   element on the left hand side of a '.' evaluated to a defined, but 
@@ -102,6 +254,27 @@
   a scalar method on a value which contained a valid and visible object 
   package name.  e.g. [% name = 'Foo::Bar'; name.baz() %] called
   Foo::Bar->baz().
+
+* Fixed a bug in the Template::Stash 'replace' virtual method which 
+  returned the original string when the replace string was specified 
+  empty.   [% var = 'foo99'; var.replace('foo', '') %] now correctly 
+  returns '99' instead of the original string 'foo99'.  Thanks to 
+  Tryggve Johannesson and Jeremy Wadsack for reporting the problem.
+
+* Added magical handling of the 'import' variable to stash clone() and
+  update methods.  This implements the V1 functionality whereby you can
+  write [% INCLUDE foo import=myhash %].  Note that 'import' is lower case,
+  (V1 was upper case IMPORT) as in V2 it is in keeping with the virtual 
+  hash method (e.g. same as myhash.import(another.hash)).  Thanks to 
+  Brian Cooper for raising the issue.
+
+* Yet another change to Template::Stash.  Objects which are blessed 
+  arrays will now honour virtual array methods if the object doesn't
+  otherwise implement a particular method.  For example, you can now
+  write [% USE Datafile(...) %] and then [% Datafile.size %].  The 
+  '.size' now works as virtual method on the blessed ARRAY which 
+  consitutes the Datafile object.  Thanks to Keith Murphy for 
+  identifying the problem.
 
 * Fixed another obscure bug, this time in Template::Parser which wasn't 
   chomping the final newline in the input string.  Thanks to Paul 
@@ -113,7 +286,8 @@
   then it should be implemented as Template::Plugin::Delegate (and may
   well be in the fullness of time).
 
-* Fixed a whole bunch of typos and spellos thanks to a patch from Leon.
+* Fixed a whole bunch of typos and spellos thanks to patches from Leon,
+  Paul Sharpe and Robert McArthur.
 
   
 #------------------------------------------------------------------------

@@ -33,12 +33,3 @@ Examples:
    ttree -src ~/tmp/templates -dest ~/public_html/test
    trree -f config
 
-
-
-
-
-
-
-
-
-
