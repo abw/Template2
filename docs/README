@@ -1,0 +1,73 @@
+This directory contains the source templates, components and
+configuration file for building the HTML documentation.
+	
+    README	This file
+    ttree.cfg   ttree configuration file
+    html        destination directory for generated HTML pages
+    lib         library of common template elements for building docs
+    src         source templates for documentation
+    style       style-specific libraries of template elements
+
+The 'ttree.cfg' file is a default ttree configuration file which is
+automatically generated at installation time when the Makefile.PL is
+run.  It contains values based on those specified for the TT2
+installation directory and desired style, one of 'plain' or 'splash'.
+
+If the user requests it, then the HTML documentation is built at run
+time when the "make install" happens.  This is achieved by calling
+ttree and specifying the config file via the -f option.  Something
+like this:
+
+    $ ttree -f /usr/local/tt2/docs/ttree.cfg
+
+All the source templates are in the 'src' directory.  These are generated
+automatically from the POD documentation which itself is built from a
+separate set of TT2 templates, XML, Perl scripts and other magical bits
+and pieces.  The 'docsrc' bundle is distributed separately from the 
+main Template Toolkit distribution.  It's available from the TT2 web site,
+at http://www.template-toolkit.org/docs/ if you're interested in seeing
+how that fits together, or if you want to do some work on the docs.
+
+The 'lib' directory contains some general purpose template elements
+and also an automatically generated configuration file 'docset/config'
+which describes the structure and metadata for all the pages.  The 
+templates use this to correctly set menu links, cross-references, etc.,
+between pages.
+
+The 'style' directory contains style-specific elements in 'plain' or
+'splash' formats.  You can copy these and create your own styles if
+you like. 
+
+    $ cp -R style/plain style/mystyle
+
+Then you can copy the default ttree config file to one of your own
+and edit accordingly
+
+    $ cp ttree.cfg myttree.cfg
+
+To build the HTML in your own style you simply call ttree and specify
+your own configuration file.
+
+    $ ttree -f /usr/local/tt2/docs/myttree.cfg
+
+The 'html' directory is the default location for the generated HTML
+files, but you could, of course, change your ttree configuration file
+to send it wherever you like.
+
+Don't forget that you can specify as many 'lib' options in the
+configuration file as you like.  e.g.
+
+    lib  = /usr/local/tt2/docs/style/mystyle
+    lib  = /usr/local/tt2/docs/style/splash
+
+So rather than copy an existing style, you might prefer to create a
+new, empty style directory (e.g. mystyle) in which you create new
+elements which are then used in preference to those in the other
+style(s) (e.g. splash).
+
+All the pages use relative links to reference each other, so you can
+safely copy the generated HTML pages anywhere you like, symlink to it,
+or do whatever else you need to do to make the pages visible to your
+web server.  This may including setting the correct permissions to
+allow read access.
+

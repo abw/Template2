@@ -1,0 +1,3 @@
+<li><b><a href="[% link %]">[% name %]</a> : [% title %]</b>
+<br>
+[% content %]
