@@ -1,0 +1,103 @@
+[% DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-%]
+=item CONSTANTS
+
+The CONSTANTS option can be used to specify a hash array of template
+variables that are compile-time constants.  These variables are
+resolved once when the template is compiled, and thus don't require
+further resolution at runtime.  This results in significantly faster
+processing of the compiled templates and can be used for variables that
+don't change from one request to the next.
+
+    my [% obj %] = [% pkg %]->new({
+	CONSTANTS => {
+	    title   => 'A Demo Page',
+	    author  => 'Joe Random Hacker',
+	    version => 3.14,
+	},
+    };
+
+=item CONSTANT_NAMESPACE
+
+Constant variables are accessed via the 'constants' namespace by
+default.
+
+    [% constants.title %]
+
+The CONSTANTS_NAMESPACE option can be set to specify an alternate
+namespace.
+
+    my [% obj %] = [% pkg %]->new({
+	CONSTANTS => {
+	    title   => 'A Demo Page',
+	    # ...etc...
+	},
+	CONSTANTS_NAMESPACE => 'const',
+    };
+
+In this case the constants would then be accessed as:
+
+    [% const.title %]
+
+=item NAMESPACE
+
+The constant folding mechanism described above is an example of a
+namespace handler.  Namespace handlers can be defined to provide
+alternate parsing mechanisms for variables in different namespaces.
+
+Under the hood, the Template module converts a constructor configuration
+such as:
+
+    my [% obj %] = [% pkg %]->new({
+	CONSTANTS => {
+	    title   => 'A Demo Page',
+	    # ...etc...
+	},
+	CONSTANTS_NAMESPACE => 'const',
+    };
+
+into one like:
+
+    my [% obj %] = [% pkg %]->new({
+	NAMESPACE => {
+	    const => Template:::Namespace::Constants->new({
+		title   => 'A Demo Page',
+		# ...etc...
+	    }),
+	},
+    };
+
+You can use this mechanism to define multiple constant namespaces, or
+to install custom handlers of your own.  
+
+    my [% obj %] = [% pkg %]->new({
+	NAMESPACE => {
+	    site => Template:::Namespace::Constants->new({
+		title   => "Wardley's Widgets",
+		version => 2.718,
+	    }),
+	    author => Template:::Namespace::Constants->new({
+		name  => 'Andy Wardley',
+		email => 'abw@andywardley.com',
+	    }),
+	    voodoo => My::Namespace::Handler->new( ... ),
+	},
+    };
+
+Now you have 2 constant namespaces, for example:
+
+    [% site.title %]
+    [% author.name %]
+
+as well as your own custom namespace handler installed for the 'voodoo'
+namespace.
+
+    [% voodoo.magic %]
+
+See L<Template::Namespace::Constants|Template::Namespace::Constants>
+for an example of what a namespace handler looks like on the inside.
+
+
+
