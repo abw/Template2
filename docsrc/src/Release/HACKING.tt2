@@ -26,12 +26,11 @@ applying patches, updating the documentation and various other
 useful tips.
 
 The documentation is all built from source templates in the 'docsrc'
-directory.  This isn't distributed as part of the Template Toolkit,
-but is available as a separate bundle from the TT web site.  This
-includes the 'README', 'INSTALL', 'HACKING' and 'Changes' files which
-can be found in the 'docsrc/src/Release' directory.  The 'docsrc/bin'
-directory contains scripts for rebuilding the documentation.  See the
-'docsrc/README' file for info.
+directory.  This includes the 'README', 'INSTALL', 'HACKING' and
+'Changes' files which can be found in the 'docsrc/src/Release'
+directory.  The 'docsrc' bundle is a separate distribution available
+from the TT web site.  The 'docsrc/bin' directory contains scripts for
+rebuilding the documentation.  See the 'docsrc/README' file for info.
 
 If you're in the business of building a distribution (that usually
 means me, but hey, you never know) then you'll need to have the latest
