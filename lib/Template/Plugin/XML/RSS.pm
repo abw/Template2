@@ -47,7 +47,16 @@ sub new {
     my $rss = XML::RSS->new
 	or return $class->fail('failed to create XML::RSS');
 
-    eval { $rss->parsefile($filename) } and not $@
+    # Attempt to determine if $filename is an XML string or
+    # a filename.  Based on code from the XML.XPath plugin.
+    eval {
+        if ($filename =~ /\</) {
+	    $rss->parse($filename);
+        }
+        else {
+	    $rss->parsefile($filename)
+        }
+    } and not $@
 	or return $class->fail("failed to parse $filename: $@");
 
     return $rss;

@@ -34,7 +34,12 @@ skip_all('XML::RSS v 0.9 or later not installed')
 my $file = abs_path( -d 't' ? 't/test/xml' : 'test/xml' );
 $file .= '/example.rdf';   
 
-test_expect(\*DATA, undef, { 'newsfile' => $file });
+local *RSS;
+open RSS, $file or die "Can't open $file: $!";
+my $data = join "" => <RSS>;
+close RSS;
+
+test_expect(\*DATA, undef, { 'newsfile' => $file, 'newsdata' => $data });
 
 __END__
 -- test --
@@ -70,7 +75,38 @@ http://template-toolkit.org/plugins/XML/RSS
 Test Image
 http://www.myorg.org/images/test.png
 
+-- test --
+[% USE news = XML.RSS(newsdata) -%]
+[% FOREACH item = news.items -%]
+* [% item.title %]
+  [% item.link  %]
 
+[% END %]
+
+-- expect --
+* I Read the News Today
+  http://oh.boy.com/
+
+* I am the Walrus
+  http://goo.goo.ga.joob.org/
+
+-- test --
+[% USE news = XML.RSS(newsdata) -%]
+[% news.channel.title %]
+[% news.channel.link %]
+
+-- expect --
+Template Toolkit XML::RSS Plugin
+http://template-toolkit.org/plugins/XML/RSS
+
+-- test --
+[% USE news = XML.RSS(newsdata) -%]
+[% news.image.title %]
+[% news.image.url %]
+
+-- expect --
+Test Image
+http://www.myorg.org/images/test.png
 
 
 
