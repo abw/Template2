@@ -124,6 +124,7 @@ sub new {
 	GRAMMAR     => undef,
 	_ERROR      => '',
 	FACTORY     => 'Template::Directive',
+	DEBUG       => 0, #$DEBUG,
     }, $class;
 
     # update self with any relevant keys in config
@@ -675,7 +676,30 @@ sub _parse {
 		if (ref $token) {
 		    ($text, $line, $token) = @$token;
 		    if (ref $token) {
-			unshift(@$tokens, @$token, (';') x 2);
+			if ($self->{ DEBUG }) {
+			    # is this gnarly or what?  we're pushing
+			    # parse tokens to make it look like the author
+			    # added a DEBUG directive like this:
+			    # [% DEBUG dir line='20' text='INCLUDE foo' %]
+			    # before each directive.  Cunning eh?
+			    my $dtext = $text;
+			    $dtext =~ s[(['\\])][\\$1]g;
+			    unshift(@$tokens, 
+				    DEBUG   => 'DEBUG',
+				    IDENT   => 'dir',
+				    IDENT   => 'line',
+				    ASSIGN  => '=',
+				    LITERAL => "'$line'",
+				    IDENT   => 'text',
+				    ASSIGN  => '=',
+				    LITERAL => "'$dtext'",
+				    (';') x 2,
+				    @$token, 
+				    (';') x 2);
+			}
+			else {
+			    unshift(@$tokens, @$token, (';') x 2);
+			}
 			$token = undef;  # force redo
 		    }
 		    elsif ($token eq 'ITEXT') {
@@ -806,15 +830,20 @@ sub _parse_error {
 
 sub _dump {
     my $self = shift;
-    my $output = "$self:\n";
-    foreach my $key (qw( START_TAG END_TAG TAG_STYLE ANYCASE INTERPOLATE 
-			 PRE_CHOMP POST_CHOMP V1DOLLAR ) ) {
-	
-	$output .= sprintf("%-12s => %s\n", $key, $self->{ $key });
+    my $output = "[Template::Parser] {\n";
+    my $format = "    %-16s => %s\n";
+    my $key;
+
+    foreach $key (qw( START_TAG END_TAG TAG_STYLE ANYCASE INTERPOLATE 
+		      PRE_CHOMP POST_CHOMP V1DOLLAR )) {
+	my $val = $self->{ $key };
+	$val = '<undef>' unless defined $val;
+	$output .= sprintf($format, $key, $val);
     }
+
+    $output .= '}';
     return $output;
 }
-    
 
 
 1;
