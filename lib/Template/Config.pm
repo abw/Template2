@@ -45,13 +45,13 @@ $SERVICE  = 'Template::Service';
 $STASH    = 'Template::Stash';
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+$INSTDIR  = '/usr/local/tt2';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
-$LATEX_PATH    = '';
-$PDFLATEX_PATH = '';
-$DVIPS_PATH    = '';
+$LATEX_PATH    = '/usr/bin/latex';
+$PDFLATEX_PATH = '/usr/bin/pdflatex';
+$DVIPS_PATH    = '/usr/bin/dvips';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -392,13 +392,13 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.46, distributed as part of the
+2.47, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -282,7 +282,7 @@ fixups/enhancements, a test script and documentation.
 
 =head1 VERSION
 
-2.46, distributed as part of the
+2.47, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 

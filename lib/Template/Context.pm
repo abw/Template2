@@ -636,19 +636,24 @@ sub debug {
     if (@args) {
 	if ($args[0] =~ /^on|1$/i) {
 	    $self->{ DEBUG } = 1;
-	    pop(@args);
+	    shift(@args);
 	}
 	elsif ($args[0] =~ /^off|0$/i) {
 	    $self->{ DEBUG } = 0;
-	    pop(@args);
+	    shift(@args);
 	}
     }
 
-    if (@args && $self->{ DEBUG }) {
+    if (@args) {
 	if ($args[0] =~ /^dir$/i) {
-	    my $format = $self->{ DEBUG_FORMAT } || $DEBUG_FORMAT;
+	    my $format = $self->{ DEBUG_FORMAT };
+	    $format = $DEBUG_FORMAT unless defined $format;
 	    $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
 	    return $format;
+	}
+	elsif ($args[0] =~ /^format$/i) {
+	    $self->{ DEBUG_FORMAT } = $args[1];
+#	    return "## set format to $args[1]\n";
 	}
 	# else ignore
     }

@@ -159,7 +159,7 @@ Simon Matthews E<lt>sam@knowledgepool.comE<gt>
 
 =head1 VERSION
 
-2.44, distributed as part of the
+2.45, distributed as part of the
 Template Toolkit version 2.07, released on 17 April 2002.
 
 
