@@ -24,6 +24,20 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.06g - March                           ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in ttree which prevented it from passing the recurse option
+  onto the Template object due to a name mismatch: recurse/recursion
+
+* Changed Template::Test to accept messages to ok().  Also added is()
+  as an alias for match().
+
+* Fixed an oversight/bug in the XS stash where a missing aTHX_ around 
+  line 546 caused compilation to fail under Win32.
+
+
+#------------------------------------------------------------------------
 # Version 2.06f - March 13th 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
