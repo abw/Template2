@@ -782,7 +782,14 @@ sub _parse {
 		?   map { $_->[1] } @$stack[ -$len .. -1 ]
 		:   ();
 
-	$coderet = &$code( $self, @codevars );
+	eval {
+	    $coderet = &$code( $self, @codevars );
+	};
+	if ($@) {
+	    my $err = $@;
+	    chomp $err;
+	    return $self->_parse_error($err);
+	}
 
 	# reduce stack by $len
 	splice(@$stack, -$len, $len);
