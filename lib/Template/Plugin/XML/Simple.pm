@@ -52,12 +52,12 @@ sub new {
 #------------------------------------------------------------------------
 # _throw($errmsg)
 #
-# Raise a Template::Exception of type XML.XPath via die().
+# Raise a Template::Exception of type XML.Simple via die().
 #------------------------------------------------------------------------
 
 sub _throw {
     my ($self, $error) = @_;
-    die (Template::Exception->new('XML.XPath', $error));
+    die (Template::Exception->new('XML.Simple', $error));
 }
 
 
