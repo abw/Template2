@@ -180,6 +180,7 @@ loop:	    FOR loopvar ';'         { $_[0]->{ INFOR }++                  }
 ;
 
 loopvar:    IDENT ASSIGN term args  { [ @_[1, 3, 4] ]                     }
+        |   IDENT IN term args      { [ @_[1, 3, 4] ]                     }
 	|   term args               { [ 0, @_[1, 2] ]                     }
 ;
 
