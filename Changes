@@ -17,6 +17,14 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.06d -                                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Removed mandatory_modules() check from Makefile.PL, allowing the 
+  regular PRE_REQUISITE approach to work in a way that keeps the CPAN
+  module (and Leon) happy.
+
+#------------------------------------------------------------------------
 # Version 2.06c - 13th December 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
