@@ -84,46 +84,46 @@ sub template {
     # CODE references are assumed to be pre-compiled templates and are
     # returned intact
     return $name
-	if UNIVERSAL::isa($name, 'Template::Document')
-	    || ref($name) eq 'CODE';
+        if UNIVERSAL::isa($name, 'Template::Document')
+            || ref($name) eq 'CODE';
 
     $shortname = $name;
 
     unless (ref $name) {
+        
+        $self->debug("looking for block [$name]") if $self->{ DEBUG };
 
-	$self->debug("looking for block [$name]") if $self->{ DEBUG };
-
-	# we first look in the BLOCKS hash for a BLOCK that may have 
-	# been imported from a template (via PROCESS)
-	return $template
-	    if ($template = $self->{ BLOCKS }->{ $name });
-
-	# then we iterate through the BLKSTACK list to see if any of the
-	# Template::Documents we're visiting define this BLOCK
-	foreach $blocks (@{ $self->{ BLKSTACK } }) {
-	    return $template
-		if $blocks && ($template = $blocks->{ $name });
-	}
-
-	# now it's time to ask the providers, so we look to see if any 
-	# prefix is specified to indicate the desired provider set.
-	if ($^O eq 'MSWin32') {
-	    # let C:/foo through
-	    $prefix = $1 if $shortname =~ s/^(\w{2,})://o;
-	}
-	else {
-	    $prefix = $1 if $shortname =~ s/^(\w+)://;
-	}
-
-	if (defined $prefix) {
-	    $providers = $self->{ PREFIX_MAP }->{ $prefix } 
-		|| return $self->throw(Template::Constants::ERROR_FILE,
-				      "no providers for template prefix '$prefix'");
-	}
+        # we first look in the BLOCKS hash for a BLOCK that may have 
+        # been imported from a template (via PROCESS)
+        return $template
+            if ($template = $self->{ BLOCKS }->{ $name });
+        
+        # then we iterate through the BLKSTACK list to see if any of the
+        # Template::Documents we're visiting define this BLOCK
+        foreach $blocks (@{ $self->{ BLKSTACK } }) {
+            return $template
+                if $blocks && ($template = $blocks->{ $name });
+        }
+        
+        # now it's time to ask the providers, so we look to see if any 
+        # prefix is specified to indicate the desired provider set.
+        if ($^O eq 'MSWin32') {
+            # let C:/foo through
+            $prefix = $1 if $shortname =~ s/^(\w{2,})://o;
+        }
+        else {
+            $prefix = $1 if $shortname =~ s/^(\w+)://;
+        }
+        
+        if (defined $prefix) {
+            $providers = $self->{ PREFIX_MAP }->{ $prefix } 
+            || return $self->throw( Template::Constants::ERROR_FILE,
+                                    "no providers for template prefix '$prefix'");
+        }
     }
     $providers = $self->{ PREFIX_MAP }->{ default }
-	      || $self->{ LOAD_TEMPLATES }
-        unless $providers;
+        || $self->{ LOAD_TEMPLATES }
+            unless $providers;
 
 
     # Finally we try the regular template providers which will 
@@ -132,13 +132,13 @@ sub template {
 
     $blockname = '';
     while ($shortname) {
-	$self->debug("asking providers for [$shortname] [$blockname]") 
+        $self->debug("asking providers for [$shortname] [$blockname]") 
             if $self->{ DEBUG };
 
-	foreach my $provider (@$providers) {
-	    ($template, $error) = $provider->fetch($shortname, $prefix);
-	    if ($error) {
-		if ($error == Template::Constants::STATUS_ERROR) {
+        foreach my $provider (@$providers) {
+            ($template, $error) = $provider->fetch($shortname, $prefix);
+            if ($error) {
+                if ($error == Template::Constants::STATUS_ERROR) {
                     # $template contains exception object
                     if (UNIVERSAL::isa($template, 'Template::Exception')
                         && $template->type() eq Template::Constants::ERROR_FILE) {
@@ -147,23 +147,23 @@ sub template {
                     else {
                         $self->throw( Template::Constants::ERROR_FILE, $template );
                     }
-		}
-		# DECLINE is ok, carry on
-	    }
-	    elsif (length $blockname) {
-		return $template 
-		    if $template = $template->blocks->{ $blockname };
-	    }
-	    else {
-		return $template;
-	    }
-	}
-
-	last if ref $shortname || ! $self->{ EXPOSE_BLOCKS };
-	$shortname =~ s{/([^/]+)$}{} || last;
-	$blockname = length $blockname ? "$1/$blockname" : $1;
+                }
+                # DECLINE is ok, carry on
+            }
+            elsif (length $blockname) {
+                return $template 
+                    if $template = $template->blocks->{ $blockname };
+            }
+            else {
+                return $template;
+            }
+        }
+        
+        last if ref $shortname || ! $self->{ EXPOSE_BLOCKS };
+        $shortname =~ s{/([^/]+)$}{} || last;
+        $blockname = length $blockname ? "$1/$blockname" : $1;
     }
-
+        
     $self->throw(Template::Constants::ERROR_FILE, "$name: not found");
 }
 
@@ -182,20 +182,20 @@ sub template {
 sub plugin {
     my ($self, $name, $args) = @_;
     my ($provider, $plugin, $error);
-
+    
     $self->debug("plugin($name, ", defined $args ? @$args : '[ ]', ')')
         if $self->{ DEBUG };
-
+    
     # request the named plugin from each of the LOAD_PLUGINS providers in turn
     foreach my $provider (@{ $self->{ LOAD_PLUGINS } }) {
-	($plugin, $error) = $provider->fetch($name, $args, $self);
-	return $plugin unless $error;
-	if ($error == Template::Constants::STATUS_ERROR) {
-	    $self->throw($plugin) if ref $plugin;
-	    $self->throw(Template::Constants::ERROR_PLUGIN, $plugin);
-	}
+        ($plugin, $error) = $provider->fetch($name, $args, $self);
+        return $plugin unless $error;
+        if ($error == Template::Constants::STATUS_ERROR) {
+            $self->throw($plugin) if ref $plugin;
+            $self->throw(Template::Constants::ERROR_PLUGIN, $plugin);
+        }
     }
-
+    
     $self->throw(Template::Constants::ERROR_PLUGIN, "$name: plugin not found");
 }
 
@@ -211,32 +211,32 @@ sub plugin {
 sub filter {
     my ($self, $name, $args, $alias) = @_;
     my ($provider, $filter, $error);
-
+    
     $self->debug("filter($name, ", 
                  defined $args  ? @$args : '[ ]', 
                  defined $alias ? $alias : '<no alias>', ')')
         if $self->{ DEBUG };
-
+    
     # use any cached version of the filter if no params provided
     return $filter 
-	if ! $args && ! ref $name
-	    && ($filter = $self->{ FILTER_CACHE }->{ $name });
-
+        if ! $args && ! ref $name
+            && ($filter = $self->{ FILTER_CACHE }->{ $name });
+    
     # request the named filter from each of the FILTERS providers in turn
     foreach my $provider (@{ $self->{ LOAD_FILTERS } }) {
-	($filter, $error) = $provider->fetch($name, $args, $self);
-	last unless $error;
-	if ($error == Template::Constants::STATUS_ERROR) {
-	    $self->throw($filter) if ref $filter;
-	    $self->throw(Template::Constants::ERROR_FILTER, $filter);
-	}
-	# return $self->error($filter)
-	#    if $error == &Template::Constants::STATUS_ERROR;
+        ($filter, $error) = $provider->fetch($name, $args, $self);
+        last unless $error;
+        if ($error == Template::Constants::STATUS_ERROR) {
+            $self->throw($filter) if ref $filter;
+            $self->throw(Template::Constants::ERROR_FILTER, $filter);
+        }
+        # return $self->error($filter)
+        #    if $error == &Template::Constants::STATUS_ERROR;
     }
-
+    
     return $self->error("$name: filter not found")
-	unless $filter;
-
+        unless $filter;
+    
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # commented out by abw on 19 Nov 2001 to fix problem with xmlstyle
     # plugin which may re-define a filter by calling define_filter()
@@ -251,7 +251,7 @@ sub filter {
 
     # cache FILTER if alias is valid
     $self->{ FILTER_CACHE }->{ $alias } = $filter
-	if $alias;
+        if $alias;
 
     return $filter;
 }
@@ -267,8 +267,8 @@ sub view {
     my $self = shift;
     require Template::View;
     return Template::View->new($self, @_)
-	|| $self->throw(&Template::Constants::ERROR_VIEW, 
-			$Template::View::ERROR);
+        || $self->throw(&Template::Constants::ERROR_VIEW, 
+                        $Template::View::ERROR);
 }
 
 
@@ -293,7 +293,7 @@ sub process {
     my ($self, $template, $params, $localize) = @_;
     my ($trim, $blocks) = @$self{ qw( TRIM BLOCKS ) };
     my (@compiled, $name, $compiled);
-    my ($stash, $tblocks, $error, $tmpout);
+    my ($stash, $component, $tblocks, $error, $tmpout);
     my $output = '';
     
     $template = [ $template ] unless ref $template eq 'ARRAY';
@@ -318,6 +318,9 @@ sub process {
     }
 
     eval {
+        # save current component
+        eval { $component = $stash->get('component') };
+
         foreach $name (@$template) {
             $compiled = shift @compiled;
             my $element = ref $compiled eq 'CODE' 
@@ -352,6 +355,7 @@ sub process {
             }
             $output .= $tmpout;
         }
+        $stash->set('component', $component);
     };
     $error = $@;
     
@@ -1533,8 +1537,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.83, distributed as part of the
-Template Toolkit version 2.11, released on 06 January 2004.
+2.84, distributed as part of the
+Template Toolkit version 2.11a, released on 06 January 2004.
 
 =head1 COPYRIGHT
 
