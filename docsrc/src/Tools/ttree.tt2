@@ -59,6 +59,20 @@ via the Template Toolkit.  If no B<accept> parameter is specified then
 all files will be accepted for processing if not already copied or
  ignored.
 
+The B<suffix> option can be used to define which file extensions should
+be mapped to other file extensions.  For example, if you want your source
+templates with a C<.tt2> suffix to be output as C<.html> files, then
+you would specify:
+
+    suffix tt2=html
+
+Or on the command line, 
+
+    --suffix tt2=html
+
+You can provide any number of different suffix mappings by repeating 
+this option.
+
 Additional options may be used to set Template Toolkit parameters.
 For example:
 
