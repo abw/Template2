@@ -31,7 +31,7 @@ my $cdir  = abs_path("$dir/tmp") . "/cache";
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => "$dir/src",
-    COMPILE_DIR  => $cdir,
+    COMPILE_DIR  => "$cdir/",    # note trailing slash - should be handled OK
     COMPILE_EXT  => '.ttc',
     ABSOLUTE     => 1,
 };
