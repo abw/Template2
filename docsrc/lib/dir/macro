@@ -37,7 +37,7 @@ equivalent to:
     [% INCLUDE header title='Hello World' %]
     [% INCLUDE header title='Hello World' bgcol='#123456# %]
 
-Here's anothe example, defining a macro for display numbers
+Here's another example, defining a macro for display numbers
 in comma-delimited groups of 3, using the chunk and join virtual
 method.
 
