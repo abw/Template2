@@ -103,7 +103,7 @@ sub process {
     $context->delocalise();
 
     if ($error) {
-	$error = $error->as_string if ref $error;
+#	$error = $error->as_string if ref $error;
 	return $self->error($error);
     }
 
@@ -139,7 +139,7 @@ sub _init {
         $self->{ $item } = $data;
     }
     
-    $self->{ ERROR      } = $config->{ ERROR };
+    $self->{ ERROR      } = $config->{ ERROR } || $config->{ ERRORS };
     $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
 			  ? $config->{ AUTO_RESET } : 1;
 

@@ -85,8 +85,8 @@ my %ucttopts;
 
 # get all template variable definitions
 my $replace = $config->get('define');
-print "replace hash: ", join(', ', map { "$_ => $replace->{ $_ }"} 
-			     keys %$replace), "\n";
+#print "replace hash: ", join(', ', map { "$_ => $replace->{ $_ }"} 
+#			     keys %$replace), "\n";
 
 # now create complete parameter hash for creating template processor
 my $ttopts   = {

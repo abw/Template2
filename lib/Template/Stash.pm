@@ -73,6 +73,7 @@ $LIST_OPS = {
 	},
     'sort'    => sub {
 	my ($list, $field) = @_;
+	return $list unless $#$list;	    # no need to sort 1 item lists
 	return $field			    # Schwartzian Transform 
 	    ?  map  { $_->[0] }		    # for case insensitivity
 	       sort { $a->[1] cmp $b->[1] }
@@ -448,7 +449,7 @@ sub _assign {
     }
     elsif (UNIVERSAL::isa($root, 'UNIVERSAL')) {
 	# try to call the item as a method of an object
-	return $root->$item($value, @$args);			## RETURN
+	return $root->$item(@$args, $value);			## RETURN
     }
     else {
 	die "don't know how to assign to [$root].[$item]\n";	## DIE

@@ -6,8 +6,8 @@
 #
 # Written by Andy Wardley <abw@cre.canon.co.uk>
 #
-# Copyright (C) 1998-1999 Canon Research Centre Europe Ltd.
-# All Rights Reserved.
+# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -56,13 +56,23 @@ my $tproc = Template->new({
     INCLUDE_PATH => "$dir/src:$dir/lib",
     TRIM         => 1,
     AUTO_RESET   => 0,
+    DEFAULT      => 'default',
 });
 
 my $tt_reset = Template->new({ 
     INTERPOLATE  => 1,
     INCLUDE_PATH => "$dir/src:$dir/lib",
     TRIM         => 1,
+    RECURSION    => 1,
+    DEFAULT      => 'bad_default',
 });
+
+# we want to process 'metadata' directly so that the correct top-level
+# 'template' reference is set instead of 'input text'
+my $output;
+$tproc->process('metadata', $replace, \$output);
+$replace->{ metaout } = $output;
+$replace->{ metamod } = (stat("$dir/src/metadata"))[9];
 
 test_expect(\*DATA, [ default => $tproc, reset => $tt_reset ], $replace);
 
@@ -187,3 +197,50 @@ ERROR: [% error.info %]
 [% END %]
 -- expect --
 ERROR: first_block: not found
+
+-- test --
+-- use default --
+[% metaout %]
+-- expect --
+-- process --
+TITLE: The cat sat on the mat
+metadata last modified [% metamod %]
+
+-- test -- 
+[% TRY %]
+[% PROCESS recurse counter = 1 %]
+[% CATCH file -%]
+[% error.info %]
+[% END %]
+-- expect --
+recursion count: 1
+recursion into 'my file'
+
+-- test --
+[% INCLUDE nosuchfile %]
+-- expect --
+This is the default file
+
+-- test -- 
+-- use reset --
+[% TRY %]
+[% PROCESS recurse counter = 1 %]
+[% CATCH file %]
+[% error.info %]
+[% END %]
+-- expect --
+recursion count: 1
+recursion count: 2
+recursion count: 3
+
+-- test --
+[% TRY;
+   INCLUDE nosuchfile;
+   CATCH;
+   "ERROR: $error";
+   END
+%]
+-- expect --
+ERROR: file error - nosuchfile: not found
+
+

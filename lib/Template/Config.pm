@@ -28,7 +28,8 @@ require 5.004;
 use strict;
 use base qw( Template::Base );
 use vars qw( $VERSION $DEBUG $ERROR $AUTOLOAD 
-	     $PARSER $PROVIDER $PLUGINS $FILTERS $STASH $SERVICE $CONTEXT);
+	     $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
+	     $STASH $SERVICE $CONTEXT );
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG    = 0 unless defined $DEBUG;
@@ -36,6 +37,7 @@ $ERROR    = '';
 
 $CONTEXT  = 'Template::Context';
 $FILTERS  = 'Template::Filters';
+$ITERATOR = 'Template::Iterator';
 $PARSER   = 'Template::Parser';
 $PLUGINS  = 'Template::Plugins';
 $PROVIDER = 'Template::Provider';
@@ -58,8 +60,8 @@ sub load {
     my ($class, $module) = @_;
     $module =~ s[::][/]g;
     $module .= '.pm';
-    print STDERR "loading $module\n"
-	if $DEBUG;
+#    print STDERR "loading $module\n"
+#	if $DEBUG;
     eval {
 	require $module;
     };
@@ -143,6 +145,24 @@ sub filters {
 	|| $class->error("failed to create filter provider: ",
 			 $FILTERS->error);
 }
+
+
+#------------------------------------------------------------------------
+# iterator(\@list)
+#
+# Instantiate a new Template::Iterator object (default: Template::Iterator).
+# Returns an object reference or undef on error, as above.
+#------------------------------------------------------------------------
+
+sub iterator {
+    my $class = shift;
+    my $list  = shift;
+
+    return undef unless $class->load($ITERATOR);
+    return $ITERATOR->new($list, @_)
+	|| $class->error("failed to create iterator: ", $ITERATOR->error);
+}
+
 
 #------------------------------------------------------------------------
 # stash(\%vars)

@@ -39,8 +39,8 @@ require 5.004;
 use strict;
 use vars qw( $VERSION $DEBUG $ERROR );
 use base qw( Template::Base );
-use Template::Constants;
 use Template::Config;
+use Template::Constants;
 use Template::Document;
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -117,8 +117,8 @@ sub fetch {
 	    : (undef, Template::Constants::STATUS_DECLINED);
     }
 
-    $self->_dump_cache() 
-	if $DEBUG > 1;
+#    $self->_dump_cache() 
+#	if $DEBUG > 1;
 
     return ($data, $error);
 }
@@ -237,6 +237,7 @@ sub _init {
     $self->{ RELATIVE }     = $params->{ RELATIVE } || 0;
     $self->{ TOLERANT }     = $params->{ TOLERANT } || 0;
     $self->{ PARSER }       = $params->{ PARSER };
+    $self->{ DEFAULT }      = $params->{ DEFAULT };
 #   $self->{ PREFIX }       = $params->{ PREFIX };
     $self->{ PARAMS }       = $params;
 
@@ -270,8 +271,9 @@ sub _fetch {
     }
     elsif ($slot = $self->{ LOOKUP }->{ $name }) {
 	# cached entry exists, so refresh slot and extract data
-	$self->_refresh($slot);
-	$data = $slot->[ DATA ];
+	($data, $error) = $self->_refresh($slot);
+	$data = $slot->[ DATA ]
+	    unless $error;
     }
     else {
 	# nothing in cache so try to load, compile and cache
@@ -313,8 +315,9 @@ sub _fetch_path {
 	# the template may have been stored using a non-filename name
 	if ($caching && ($slot = $self->{ LOOKUP }->{ $name })) {
 	    # cached entry exists, so refresh slot and extract data
-	    $self->_refresh($slot);
-	    $data = $slot->[ DATA ];
+	    ($data, $error) = $self->_refresh($slot);
+	    $data = $slot->[ DATA ] 
+		unless $error;
 	    last INCLUDE;
 	}
 
@@ -326,8 +329,9 @@ sub _fetch_path {
 
 	    if ($caching && ($slot = $self->{ LOOKUP }->{ $path })) {
 		# cached entry exists, so refresh slot and extract data
-		$self->_refresh($slot);
-		$data = $slot->[ DATA ];
+		($data, $error) = $self->_refresh($slot);
+		$data = $slot->[ DATA ]
+		    unless $error;
 		last INCLUDE;
 	    }
 	    elsif (-f $path) {
@@ -338,7 +342,7 @@ sub _fetch_path {
 		    # load compiled template via require();  we zap any
 		    # %INC entry to ensure it is reloaded (we don't 
 		    # want 1 returned by require() to say it's in memory)
-		    delete $INC{ $compiled };  # don't want 1 returned
+		    delete $INC{ $compiled };
 		    eval { $data = require $compiled };
 
 		    if ($data && ! $@) {
@@ -365,7 +369,12 @@ sub _fetch_path {
 		    || $error == Template::Constants::STATUS_ERROR;
 	    }
 	}
-	# nothing found
+	# template not found, so look for a DEFAULT template
+	my $default;
+	if (defined ($default = $self->{ DEFAULT }) && $name ne $default) {
+	    $name = $default;
+	    redo INCLUDE;
+	}
 	($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
     } # INCLUDE
 
@@ -398,7 +407,7 @@ sub _load {
     local $/ = undef;    # slurp files in one go
     local *FH;
 
-    $alias = $name unless defined $alias;
+    $alias = $name unless defined $alias or ref $name;
 
     print STDERR "_load($name, $alias)\n"
 	if $DEBUG;
@@ -407,7 +416,7 @@ sub _load {
 	if (ref $name eq 'SCALAR') {
 	    # $name can be a SCALAR reference to the input text...
 	    $data = {
-		name => 'input text',
+		name => defined $alias ? $alias : 'input text',
 		text => $$name,
 		time => $now,
 		load => 0,
@@ -417,7 +426,7 @@ sub _load {
 	    # ...or a GLOB or file handle...
 	    my $text = <$name>;
 	    $data = {
-		name => 'input file handle',
+		name => defined $alias ? $alias : 'input file handle',
 		text => $text,
 		time => $now,
 		load => 0,
@@ -457,7 +466,7 @@ sub _load {
 
 sub _refresh {
     my ($self, $slot) = @_;
-    my ($head, $file);
+    my ($head, $file, $data, $error);
 
     print STDERR "_refresh([ @$slot ])\n"
 	if $DEBUG;
@@ -469,8 +478,8 @@ sub _refresh {
 	print STDERR "refreshing cache file ", $slot->[ NAME ], "\n"
 	    if $DEBUG;
 
-	my ($data, $error) = $self->_load($slot->[ NAME ], 
-					  $slot->[ DATA ]->{ name });
+	($data, $error) = $self->_load($slot->[ NAME ], 
+				       $slot->[ DATA ]->{ name });
 	($data, $error) = $self->_compile($data)
 	    unless $error;
 	$slot->[ DATA ] = $data->{ data },
@@ -497,6 +506,8 @@ sub _refresh {
     $slot->[ PREV ] = undef;
     $slot->[ NEXT ] = $head;
     $self->{ HEAD } = $slot;
+
+    return ($data, $error);
 }
 
 
@@ -610,6 +621,11 @@ sub _compile {
 	# call Template::Document constructor to compile Perl code and 
 	# return a cohesive object encapsulating the template, additional
 	# BLOCKs and metadata
+	$parsedoc->{ METADATA } = { 
+	    'name'    => $data->{ name },
+	    'modtime' => $data->{ time },
+	    %{ $parsedoc->{ METADATA } },
+	};
 	return $data					    ## RETURN ##
 	    if $data->{ data } = Template::Document->new($parsedoc);
 

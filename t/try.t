@@ -596,3 +596,21 @@ before
 caught any: [undef] undefined error
 after
 
+-- test --
+[% TRY %]
+[% THROW up 'feeling sick' %]
+[% CATCH %]
+[% error %]
+[% END %]
+-- expect --
+up error - feeling sick
+
+-- test --
+[% TRY %]
+[% THROW up 'feeling sick' %]
+[% CATCH %]
+[% e %]
+[% END %]
+-- expect --
+up error - feeling sick
+

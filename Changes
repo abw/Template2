@@ -12,6 +12,36 @@
 # $Id$
 #========================================================================
 
+#========================================================================
+# Changes from version 2.00-beta2 to 2.00-beta3
+#========================================================================
+
+* Added the WRAPPER directive to include another template, passing the 
+  enclosing block as the 'content' variable.  e.g.
+
+  somefile:                    mytable:
+    [% WRAPPER mytable %]        <table>
+       blah blah blah            [% content %]
+    [% END %]                    </table>
+
+  This is equivalent to:
+
+    [% content = BLOCK %]
+       blah blah blah
+    [% END %]
+    [% INCLUDE mytable %]
+
+* Added the DEFAULT configuration option which allows you to specify a 
+  default template which should be used whenever a named template 
+  cannot be found.  This is ignored for templates specified with absolute
+  or relative filenames, or as references to an input filehandle or text.
+
+* Added a FORNEXT directive to step on to the next iteration of a
+  FOREACH loop, as suggested/requested by Jo Ellen Wisnosky.  I chose
+  FORNEXT rather than simply NEXT because 'next' is a very common
+  variable name but I'm open to better suggestions.  Perhaps CASE
+  should be set by default to prevent variable conflict?
+
 * Reorganised the Template::Filters modules and changed the calling 
   convention for requesting filters via the fetch() method.  This now
   expects a reference to the calling Template::Context object as the
@@ -20,7 +50,7 @@
   no effect.  Dynamic filter factories (denoted by a $is_dynamic flag
   in the FILTER_FACTORY table) are called to create a filter sub-routine
   (closure) for each request.  The context is now passed as the first
-  parameters, followed by the expansion of any arguments.  Filter 
+  parameter, followed by the expansion of any arguments.  Filter 
   factories should return a sub-routine or (undef, $error) on error.
 
 * Added several new filters:
@@ -38,12 +68,65 @@
 
   - 'evalperl' evaluate the input as Perl code, as suggested by Jonas
     Liligren. Requires the EVAL_PERL option to be set and will throw a 
-    'perl' error if not (see next item).  e.g. [% perlcode | evalperl %]
+    'perl' error if not (see later item).  e.g. [% perlcode | evalperl %]
 
-* Changed PERL blocks to throw a 'perl' error if EVAL_PERL is not set.
-  Any other errors thrown in a Perl blocks are left intact.  Previously,
-  these were converted to 'perl' exceptions which prevented exceptions 
-  of other kinds being throw from within Perl code.
+* Fixed a bug in Template::Provider which was mangling the metadata items
+  for the template name and modification time.  The [% template.name %] 
+  and [% template.modtime %] variables now work as expected.
+
+* Added 'component' variable, similar to 'template', but which references 
+  the current template component file or block, rather than the top-level 
+  template.  Of course, these may be one and the same if you're not nesting
+  any templates.
+
+* Template::Provider now reports errors raised when re-compiling 
+  modified templates rather than ignoring them, thanks to a patch from
+  Perrin Harkins.
+
+* Fixed Template::Context to recognise the RECURSION option once more,
+  thanks to a patch from Rafael Kitover.
+
+* Overloaded "" stringification of Template::Exception to call as_string(),
+  again thanks to Rafael.  In a catch block you can now simply say 
+  [% error %] as well as the more explicit  [% error.type %] and/or 
+  [% error.info %].
+
+* Changed Template module (via Template::Service) to return the
+  exception raised rather than a pre-stringified form.  This allows
+  you to test the type() and/or info() if you want, or just print it
+  and rely on the automatic stringification mentioned above to format
+  it as expected.  Note that the top-level process($file) method
+  returns a string rather than an exception if $file can't be found.
+  This is a bug, or a possible "gotcha" at the very least, and should
+  get fixed some time soon.  For now, test that the error is a
+  reference before attempting to call info() or type().
+
+* Fixed a bug preventing literal newlines from being used in strings.
+  Thanks to Simon Matthews for bringing it to my attention by calling 
+  my hotel room at the Perl Conference and saying "Hello?  Is that the 
+  Template Toolkit Helpdesk?  I have a bug to report..."  :-) 
+  (I fixed it on his laptop a few minutes later - good service, eh?)
+
+* Changed Template::Parser to not compile PERL or RAWPERL blocks if
+  EVAL_PERL is not set.  Previously they were compiled but switched out
+  at runtime.  This was erroneous as rogue BEGIN { } blocks could still
+  be executed, as noted by Randal Schwartz.  Any PERL or RAWPERL blocks
+  encountered when EVAL_PERL is disabled will now cause a 'perl' exception
+  to be thrown. 
+
+* Any other errors thrown in a PERL blocks (assuming EVAL_PERL set)
+  are now left unchanged.  Previously, these were converted to 'perl'
+  exceptions which prevented exceptions of other kinds being throw
+  from within Perl code.
+
+* Applied a patch from Chris Dean to fix a bug in the list 'sort' 
+  method which was converting a single element list into a hash.  The
+  sort now does nothing unless there's > 1 elements in the list.
+
+* Changed Template::Stash set() method to append the assigned value to
+  the end of any arguments specified, rather than prepending it to the 
+  front.  e.g. The foo() method called by [% myobj.foo(x, y) = z %] now
+  receives arguments as foo(x, y, z) instead of foo(z, x, y).
 
 * Changed Template::Base::error() to accept a reference (e.g. exception)
   as the first parameter.  In this case, no attempt is made to 
@@ -52,13 +135,21 @@
 * Added a direct stash() accessor method to Template::Context rather 
   than relying on the slower AUTOLOAD method.
 
-* Fixed a bug with persistant templates not loading Template::Iterator.
-  Thanks to Doug Steinwand who identified the problem.  Also uncovered
-  and fixed a problem with persistant templates not being reloaded due 
-  to the %INC hash.  This caused 1 to be returned from require()
-  instead of the compiled template.
+* Added an iterator() method to Template::Config to require
+  Template::Iterator and instantiate an iterator, and changed
+  generated code for FOREACH to call this factory method.  This fixes
+  a bug with pre-compiled (i.e persistant) templates which were
+  failing if Template::Iterator wasn't already loaded.  Thanks to Doug
+  Steinwand, Rafael Kitover and Jonas Lilegren who all identified the
+  problem and hounded me until I fixed it.  :-)
+ 
+* Fixed a problem with persistant templates not being reloaded due to 
+  the %INC hash.  This caused 1 to be returned from require() instead 
+  of the compiled template.
 
-* Applied documentation and test patches from Leon Brocard.
+* Applied various documentation and test patches from Leon Brocard.
+  Fixed docs to quote dotted exception types to prevent string 
+  concatenation, as noted by Randal Schwartz.
 
 
 #========================================================================
@@ -372,10 +463,10 @@ Configuration Options
 
     my $template = Template->new({
 	ERROR => {
-	    dbi      => 'error/database.html',	 # DBI error
-	    user.pwd => 'error/badpasswd.html',  # invalid user password
-	    user     => 'user/index.html',	 # general 'user' handler
-	    default  => 'error/error.html',      # default error template
+	    dbi        => 'error/database.html',   # DBI error
+	    'user.pwd' => 'error/badpasswd.html',  # invalid user password
+	    user       => 'user/index.html',	   # general 'user' handler
+	    default    => 'error/error.html',      # default error template
 	}
     });
 

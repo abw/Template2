@@ -32,8 +32,8 @@ use vars qw( $VERSION $DEBUG $AUTOLOAD );
 use base qw( Template::Base );
 
 use Template::Base;
-use Template::Constants;
 use Template::Config;
+use Template::Constants;
 use Template::Exception;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -218,8 +218,10 @@ sub process {
 	    && ($blocks = $template->blocks);
 
     # update stash with any new parameters passed
-    $self->{ STASH }->update($params)
-	if $params;
+    $params ||= { };
+    $params->{ component } = $template;
+    $self->{ STASH }->update($params);
+#	if $params;
     
     if (ref $template eq 'CODE') {
 	$output = &$template($self);
@@ -268,6 +270,7 @@ sub include {
 
     # localise the variable stash with any parameters passed
     $params ||= { };
+    $params->{ component } = $template;
     $self->{ STASH } = $self->{ STASH }->clone($params);
 
     eval {
@@ -556,11 +559,13 @@ sub _init {
     };
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # RECURSION - flag indicating is recursion into templates is supported
     # EVAL_PERL - flag indicating if PERL blocks should be processed
-    # EVAL_PERL - flag to remove leading and trailing whitespace from output
+    # TRIM      - flag to remove leading and trailing whitespace from output
     # BLKSTACK  - list of hashes of BLOCKs defined in current template(s)
     # CONFIG    - original configuration hash
 
+    $self->{ RECURSION } = $config->{ RECURSION } || 0;
     $self->{ EVAL_PERL } = $config->{ EVAL_PERL } || 0;
     $self->{ TRIM      } = $config->{ TRIM } || 0;
     $self->{ BLKSTACK  } = [ ];

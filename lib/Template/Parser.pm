@@ -97,6 +97,7 @@ sub new {
 	PRE_CHOMP   => 0,
 	POST_CHOMP  => 0,
 	V1DOLLAR    => 0,
+	EVAL_PERL   => 0,
 	GRAMMAR     => undef,
 	_ERROR      => '',
     }, $class;

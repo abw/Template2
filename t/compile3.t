@@ -20,6 +20,7 @@
 use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
+use File::Copy;
 $^W = 1;
 
 # declare extra test to follow test_expect();
@@ -35,22 +36,44 @@ my $ttcfg = {
 
 my $file = "$dir/complex";
 
-# check compiled template file exists and save modification time
+# check compiled template file exists and grab modification time
 ok( -f "$file.ttc" );
 my $mod = (stat(_))[9];
+
+# save copy of the source file because we're going to try to break it
+copy($file, "$file.org") || die "failed to copy $file to $file.org\n";
 
 # sleep for a couple of seconds to ensure clock has ticked
 sleep(2);
 
 # append a harmless newline to the end of the source file to change
 # its modification time
-open(FOO, ">>$file") || die "$file: $!\n";
-print FOO "\n";
-close(FOO);
+append_file("\n");
 
-test_expect(\*DATA, $ttcfg);
+# define 'bust_it' to append a lone "[% TRY %]" onto the end of the 
+# source file to cause re-compilation to fail
+my $replace = {
+    bust_it => sub { append_file('[% TRY %]') },
+};
+
+test_expect(\*DATA, $ttcfg, $replace );
 
 ok( (stat($file))[9] > $mod );
+
+# restore original source file
+copy("$file.org", $file) || die "failed to copy $file.org to $file\n";
+
+#------------------------------------------------------------------------
+
+sub append_file {
+    local *FP;
+    sleep(2);     # ensure file time stamps are different
+    open(FP, ">>$file") || die "$file: $!\n";
+    print FP @_;
+    close(FP);
+}
+
+#------------------------------------------------------------------------
 
 __DATA__
 -- test --
@@ -61,5 +84,17 @@ This is the header, title: Yet Another Template Test
 This is a more complex file which includes some BLOCK definitions
 This is the footer, author: albert, version: emc2
 - 3 - 2 - 1 
+
+-- test --
+[%# we want to break 'compile' to check that errors get reported -%]
+[% CALL bust_it -%]
+[% TRY; INCLUDE complex; CATCH; "$error"; END %]
+-- expect --
+file error - parse error: complex line 18: unexpected end of input
+
+
+
+
+
 
 

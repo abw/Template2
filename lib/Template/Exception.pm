@@ -16,22 +16,25 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#----------------------------------------------------------------------------
+#------------------------------------------------------------------------
 #
 # $Id$
 #
-#============================================================================
+#========================================================================
+
 
 package Template::Exception;
 
-require 5.004;
+require 5.005;
 
 use strict;
 use vars qw( $VERSION );
 
-use constant TYPE => 0;
-use constant INFO => 1;
-use constant TEXT => 2;
+use constant TYPE  => 0;
+use constant INFO  => 1;
+use constant TEXT  => 2;
+use overload q|""| => "as_string";
+
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 

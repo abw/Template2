@@ -6,8 +6,8 @@
 #
 # Written by Andy Wardley <abw@cre.canon.co.uk>
 #
-# Copyright (C) 1998-1999 Canon Research Centre Europe Ltd.
-# All Rights Reserved.
+# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -51,6 +51,74 @@ foo: This is the foo file, a is
 foo(c): This is the foo file, a is charlie
 
 
+-- test --
+[% BLOCK mypage %]
+Header
+[% content %]
+Footer
+[% END %]
 
+[%- MACRO content BLOCK -%]
+This is a macro which encapsulates a template block.
+a: [% a -%]
+[% END -%]
 
+begin
+[% INCLUDE mypage %]
+mid
+[% INCLUDE mypage a = 'New Alpha' %]
+end
+-- expect --
+begin
+Header
+This is a macro which encapsulates a template block.
+a: alpha
+Footer
+mid
+Header
+This is a macro which encapsulates a template block.
+a: New Alpha
+Footer
+end
+
+-- test --
+[% BLOCK table %]
+<table>
+[% rows %]
+</table>
+[% END -%]
+
+[% # define some dummy data
+   udata = [
+      { id => 'foo', name => 'Fubar' },
+      { id => 'bar', name => 'Babar' }
+   ] 
+-%]
+
+[% # define a macro to print each row of user data
+   MACRO user_summary INCLUDE user_row FOREACH user = udata 
+%]
+
+[% # here's the block for each row
+   BLOCK user_row %]
+<tr>
+  <td>[% user.id %]</td>
+  <td>[% user.name %]</td>
+</tr>
+[% END -%]
+
+[% # now we can call the main table template, and alias our macro to 'rows' 
+   INCLUDE table 
+     rows = user_summary
+%]
+-- expect --
+<table>
+<tr>
+  <td>foo</td>
+  <td>Fubar</td>
+</tr><tr>
+  <td>bar</td>
+  <td>Babar</td>
+</tr>
+</table>
 

@@ -6,6 +6,7 @@
 # Written by Andy Wardley <abw@kfs.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -68,6 +69,12 @@ sub belief {
     return "Oh I believe in $b.";
 }
 
+sub concat {
+    my $self = shift;
+    local $" = ', ';
+    $self->{ PARAMS }->{ args } = "ARGS: @_";
+}
+
 sub _private {
     my $self = shift;
     die "illegal call to private method _private()\n";
@@ -107,6 +114,7 @@ my $objconf = {
 
 my $replace = {
     thing => TestObject->new($objconf),
+    %{ callsign() },
 };
 
 test_expect(\*DATA, { INTERPOLATE => 1 }, $replace);
@@ -133,6 +141,18 @@ whisky
 [% thing.c %]
 -- expect --
 bravo
+
+-- test --
+[% thing.concat = thing.b -%]
+[% thing.args %]
+-- expect --
+ARGS: bravo
+
+-- test --
+[% thing.concat(d) = thing.b -%]
+[% thing.args %]
+-- expect --
+ARGS: delta, bravo
 
 -- test --
 [% thing.yesterday %]
@@ -180,7 +200,6 @@ Wednesday Thursday Friday Saturday Sunday .
 
 
 -- stop --
-
 #========================================================================
 # TODO: test _private and .private members
 #========================================================================
@@ -229,10 +248,13 @@ ERROR: invalid member name '.private'
 -- test --
 [% other.foo %]
 [% other.Help %]
-
-
 -- expect --
 bar
 Help Yourself
 
+-- test --
+[% localise = 10 -%]
+[% localise %]
+-- expect --
+10
 

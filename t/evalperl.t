@@ -22,6 +22,7 @@ use Template::Test;
 $^W = 1;
 
 #$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 #$Template::Context::DEBUG = 0;
 
 my $tt_no_perl = Template->new({ 
@@ -35,6 +36,7 @@ my $tt_do_perl = Template->new({
     INTERPOLATE => 1, 
     POST_CHOMP  => 1,
     EVAL_PERL   => 1,
+    INCLUDE_PATH => -d 't' ? 't/test/lib' : 'test/lib',
 });
 
 my $ttprocs = [
@@ -60,20 +62,25 @@ __DATA__
     $output;
 [% END %]
 [% CATCH %]
-Not allowed.
+Not allowed: [% error +%]
 [% END %]
 a: [% a +%]
 a: $a
+[% TRY %]
 [% RAWPERL %]
 $output .= "The cat sat on the mouse mat\n";
 $stash->set('b', 'The cat sat where?');
 [% END %]
+[% CATCH %]
+Still not allowed: [% error +%]
+[% END %]
 b: [% b +%]
 b: $b
 -- expect --
-Not allowed.
+Not allowed: perl error - EVAL_PERL not set
 a: alpha
 a: alpha
+Still not allowed: perl error - EVAL_PERL not set
 b: bravo
 b: bravo
 
@@ -100,7 +107,36 @@ ERROR: [[% error.type %]] [% error.info %]
 [% END %]
 -- expect --
 some stuff
-ERROR: [file] syntax error at RAWPERL block (starting line 2) line 2, at EOF
+This is some text
+ERROR: [perl] EVAL_PERL not set
+
+-- start --
+-- test --
+-- use do_perl --
+some stuff
+[% TRY %]
+[% INCLUDE badrawperl %]
+[% CATCH +%]
+ERROR: [[% error.type %]]
+[% END %]
+-- expect --
+some stuff
+This is some text
+more stuff goes here
+ERROR: [undef]
+
+-- test --
+-- use do_perl --
+[% META author = 'Andy Wardley' %]
+[% PERL %]
+    my $output = "author: [% template.author %]\n";
+    $stash->set('a', 'The cat sat on the mat');
+    $output .= "more perl generated output\n";
+    $output;
+[% END %]
+-- expect --
+author: Andy Wardley
+more perl generated output
 
 -- test --
 -- use do_perl --

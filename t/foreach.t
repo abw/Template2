@@ -6,8 +6,8 @@
 #
 # Written by Andy Wardley <abw@cre.canon.co.uk>
 #
-# Copyright (C) 1998-1999 Canon Research Centre Europe Ltd.
-# All Rights Reserved.
+# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -23,7 +23,8 @@ use Template::Test;
 $^W = 1;
 
 #$Template::Test::DEBUG = 0;
-#$Template::Parser::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 my ($a, $b, $c, $d, $l, $o, $r, $u, $w ) = 
 	qw( alpha bravo charlie delta lima oscar romeo uncle whisky );
@@ -445,3 +446,32 @@ Section List:
   three - Section Three
   two - Section Two
 
+-- test --
+[% FOREACH a = [ 2..6 ] %]
+before [% a %]
+[% FORNEXT IF a == 5 +%]
+after [% a +%]
+[% END %]
+-- expect --
+before 2
+after 2
+before 3
+after 3
+before 4
+after 4
+before 5before 6
+after 6
+
+-- test --
+[% count = 1; WHILE (count < 10) %]
+[% count = count + 1 %]
+[% FORNEXT if count < 5 %]
+count: [% count +%]
+[% END %]
+-- expect --
+count: 5
+count: 6
+count: 7
+count: 8
+count: 9
+count: 10

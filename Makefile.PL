@@ -53,6 +53,7 @@ WriteMakefile(
     'VERSION_FROM' => 'lib/Template.pm',
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
     'PMLIBDIRS'    => [ 'lib' ], 
+#   'DIR'	   => [ 'clib' ],
     'PREREQ_PM'    => { 'AppConfig' => 1.52 },
     'MAN3PODS'	   => $man3pods,
     'dist'         => {

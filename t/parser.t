@@ -147,5 +147,12 @@ end
 
 #------------------------------------------------------------------------
 -- test --
-[% sql = "SELECT *
-            FROM table" %]
+[% sql = "
+     SELECT *
+     FROM table"
+-%]
+SQL: [% sql %]
+-- expect --
+SQL: 
+     SELECT *
+     FROM table

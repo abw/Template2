@@ -121,3 +121,5 @@ title: My Template Title
 [% INCLUDE $mydoc %]
 -- expect --
 some output
+
+

@@ -129,7 +129,7 @@ header:
 error: [file] [block1: not found]
 footer
 
-# now try it again with RESET_BLOCKS turned off...
+# now try it again with AUTO_RESET turned off...
 -- test --
 -- use tt2 --
 [% PROCESS blockdef -%]

@@ -1,4 +1,4 @@
-#============================================================= -*-Perl-*-
+##============================================================= -*-Perl-*-
 #
 # Template::Document
 #
@@ -32,7 +32,6 @@ use strict;
 use vars qw( $VERSION $ERROR $COMPERR $DEBUG $AUTOLOAD );
 use base qw( Template::Base );
 use Template::Constants;
-use Template::Iterator;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 

@@ -10,6 +10,8 @@ cgi.t           CGI plugin (Template::Plugin::CGI)
 compile1.t      Compile templates to Perl code and save to file
 compile2.t      Reload above compiled templates without re-parsing
 compile3.t      Ensure that touching source template causes re-compilation 
+compile4.t      Compiling templates to a COMPILE_DIR
+compile5.t      Reload templates from a COMPILE_DIR
 config.t        Template::Config factory module
 context.t       Template::Context module
 datafile.t      Datafile plugin (Template::Plugin::Datafile)
@@ -17,6 +19,7 @@ date.t          Date plugin (Template::Plugin::Date)
 directive.t     Directive layout, chomping, comments, etc.
 document.t      Template::Document module
 dom.t           XML::DOM plugin (Template::Plugin::XML::DOM)
+error.t         Test that errors are reported back to caller as exceptions
 evalperl.t      Evaluation of PERL and RAWPERL blocks
 exception.t     Template::Exception module
 filter.t        FILTER directive and various filters
@@ -25,6 +28,7 @@ format.t        Format plugin (Template::Plugin::Format)
 include.t       INCLUDE and PROCESS directive
 iterator.t      Template::Iterator and Iterator plugin modules
 list.t          List definition and access via various methods
+macro.t         MACRO directive
 object.t        Binding objects to template variables
 output.t        OUTPUT_PATH and OUTPUT options
 parser.t        Template::Parser module
@@ -44,11 +48,9 @@ url.t           URL plugin (Template::Plugin::URL)
 vars.t          Variable usage and GET / SET / CALL / DEFAULT directives
 varsv1.t        As above, using version 1 handling of leading '$'
 while.t         WHILE directive
+wrapper.t       WRAPPER directive
 
 TODO:
   anonymous blocks
-  MACROS
-  caching options in Template::Provider
-  recursion option
   return/stop/break
 

@@ -22,7 +22,7 @@ use vars qw( $DEBUG );
 use Template::Test;
 use Template::Config;
 
-ntests(38);
+ntests(42);
 $DEBUG = 0;
 $Template::Config::DEBUG = 0;
 
@@ -194,3 +194,26 @@ ok( $service );
 ok( $service->{ CONTEXT }->{ LOAD_TEMPLATES }->[0]->{ INCLUDE_PATH }->[0]
     eq 'amsterdam' );
 
+
+#------------------------------------------------------------------------
+# iterator
+#------------------------------------------------------------------------
+
+
+print STDERR "Testing iterator...\n" if $DEBUG;
+
+my ($iterator, $value, $error);
+
+$iterator = $factory->iterator([qw(foo bar baz)])
+    || print STDERR $factory->error(), "\n";
+
+ok( $iterator );
+
+($value, $error) = $iterator->get_first();
+ok( $value eq 'foo' );
+
+($value, $error) = $iterator->get_next();
+ok( $value eq 'bar' );
+ 
+($value, $error) = $iterator->get_next();
+ok( $value eq 'baz' );

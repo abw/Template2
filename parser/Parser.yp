@@ -87,6 +87,7 @@ directive:  setlist		    { $factory->set($_[1])                }
 	|   condition
 	|   switch
 	|   loop
+        |   wrapper
 	|   try
 	|   perl
 ;
@@ -108,10 +109,13 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 	|   PROCESS nameargs	    { $factory->process($_[2])            }
 #	|   PLUGIN nameargs	    { $factory->plugin($_[2])             }
 	|   THROW nameargs          { $factory->throw($_[2])              }
-	|   CLEAR		    { $factory->clear()                   }
-	|   BREAK		    { $factory->break()                   }
 	|   RETURN		    { $factory->return()                  }
 	|   STOP		    { $factory->stop()                    }
+	|   CLEAR                   { "\$output = '';";                   }
+	|   BREAK                   { 'last;'                             }
+	|   FORNEXT		    { $_[0]->{ INFOR }
+					? $factory->next()
+				        : 'next;'                         }
 	|   filter
 ;
 
@@ -142,9 +146,12 @@ case:	    CASE term ';' block
 	|   /* NULL */		    { [ undef ]                           }
 ;
 
-loop:	    FOR loopvar ';' 
-		block END	    { $factory->foreach(@{$_[2]}, $_[4])      }
-	|   atomexpr FOR loopvar    { $factory->foreach(@{$_[3]}, $_[1])      }
+loop:	    FOR loopvar ';'         { $_[0]->{ INFOR }++                  }
+		block END	    { $_[0]->{ INFOR }--;
+				      $factory->foreach(@{$_[2]}, $_[5])  }
+#loop:	    FOR loopvar ';'
+#		block END	    { $factory->foreach(@{$_[2]}, $_[4])  }
+	|   atomexpr FOR loopvar    { $factory->foreach(@{$_[3]}, $_[1])  }
 	|   WHILE expr ';' 
 	      block END		    { $factory->while(@_[2, 4])           }
 	|   atomexpr WHILE expr	    { $factory->while(@_[3, 1])           }
@@ -152,6 +159,10 @@ loop:	    FOR loopvar ';'
 
 loopvar:    IDENT ASSIGN term args  { [ @_[1, 3, 4] ]                     }
 	|   term args               { [ 0, @_[1, 2] ]                     }
+;
+
+wrapper:    WRAPPER nameargs ';'
+	      block END		    { $factory->wrapper(@_[2, 4])         }
 ;
 
 try:	    TRY ';' 
@@ -176,13 +187,17 @@ use:	    USE lnameargs	    { $factory->use($_[2])                }
 
 perl:	    PERL ';'                { ${$_[0]->{ INPERL }}++;             }
 	      block END		    { ${$_[0]->{ INPERL }}--;
-				      $factory->perl($_[4])               }
+				      $_[0]->{ EVAL_PERL } 
+				      ? $factory->perl($_[4])             
+				      : $factory->no_perl();              }
 ;
 
 rawperl:    RAWPERL                 { ${$_[0]->{ INPERL }}++; 
 				      $rawstart = ${$_[0]->{'LINE'}};     }
 	    ';' TEXT END	    { ${$_[0]->{ INPERL }}--;
-				      $factory->rawperl($_[4], $rawstart) }
+				      $_[0]->{ EVAL_PERL } 
+				      ? $factory->rawperl($_[4], $rawstart)
+				      : $factory->no_perl();              }
 ;
 
 filter:	    FILTER lnameargs ';' 

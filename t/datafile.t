@@ -6,8 +6,8 @@
 #
 # Written by Andy Wardley <abw@cre.canon.co.uk>
 #
-# Copyright (C) 1998-1999 Canon Research Centre Europe Ltd.
-# All Rights Reserved.
+# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.

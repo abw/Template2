@@ -37,12 +37,11 @@ use strict;
 use vars qw( $VERSION $DEBUG $PRETTY $WHILE_MAX );
 use Template::Constants;
 use Template::Exception;
-use Template::Iterator;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-$WHILE_MAX = 1000;
-$PRETTY    = 0;
+$WHILE_MAX = 1000 unless defined $WHILE_MAX;
+$PRETTY    = 0 unless defined $PRETTY;
 my $OUTPUT = '$output .= ';
 
 sub pad {
@@ -356,8 +355,8 @@ do {
     my \$list = $list;
     
     unless (UNIVERSAL::isa(\$list, 'Template::Iterator')) {
-	\$list = Template::Iterator->new(\$list)
-	    || die \$Template::Iterator::ERROR, "\\n"; 
+	\$list = Template::Config->iterator(\$list)
+	    || die \$Template::Config::ERROR, "\\n"; 
     }
 
     (\$value, \$error) = \$list->get_first();
@@ -378,6 +377,47 @@ $block;
 EOF
 }
 
+#------------------------------------------------------------------------
+# next()                                                       [% NEXT %]
+#
+# Next iteration of a FOREACH loop (experimental)
+#------------------------------------------------------------------------
+
+sub next {
+    return <<EOF;
+(\$value, \$error) = \$list->get_next();
+next;
+EOF
+}
+
+
+#------------------------------------------------------------------------
+# wrapper(\@nameargs, $block)            [% WRAPPER template foo = bar %] 
+#          # => [ $file, \@args ]    
+#------------------------------------------------------------------------
+
+sub wrapper {
+    my ($class, $nameargs, $block) = @_;
+    my ($file, $args) = @$nameargs;
+    my $hash = shift @$args;
+
+    $block = pad($block, 2) if $PRETTY;
+    push(@$hash, "'content'", '$content');
+    $file .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
+
+    return <<EOF;
+
+# WRAPPER
+$OUTPUT do {
+    my \$content = sub {
+	my \$output = '';
+$block
+        return \$output;
+    };
+    \$context->include($file); 
+};
+EOF
+}
 
 
 #------------------------------------------------------------------------
@@ -515,9 +555,9 @@ $block
         if (defined (\$handler = \$error->select_handler($handlers))) {
 $catchblock
         }
-        $default
+$default
     }
-    $final
+$final
 };
 EOF
 }
@@ -542,6 +582,8 @@ sub throw {
 
 #------------------------------------------------------------------------
 # clear()                                                     [% CLEAR %]
+#
+# NOTE: this is redundant, being hard-coded (for now) into Parser.yp
 #------------------------------------------------------------------------
 
 sub clear {
@@ -550,6 +592,8 @@ sub clear {
 
 #------------------------------------------------------------------------
 # break()                                                     [% BREAK %]
+#
+# NOTE: this is redundant, being hard-coded (for now) into Parser.yp
 #------------------------------------------------------------------------
 
 sub break {
@@ -599,28 +643,33 @@ sub use {
 
 sub perl {
     my ($class, $block) = @_;
-    $block = pad($block, 2) if $PRETTY;
+    $block = pad($block, 1) if $PRETTY;
 
     return <<EOF;
 
 # PERL
-if (\$context->eval_perl()) {
-    $OUTPUT do {
-	my \$output = "package Template::Perl;\\n";
+$OUTPUT do {
+    my \$output = "package Template::Perl;\\n";
 
 $block
 
-        \$Template::Perl::context = \$context;
-	\$Template::Perl::stash   = \$stash;
-	\$output = eval \$output;
-	\$context->throw(\$@) if \$@;
-	\$output;
-    };
-}
-else {
-    \$context->throw('perl', 'EVAL_PERL not set');
-}
+    \$Template::Perl::context = \$context;
+    \$Template::Perl::stash   = \$stash;
+    \$output = eval \$output;
+    \$context->throw(\$@) if \$@;
+    \$output;
+};
 EOF
+}
+
+
+#------------------------------------------------------------------------
+# no_perl()
+#------------------------------------------------------------------------
+
+sub no_perl {
+    my $class = shift;
+    return "\$context->throw('perl', 'EVAL_PERL not set');";
 }
 
 
@@ -642,10 +691,8 @@ sub rawperl {
 
     return <<EOF;
 # RAWPERL
-if (\$context->eval_perl) {
 #line 1 "RAWPERL block$line"
 $block
-}
 EOF
 }
 

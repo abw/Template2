@@ -20,12 +20,15 @@ use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Config;
-use Template::Provider;
+                    use Template::Provider;
 use Cwd 'abs_path';
 
 $^W = 1;
 $Template::Test::DEBUG = 0;
 #$Template::Provider::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
+
 my $DEBUG = 0;
 
 my $factory = 'Template::Config';
@@ -178,6 +181,20 @@ Error: [% error.type %] - [% error.info.split(': ').1 %]
 This is the foo file, a is 
 Error: file - not found
 
+-- test --
+[% TRY %]
+[% INSERT foo %]
+[% INSERT $absfile %]
+[% CATCH file %]
+Error: [% error %]
+[% END %]
+-- expect --
+-- process --
+[% TAGS [* *] %]
+This is the foo file, a is [% a %]
+Error: file error - [* absfile *]: not found
+
+
 #------------------------------------------------------------------------
 
 -- test --
@@ -202,6 +219,17 @@ Error: [% error.type %] - [% error.info.split(': ').1 %]
 -- expect --
 This is the foo file, a is 
 Error: file - absolute paths are not allowed (set ABSOLUTE option)
+
+-- test --
+foo: [% TRY; INSERT foo;      CATCH; "$error\n"; END %]
+rel: [% TRY; INSERT $relfile; CATCH; "$error\n"; END %]
+abs: [% TRY; INSERT $absfile; CATCH; "$error\n"; END %]
+-- expect --
+-- process --
+[% TAGS [* *] %]
+foo: file error - foo: not found
+rel: This is the foo file, a is [% a %]
+abs: file error - [* absfile *]: absolute paths are not allowed (set ABSOLUTE option)
 
 #------------------------------------------------------------------------
 
@@ -229,6 +257,19 @@ This is the foo file, a is
 Error: file - relative paths are not allowed (set RELATIVE option)
 
 
+-- test --
+foo: [% TRY; INSERT foo;      CATCH; "$error\n"; END %]
+rel: [% TRY; INSERT $relfile; CATCH; "$error\n"; END %]
+abs: [% TRY; INSERT $absfile; CATCH; "$error\n"; END %]
+-- expect --
+-- process --
+[% TAGS [* *] %]
+foo: file error - foo: not found
+rel: file error - [* relfile *]: relative paths are not allowed (set RELATIVE option)
+abs: This is the foo file, a is [% a %]
+
+
+
 #------------------------------------------------------------------------
 # test that files updated on disk are automatically reloaded.
 #------------------------------------------------------------------------
@@ -244,11 +285,5 @@ This is the old content
 [% INCLUDE foobar %]
 -- expect --
 This is the new content
-
-
-
-
-
-
 
 
