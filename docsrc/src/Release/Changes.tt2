@@ -30,6 +30,12 @@
 * Applied a single character patch from Lubomir Host which fixes the 
   user attribute in Template::Plugin::File.
 
+* Added an eval wrapper around mkpath() in Template::Provider to handle
+  errors more nicely.
+
+* Added Math Plugin to MANIFEST.
+
+
 
 #------------------------------------------------------------------------
 # Version 2.14 - 4th October 2004
