@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06d - 17th January 2002               ## DEVELOPER RELEASE ##
+# Version 2.06d - 22nd January 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch to the DBI plugin from Simon Matthews to stop it 
@@ -51,6 +51,9 @@
 * Fixed Makefile.PL to warn, not die, about mandatory modules, leaving
   it to the definitions in the PREREQ_PM which the CPAN module can 
   understand.  Thanks to Leon for waving the flag.
+
+* Applied Leon's doc patch to the Table plugin to demonstrate 
+  row/column transposition.
 
 * Added ucfirst and lcfirst filters to fold first character to upper
   or lower case respectively.  Thanks to Paul Makepeace for the patch.

@@ -86,7 +86,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.06d, released on 17 January 2002.
+Template Toolkit version 2.06d, released on 21 January 2002.
 
 =head1 COPYRIGHT
 

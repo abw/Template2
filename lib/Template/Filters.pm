@@ -287,11 +287,10 @@ sub html_filter_factory {
     my $context = shift;
     my $opts = @_ && ref $_[-1] eq 'HASH' ? pop @_ : { };
 
-    # if a sufficiently mature version of Apache::Utils is installed
-    # which has escape_html then we use that
+    # if Apache::Util is installed then we use it
     eval { 
 	require Apache::Util;
-        Apache::Utils::escape_html('');
+        Apache::Util::escape_html('');
     };
     return \&Apache::Util::escape_html
 	unless $@ || $opts->{ entity };

@@ -107,8 +107,8 @@ was written by Grant McLean E<lt>grantm@web.co.nzE<gt>.
 
 =head1 VERSION
 
-2.35, distributed as part of the
-Template Toolkit version 2.06d, released on 17 January 2002.
+2.36, distributed as part of the
+Template Toolkit version 2.06d, released on 21 January 2002.
 
 =head1 COPYRIGHT
 
