@@ -22,16 +22,34 @@ package Template::Plugin::Image;
 require 5.004;
 
 use strict;
-use Image::Size;
 use Template::Plugin;
 use File::Spec;
 use base qw( Template::Plugin );
 
-use vars qw( $VERSION );
+use vars qw( $VERSION $AUTOLOAD );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
+BEGIN {
+    if (eval { require Image::Info; }) {
+        *img_info = \&Image::Info::image_info;
+    }
+    elsif (eval { require Image::Size; }) {
+        *img_info = sub {
+            my $file = shift;
+            my @stuff = Image::Size::imgsize($file);
+            return { "width"  => $stuff[0],
+                     "height" => $stuff[1],
+                     "error"  => $stuff[2]
+                   };
+        }
+    }
+    else {
+        die(Template::Exception->new("image",
+            "Couldn't load Image::Info or Image::Size: $@"));
+    }
 
+}
 
 #------------------------------------------------------------------------
 # new($context, $name, \%config)
@@ -50,7 +68,7 @@ sub new {
     $name = $config->{ name } unless defined $name;
 
     return $class->throw('no image file specified')
-	unless defined $name and length $name;
+        unless defined $name and length $name;
 
     # name can be specified as an absolute path or relative
     # to a root directory 
@@ -65,58 +83,32 @@ sub new {
     # do we want to check to see if file exists?
 
     bless { 
-	name => $name,
+        name => $name,
         file => $file,
         root => $root,
     }, $class;
 }
 
-
 #------------------------------------------------------------------------
-# size()
+# init()
 #
-# Return the width and height of the image as a 2 element list.
+# Calls image_info on $self->{ file }
 #------------------------------------------------------------------------
 
-sub size {
+sub init {
     my $self = shift;
+    return $self if $self->{ size };
 
-    # return cached size
-    return $self->{ size } if $self->{ size };
+    my $image = img_info($self->{ file });
+    return $self->throw($image->{ error }) if defined $image->{ error };
 
-    my ($width, $height, $error ) = imgsize($self->{ file });
-    return $self->throw($error) unless defined $width;
-    $self->{ width  } = $width;
-    $self->{ height } = $height;
-    return ($self->{ size } = [ $width, $height ]);
+    @$self{ keys %$image } = values %$image;
+    $self->{ size } = [ $image->{ width }, $image->{ height } ];
+
+    $self->{ modtime } = (stat $self->{ file })[10];
+
+    return $self;
 }
-
-
-#------------------------------------------------------------------------
-# width()
-#
-# Return the width of the image.
-#------------------------------------------------------------------------
-
-sub width {
-    my $self = shift;
-    $self->size() unless $self->{ size };
-    return $self->{ width };
-}
-
-
-#------------------------------------------------------------------------
-# height()
-#
-# Return the height of the image.
-#------------------------------------------------------------------------
-
-sub height {
-    my $self = shift;
-    $self->size() unless $self->{ size };
-    return $self->{ height };
-}
-
 
 #------------------------------------------------------------------------
 # attr()
@@ -130,6 +122,19 @@ sub attr {
     return "width=\"$size->[0]\" height=\"$size->[1]\"";
 }
 
+#------------------------------------------------------------------------
+# modtime()
+#
+# Return last modification time as a time_t:
+#
+#   [% date.format(image.modtime, "%Y/%m/%d") %]
+#------------------------------------------------------------------------
+
+sub modtime {
+    my $self = shift;
+    $self->init;
+    return $self->{ modtime };
+}
 
 #------------------------------------------------------------------------
 # tag(\%options)
@@ -158,6 +163,14 @@ sub tag {
 sub throw {
     my ($self, $error) = @_;
     die (Template::Exception->new('Image', $error));
+}
+
+sub AUTOLOAD {
+    my $self = shift;
+   (my $a = $AUTOLOAD) =~ s/.*:://;
+
+    $self->init;
+    return $self->{ $a };
 }
 
 1;
