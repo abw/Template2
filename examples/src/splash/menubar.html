@@ -1,10 +1,10 @@
 [%  library = libs.splash
-    section = 'menu' ;
+    section = 'menubar' ;
     WRAPPER page
 %]
 
 <p>
-[% PROCESS splash/about/menu %]
+[% PROCESS splash/about/menubar %]
 </p>
 
 [% PROCESS splash/config %]
@@ -16,6 +16,6 @@
    ]
 %]
 
-[% PROCESS example/vsplit2 from=1 to=5 indent=1 %]
+[% PROCESS example/vsplit2 from=1 to=3 indent=0 %]
 
 [% END %]

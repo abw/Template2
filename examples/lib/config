@@ -22,18 +22,25 @@
     	splash = {
     	    name  = 'splash'
     	    title = "Splash!"
-    	    pages = {
-    		index   => 'About Splash!'
-    		config  => 'Configuration'
-    		text    => 'Text'
-		buttons => 'Buttons, Bars and Panels'
-		menus   => 'Menus and Menu Bars'
-		tabs    => 'Tabs and Tabbed Boxes'
-		tabsets => 'Tab Sets and Boxes'
-		dropbox => 'Dropped Boxes'
-    	    }
-    	    order => [ 'index', 'config', 'text', 'buttons', 
-		       'menus', 'tabs', 'tabsets', 'dropbox' ]
+	    pages = {
+		index   = 'About Splash!'
+		text    = 'Text'
+		button  = 'Buttons'
+		bar     = 'Bars'
+		menu    = 'Menus'
+		menubar = 'Menu Bars'
+		frame   = 'Frames'
+		panel   = 'Panel'
+		box     = 'Box'
+		tab     = 'Tabs'
+		tabbox  = 'Tabbed Box'
+		tabset  = 'Set of tabs'
+		tabsbox = 'Box with set of tabs'
+		dropbox = 'Button bar with box dropping down'
+	    }
+	    order = [ 'index', 'text', 'button', 'bar', 'menu', 'menubar'
+                      'tab', 'frame', 'panel', 'box', 'tabbox', 'tabset', 
+                      'tabsbox', 'dropbox' ] 
     	}
     	ps = {
     	    name  = 'ps'

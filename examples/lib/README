@@ -5,8 +5,6 @@ the examples.
     config	Configuration file
     example/	Contains templates for displaying examples
     examples/   Contains the examples themselves
-    footer	Footer for complete example pages
-    header      Header for same
     menu	Menu for same, included via header
     page        Complete page for examples, includes header and footer
     source      Template for displaying TT template source

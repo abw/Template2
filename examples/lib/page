@@ -4,9 +4,9 @@
     content = ''
 %]
 
-[% PROCESS menu %]
+[%# PROCESS menu %]
     
-[% WRAPPER splash/tabsbox
+[%# WRAPPER splash/tabsbox
      tabs   = library.tabs
      select = section
      width  = "100%"
@@ -14,11 +14,11 @@
 %]
 <h1>[% library.pages.$section %]</h1>
 [% content %]
-[% END %]
+[%# END %]
 
 <p>
 <div align="center">
-[% PROCESS splash/icon %]
+[%# PROCESS splash/icon %]
 </div>
 </p>
 
