@@ -18,7 +18,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06c - 13th December 2001              ## DEVELOPER RELEASE ##
+# Version 2.06c - 16th December 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed both Perl and XS Stash modules to try to apply a SCALAR_OPS
@@ -31,6 +31,10 @@
   Hodgkinson.  Also made various minor cleanups to DBI code and updated 
   documentation and tests.  Incidentally, this tickled the missing 
   feature in the XS stash which doesn't yet support tied hashes.
+
+* Applied a patch from Christian Schaffner which fixes a problem in 
+  the Makefile.PL for installation via the fink package manager under 
+  Mac OS X.
 
 * Fixed up some of the ugliness in the docsrc tools.
 
