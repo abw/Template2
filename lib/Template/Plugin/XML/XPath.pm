@@ -26,6 +26,7 @@ package Template::Plugin::XML::XPath;
 require 5.004;
 
 use strict;
+use Template::Exception;
 use Template::Plugin;
 use XML::XPath;
 
