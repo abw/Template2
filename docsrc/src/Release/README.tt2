@@ -53,6 +53,9 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
+Version 2.12 followed on quickly from 2.11 to fix a minor, but 
+annoying bug in the date.t test script. 
+
 Version 2.11 includes a number of enhancements to ttree, and several
 minor bug fixes.  It also improves on how runtime errors and warnings
 are reported, by adding the template file and line number to the 
