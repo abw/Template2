@@ -1,11 +1,11 @@
 
                             Template Toolkit
 
-                              Version 2.10
+                              Version 2.11
 
-                             24 July 2003
+                             06 January 2004
 
-        Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
           This is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@ The latest version of the Template Toolkit can be retrieved from:
 
     http://www.cpan.org/modules/by-module/Template/
 
-Fetch and install AppConfig 1.52 if you don't already have it installed.
+Fetch and install AppConfig 1.55 if you don't already have it installed.
 Available from CPAN in:
 
     http://www.cpan.org/authors/Andy_Wardley/
@@ -42,8 +42,8 @@ need to install them.  They're all available from CPAN if you do.
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.10.tar.gz
-    cd Template-Toolkit-2.10
+    tar zxf Template-Toolkit-2.11.tar.gz
+    cd Template-Toolkit-2.11
     perl Makefile.PL
     make
     make test
@@ -72,7 +72,7 @@ PREREQUISITES
 The Template Toolkit is written entirely in Perl and should run on any 
 platform on which Perl is available.  It requires Perl 5.005 or later.
 
-The 'ttree' utility uses the AppConfig module (version 1.52 or above)
+The 'ttree' utility uses the AppConfig module (version 1.55 or above)
 for parsing command line options and configuration files.  It is
 available from CPAN:
 
@@ -129,19 +129,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.10.
+where <version> represents the current version number, e.g. 2.11.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    tar zxf Template-Toolkit-2.10.tar.gz
+    tar zxf Template-Toolkit-2.11.tar.gz
 or
-    gunzip Template-Toolkit-2.10.tar.gz
-    tar xf Template-Toolkit-2.10.tar
+    gunzip Template-Toolkit-2.11.tar.gz
+    tar xf Template-Toolkit-2.11.tar
 
 You can then 'cd' into the directory created,
 
-    cd Template-Toolkit-2.10
+    cd Template-Toolkit-2.11
 
 and perform the usual Perl installation procedure:
 
@@ -564,7 +564,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
 Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This is free software; you can redistribute it and/or modify it under

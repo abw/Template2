@@ -108,7 +108,7 @@ templates into executable Perl code (but more on that later).  Thankfully,
 all of this complexity is hidden away behind a simple template()
 method.  You call it passing a template name as an argument, and it
 returns a compiled template in the form of a Template::Document
-object, or otherwise raises an exeception.
+object, or otherwise raises an exception.
 </p>
 <p>
 A <b>Template::Document</b> is a thin object wrapper around a compiled 
@@ -281,7 +281,7 @@ reference passed as the second argument to get().
 <p>
 This translates to the stash get() call:
 </p>
-<pre>    $stash-&gt;get('title', ['The Cat Sat on the Mat']);</pre>
+<pre>    $stash-&gt;get([ 'title', ['The Cat Sat on the Mat'] ]);</pre>
 <p>
 Dotted compound variables can be requested by passing a single 
 list reference to the get() method in place of the variable 
@@ -345,7 +345,7 @@ filters, filter().
 <pre>    [% tt_start_tag %] FILTER bar(20) [% tt_end_tag %]
        blah blah blah
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<pre>    my $filter = $stash-&gt;filter('bar', [20]);
+<pre>    my $filter = $context-&gt;filter('bar', [20]);
     &amp;$filter('blah blah blah');</pre>
 <p>
 Pretty much everything else you might want to do in a template can be done
@@ -544,12 +544,12 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.10, released on 24 July 2003.
+Template Toolkit version 2.11, released on 06 January 2004.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
+-%]<pre>  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or

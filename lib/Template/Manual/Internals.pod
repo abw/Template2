@@ -108,7 +108,7 @@ templates into executable Perl code (but more on that later).  Thankfully,
 all of this complexity is hidden away behind a simple template()
 method.  You call it passing a template name as an argument, and it
 returns a compiled template in the form of a Template::Document
-object, or otherwise raises an exeception.
+object, or otherwise raises an exception.
 
 A B<Template::Document> is a thin object wrapper around a compiled 
 template subroutine.  The object implements a process() method which
@@ -275,7 +275,7 @@ reference passed as the second argument to get().
 
 This translates to the stash get() call:
 
-    $stash->get('title', ['The Cat Sat on the Mat']);
+    $stash->get([ 'title', ['The Cat Sat on the Mat'] ]);
 
 Dotted compound variables can be requested by passing a single 
 list reference to the get() method in place of the variable 
@@ -343,7 +343,7 @@ filters, filter().
        blah blah blah
     [% END %]
 
-    my $filter = $stash->filter('bar', [20]);
+    my $filter = $context->filter('bar', [20]);
     &$filter('blah blah blah');
 
 Pretty much everything else you might want to do in a template can be done
@@ -533,11 +533,11 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.10, released on 24 July 2003.
+Template Toolkit version 2.11, released on 06 January 2004.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

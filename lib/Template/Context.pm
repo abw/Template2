@@ -295,74 +295,74 @@ sub process {
     my (@compiled, $name, $compiled);
     my ($stash, $tblocks, $error, $tmpout);
     my $output = '';
-
+    
     $template = [ $template ] unless ref $template eq 'ARRAY';
-
+    
     $self->debug("process([ ", join(', '), @$template, ' ], ', 
                  defined $params ? $params : '<no params>', ', ', 
                  $localize ? '<localized>' : '<unlocalized>', ')')
         if $self->{ DEBUG };
-
+    
     # fetch compiled template for each name specified
     foreach $name (@$template) {
-	push(@compiled, $self->template($name));
+        push(@compiled, $self->template($name));
     }
 
     if ($localize) {
-	# localise the variable stash with any parameters passed
-	$stash = $self->{ STASH } = $self->{ STASH }->clone($params);
+        # localise the variable stash with any parameters passed
+        $stash = $self->{ STASH } = $self->{ STASH }->clone($params);
     } else {
-	# update stash with any new parameters passed
-	$self->{ STASH }->update($params);
-	$stash = $self->{ STASH };
+        # update stash with any new parameters passed
+        $self->{ STASH }->update($params);
+        $stash = $self->{ STASH };
     }
 
     eval {
-	foreach $name (@$template) {
-	    $compiled = shift @compiled;
-	    my $element = ref $compiled eq 'CODE' 
-		? { (name => (ref $name ? '' : $name), modtime => time()) }
+        foreach $name (@$template) {
+            $compiled = shift @compiled;
+            my $element = ref $compiled eq 'CODE' 
+                ? { (name => (ref $name ? '' : $name), modtime => time()) }
 	        : $compiled;
-	    $stash->set('component', $element);
-	    
-	    unless ($localize) {
-		# merge any local blocks defined in the Template::Document
-		# into our local BLOCKS cache
-		@$blocks{ keys %$tblocks } = values %$tblocks
-		    if UNIVERSAL::isa($compiled, 'Template::Document')
-			&& ($tblocks = $compiled->blocks());
-	    }
-	    
-	    if (ref $compiled eq 'CODE') {
-		$tmpout = &$compiled($self);
-	    }
-	    elsif (ref $compiled) {
-		$tmpout = $compiled->process($self);
-	    }
-	    else {
-		$self->throw('file', 
-			    "invalid template reference: $compiled");
-	    }
-	    
-	    if ($trim) {
-		for ($tmpout) {
-		    s/^\s+//;
-		    s/\s+$//;
-		}
-	    }
-	    $output .= $tmpout;
-	}
+            $stash->set('component', $element);
+            
+            unless ($localize) {
+                # merge any local blocks defined in the Template::Document
+                # into our local BLOCKS cache
+                @$blocks{ keys %$tblocks } = values %$tblocks
+                    if UNIVERSAL::isa($compiled, 'Template::Document')
+                    && ($tblocks = $compiled->blocks());
+            }
+            
+            if (ref $compiled eq 'CODE') {
+                $tmpout = &$compiled($self);
+            }
+            elsif (ref $compiled) {
+                $tmpout = $compiled->process($self);
+            }
+            else {
+                $self->throw('file', 
+                             "invalid template reference: $compiled");
+            }
+            
+            if ($trim) {
+                for ($tmpout) {
+                    s/^\s+//;
+                    s/\s+$//;
+                }
+            }
+            $output .= $tmpout;
+        }
     };
     $error = $@;
     
     if ($localize) {
-	# ensure stash is delocalised before dying
-	$self->{ STASH } = $self->{ STASH }->declone();
+        # ensure stash is delocalised before dying
+        $self->{ STASH } = $self->{ STASH }->declone();
     }
-
+    
     $self->throw(ref $error 
-		 ? $error : (Template::Constants::ERROR_FILE, $error))
-	if $error;
+                 ? $error : (Template::Constants::ERROR_FILE, $error))
+        if $error;
     
     return $output;
 }
@@ -1533,12 +1533,12 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.82, distributed as part of the
-Template Toolkit version 2.10a, released on 09 October 2003.
+2.83, distributed as part of the
+Template Toolkit version 2.11, released on 06 January 2004.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

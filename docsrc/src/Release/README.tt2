@@ -53,7 +53,12 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
-Version 2.10 provides a few trivial new features and applies fixes to
+Version 2.11 includes a number of enhancements to ttree, and several
+minor bug fixes.  It also improves on how runtime errors and warnings
+are reported, by adding the template file and line number to the 
+message generated.
+
+Version 2.10 provided a few trivial new features and applies fixes to
 some small bugs.  For example, you can now use IN instead of = in a
 loop, e.g. FOREACH item IN list.  The WRAPPER configuration option is
 new, and Template::Context and Template::Stash now both implement
@@ -82,19 +87,11 @@ Version 2.03 included Craig Barratt's 'latex' filter and GD plugins
 and Dave Cross's tutorial on using the Template Toolkit for creating
 and reusing XML data files.
 
-Version 2.02 was another bugfix release, following shortly on after
-version 2.01.  This was a major release which contained some of 
-the following:
+Version 2.02 was another bugfix release.
 
-  * total overhaul of the documtation
-
-  * additional of template libraries: POD, HTML, Splash!
-
-  * various new language features including VIEWs
-
-  * new filters and plugins
-
-For more information please consult the Changes file.
+Version 2.01 was a major release containing new filters, plugins, 
+template libraries, the experimental VIEW directive, and a total
+overhaul of the documentation.
 
 
 GENERAL FEATURES

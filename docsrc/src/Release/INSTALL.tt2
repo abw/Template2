@@ -22,7 +22,7 @@ PREREQUISITES
 The Template Toolkit is written entirely in Perl and should run on any 
 platform on which Perl is available.  It requires Perl 5.005 or later.
 
-The 'ttree' utility uses the AppConfig module (version 1.52 or above)
+The 'ttree' utility uses the AppConfig module (version 1.55 or above)
 for parsing command line options and configuration files.  It is
 available from CPAN:
 

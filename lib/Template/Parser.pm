@@ -292,7 +292,7 @@ sub split_text {
     my ($pre, $dir, $prelines, $dirlines, $postlines, $chomp, $tags, @tags);
     my $style = $self->{ STYLE }->[-1];
     my ($start, $end, $prechomp, $postchomp, $interp ) = 
-	@$style{ qw( START_TAG END_TAG PRE_CHOMP POST_CHOMP INTERPOLATE ) };
+        @$style{ qw( START_TAG END_TAG PRE_CHOMP POST_CHOMP INTERPOLATE ) };
 
     my @tokens = ();
     my $line = 1;
@@ -302,105 +302,107 @@ sub split_text {
 
     # extract all directives from the text
     while ($text =~ s/
-	   ^(.*?)               # $1 - start of line up to directive
-	    (?:
-		$start          # start of tag
-		(.*?)           # $2 - tag contents
-		$end            # end of tag
-	    )
-	    //sx) {
-
-	($pre, $dir) = ($1, $2);
-	$pre = '' unless defined $pre;
-	$dir = '' unless defined $dir;
-	
-	$postlines = 0;                      # denotes lines chomped
-	$prelines  = ($pre =~ tr/\n//);      # NULL - count only
-	$dirlines  = ($dir =~ tr/\n//);      # ditto
-
-	# the directive CHOMP options may modify the preceding text
-	for ($dir) {
-	    # remove leading whitespace and check for a '-' chomp flag
-	    s/^([-+\#])?\s*//s;
-	    if ($1 && $1 eq '#') {
-		# comment out entire directive except for any chomp flag
-		$dir = ($dir =~ /([-+])$/) ? $1 : '';
-	    }
-	    else {
-		$chomp = ($1 && $1 eq '+') ? 0 : ($1 || $prechomp);
-#		my $space = $prechomp == &Template::Constants::CHOMP_COLLAPSE 
-		my $space = $prechomp == CHOMP_COLLAPSE 
-		    ? ' ' : '';
-
-		# chomp off whitespace and newline preceding directive
-		$chomp and $pre =~ s/(\n|^)([ \t]*)\Z/($1||$2) ? $space : ''/me
-		       and $1 eq "\n"
-		       and $prelines++;
-	    }
-
-	    # remove trailing whitespace and check for a '-' chomp flag
-	    s/\s*([-+])?\s*$//s;
-	    $chomp = ($1 && $1 eq '+') ? 0 : ($1 || $postchomp);
-	    my $space = $postchomp == &Template::Constants::CHOMP_COLLAPSE 
-		? ' ' : '';
-
-	    $postlines++ 
-		if $chomp and $text =~ s/ 
-		    ^
-		    ([ \t]*)\n    # whitespace to newline
-		    (?:(.|\n)|$)      # any char (not EOF)
-		    / 
-		    (($1||$2) ? $space : '') . (defined $2 ? $2 : '')
-		    /ex;
-	}
-
-	# any text preceding the directive can now be added
-	if (length $pre) {
-	    push(@tokens, $interp
-		 ? [ $pre, $line, 'ITEXT' ]
-		 : ('TEXT', $pre) );
-	    $line += $prelines;
-	}
-	
-	# and now the directive, along with line number information
-	if (length $dir) {
-	    # the TAGS directive is a compile-time switch
-	    if ($dir =~ /^TAGS\s+(.*)/i) {
-		my @tags = split(/\s+/, $1);
-		if (scalar @tags > 1) {
-		    ($start, $end) = map { quotemeta($_) } @tags;
-		}
-		elsif ($tags = $TAG_STYLE->{ $tags[0] }) {
-		    ($start, $end) = @$tags;
-		}
-		else {
-		    warn "invalid TAGS style: $tags[0]\n";
-		}
-	    }
-	    else {
-		# DIRECTIVE is pushed as [ $dirtext, $line_no(s), \@tokens ]
-		push(@tokens, [ $dir, 
-				($dirlines 
-				 ? sprintf("%d-%d", $line, $line + $dirlines)
-				 : $line),
-				$self->tokenise_directive($dir) ]);
-	    }
-	}
-
-	# update line counter to include directive lines and any extra
-	# newline chomped off the start of the following text
-	$line += $dirlines + $postlines;
+           ^(.*?)               # $1 - start of line up to directive
+           (?:
+            $start          # start of tag
+            (.*?)           # $2 - tag contents
+            $end            # end of tag
+            )
+           //sx) {
+        
+        ($pre, $dir) = ($1, $2);
+        $pre = '' unless defined $pre;
+        $dir = '' unless defined $dir;
+        
+        $postlines = 0;                      # denotes lines chomped
+        $prelines  = ($pre =~ tr/\n//);      # NULL - count only
+        $dirlines  = ($dir =~ tr/\n//);      # ditto
+        
+        # the directive CHOMP options may modify the preceding text
+        for ($dir) {
+            # remove leading whitespace and check for a '-' chomp flag
+            s/^([-+\#])?\s*//s;
+            if ($1 && $1 eq '#') {
+                # comment out entire directive except for any chomp flag
+                $dir = ($dir =~ /([-+])$/) ? $1 : '';
+            }
+            else {
+                $chomp = ($1 && $1 eq '+') ? 0 : ($1 || $prechomp);
+#               my $space = $prechomp == &Template::Constants::CHOMP_COLLAPSE 
+                my $space = $prechomp == CHOMP_COLLAPSE 
+                    ? ' ' : '';
+                
+                # chomp off whitespace and newline preceding directive
+                $chomp and $pre =~ s/(\n|^)([ \t]*)\Z/($1||$2) ? $space : ''/me
+                    and $1 eq "\n"
+                    and $prelines++;
+            }
+            
+            # remove trailing whitespace and check for a '-' chomp flag
+            s/\s*([-+])?\s*$//s;
+            $chomp = ($1 && $1 eq '+') ? 0 : ($1 || $postchomp);
+            my $space = $postchomp == &Template::Constants::CHOMP_COLLAPSE 
+                ? ' ' : '';
+            
+            $postlines++ 
+                if $chomp and $text =~ s/ 
+                ^
+                ([ \t]*)\n    # whitespace to newline
+                (?:(.|\n)|$)      # any char (not EOF)
+                 / 
+                 (($1||$2) ? $space : '') . (defined $2 ? $2 : '')
+                 /ex;
+        }
+            
+        # any text preceding the directive can now be added
+        if (length $pre) {
+            push(@tokens, $interp
+                 ? [ $pre, $line, 'ITEXT' ]
+                 : ('TEXT', $pre) );
+            $line += $prelines;
+        }
+            
+        # and now the directive, along with line number information
+        if (length $dir) {
+            # the TAGS directive is a compile-time switch
+            if ($dir =~ /^TAGS\s+(.*)/i) {
+                my @tags = split(/\s+/, $1);
+                if (scalar @tags > 1) {
+                    ($start, $end) = map { quotemeta($_) } @tags;
+                }
+                elsif ($tags = $TAG_STYLE->{ $tags[0] }) {
+                    ($start, $end) = @$tags;
+                }
+                else {
+                    warn "invalid TAGS style: $tags[0]\n";
+                }
+            }
+            else {
+                # DIRECTIVE is pushed as:
+                #   [ $dirtext, $line_no(s), \@tokens ]
+                push(@tokens, 
+                     [ $dir, 
+                       ($dirlines 
+                        ? sprintf("%d-%d", $line, $line + $dirlines)
+                        : $line),
+                       $self->tokenise_directive($dir) ]);
+            }
+        }
+            
+        # update line counter to include directive lines and any extra
+        # newline chomped off the start of the following text
+        $line += $dirlines + $postlines;
     }
-
+        
     # anything remaining in the string is plain text 
     push(@tokens, $interp 
-	 ? [ $text, $line, 'ITEXT' ]
-	 : ( 'TEXT', $text) )
-	if length $text;
-
+         ? [ $text, $line, 'ITEXT' ]
+         : ( 'TEXT', $text) )
+        if length $text;
+        
     return \@tokens;					    ## RETURN ##
 }
-
+    
 
 
 #------------------------------------------------------------------------
@@ -690,6 +692,7 @@ sub _parse {
 
     $line = $inperl = 0;
     $self->{ LINE   } = \$line;
+    $self->{ FILE   } = $info->{ name };
     $self->{ INPERL } = \$inperl;
 
     $status = CONTINUE;
@@ -1401,14 +1404,14 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.75, distributed as part of the
-Template Toolkit version 2.10, released on 24 July 2003.
+2.76, distributed as part of the
+Template Toolkit version 2.11, released on 06 January 2004.
 
  
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

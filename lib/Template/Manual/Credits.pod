@@ -92,8 +92,10 @@ Many people have contributed ideas, inspiration, fixes and features to
 the Template Toolkit.  Their efforts continue to be very much appreciated.  
 Please let me know if you think anyone is missing from this list.
 
-  Stephen Adkins            <stephen.adkins@officevision.com>
   Chuck Adams               <scrytch@uswest.net>
+  Stephen Adkins            <stephen.adkins@officevision.com>
+  Ivan Adzhubey             <iadzhubey@rics.bwh.harvard.edu>
+  Mark Anderson             <mda@discerning.com>
   Bradley Baetz             <bbaetz@student.usyd.edu.au>
   Thierry-Michel Barral     <kktos@electron-libre.com>
   Craig Barratt             <craig@arraycomm.com>
@@ -103,6 +105,7 @@ Please let me know if you think anyone is missing from this list.
   Leon Brocard              <acme@astray.com>  
   Lyle Brooks               <brooks@deseret.com>
   Piers Cawley              <pdcawley@bofh.org.uk>
+  Darren Chamberlain        <dlc@users.sourceforge.net>
   Eric Cholet               <cholet@logilune.com>
   Dave Cross                <dave@dave.org.uk>
   Chris Dean                <ctdean@babycenter.com>  
@@ -111,13 +114,15 @@ Please let me know if you think anyone is missing from this list.
   Mark Fowler               <mark@indicosoftware.com>
   Michael Fowler            <michael@shoebox.net>    
   Axel Gerstmair            <anthill@web.de>
+  Dylan William Hardison    <dylanwh@tampabay.rr.com>
   Perrin Harkins            <pharkins@etoys.com>
+  Bryce Harrington          <bryce@osdl.org>
   Dave Hodgkinson           <daveh@davehodgkinson.com>
   Harald Joerg              <Harald.Joerg@fujitsu-siemens.com>
   Colin Johnson             <colin@knowledgepool.com>
   Vivek Khera               <khera@kciLink.com>
   Rafael Kitover            <caelum@debian.org>
-  Ivan Kurmanov             <kurmanov@openlib.org>
+  Ivan Kurmanov             <http://www.ahinea.com>
   Hans von Lengerke         <hans@lengerke.org>
   Jonas Liljegren           <jonas@paranormal.se>
   Simon Luff                <simon@sports.com>
@@ -159,11 +164,11 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.10, released on 24 July 2003.
+Template Toolkit version 2.11, released on 06 January 2004.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
