@@ -17,13 +17,8 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.01  30th March 2001
+# Version 2.01 - 30th March 2001
 #------------------------------------------------------------------------
-
-* New Makefile.PL offers to install optional libraries, images, build
-  HTML docs, examples, etc.  Adds 'tt2_install', 'tt2_html_docs' and
-  'tt2_examples' as Makefile targets if requested.  These then get run
-  as part of "make install".
 
 * Added the various template libraries in the 'templates' directory.
   The 'html' library implements some generally useful HTML elements.
@@ -42,6 +37,11 @@
 
 * Added the 'docs' directory containing templates and library elements
   for building the TT2 documentation as HTML pages.
+
+* Updated Makefile.PL to now offer to install optional libraries,
+  images, build HTML docs, examples, etc.  Adds 'tt2_install',
+  'tt2_html_docs' and 'tt2_examples' as Makefile targets if requested.
+  These then get run as part of "make install".
 
 * Totally re-organised the documentation, splitting the long user manual
   into separate Template::Manual::* pages, adding the Template::FAQ, 
@@ -161,16 +161,16 @@
 
     my $tt = Template->new({
 	PLUGIN_FACTORY => {
-	    plugin1 => 'My::Plugin',	    # class name
+	    plugin1 => 'My::Plugin',         # class name
 	    plugin2 =>  My::Plugin->new(),   # prototype obj
 	},
     });
 
 * Added the File and Directory plugins which blossomed from the
   Directory plugin written by Michael Stevens and posted to the
-  mailing list.  Many thanks to him for donating the code.  These give
-  you access to files and directories on your filesystem and also
-  allow you to create representations of abstract files/dirs.
+  mailing list.  These give you access to files and directories on
+  your filesystem and also allow you to create representations of
+  abstract files/dirs.
 
   WARNING: recognise that this gives the author of any templates you
   run access to information about your filesystem.  We assume that the
