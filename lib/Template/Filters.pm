@@ -326,7 +326,7 @@ sub html_paragraph  {
 
 sub html_para_break  {
     my $text = shift;
-    $text =~ s/(\r?\n){2,}/$1<br>$1<br>$1/g;
+    $text =~ s|(\r?\n){2,}|$1<br />$1<br />$1|g;
     return $text;
 }
 
@@ -338,7 +338,7 @@ sub html_para_break  {
 
 sub html_line_break  {
     my $text = shift;
-    $text =~ s/(\r?\n)/<br>$1/g;
+    $text =~ s|(\r?\n)|<br />$1|g;
     return $text;
 }
 

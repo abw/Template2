@@ -410,11 +410,11 @@ if I can't wait until then?  I'm hungry!
 
 -- expect --
 The cat sat on the mat
-<br>
-<br>
+<br />
+<br />
 Mary had a little Lamb
-<br>
-<br>
+<br />
+<br />
 You shall have a fishy on a little dishy, when the boat comes in.  What 
 if I can't wait until then?  I'm hungry!
 
@@ -423,11 +423,11 @@ if I can't wait until then?  I'm hungry!
 
 -- expect --
 The cat sat on the mat
-<br>
-<br>
+<br />
+<br />
 Mary had a little Lamb
-<br>
-<br>
+<br />
+<br />
 You shall have a fishy on a little dishy, when the boat comes in.  What 
 if I can't wait until then?  I'm hungry!
 
@@ -435,14 +435,14 @@ if I can't wait until then?  I'm hungry!
 [% global.blocktext FILTER html_line_break %]
 
 -- expect --
-The cat sat on the mat<br>
-<br>
-Mary had a little Lamb<br>
-<br>
-<br>
-<br>
-You shall have a fishy on a little dishy, when the boat comes in.  What <br>
-if I can't wait until then?  I'm hungry!<br>
+The cat sat on the mat<br />
+<br />
+Mary had a little Lamb<br />
+<br />
+<br />
+<br />
+You shall have a fishy on a little dishy, when the boat comes in.  What <br />
+if I can't wait until then?  I'm hungry!<br />
 
 -- test --
 [% global.blocktext FILTER truncate(10) %]
