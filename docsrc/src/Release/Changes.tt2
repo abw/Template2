@@ -24,10 +24,13 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.10 - 30th April 2003
+# Version 2.10 - 24th July 2003
 #------------------------------------------------------------------------
 
-* applied patch from Axel Gerstmair for minor fixes to Makefile.PL, 
+* Merged in Darren's branch to add the define_vmethod() methods to
+  Template::Context and Template::Stash.
+
+* Applied patch from Axel Gerstmair for minor fixes to Makefile.PL, 
   t/gd.t and t/date.t.
   http://template-toolkit.org/pipermail/templates/2003-April/004545.html
 
