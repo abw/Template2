@@ -10,12 +10,17 @@ tag by itself.
 
     [% foo %]
 
-The variable may take any of the forms described above:
+The variable can have an unlimited number of elements, each separated
+by a dot '.'.  Each element can have arguments specified within
+parentheses.
 
     [% foo %]
     [% bar.baz %]
     [% biz.baz(10) %]
     ...etc...
+
+See L<Template::Manual::Variables> for a full discussion on template
+variables.
 
 You can also specify expressions using the logical (and, or, not, ?:) and
 mathematic operators (+ - * / % mod div).

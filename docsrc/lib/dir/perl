@@ -1,6 +1,8 @@
 [% TAGS star %]
 =item PERL
 
+(for the advanced reader)
+
 The PERL directive is used to mark the start of a block which contains
 Perl code for evaluation.  The EVAL_PERL option must be enabled for Perl
 code to be evaluated or a 'perl' exception will be thrown with the 

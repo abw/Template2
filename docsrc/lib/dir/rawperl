@@ -1,6 +1,8 @@
 [% TAGS star %]
 =item RAWPERL
 
+(for the very advanced reader)
+
 The Template Toolkit parser reads a source template and generates the
 text of a Perl subroutine as output.  It then uses eval() to evaluate
 it into a subroutine reference.  This subroutine is then called to

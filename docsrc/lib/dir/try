@@ -1,6 +1,8 @@
 [% TAGS star %]
 =item TRY / THROW / CATCH / FINAL
 
+(more advanced material)
+
 The Template Toolkit supports fully functional, nested exception
 handling.  The TRY directive introduces an exception handling scope 
 which continues until the matching END directive.  Any errors that 
