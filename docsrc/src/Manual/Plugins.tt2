@@ -1,0 +1,246 @@
+[% TAGS star -%]
+
+=head1 DESCRIPTION
+
+[* USE wrap; page.intro | wrap(72) *]
+
+=over 4
+
+=item Autoformat
+
+The Autoformat plugin is an interface to Damian Conway's Text::Autoformat 
+Perl module which provides advanced text wrapping and formatting.  See
+L<Template::Plugin::Autoformat> and L<Text::Autoformat> for further 
+details.
+
+    [% USE autoformat(left=10, right=20) %]
+    [% autoformat(mytext) %]	    # call autoformat sub
+    [% mytext FILTER autoformat %]  # or use autoformat filter
+
+The Text::Autoformat module is available from CPAN:
+
+    http://www.cpan.org/modules/by-module/Text/
+
+=item CGI
+
+The CGI plugin is a wrapper around Lincoln Stein's 
+E<lt>lstein@genome.wi.mit.eduE<gt> CGI.pm module.  The plugin is 
+distributed with the Template Toolkit (see L<Template::Plugin::CGI>)
+and the CGI module itself is distributed with recent versions Perl,
+or is available from CPAN.
+
+    [% USE CGI %]
+    [% CGI.param('param_name') %]
+    [% CGI.start_form %]
+    [% CGI.popup_menu( Name   => 'color', 
+                       Values => [ 'Green', 'Brown' ] ) %]
+    [% CGI.end_form %]
+
+=item Datafile
+
+Provides an interface to data stored in a plain text file in a simple
+delimited format.  The first line in the file specifies field names
+which should be delimiter by any non-word character sequence.
+Subsequent lines define data using the same delimiter as int he first
+line.  Blank lines and comments (lines starting '#') are ignored.  See
+L<Template::Plugin::Datafile> for further details.
+
+/tmp/mydata:
+
+    # define names for each field
+    id : email : name : tel
+    # here's the data
+    fred : fred@here.com : Fred Smith : 555-1234
+    bill : bill@here.com : Bill White : 555-5678
+
+example:
+
+    [% USE userlist = datafile('/tmp/mydata') %]
+
+    [% FOREACH user = userlist %]
+       [% user.name %] ([% user.id %])
+    [% END %]
+
+=item Date
+
+The Date plugin provides an easy way to generate formatted time and date
+strings by delegating to the POSIX strftime() routine.   See
+L<Template::Plugin::Date> and L<POSIX> for further details.
+
+    [% USE date %]
+    [% date.format %]		# current time/date
+
+    File last modified: [% date.format(template.modtime) %]
+
+=item Directory
+
+The Directory plugin provides a simple interface to a directory and
+the files within it.  See L<Template::Plugin::Directory> for further
+details.
+
+    [% USE dir = Directory('/tmp') %]
+    [% FOREACH file = dir.files %]
+	# all the plain files in the directory
+    [% END %]
+    [% FOREACH file = dir.dirs %]
+	# all the sub-directories
+    [% END %]
+
+=item DBI
+
+The DBI plugin, developed by Simon Matthews
+E<lt>sam@knowledgepool.comE<gt>, brings the full power of Tim Bunce's
+E<lt>Tim.Bunce@ig.co.ukE<gt> database interface module (DBI) to your
+templates.  See L<Template::Plugin::DBI> and L<DBI> for further details.
+
+    [% USE DBI('dbi:driver:database', 'user', 'pass') %]
+
+    [% FOREACH user = DBI.query( 'SELECT * FROM users' ) %]
+       [% user.id %] [% user.name %]
+    [% END %]
+
+The DBI and relevant DBD modules are available from CPAN:
+
+  http://www.cpan.org/modules/by-module/DBI/
+
+=item Dumper
+
+The Dumper plugin provides an interface to the Data::Dumper module.  See
+L<Template::Plugin::Dumper> and L<Data::Dumper> for further details.
+
+    [% USE dumper(indent=0, pad="<br>") %]
+    [% dumper.dump(myvar, yourvar) %]
+
+=item File
+
+The File plugin provides a general abstraction for files and can be
+used to fetch information about specific files within a filesystem.
+See L<Template::Plugin::File> for further details.
+
+    [% USE File('/tmp/foo.html') %]
+    [% File.name %]     # foo.html
+    [% File.dir %]      # /tmp
+    [% File.mtime %]    # modification time
+
+=item Format
+
+The Format plugin provides a simple way to format text according to a
+printf()-like format.   See L<Template::Plugin::Format> for further 
+details.
+
+    [% USE bold = format('<b>%s</b>') %]
+    [% bold('Hello') %]
+
+=item Iterator
+
+The Iterator plugin provides a way to create a Template::Iterator
+object to iterate over a data set.  An iterator is created
+automatically by the FOREACH directive and is aliased to the 'loop'
+variable.  This plugin allows an iterator to be explicitly created
+with a given name, or the default plugin name, 'iterator'.  See
+L<Template::Plugin::Iterator> for further details.
+
+    [% USE iterator(list, args) %]
+
+    [% FOREACH item = iterator %]
+       [% '<ul>' IF iterator.first %]
+       <li>[% item %]
+       [% '</ul>' IF iterator.last %]
+    [% END %]
+
+=item Table
+
+The Table plugin allows you to format a list of data items into a 
+virtual table by specifying a fixed number of rows or columns, with 
+an optional overlap.  See L<Template::Plugin::Table> for further 
+details.
+
+    [% USE table(list, rows=10, overlap=1) %]
+
+    [% FOREACH item = table.col(3) %]
+       [% item %]
+    [% END %]
+
+=item URL
+
+The URL plugin provides a simple way of constructing URLs from a base
+part and a variable set of parameters.  See L<Template::Plugin::URL>
+for further details.
+
+    [% USE mycgi = url('/cgi-bin/bar.pl', debug=1) %]
+
+    [% mycgi %]
+       # ==> /cgi/bin/bar.pl?debug=1
+
+    [% mycgi(mode='submit') %]
+       # ==> /cgi/bin/bar.pl?mode=submit&debug=1
+
+=item Wrap
+
+The Wrap plugin uses the Text::Wrap module by David Muir Sharnoff 
+E<lt>muir@idiom.comE<gt> (with help from Tim Pierce and many many others)
+to provide simple paragraph formatting.  See L<Template::Plugin::Wrap>
+and L<Text::Wrap> for further details.
+
+    [% USE wrap %]
+    [% wrap(mytext, 40, '* ', '  ') %]	# use wrap sub
+    [% mytext FILTER wrap(40) -%]	# or wrap FILTER
+
+The Text::Wrap module is available from CPAN:
+
+    http://www.cpan.org/modules/by-module/Text/
+
+=item XML::DOM
+
+The XML::DOM plugin gives access to the XML Document Object Module via
+Clark Cooper E<lt>cooper@sch.ge.comE<gt> and Enno Derksen's 
+E<lt>enno@att.comE<gt> XML::DOM module.  See L<Template::Plugin::XML::DOM> 
+and L<XML::DOM> for further details.
+
+    [% USE dom = XML.DOM %]
+    [% doc = dom.parse(filename) %]
+
+    [% FOREACH node = doc.getElementsByTagName('CODEBASE') %]
+       * [% node.getAttribute('href') %]
+    [% END %]
+
+The plugin requires the XML::DOM module, available from CPAN:
+
+    http://www.cpan.org/modules/by-module/XML/
+
+=item XML::XPath
+
+The XML::XPath plugin provides an interface to Matt Sergeant's
+E<lt>matt@sergeant.orgE<gt> XML::XPath module.  See 
+L<Template::Plugin::XML::XPath> and L<XML::XPath> for further details.
+
+    [% USE xpath = XML.XPath(xmlfile) %]
+    [% FOREACH page = xpath.findnodes('/html/body/page') %]
+       [% page.getAttribute('title') %]
+    [% END %]
+
+The plugin requires the XML::XPath module, available from CPAN:
+
+    http://www.cpan.org/modules/by-module/XML/
+
+=item XML::RSS
+
+The XML::RSS plugin is a simple interface to Jonathan Eisenzopf's
+E<lt>eisen@pobox.comE<gt> XML::RSS module.  A RSS (Rich Site Summary)
+file is typically used to store short news 'headlines' describing
+different links within a site.  This plugin allows you to parse RSS
+files and format the contents accordingly using templates.  
+See L<Template::Plugin::XML::RSS> and L<XML::RSS> for further details.
+
+    [% USE news = XML.RSS(filename) %]
+   
+    [% FOREACH item = news.items %]
+       <a href="[% item.link %]">[% item.title %]</a>
+    [% END %]
+
+The XML::RSS module is available from CPAN:
+
+    http://www.cpan.org/modules/by-module/XML/
+
+=back
+

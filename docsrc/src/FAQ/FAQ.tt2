@@ -1,0 +1,77 @@
+[% TAGS star -%]
+=head1 DESCRIPTION
+
+[* USE wrap; page.intro | wrap(72) *]
+
+=head2 General Questions
+
+=over 4
+
+=item Why is the sky blue?
+
+Something to do with refraction.
+
+=back
+
+=head2 Language
+
+=over 4
+
+=item Why doesn't [% a = b IF c %] work as expected?
+
+Because the parser interprets it as [% a = (b IF c) %].
+
+Do this instead:
+
+    [% SET a = b IF c %]
+
+=back
+
+=head2 Plugins
+
+=over 4
+
+=item Using the Table plugin, how do I order the data to go across rather than down?
+
+Order the data into rows:
+
+     Steve     Karen     Jeff
+     Brooklyn  Nantucket Fairfax
+     NY        MA        VA
+ 
+    [% USE table(data, rows=3) %]
+ 
+Then ask for each column
+ 
+    [% FOREACH column = table.cols %]
+ 
+And then print each item in the column going across the output rows
+ 
+    [% FOREACH item = column %]
+	<td>[% item %]</td>
+    [% END %]
+
+=back
+
+=head2 Extending the Template Toolkit
+
+=over 4
+
+=item Can I serve templates from a database?
+
+Short answer: yes, Chris Nandor has done this for Slash.  You need to 
+subclass Template::Provider.  See the mailing list archives for further
+info.
+
+=back
+
+=head2 Miscellaneous
+
+=over 4
+
+=item Can I have another cup of coffee?
+
+No, I think you've hhhaadd ennnough alllrready.
+
+=back
+

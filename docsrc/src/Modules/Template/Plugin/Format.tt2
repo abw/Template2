@@ -1,0 +1,15 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE format %]
+    [% commented = format('# %s') %]
+    [% commented('The cat sat on the mat') %]
+    
+    [% USE bold = format('<b>%s</b>') %]
+    [% bold('Hello') %]
+
+=head1 DESCRIPTION
+
+The format plugin constructs sub-routines which format text according to
+a printf()-like format string.
+

@@ -1,0 +1,31 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    # load plugin and specify XML file to parse
+    [% USE xml = XML.Simple(xml_file_or_text) %]
+
+=head1 DESCRIPTION
+
+This is a Template Toolkit plugin interfacing to the XML::Simple module.
+
+=head1 PRE-REQUISITES
+
+This plugin requires that the XML::Parser and XML::Simple modules be 
+installed.  These are available from CPAN:
+
+    http://www.cpan.org/modules/by-module/XML
+
+=head1 AUTHORS
+
+This plugin wrapper module was written by Andy Wardley
+E<lt>abw@kfs.orgE<gt>.
+
+The XML::Simple module which implements all the core functionality 
+was written by Grant McLean E<lt>grantm@web.co.nzE<gt>.
+
+[* PROCESS misc/version
+         + misc/copyright
+	 + misc/seealso
+       seealso=page.seealso
+*]
+

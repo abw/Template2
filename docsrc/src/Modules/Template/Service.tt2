@@ -1,0 +1,168 @@
+[% TAGS [* *] -%]
+
+=head1 SYNOPSIS
+
+    use Template::Service;
+
+    my $service = Template::Service->new({
+	PRE_PROCESS  => [ 'config', 'header' ],
+	POST_PROCESS => 'footer',
+	ERROR        => {
+	    user     => 'user/index.html', 
+	    dbi      => 'error/database',
+	    default  => 'error/default',
+	},
+    });
+
+    my $output = $service->process($template_name, \%replace)
+	|| die $service->error(), "\n";
+
+=head1 DESCRIPTION
+
+The Template::Service module implements an object class for providing
+a consistent template processing service. 
+
+Standard header (PRE_PROCESS) and footer (POST_PROCESS) templates may
+be specified which are prepended and appended to all templates
+processed by the service (but not any other templates or blocks
+INCLUDEd or PROCESSed from within).  An ERROR hash may be specified
+which redirects the service to an alternate template file in the case
+of uncaught exceptions being thrown.  This allows errors to be
+automatically handled by the service and a guaranteed valid response
+to be generated regardless of any processing problems encountered.
+
+A default Template::Service object is created by the Template module.
+Any Template::Service options may be passed to the Template new()
+constructor method and will be forwarded to the Template::Service
+constructor.
+
+    use Template;
+    
+    my $template = Template->new({
+	PRE_PROCESS  => 'header',
+	POST_PROCESS => 'footer',
+    });
+
+Similarly, the Template::Service constructor will forward all configuration
+parameters onto other default objects (e.g. Template::Context) that it may 
+need to instantiate.
+
+A Template::Service object (or subclass/derivative) can be explicitly
+instantiated and passed to the Template new() constructor method as 
+the SERVICE item.
+
+    use Template;
+    use Template::Service;
+
+    my $service = Template::Service->new({
+	PRE_PROCESS  => 'header',
+	POST_PROCESS => 'footer',
+    });
+
+    my $template = Template->new({
+	SERVICE => $service,
+    });
+
+The Template::Service module can be sub-classed to create custom service
+handlers.
+
+    use Template;
+    use MyOrg::Template::Service;
+
+    my $service = MyOrg::Template::Service->new({
+	PRE_PROCESS  => 'header',
+	POST_PROCESS => 'footer',
+	COOL_OPTION  => 'enabled in spades',
+    });
+
+    my $template = Template->new({
+	SERVICE => $service,
+    });
+
+The Template module uses the Template::Config service() factory method
+to create a default service object when required.  The
+$Template::Config::SERVICE package variable may be set to specify an
+alternate service module.  This will be loaded automatically and its
+new() constructor method called by the service() factory method when
+a default service object is required.  Thus the previous example could 
+be written as:
+
+    use Template;
+
+    $Template::Config::SERVICE = 'MyOrg::Template::Service';
+
+    my $template = Template->new({
+	PRE_PROCESS  => 'header',
+	POST_PROCESS => 'footer',
+	COOL_OPTION  => 'enabled in spades',
+    });
+
+=head1 METHODS
+
+=head2 new(\%config)
+
+The new() constructor method is called to instantiate a Template::Service
+object.  Configuration parameters may be specified as a HASH reference or
+as a list of (name =E<gt> value) pairs.
+
+    my $service1 = Template::Service->new({
+	PRE_PROCESS  => 'header',
+	POST_PROCESS => 'footer',
+    });
+
+    my $service2 = Template::Service->new( ERROR => 'error.html' );
+
+The new() method returns a Template::Service object (or sub-class) or
+undef on error.  In the latter case, a relevant error message can be
+retrieved by the error() class method or directly from the
+$Template::Service::ERROR package variable.
+
+    my $service = Template::Service->new(\%config)
+	|| die Template::Service->error();
+
+    my $service = Template::Service->new(\%config)
+	|| die $Template::Service::ERROR;
+
+The following configuration items may be specified:
+
+=over 4
+
+[* obj = '$service'  pkg = 'Template::Service' *]
+[* PROCESS option/preproc *]
+
+[* PROCESS option/process *]
+
+[* PROCESS option/error *]
+
+[* PROCESS option/reset *]
+
+=back
+
+=head2 process($input, \%replace)
+
+The process() method is called to process a template specified as the first
+parameter, $input.  This may be a file name, file handle (e.g. GLOB or IO::Handle)
+or a reference to a text string containing the template text.  An additional
+hash reference may be passed containing template variable definitions.
+
+The method processes the template, adding any PRE_PROCESS or POST_PROCESS 
+templates defined, and returns the output text.  An uncaught exception thrown 
+by the template will be handled by a relevant ERROR handler if defined.
+Errors that occur in the PRE_PROCESS or POST_PROCESS templates, or those that
+occur in the main input template and aren't handled, cause the method to 
+return undef to indicate failure.  The appropriate error message can be
+retrieved via the error() method.
+
+    $service->process('myfile.html', { title => 'My Test File' })
+	|| die $service->error();
+
+
+=head2 context()
+
+Returns a reference to the internal context object which is, by default, an
+instance of the Template::Context class.
+
+=head2 error()
+
+Returns the most recent error message.
+

@@ -1,0 +1,77 @@
+[% TAGS [* *] -%]
+
+=head1 SYNOPSIS
+
+    $provider = Template::Provider->new(\%options);
+
+    ($template, $error) = $provider->fetch($name);
+
+=head1 DESCRIPTION
+
+The Template::Provider is used to load, parse, compile and cache template
+documents.  This object may be sub-classed to provide more specific 
+facilities for loading, or otherwise providing access to templates.
+
+The Template::Context objects maintain a list of Template::Provider 
+objects which are polled in turn (via fetch()) to return a requested
+template.  Each may return a compiled template, raise an error, or 
+decline to serve the reqest, giving subsequent providers a chance to
+do so.
+
+This is the "Chain of Responsiblity" pattern.  See 'Design Patterns' for
+further information.
+
+This documentation needs work.
+
+=head1 PUBLIC METHODS
+
+=head2 new(\%options) 
+
+Constructor method which instantiates and returns a new Template::Provider
+object.  The optional parameter may be a hash reference containing any of
+the following items:
+
+=over 4
+
+[* obj = '$provider', pkg = 'Template::Provider' *]
+[* INCLUDE option/include *]
+
+[* INCLUDE option/delim *]
+
+[* INCLUDE option/absolute *]
+
+[* INCLUDE option/relative *]
+
+[* INCLUDE option/default *]
+
+[* INCLUDE option/cache *]
+
+[* INCLUDE option/compile *]
+
+[* INCLUDE option/tolerant *]
+
+[* INCLUDE option/parser *]
+
+=back
+
+=head2 fetch($name)
+
+Returns a compiled template for the name specified.  If the template 
+cannot be found then (undef, STATUS_DECLINED) is returned.  If an error
+occurs (e.g. read error, parse error) then ($error, STATUS_ERROR) is 
+returned, where $error is the error message generated.  If the TOLERANT
+flag is set the the method returns (undef, STATUS_DECLINED) instead of
+returning an error.
+
+=head2 store($name, $template)
+
+Stores the compiled template, $template, in the cache under the name, 
+$name.  Susbequent calls to fetch($name) will return this template in
+preference to any disk-based file.
+
+=head2 include_path(\@newpath))
+
+Accessor method for the INCLUDE_PATH setting.  If called with an
+argument, this method will replace the existing INCLUDE_PATH with
+the new value.
+

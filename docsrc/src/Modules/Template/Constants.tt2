@@ -1,0 +1,60 @@
+[% TAGS [* *] -%]
+
+=head1 SYNOPSIS
+
+    use Template::Constants qw( :status :error :all );
+
+=head1 DESCRIPTION
+
+The Template::Constants modules defines, and optionally exports into the
+caller's namespace, a number of constants used by the Template package.
+
+Constants may be used by specifying the Template::Constants package 
+explicitly:
+
+    use Template::Constants;
+
+    print Template::Constants::STATUS_DECLINED;
+
+Constants may be imported into the caller's namespace by naming them as 
+options to the C<use Template::Constants> statement:
+
+    use Template::Constants qw( STATUS_DECLINED );
+
+    print STATUS_DECLINED;
+
+Alternatively, one of the following tagset identifiers may be specified
+to import sets of constants; :status, :error, :all.
+
+    use Template::Constants qw( :status );
+
+    print STATUS_DECLINED;
+
+See L<Exporter> for more information on exporting variables.
+
+=head1 EXPORTABLE TAG SETS
+
+The following tag sets and associated constants are defined: 
+
+  :status
+    STATUS_OK                 # no problem, continue
+    STATUS_RETURN             # ended current block then continue (ok)
+    STATUS_STOP               # controlled stop (ok) 
+    STATUS_DONE               # iterator is all done (ok)
+    STATUS_DECLINED           # provider declined to service request (ok)
+    STATUS_ERROR              # general error condition (not ok)
+
+  :error
+    ERROR_RETURN              # return a status code (e.g. 'stop')
+    ERROR_FILE                # file error: I/O, parse, recursion
+    ERROR_UNDEF               # undefined variable value used
+    ERROR_PERL                # error in [% PERL %] block
+
+  :chomp                      # for PRE_CHOMP and POST_CHOMP
+    CHOMP_NONE                # do not remove whitespace
+    CHOMP_ALL                 # remove whitespace
+    CHOMP_COLLAPSE            # collapse whitespace to a single space
+
+  :all         All the above constants.
+
+

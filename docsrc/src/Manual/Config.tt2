@@ -1,0 +1,124 @@
+=head1 DESCRIPTION
+
+[% USE wrap; page.intro | wrap(72) %]
+
+=head2 Template Style and Parsing Options
+
+=over 4
+
+[% PROCESS option/tag %]
+
+[% PROCESS option/tagstyle %]
+
+[% PROCESS option/chomp %]
+
+[% PROCESS option/trim %]
+
+[% PROCESS option/interp %]
+
+[% PROCESS option/case %]
+
+=back
+
+=head2 Template Files and Blocks
+
+=over 4
+
+[% PROCESS option/include %]
+
+[% PROCESS option/delim %]
+
+[% PROCESS option/absolute %]
+
+[% PROCESS option/relative %]
+
+[% PROCESS option/default %]
+
+[% PROCESS option/blocks %]
+
+[% PROCESS option/reset %]
+
+[% PROCESS option/recurse %]
+
+=back
+
+=head2 Template Variables
+
+=over 4
+
+[% PROCESS option/variables %]
+
+=back
+
+=head2 Runtime Processing Options
+
+=over 4
+
+[% PROCESS option/evalperl %]
+
+[% PROCESS option/preproc %]
+
+[% PROCESS option/process %]
+
+[% PROCESS option/error %]
+
+[% PROCESS option/output %]
+
+[% PROCESS option/outpath %]
+
+[% PROCESS option/debug %]
+
+
+=back
+
+=head2 Caching and Compiling Options
+
+=over 4
+
+[% PROCESS option/cache %]
+
+[% PROCESS option/compile %]
+
+=back
+
+=head2 Plugins and Filters
+
+=over 4
+
+[% PROCESS option/plugins %]
+
+[% PROCESS option/plugbase %]
+
+[% PROCESS option/loadperl %]
+
+[% PROCESS option/filters %]
+
+=back
+
+=head2 Compatibility, Customisation and Extension
+
+=over 4
+
+[% PROCESS option/version %]
+
+[% PROCESS option/loadtmpl %]
+
+[% PROCESS option/loadplug %]
+
+[% PROCESS option/loadfilt %]
+
+[% PROCESS option/tolerant %]
+
+[% PROCESS option/service %]
+
+[% PROCESS option/context %]
+
+[% PROCESS option/stash %]
+
+[% PROCESS option/parser %]
+
+[% PROCESS option/grammar %]
+
+=back
+
+

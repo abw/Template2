@@ -1,0 +1,205 @@
+#========================================================================
+# The following represents the Grand Plan for Version 3 of the
+# Template Toolkit.  Of course, I'm loathed to ever release a Version
+# 3 for the (simple|stupid) reason that I registered tt2.org, but
+# tt3.org has already been taken :-) So you never know, we might stick
+# with v2.nn, jump straight to version 4 (hmm, exponential growth as
+# 2^n, not bad but grows rather quickly), descend into e (2.718...) or
+# just go ahead with V3.00 regardless.  After all, what's in a
+# (domain) name?  :-)
+#
+# Whatever it's called, it will be a fairly major release, not
+# expected to see the light in the immediate future.  However, some,
+# many or all of these features might creep in gradually over time.
+# You never know.
+#
+# Anyway, here's my thoughts.  Feel free to discuss, offer opinions, 
+# ideas, or any other kind of feedback to the template mailing list
+# or direct to the author.  Note that these are the distilled wisdom
+# of the far more verbose ramblings in the TODO file, so you may find
+# a little more detail in there.
+#========================================================================
+
+Core Modules
+============
+
+Template   Module to interface TT to the real world.
+
+Contract   Defines service contract which specifies how service will 
+           process a template.  Defines things like PRE_PROCESS, etc.,
+           and details of facilities which should/shouldn't be made 
+           available.  May also define more general processing style,
+           e.g. acquire/release facilities for every template (slightly
+           slower, but guaranteed memory safe) or once at start/end of 
+           contract lifetime (faster if multiple templates being run,
+           but possibly less safe).  Maybe many other items to define
+           general flavour of TT required.  In Design Pattern terms, the
+           contract defines a Strategy.
+
+Service    Processes a template according to a service contract.  First
+           prepares a context by acquiring any facilities specified in
+           the contract, then fetches the template, then processes it
+           along with any wrappers, then releases the facilities.  Manages
+           error handling, etc.  
+
+Facility   Something that implements a general facility in TT.  Examples 
+           are the Stash (data management), View (template provision),
+           Parser (and maybe also Compiler which has a higher level role?),
+           Output (for managing outpuf buffers, files, etc), Plugins, 
+           Filters, etc.  Facilities are acquired by a Service for a 
+           particular Context and then released again when done.  This
+           allows certain facilities (e.g. the stash) to maintain a 
+           reference to the context (e.g. create a circular reference)
+           which is properly released later.
+
+Context    A container object which aggregates the various facilities
+           installed for processing a template under a certain contract.
+           The context provides direct access to all the features of the
+           Template Toolkit in a well-defined manner, and thus is the
+           central "switching station" for the whole template processing 
+           caboodle.
+
+
+Facilities
+==========
+
+Parser     Turns template text into Perl code.  The job of the parser is
+           to detect directives that relate to particular facilities 
+           (e.g. INCLUDE belongs to view) and call a method of the facility
+           to rewrite the directive into Perl code (e.g. code generator)
+
+Compiler   Thin wrapper around Parser which provides some additional
+           functionality, like writing templates to disk, loading them
+           again (bypassing the Parser), generating Template::Documents, 
+           and so on.
+
+Provider   Given a template name (or text, code sub, obj ref, etc) it 
+           provides a compiled template.  Abstracts template source
+           (e.g. file, database, etc.) and handles caching.
+
+View       Template processing facility.  Has one or more providers, which
+           may be mapped to different namespaces and to which prefix/suffix
+           may be applied, as well as default template, and various other 
+           options.  The template() method provides a template, while 
+           include() and process() perform as current (TT2) context methods.
+
+Stash      Data store.  Basic model has much magic.  May want to tweak and/or
+           subclass to provide faster, but less magical access.
+
+Plugins    Plugins provider.
+
+Filters    Filters provider.
+
+Iterator   Data iterator.
+
+
+
+Other General Purpose Modules
+=============================
+
+Cache      General purpose cache for compiled templates, generated 
+           template output (for output caching), etc.
+
+Grammar    Basic TT grammar defining general language constructs such
+           as variables, expressions, template names, if blocks, for 
+           loops, etc.  Unlike TT2, it won't contain constructs for
+           directives which are now defined dynamically in the parser
+           by the registration of facilities which are obliged to declare
+           the directives they implement.
+
+
+Code Generation
+===============
+
+Facilities not only implement runtime functionality, but also define 
+the directives that they implement.  They provide methods which are 
+called when their directives are detected which either perform some
+compile-time functionality and/or return generate Perl program code
+to represent the rewritten form of the directive.  Each facility 
+registers its directives and associated generator methods at the 
+point at which it is installed in a context.
+
+[% PARSER		    # purely compile time
+     start_tag = '[*'
+     end_tag   = '*]'
+     pre_chomp = 1
+%]
+
+[% COMPILER		    # ditto
+    extension = '.tt2'
+    directory = '/tmp'
+%]
+
+[% PROVIDER http	    # ditto, for general configuration
+    proxy = 'localhost:8080'
+%]
+
+[% VIEW fancy %]	    # compile time view definition + runtime code
+   ...
+[% END %]
+
+[% INCLUDE template %]	    # runtime code gen via view
+
+[% PROCESS template %]	    # ditto
+
+[% GET foo %] / [% foo %]   # runtime code gen
+
+[% LOCAL a=10 %]	    # gen code for runtime localisation of stash
+   ...
+[% END %]
+
+[% ISOLATE a=10 %]	    # gen code to isolate stash
+   ...
+[% END %]
+
+[% p = PLUGIN foo %]	    # gen code for runtime plugin 
+
+[% USE p = foo %]	    # different form of above
+
+[% FILTER f %]		    # ditto for filtering
+   ...
+[% END %]
+
+[% FOREACH foo = items %]   # create data iterator (unlike simple 'for')
+   foo, loop.item, loop.prev, etc.
+[% END %]
+
+[% foo = ITERATOR items %]  # named iterator
+
+[% FOREACH foo %]	    # run iterator
+   foo.item, foo.prev, foo.next, etc.
+[% END %]
+
+[% FOREACH x = foo %]	    # ditto, using local item var
+   x, foo.item, foo.prev, foo.next, etc.
+[% END %]
+
+#------------------------------------------------------------------------
+
+Compare:
+    
+  [% TEMPLATE foo
+       title = 'Blah blah'
+       author = '....'
+       etc., etc., etc., 
+  %]
+
+  ...
+
+  [% END %]
+
+to:
+
+  [% BLOCK foo %]
+     ...
+  [% END %]
+
+Maybe block should simply be extended to include this metadata?
+
+Or rather, the TEMPLATE directive should offer something like what 
+VIEW currently does, in allowing variables to be defined.  So 
+while BLOCK defines a template block in the same namespace, maybe 
+thus TEMPLATE defines one in a unique namespace, or a cloned 
+namespace?
+
+That implies META fixes the metadata of the current template?

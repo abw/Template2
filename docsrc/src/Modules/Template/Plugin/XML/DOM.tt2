@@ -1,0 +1,283 @@
+[% TAGS star %]
+=head1 SYNOPSIS
+
+    # load plugin
+    [% USE dom = XML.DOM %]
+
+    # also provide XML::Parser options
+    [% USE dom = XML.DOM(ProtocolEncoding =E<gt> 'ISO-8859-1') %]
+
+    # parse an XML file
+    [% doc = dom.parse(filename) %]
+    [% doc = dom.parse(file => filename) %]
+
+    # parse XML text
+    [% doc = dom.parse(xmltext) %]
+    [% doc = dom.parse(text => xmltext) %]
+
+    # call any XML::DOM methods on document/element nodes
+    [% FOREACH node = doc.getElementsByTagName('CODEBASE') %]
+       * [% node.getAttribute('href') %]     # or just '[% node.href %]'
+    [% END %]
+
+    # process template for DOM node (template name is node TagName)
+    [% node.toTemplate %]
+
+    # process templates for all children of DOM node
+    [% node.childrenToTemplate %]
+
+    # process templates recursively for all descendants of DOM node
+    [% node.allChildrenToTemplate %]
+
+    # examples of processing options
+    [% node.toTemplate(verbose=>1) %]
+    [% node.childrenToTemplate(prefix=>'mytemplates/' suffix=>'.tt2') %]
+    [% node.allChildrenToTemplate(default=>'mytemplates/anynode.tt2') %]
+
+=head1 PRE-REQUISITES
+
+This plugin requires that the XML::Parser (2.19 or later) and XML::DOM
+(1.27 or later) modules be installed.  These are available from CPAN:
+
+    http://www.cpan.org/modules/by-module/XML
+
+Note that the XML::DOM module is now distributed as part of the
+'libxml-enno' bundle.
+
+=head1 DESCRIPTION
+
+This is a Template Toolkit plugin interfacing to the XML::DOM module.
+The plugin loads the XML::DOM module and creates an XML::DOM::Parser
+object which is stored internally.  The parse() method can then be
+called on the plugin to parse an XML stream into a DOM document.
+
+    [% USE dom = XML.DOM %]
+    [% doc = dom.parse('/tmp/myxmlfile') %]
+
+NOTE: earlier versions of this XML::DOM plugin expected a filename to
+be passed as an argument to the constructor.  This is no longer
+supported due to the fact that it caused a serious memory leak.  We
+apologise for the inconvenience but must insist that you change your
+templates as shown:
+
+    # OLD STYLE: now fails with a warning
+    [% USE dom = XML.DOM('tmp/myxmlfile') %]
+
+    # NEW STYLE: do this instead
+    [% USE dom = XML.DOM %]
+    [% doc = dom.parse('tmp/myxmlfile') %]
+
+The root of the problem lies in XML::DOM creating massive circular
+references in the object models it constructs.  The dispose() method
+must be called on each document to release the memory that it would
+otherwise hold indefinately.  The XML::DOM plugin object (i.e. 'dom'
+in these examples) acts as a sentinel for the documents it creates
+('doc' and any others).  When the plugin object goes out of scope at
+the end of the current template, it will automatically call dispose()
+on any documents that it has created.  Note that if you dispose of the
+the plugin object before the end of the block (i.e.  by assigning a
+new value to the 'dom' variable) then the documents will also be
+disposed at that point and should not be used thereafter.
+
+    [% USE dom = XML.DOM %]
+    [% doc = dom.parse('/tmp/myfile') %]
+    [% dom = 'new value' %]     # releases XML.DOM plugin and calls
+                                # dispose() on 'doc', so don't use it!
+
+Any template processing parameters (see toTemplate() method and
+friends, below) can be specified with the constructor and will be used
+to define defaults for the object.
+
+    [% USE dom = XML.DOM(prefix => 'theme1/') %]
+
+The plugin constructor will also accept configuration options destined
+for the XML::Parser object:
+
+    [% USE dom = XML.DOM(ProtocolEncoding => 'ISO-8859-1') %]
+
+=head1 METHODS
+
+=head2 parse()
+
+The parse() method accepts a positional parameter which contains a filename
+or XML string.  It is assumed to be a filename unless it contains a E<lt>
+character.
+
+    [% xmlfile = '/tmp/foo.xml' %]
+    [% doc = dom.parse(xmlfile) %]
+
+    [% xmltext = BLOCK %]
+    <xml>
+      <blah><etc/></blah>
+      ...
+    </xml>
+    [% END %]
+    [% doc = dom.parse(xmltext) %]
+
+The named parameters 'file' (or 'filename') and 'text' (or 'xml') can also
+be used:
+
+    [% doc = dom.parse(file = xmlfile) %]
+    [% doc = dom.parse(text = xmltext) %]
+
+The parse() method returns an instance of the XML::DOM::Document object 
+representing the parsed document in DOM form.  You can then call any 
+XML::DOM methods on the document node and other nodes that its methods
+may return.  See L<XML::DOM> for full details.
+
+    [% FOREACH node = doc.getElementsByTagName('CODEBASE') %]
+       * [% node.getAttribute('href') %]
+    [% END %]
+
+This plugin also provides an AUTOLOAD method for XML::DOM::Node which 
+calls getAttribute() for any undefined methods.  Thus, you can use the 
+short form of 
+
+    [% node.attrib %]
+
+in place of
+
+    [% node.getAttribute('attrib') %]
+
+=head2 toTemplate()
+
+This method will process a template for the current node on which it is 
+called.  The template name is constructed from the node TagName with any
+optional 'prefix' and/or 'suffix' options applied.  A 'default' template 
+can be named to be used when the specific template cannot be found.  The 
+node object is available to the template as the 'node' variable.
+
+Thus, for this XML fragment:
+
+    <page title="Hello World!">
+       ...
+    </page>
+
+and this template definition:
+
+    [% BLOCK page %]
+    Page: [% node.title %]
+    [% END %]
+
+the output of calling toTemplate() on the E<lt>pageE<gt> node would be:
+
+    Page: Hello World!
+
+=head2 childrenToTemplate()
+
+Effectively calls toTemplate() for the current node and then for each of 
+the node's children.  By default, the parent template is processed first,
+followed by each of the children.  The 'children' closure can be called
+from within the parent template to have them processed and output 
+at that point.  This then suppresses the children from being processed
+after the parent template.
+
+Thus, for this XML fragment:
+
+    <foo>
+      <bar id="1"/>
+      <bar id="2"/>
+    </foo>
+
+and these template definitions:
+
+    [% BLOCK foo %]
+    start of foo
+    end of foo 
+    [% END %]
+
+    [% BLOCK bar %]
+    bar [% node.id %]
+    [% END %]
+
+the output of calling childrenToTemplate() on the parent E<lt>fooE<gt> node 
+would be:
+
+    start of foo
+    end of foo
+    bar 1
+    bar 2
+
+Adding a call to [% children %] in the 'foo' template:
+
+    [% BLOCK foo %]
+    start of foo
+    [% children %]
+    end of foo 
+    [% END %]
+
+then creates output as:
+
+    start of foo
+    bar 1 
+    bar 2
+    end of foo
+
+The 'children' closure can also be called as a method of the node, if you 
+prefer:
+
+    [% BLOCK foo %]
+    start of foo
+    [% node.children %]
+    end of foo 
+    [% END %]
+
+The 'prune' closure is also defined and can be called as [% prune %] or
+[% node.prune %].  It prunes the currrent node, preventing any descendants
+from being further processed.
+
+    [% BLOCK anynode %]
+    [% node.toString; node.prune %]
+    [% END %]
+
+=head2 allChildrenToTemplate()
+
+Similar to childrenToTemplate() but processing all descendants (i.e. children
+of children and so on) recursively.  This is identical to calling the 
+childrenToTemplate() method with the 'deep' flag set to any true value.
+
+=head1 AUTHORS
+
+This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>
+and Simon Matthews E<lt>sam@knowledgepool.comE<gt>.
+
+The XML::DOM module is by Enno Derksen E<lt>enno@att.comE<gt> and Clark 
+Cooper E<lt>coopercl@sch.ge.comE<gt>.  It extends the the XML::Parser 
+module, also by Clark Cooper which itself is built on James Clark's expat
+library.
+
+[* PROCESS misc/version *]
+
+=head1 HISTORY
+
+Version 2.5 : updated for use with version 1.27 of the XML::DOM module.
+
+=over 4
+
+=item *
+
+XML::DOM 1.27 now uses array references as the underlying data type
+for DOM nodes instead of hash array references.  User data is now
+bound to the _UserData node entry instead of being forced directly
+into the node hash.
+
+=back
+
+=head1 BUGS
+
+The childrenToTemplate() and allChildrenToTemplate() methods can easily
+slip into deep recursion.
+
+The 'verbose' and 'nospace' options are not documented.  They may 
+change in the near future.
+
+=head1 COPYRIGHT
+
+Copyright (C) 2000-2001 Andy Wardley, Simon Matthews.  All Rights Reserved.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+[* PROCESS misc/seealso
+    seealso=page.seealso *]
+

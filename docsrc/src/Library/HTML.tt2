@@ -1,0 +1,243 @@
+[% TAGS star %]
+=head1 DESCRIPTION
+
+B<NOTE:> This documentation is incomplete and may be incorrect
+in places. 
+
+The 'html' template library is distributed as part of the Template
+Toolkit.  It can be found in the 'templates' sub-directory of the
+installation directory.
+
+    use Template;
+
+    my $tt2 = Template->new({
+	INCLUDE_PATH => '/usr/local/tt2/templates',
+    });
+
+For a portable way to determine the installation 'templates' directory,
+you can use the C<Template::Config-E<gt>instdir()> class method.
+
+    use Template;
+
+    my $tt2 = Template->new({
+	INCLUDE_PATH => Template::Config->instdir('templates'),
+    });
+
+You should now be able to access the html library as, for example:
+
+    [% INCLUDE html/header %]
+
+Note that some of the more basic elements don't give you much more
+than the raw HTML tags.  In many cases you might be well advised to
+stick to regular HTML rather than complicating matters by the use
+of template elements.
+
+e.g.
+
+    <table>
+      . . .
+    </table>
+
+vs
+
+    [% WRAPPER html/table %]
+       . . .
+    [% END %]
+
+However, the use of template elements to generate the underlying HTML
+does have some important benefits, particularly as the constructs start
+to get more complicated and more magical.
+
+See the example in the 'examples' sub-directory of the distribution
+directory for further examples and enlightenment on using this library.
+
+=head2 Headers, Footers and Pages
+
+=over 4
+
+=item header
+
+The 'header' element generates the regular header required as the 
+pre-amble for an HTML document.  That is, everything from the initial
+E<lt>htmlE<gt> to the opening E<lt>bodyE<gt>.
+
+    [% INCLUDE html/header
+         title = 'This is a Test'
+	 bgcol = '#ffffff'
+    %]
+
+Additional header items can be provided by explicitly setting the 'headers'
+variable, e.g.
+
+    [% headers = BLOCK %]
+    <META name="description" content="Template Toolkit">
+    <META name="REVISIT-AFTER" content="14 days">	
+    <META name="keywords" content="Templates, Web, ...etc...">
+    [% END %]
+
+    [% INCLUDE html/header
+	 title = 'This is a Test'
+	 bgcol = '#ffffff'
+    %]
+
+=item footer
+
+The 'footer' element generates the terminating E<lt>/bodyE<gt> and
+E<lt>/htmlE<gt> element to balance the header.
+
+    [% PROCESS html/header %]
+
+    ...page content here...
+
+    [% PROCESS html/footer %]
+
+=item page
+
+The 'page' element combines the 'html/header' and 'html/footer' elements.
+
+    [% WRAPPER html/page %]
+
+    ...page content here...
+
+    [% END %]
+
+Page content should be defined in the 'content' variable (e.g. via WRAPPER).
+Additional HTML headers should be defined in the 'headers' variable.
+
+    [% WRAPPER html/page
+        headers = '<META name="keywords" content="foo, bar, ...">'
+    %]
+
+    ...page content here...
+
+    [% END %]
+
+=back
+
+=head2 Tables, Bars and Boxes
+
+=over 4
+
+=item table
+
+A basic element for creating HTML tables.
+
+    [% WRAPPER html/table pad=10 space=4 col='#404040' %]
+       <tr>
+	<td>Hello</td> <td>World</td>
+       </tr>
+    [% END %]
+
+The following variables may be defined:
+
+=over 4
+
+=item border
+
+Set the border width (default: 0)
+
+=item col
+
+Set the background colour (default: none).
+
+=item width
+
+Set a fixed table width.
+
+=item pad
+
+Set the cellpadding.
+
+=item space
+
+Set the cellspacing.
+
+=item content
+
+Content for the box.  Supplied automatically if used via WRAPPER.
+
+=back
+
+=item row
+
+A basic element for creating HTML table rows.
+
+    [% WRAPPER html/table %]
+       [% WRAPPER html/row %]
+	<td>Hello</td> <td>World</td>
+       [% END %]
+    [% END %]
+
+The following variables may be defined:
+
+=over 4
+
+=item col
+
+Set the background colour (default: none).
+
+=item valign
+
+Set the vertical alignment.
+
+=item rowspan
+
+Specify the number of rows to span.
+
+=item content
+
+Content for the box.  Supplied automatically if used via WRAPPER.
+
+=back
+
+=item cell
+
+A basic element for creating HTML table cells.
+
+    [% WRAPPER html/table %]
+       [% WRAPPER html/row %]
+	  [% INCLUDE html/cell 
+		FOREACH content = ['Hello', 'World'] %]
+       [% END %]
+    [% END %]
+
+The following variables may be defined:
+
+=over 4
+
+=item col
+
+Set the background colour (default: none).
+
+=item align
+
+Set the horizontal alignment.
+
+=item colspan
+
+Specify the number of columns to span.
+
+=item content
+
+Content for the cell.  Supplied automatically if used via WRAPPER.
+
+=back
+
+=item bar
+
+The bar element is a wrapping of html/table + html/row.
+
+    [% WRAPPER html/bar %]
+       <td>Foo</td>  <td>Bar</td>
+    [% END %]
+
+=item box
+
+The box element is a wrapping of html/table + html/row + html/cell
+
+    [% WRAPPER html/box %]
+       Hello World!
+    [% END %]
+
+=back
+

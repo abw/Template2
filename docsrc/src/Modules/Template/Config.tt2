@@ -1,0 +1,82 @@
+=head1 SYNOPSIS
+
+    use Template::Config;
+
+=head1 DESCRIPTION
+
+This module implements various methods for loading and instantiating
+other modules that comprise the Template Toolkit.  It provides a consistent
+way to create toolkit components and allows custom modules to be used in 
+place of the regular ones.
+
+Package variables such as $STASH, $SERVICE, $CONTEXT, etc., contain
+the default module/package name for each component (Template::Stash,
+Template::Service and Template::Context, respectively) and are used by
+the various factory methods (stash(), service() and context()) to load
+the appropriate module.  Changing these package variables will cause
+subsequent calls to the relevant factory method to load and instantiate
+an object from the new class.
+
+=head1 PUBLIC METHODS
+
+=head2 load($module)
+
+Load a module via require().  Any occurences of '::' in the module name
+are be converted to '/' and '.pm' is appended.  Returns 1 on success
+or undef on error.  Use $class-E<gt>error() to examine the error string.
+
+=head2 parser(\%config)
+
+Instantiate a new parser object of the class whose name is denoted by
+the package variable $PARSER (default: Template::Parser).  Returns
+a reference to a newly instantiated parser object or undef on error.
+
+=head2 provider(\%config)
+
+Instantiate a new template provider object (default: Template::Provider).
+Returns an object reference or undef on error, as above.
+
+=head2 plugins(\%config)
+
+Instantiate a new plugins provider object (default: Template::Plugins).
+Returns an object reference or undef on error, as above.
+
+=head2 filters(\%config)
+
+Instantiate a new filter provider object (default: Template::Filters).
+Returns an object reference or undef on error, as above.
+
+=head2 stash(\%vars)
+
+Instantiate a new stash object (default: Template::Templates) using the 
+contents of the optional hash array passed by parameter as initial variable
+definitions.  Returns an object reference or undef on error, as above.
+
+=head2 context(\%config)
+
+Instantiate a new template context object (default: Template::Context).
+Returns an object reference or undef on error, as above.
+
+=head2 service(\%config)
+
+Instantiate a new template service object (default: Template::Service).
+Returns an object reference or undef on error, as above.
+
+=head2 instdir($dir)
+
+Returns the root directory of the Template Toolkit installation under
+which optional components are installed.  Any relative directory specified
+as an argument will be appended to the returned directory.
+
+    # e.g. returns '/usr/local/tt2'
+    my $ttroot = Template::Config->instdir()
+	|| die "$Template::Config::ERROR\n";
+
+    # e.g. returns '/usr/local/tt2/templates'
+    my $template = Template::Config->instdir('templates')
+	|| die "$Template::Config::ERROR\n";
+
+Returns undef and sets $Template::Config::ERROR appropriately if the 
+optional components of the Template Toolkit have not been installed.
+
+

@@ -1,0 +1,81 @@
+[% TAGS [* *] -%]
+
+=head1 SYNOPSIS
+
+    use Template::Filters;
+
+    $filters = Template::Filters->new(\%config);
+
+    ($filter, $error) = $filters->fetch($name, \@args, $context);
+
+=head1 DESCRIPTION
+
+The Template::Plugins module implements a provider for creating and/or
+returning subroutines that implement the standard filters.  Additional 
+custom filters may be provided via the FILTERS options.
+
+=head1 METHODS
+
+=head2 new(\%params) 
+
+Constructor method which instantiates and returns a reference to a
+Template::Filters object.  A reference to a hash array of configuration
+items may be passed as a parameter.  These are described below.  
+
+    my $filters = Template::Filters->new({
+	FILTERS => { ... },
+    });
+
+    my $template = Template->new({
+	LOAD_FILTERS => [ $filters ],
+    });
+
+A default Template::Filters module is created by the Template.pm module
+if the LOAD_FILTERS option isn't specified.  All configuration parameters
+are forwarded to the constructor.
+
+    $template = Template->new({
+        FILTERS => { ... },
+    });
+
+=head2 fetch($name, \@args, $context)
+
+Called to request that a filter of a given name be provided.  The name
+of the filter should be specified as the first parameter.  This should
+be one of the standard filters or one specified in the FILTERS
+configuration hash.  The second argument should be a reference to an
+array containing configuration parameters for the filter.  This may be
+specified as 0, or undef where no parameters are provided.  The third
+argument should be a reference to the current Template::Context
+object.
+
+The method returns a reference to a filter sub-routine on success.  It
+may also return (undef, STATUS_DECLINE) to decline the request, to allow
+delegation onto other filter providers in the LOAD_FILTERS chain of 
+responsibility.  On error, ($error, STATUS_ERROR) is returned where $error
+is an error message or Template::Exception object indicating the error
+that occurred. 
+
+When the TOLERANT option is set, errors are automatically downgraded to
+a STATUS_DECLINE response.
+
+
+=head1 CONFIGURATION OPTIONS
+
+The following list details the configuration options that can be provided
+to the Template::Filters new() constructor.
+
+=over 4
+
+[* obj = '$filters', pkg = 'Template::Filters' *]
+[* PROCESS option/filters *]
+
+[* PROCESS option/tolerant *]
+
+=back
+
+=head1 TEMPLATE TOOLKIT FILTERS
+
+The following standard filters are distributed with the Template Toolkit.
+
+[* PROCESS misc/filters *]

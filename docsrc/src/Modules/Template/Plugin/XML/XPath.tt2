@@ -1,0 +1,40 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    # load plugin and specify XML file to parse
+    [% USE xpath = XML.XPath(xmlfile) %]
+    [% USE xpath = XML.XPath(file => xmlfile) %]
+    [% USE xpath = XML.XPath(filename => xmlfile) %]
+
+    # load plugin and specify XML text to parse
+    [% USE xpath = XML.XPath(xmltext) %]
+    [% USE xpath = XML.XPath(xml => xmltext) %]
+    [% USE xpath = XML.XPath(text => xmltext) %]
+
+    # then call any XPath methods (see XML::XPath docs)
+    [% FOREACH page = xpath.findnodes('/html/body/page') %]
+       [% page.getAttribute('title') %]
+    [% END %]
+
+=head1 PRE-REQUISITES
+
+This plugin requires that the XML::Parser and XML::XPath modules be 
+installed.  These are available from CPAN:
+
+    http://www.cpan.org/modules/by-module/XML
+
+=head1 DESCRIPTION
+
+This is a Template Toolkit plugin interfacing to the XML::XPath module.
+
+=head1 AUTHORS
+
+This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>.
+
+The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
+
+[* PROCESS misc/version
+         + misc/copyright
+	 + misc/seealso
+       seealso=page.seealso
+*]

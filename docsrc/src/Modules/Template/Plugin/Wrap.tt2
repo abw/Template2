@@ -1,0 +1,73 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    [% USE wrap %]
+
+    # call wrap subroutine
+    [% wrap(mytext, width, initial_tab,  subsequent_tab) %]
+
+    # or use wrap FILTER
+    [% mytext FILTER wrap(width, initital_tab, subsequent_tab) %]
+
+=head1 DESCRIPTION
+
+This plugin provides an interface to the Text::Wrap module which 
+provides simple paragraph formatting.
+
+It defines a 'wrap' subroutine which can be called, passing the input
+text and further optional parameters to specify the page width (default:
+72), and tab characters for the first and subsequent lines (no defaults).
+
+    [% USE wrap %]
+
+    [% text = BLOCK %]
+    First, attach the transmutex multiplier to the cross-wired 
+    quantum homogeniser.
+    [% END %]
+
+    [% wrap(text, 40, '* ', '  ') %]
+
+Output:
+
+    * First, attach the transmutex
+      multiplier to the cross-wired quantum
+      homogeniser.
+
+It also registers a 'wrap' filter which accepts the same three optional 
+arguments but takes the input text directly via the filter input.
+
+    [% FILTER bullet = wrap(40, '* ', '  ') -%]
+    First, attach the transmutex multiplier to the cross-wired quantum
+    homogeniser.
+    [%- END %]
+
+    [% FILTER bullet -%]
+    Then remodulate the shield to match the harmonic frequency, taking 
+    care to correct the phase difference.
+    [% END %]
+
+Output:
+
+    * First, attach the transmutex
+      multiplier to the cross-wired quantum
+      homogeniser.
+
+    * Then remodulate the shield to match
+      the harmonic frequency, taking 
+      care to correct the phase difference.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+The Text::Wrap module was written by David Muir Sharnoff
+E<lt>muir@idiom.comE<gt> with help from Tim Pierce and many
+others.
+
+[* PROCESS misc/version 
+	 + misc/copyright
+	 + misc/seealso
+       seealso=page.seealso 
+*]
+
+

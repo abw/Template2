@@ -1,0 +1,216 @@
+[% TAGS star -%]
+=head1 SYNOPSIS
+
+    # use positional arguments...
+    [% USE DBI('dbi:driver:database', 'username', 'password') %]
+
+    # ...or named parameters...
+    [% USE DBI(data_source = 'dbi:driver:database',
+               username    = 'username', 
+               password    = 'password') %]
+
+    # ...or call connect() explicitly
+    [% USE DBI %]
+    [% DBI.connect(dsn, user, pass) %]
+
+    [% FOREACH item = DBI.query( 'SELECT rows FROM table' ) %]
+       Here's some row data: [% item.field %]
+    [% END %]
+
+    [% query = DBI.prepare('SELECT * FROM user WHERE manager = ?') %]
+    [% FOREACH user = query.execute('sam') %]
+       ...
+    [% FOREACH user = query.execute('abw') %]
+       ...
+
+    [% IF DBI.do("DELETE FROM users WHERE uid = 'sam'") %]
+       Oh No!  The user was deleted!
+    [% END %]
+
+=head1 DESCRIPTION
+
+This Template Toolkit plugin module provides an interface to the Perl
+DBI/DBD modules, allowing you to integrate SQL queries into your template
+documents.
+
+A DBI plugin object can be created as follows:
+
+    [% USE DBI %]
+
+This creates an uninitialised DBI object.  You can then open a connection
+to a database using the connect() method.
+
+    [% DBI.connect('dbi:driver:database', 'username', 'password') %]
+
+The DBI connection can be opened when the plugin is created by passing
+arguments to the constructor, called from the USE directive.
+
+    [% USE DBI('dbi:driver:database', 'username', 'password') %]
+
+You can also use named parameters to provide the data source connection 
+string, user name and password.
+
+    [% USE DBI(data_source => 'dbi:driver:database',
+               username    => 'username',
+               password    => 'password')  %]
+
+Lazy Template hackers may prefer to use 'dsn' or 'connect' as a shorthand
+form of the 'data_source' parameter, and 'user' and 'pass' as shorthand
+forms of 'username' and 'password', respectively.
+
+    [% USE DBI(connect => 'dbi:driver:database',
+               user    => 'username',
+               pass    => 'password')  %]
+
+Any additional DBI attributes can be specified as named parameters.
+The 'PrintError' attribute defaults to 0 unless explicitly set true.
+
+    [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
+
+Methods can then be called on the plugin object using the familiar dotted
+notation:
+
+    [% FOREACH item = DBI.query( 'SELECT rows FROM table' ) %]
+       Here's some row data: [% item.field %]
+    [% END %]
+
+See L<OBJECT METHODS> below for further details of the methods available.
+
+An alternate variable name can be provided for the plugin as per regular
+Template Toolkit syntax:
+
+    [% USE mydb = DBI('dbi:driver:database','username','password') %]
+
+    [% FOREACH item = mydb.query( 'SELECT rows FROM table' ) %]
+       ...
+
+You can also specify the DBI plugin name in lower case if you prefer:
+
+    [% USE dbi(dsn, user, pass) %]
+    [% FOREACH item = dbi.query( 'SELECT rows FROM table' ) %]
+       ...
+
+The disconnect() method can be called to explicitly disconnect the
+current database, but this generally shouldn't be necessary as it is
+called automatically when the plugin goes out of scope.  You can call
+connect() at any time to open a connection to another database.  The
+previous connection will be closed automatically.
+
+=head1 OBJECT METHODS
+
+=head2 connect($data_source, $username, $password)
+
+Establishes a database connection.  This method accepts both positional 
+and named parameter syntax.  e.g. 
+
+    [% DBI.connect(data_source, username, password) %]
+    [% DBI.connect(data_source = 'dbi:driver:database'
+                   username    = 'foo' 
+                   password    = 'bar' ) %]
+
+The connect method allows you to connect to a data source explicitly.
+It can also be used to reconnect an exisiting object to a different
+data source.
+
+=head2 query($sql)
+
+This method submits an SQL query to the database and creates an iterator 
+object to return the results.  This may be used directly in a FOREACH 
+directive as shown below.  Data is automatically fetched a row at a time
+from the query result set as required for memory efficiency.
+
+    [% FOREACH row = DBI.query('select * from users') %]
+       Each [% row.whatever %] can be processed here
+    [% END %]
+
+=head2 prepare($sql)
+
+Prepare a query for later execution.  This returns a compiled query
+object (of the Template::Plugin::DBI::Query class) on which the
+execute() method can subsequently be called.
+
+    [% query = DBI.prepare('SELECT * FROM users WHERE id = ?') %]
+
+=head2 execute(@args)
+
+Execute a previously prepared query.  This method should be called on
+the query object returned by the prepare() method.  Returns an
+iterator object which can be used directly in a FOREACH directive.
+
+    [% query = DBI.prepare('SELECT * FROM users WHERE manager = ?') %]
+
+    [% FOREACH user = query.execute('sam') %]
+       [% user.name %]
+    [% END %]
+
+    [% FOREACH user = query.execute('sam') %]
+       [% user.name %]
+    [% END %]
+
+=head2 do($sql)
+
+The do() method executes a sql statement from which no records are
+returned.  It will return true if the statement was successful
+
+    [% IF DBI.do("DELETE FROM users WHERE uid = 'sam'") %]
+       The user was successfully deleted.
+    [% END %]
+
+=head2 quote($value, $type)
+
+Calls the quote() method on the underlying DBI handle to quote the value
+specified in the appropriate manner for its type.
+
+=head2 disconnect()
+
+Disconnects the current database.
+
+=head1 PRE-REQUISITES
+
+Perl 5.005, Template-Toolkit 2.00, DBI 1.02
+
+=head1 AUTHORS
+
+The DBI plugin was written by Simon A Matthews,
+E<lt>sam@knowledgepool.comE<gt>, with contributions from Andy Wardley
+E<lt>abw@kfs.orgE<gt>.
+
+=head1 HISTORY
+
+=over 4
+
+=item 1.01  2000/11/03  abw
+
+Modified connect method to pass all named arguments to DBI.  e.g.
+
+    [% USE DBI(dsn, user, pass, ChopBlanks=1) %]
+
+=item 1.02  2000/11/14  abw
+
+Added prev() and next() methods to Template::Plugin::DBI:Iterator to
+return the previous and next items in the iteration set or undef if
+not available.
+
+=item 1.03  2000/11/31  sam
+
+Added _connect method to Plugin::DBI for backwards compatability with code 
+from version 1 of Template that subclassed the plugin
+
+Changed the new method on the DBI plugin so that it checks to see if it is
+being called by a subclassed object.  
+
+Fixed the return value in the DBI plugin when connect is called more than
+once in the lifetime of the plugin.
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright (C) 1999-2000 Simon Matthews.  All Rights Reserved
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+[* PROCESS misc/seealso
+    seealso=page.seealso *]
+
