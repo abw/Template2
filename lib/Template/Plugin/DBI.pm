@@ -622,6 +622,13 @@ The DBI plugin was written by Simon A Matthews,
 E<lt>sam@knowledgepool.comE<gt>, with contributions from Andy Wardley
 E<lt>abw@kfs.orgE<gt>.
 
+=head1 VERSION
+
+1.04, distributed as part of the
+Template Toolkit version 2.02, released on 06 April 2001.
+
+
+
 =head1 HISTORY
 
 =over 4

@@ -21,6 +21,12 @@ use Template::Test;
 use Template::Plugin::File;
 $^W = 1;
 
+if ($^O =~ /win/i) {
+    print "1..0\n";
+    exit(0);
+}
+
+#
 my $dir  = -d 't' ? 't/test' : 'test';
 my $file = "$dir/src/foo";
 my @stat;

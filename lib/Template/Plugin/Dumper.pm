@@ -159,10 +159,10 @@ Simon Matthews E<lt>sam@knowledgepool.comE<gt>
 
 =head1 VERSION
 
-0.00, distributed as part of the
+2.06, distributed as part of the
 Template Toolkit version 2.02, released on 06 April 2001.
 
- 
+
 
 =head1 COPYRIGHT
 
