@@ -25,6 +25,8 @@ use Template::Document;
 $^W = 1;
 $Template::Test::DEBUG = 0;
 $Template::Document::DEBUG = 0;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 my $DEBUG = 0;
 
 
@@ -104,6 +106,22 @@ title: [% template.title or title %]
 [% INCLUDE header %]
 -- expect --
 title: My Template Title
+
+-- test --
+[% BLOCK header -%]
+HEADER
+component title: [% component.name %]
+ template title: [% template.name %]
+[% END -%]
+component title: [% component.name %]
+ template title: [% template.name %]
+[% PROCESS header %]
+-- expect --
+component title: input text
+ template title: input text
+HEADER
+component title: header
+ template title: input text
 
 -- test --
 [% META title = 'My Template Title' -%]

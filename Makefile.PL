@@ -5,10 +5,13 @@ $| = 1;
 select STDOUT;
 
 warn(<<EOF);
-    Template Toolkit Version 2.00 beta 3
+
+    Template Toolkit Version 2.00 beta 4
     ------------------------------------
 
-    This is stable beta code.  Please read the README and Changes files.
+    This is stable beta code and a release candidate for Version 2.00 
+    proper.  Please read the README file and consult the Changes and 
+    TODO files for further information.
 
 EOF
 
@@ -24,24 +27,19 @@ unless ($@) {
     If you install these modules you will totally screw up your
     Version $Template::VERSION installation.  If you're ready to take
     the plunge and aren't relying too heavily on any of the "features"
-    that have changed from version 1.xx to 2.xx (see Changes file),
-    then go ahead.  Be bold.  See the Changes file for a summary of
-    all the great new things for you to play with, and the issues that
-    you might need to attend to.
+    that have changed from version 1.xx to 2.xx then go ahead, be
+    bold.  The Changes file contains details of visible changes from
+    versions 1.xx and 2.xx beta releases and highlights some issues
+    that you you might need to attend to.  The TODO file contains
+    details of the (very few) known bugs, problems, limitations, etc.
 
-    You might then decide to re-install Version $Template::VERSION to a different
-    location in case you ever need it, e.g.
+    If you want to install the Template Toolkit to an alternate 
+    directory when you can do it like this:
 
         perl Makefile.PL PREFIX=/some/where/else
 
     Remember to add "use lib '/some/where/else'" to your Perl scripts
-    that want to use Version 1.07, and also to the V1 'tpage' and
-    'ttree' scripts (in /some/where/else/bin) so that they continue to
-    use the right versions of the modules.
-
-    Alternatively, you can install this Version 2.00 beta to a
-    different location and follow the strategy outlined above, or not
-    "make install" it at all.
+    so that they can find and load the relevant modules.
 
 EOF
 }

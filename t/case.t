@@ -29,17 +29,12 @@ my $ttdef = Template->new({
     POST_CHOMP => 1,
 });
 
-my $ttcaseon = Template->new({ 
-    CASE => 1, 
+my $ttanycase = Template->new({ 
+    ANYCASE => 1, 
     POST_CHOMP => 1,
 });
 
-my $ttcaseoff = Template->new({ 
-    CASE => 0, 
-    POST_CHOMP => 1,
-});
-
-my $tts = [ default => $ttdef, caseon => $ttcaseon, caseoff => $ttcaseoff ];
+my $tts = [ default => $ttdef, anycase => $ttanycase ];
 
 test_expect(\*DATA, $tts, callsign());
 
@@ -80,18 +75,15 @@ good
 alpha
 
 -- test --
--- use caseon --
-[% include = 10 %]
-include: [% include %]
--- expect --
-include: 10
-
--- test --
--- use caseoff --
+-- use anycase --
 [% include foo bar='baz' %]
 [% BLOCK foo %]this is foo, bar = [% bar %][% END %]
 -- expect --
 this is foo, bar = baz
 
-
-
+-- test --
+[% 10 div 3 %] [% 10 DIV 3 +%]
+[% 10 mod 3 %] [% 10 MOD 3 %]
+-- expect --
+3 3
+1 1

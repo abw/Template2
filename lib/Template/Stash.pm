@@ -486,7 +486,7 @@ sub _assign {
 	unless $root and defined $item and $item !~ /^[\._]/;
     
     if ($rootref eq 'HASH' || $rootref eq __PACKAGE__) {
-#	if ($item eq 'import' && UNIVERSAL::isa($value, 'HASH')) {
+#	if ($item eq 'IMPORT' && UNIVERSAL::isa($value, 'HASH')) {
 #	    # import hash entries into root hash
 #	    @$root{ keys %$value } = values %$value;
 #	    return '';						## RETURN

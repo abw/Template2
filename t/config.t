@@ -66,7 +66,7 @@ ok( $provider->{ PARSER }->{ POST_CHOMP } == 1);
 
 $provider = $factory->provider({ 
     INCLUDE_PATH => 'cat:mat', 
-    CASE         => 1,
+    ANYCASE      => 1,
     INTERPOLATE  => 1
 }) || print STDERR $factory->error(), "\n";
 
@@ -77,7 +77,7 @@ ok( join('...', @{ $provider->{ INCLUDE_PATH } }) eq 'cat...mat' );
 # parameters.
 my $text = 'The cat sat on the mat';
 ok( $provider->fetch(\$text) );
-ok( $provider->{ PARSER }->{ CASE        } == 1);
+ok( $provider->{ PARSER }->{ ANYCASE     } == 1);
 ok( $provider->{ PARSER }->{ INTERPOLATE } == 1);
 
 

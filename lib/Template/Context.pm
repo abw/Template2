@@ -205,6 +205,7 @@ sub filter {
 sub process {
     my ($self, $template, $params) = @_;
     my ($blocks, $output);
+    my $name = $template;
 
     # request compiled template from cache 
     $template = $self->template($template)
@@ -219,7 +220,9 @@ sub process {
 
     # update stash with any new parameters passed
     $params ||= { };
-    $params->{ component } = $template;
+    $params->{ component } = ref $template eq 'CODE' 
+	? { ref $name ? () : (name => $name, modtime => time()) }
+        : $template;
     $self->{ STASH }->update($params);
 #	if $params;
     
@@ -262,6 +265,7 @@ sub include {
     my ($self, $template, $params) = @_;
     my ($error, $blocks);
     my $output = '';
+    my $name = $template;
 
     # request compiled template from cache 
     $template = $self->template($template)
@@ -270,7 +274,9 @@ sub include {
 
     # localise the variable stash with any parameters passed
     $params ||= { };
-    $params->{ component } = $template;
+    $params->{ component } = ref $template eq 'CODE' 
+	? { ref $name ? () : (name => $name, modtime => time()) }
+        : $template;
     $self->{ STASH } = $self->{ STASH }->clone($params);
 
     eval {

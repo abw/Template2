@@ -22,8 +22,8 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
-$Template::Parser::DEBUG = 1;
-$Template::Directive::PRETTY = 1;
+#$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 ok(1);
 

@@ -370,7 +370,9 @@ sub foreach {
     }
     else {
 	$loop_save    = '$stash = $context->localise()';
-	$loop_set     = "\$stash->set('IMPORT', \$value) "
+#	$loop_set     = "\$stash->set('import', \$value) "
+#	                . "if ref \$value eq 'HASH'";
+	$loop_set     = "\$stash->get(['import', [\$value]]) "
 	                . "if ref \$value eq 'HASH'";
 	$loop_restore = '$stash = $context->delocalise()';
     }

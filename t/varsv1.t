@@ -81,7 +81,17 @@ my $params = {
     # don't define a 'z' - DEFAULT test relies on its non-existance
 };
 
-test_expect(\*DATA, { INTERPOLATE => 1, V1DOLLAR => 1 }, $params);
+my $tt = [ default => Template->new({ 
+	       INTERPOLATE => 1, 
+	       ANYCASE     => 1,
+	       V1DOLLAR    => 1,
+	   }),
+	   notcase => Template->new({ 
+	       INTERPOLATE => 1, 
+	       V1DOLLAR    => 0,
+	   }) ];
+
+test_expect(\*DATA, $tt, $params);
 
 #------------------------------------------------------------------------
 # subs 
@@ -256,6 +266,7 @@ Now it looks as though they're here to stay.
 Oh I believe in yesterday.
 
 -- test --
+-- use notcase --
 [% day.next %]
 $day.next
 -- expect --
@@ -268,6 +279,7 @@ Tuesday
 Wednesday Thursday Friday Saturday Sunday 
 
 -- test --
+-- use default --
 before
 [% halt %]
 after

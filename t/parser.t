@@ -32,6 +32,7 @@ $^W = 1;
 my $p2 = Template::Parser->new({
     START_TAG => '\[\*',
     END_TAG   => '\*\]',
+    ANYCASE   => 1,
     PRE_CHOMP => 1,
     V1DOLLAR  => 1,
 });
@@ -39,15 +40,16 @@ my $p2 = Template::Parser->new({
 my $p3 = Template::Config->parser({
     TAG_STYLE  => 'html',
     POST_CHOMP => 1,
+    ANYCASE    => 1,
     INTERPOLATE => 1,
 });
 
 my $p4 = Template::Config->parser({
-    CASE => 1,
+    ANYCASE => 0,
 });
 
 my $tt = [
-    tt1 => Template->new(),
+    tt1 => Template->new(ANYCASE => 1),
     tt2 => Template->new(PARSER => $p2),
     tt3 => Template->new(PARSER => $p3),
     tt4 => Template->new(PARSER => $p4),

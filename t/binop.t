@@ -319,5 +319,9 @@ maxi: 54
 mega: 106
 
 -- test --
-fail
+[% 10 mod 4 +%] [% 10 MOD 4 +%]
+[% 10 div 3 %] [% 10 DIV 3 %]
 -- expect --
+2 2
+3 3
+

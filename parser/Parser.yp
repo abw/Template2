@@ -46,6 +46,8 @@
 %left CMPOP
 %left BINOP
 %left '/'
+%left DIV
+%left MOD
 %left TO 
 %%
 
@@ -107,13 +109,12 @@ atomdir:    GET expr		    { $factory->get($_[2])                }
 	|   INSERT nameargs         { $factory->insert($_[2])             }
 	|   INCLUDE nameargs	    { $factory->include($_[2])            }
 	|   PROCESS nameargs	    { $factory->process($_[2])            }
-#	|   PLUGIN nameargs	    { $factory->plugin($_[2])             }
 	|   THROW nameargs          { $factory->throw($_[2])              }
 	|   RETURN		    { $factory->return()                  }
 	|   STOP		    { $factory->stop()                    }
 	|   CLEAR                   { "\$output = '';";                   }
 	|   BREAK                   { 'last;'                             }
-	|   FORNEXT		    { $_[0]->{ INFOR }
+	|   NEXT		    { $_[0]->{ INFOR }
 					? $factory->next()
 				        : 'next;'                         }
         |   wrapper
@@ -306,6 +307,8 @@ item:	    IDENT		    { "'$_[1]'"                           }
 
 expr:	    expr BINOP expr	    { "$_[1] $_[2] $_[3]"                 }
 	|   expr '/' expr	    { "$_[1] $_[2] $_[3]"                 }
+	|   expr DIV expr	    { "int($_[1] / $_[3])"                }
+	|   expr MOD expr	    { "$_[1] % $_[3]"                     }
 	|   expr CMPOP expr	    { "$_[1] $CMPOP{ $_[2] } $_[3]"       }
 	|   expr AND expr	    { "($_[1]) && ($_[3])"                }
 	|   expr OR expr	    { "($_[1]) || ($_[3])"                }

@@ -43,7 +43,6 @@ lib/Template/Plugins.pm
 lib/Template/Plugins.pod
 lib/Template/Provider.pm
 lib/Template/Provider.pod
-lib/Template/README
 lib/Template/Service.pm
 lib/Template/Service.pod
 lib/Template/Stash.pm

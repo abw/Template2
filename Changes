@@ -17,25 +17,16 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.00 beta 4  
+# Version 2.00 beta 4  12th September 2000
 #------------------------------------------------------------------------
 
-* Added the PROCESS option which allows a template or templates to be
-  specified which is/are processed instead of the template passed as
-  an argument to the Template process() method.  The original template
-  is available as the 'template' variable and can be processed by
-  calling INCLUDE or PROCESS as [% INCLUDE $template %].
+* Added the PROCESS config option which allows a template or templates
+  to be specified which is/are processed instead of the template
+  passed as an argument to the Template process() method.  The
+  original template is available as the 'template' variable and can be
+  processed by calling INCLUDE or PROCESS as [% INCLUDE $template %].
 
-* Added the reference operator, '\' which allows a "reference" to 
-  another variable to be taken.  The implementation creates a closure
-  around the referenced variable which, when called, will return the 
-  actual variable value.  It is really a form of lazy evaluation, rather
-  than genuine reference taking, but it looks and smells almost the same.
-  Primarily, it is useful for allowing sub-routine references to be 
-  passed to another sub-routine.  See t/refs.t for examples until 
-  documentation arrives.
-
-* Changed what was the CASE option to now be enabled by default and
+* Changed what was the CASE option to now be enabled by default, and
   then changed the name of the option to ANYCASE to make it more
   obvious as to what it did.  You must now specify directive keywords
   (INCLUDE, FOREACH, IF, etc) in UPPER CASE only, or enable the
@@ -60,8 +51,8 @@
       [% END %]			   $output;
                                 [% END %]
 
-* The IMPORT directive and magical IMPORT variable have been removed 
-  and replaced with a general purpose virtual hash method, import().
+* The IMPORT directive and magical IMPORT variable have been replaced 
+  with a general purpose virtual hash method, import().
 
     [% hash1.import(hash2) %]   # was "hash1.IMPORT = hash2"
     [% import(hash1) %]	        # was "IMPORT hash1" or "IMPORT = hash1"
@@ -79,6 +70,12 @@
     [% data.sort.join(', ')  %]     # 1, 10, 11, 5
     [% data.nsort.join(', ') %]     # 1, 5, 10, 11  
 
+* Added 'div' operator to provider integer division (e.g. 'a div b' =>
+  'int(a / b)' and 'mod' which is identical to '%' but added for backwards
+  compatibility with V1.
+
+* Changed the (undocumented) FORNEXT directive to NEXT and documented it.
+
 * Fixed a bug in the persistant caching mechanism in Template::Provider
   which was failing to write compiled template files for source templates
   specifed in the form [% INCLUDE foo/bar %].  Intermediate directories 
@@ -92,11 +89,28 @@
   exceptions to be raised.  Thanks to Jonas Liljegren for reporting the 
   problems.
 
+* Added the reference operator, '\' which allows a "reference" to 
+  another variable to be taken.  The implementation creates a closure
+  around the referenced variable which, when called, will return the 
+  actual variable value.  It is really a form of lazy evaluation, rather
+  than genuine reference taking, but it looks and smells almost the same.
+  Primarily, it is useful for allowing sub-routine references to be 
+  passed to another sub-routine.  This is currently undocumented 
+  because I'm not sure about the validity of adding it, but See t/refs.t 
+  for examples for now.
+
 * Changed parser to automatically unescape any escaped characters in 
   double quoted strings except for \n and \$.  This permits strings to
   be constructed that include tag characters.  e.g.
 
     [% directive = "[\% INSERT thing %\]" %]
+
+* Fixed a bug in the use of the 'component' variable when the current
+  component is a sub-routine rather than a Template::Document.
+
+* Added the '--define var=val' option to tpage to allow template 
+  variables to be defined from the command line.  Added support to
+  ttree for various new Template configuration options.
 
 * Added $Template::Test::PRESERVE package variable which can be set to 
   prevent newlines in test output from being automatically mangled to

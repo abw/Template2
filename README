@@ -1,66 +1,44 @@
 
-              Template Toolkit Version 2.00 Beta Release 3
+             Template Toolkit Version 2.00 Beta Release 4
 
-                              10-August-2000
+                         12th September 2000
 
 
-              ** IMPORTANT WARNING FOR VERSION 1.xx USERS ** 
+This is the fourth (and almost certainly, final) beta release of
+Version 2.00 of the Perl Template Toolkit.  It is fully-featured,
+reliable and all known bugs have been fixed (but see the TODO list for
+a few outstanding issues and minor "features").  The Changes file
+details changes from the last beta release, and versions before that.
+It also includes the major changes from Version 1.xx to 2.00.
 
-    If you install these modules you will totally screw up your
-    existing version 1.* installation (if you have one, that is).  If
-    you're ready to take the plunge and aren't relying too heavily on
-    any of the "features" that have changed from version 1.xx to 2.xx
-    (see Changes file), then go ahead.  Be bold.  See the Changes file
-    for a summary of all the great new things for you to play with,
-    and the issues that you might need to attend to.
+Installation is as you might expect:
 
-    You might then decide to re-install Version 1.07 to a different
-    location in case you ever need it, e.g.
+    perl Makefile.PL
+    make
+    make test
+    make install
 
-        perl Makefile.PL PREFIX=/some/where/else
+If you have version 1.xx installed then be warned that version 2.00
+will render it totally useless.  This probably isn't an issue unless
+you're relying heavily on any of the more obscure "features" that have
+changed from version 1.xx to 2.00 (see Changes file).
 
-    Remember to add "use lib '/some/where/else'" to your Perl scripts
-    that want to use Version 1.07, and also to the V1 'tpage' and
-    'ttree' scripts (in /some/where/else/bin) so that they continue to
-    use the right versions of the modules.
+You can specify the PREFIX option to install the Template Toolkit to a
+different location if you want to preserve an existing installation
+(see ExtUtils::MakeMaker).  Or preferably, install version 2.00 as per
+usual and then go back and install version 1.07 to an alternate
+location, thus ensuring that version 2.00 is the default.
 
-    Alternatively, you can install this Version 2.00 beta to a
-    different location and follow the strategy outlined above, or not
-    "make install" it at all.
+    perl Makefile.PL PREFIX=/some/where/else
+    make, etc.
 
-                     ** END OF IMPORTANT WARNING ** 
+The documentation is now complete in all its 100+ page glory.  
 
-Hello World
------------
+    perldoc Template
 
-This is the third (and possibly final) beta release of Version 2.00 of
-the Perl Template Toolkit.  It is fully-featured, reliable and all
-known bugs have been fixed (but see the TODO list for a few
-outstanding issues and minor "features").  The Changes file details
-changes from the last beta release, and versions before that.  It also
-includes the major changes from Version 1.xx to 2.00.
+Any errors, inaccuracies or omissions are bugs and should be reported
+to the overworked and underpaid author who really needs to take a
+vacation.  8-)
 
-The API is now frozen for Version 2.00.  The final remaining effort
-was to improve the filters interface and this is now up to scratch with
-the rest of the toolkit and suitable for release.
-
-Most, if not all of the individual modules are fully documented and 
-reasonably accurate and complete.  I need to do one final sweep to 
-tidy up some loose ends, but on the whole they're pretty much there.
-
-The main Template.pod document is complete or very nearly complete in 
-all the important areas.  Configuration options are fully documented
-and all but a few of the directives are documented, although with a 
-handful of TODO's littered around marking sections that are incomplete
-or in need of work.  We're still missing a general overview and possibly 
-a few other meta-sections.  The documentation should probably be broken
-up into smaller sections and converted to HTML for those that want it
-that way.  That may happen before, or possibly after the release of 
-Version 2.00
-
-Enjoy!
+Enjoy
 A
-
-
-
-

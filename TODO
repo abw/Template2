@@ -1,35 +1,53 @@
 #------------------------------------------------------------------------
-# KNOWN BUGS AND/OR LIMITATIONS
+# PENDING TODO ITEMS
 #------------------------------------------------------------------------
 
-* Template::Hacking / Template::Internals, etc.
+* URL plugin may be incorrect in not escaping certain characters such as 
+  '&'.  
 
-* TPC4 paper
+* XML::Simple plugin (I wrote this once already but my laptop died and 
+  took it with it).  An XML::XPath plugin would also be nice.  Both are
+  trivial, although XML::Simple should use a singleton parser object, 
+  instantiated via load() which can then cache parsed documents if 
+  required.  new() would then be used to parse a file/text and return 
+  the data tree.  There may be cleanup issues.  Haven't looked at writing
+  an XML::XPath plugin yet, but it should be reasonably similar.
 
-* NEXT
+* XML::DOM plugin may leak memory due to it not properly cleaning up
+  the data model which has massively circular references.  Simon
+  Matthews <sam@knowledgepool.com> has fixed this problem and also
+  added a wonderfully powerful to_template() method.  Will integrate
+  his changes before V2 proper.
 
-* XML::Simple plugin
+* DBI plugin, also by Simon Matthews, will be distributed with V2.  
+  Makefile.PL will need some hacking to incorporate DBI testing options.
 
-* test IMPORT and import options
+* Document the TT internals and describe how, where and why to hack on
+  them.
 
-* fix div (integer division) and mod
+* The documentation should be broken up into smaller chunks (or 
+  published as a book!).  An HTML/XML version will also be forthcoming.
+
+#------------------------------------------------------------------------
+# KNOWN BUGS AND/OR LIMITATIONS
+#------------------------------------------------------------------------
 
 * empty hashes can cause a harmless, but possibly annoying parser error.
 
 * Template process($file) method returns a string if the named
   template ($file) can't be found, rather than an exception.  This
-  should be changed so that an exception is returned whatever?
-
-* It's currently not possible to catch a 'perl' exception because 'PERL'
-  is a reserved word.  You need to enable the CASE option to be able to 
-  make a distinction between them.  THROW and CATCH should accept quoted
-  exception names to prevent these kind of issues.
+  should be changed so that an exception is returned whatever.  The
+  fix is fairly simple, but requires a careful examination of the code
+  as there may be many places in which this happens.
 
 * Filters and plugins cache may bloat.  Perhaps reset() should accept
-  flags to clear BLOCKS, PLUGINS, FILTERS, etc.  I need to check this.
+  flags to clear BLOCKS, PLUGINS, FILTERS, etc?  I need to check this.
 
-* The 'ttree' script doesn't yet have knowledge of all the new 
-  configuration items.
+* If you use 'ttree' with a COMPILE_EXT or COMPILE_DIR option then
+  templates in the 'lib' directories will be compiled, but those in
+  the src directories will not.  This is because ttree does a chdir()
+  to the src directory and processes files as './myfile'.  TT doesn't
+  compile RELATIVE files by default.
 
 * There's no easy way to run version 1 and version 2 on the same
   machine.  If you're happy to junk version 1 then no problem, go
@@ -43,15 +61,18 @@
 
     use lib qw( /home/abw/tt1 );
 
-  I've been playing around with moving version 1 modules into
-  Template::v1::* to allow them to co-exist.  I think this is nearly
-  ready to roll out, but it still needs some polish and it's lowish
-  priority at the moment.
+  I was planning on moving version 1 modules into Template::v1::* to 
+  allow them to co-exist but I think this will prove to be more trouble
+  than it's worth.
 
 * Note that no recursion checking is performed for BLOCKs, only 
   Template::Document instances.  This is probably the way it will stay
   (unless anyone shouts loudly enough) but it should be documented
-  anyway.
+  anyway.   STOP PRESS: I had an idea that bare BLOCK subs should 
+  be blessed into Template::Document class to allow $template->process()
+  to be called regardless.  Template::Document methods would need to 
+  test $self for CODE/HASH and Do The Right Thing.  This would then 
+  allow recursion testing for BLOCKs as well as Template::Document objects.
 
 * I've had a few reports of tests failing (provider.t test 37 and several
   in args.t) but haven't been able to reproduce them.  If you do get 
@@ -60,24 +81,10 @@
   send me the output, along with any other relevant information.  If you're
   able to track down the problem then so much the better.  The test suite
   is well organised and fairly pleasant to work with these days so please
-  don't be afraid to go digging for answers.
+  don't be afraid to go digging for answers (this means you, Perrin  :-)
 
 * The XML::RSS plugin test may generate warnings (but passes all tests)
   under Perl 5.6
-
-
-#------------------------------------------------------------------------
-# PENDING ITEMS ON THE 'TO-DO' LIST
-#------------------------------------------------------------------------
-
-* document DEBUG option (or think of a better name)
-
-* test and document 'component' variable
-
-* fix _private and .private tests in t/object.t
-
-* 'tpage' could do with a '--define var=value' variable and possibly 
-  others.
 
 
 #------------------------------------------------------------------------

@@ -80,7 +80,7 @@ sub format {
     }
 }
 
-my $template = Template->new({ INTERPOLATE => 1, POST_CHOMP => 1 });
+my $template = Template->new({ INTERPOLATE => 1, POST_CHOMP => 1, ANYCASE => 1 });
 
 test_expect(\*DATA, $template, $params);
 
@@ -117,26 +117,6 @@ Fire!
 [% FOR count = [ 1 2 3 ] %]${count}..[% END %]
 -- expect --
 1..2..3..
-
--- test --
-[% for count = [ 1 2 3 ] %]${count}..[% END %]
--- expect --
-1..2..3..
-
--- test --
-[% foreach count = [ 1 2 3 ] %]${count}..[% END %]
--- expect --
-1..2..3..
-
--- test --
-[% for [ 1 2 3 ] %]<blip>..[% END %]
--- expect --
-<blip>..<blip>..<blip>..
-
--- test --
-[% foreach [ 1 2 3 ] %]<blip>..[% END %]
--- expect --
-<blip>..<blip>..<blip>..
 
 -- test --
 people:
@@ -449,7 +429,7 @@ Section List:
 -- test --
 [% FOREACH a = [ 2..6 ] %]
 before [% a %]
-[% FORNEXT IF a == 5 +%]
+[% NEXT IF a == 5 +%]
 after [% a +%]
 [% END %]
 -- expect --
@@ -465,7 +445,7 @@ after 6
 -- test --
 [% count = 1; WHILE (count < 10) %]
 [% count = count + 1 %]
-[% FORNEXT if count < 5 %]
+[% NEXT if count < 5 %]
 count: [% count +%]
 [% END %]
 -- expect --
@@ -475,3 +455,24 @@ count: 7
 count: 8
 count: 9
 count: 10
+
+-- test --
+[% for count = [ 1 2 3 ] %]${count}..[% END %]
+-- expect --
+1..2..3..
+
+-- test --
+[% foreach count = [ 1 2 3 ] %]${count}..[% END %]
+-- expect --
+1..2..3..
+
+-- test --
+[% for [ 1 2 3 ] %]<blip>..[% END %]
+-- expect --
+<blip>..<blip>..<blip>..
+
+-- test --
+[% foreach [ 1 2 3 ] %]<blip>..[% END %]
+-- expect --
+<blip>..<blip>..<blip>..
+

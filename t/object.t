@@ -41,6 +41,9 @@ sub new {
 	DAYS    => [ qw( Monday Tuesday Wednesday Thursday 
 			 Friday Saturday Sunday ) ],
 	DAY     => 0,
+        'public'   => 314,
+	'.private' => 425,
+	'_hidden'  => 537,
     }, $class;
 }
 
@@ -199,62 +202,25 @@ Tuesday
 Wednesday Thursday Friday Saturday Sunday .
 
 
--- stop --
-#========================================================================
-# TODO: test _private and .private members
-#========================================================================
-
 #------------------------------------------------------------------------
 # test private methods do not get exposed
 #------------------------------------------------------------------------
 -- test --
-[% TRY %]
-before[% thing._private %]after
-[% CATCH %]
-ERROR: [% error.info %]
-[% END %]
+before[% thing._private %] mid [% thing._hidden %]after
 -- expect --
+before mid after
 
 -- test --
-[% TRY %]
-[% thing._private = 10 %]
-[% CATCH %]
-ERROR: [% error.info %]
-[% END %]
--- expect --
-ERROR: invalid member name '_private'
-
-
--- test --
-[% TRY %]
 [% key = '_private' -%]
-[% thing.${key} %]
-[% CATCH %]
-ERROR: [% error.info %]
-[% END %]
+[[% thing.$key %]]
 -- expect --
-ERROR: invalid member name '_private'
+[]
 
 -- test --
-[% TRY %]
 [% key = '.private' -%]
-[% thing.${key} = 'foo' %]
-[% CATCH %]
-ERROR: [% error.info %]
-[% END %]
+[[% thing.$key = 'foo' %]]
+[[% thing.$key %]]
 -- expect --
-ERROR: invalid member name '.private'
-
--- test --
-[% other.foo %]
-[% other.Help %]
--- expect --
-bar
-Help Yourself
-
--- test --
-[% localise = 10 -%]
-[% localise %]
--- expect --
-10
+[]
+[]
 

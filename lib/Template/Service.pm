@@ -56,6 +56,7 @@ sub process {
     my ($self, $template, $params) = @_;
     my $context = $self->{ CONTEXT };
     my ($name, $output, $procout, $error);
+    $output = '';
 
     $context->reset()
 	if $self->{ AUTO_RESET };
@@ -91,7 +92,7 @@ sub process {
 	    last SERVICE
 		unless defined ($procout = $self->_recover(\$error));
 	}
-	$output .= $procout;
+	$output .= $procout if defined $procout;
 
 	# POST_PROCESS
 	eval {
@@ -136,6 +137,7 @@ sub _init {
     # by splitting on non-word characters
     foreach $item (qw( PRE_PROCESS PROCESS POST_PROCESS )) {
 	$data = $config->{ $item };
+	next unless defined $data;
 	$data = [ split(/\W+/, $data || '') ]
 	    unless ref $data eq 'ARRAY';
         $self->{ $item } = $data;

@@ -20,7 +20,7 @@ use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Config;
-                    use Template::Provider;
+use Template::Provider;
 use Cwd 'abs_path';
 
 $^W = 1;
@@ -59,7 +59,7 @@ sub update_file {
     local *FP;
     sleep(2);     # ensure file time stamps are different
     open(FP, ">$newfile") || die "$newfile: $!\n";
-    print FP @_;
+    print(FP @_) || die "failed to write $newfile: $!\n";
     close(FP);
 }
 

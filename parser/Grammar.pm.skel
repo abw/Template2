@@ -49,8 +49,8 @@ my ($factory, $rawstart);
 
 @RESERVED = qw( 
 	GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK END
-	USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT
-	IF UNLESS ELSE ELSIF FOR FORNEXT WHILE SWITCH CASE META
+	USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT DIV MOD
+	IF UNLESS ELSE ELSIF FOR NEXT WHILE SWITCH CASE META
 	TRY THROW CATCH FINAL BREAK RETURN STOP CLEAR
     );
 
@@ -78,14 +78,16 @@ $LEXTABLE = {
     '\\'      => 'REF',
     'and'     => 'AND',		# explicitly specified so that qw( and or
     'or'      => 'OR',		# not ) can always be used in lower case, 
-    'not'     => 'NOT'		# regardless of CASE sensitivity flag
+    'not'     => 'NOT',		# regardless of ANYCASE flag
+    'mod'     => 'MOD',
+    'div'     => 'DIV',
 };
 
 # localise the temporary variables needed to complete lexer table
 { 
     my @tokens = qw< ( ) [ ] { } ${ $ / ; : ? >;
     my @cmpop  = keys %CMPOP;
-    my @binop  = qw( + - * % );             # '/' above, in @tokens
+    my @binop  = qw( + - * % );              # '/' above, in @tokens
 
     # fill lexer table, slice by slice, with reserved words and operators
     @$LEXTABLE{ @RESERVED, @cmpop, @binop, @tokens } 

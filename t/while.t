@@ -25,6 +25,7 @@ $^W = 1;
 
 $Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 1;
+#$Template::Directive::PRETTY = 1;
 
 # set low limit on WHILE's maximum iteration count
 $Template::Directive::WHILE_MAX = 100;
@@ -116,7 +117,13 @@ error: [% error.info %]
 error: WHILE loop terminated (> 100 iterations)
 
 
-
-
-
-
+-- test --
+[% reset %]
+[% WHILE (item = next) %]
+[% NEXT IF item == 'yankee' -%]
+* [% item +%]
+[% END %]
+-- expect --
+Reset list
+* x-ray
+* zulu
