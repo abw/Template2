@@ -1,0 +1,74 @@
+[% META book = 'Release'
+        page = 'HACKING'
+%]
+<pre>
+
+                            Template Toolkit
+
+                              Version 2.05b
+
+                              21 September 2001
+
+        Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+          This is free software; you can redistribute it and/or
+             modify it under the same terms as Perl itself.
+
+HACKER'S GUIDE
+--------------
+
+Please hack on the Template Toolkit.  It has been designed to be
+extensible and has literally dozens of programmer hooks that you can
+tap into to do all sorts of cool things.  The object oriented
+architecture allows you to create your own subclassed modules to
+implement your own services, providers, filters, plugins, and so on.
+
+The Template::Manual::Internals document gives a brief overview of the
+architecture.  Unfortunately, it's not as complete as it could be,
+but the code is well documented and generally easy to follow.  Don't
+be afraid to use the source, Luke.
+
+The internals document also contains information about preparing and
+applying patches, updating the documentation and various other 
+useful tips.
+
+The documentation is all built from source templates in the 'docsrc'
+directory.  This includes the 'README', 'INSTALL', 'HACKING' and
+'Changes' files which can be found in the 'docsrc/src/Release'
+directory.  The 'docsrc' bundle is a separate distribution available
+from the TT web site.  The 'docsrc/bin' directory contains scripts for
+rebuilding the documentation.  See the 'docsrc/README' file for info.
+
+If you're in the business of building a distribution (that usually
+means me, but hey, you never know) then you'll need to have the latest
+CVS sources which includes the 'bin/release' script.  This rebuilds
+the documentation, runs the tests, fixes up the Template/Config.pm
+file to a sane state and build the distribution archive.  The
+'bin/docsrc' script builds the docsrc.tar.gz distribution for the
+latest release.
+
+This document will be integrated with Template::Manual::Internals
+at some point, probably as a separate hacking tutorial or something
+similar.
+
+
+AUTHOR
+------
+
+The Template Toolkit was written by Andy Wardley &lt;abw@kfs.org&gt; with
+the invaluable assistance and contributions from many other people.
+See Template::Manual::Credits for details.
+
+
+COPYRIGHT
+---------
+
+Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+
+</pre>
