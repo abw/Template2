@@ -305,6 +305,11 @@ the regular pure-perl stash module.  In additional, you can opt
 to use the XS Stash as the default, typically making the Template
 Toolkit run twice as fast!
 
+However, please note that there may be outstanding issues relating to 
+accessing data from tied hashes (e.g. Apache::Session).  For further
+information, see the related thread on the Template Toolkit mailing list:
+http://www.tt2.org/pipermail/templates/2001-September/001568.html
+
 When prompted, answer 'y' or 'n' to build and optionally use
 the XS Stash module by default:
 
