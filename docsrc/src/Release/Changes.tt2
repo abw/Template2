@@ -18,6 +18,18 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.06b - TBA                 ## FORTHCOMING DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Added the Template::Plugin::Filter module to make plugin filters 
+  easier to write and rewrote the Template::Plugin::XML::Style to use
+  it.
+
+* Applied Leon's patch to Template::Service to delete the 'template'
+  entry added to the variable hash at the end of processing.
+
+
+#------------------------------------------------------------------------
 # Version 2.06a - 19th November 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
