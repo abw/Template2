@@ -35,6 +35,9 @@
   of tests to use it.  Also made other minor fixes to the tests to run
   nicely (or bail politely) under Perl 5.8.0
 
+* Applied patch from Yann Kerhervé to Template::Document to untaint
+  filename before calling rename() in write_perl_file().
+
 
 #------------------------------------------------------------------------
 # Version 2.08 - July 30th 2002
