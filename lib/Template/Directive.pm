@@ -39,13 +39,13 @@ use Template::Constants;
 use Template::Exception;
 
 use base qw( Template::Base );
-use vars qw( $VERSION $DEBUG $PRETTY $WHILE_MAX );
+use vars qw( $VERSION $DEBUG $PRETTY $WHILE_MAX $OUTPUT );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $WHILE_MAX = 1000 unless defined $WHILE_MAX;
 $PRETTY    = 0 unless defined $PRETTY;
-my $OUTPUT = '$output .= ';
+$OUTPUT    = '$output .= ';
 
 
 sub _init {
