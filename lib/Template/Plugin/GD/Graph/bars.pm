@@ -49,6 +49,13 @@ sub set
     $self->SUPER::set(@_);
 }
 
+sub set_legend
+{
+    my $self = shift;
+	
+    $self->SUPER::set_legend(@{$_[0]});
+}
+
 1;
 
 __END__
