@@ -28,6 +28,11 @@ test_expect(\*DATA, { INTERPOLATE => 1 }, { sorted => \&sort_params });
 # url params are constructed in a non-deterministic order.  we obviously
 # can't test against this so we use this devious hack to reorder a
 # query so that its parameters are in alphabetical order.
+# ------------------------------------------------------------------------
+# later note: in adding support for parameters with multiple values, the
+# sort_params() hacked below got broken so as a temporary solution, I
+# changed teh URL plugin to sort all params by key when generating the 
+# URL
 
 sub sort_params {
     my $query  = shift;
@@ -105,4 +110,10 @@ there?age=42&amp;name=frank
 -- expect --
 /cgi-bin/woz.pl?name=Elrich%20von%20Benjy%20d%27Weiro
 
+-- test --
+[% USE url '/script' { one => 1, two => [ 2, 4 ], three => [ 3, 6, 9] } -%]
+[% url  %]
+
+-- expect --
+/script?one=1&amp;three=3&amp;three=6&amp;three=9&amp;two=2&amp;two=4
 
