@@ -168,7 +168,7 @@ sub _init {
     }
     # unset PROCESS option unless explicitly specified in config
     $self->{ PROCESS } = undef
-	unless exists $config->{ PROCESS };
+	unless defined $config->{ PROCESS };
     
     $self->{ ERROR      } = $config->{ ERROR } || $config->{ ERRORS };
     $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
