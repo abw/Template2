@@ -43,7 +43,6 @@ use strict;
 use vars qw( $VERSION $DEBUG $ERROR );
 use base qw( Template::Base );
 
-use Template::Utils;
 use Template::Directive;
 use Template::Grammar;
 

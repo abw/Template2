@@ -34,14 +34,14 @@ use Template::Constants;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $STD_PLUGINS   = {
-    'cgi'      => 'CGI',
-    'date'     => 'Date',
-    'dbi'      => 'DBI',
-    'url'      => 'URL',
-    'format'   => 'Format',
-    'table'    => 'Table',
-    'iterator' => 'Iterator',
-    'datafile' => 'Datafile',
+    'cgi'      => 'Template::Plugin::CGI',
+    'date'     => 'Template::Plugin::Date',
+    'dbi'      => 'Template::Plugin::DBI',
+    'url'      => 'Template::Plugin::URL',
+    'format'   => 'Template::Plugin::Format',
+    'table'    => 'Template::Plugin::Table',
+    'iterator' => 'Template::Plugin::Iterator',
+    'datafile' => 'Template::Plugin::Datafile',
 };
 
 
@@ -122,19 +122,19 @@ sub fetch {
 
 sub _init {
     my ($self, $params) = @_;
-    my ($pbase, $pnames) = @$params{ qw( PLUGIN_BASE PLUGIN_NAME ) };
+    my ($pbase, $plugins) = @$params{ qw( PLUGIN_BASE PLUGINS ) };
 
-    $pnames ||= { };
+    $plugins ||= { };
     if (ref $pbase ne 'ARRAY') {
 	$pbase = $pbase ? [ $pbase ] : [ ];
     }
     push(@$pbase, 'Template::Plugin');
 
     $self->{ PLUGIN_BASE } = $pbase;
-    $self->{ PLUGIN_NAME } = { %$STD_PLUGINS, %$pnames };
-    $self->{ FACTORY     } = $params->{ PLUGIN_FACTORY } || { };
+    $self->{ PLUGINS     } = { %$STD_PLUGINS, %$plugins };
     $self->{ TOLERANT    } = $params->{ TOLERANT }  || 0;
     $self->{ LOAD_PERL   } = $params->{ LOAD_PERL } || 0;
+    $self->{ FACTORY     } = { };
 
     return $self;
 }
@@ -146,7 +146,11 @@ sub _init {
 #
 # Private method which attempts to load a plugin module and determine the 
 # correct factory name or object by calling the load() class method in
-# the loaded module.  The PLUGIN_NAME member is a hash array which maps 
+# the loaded module.
+#
+# *** DON'T TRUST THE REST OF THIS COMMENT BLOCK ***
+#
+#  The PLUGIN_NAME member is a hash array which maps 
 # "standard" plugin names (in lower case) to their correct case module 
 # names, along with any user-supplied name mappings.  Any periods in the
 # name are converted to '::'.  The method tries to load the relevant 
@@ -163,22 +167,34 @@ sub _init {
 sub _load {
     my ($self, $name, $args) = @_;
     my ($factory, $module, $base, $pkg, $file, $ok, $error);
-    	    
-    ($module = $name) =~ s/\./::/g
-	unless defined ($module = $self->{ PLUGIN_NAME }->{ $name });
 
-    foreach $base (@{ $self->{ PLUGIN_BASE } }) {
-	$pkg = $base . '::' . $module;
-	($file = $pkg) =~ s|::|/|g;
-
-	print STDERR "fetch() attempting to load $file.pm\n"
+    if ($module = $self->{ PLUGINS }->{ $name }) {
+	# plugin module name is explicitly stated in PLUGIN_NAME
+	$pkg = $module;
+	($file = $module) =~ s|::|/|g;
+	$file =~ s|::|/|g;
+	print STDERR "fetch() loading $module.pm (PLUGIN_NAME)\n"
 	    if $DEBUG;
-
 	$ok = eval { require "$file.pm" };
-	last unless $@;
+	$error = $@;
+    }
+    else {
+	# try each of the PLUGIN_BASE values to build module name
+	($module = $name) =~ s/\./::/g;
+
+	foreach $base (@{ $self->{ PLUGIN_BASE } }) {
+	    $pkg = $base . '::' . $module;
+	    ($file = $pkg) =~ s|::|/|g;
+
+	    print STDERR "fetch() attempting to load $file.pm (PLUGIN_BASE)\n"
+		if $DEBUG;
+
+	    $ok = eval { require "$file.pm" };
+	    last unless $@;
 	
-	$error .= "$@\n" 
-	    unless ($@ =~ /^Can\'t locate $file\.pm/);
+	    $error .= "$@\n" 
+		unless ($@ =~ /^Can\'t locate $file\.pm/);
+	}
     }
 
     if ($ok) {
@@ -193,6 +209,7 @@ sub _load {
 	}
     }
     elsif ($self->{ LOAD_PERL }) {
+	# fallback - is it a regular Perl module?
 	($file = $module) =~ s|::|/|g;
 	eval { require "$file.pm" };
 	if ($@) {
@@ -234,13 +251,13 @@ sub _dump {
     my $self = shift;
     local $" = ', ';
     my $fkeys = join(", ", keys %{$self->{ FACTORY }});
-    my $pnames = $self->{ PLUGIN_NAME };
-    $pnames = join(", ", map { "$_ => $pnames->{ $_ }" } keys %$pnames);
+    my $plugins = $self->{ PLUGINS };
+    $plugins = join(", ", map { "$_ => $plugins->{ $_ }" } keys %$plugins);
 
     return <<EOF;
 $self
 PLUGIN_BASE => [ @{ $self->{ PLUGIN_BASE } } ]
-PLUGIN_NAME => { $pnames }
+PLUGINS     => { $plugins }
 FACTORY     => [ $fkeys ]
 TOLERANT    => $self->{ TOLERANT }
 LOAD_PERL   => $self->{ LOAD_PERL }

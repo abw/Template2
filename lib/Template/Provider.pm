@@ -198,8 +198,6 @@ sub _init {
     $self->{ COMPILE_EXT }  = $params->{ COMPILE_EXT } || 0;
     $self->{ PARSER }       = $params->{ PARSER };
     $self->{ PARAMS }       = $params;
-#	|| Template::Config->parser($params)
-#       || return $self->error(Template::Config->error);
 
     return $self;
 }

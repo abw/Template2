@@ -65,7 +65,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 # any enclosing Template::Documents that we're visiting (e.g. we've
 # been called via an INCLUDE and we want to access a BLOCK defined in
 # the template that INCLUDE'd us).  If nothing is defined, then we
-# iterate through the TEMPLATES providers list as a 'chain of 
+# iterate through the LOAD_TEMPLATES providers list as a 'chain of 
 # responsibility' (see Design Patterns) asking each object to fetch() 
 # the template if it can.
 #
@@ -102,7 +102,7 @@ sub template {
     # finally we try the regular template providers which will 
     # handle references to files, text, etc., as well as templates
     # reference by name
-    foreach my $provider (@{ $self->{ TEMPLATES } }) {
+    foreach my $provider (@{ $self->{ LOAD_TEMPLATES } }) {
 	($template, $error) = $provider->fetch($name);
 	return $template unless $error;
 #	print STDERR "template() error: $error\ntemplate: $template";
@@ -117,7 +117,7 @@ sub template {
 #------------------------------------------------------------------------
 # plugin($name, \@args)
 #
-# Calls on each of the PLUGINS providers in turn to fetch() (i.e. load
+# Calls on each of the LOAD_PLUGINS providers in turn to fetch() (i.e. load
 # and instantiate) a plugin of the specified name.  Additional parameters 
 # passed are propagated to the new() constructor for the plugin.  
 # Returns a reference to a new plugin object or other reference.  On 
@@ -129,8 +129,8 @@ sub plugin {
     my ($self, $name, $args) = @_;
     my ($provider, $plugin, $error);
 
-    # request the named plugin from each of the PLUGINS providers in turn
-    foreach my $provider (@{ $self->{ PLUGINS } }) {
+    # request the named plugin from each of the LOAD_PLUGINS providers in turn
+    foreach my $provider (@{ $self->{ LOAD_PLUGINS } }) {
 #	print STDERR "Asking plugin provider $provider for $name...\n"
 #	    if $DEBUG;
 
@@ -147,7 +147,7 @@ sub plugin {
 #------------------------------------------------------------------------
 # filter($name, \@args, $alias)
 #
-# Similar to plugin() above, but querying the FILTERS providers to 
+# Similar to plugin() above, but querying the LOAD_FILTERS providers to 
 # return filter instances.  An alias may be provided which is used to
 # save the returned filter in a local cache.
 #------------------------------------------------------------------------
@@ -161,7 +161,7 @@ sub filter {
 	if ! $args && ($filter = $self->{ FILTER_CACHE }->{ $name });
 
     # request the named filter from each of the FILTERS providers in turn
-    foreach my $provider (@{ $self->{ FILTERS } }) {
+    foreach my $provider (@{ $self->{ LOAD_FILTERS } }) {
 #	print STDERR "Asking filter provider $provider for $name...\n"
 #	    if $DEBUG;
 
@@ -498,12 +498,12 @@ sub _init {
     my ($self, $config) = @_;
     my ($name, $item, $method, $block, $blocks);
     my @itemlut = ( 
-	TEMPLATES => 'provider',
-	PLUGINS   => 'plugins',
-	FILTERS   => 'filters' 
+	LOAD_TEMPLATES => 'provider',
+	LOAD_PLUGINS   => 'plugins',
+	LOAD_FILTERS   => 'filters' 
     );
 
-    # TEMPLATE, PLUGINS, FILTERS - lists of providers
+    # LOAD_TEMPLATE, LOAD_PLUGINS, LOAD_FILTERS - lists of providers
     while (($name, $method) = splice(@itemlut, 0, 2)) {
 	$item = $config->{ $name } 
 	     || Template::Config->$method($config)
@@ -559,7 +559,7 @@ sub _init {
 sub _dump {
     my $self = shift;
     my $output = "$self\n";
-    foreach my $pname (qw( TEMPLATES PLUGINS FILTERS )) {
+    foreach my $pname (qw( LOAD_TEMPLATES LOAD_PLUGINS LOAD_FILTERS )) {
 	foreach my $prov (@{ $self->{ $pname } }) {
 	    $output .= $prov->_dump();
 	}
