@@ -1,0 +1,59 @@
+[%# html/rgb: define 'rgb' containing RGB triples for various colours -%]
+[%  rgb = {
+	# the mono crowd
+	black  => '#000000'  
+	grey25 => '#404040'
+	grey50 => '#808080'
+	grey75 => '#c0c0c0'
+	white  => '#ffffff'
+
+	# reds
+	blood   => '#800000'
+	scarlet => '#c04040'
+	rose    => '#f08080'
+
+	# greens
+	leaf   => '#006400'
+	bud    => '#66aa66'
+	mint   => '#aaffaa'
+
+	# blues
+	navy   => '#202080'
+	marine => '#0066cc'
+	aqua   => '#3399cc'
+	sky    => '#66ccff'
+
+	# lavender blues
+	purple  => '#404080'
+	mauve   => '#6666cc'
+	lilac   => '#9797ff'
+
+    }
+
+    # sets of dark/mid/light colours
+    rgb.grey = {
+	dark   => rgb.grey25,
+	mid    => rgb.grey50,
+	light  => rgb.grey75,
+    }
+    rgb.red = {
+	dark   => rgb.blood,
+	mid    => rgb.scarlet,
+	light  => rgb.rose,
+    }
+    rgb.green = {
+	dark   => rgb.leaf,
+	mid    => rgb.bud,
+	light  => rgb.mint,
+    }
+    rgb.blue = {
+	dark   => rgb.navy,
+	mid    => rgb.marine,
+	light  => rgb.aqua,
+    }
+    rgb.lavender = {
+	dark   => rgb.purple,
+	mid    => rgb.mauve,
+	light  => rgb.lilac,
+    }
+-%]

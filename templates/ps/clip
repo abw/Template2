@@ -1,0 +1,14 @@
+[%  PROCESS ps/border UNLESS global.ps.loaded.border;
+    global.ps.loaded.clip = 1;
+-%]
+% clipping rectangle set to current imageable size minus border
+clippath pathbbox 
+/clip-try exch border sub def 
+/clip-trx exch border sub def 
+/clip-bly exch border add def 
+/clip-blx exch border add def
+/clip-ysize clip-try clip-bly sub def
+/clip-xsize clip-trx clip-blx sub def
+/clip-box {
+    clip-blx clip-bly clip-xsize clip-ysize
+} def

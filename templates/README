@@ -1,0 +1,8 @@
+This directory contains the template libraries distributed with the 
+Template Toolkit.
+
+    html       Basic HTML library
+    pod        Library for pod->HTML conversion
+    ps         PostScript library
+    splash     Fancy HTML library/widget set
+

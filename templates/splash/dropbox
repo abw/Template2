@@ -1,0 +1,47 @@
+<!-- tt2.splash.dropbox -->  
+[%  DEFAULT 
+	style   = select ? splash.select : splash.unselect
+	bar     = style.col.bar  or splash.col.bar
+	textcol = style.col.text or splash.col.text
+	edge    = style.col.edge or splash.col.edge
+        fill    = style.col.fill or splash.col.fill;
+    SET
+	rgb = {
+	    bar  = splash.rgb.$bar
+	    edge = splash.rgb.$edge
+	}
+	barimg  = "$splash.images/$bar"
+        imgsize = splash.imgsize
+        border  = border.defined ? border : splash.border
+        pad     = pad.defined ? pad : splash.pad
+-%]
+<!-- tt2.splash.dropbox -->  
+<table border=0 [% IF width  %]width="[% width %]"[% END %]
+       bgcolor="[% rgb.bar %]" cellpadding=0 cellspacing=0>
+  <tr height="[% imgsize %]" valign=top>
+    <td width="[% imgsize %]"><img
+        src="[% barimg %]/topleft.png" width="[% imgsize %]" height="[% imgsize %]"></td>
+    <td rowspan=2 valign="middle"
+	[%- IF align %] align="[% align %]"[% END %]
+	[%- IF width %] width="100%"[% END %]>
+	[%- INCLUDE splash/text content=title col=textcol %]
+    </td>
+    <td width="[% imgsize %]" align="right"><img 
+        src="[% barimg %]/topright.png"
+        width="[% imgsize %]" height="[% imgsize %]"></td>
+  </tr>
+  <tr height="[% imgsize %]" valign=bottom>
+     <td width="[% imgsize %]" align=left><img src="[% barimg %]/botleft.png" 
+  	 width="[% imgsize %]" height="[% imgsize %]"></td>
+     <td width="[% imgsize %]" align=right><img src="[% barimg %]/botright.png" 
+  	 width="[% imgsize %]" height="[% imgsize %]"></td>
+  </tr>
+  <tr> 
+    <td></td>
+    <td bgcolor="[% rgb.edge %]">
+	[%- INCLUDE splash/box col=fill, width='100%', space=border %]</td>
+    <td></td>
+  </tr>
+</table>
+<!-- /tt2.splash.dropbox -->
+

@@ -1,0 +1,5 @@
+[%  DEFAULT ps_border = '5 mm';
+    PROCESS ps/mm UNLESS global.ps.loaded.mm;
+    global.ps.loaded.border = 1;
+-%]
+/border [% ps_border %] def

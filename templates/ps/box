@@ -1,0 +1,111 @@
+% blx bly trx try box
+% create a new box array
+/box {
+    4 array astore
+} def
+
+% box box-select
+% unpacks box to define various box-* variables
+/box-select {
+    aload pop
+    /box-try exch def
+    /box-trx exch def
+    /box-bly exch def
+    /box-blx exch def
+    /box-width  box-trx box-blx sub abs def
+    /box-height box-try box-bly sub abs def
+} def
+
+% box box-rect
+% output box as a rect suitable for rectstoke etc.
+/box-rect {
+    box-select
+    box-blx box-bly box-width box-height
+} def
+
+% box box-path
+% output box as a path suitable for stroke, clip, etc.
+/box-path {
+    box-select
+    newpath
+    box-blx box-bly moveto
+    box-blx box-try lineto
+    box-trx box-try lineto
+    box-trx box-bly lineto
+    closepath 
+} def
+
+% box border box-border
+% create a new box bordered within a box
+/box-border {
+    /border exch def
+    box-select
+    box-blx border add 
+    box-bly border add
+    box-trx border sub 
+    box-try border sub 
+    box
+} def
+
+% box tiles space pad box-vsplit
+% split box vertically into 'tiles' new boxes, spaced apart by 'space' 
+% and padded within the original box by 'pad'
+/box-vsplit {
+    /box-pad   exch def
+    /box-space exch def    
+    /box-tiles exch def
+    box-select
+    /box-height 
+      box-try box-bly sub 
+      box-pad 2 mul sub 
+      box-space box-tiles 1 sub mul sub 
+      box-tiles div
+      def
+    /box-width
+      box-trx box-blx sub 
+      box-pad 2 mul sub 
+      def
+    /box-blx box-blx box-pad add def
+    /box-bly box-bly box-pad add def
+    1 1 box-tiles {
+      pop
+      box-blx box-bly box-blx box-width add box-bly box-height add box
+      /box-bly box-bly box-height add box-space add def
+    } for
+} def 
+
+% box tiles space pad box-hsplit
+% as per box-vsplit, splitting box horizontally
+/box-hsplit {
+    /box-pad   exch def
+    /box-space exch def    
+    /box-tiles exch def
+    box-select
+    /box-height box-height 
+      box-pad 2 mul sub 
+      def
+    /box-width box-width
+      box-pad 2 mul sub 
+      box-space box-tiles 1 sub mul sub 
+      box-tiles div
+      def
+    /box-blx box-blx box-pad add def
+    /box-bly box-bly box-pad add def
+    1 1 box-tiles {
+      pop
+      box-blx box-bly box-blx box-width add box-bly box-height add box
+      /box-blx box-blx box-width add box-space add def
+    } for
+} def 
+
+/box-focus {
+    /box-box exch def
+    gsave
+    box-box box-select
+    box-box box-path clip
+    box-blx box-bly translate
+} def
+
+/box-defocus {
+    grestore
+} def

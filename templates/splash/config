@@ -1,0 +1,90 @@
+[%  #--------------------------------------------------------------------
+    # the following hash is user-definable and can/should
+    # be changed to suit your local environment and/or 
+    # preferences
+    #--------------------------------------------------------------------
+
+    splash = {
+
+	# URL prefix to Splash images 
+	# NOTE: this is set by the Makefile.PL at installation time
+	images  = '/tt2/images/splash'
+
+	# default border/space/pad widths
+	border  = 2
+	space   = 2
+	pad     = 2
+
+	# default colours
+	col = {
+	    bar  => 'lilac'		# tabs, buttons, bars, etc
+	    edge => 'lilac'		# edge colour
+	    fill => 'white'		# fill colour
+	    back => 'white'		# background
+	    text => 'black'		# text colour
+	}
+
+	# default font settings for UI elements (tabs, buttons, etc.)
+	font = {
+	    face = 'Helvetica, Arial'
+	    # and/or combinations of the following...
+	    # size = '+1'		# ...for example...
+	    # bold = 1			# turn bold on
+	}
+
+	# default settings for tab elements
+	tab = {
+	    locate = 'right'		# tab location on box 
+	    align  = 'center'		# text alignment
+	}
+
+	# default settings for buttons
+	button = {
+	    width  = 0			# grow to fit
+	    align  = 'left'		# text alignment
+	}
+
+	# override settings for the "select" style
+	select = {
+	    col = {			# refine colour settings
+		bar  = 'mauve'
+		edge = 'mauve'
+		text = 'white'
+	    }
+	    font = {			# refine font settings
+		bold = 1
+	    }
+            # tab = {			# refine tab settings
+	    #   ...
+	    # }
+	    # button = {		# refine button settings
+	    #   ...
+	    # }
+	}
+
+	# override settings for the "unselect" style
+	unselect = {
+	    # same as default style
+	}
+    };
+-%]
+[%  #--------------------------------------------------------------------
+    # hands off - you shouldn't need to mess with anything below here! :-)
+    #--------------------------------------------------------------------
+
+    splash_sys = {
+	name     = 'Splash!'
+	homepage = 'http://www.template-toolkit.org/splash/'
+	about    = 'The Template Toolkit HTML Library / Widget Set'
+	imgsize  = 8
+    };
+
+    splash.import(splash_sys);
+
+    splash.link = "<a href=\"$splash.homepage\">$splash.name</a>";
+    splash.bold = "<b>$splash.name</b>";
+
+    # load rgb table from HTML library
+    PROCESS html/rgb;
+    splash.rgb = rgb;
+-%]

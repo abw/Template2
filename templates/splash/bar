@@ -1,0 +1,48 @@
+<!-- tt2.splash.bar -->  
+[%
+  # splash/bar: a bar with rounded corner at the top or bottom (invert)
+  # ARGS:
+  #	content	    # button text
+  #     alt         # alt text for image links
+  #     width       # bar width
+  #     select      # flag to indicate style (1: select, 0: unselect)
+  # The following arguments default to values set in the style
+  #     col         # bar colour
+  #     textcol     # text colour
+  #     font        # text font
+  #     size        # text size
+  #     bold        # make text bold
+  #     align       # text alignment
+  DEFAULT 
+	style   = select ? splash.select : splash.unselect
+	col     = style.col.bar   or splash.col.bar
+	textcol = style.col.text  or splash.col.text
+	font    = style.font.face or splash.font.face
+	size    = style.font.size or splash.font.size
+        width   = style.button.width or splash.button.width
+        align   = style.button.align or splash.button.align;
+    SET
+	rgbcol  = splash.rgb.$col
+	imgdir  = "$splash.images/$col"
+        imgsize = splash.imgsize;
+	bold    = bold.defined ? bold : style.font.bold;
+	bold    = bold.defined ? bold : splash.font.bold;
+-%]
+<table border=0 [% IF width  %]width="[% width %]"[% END %]
+       bgcolor="[% rgbcol %]" cellpadding=0 cellspacing=0>
+  <tr height="[% imgsize %]" valign="[% invert ? 'bottom' : 'top' %]">
+    <td width="[% imgsize %]"><img
+        src="[% imgdir %]/[% invert ? 'bot' : 'top' %]left.png" 
+	width="[% imgsize %]" height="[% imgsize %]"
+	[%- IF alt %] alt="[% alt %]"[% END %]></td>
+    <td valign="middle"[% IF align %] align="[% align %]"[% END %]
+	[%- IF width %] width="100%"[% END %]>
+        [% INCLUDE splash/text col=textcol %]
+    </td>
+    <td width="[% imgsize %]" align="right"><img 
+        src="[% imgdir %]/[% invert ? 'bot' : 'top' %]right.png"
+        width="[% imgsize %]" height="[% imgsize %]"
+	[%- IF alt %] alt="[% alt %]"[% END %]></td>
+  </tr>
+</table>
+<!-- /tt2.splash.bar -->  

@@ -1,0 +1,21 @@
+[%  PROCESS ps/clip      UNLESS global.ps.loaded.clip;
+    PROCESS ps/crosshair UNLESS global.ps.loaded.crosshair;
+    PROCESS ps/border    UNLESS global.ps.loaded.border;
+    PROCESS ps/lines     UNLESS global.ps.loaded.lines;
+    global.ps.loaded.regmarks = 1;
+-%]
+% registration marks relative to clipping rectangle
+/regmarks {
+    % draw clipping edge if border > 0
+    border 0 gt {
+        line-dashed
+	clip-box rectstroke
+    } if
+
+    % draw registration marks at corners
+    line-normal
+    clip-blx clip-bly crosshair
+    clip-blx clip-try crosshair 
+    clip-trx clip-try crosshair
+    clip-trx clip-bly crosshair
+} def

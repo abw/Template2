@@ -1,0 +1,20 @@
+[%  library = libs.html
+    section = 'bars' ;
+    WRAPPER page 
+%]
+
+<p>
+These elements can be used to create bars and boxes, both with and
+without borders.  These components are constructed from the more
+fundamental table elements: 'table', 'row' and 'cell'.
+</p>
+
+[% PROCESS html/rgb %]
+
+[% PROCESS example/vsplit3 count=4 %]
+
+[% PROCESS example/tbreak %]
+
+[% PROCESS example/vsplit2 from=5 to=11 %]
+
+[% END %]

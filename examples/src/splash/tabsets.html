@@ -1,0 +1,25 @@
+[%  library = libs.splash
+    section = 'tabsets' ;
+    WRAPPER page
+%]
+
+<p>
+The splash/tabset component provides an easy way to generate a row of
+splash/tab elements.  The splash/tabsbox joins this onto a splash/box,
+as shown in the examples further below.
+</p>
+
+[%  tabs = [
+ 	{ link => '#wait',  text => 'Wait'  }
+ 	{ link => '#meet',  text => 'Meet'  }
+ 	{ link => '#shade', text => 'Shade' }
+    ]
+%]
+
+[% PROCESS splash/config %]
+
+[% PROCESS example/split50
+   count = 5
+%]
+
+[% END %]

@@ -1,0 +1,17 @@
+[%  library = libs.splash
+    section = 'dropbox' ;
+    WRAPPER page
+%]
+
+<p>
+This is the latest experiment: a rounded bar at the top, with a square
+box dropping down from it like some futuristic scroll.
+</p>
+
+[% PROCESS splash/config %]
+
+[% PROCESS example/switch50
+   count = 5
+%]
+
+[% END %]

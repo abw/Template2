@@ -1,0 +1,19 @@
+[%  library = libs.splash
+    section = 'tabs' ;
+    WRAPPER page
+%]
+
+<p>
+The splash/tab template implements another fundamental element, the
+tab.  These can be attached onto boxes, as in the splash/tabbox 
+template, and/or grouped together, as in splash/tabset
+(see <a href="tabsets.html">next page</a>).
+</p>
+
+[% PROCESS splash/config %]
+
+[% PROCESS example/split50
+   count = 5
+%]
+
+[% END %]

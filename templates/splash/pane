@@ -1,0 +1,4 @@
+[%  WRAPPER splash/row + splash/cell;
+        content;
+    END
+%]

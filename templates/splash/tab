@@ -1,0 +1,69 @@
+<!-- tt2.splash.tab -->  
+[% 
+  # splash/tab: a single tab
+  # ARGS:
+  #	content	    # tab text
+  #     alt         # alt text for image links
+  #     width       # tab width
+  #     select      # flag to indicate style (1: select, 0: unselect)
+  #     invert      # flag to invert tab (e.g. hang down)
+  # The following arguments default to values set in the style
+  #     col         # tab colour
+  #     textcol     # text colour
+  #     back        # background colour
+  #     font        # text font
+  #     size        # text size
+  #     bold        # make text bold
+  #     align       # text alignment
+  DEFAULT 
+        style   = select ? splash.select : splash.unselect
+	col     = style.col.bar   or splash.col.bar
+	textcol = style.col.text  or splash.col.text
+	back    = style.col.back  or splash.col.back
+	font    = style.font.face or splash.font.face
+	size    = style.font.size or splash.font.size
+        align   = style.tab.align or splash.tab.align;
+    SET
+	rgb  = {
+	    fore = splash.rgb.$col
+	    back = splash.rgb.$back
+	}
+	bold    = bold.defined ? bold : style.font.bold;
+	bold    = bold.defined ? bold : splash.font.bold;
+        imgsize = splash.imgsize;
+	imgtop  = invert ? "$splash.images/$col/neg" : "$splash.images/$col"
+	imgbot  = invert ? "$splash.images/$col"   : "$splash.images/$col/neg"
+	imgtl   = invert ? "$imgbot/botleft.png "  : "$imgtop/topleft.png"
+	imgtr   = invert ? "$imgbot/botright.png " : "$imgtop/topright.png"
+	imgbl   = invert ? "$imgtop/topright.png " : "$imgbot/botright.png"
+	imgbr   = invert ? "$imgtop/topleft.png "  : "$imgbot/botleft.png"
+	up      = invert ? 'bottom' : 'top'
+	down    = invert ? 'top'    : 'bottom'
+-%]
+<table border=0 [% IF width  %]width="[% width %]"[% END %]
+       bgcolor="[% rgb.fore %]" cellpadding=0 cellspacing=0>
+  <tr>
+    <td bgcolor="[% rgb.back %]" align="right" valign="[% down %]"
+          width="[% imgsize %]"><img src="[% imgbl %]" 
+  	  width="[% imgsize %]" height="[% imgsize %]"
+	  [%- IF alt %] alt="[% alt %]"[% END %]></td>
+    <td bgcolor="[% rgb.fore %]" align="left" valign="[% up %]"
+          width="[% imgsize %]"><img src="[% imgtl %]" 
+  	  width="[% imgsize %]" height="[% imgsize %]"
+	  [%- IF alt %] alt="[% alt %]"[% END %]></td>
+    <td bgcolor="[% rgb.fore %]" 
+         valign="middle"[% IF align %] align="[% align %]"[% END %]
+		[%- IF width %] width="100%"[% END %]>
+	[%- INCLUDE splash/text col=textcol -%]
+    </td>
+    <td bgcolor="[% rgb.fore %]" align="right" valign="[% up %]"
+          width="[% imgsize %]"><img src="[% imgtr %]" 
+          width="[% imgsize %]" height="[% imgsize %]"
+	  [%- IF alt %] alt="[% alt %]"[% END %]></td>
+    <td bgcolor="[% rgb.back %]" align="left" valign="[% down %]"
+          width="[% imgsize %]"><img src="[% imgbr %]" 
+  	  width="[% imgsize %]" height="[% imgsize %]"
+	  [%- IF alt %] alt="[% alt %]"[% END %]></td>
+  </tr>
+</table>
+<!-- /tt2.splash.tab -->  

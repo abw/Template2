@@ -1,0 +1,70 @@
+[%  library = libs.splash
+    section = 'index' ;
+    WRAPPER page
+%]
+
+<p>
+[% splash.bold %] is a library of templates which can be used to build
+fancy looking HTML pages from a number of simple but powerful
+components and fundamental elements.  It is effectively an HTML widget
+set which can be used to greatly simplify the process of building user
+interfaces for web document systems and applications.
+</p>
+
+<p>
+[% splash.bold %] is built on top of the HTML library.  It defines
+some basic colour schemes (currently limited to only a few colours,
+but that's likely to change) and provides some very small (8x8 pixels,
+&lt; 1k) and simple graphics for creating rounded corners in these
+various colours.  With nothing else but regular HTML we can build some
+very attractive buttons, tabs, panels and other widgets which can be
+used to brighten up any web page.
+</p>
+
+<p>
+[% splash.bold %] was chosen as a name for the libary as a
+tip-of-the-hat to Slashdot whose web site ([% PROCESS html/link
+link="http://slashdot.org/" %] ) contains many nice user interface
+components such as these.  I was inspired by their look and allowed
+myself to draw influence from them as well as a number of other
+places.  The <a href="http://slashcode.org/">Slashcode</a> engine
+which runs Slashdot has recently been rewritten (by <a
+href="mailto:pudge@pobox.com">Chris Nandor</a>) to use the Template
+Toolkit for generating interface elements, so we like the guys at
+Slashdot and (hopefully) they like us, too.  :-)
+<p>
+
+<p>
+This is the first public release of [% splash.bold %] and should be
+considered as alpha quality code.  Everything is subject to change and
+at this stage, I can make no guarantees of "correctness" about any of
+the generated HTML.  My HTML skills aren't what they used to be and
+I'm not very up-to-date with all the latest browser compatability
+issues.  Having said that, I've tried to use vanilla HTML wherever
+possible and tried to keep everything as simple, small and correct as
+I can.  If you have an comments, suggestions, corrections, additions,
+or any other contributions to make then please do <a
+href="mailto:abw@kfs.org">get in touch</a>.  There are plenty more
+widgets waiting to be written.  Feel free to write them.
+</p>
+
+<p>
+A final word of warning - don't go overboard in using these widgets.
+Use them sparingly, or rather, use them <i>appropriately</i>.  There
+is more to good design than a fancy paintbrush and you <i>can</i> have
+too much of a Good Thing.  Remember that the most important thing on
+any web page is the content.  Use these widgets as an enhancement for
+your content, not a replacement.
+</p>
+
+<ul>
+[% FOREACH page = library.order %]
+<li><b>
+[%- INCLUDE html/link 
+	link="$library.root/${page}.html"
+	text = page %]:</b>
+[% library.pages.$page %]
+[% END %]
+</ul>
+
+[% END %]

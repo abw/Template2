@@ -1,0 +1,8 @@
+[%  DEFAULT font = 'Helvetica';
+    PROCESS ps/mm UNLESS global.ps.loaded.mm;
+    global.ps.loaded.text = 1;
+-%]
+/[% font %] findfont dup dup
+    24 scalefont /text-big exch def
+    14 scalefont /text-mid exch def
+    10 scalefont /text-min exch def

@@ -1,0 +1,23 @@
+<!-- tt2.splash.tabset -->
+[%
+  # splash/tabset: a row of tabs
+  # ARGS:
+  #	tabs	    # list of { text => '...', link => '...' } hashes
+  #     select      # number of tab to select (1 - n, 0: none)
+  #     invert      # flag to invert tabs (hang down)
+-%]
+<table border=0 cellpadding=0 cellspacing=0>
+<tr>
+[%- FOREACH tab = tabs;
+	WRAPPER splash/cell width=0;
+	    INCLUDE splash/tab 
+		content = tab.text
+		link    = tab.link
+		select  = (select == loop.count or select == tab.text) ? 1 : 0
+		width   = '';
+	END;
+    END;
+%]
+</tr>
+</table>
+<!-- /tt2.splash.tabset -->

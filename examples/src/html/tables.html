@@ -1,0 +1,28 @@
+[%  library = libs.html
+    section = 'tables' ;
+    WRAPPER page
+%]
+
+<p>
+These elements are for creating HTML tables and the rows and cells
+within them.  In most cases, they offer little benefit over using the
+regular HTML tags and are more likely to make your templates more
+complicated and harder to read.  But on the other hand, they are
+useful for various other elements which glue them together in
+interesting ways to make more complex components (e.g. bars and
+menus).  Think of them as HTML Lego&reg; bricks.
+</p>
+
+[% PROCESS html/rgb %]
+
+[% PROCESS example/split3 count=1 %]
+
+[% PROCESS example/tbreak %]
+
+[% PROCESS example/vsplit3 from=2 to=3 %]
+
+[% PROCESS example/tbreak %]
+
+[% PROCESS example/vsplit2 from=4 to=5 %]
+
+[% END %]

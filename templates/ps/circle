@@ -1,0 +1,6 @@
+[%  DEFAULT radius = '2 mm';
+    PROCESS ps/mm UNLESS global.ps.loaded.mm;
+-%]
+newpath 
+[% ps_circle_radius %] 0 360 arc
+stroke

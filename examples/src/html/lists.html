@@ -1,0 +1,29 @@
+[%  library = libs.html
+    section = 'lists' ;
+    WRAPPER page
+%]
+
+<p>
+These elements can be used to create lists, items and indented
+sections.  The html/list and html/item components are included for
+completeness but in many cases it's overkill to use them unless you
+plan to make your lists and items more fancy than regular &lt;ul&gt;
+and &lt;li&gt; elements.  The html/indent element is particularly
+useful for creating an indented section and is implemented as a 
+right-aligned table, allowing background colour, internal alignment
+and various other parameters to be specified.
+</p>
+
+[% PROCESS html/rgb %]
+
+[% PROCESS example/split3
+   count=2
+%]
+
+[% PROCESS example/tbreak %]
+
+[% PROCESS example/vsplit2
+   from=3 to=8
+%]
+
+[% END %]

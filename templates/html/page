@@ -1,0 +1,3 @@
+[% INCLUDE html/header %]
+[% content %]
+[% PROCESS html/footer %]

@@ -1,0 +1,29 @@
+[%  library = libs.html
+    section = 'menus' ;
+    WRAPPER page 
+%]
+
+<p>
+These elements can be used to create menus and menu bars.
+</p>
+
+[% PROCESS html/rgb %]
+
+[% buttons = [
+	{ link => 'headers.html', text => 'Headers' }
+        { link => 'links.html',   text => 'Links'   }
+        { link => 'bars.html',    text => 'Bars'    }
+   ]
+%]
+
+[% PROCESS example/vsplit3 count=3 indent=1 %]
+
+[% PROCESS example/tbreak %]
+
+[% PROCESS example/vsplit3 from=4 to=4 indent=0 %]
+
+[% PROCESS example/tbreak %]
+
+[% PROCESS example/vsplit2 from=5 to=6 indent=0 %]
+
+[% END %]

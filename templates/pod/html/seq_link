@@ -1,0 +1,5 @@
+[% items = item.split('\|')
+   link  = items.0
+   text = items.1 or items.0
+-%]
+<a href="[% link %]">[% text %]</a>

@@ -1,0 +1,13 @@
+[%# row: an empty and orphaned HTML table row, <tr> . . . </tr>
+  # ARGS:
+  #	col	    # background colour (default: none)
+  #     valign      # vertical alignment (default: none)
+  #     rowspan     # span multiple rows (default: none)
+  #     content     # box content
+-%]
+<tr
+    [%- IF col %] bgcolor="[% col %]"[% END %]
+    [%- IF rowspan %] rowspan="[% rowspan %]"[% END %]
+    [%- IF valign %] valign="[% valign %]"[% END %]>
+[% content %]
+</tr>

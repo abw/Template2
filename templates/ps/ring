@@ -1,0 +1,9 @@
+[%  DEFAULT ps_ring_radius = '2 mm';
+    PROCESS ps/mm UNLESS global.ps.loaded.mm;
+    global.ps.loaded.ring = 1;
+-%]
+/ring {
+    newpath 
+    [% ps_ring_radius %] 0 360 arc
+    stroke
+} def

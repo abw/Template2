@@ -1,0 +1,6 @@
+[%  INCLUDE splash/button
+	select  = 0
+	bold    = 1
+	content = splash.name
+	link    = splash.homepage
+-%]

@@ -1,0 +1,14 @@
+[%# html/cell: an empty and orphaned HTML table cell, <td> . . . </td>
+  # ARGS:
+  #	col	    # background colour (default: none)
+  #     align       # horizontal alignment (default: none)
+  #     colspan     # span multiple columns (defualt: none)
+  #     content     # box content
+-%]
+<td
+    [%- IF width %] width="[% width %]"[% END %]
+    [%- IF col %] bgcolor="[% col %]"[% END %]
+    [%- IF colspan %] colspan="[% colspan %]"[% END %]
+    [%- IF  align %] align="[% align %]"[% END %]>
+[% content %]
+</td>

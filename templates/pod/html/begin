@@ -1,0 +1,1 @@
+[% view.print(item.content) IF item.format.search('html') %]

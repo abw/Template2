@@ -1,0 +1,14 @@
+[%# html/header: standard header for HTML pages
+  # ARGS:
+  #	bgcol	    # background colour (default: #ffffff)
+  #     title	    # page title
+  #     headers     # additional HTML headers
+-%]
+[% DEFAULT bgcol = '#ffffff' -%]
+<html>
+<head>
+<title>[% title %]</title>
+[% headers -%]
+</head>
+
+<body bgcolor="[% bgcol %]">

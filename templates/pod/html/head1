@@ -1,0 +1,3 @@
+<h1>[% view.print(item.title) %]</h1>
+
+[% view.print(item.content) %]

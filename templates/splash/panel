@@ -1,0 +1,34 @@
+<!-- tt2.splash.panel -->  
+[%
+  # splash/panel: a table with an edge
+  # ARGS:
+  #     select      # flag to indicate style (1: select, 0: unselect)
+  #     content     # box content
+  #     width       # box width (default: 0, grow to fit content)
+  # The following default to values set in the select style
+  #     edge        # edge colour
+  #     fill        # fill colour
+  #     border      # border width
+  #     pad	    # box padding
+    DEFAULT
+	style  = select ? splash.select : splash.unselect
+	edge   = style.col.edge or splash.col.edge
+	fill   = style.col.fill or splash.col.fill
+	border = style.border   or splash.border
+-%]
+[%  WRAPPER splash/box
+	col     = edge
+	pad     = 0 
+	space   = 0 
+	border  = 0;
+	inwidth = width ? '100%' : '';
+	WRAPPER splash/table
+	    col    = fill
+	    width  = inwidth
+	    border = 0
+	    space  = border;
+	    GET content;
+	END;
+    END;
+%]
+<!-- /splash.panel -->

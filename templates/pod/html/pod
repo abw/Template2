@@ -1,0 +1,2 @@
+<!-- Pod to HTML conversion by the Template Toolkit version 2 -->
+[% view.print(item.content) %]
