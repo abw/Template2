@@ -109,8 +109,8 @@ of variable definitions for substitution in the template.
 	deadline => 'the next chorus',
     };
 
-    $template->process('letters/overdrawn', $vars)
-	|| die $template->error(), "\n";
+    $tt->process('letters/overdrawn', $vars)
+	|| die $tt->error(), "\n";
 
 
 The process() method returns true (1) on success and prints the
@@ -272,7 +272,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.04, released on 27 June 2001.
+Template Toolkit version 2.04, released on 29 June 2001.
 
 =head1 COPYRIGHT
 

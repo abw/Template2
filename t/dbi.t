@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( . ./t ../lib ./blib/lib ../blib/lib );
+use lib qw( . ./t ./lib ../lib ./blib/lib ../blib/lib );
 use vars qw( $DEBUG $run $dsn $user $pass );
 use Template::Test;
 
@@ -451,4 +451,52 @@ Group 2 : The Foo Group
 
 
 
+#------------------------------------------------------------------------
+# test get_all()
+#------------------------------------------------------------------------
+
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+[% people = dbi.query('SELECT * FROM usr ORDER BY id').get_all -%]
+[% FOREACH p = people -%]
+<person id="[% p.id %]">
+  <name>[% p.name %]</name>
+</person>
+[% END; global.people = people %]
+-- expect --
+<person id="abw">
+  <name>Andy Wardley</name>
+</person>
+<person id="hans">
+  <name>Hans von Lengerke</name>
+</person>
+<person id="mrp">
+  <name>Martin Portman</name>
+</person>
+<person id="sam">
+  <name>Simon Matthews</name>
+</person>
+
+-- test --
+[% FOREACH p = global.people.reverse -%]
+<person>[% p.name %]</person>
+[% END %]
+-- expect --
+<person>Simon Matthews</person>
+<person>Martin Portman</person>
+<person>Hans von Lengerke</person>
+<person>Andy Wardley</person>
+
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+[% people = dbi.query('SELECT * FROM usr ORDER BY id') -%]
+first: [% people.get.name %]
+[% FOREACH p = people.get_all -%]
+rest: [% p.name %]
+[% END %]
+-- expect --
+first: Andy Wardley
+rest: Hans von Lengerke
+rest: Martin Portman
+rest: Simon Matthews
 

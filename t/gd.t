@@ -21,7 +21,7 @@ $^W = 1;
 
 eval "use GD;";
 
-if ( $@ ) {
+if ( $@ || $GD::VERSION < 1.20 ) {
     exit(0);
 }
 

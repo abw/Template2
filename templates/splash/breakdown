@@ -96,7 +96,7 @@
 <tr>
   <td bgcolor="[% rgbcol %]"><img 
     src="[% splash.images %]/[% col %]/single.[% img.type %]"
-    width="[% gap %]" height="[% gap %]" border=0></td>
+    width="[% gap %]" height="[% gap %]" border=0>---</td>
 </tr>
 [%- END %]
 

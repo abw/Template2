@@ -86,8 +86,8 @@ of variable definitions for substitution in the template.
 	debt     =&gt; '3 riffs and a solo',
 	deadline =&gt; 'the next chorus',
     };</pre>
-<pre>    $template-&gt;process('letters/overdrawn', $vars)
-	|| die $template-&gt;error(), &quot;\n&quot;;</pre>
+<pre>    $tt-&gt;process('letters/overdrawn', $vars)
+	|| die $tt-&gt;error(), &quot;\n&quot;;</pre>
 <p>
 The process() method returns true (1) on success and prints the
 template output to STDOUT, by default.  On error, the process() method
@@ -253,7 +253,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.04, released on 27 June 2001.
+Template Toolkit version 2.04, released on 29 June 2001.
 </p>
 [%- END %]
 [% WRAPPER section

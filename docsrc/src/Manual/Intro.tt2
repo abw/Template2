@@ -65,8 +65,8 @@ of variable definitions for substitution in the template.
 	deadline => 'the next chorus',
     };
 
-    $template->process('letters/overdrawn', $vars)
-	|| die $template->error(), "\n";
+    $tt->process('letters/overdrawn', $vars)
+	|| die $tt->error(), "\n";
 
 
 The process() method returns true (1) on success and prints the

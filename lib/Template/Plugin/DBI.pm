@@ -277,6 +277,7 @@ sub quote {
 
 sub DESTROY {
     my $self = shift;
+    delete($self->{ _STH });       # first DESTROY any query
     $self->{ _DBH }->disconnect() if $self->{ _DBH };
 }
 
@@ -360,6 +361,7 @@ sub new {
 
 sub get_first {
     my $self = shift;
+    $self->{ _STARTED } = 1;
 
     # set some status variables into $self
     @$self{ qw(  PREV   ITEM FIRST LAST COUNT INDEX ) } 
@@ -415,17 +417,43 @@ sub get_next {
 
     # NOTE: this needs fixing, flushing or documenting...
     # process any fixup handlers on the data
-    if (defined($fixup = $self->{ _FIXUP })) {
-	foreach (keys %$fixup) {
-	    $data->{ $_ } = &{ $fixup->{$_} }($data->{ $_ })
-		if exists $data->{ $_ };
-	}
-    }
+#    if (defined($fixup = $self->{ _FIXUP })) {
+#	foreach (keys %$fixup) {
+#	    $data->{ $_ } = &{ $fixup->{$_} }($data->{ $_ })
+#		if exists $data->{ $_ };
+#	}
+#    }
 
     $self->{ ITEM } = $data;
     return ($data, Template::Constants::STATUS_OK);
 }
 
+
+sub get {
+    my $self = shift;
+    my ($data, $error);
+
+    ($data, $error) = $self->{ _STARTED } 
+		    ? $self->get_next() : $self->get_first();
+
+    return $data;
+}
+
+
+sub get_all {
+    my $self = shift;
+    my $sth  = $self->{ _STH };
+    my $error;
+
+    my $data = $sth->fetchall_arrayref({});
+    $self->throw($error) if ($error = $sth->err());
+    unshift(@$data, $self->{ NEXT }) if $self->{ NEXT };
+    $self->{ LAST } = 1;
+    $self->{ NEXT } = undef;
+    $sth->finish();
+
+    return $data;
+}
 
 
 #------------------------------------------------------------------------
@@ -660,7 +688,7 @@ E<lt>abw@kfs.orgE<gt>.
 =head1 VERSION
 
 1.04, distributed as part of the
-Template Toolkit version 2.04, released on 27 June 2001.
+Template Toolkit version 2.04, released on 29 June 2001.
 
 
 

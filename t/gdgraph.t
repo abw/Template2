@@ -23,7 +23,7 @@ $^W = 1;
 
 eval "use GD; use GD::Graph;";
 
-if ( $@ ) {
+if ( $@ || $GD::VERSION < 1.20 ) {
     exit(0);
 }
 

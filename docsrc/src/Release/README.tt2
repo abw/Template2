@@ -91,6 +91,8 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
+Version 2.04 is mainly a bug fixing version.
+
 Version 2.03 includes Craig Barratt's 'latex' filter and GD plugins.
 The latex filter allow you to create PostScript/PDF/DVI output from 
 LaTeX source templates.  The GD plugins allow you to access the GD::*

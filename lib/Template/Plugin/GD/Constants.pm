@@ -27,7 +27,7 @@ package Template::Plugin::GD::Constants;
 require 5.004;
 
 use strict;
-use GD qw(:DEFAULT :cmp);
+use GD qw(/^gd/ /^GD/);
 use Template::Plugin;
 use base qw( Template::Plugin );
 use vars qw( @ISA $VERSION );
@@ -110,8 +110,8 @@ Lincoln D. Stein wrote the GD.pm interface to the GD library.
 
 =head1 VERSION
 
-1.07, distributed as part of the
-Template Toolkit version 2.04, released on 27 June 2001.
+1.08, distributed as part of the
+Template Toolkit version 2.04, released on 29 June 2001.
 
 =head1 COPYRIGHT
 

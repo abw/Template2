@@ -18,7 +18,29 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.04b - 27th June 2001
+# Version 2.04a -                                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Changed GD plugin and tests to require GD version 1.20.  See
+  http://www.tt2.org/pipermail/templates/2001-July/001212.html
+
+* Applied Craig's fix for the DBI plugin to correctly destroy a 
+  statement handle to ensure that finish() gets called on it even if the
+  iterator doesn't complete.  See:
+  http://www.tt2.org/pipermail/templates/2001-July/001216.html
+
+* Further to Craig's points in the above post, I added get_all() and 
+  get() to the DBI iterator so that you can now do this:
+
+  [% people = DBI.query(...) %]
+  [% person = people.get %]   # first person
+  [% person = people.get %]   # second person
+  [% FOREACH person = people.get_all %]
+     # third to nth person(s)
+  [% END %]
+
+#------------------------------------------------------------------------
+# Version 2.04 - 29th June 2001
 #------------------------------------------------------------------------
 
 * Applied a patch from Craig Barratt to both the regular
@@ -98,7 +120,6 @@
 * Fixed another problem identified by Jonas so that filters are no 
   longer cached.  See:
   http://www.tt2.org/pipermail/templates/2001-June/001192.html
-
 
 
 #------------------------------------------------------------------------
