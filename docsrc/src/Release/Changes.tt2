@@ -24,11 +24,15 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.08c -                                 ## DEVELOPER RELEASE ##
+# Version 2.08c - November 4th                    ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Applied a patch from Bradley Baetz to work around a bug in Perl when 
   using an overridden die(), as CGI::Carp does, for example.
+
+* Added the Image plugin interfacing to the Image::Size module, based
+  on examples posted to the mailing list by Darren and Mark.  See
+  http://tt2.org/pipermail/templates/2002-November/003876.html
 
 
 #------------------------------------------------------------------------
