@@ -426,6 +426,7 @@ lib/Template/Plugin/GD/Text/Wrap.pm
 lib/Template/Plugin/HTML.pm
 lib/Template/Plugin/Image.pm
 lib/Template/Plugin/Iterator.pm
+lib/Template/Plugin/Math.pm
 lib/Template/Plugin/Pod.pm
 lib/Template/Plugin/Procedural.pm
 lib/Template/Plugin/String.pm
