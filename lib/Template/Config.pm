@@ -27,14 +27,14 @@ require 5.004;
 
 use strict;
 use base qw( Template::Base );
-use vars qw( $VERSION $DEBUG $ERROR $AUTOLOAD 
+use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
 	     $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
 	     $STASH $SERVICE $CONTEXT );
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG    = 0 unless defined $DEBUG;
 $ERROR    = '';
-
+$INSTDIR  = '';
 $CONTEXT  = 'Template::Context';
 $FILTERS  = 'Template::Filters';
 $ITERATOR = 'Template::Iterator';
@@ -217,6 +217,23 @@ sub service {
 }
 
 
+#------------------------------------------------------------------------
+# instdir($dir)
+#
+# Returns the root installation directory appended with any local 
+# component directory passed as an argument.
+#------------------------------------------------------------------------
+
+sub instdir {
+    my ($class, $dir) = @_;
+    my $inst = $INSTDIR 
+	|| return $class->error("no installation directory");
+    $inst =~ s[/$][]g;
+    $inst .= "/$dir" if $dir;
+    return $inst;
+}
+
+
 #========================================================================
 # This should probably be moved somewhere else in the long term, but for
 # now it ensures that Template::TieString is available even if the 
@@ -334,7 +351,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 9th March 2000.
+Template Toolkit version 2.01, released on 28th March 2001.
 
 =head1 COPYRIGHT
 
