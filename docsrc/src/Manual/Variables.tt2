@@ -594,6 +594,14 @@ into the current namespace hash.
     [% import(user) %]
     [% id %]: [% name %]		# lwall: Larry Wall
 
+=item defined, exists
+
+Returns a true or false value if an item in the hash denoted by the key
+passed as an argument is defined or exists, respectively.
+
+    [% hash.defined('somekey') ? 'yes' : 'no' %]
+    [% hash.exists('somekey') ? 'yes' : 'no' %]
+
 =item size
 
 Returns the number of key =E<gt> value pairs in the hash.
