@@ -628,6 +628,16 @@ sub stash {
 }
 
 
+#------------------------------------------------------------------------
+# debug($command, @args, \%params)
+#
+# Method for controlling the debugging status of the context.  The first
+# argument can be 'on' or 'off' to enable/disable debugging, 'format'
+# to define the format of the debug message, or 'msg' to generate a 
+# debugging message reporting the file, line, message text, etc., 
+# according to the current debug format.
+#------------------------------------------------------------------------
+
 sub debug {
     my $self = shift;
     my $hash = ref $_[-1] eq 'HASH' ? pop : { };
@@ -645,7 +655,7 @@ sub debug {
     }
 
     if (@args) {
-	if ($args[0] =~ /^dir$/i) {
+	if ($args[0] =~ /^msg$/i) {
 	    my $format = $self->{ DEBUG_FORMAT };
 	    $format = $DEBUG_FORMAT unless defined $format;
 	    $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
@@ -653,13 +663,13 @@ sub debug {
 	}
 	elsif ($args[0] =~ /^format$/i) {
 	    $self->{ DEBUG_FORMAT } = $args[1];
-#	    return "## set format to $args[1]\n";
 	}
 	# else ignore
     }
 
     return '';
 }
+
 
 #------------------------------------------------------------------------
 # AUTOLOAD
