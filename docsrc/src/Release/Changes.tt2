@@ -25,7 +25,16 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.11a - 6th Januray 2004           
+# Version 2.11b - 7th Januray 2004                ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied patch from Myk Melez to ensure the 'component' variable 
+  remains correctly set to the current templates.  See
+  http://template-toolkit.org/pipermail/templates/2004-January/005483.html
+
+
+#------------------------------------------------------------------------
+# Version 2.11a - 6th Januray 2004                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed bug in t/date.t and corrected version number of 
