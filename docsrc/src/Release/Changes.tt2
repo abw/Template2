@@ -38,6 +38,9 @@
 
 * Fixed a html.t test to allow numerical instead of named entities (mark)
 
+* Added the params() method to the CGI plugin.
+
+
 #------------------------------------------------------------------------
 # Version 2.08a - August 14th 2002                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
