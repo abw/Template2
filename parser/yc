@@ -17,9 +17,9 @@
 #
 #========================================================================
 
-GRAMMAR=Parser.yp
-OUTPUT=../lib/Template/Grammar.pm
-TEMPLATE=Grammar.pm.skel
+: ${GRAMMAR:="Parser.yp"}
+: ${OUTPUT:="../lib/Template/Grammar.pm"}
+: ${TEMPLATE:="Grammar.pm.skel"}
 
 echo "Compiling parser grammar (${GRAMMAR} -> ${OUTPUT})"
 
