@@ -43,7 +43,7 @@ my $tt = Template->new(
     INCLUDE_PATH => "$inst/templates",
     PRE_PROCESS  => 'html/rgb',
     OUTPUT_PATH  => $dest,
-);
+) || die Template->error(), "\n";
 
 my $vars = {
     gifs    => load_gifs($src),

@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.05d, detailing
+#   Revision history for the Template Toolkit version 2.06, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -17,7 +17,17 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.05d - 2 Oct 2001                     ## DEVELOPER RELEASE ##
+# Version 2.06 - 7th Nov 2001
+#------------------------------------------------------------------------
+
+* Fixed a bug in t/compile5.t which caused the following test warning on 
+  Win32: "Cannot chdir to D/blah/blah/Template-Toolkit-2.05c/t/test: No 
+  such file or directory at t\compile5.t line 73".  Thanks to Chris 
+  Winters for finding the bug and testing the fix.
+
+
+#------------------------------------------------------------------------
+# Version 2.05d - 6th Nov 2001                    ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in the parser which was missing a '^' anchor on the regex

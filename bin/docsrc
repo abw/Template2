@@ -15,6 +15,7 @@ die "cannot find directory '$DOCSRC'\n" unless -d $DOCSRC;
 my $not = join(' ', map { "-not -regex '$_'" } @IGNORE);
 
 print STDERR "Building $MANIFEST\n";
+print STDERR "  find $DOCSRC $not > $MANIFEST\n";
 system("find $DOCSRC $not > $MANIFEST");
 print STDERR "Building $TARFILE\n";
 system("tar zcf $TARFILE -T $MANIFEST");
