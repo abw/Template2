@@ -100,7 +100,7 @@ $tt2->context->define_filter('another', \&another, 1);
 
 test_expect(\*DATA, [ default => $tt1, evalperl => $tt2 ], $params);
 
-ok( -f "$dir/$file" );
+ok( -f "$dir/$file", "$dir/$file exists" );
 unlink "$dir/$file" if -f "$dir/$file";
 
 
@@ -417,6 +417,32 @@ Mary had a little Lamb
 <br>
 You shall have a fishy on a little dishy, when the boat comes in.  What 
 if I can't wait until then?  I'm hungry!
+
+-- test --
+[% global.blocktext FILTER html_para_break %]
+
+-- expect --
+The cat sat on the mat
+<br>
+<br>
+Mary had a little Lamb
+<br>
+<br>
+You shall have a fishy on a little dishy, when the boat comes in.  What 
+if I can't wait until then?  I'm hungry!
+
+-- test --
+[% global.blocktext FILTER html_line_break %]
+
+-- expect --
+The cat sat on the mat<br>
+<br>
+Mary had a little Lamb<br>
+<br>
+<br>
+<br>
+You shall have a fishy on a little dishy, when the boat comes in.  What <br>
+if I can't wait until then?  I'm hungry!<br>
 
 -- test --
 [% global.blocktext FILTER truncate(10) %]
