@@ -239,17 +239,17 @@ sub as_perl {
     $block =~ s/\s+$//;
 
     $defblocks = join('', map {
-	my $code = $defblocks->{ $_ };
-	$code =~ s/\n/\n        /g;
-	$code =~ s/\s*$//;
-	"        '$_' => $code,\n";
+        my $code = $defblocks->{ $_ };
+        $code =~ s/\n/\n        /g;
+        $code =~ s/\s*$//;
+        "        '$_' => $code,\n";
     } keys %$defblocks);
     $defblocks =~ s/\s+$//;
 
     $metadata = join('', map { 
-	my $x = $metadata->{ $_ }; 
-	$x =~ s/(['\\])/\\$1/g; 
-	"        '$_' => '$x',\n";
+        my $x = $metadata->{ $_ }; 
+        $x =~ s/(['\\])/\\$1/g; 
+        "        '$_' => '$x',\n";
     } keys %$metadata);
     $metadata =~ s/\s+$//;
 
