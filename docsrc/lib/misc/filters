@@ -97,12 +97,21 @@ output:
 
     Binary "&lt;=&gt;" returns -1, 0, or 1 depending on...
 
-If the Apache::Util or HTML::Entities modules are installed on your
-system then these will instead be used to encode the text via the
-escape_html() or encode_entities() subroutines respectively.  Both
-these modules correctly handle the full gamut of HTML entities and
-will additionally escape characters like 'é' to '&eacute;'.  For
-further information, see
+=head2 html_entity
+
+The html filter is fast and simple but it doesn't encode the full
+range of HTML entities that your text may contain.  The html_entity
+filter uses either the Apache::Util module (which is written in C and
+is therefore faster) or the HTML::Entities module (written in Perl but
+equally as comprehensive) to perform the encoding.  If one or other of
+these modules are installed on your system then the text will be
+encoded (via the escape_html() or encode_entities() subroutines
+respectively) to convert all extended characters into their
+appropriate HTML entities (e.g. converting 'é' to '&eacute;').  If
+neither module is available on your system then an 'html_all' exception
+will be thrown reporting an appropriate message.   
+
+For further information on HTML entity encoding, see
 http://www.w3.org/TR/REC-html40/sgml/entities.html.
 
 =head2 html_para
