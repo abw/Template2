@@ -261,7 +261,7 @@ docset => {
             prev   => 'Manual',
             next   => 'Library',
         
-            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Namespace_Constants', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_Procedural', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath' ],
+            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Namespace_Constants', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_DBI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_GD_Image', 'Plugin_GD_Polygon', 'Plugin_GD_Constants', 'Plugin_GD_Text', 'Plugin_GD_Text_Align', 'Plugin_GD_Text_Wrap', 'Plugin_GD_Graph_lines', 'Plugin_GD_Graph_lines3d', 'Plugin_GD_Graph_bars', 'Plugin_GD_Graph_bars3d', 'Plugin_GD_Graph_points', 'Plugin_GD_Graph_linespoints', 'Plugin_GD_Graph_area', 'Plugin_GD_Graph_mixed', 'Plugin_GD_Graph_pie', 'Plugin_GD_Graph_pie3d', 'Plugin_HTML', 'Plugin_Image', 'Plugin_Iterator', 'Plugin_Pod', 'Plugin_Procedural', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap', 'Plugin_XML_DOM', 'Plugin_XML_RSS', 'Plugin_XML_Simple', 'Plugin_XML_Style', 'Plugin_XML_XPath' ],
         
             pages  => {
                 Template => {
@@ -860,6 +860,19 @@ docset => {
                     about   => 'Plugin to create HTML elements',
                 
                     prev    => 'Plugin_GD_Graph_pie3d',
+                    next    => 'Plugin_Image',
+                },
+                Plugin_Image => {
+                    id      => 'Plugin_Image',
+                    name    => 'Template::Plugin::Image',
+                    title   => 'Template::Plugin::Image',
+                    podname => 'Template::Plugin::Image',
+                    url     => 'Modules/Template/Plugin/Image.html',
+                    uplink  => '../../..',
+                    author  => 'abw',
+                    about   => 'Plugin access to image sizes',
+                
+                    prev    => 'Plugin_HTML',
                     next    => 'Plugin_Iterator',
                 },
                 Plugin_Iterator => {
@@ -872,7 +885,7 @@ docset => {
                     author  => 'abw',
                     about   => 'Plugin to create iterators (Template::Iterator)',
                 
-                    prev    => 'Plugin_HTML',
+                    prev    => 'Plugin_Image',
                     next    => 'Plugin_Pod',
                 },
                 Plugin_Pod => {
@@ -1376,6 +1389,7 @@ docset => {
 	'Template::Plugin::GD::Graph::pie' => 'Modules/Template/Plugin/GD/Graph/pie.html',
 	'Template::Plugin::GD::Graph::pie3d' => 'Modules/Template/Plugin/GD/Graph/pie3d.html',
 	'Template::Plugin::HTML' => 'Modules/Template/Plugin/HTML.html',
+	'Template::Plugin::Image' => 'Modules/Template/Plugin/Image.html',
 	'Template::Plugin::Iterator' => 'Modules/Template/Plugin/Iterator.html',
 	'Template::Plugin::Pod' => 'Modules/Template/Plugin/Pod.html',
 	'Template::Plugin::Procedural' => 'Modules/Template/Plugin/Procedural.html',

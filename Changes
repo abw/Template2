@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.08b, detailing
+#   Revision history for the Template Toolkit version 2.08c, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -21,6 +21,18 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.08c - November 4th                    ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied a patch from Bradley Baetz to work around a bug in Perl when 
+  using an overridden die(), as CGI::Carp does, for example.
+
+* Added the Image plugin interfacing to the Image::Size module, based
+  on examples posted to the mailing list by Darren and Mark.  See
+  http://tt2.org/pipermail/templates/2002-November/003876.html
+
 
 #------------------------------------------------------------------------
 # Version 2.08b - November 1st 2002               ## DEVELOPER RELEASE ##

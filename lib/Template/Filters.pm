@@ -777,11 +777,11 @@ Template::Filters object.  A reference to a hash array of configuration
 items may be passed as a parameter.  These are described below.  
 
     my $filters = Template::Filters->new({
-	FILTERS => { ... },
+        FILTERS => { ... },
     });
 
     my $template = Template->new({
-	LOAD_FILTERS => [ $filters ],
+        LOAD_FILTERS => [ $filters ],
     });
 
 A default Template::Filters module is created by the Template.pm module
@@ -840,11 +840,11 @@ dynamic (1).  A filter may also be specified as a solitary subroutine
 reference and is assumed to be static.
 
     $filters = Template::Filters->new({
-  	FILTERS => {
-  	    'sfilt1' =>   \&static_filter,      # static
+        FILTERS => {
+            'sfilt1' =>   \&static_filter,      # static
             'sfilt2' => [ \&static_filter, 0 ], # same as above
-  	    'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
-  	},
+            'dfilt1' => [ \&dyanamic_filter_factory, 1 ],
+        },
     });
 
 Additional filters can be specified at any time by calling the 
@@ -866,9 +866,9 @@ the output of a template block which is passed as the only argument.
 The subroutine should return the modified text.
 
     sub static_filter {
-  	my $text = shift;
-	# do something to modify $text...
-  	return $text;
+        my $text = shift;
+        # do something to modify $text...
+        return $text;
     }
 
 The following template fragment:
@@ -891,13 +891,13 @@ another subroutine reference (usually a closure) which implements the
 filter.
 
     sub dynamic_filter_factory {
-	my ($context, @args) = @_;
+        my ($context, @args) = @_;
 
-  	return sub {
-  	    my $text = shift;
-	    # do something to modify $text...
-	    return $text;	    
-  	}
+        return sub {
+            my $text = shift;
+            # do something to modify $text...
+            return $text;           
+        }
     }
 
 The following template fragment:
@@ -1394,8 +1394,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.63, distributed as part of the
-Template Toolkit version 2.08b, released on 01 November 2002.
+2.64, distributed as part of the
+Template Toolkit version 2.08c, released on 04 November 2002.
 
 =head1 COPYRIGHT
 

@@ -45,6 +45,7 @@ $STD_PLUGINS   = {
     'file'       => 'Template::Plugin::File',
     'format'     => 'Template::Plugin::Format',
     'html'       => 'Template::Plugin::HTML',
+    'image'      => 'Template::Plugin::Image',
     'iterator'   => 'Template::Plugin::Iterator',
     'pod'        => 'Template::Plugin::Pod',
     'table'      => 'Template::Plugin::Table',
@@ -1014,8 +1015,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.60, distributed as part of the
-Template Toolkit version 2.08b, released on 01 November 2002.
+2.61, distributed as part of the
+Template Toolkit version 2.08c, released on 04 November 2002.
 
 =head1 COPYRIGHT
 
