@@ -48,12 +48,27 @@ my $tt2 = Template->new($config);
 $config->{ ERROR } = 'barfed';
 my $tt3 = Template->new($config);
 
+$config->{ PRE_PROCESS  } = 'before';
+$config->{ POST_PROCESS } = 'after';
+$config->{ PROCESS } = 'process';
+$config->{ WRAPPER } = 'outer';
+my $tt4 = Template->new($config);
+
+$config->{ WRAPPER } = [ 'outer', 'inner' ];
+my $tt5 = Template->new($config);
+
 my $replace = {
     title => 'Joe Random Title',
 };
 
 
-test_expect(\*DATA, [ tt1 => $tt1, tt2 => $tt2, tt3 => $tt3 ], $replace);
+test_expect(\*DATA, [ 
+    tt1 => $tt1, 
+    tt2 => $tt2, 
+    tt3 => $tt3,
+    wrapper => $tt4,
+    nested  => $tt5,
+], $replace);
 
 __END__
 # test that headers and footers get added
@@ -192,3 +207,40 @@ header:
   menu: This is the menu, defined in 'config'
 barfed: [food] [cabbages]
 footer
+
+-- test --
+-- use wrapper --
+[% title = 'The Foo Page' -%]
+begin page content
+title is "[% title %]"
+end page content
+-- expect --
+This comes before
+<outer title="The Foo Page">
+begin process
+begin page content
+title is "The Foo Page"
+end page content
+end process
+</outer>
+This comes after
+
+-- test --
+-- use nested --
+[% title = 'The Bar Page' -%]
+begin page content
+title is "[% title %]"
+end page content
+-- expect --
+This comes before
+<outer title="inner The Bar Page">
+<inner title="The Bar Page">
+begin process
+begin page content
+title is "The Bar Page"
+end page content
+end process
+</inner>
+
+</outer>
+This comes after
