@@ -1,15 +1,18 @@
-[%  WRAPPER splash/button
-	    style = splash.style.select;
+[% WRAPPER splash/button
+	   style = splash.style.select;
 %]
 
 [% WRAPPER splash/text
-           style = splash.style.select;
+           style = splash.style.select
+	   size  = '+1'
 -%]
-<h3>Hello World</h3>
+Hello World
 [% END %]
 
-[% WRAPPER splash/text
+[% WRAPPER splash/button + splash/text
 	   style = splash.style.default
+	   bgcol = splash.style.select.col.fore
+	   bold  = 1
 -%]
 Choosing a Language for your Project
 [% END %]

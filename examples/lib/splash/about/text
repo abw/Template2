@@ -1,0 +1,5 @@
+The splash/text element can be used to apply a particular style to a
+piece of content text.  If no style is specified then the default
+style is used (which may do nothing).  In addition to font face, size,
+colour and boldness, you can also specify a 'link' value to convert it
+to a hyperlink.

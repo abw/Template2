@@ -1,0 +1,3 @@
+The splash/frame template create a frame with an optional border into
+which splash/panel template can be embedded.  It is implemented as an
+HTML table.

@@ -1,0 +1,3 @@
+The splash/button template provides one of the fundamental components
+of the [% splash.bold %] library - a coloured box with rounded corners.
+It can be used as a menu button, title bar, panel frame, and so on.
