@@ -74,10 +74,11 @@ chunks:	    chunks chunk	    { push(@{$_[1]}, $_[2])
 ;
 
 chunk:	    TEXT		    { $factory->textblock($_[1])          }
-	|   statement ';'
+	|   statement ';'           { my $line = ${$_[0]->{LINE}};
+                                      $line =~ s/\-.*$//;
+                                      "#line $line \"$_[0]->{FILEINFO}->[-1]->{path}\"\n$_[1]" }
 ;
 
-                          # { "#line ${$_[0]->{LINE} \"template\"\n$_[1]" }
 statement:  directive      
 	|   defblock
 	|   anonblock
