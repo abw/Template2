@@ -97,6 +97,12 @@ output:
 
     Binary "&lt;=&gt;" returns -1, 0, or 1 depending on...
 
+If the Apache::Util or HTML::Entities modules are installed on your
+system then these will instead be used to encode the text.  Both these
+modules correctly handle the full gamut of HTML entities and will 
+additionally escape characters like 'é' to '&eacute;'.  For further 
+information, see http://www.w3.org/TR/REC-html40/sgml/entities.html.
+
 =head2 html_para
 
 This filter formats a block of text into HTML paragraphs.  A sequence of 
