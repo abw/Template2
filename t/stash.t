@@ -204,4 +204,24 @@ foo
 -- expect --
 bar
 
+-- test --
+[% 10 le 20 ? 'foo' : 'bar' %]
+-- expect --
+foo
+
+-- test --
+[% 10 ge 20 ? 'foo' : 'bar' %]
+-- expect --
+bar
+
+-- test --
+[% 10 ge 10 ? 'foo' : 'bar' %]
+-- expect --
+foo
+
+-- test --
+[% 10 le 10 ? 'foo' : 'bar' %]
+-- expect --
+foo
+
 
