@@ -24,7 +24,17 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.07a -                                 ## DEVELOPER RELEASE ##
+# Version 2.07b - July 7th 2002                   ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Added the CONSTANTS, CONSTANTS_NAMESPACE and NAMESPACE options, the
+  Template::Namespace::Constants module, documentation and t/constants.t
+  test suite.  This adds support for compile-time constant folding and
+  other custom namespace handlers.
+
+
+#------------------------------------------------------------------------
+# Version 2.07a - July 5th 2002                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed the Perl and XS stashes to automatically promote a scalar
