@@ -104,8 +104,22 @@ my $params = {
     numbers   => [ map { My::Object->new($_) }
 		   qw( 1 02 10 12 021 ) ],
     duplicates => [ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
-
 };
+
+my $tt = Template->new();
+my $tc = $tt->context();
+
+# define vmethods using define_vmethod() interface.
+$tc->define_vmethod(item   => commas => $Template::Stash::SCALAR_OPS->{ commify });
+$tc->define_vmethod(scalar => commaz => $Template::Stash::SCALAR_OPS->{ commify });
+$tc->define_vmethod(list   => oddnos => \&odd);
+$tc->define_vmethod(array  => jumblate => \&jumble);
+$tc->define_vmethod(hash   => dump => sub {
+    my $hash = shift;
+    return '{ ' 
+        . join(', ', map { "$_ => '$hash->{$_}'" } sort keys %$hash)
+        . ' }';
+});
 
 test_expect(\*DATA, undef, $params);
 
@@ -159,7 +173,9 @@ The_dog_sat_on_the_log
 __The_dog_sat_on_the_log
 
 
+#------------------------------------------------------------------------
 # HASH_OPS
+#------------------------------------------------------------------------
 
 -- test --
 [% hash.keys.sort.join(', ') %]
@@ -208,7 +224,27 @@ good
 good
 
 
+#------------------------------------------------------------------------
+# USER DEFINED HASH_OPS
+#------------------------------------------------------------------------
+
+-- test --
+-- name dump hash virtual method --
+[% product = {
+     id = 'abc-123',
+     name = 'ABC Widget #123'
+     price = 7.99
+   };
+   product.dump
+%]
+-- expect --
+{ id => 'abc-123', name => 'ABC Widget #123', price => '7.99' }
+
+
+
+#------------------------------------------------------------------------
 # LIST_OPS
+#------------------------------------------------------------------------
 
 -- test --
 [% metavars.first %]
@@ -350,6 +386,16 @@ Tom
 [% big_num = "hello world"; big_num.commify %]
 -- expect --
 hello world
+
+-- test --
+[% big_num = "1234567890"; big_num.commas %]
+-- expect --
+1,234,567,890
+
+-- test --
+[% big_num = "1234567890"; big_num.commaz %]
+-- expect --
+1,234,567,890
 
 
 -- test --
@@ -500,6 +546,15 @@ Th, eCa, tSa, ton, The, Mat
 1, 2, 3, 4, 5, 6, 0
 4, 5, 6, 0, 1, 2, 3
 
+-- test --
+-- name jumblate list virtual method --
+[% items = [0..6] -%]
+[% items.jumblate.join(', ') %]
+[% items.jumblate(3).join(', ') %]
+-- expect --
+1, 2, 3, 4, 5, 6, 0
+4, 5, 6, 0, 1, 2, 3
+
 -- test -- 
 [% primes.sum %]
 -- expect --
@@ -507,6 +562,12 @@ Th, eCa, tSa, ton, The, Mat
 
 -- test --
 [% primes.odd.nsort.join(', ') %]
+-- expect --
+3, 5, 7, 11, 13, 17, 19
+
+-- test --
+-- name oddnose virtual method --
+[% primes.oddnos.nsort.join(', ') %]
 -- expect --
 3, 5, 7, 11, 13, 17, 19
 
