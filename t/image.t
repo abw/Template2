@@ -22,9 +22,10 @@ use Cwd;
 use File::Spec;
 $^W = 1;
 
-eval "use Image::Info" || eval "use Image::Size";
+eval "use Image::Info";
 if ($@) {
-    skip_all('Neither Image::Info nor Image::Size installed');
+    eval "use Image::Size";
+    skip_all('Neither Image::Info nor Image::Size installed') if $@;
 }
 
 my $dir  = -d 't' ? 'images' : File::Spec->catfile(File::Spec->updir(), 'images');
@@ -35,6 +36,7 @@ my $vars = {
         power => File::Spec->catfile($dir, 'tt2power.gif'),
     },
 };
+
 
 test_expect(\*DATA, undef, $vars);
 
