@@ -192,7 +192,7 @@ tt2_install ::
 	@$(PERL) bin/tt2inst -v "$(TT_PREFIX)"
 
 tt2_splash ::
-	@$(PERL) -I lib bin/gifsplash -v
+	@$(PERL) -I lib bin/gifsplash -v -i "$(TT_PREFIX)"
 
 EOF
     $amble .=<<EOF if $main::TT_BUILD_DOCS;
