@@ -386,7 +386,7 @@ sub get {
 	$result = $self->_dotop($root, $ident, $args);
     }
 
-    return defined $result ? $result : '';
+    return defined $result ? $result : $self->undefined($ident, $args);
 }
 
 
@@ -502,6 +502,19 @@ sub update {
 }
 
 
+#------------------------------------------------------------------------
+# undefined($ident, $args)
+#
+# Method called when a get() returns an undefined value.  Can be redefined
+# in a subclass to implement alternate handling.
+#------------------------------------------------------------------------
+
+sub undefined {
+    my ($self, $ident, $args);
+    return '';
+}
+
+
 #========================================================================
 #                  -----  PRIVATE OBJECT METHODS -----
 #========================================================================
@@ -532,7 +545,7 @@ sub update {
 sub _dotop {
     my ($self, $root, $item, $args, $lvalue) = @_;
     my $rootref = ref $root;
-    my $atroot  = ($rootref eq __PACKAGE__);
+    my $atroot  = ($root eq $self);
     my ($value, @result);
 
     $args ||= [ ];
@@ -681,6 +694,7 @@ sub _dotop {
 sub _assign {
     my ($self, $root, $item, $args, $value, $default) = @_;
     my $rootref = ref $root;
+    my $atroot  = ($root eq $self);
     my $result;
     $args ||= [ ];
     $default ||= 0;
@@ -694,7 +708,7 @@ sub _assign {
     return undef						## RETURN
 	unless $root and defined $item and $item !~ /^[\._]/;
     
-    if ($rootref eq 'HASH' || $rootref eq __PACKAGE__) {
+    if ($rootref eq 'HASH' || $atroot) {
 #	if ($item eq 'IMPORT' && UNIVERSAL::isa($value, 'HASH')) {
 #	    # import hash entries into root hash
 #	    @$root{ keys %$value } = values %$value;
@@ -939,8 +953,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.74, distributed as part of the
-Template Toolkit version 2.09b, released on 24 April 2003.
+2.75, distributed as part of the
+Template Toolkit version 2.09c, released on 29 April 2003.
 
 =head1 COPYRIGHT
 
