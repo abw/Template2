@@ -103,7 +103,6 @@ $LIST_OPS = {
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
 		    
-};
 $HASH_OPS = { 
     %$Template::Stash::HASH_OPS,
     defined $HASH_OPS ? %$HASH_OPS : (),
