@@ -397,7 +397,7 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-Template Toolkit version 2.01, released on 28th March 2001.
+Template Toolkit version 2.01, released on 30th March 2001.
 
 
 

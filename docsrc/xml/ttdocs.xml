@@ -1,5 +1,6 @@
 <docset id="tt2" name="Template" title="Template Toolkit"
 	about="A fast, powerful and extensible template processing system">
+
     <intro>
 	This is the documentation set for the Template Toolkit.  It is 
 	split into a number of "books" which describe different aspects
@@ -39,6 +40,7 @@
     <!-- USER MANUAL -->
     <book id="Manual" prefix="Template/Manual" title="User Manual"
 	  about="User guide and reference manual for the Template Toolkit">
+
 	<intro>
 	    This is the comprehensive user guide and reference manual for
 	    the Template Toolkit.
@@ -183,6 +185,7 @@
     <!-- MODULES -->
     <book id="Modules" title="Module Documentation"
 	  about="Core modules comprising the Template Toolkit">
+
 	<intro>This section contains the documentation for the
                modules that comprise the Template Toolkit.
         </intro>
@@ -416,28 +419,9 @@
     </book>
 
 
-    <!-- FAQ -->
-    <book id="FAQ" title="Frequently Asked Questions"
-		   about="Frequently Asked Questions">
-
-	<!-- Template::FAQ -->
-	<page id="FAQ" 
-	      title="Frequently Asked Questions"
-	      about="Frequently Asked Questions about the Template Toolkit"
-	      standalone="1"
-	      podfile="Template/FAQ.pod">
-	    <intro>
-		This is the Frequently Asked Questions list for the
-		Template Toolkit.  More accurately, it's a very thin
-		placeholder for where the FAQ will soon be.
-	    </intro>
-	</page>
-    </book>
-
-
     <!-- LIBRARY -->
     <book id="Library" prefix="Template/Library" title="Libraries"
-	  about="Reusable template libraries for rapid content creation">
+	  about="Template libraries">
         <intro>
           This section contains documentation for the template libraries
           distributed with the Template Toolkit.
@@ -445,7 +429,7 @@
 
 	<!-- Template::Library::HTML -->
 	<page id="HTML" title="HTML Library"
-	      about="Template library for basic HTML pages"
+	      about="Template library for building basic HTML pages"
 	      standalone="1"
 	      seealso="Template::Library::Splash">
 	    <intro>
@@ -456,7 +440,7 @@
 
 	<!-- Template::Library::Splash -->
 	<page id="Splash" title="Splash! Library"
-	      about="Template widget set for fancy HTML user interfaces"
+	   about="Template library for building stylish HTML user interfaces"
 	      standalone="1"
 	      seealso="Template::Library::HTML">
 	    <intro>
@@ -480,7 +464,7 @@
 
     <!-- TOOLS -->
     <book id="Tools" prefix="Template/Tools"
-	  about="Useful scripts distributed with the Template Toolkit">
+	  about="Template Tools">
         <intro>
 	    This section contains documentation for 'tpage' and 'ttree',
             two useful template processing tools distributed with the 
@@ -497,9 +481,28 @@
     </book>
 
 
+    <!-- FAQ -->
+    <book id="FAQ" title="Frequently Asked Questions"
+		   about="Frequently Asked Questions">
+
+	<!-- Template::FAQ -->
+	<page id="FAQ" 
+	      title="Frequently Asked Questions"
+	      about="Frequently Asked Questions about the Template Toolkit"
+	      standalone="1"
+	      podfile="Template/FAQ.pod">
+	    <intro>
+		This is the Frequently Asked Questions list for the
+		Template Toolkit.  More accurately, it's a very thin
+		placeholder for where the FAQ will soon be.
+	    </intro>
+	</page>
+    </book>
+
+
     <!-- RELEASE NOTES -->
     <book id="Release" type="text" title="Release Notes"
-	  about="README, Changes and TODO files">
+	  about="Release notes: README, Changes, TODO">
         <intro>
 	  This section contains the release notes for the Template Toolkit.
         </intro>

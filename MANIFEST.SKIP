@@ -11,5 +11,7 @@
 ^docs/config/\w+\.cfg
 ^docs/html/(?!README)
 ^docs/ttree.cfg
+^examples/html
+^t/dbi_test.cfg
 ^clib/
 ^t/test/src/complex.org

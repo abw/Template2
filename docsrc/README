@@ -1,0 +1,43 @@
+This is the docsrc bundle for the Template Toolkit.  This contains all
+the templates, XML, scripts and other bits and pieces required to build
+the Template Toolkit documentation in both POD and HTML form.
+
+Contents:
+
+    bin     scripts for building the TT documentation
+    lib     library containing shared document "chunks"
+    pod     output for generated .pod files
+    src     source directory for documentation templates
+    txt     output for generated text files (e.g. Changes)
+    xml     source directory for XML files
+
+This 'docsrc' directory should be installed within the Template 
+Toolkit distribution directory, i.e. at the same level and alongside
+the 'docs' and 'lib' directories.
+
+The source templates for the documentation are in the 'src' directory.
+Additional template elements can be found in the 'lib' library directory.
+The 'xml' directory contains the 'ttdocs.xml' file which contains
+metadata for the documentation set.  
+
+The 'bin' directory contains the 'ttmkdocs' script which builds the 
+documentation.  The generated documentation gets written to the 
+'pod' directory in POD form.  The HTML documentation gets written
+to the '../docs/src' directory (yes, that's the 'docs' directory 
+in the distribution root) along with the '../docs/lib/docset/config'
+file which includes data structures describing the documentation 
+pages.  The release notes (README, Changes and TODO) get written 
+into the 'txt' directory.
+
+The 'ttpodglu' script can then be used to install the POD documentation
+and release notes into place.  The POD files in 'pod' gets glued onto
+the end of the corresponding .pm files in '../lib/' (yep, the main TT2
+lib directory), or copied as a '.pod' file if there isn't a corresponding
+.pm file (e.g. Template::Manual, Template::FAQ, etc).  The documentation
+for the tools, Template::Tools::(tpage|ttree), also get grafted onto
+the end of the relevant scripts in ../bin.  The release notes get
+copied to '..', the main TT2 distribution directory.
+
+
+
+

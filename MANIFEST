@@ -5,11 +5,16 @@ README
 TODO
 bin/README
 bin/tpage
+bin/tt2inst
 bin/ttree
 docs/README
 docs/html/README
 docs/lib/config
 docs/lib/docset/config
+docs/lib/docset/index
+docs/lib/docset/info
+docs/lib/docset/maker
+docs/lib/docset/meta
 docs/lib/footer
 docs/lib/header
 docs/lib/link
@@ -96,7 +101,7 @@ docs/style/splash/menu
 docs/style/splash/navigate
 docs/style/splash/pagemenu
 docs/style/splash/section
-examples/html/README
+examples/README
 examples/lib/README
 examples/lib/config
 examples/lib/example/README
@@ -306,8 +311,8 @@ images/splash/sky/botright.png
 images/splash/sky/square.png
 images/splash/sky/topleft.png
 images/splash/sky/topright.png
-images/ttdotorg.gif
 images/tt2power.gif
+images/ttdotorg.gif
 lib/Template.pm
 lib/Template/Base.pm
 lib/Template/Config.pm

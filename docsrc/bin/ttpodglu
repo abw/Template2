@@ -86,11 +86,11 @@ find({
     no_chdir => 1,
 },  '.');
 
-glu_file("Template/Tools/tpage.pod", "$bin/tpage");
-glu_file("Template/Tools/ttree.pod", "$bin/ttree");
+glue_file("Template/Tools/tpage.pod", "$bin/tpage");
+glue_file("Template/Tools/ttree.pod", "$bin/ttree");
 
 foreach my $f (qw( README Changes TODO )) {
-    copy("$txt/$f", "$root/$f") || die "$txt/$f: $!\n";
+    copy_file("$txt/$f", "$root/$f");
 }
 
 #------------------------------------------------------------------------
@@ -109,19 +109,18 @@ sub wanted {
     my $base = $1;
 
     if (-f "$lib/$base.pm") {
-	glu_file("$file.pod", "$lib/$base.pm");
+	glue_file("$file.pod", "$lib/$base.pm");
     }
     else {
-	print "copying $base.pod\n" unless $args->{ q };
 	my $dir = dirname("$lib/$base");
 	mkpath($dir) unless -d $dir;
-	copy("$_.pod", "$lib/$_.pod") || die "$_.pod: $!\n";
+	copy_file("$_.pod", "$lib/$_.pod");
     }
 }
 
 
 
-sub glu_file {
+sub glue_file {
     my ($pod, $pm) = @_;
     local *FP;
     local $/ = undef;
@@ -143,4 +142,10 @@ sub glu_file {
     open(FP, ">$pm") || die "> $pm: $!\n";
     print FP $text;
     close(FP);
+}
+
+sub copy_file {
+    my ($src, $dest) = @_;
+    print "copying $src\n" unless $args->{ q };
+    copy($src, $dest) || die "$src: $!\n";
 }
