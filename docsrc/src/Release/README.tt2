@@ -53,7 +53,15 @@ appropriate sex, then you can always return it for a full refund. :-)
 WHAT'S NEW?
 -----------
 
-The most exciting new feature in version 2.05 is Doug Steinwand's
+Version 2.08 adds compile time constant folding which can result in a
+significant performance boost when processing templates.  It also 
+offers several other minor enhancements and bug fixes.
+
+Version 2.07 was a major maintenance release, fixing numerous minor bugs
+and smoothing out various rough edges.  Version 2.06 was a very minor
+bug release version.
+
+The most exciting new feature in version 2.05 was Doug Steinwand's
 high-speed drop-in replacement for Template::Stash written in 
 Perl XS.  With this in place, the Template Toolkit typically runs
 twice as fast as before!
@@ -61,7 +69,7 @@ twice as fast as before!
 Pretty much everything else in 2.05 and 2.04 before it consisted
 of minor bug fixes and improvements.
 
-Version 2.03 includes Craig Barratt's 'latex' filter and GD plugins
+Version 2.03 included Craig Barratt's 'latex' filter and GD plugins
 and Dave Cross's tutorial on using the Template Toolkit for creating
 and reusing XML data files.
 
