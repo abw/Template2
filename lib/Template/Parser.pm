@@ -418,7 +418,7 @@ sub interpolate_text {
 
    while ($text =~
            /
-           ( (?: \\. | [^\$] ){1,4000} ) # escaped or non-'$' character [$1]
+           ( (?: \\. | [^\$] ){1,3000} ) # escaped or non-'$' character [$1]
            |
 	   ( \$ (?:		    # embedded variable	           [$2]
 	     (?: \{ ([^\}]*) \} )   # ${ ... }                     [$3]
