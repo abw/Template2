@@ -92,8 +92,6 @@ sub init_database {
 		     VALUES ('hans', 'Hans von Lengerke', 'bar')");
     sql_query($dbh, "INSERT INTO usr 
 		     VALUES ('mrp', 'Martin Portman', 'bar')");
-
-    $dbh->disconnect();
 }
 
 

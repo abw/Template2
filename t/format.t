@@ -2,7 +2,7 @@
 #
 # t/format.t
 #
-# Template script testing format plugin.
+# Template script testing the format plugin.
 #
 # Written by Andy Wardley <abw@cre.canon.co.uk>
 #
@@ -23,6 +23,7 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
+$Template::Test::PRESERVE = 1;
 
 my ($a, $b, $c, $d) = qw( alpha bravo charlie delta );
 my $params = { 
@@ -83,5 +84,4 @@ $bold
 
 -- expect --
 alpha     -     bravo
-
 
