@@ -174,3 +174,21 @@ As with the command line options, the C<*> character can be used
 as a wildcard to specify a dependency for all templates.
 
     * : config,header
+
+=head1 AUTHORS
+
+Andy Wardley E<lt>abw@andywardley.comE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+Dylan William Hardison E<lt>dylanwh@tampabay.rr.comE<gt>
+added support for dependencies.
+
+[% PROCESS misc/version
+         + misc/copyright
+         + misc/seealso
+               seealso=page.seealso
+%]
+
+
+
