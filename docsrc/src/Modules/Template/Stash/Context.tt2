@@ -1,0 +1,64 @@
+[% TAGS [* *] -%]
+
+=head1 SYNOPSIS
+
+    use Template;
+    use Template::Stash::Context;
+
+    my $stash = Template::Stash::Context->new(\%vars);
+    my $tt2   = Template->new({ STASH => $stash });
+
+=head1 DESCRIPTION
+
+This is an alternate stash object which includes a patch from 
+Craig Barratt to implement various new virtual methods to allow
+dotted template variable to denote if object methods and subroutines
+should be called in scalar or list context.  It adds a little overhead
+to each stash call and I'm a little wary of applying that to the core
+default stash without investigating the effects first. So for now,
+it's implemented as a separate stash module which will allow us to 
+test it out, benchmark it and switch it in or out as we require.
+
+This is what Craig has to say about it:
+
+Here's a better set of features for the core.  Attached is a new version
+of Stash.pm (based on TT2.02) that:
+
+* supports the special op "scalar" that forces scalar context on
+function calls, eg:
+
+    cgi.param("foo").scalar
+
+calls cgi.param("foo") in scalar context (unlike my wimpy
+scalar op from last night).  Array context is the default.
+
+With non-function operands, scalar behaves like the perl
+version (eg: no-op for scalar, size for arrays, etc).
+
+* supports the special op "ref" that behaves like the perl ref.
+If applied to a function the function is not called.  Eg:
+
+    cgi.param("foo").ref
+
+does *not* call cgi.param and evaluates to "CODE".  Similarly,
+HASH.ref, ARRAY.ref return what you expect.
+
+* adds a new scalar and list op called "array" that is a no-op for
+arrays and promotes scalars to one-element arrays.
+
+* allows scalar ops to be applied to arrays and hashes in place,
+eg: ARRAY.repeat(3) repeats each element in place.
+
+* allows list ops to be applied to scalars by promoting the scalars
+to one-element arrays (like an implicit "array").  So you can
+do things like SCALAR.size, SCALAR.join and get a useful result.
+
+This also means you can now use x.0 to safely get the first element
+whether x is an array or scalar.
+
+The new Stash.pm passes the TT2.02 test suite.  But I haven't tested the
+new features very much.  One nagging implementation problem is that the
+"scalar" and "ref" ops have higher precedence than user variable names.
+
+
+

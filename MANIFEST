@@ -227,6 +227,8 @@ examples/lib/examples/splash/frame/2
 examples/lib/examples/splash/frame/3
 examples/lib/examples/splash/frame/4
 examples/lib/examples/splash/frame/5
+examples/lib/examples/splash/hair/1
+examples/lib/examples/splash/hair/2
 examples/lib/examples/splash/icon/1
 examples/lib/examples/splash/icon/2
 examples/lib/examples/splash/icon/3
@@ -283,6 +285,7 @@ examples/lib/splash/about/box
 examples/lib/splash/about/button
 examples/lib/splash/about/dropbox
 examples/lib/splash/about/frame
+examples/lib/splash/about/hair
 examples/lib/splash/about/icon
 examples/lib/splash/about/menu
 examples/lib/splash/about/menubar
@@ -310,6 +313,7 @@ examples/src/splash/colours.html
 examples/src/splash/config.html
 examples/src/splash/dropbox.html
 examples/src/splash/frame.html
+examples/src/splash/hair.html
 examples/src/splash/icon.html
 examples/src/splash/index.html
 examples/src/splash/menu.html
@@ -620,6 +624,7 @@ templates/splash/box
 templates/splash/breakdown
 templates/splash/button
 templates/splash/config
+templates/splash/dots
 templates/splash/dropbox
 templates/splash/frame
 templates/splash/hair
