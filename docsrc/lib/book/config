@@ -1,28 +1,40 @@
-[% PROCESS book/meta -%]
-prev   => '[% loop.prev.id %]',
-next   => '[% loop.next.id %]',
-pages  => {
-[%  FOREACH page = book.pages -%]
-    [% page.id %] => {
-[%  PROCESS page/config | indent(8) -%]
-        prev    => '[% loop.prev.id %]',
-        next    => '[% loop.next.id %]',
-    },
-[%  END -%]
-    index => {
-[%  IF book.index;
+[% book.id %] => {
+    id     => '[% book.id %]',
+    name   => '[% book.name %]',
+    title  => '[% book.title %]',
+    url    => '[% book.html %]',
+    uplink => '[% elems = book.html.split('/'); 
+		  dud = elems.shift;  
+                  elems.join('/').replace('[^\/]+', '..') %]',
+    author => '[% book.author or 'abw' %]',
+    about  => '[% book.about %]',
+    prev   => '[% loop.prev.id %]',
+    next   => '[% loop.next.id %]',
+    pages  => {
+[%
+    # generate configuration for each page
+    FOREACH page = book.pages;
+        PROCESS page/config | indent(8);
+    END;
+
+    # look to see if there's an index page
+    IF book.index;
 	page = book.index;
     ELSIF book.pages.size == 1;
 	page = book.pages.0;
     ELSE;
 	page = '';
     END;
-    PROCESS page/meta | indent(8) IF page;
--%]
-    },
-},
-pagelist => [
-[% FOREACH page = book.pages -%]
-    '[% page.id %]',
-[% END -%]
-],
+
+    # generate index entry if suitable index page found
+    IF page
+%]
+        index => {
+[% PROCESS page/meta | indent(12) %]
+	}
+[%  END %]
+    }
+    pagelist => [
+	[% "'$page.id', " FOREACH page = book.pages -%]
+    ]
+}

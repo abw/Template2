@@ -1,30 +1,14 @@
 [%  TAGS star -%]
-[*  # create template files for larger docset content
-    docsdir = "$dir.html.lib/docset";
-#    FOREACH attr = ['intro'];
-#	IF (text = docset.$attr);
-#	    text | redirect("$docsdir/$attr");
-#	END;
-#    END;
-
-    #------------------------------------------------------------------------
-    # create main config file for docset
-    FILTER redirect("$docsdir/config")
--*]
 [%
 docset => {
-[*  PROCESS docset/meta | indent(4) -*]
+    id    => '[% docset.id %]',
+    title => '[% docset.title %]',
+    about => '[% docset.about %]',
     books => {
-[*  FOREACH book = docset.books -*]
-        [* book.id *] => {
-[*  PROCESS book/config | indent(12) -*]
-	},
-[*  END -*]
+[*  PROCESS book/config | indent(8) FOREACH book = docset.books *]
     },
     booklist => [ 
-[*  FOREACH book = docset.books -*]
-        '[* book.id *]',
-[*  END -*]
+[*  "'$book.id', " FOREACH book = docset.books -*]
     ],
     links => {
 [*  FOREACH book = docset.books; 
@@ -43,6 +27,3 @@ docset => {
     },
 };
 -%]
-[*- END
-    #------------------------------------------------------------------------
--*]

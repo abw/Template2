@@ -1,10 +1,12 @@
-[% IF seealso -%]
+[% RETURN UNLESS seealso -%]
 =head1 SEE ALSO
 
 [%  FOREACH item = seealso.split(',\s*');
 	item = item.split('\|');
-	link = item.1 or item.0
-	item = item.0
--%]L<[% item %]|[% link %]>[% ', ' UNLESS loop.last -%]
-[%- END %]
-[% END -%]
+        name = item.0.replace('^CPAN::', '');
+#	(link = item.1) ? "L<$name|$link>" : "L<$name>";
+	link = item.1 or name;
+	"L<$name|$link>";
+        ', ' UNLESS loop.last;
+    END
+-%]

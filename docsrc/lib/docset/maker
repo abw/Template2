@@ -1,9 +1,32 @@
 [%  # docset/maker
-    #
-    # ARGS: xdocset - an XML DOM node to a docset element
-    #       xcontent(xnode, name) - MACRO to fetch name element from node
+    # 
+    # This template controls the production of a docset.
+    # 
+    # expects arguments:
+    #   xmlfile         full path to docset XML file
+    #   dir             hash of directories
+    #     dir.pod       destination for pod
+    #     dir.text      destination for text
+    #     dir.html.src  destination for HTML source pages
+    #     dir.html.lib  destination for HTML library templates
+    #   
+    
+    # load docset XML file
+    USE dom = XML.DOM;
+    xmldom  = dom.parse(xmlfile);
+    xdocset = xmldom.getElementsByTagName('docset');
 
-    # setup docset data
+    # define a macro to extract an element from an XML DOM node
+    MACRO xcontent(xnode, name) BLOCK;
+	node = xnode.getElementsByTagName(name, 0);
+	text = node.childrenToTemplate(verbose=1, default="asis");
+	text.replace('\s+', ' ').replace('^\s+', '').replace('\s+$', '');
+    END;
+
+    # define simple block for use with xcontent MACRO above
+    BLOCK asis; node.toString; node.prune; END;
+
+    # extract docset data from XML file and build hash
     id   = xdocset.id;
     name = xdocset.name or id;
     docset = {
@@ -25,10 +48,10 @@
         docset.books.push(book);
     END;
 
-    # generate configuration templates for the docset
-    PROCESS docset/config;
+    # generate configuration template for the docset
+    PROCESS docset/config | redirect("$dir.html.lib/docset/config");
 
-    # generate index page...
+    # generate index page for the docset
     PROCESS docset/index | redirect("$dir.html.src/index.html");
 
 -%]
