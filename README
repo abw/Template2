@@ -1,179 +1,69 @@
-This is an alpha release of version 2 of the Perl Template Toolkit.
-It is still in experimental form and should most definately not be
-used in production systems unless you really enjoy living dangerously.
 
-Don't even install it.  No, I'm serious.  It will overwrite your
-existing version 1.xx Template Toolkit modules and really spoil your
-day.  There's no Makefile.PL anyway, just in case you felt tempted to
-install it without reading this README first.
+              Template Toolkit Version 2.00 Beta Release 1
 
-So, with that warning aside, down to business.  This contains a current
-snapshot of my workings on version 2 of the Template Toolkit.  The 
-template language itself remains fairly constant, with a few minor
-changes, a couple of new features, and the cleaning up of a few loose
-ends and inconsistencies.  The majority of the work has gone on improving
-the architecture and internal workings of the toolkit.  Most significant
-is the fact that templates are now compiled to Perl code and evaluated
-as Perl sub-routines.  This has 2 main advantages.  The first is that
-the execution time is dramatically reduced.  In a persistant server 
-environment such as a web server, this is a major win.  The second
-benefit is that once compiled, the Perl code can be written to a file
-so that it can be re-loaded at some later date in considerably less 
-time.  As an added bonus, this makes it much easier to integrate 
-external modules, template components, and so on.  
-
-only one significant
-change that might affect you.  Up until now, the leading '$' on a variable
-has been optional and has no effect.  From version 2 onwards, variables
-should NOT be prefixed with a '$'.  More on that later, but for now rest
-assured that there's a VERSION compatability option which reverts this
-to the original behaviour.  Another change is the behaviour of CATCH
-blocks, which up until now has always been a little weird.  This has now
-been formalised into a properly structure TRY ... CATCH block.  There's
-also a new SWITCH ... CASE statement
-  The '$' is now used consistently to
-indicate that a variable name should interpolated, for example, when 
-accessing a hash key by a symbolic name:
-
-    hash.$key
+                              10-July-2000
 
 
-#------------------------------------------------------------------------
-Template::Document
+                        ** IMPORTANT WARNING ** 
 
-  This defines an object class whose instances represent compiled template
-  documents.  The Template::Parser module creates Template::Document
-  instances to encapsulate templates as it compiles them.  The template 
-  content itself should be passed to the constructor as a reference to 
-  a sub-routine.  The Template::Document object simply stores this 
-  reference internally and then calls it when its process($context)
-  method is invoked.  The sub-routine should expect a Template::Context
-  reference as its only parameter and should return its output or raise
-  an error via "die Template::Exception->new($type, $info)".
+    If you install these modules you will totally screw up your existing 
+    version 1.* installation.  I do plan to make V1 and V2 work harmoniously
+    with each other but that time is not yet now.  Install it to an entirely 
+    different location or don't "make install"  it at all.  You have been
+    warned (and will be again).
 
-    my $doc = Template::Document->new(
-	sub { 
-	    my $context = shift;
-	    my $stash   = $context->stash();
-	    my $foo     = $stash->get('foo') || 'undefined';
-	    return "The value of foo is $foo";
-	}
-    );
+                     ** END OF IMPORTANT WARNING ** 
 
-    print $doc->process($context);
+Hello World
+-----------
 
-  Additional parameters passed to the constructor are treated as named 
-  metadata items.  These are also stored internally and available via 
-  an AUTOLOAD method.
+This is the first beta release of version 2 of the Perl Template
+Toolkit.  It is fully-featured, reliable and reasonably bug-free.
+Most of the modules are documented fully, or near-fully, but the main
+Template.pm documentation and some other bits and pieces still need
+some work.  The API is almost frozen.  Some of the option names may
+still change and the filters interface will almost certainly get
+improved a little before the real v2.  Other than that, this is pretty
+much what version 2 will look like.  If you think there's anything
+missing, or that which could be done better then now is the time to
+speak or forever hold your peace (or at least until version 2.01)
 
-    my $doc = Template::Document->new(\&mytemplate, 
-				      author  => 'Andy Wardley',
-				      version => 3.14 );
+Beware
+------
 
-    print "version ", $doc->version, " by ", $doc->author, "\n";
-  
-  
-  Metadata items are accessible in templates via the 'template'
-  variable which contains a reference to the parent Template::Document
-  object, where 'parent' defines the outermost template being
-  processed.
+Most, if not all of the modules are lacking specific cleanup code and
+many of them need it.  In particular, the Template::Provider builds a
+linked list to cache compiled templates and the circular refs prevent
+it from being cleaned up automatically.  It's not a major problem.  I
+just need to write some fairly trivial code to clean it up here, and
+in a couple of other places (e.g. filters cache).  Until then, it will
+leak memory like a sieve, so don't use it in a persistant server
+unless you take other precautions.  Don't worry - it'll get fixed in
+the mix.
 
-    [% template.author %]
+Be Warned
+---------
 
-  The BLOCKS parameter may be provided and should contain a reference to
-  a hash array of other Template::Document objects, representing any 
-  additional BLOCK definitions within the template source file.
+If you missed the IMPORTANT WARNING earlier, then let me just remind
+you not to install it unless you know what you're doing.  There's a
+Makefile.PL now, but we still don't trust you not to do something
+silly, so it will issue an annoying warning when you run it.  The
+version 2 modules are very different from the version 1 modules but
+overlap in name.  I'm planning to release version 1.08 as a final
+swansong for the version 1.* dynasty.  This will relocate all version
+1 modules to Template::v1::* so that they can continue to be used
+without getting in version 2+'s way.
 
-    my $hdr = Template::Document->new(\&myheader);
-    my $ftr = Template::Document->new(\&myfooter);
+Please Read
+-----------
 
-    my $doc = Template::Document->new(\&mytemplate,
-				      BLOCKS => {
-				          header => $hdr,
-				          footer => $ftr,
-				      },
-				      author  => 'Andy Wardley',
-				      version => 3.14 );
+The Changes file contains most of the interesting detail about the
+major differences between version 1 and 2, including new features and
+so on.  Until the documentation is complete, this is the best source
+of information, even though it is itsefl incomplete or sketchy in
+places.  The TODO file is a total mess and includes TODONE stuff that
+should be in the Changes file.  It'll get cleaned up RSN.
 
-  Template::Document objects are usually created by the Template::Parser
-  but can be manually instantiated, or indeed sub-classed to provide
-  custom template components.
-
-
-#------------------------------------------------------------------------
-Template::Document
-
-  This defines an object class whose instances represent compiled template
-  documents.  A "compiled template document" is a reference to an anonymous
-  sub-routine.
-
-    new(\&template, BLOCKS => \%blockdefs, metavar => $val, ...)
-    process($context)
-    blocks()
-
-Template::Context
-
-  Runtime object:
-
-    new(\%config)
-    stash()                         # return Template::Stash reference
-    template($name)                 # fetches compiled template by name
-    plugin($name, \@args)           # fetches plugin by name (USE)
-    filter($name, \@args, $alias)   # fetches filter by name (FILTER)
-    process($template, \%params)    # process template in context (PROCESS)
-    include($template, \%params)    # ditto in localised context (INCLUDE)
-    throw($type, $info)             # raise exception via die() (THROW)
-    catch($error)		    # sanitise errors caught
-    localise()                      # localise the context
-    delocalise()                    # de-localise the context
-    
-
-Template::Stash
-
-  Variable storage:
-
-    new(\%predefs)
-    get('foo')                      # => [% foo %]
-    get(['foo', \@args])            # => [% foo(args) %]
-    get(['foo', 0, 'bar', 0])       # => [% foo.bar %]
-    get(['foo', \@args1, 'bar', \@args2])
-                                    # => [% foo(args1).bar(args2)... %]
-
-    set('foo', 5)                   # => [% foo = 5 %]
-    set('foo', 5, 1)                # => [% DEFAULT foo = 5 %]
-
-    set(['foo', 0, 'bar', 0], 5)    # => [% foo.bar = 5 %]
-    set(['foo', 0, 'bar', 0], 5, 1) # => [% DEFAULT foo.bar = 5 %]
-
-
-Template::Provider
-
-  Provides and caches compiled templates.
-
-    fetch($name)		    # return Template::Document object
-    store($name, $template)         # store Template::Document object
-
-
-Template::Parser
- 
-  Parses templates and compiles them down to Perl code.  This is then
-  evaluated to define an anonymous sub-routine which, when invoked,
-  will generate the processed template output.  The parser instantiates
-  Template::Document objects to encapsulate the compiled template.
-
-    parse($text)
-
-
-Template::Filters
-
-  General provider for system-defined FILTER operations.
-
-    fetch($name, \@args)
-
-
-Template::Plugins
-
-  General provider for system-defined plugins operations.
-
-    fetch($name, \@args, $context)
+Enjoy
+A   
 

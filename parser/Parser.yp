@@ -137,6 +137,7 @@ switch:	    SWITCH expr ';'
 case:	    CASE term ';' block
 	      case		    { unshift(@{$_[5]}, [ @_[2, 4] ]); 
 				      $_[5];                              }
+	|   CASE DEFAULT ';' block  { [ $_[4] ]                           }
 	|   CASE ';' block	    { [ $_[3] ]                           }
 	|   /* NULL */		    { [ undef ]                           }
 ;
@@ -297,6 +298,7 @@ expr:	    expr BINOP expr	    { "$_[1] $_[2] $_[3]"                 }
 ;
 
 setlist:    setlist assign	    { push(@{$_[1]}, @{$_[2]}); $_[1]     }
+	|   setlist COMMA
 	|   assign
 ;
 

@@ -136,15 +136,15 @@ sub denied {
 # we can pass to text_expect() to do some template driven testing
 #------------------------------------------------------------------------
 
-my $ttinc = Template->new( TEMPLATES => [ $provinc ] )
+my $ttinc = Template->new( LOAD_TEMPLATES => [ $provinc ] )
     || die "$Template::ERROR\n";
 ok( $ttinc );
 
-my $ttabs = Template->new( TEMPLATES => [ $provabs ] )
+my $ttabs = Template->new( LOAD_TEMPLATES => [ $provabs ] )
     || die "$Template::ERROR\n";
 ok( $ttabs );
 
-my $ttrel = Template->new( TEMPLATES => [ $provrel ] )
+my $ttrel = Template->new( LOAD_TEMPLATES => [ $provrel ] )
     || die "$Template::ERROR\n";
 ok( $ttrel );
 

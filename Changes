@@ -13,6 +13,7 @@
 #========================================================================
 
 
+
 #========================================================================
 #                       ***** VERSION 2.00 *****
 #
@@ -125,7 +126,18 @@ New Language Features
 
 * Comments now only extend to the end of the current line.
 
-    [%
+    [% # this is a comment
+       a = 10
+       # so is this
+       b = 20
+    %]
+
+  Placing the '#' character immediately inside the directive will comment
+  out the entire directive
+
+    [%# entire directive
+        is ignored
+    %]
 
 * The TAGS directive can now be used to switch tag styles by name.
   Several new tag styles are defined (e.g. html, asp, php, mason).
@@ -282,14 +294,14 @@ Configuration Options
   The new Template::Provider which manages the loading of template files
   will correctly adapt to chahges in the INCLUDE_PATH and act accordingly.
 
-* The TEMPLATES option allows you to specify a list of one or more
+* The LOAD_TEMPLATES option allows you to specify a list of one or more
   Template::Provider object which will take responsibility for loading
   templates.  Each provider can have it's own INCLUDE_PATH, caching
   options (e.g CACHE_SIZE) and so on.  You can sub-class the
   Template::Provider module to allow templates to be loaded from a
   database, for example, and then define your new provider in the
-  TEMPLATES list.  The providers are queried in order as a "Chain of
-  Responsiblity".  Each may return a compiled template, raise an
+  LOAD_TEMPLATES list.  The providers are queried in order as a "Chain 
+  of Responsiblity".  Each may return a compiled template, raise an
   error, or decline to serve the template and pass control onto the
   next provider in line.
 
@@ -315,14 +327,19 @@ Configuration Options
   (e.g. /tmp/somefile) or relative (e.g. ../tmp/another) filenames.  Both
   are disabled by default.
 
-* The PLUGINS option is similar to TEMPLATES but allows you to specify 
-  one or more plugin providers.  These take responsibility for loading
-  and instantiating plugins.  The Template::Plugins module is the default
-  provider and multiplexes requests out to other Template::Plugin::* 
-  plugin modules.
+* The LOAD_PLUGINS option is similar to LOAD_TEMPLATES but allows you
+  to specify one or more plugin providers.  These take responsibility
+  for loading and instantiating plugins.  The Template::Plugins module
+  is the default provider and multiplexes requests out to other
+  Template::Plugin::* plugin modules.  Loading of plugins has been
+  simplified and improved in general The PLUGINS option can be used to
+  map plugin names to specific modules and PLUGIN_BASE can map plugins
+  into particular namespaces.  The LOAD_PERL option can be used to
+  load (almost) any regular Perl module and use it as a plugin.
 
-* The FILTERS option is the same but for providing filters.  The 
-  Template::Filters module is the default provider here.
+* The LOAD_FILTERS option is similar to LOAD_TEMPLATES and LOAD_PLUGINS, 
+  allowing one or more custom providers to be specified for providing
+  filters.  The Template::Filters module is the default provider here.
 
 * The TOLERANT option can be used to tailor the behaviour of providers
   (e.g. Template::Provider, Template::Plugins, Template::Filters) when
@@ -346,155 +363,7 @@ Configuration Options
     now we're interpolating variables again, like $var
 
 * Added the TRIM option to automatically removed leading and trailing 
-  whitespace from the output of templates and BLOCKs.  This was suggested
-  by someone on the mailing list (was it Swen?) but I recall who at the 
-  moment.  I'll check and fill in this **gap**, but thanks to him anwyay.
-
-
-Plugins and Filters
--------------------
-
-* Added the 'upper' and 'lower' filters for case folding text.
-
-* Added the Date plugin, as provided by Thierry-Michel Barral.
-
-Tools
------
-
-* Added the --define var=val option to ttree  
-
-Gotchas
--------
-
-  * Bare CATCH blocks are no longer permitted and must be explicitly 
-    scoped with a matching TRY.  In most cases, this simply means adding
-    a [% TRY %] to the start of any templates that define CATCH blocks, 
-    and ensuring that the CATCH blocks are moved to the end of the file
-    (or relevant place).
-
-       # version 1 - no longer supported
-       blah blah blah...some error occurs
-
-       [% CATCH some_kind_of_error %]
-          handler template...
-       [% END %]
-
-       # version 2
-       [% TRY %]
-       blah blah blah...some error occurs...
-
-       [% CATCH some_kind_of_error %]
-          handler template...
-       [% END %]
-
-    Also be aware that this may change the expected output in case of 
-    errors.  By default, all output in the TRY block up to the point 
-    of error will be returned, with the relevant catch block, and then
-    and further template output appended.  You can use [% CLEAR %] within
-    a CATCH block to clear the output from the TRY block, if you prefer.
-    TRY blocks can be nested indefinately.
-
-  * The ERROR directive is no longer supported.  It was very ill-defined
-    anyway and serves no purpose that can't be acheived by defining 
-    custom filters, error handlers bound to template variables, or whatever.
-    I haven't implemented any special error or logging facilities, other 
-    than the general purpose exception handling, but welcome any thoughts
-    on what or if anything else is needed.  
-
-  * The current exception caught in a catch block is now aliased to the 
-    variable 'error' rather than 'e'.  This is much more logical, IMHO, 
-    and was only prevented previously by 'error' being a reserved word.
-    Note that 'e' is still defined, in addition to 'error'.  This may 
-    be deprecated at some point in the future.
-
-  * The use of a leading '$' on variables is no longer optional, and
-    should only be used to explicitly to indicate interpolatation of a
-    variable name.  Most of the time you *don't* want to do this, so
-    leave the '$' off.  This represent a slight shift away from the
-    (optional) Perlness of the language, but I think it's a necessary
-    step to improve the clarity and consistency of the language.  
-
-    As previously discussed on the mailing list, in interpolated text
-    (i.e. a "double quoted" string or regular template text with
-    INTERPOLATE set), both '$foo' or '${foo}' are interpolated as the
-    value of the variable 'foo'.  This is good because it is a
-    de-facto standard, consistent with Perl, shell, etc.  But inside a
-    directive, [% $foo %] and [% ${foo} %] mean different things, the
-    first being equivalent to [% foo %] or [% GET foo %] (the leading
-    '$' is ignored) but the second actually fetching a variable whose
-    name is stored in the variable 'foo'.  In other words, '${foo}'
-    interpolates to the value of foo ('bar', say) and then this is
-    used as the parameter to GET (which itself is optional).  Thus, in
-    this case, [% ${foo} %] is [% GET ${foo} %] is [% GET bar %].
-
-    This makes more sense if you look at the common example of accesing
-    an entry from a hash array using the value of an variable as the 
-    key (e.g. $hash->{ $key }).  In version 1, the leading '$' on 
-    variables is ignored, meaning that the following are NOT identical.
-
-      # version 1
-      [% hash.$key   %]     # ERROR - '$' ignored => [% hash.key %]
-      [% hash.${key} %]     # OK - '$key' is interpolated first
-
-    It gets more confusing if you excercise your right to add optional
-    leading '$'s in other places (which is one reason why I've always 
-    suggested against their use).
-
-      # version 1 - same as above
-      [% $hash.$key   %]
-      [% $hash.${key} %]
-
-    In particular, that last example should demonstrate the
-    inconsistency.  Unlike interpolated text, '$...' and '${...}' are
-    not treated the same and '$hash' is not interpolate while '${key}'
-    is.  The only consistent solution I can see to this is to make
-    both '$xxx' and '${xxx}' indicate interpolation in all cases, so
-    that's what I've done.  In version 2, the syntax becomes a lot
-    clearer and aligns more closely to a markup language than a
-    programming language.  I think this is a Good Thing, but let me 
-    know what you think...
-
-    Here's the Version 2 summary, assuming INTERPOLATE is set.
-
-      # version 2
-      my name is $name
-      my name is $user.name
-      my name is ${user.name}
-
-
-      [% GET name %]                 [% name %]
-      [% GET user.name %]            [% user.name %]
-      [% GET people.fred %]          [% people.fred %]
-      [% GET people.$name        %]  [% people.$name %]
-      [% GET people.${user.name} %]  [% people.${user.name} %]
-
-      [% INCLUDE header 
-         title = "Home Page for $name"
-      %]
-      [% INCLUDE header
-         title = "Home Page for $user.name"
-      %]
-      [% INCLUDE header
-         title = "Home Page for ${user.name}"
-      %]
-
-    If you find it slightly confusing that the dollar should be
-    missing inside directives, then you may find it helps to think 
-    of the '[% ... %]' as an even more advanced form of '${ ... }'.
-    e.g.
-
-       $foo  ==>  ${foo}  ==> [% foo %]
-
-    Personally, I think this solution works well and although it restricts
-    your freedom in using '$'s wherever you like, it really does help to 
-    make things clearer.  Let me know what you think.  For now, there's 
-    a VERSION => 1 flag you can set to revert to the old behaviour.
-
-In addition to those changes, the main new features of the language are:
-
-      
-There are a number of other significant changes in the architecture
-and implementation.
+  whitespace from the output of templates and BLOCKs.
 
 Other Enhancements and Internal Features
 ----------------------------------------
@@ -578,14 +447,152 @@ Other Enhancements and Internal Features
   returned according to the OUTPUT options specified for the module
   and/or any output option passed explicitly to the process() method.
 
+Plugins and Filters
+-------------------
 
-----------------------------------------------------------------------
+* Added the 'upper' and 'lower' filters for case folding text.
 
-* USERDIR and USERBLOCK are currently not supported (and may never be,
-  given that they're experimental features of TT1 anyway). 
+* Added the Date plugin.
 
-* Changed default TAGS to 
-  to [% %] and changed names of some others
+Tools and Tests
+---------------
+
+* Added the --define var=val option to ttree.
+
+* Added '-- use name --' to Template::Test to switch between multiple
+  Template objects specified as a list reference as the second arg
+  to test_expect()
+
+* Totally updated the test suite.
+
+
+Gotchas
+-------
+
+Things that have changed between version 1 and 2 that might catch you 
+out.  
+
+* Bare CATCH blocks are no longer permitted and must be explicitly
+  scoped with a matching TRY.  In most cases, this simply means adding
+  a [% TRY %] to the start of any templates that define CATCH blocks,
+  and ensuring that the CATCH blocks are moved to the end of the file
+  (or relevant place).
+
+       # version 1 - no longer supported
+       blah blah blah...some error occurs
+
+       [% CATCH some_kind_of_error %]
+          handler template...
+       [% END %]
+
+       # version 2
+       [% TRY %]
+       blah blah blah...some error occurs...
+
+       [% CATCH some_kind_of_error %]
+          handler template...
+       [% END %]
+
+  Also be aware that this may change the expected output in case of
+  errors.  By default, all output in the TRY block up to the point of
+  error will be returned, with the relevant catch block, and then and
+  further template output appended.  You can use [% CLEAR %] within a
+  CATCH block to clear the output from the TRY block, if you prefer.
+  TRY blocks can be nested indefinately.
+
+* The ERROR directive is no longer supported.  It was very ill-defined
+  anyway and serves no purpose that can't be acheived by defining
+  custom filters, error handlers bound to template variables, or
+  whatever.  I haven't implemented any special error or logging
+  facilities, other than the general purpose exception handling, but
+  welcome any thoughts on what or if anything else is needed.
+
+* The ERROR option is also different.  It could previously be used
+  to specify an error handling sub-routine, but is no longer required
+  (see previous point).  The ERROR option in version 2 is used to 
+  define a map of error types to template names for automatic 
+  redirection for error handling.
+
+* The current exception caught in a catch block is now aliased to the
+  variable 'error' rather than 'e'.  This is much more logical, IMHO,
+  and was only prevented previously by 'error' being a reserved word.
+  Note that 'e' is still defined, in addition to 'error'.  This may be
+  deprecated at some point in the future.
+
+* The use of a leading '$' on variables is no longer optional, and
+  should only be used to explicitly to indicate interpolatation of a
+  variable name.  Most of the time you *don't* want to do this, so
+  leave the '$' off.  This represent a slight shift away from the
+  (optional) Perlness of the language, but I think it's a necessary
+  step to improve the clarity and consistency of the language.
+
+    As previously discussed on the mailing list, in interpolated text
+  (i.e. a "double quoted" string or regular template text with
+  INTERPOLATE set), both '$foo' or '${foo}' are interpolated as the
+  value of the variable 'foo'.  This is good because it is a de-facto
+  standard, consistent with Perl, shell, etc.  But inside a directive,
+  [% $foo %] and [% ${foo} %] mean different things, the first being
+  equivalent to [% foo %] or [% GET foo %] (the leading '$' is
+  ignored) but the second actually fetching a variable whose name is
+  stored in the variable 'foo'.  In other words, '${foo}' interpolates
+  to the value of foo ('bar', say) and then this is used as the
+  parameter to GET (which itself is optional).  Thus, in this case, [%
+  ${foo} %] is [% GET ${foo} %] is [% GET bar %].
+
+  This makes more sense if you look at the common example of
+  accesing an entry from a hash array using the value of an variable
+  as the key (e.g. $hash->{ $key }).  In version 1, the leading '$' on
+  variables is ignored, meaning that the following are NOT identical.
+
+      # version 1
+      [% hash.$key   %]     # ERROR - '$' ignored => [% hash.key %]
+      [% hash.${key} %]     # OK - '$key' is interpolated first
+
+  It gets more confusing if you excercise your right to add optional
+  leading '$'s in other places (which is one reason why I've always
+  suggested against their use).
+
+      # version 1 - same as above
+      [% $hash.$key   %]
+      [% $hash.${key} %]
+
+  In particular, that last example should demonstrate the
+  inconsistency.  Unlike interpolated text, '$...' and '${...}' are
+  not treated the same and '$hash' is not interpolate while '${key}'
+  is.  The only consistent solution I can see to this is to make both
+  '$xxx' and '${xxx}' indicate interpolation in all cases, so that's
+  what I've done.  In version 2, the syntax becomes a lot clearer and
+  aligns more closely to a markup language than a programming
+  language.  I think this is a Good Thing, but let me know what you
+  think...
+
+  Here's the Version 2 summary, assuming INTERPOLATE is set.
+
+      # version 2
+      my name is $name
+      my name is $user.name
+      my name is ${user.name}
+
+
+      [% GET name %]                 [% name %]
+      [% GET user.name %]            [% user.name %]
+      [% GET people.fred %]          [% people.fred %]
+      [% GET people.$name        %]  [% people.$name %]
+      [% GET people.${user.name} %]  [% people.${user.name} %]
+
+      [% INCLUDE header 
+         title = "Home Page for $name"
+      %]
+      [% INCLUDE header
+         title = "Home Page for $user.name"
+      %]
+      [% INCLUDE header
+         title = "Home Page for ${user.name}"
+      %]
+
+* Changed default TAG_STYLE to only recognise [% ... %] and not the MetaText
+  compatability %% ... %% style.  Set TAG_STYLE => 'template1' to accept both,
+  or 'metatext' for just %% ... %%
 
 * Changed how error/return values should be returned from user code.
   All errors should be thrown via one of the following:
@@ -595,47 +602,10 @@ Other Enhancements and Internal Features
     $context->throw($msg);
     $context->throw($type, $info);
     $context->throw($exception);
-    
-* Added '-- use name --' to Template::Test to switch between multiple
-  Template objects specified as a list reference as the second arg
-  to test_expect()
+
+* USERDIR and USERBLOCK are not supported (they were experimental and 
+  undocumented, anyway)
 
 * $Template::Directive::While::MAXITER is now 
-  $Template::Directive::WHILE_MAX
+  $Template::Directive::WHILE_MAX and may change again.
 
-changes from alpha to beta
---------------------------
-
-* fixed bug in Context filter() provider method which wasn't caching 
-  filters with args.
-
-
-The Template Toolkit has been re-written for version 2 and includes
-many enhancements and new features.  It remains backwardly compatible
-with version 1.* in all but a few minor areas where syntax or
-structure have been changed for the sake of clarity and/or progress.
-By and large it is a superset of version 1, being better, stronger and
-significantly faster without sacrificing existing functionality.
-
-The most important internal change is that all templates are now
-compiled to Perl code for greater speed, efficiency and portability.
-Doug Steinwand was instrumental in this and deserves much credit for
-providing the code and ideas around which the new parser was built.
-In trivial benchmarks, you can expect to see templates being processed
-roughly twice as fast under version 2 as version 1, without losing any
-features or functionality.  Doug's original version was significantly
-faster still, although it acheived this by bypassing the stash for
-variable access and consequently losing some of the magical variable
-binding.  For the initial release of version 2.00, I wanted to
-maintain backwards compatability with version 1.00 as much as
-possible, so I had to code the stash back in, and accept that it
-wouldn't be as fast as it could have been.  But hey, it's still
-*twice* as fast.
-
-Better still is that the new, improved architecture makes it much
-easier to install an alternate parser grammar to generate Perl code
-from the template source.  Once compiled to Perl, all templates can
-run alongside each other, regardless of how they were parsed and
-constructed.  Thus we could have a alternate grammar based on Doug's
-code which could be switched in when you need absolute speed and 
-don't mind if some things work a little different.

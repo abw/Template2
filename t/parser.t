@@ -2,7 +2,7 @@
 #
 # t/parser.t
 #
-# Test the parser, including quoting, interpolation flags, etc.
+# Test the Template::Parser module.
 #
 # Written by Andy Wardley <abw@kfs.org>
 #
@@ -19,30 +19,127 @@
 use strict;
 use lib qw( . ../lib );
 use Template::Test;
+use Template::Config;
+use Template::Parser;
 $^W = 1;
 
 #$Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 0;
 
-my $config = {
+my $p2 = Template::Parser->new({
+    START_TAG => '\[\*',
+    END_TAG   => '\*\]',
+    PRE_CHOMP => 1,
+    V1DOLLAR  => 1,
+});
+
+my $p3 = Template::Config->parser({
+    TAG_STYLE  => 'html',
+    POST_CHOMP => 1,
     INTERPOLATE => 1,
-};
+});
 
-my $vars = {
-    a => 'alpha',
-    b => 'bravo',
-    c => 'charlie',
-};
+my $p4 = Template::Config->parser({
+    CASE => 1,
+});
 
-test_expect(\*DATA, $config, $vars);
+my $tt = [
+    tt1 => Template->new(),
+    tt2 => Template->new(PARSER => $p2),
+    tt3 => Template->new(PARSER => $p3),
+    tt4 => Template->new(PARSER => $p4),
+];
+
+test_expect(\*DATA, $tt, &callsign());
 
 __DATA__
+#------------------------------------------------------------------------
+# tt1
+#------------------------------------------------------------------------
 -- test --
-[% a %] at $b @ [% c %]
+start $a
+[% BLOCK a %]
+this is a
+[% END %]
+=[% INCLUDE a %]=
+=[% include a %]=
+end
+-- expect --
+start $a
+
+=
+this is a
+=
+=
+this is a
+=
+end
+
+#------------------------------------------------------------------------
+# tt2
+#------------------------------------------------------------------------
+-- test --
+-- use tt2 --
+begin
+[% this will be ignored %]
+[* a *]
+end
+-- expect --
+begin
+[% this will be ignored %]alpha
+end
+
+-- test --
+$b does nothing: 
+[* c = 'b'; 'hello' *]
+stuff: 
+[* $c *]
+-- expect --
+$b does nothing: hello
+stuff: b
+
+#------------------------------------------------------------------------
+# tt3
+#------------------------------------------------------------------------
+-- test --
+-- use tt3 --
+begin
+[% this will be ignored %]
+<!-- a -->
+end
 
 -- expect --
-alpha at bravo @ charlie
+begin
+[% this will be ignored %]
+alphaend
+
+-- test --
+$b does something: 
+<!-- c = 'b'; 'hello' -->
+stuff: 
+<!-- $c -->
+end
+-- expect --
+bravo does something: 
+hellostuff: 
+bravoend
 
 
+#------------------------------------------------------------------------
+# tt4
+#------------------------------------------------------------------------
+-- test --
+-- use tt4 --
+start $a[% 'include' = 'hello world' %]
+[% BLOCK a -%]
+this is a
+[%- END %]
+=[% INCLUDE a %]=
+=[% include %]=
+end
+-- expect --
+start $a
 
-
+=this is a=
+=hello world=
+end

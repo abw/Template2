@@ -165,21 +165,20 @@ $context = $factory->context(INCLUDE_PATH => 'anywhere')
     || print STDERR $factory->error(), "\n";
 
 ok( $context );
-ok( $context->{ TEMPLATES }->[0]->{ INCLUDE_PATH }->[0] eq 'anywhere' );
+ok( $context->{ LOAD_TEMPLATES }->[0]->{ INCLUDE_PATH }->[0] eq 'anywhere' );
 
 $context = $factory->context({
-    TEMPLATES => [ $provider ],
-    PLUGINS   => [ $plugins ],
-    FILTERS   => [ $filters ],
-    STASH     => $stash,
+    LOAD_TEMPLATES => [ $provider ],
+    LOAD_PLUGINS   => [ $plugins ],
+    LOAD_FILTERS   => [ $filters ],
+    STASH          => $stash,
 }) || print STDERR $factory->error(), "\n";
 
 ok( $context );
 ok( $context->stash->get('foo') == 30 );
-ok( $context->{ TEMPLATES }->[0]->{ PARSER    }->{ INTERPOLATE } == 1);
-ok( $context->{ PLUGINS   }->[0]->{ LOAD_PERL } == 1 );
-ok( $context->{ FILTERS   }->[0]->{ TOLERANT  } == 1 );
-
+ok( $context->{ LOAD_TEMPLATES }->[0]->{ PARSER    }->{ INTERPOLATE } == 1);
+ok( $context->{ LOAD_PLUGINS   }->[0]->{ LOAD_PERL } == 1 );
+ok( $context->{ LOAD_FILTERS   }->[0]->{ TOLERANT  } == 1 );
 
 #------------------------------------------------------------------------
 # service
@@ -192,6 +191,6 @@ $service = $factory->service(INCLUDE_PATH => 'amsterdam')
     || print STDERR $factory->error(), "\n";
 
 ok( $service );
-ok( $service->{ CONTEXT }->{ TEMPLATES }->[0]->{ INCLUDE_PATH }->[0]
+ok( $service->{ CONTEXT }->{ LOAD_TEMPLATES }->[0]->{ INCLUDE_PATH }->[0]
     eq 'amsterdam' );
 

@@ -2,7 +2,9 @@
 #
 # t/template.t
 #
-# Test the Template.pm module.
+# Test the Template.pm module.  Does nothing of any great importance
+# at the moment, but all of its options are tested in the various other
+# test scripts.
 #
 # Written by Andy Wardley <abw@kfs.org>
 #
@@ -18,15 +20,8 @@
 
 use strict;
 use lib  qw( ./lib ../lib );
-use vars qw( $DEBUG );
+use Template;
 use Template::Test;
 
-ntests(1);
-$DEBUG = 1;
-
-my $tt = Template->new(INCLUDE_PATH => 'here')
-    || die $Template::ERROR;
-
+my $tt = Template->new();
 ok( $tt );
-#ok( $tt->context->{ TEMPLATES }->[0]->{ INCLUDE_PATH }->[0] eq 'here' );
-#print $tt->service->context->{ TEMPLATES }->[0]->_dump();

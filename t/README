@@ -27,13 +27,17 @@ iterator.t      Template::Iterator and Iterator plugin modules
 list.t          List definition and access via various methods
 object.t        Binding objects to template variables
 output.t        OUTPUT_PATH and OUTPUT options
+parser.t        Template::Parser module
+plugins.t       Template::Plugins provider module (incomplete)
 provider.t      Template::Provider module
 rss.t           XML::RSS plugin (Template::Plugin::XML::RSS)
 service.t       Template::Service module
-skelt.          Skeleton test file.  Copy and edit to create your own tests.
+skel.t          Skeleton test file.  Copy and edit to create your own tests.
 stop.t          STOP directive and throwing 'stop' exception
+switch.t        SWITCH / CASE directives
 table.t         Table plugin (Template::Plugin::Table)
 tags.t          TAGS directive
+template.t      Template front-end module
 text.t          Plain text blocks, ensuring all characters are reproducable
 try.t           TRY / THROW / CATCH / FINAL directives
 url.t           URL plugin (Template::Plugin::URL)
@@ -42,17 +46,9 @@ varsv1.t        As above, using version 1 handling of leading '$'
 while.t         WHILE directive
 
 TODO:
+  anonymous blocks
+  MACROS
+  caching options in Template::Provider
+  recursion option
+  return/stop/break
 
-parser.t        Template::Parser module
-switch.t        SWITCH / CASE directives
-plugins.t       Template::Plugins provider module
-template.t      Template front-end module
-
-===
-anonblock
-macro
-cache
-recursion                    << OPTION
-return/stop/etc
-
-format => plugins

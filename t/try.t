@@ -2,7 +2,7 @@
 #
 # t/try.t
 #
-# Template script testing TRY blocks
+# Template script testing TRY / THROW / CATCH / FINAL blocks.
 #
 # Written by Andy Wardley <abw@kfs.org>
 #

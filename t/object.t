@@ -178,31 +178,51 @@ Tuesday
 -- expect --
 Wednesday Thursday Friday Saturday Sunday .
 
+
 -- stop --
+
+#========================================================================
+# TODO: test _private and .private members
+#========================================================================
 
 #------------------------------------------------------------------------
 # test private methods do not get exposed
 #------------------------------------------------------------------------
 -- test --
-[% thing._private %]
+[% TRY %]
+before[% thing._private %]after
+[% CATCH %]
+ERROR: [% error.info %]
+[% END %]
 -- expect --
-ERROR: invalid member name '_private'
 
 -- test --
+[% TRY %]
 [% thing._private = 10 %]
+[% CATCH %]
+ERROR: [% error.info %]
+[% END %]
 -- expect --
 ERROR: invalid member name '_private'
 
 
 -- test --
+[% TRY %]
 [% key = '_private' -%]
 [% thing.${key} %]
+[% CATCH %]
+ERROR: [% error.info %]
+[% END %]
 -- expect --
 ERROR: invalid member name '_private'
 
 -- test --
+[% TRY %]
 [% key = '.private' -%]
 [% thing.${key} = 'foo' %]
+[% CATCH %]
+ERROR: [% error.info %]
+[% END %]
 -- expect --
 ERROR: invalid member name '.private'
 
@@ -215,34 +235,4 @@ ERROR: invalid member name '.private'
 bar
 Help Yourself
 
-
-#------------------------------------------------------------------------
-# test that a regular list returned is converted to a list reference
-#------------------------------------------------------------------------
-
--- test --
-[% FOREACH item = thing.items -%]
-   * [% item %]
-[% END %]
-
--- expect --
-   * foo
-   * bar
-   * baz
-
--- test --
-before
-[% thing.halt %]
-after
-
--- expect --
-before
-
--- test --
-before
-[% thing.halt = 5 %]
-after
-
--- expect --
-before
 
