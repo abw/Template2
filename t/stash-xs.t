@@ -32,21 +32,28 @@ if ($@) {
     skip_all('cannot load Template::Stash::XS');
 }
 
+package Buggy;
+sub new { bless {}, shift }
+sub croak { my $self = shift; die @_ }
+package main;
+
 my $count = 20;
 my $data = {
     foo => 10,
     bar => {
-	baz => 20,
+        baz => 20,
     },
     baz => sub {
-	return {
-	    boz => ($count += 10),
-	    biz => (shift || '<undef>'),
-	};
+        return {
+            boz => ($count += 10),
+            biz => (shift || '<undef>'),
+        };
     },
-    obj => bless {
-	name => 'an object',
-    }, 'AnObject',
+    obj => bless({
+        name => 'an object',
+    }, 'AnObject'),
+    correct => sub { die @_ },
+    buggy => Buggy->new(),
 };
 
 my $stash = Template::Stash::XS->new($data);
@@ -236,3 +243,22 @@ an object
 -- expect --
 ==
 
+-- test --
+[% USE Dumper;
+   TRY;
+     correct(["hello", "there"]);
+   CATCH;
+     error.info.join(', ');
+   END;
+%]
+==
+[% TRY;
+     buggy.croak(["hello", "there"]);
+   CATCH;
+     error.info.join(', ');
+   END;
+%]
+-- expect --
+hello, there
+==
+hello, there
