@@ -649,3 +649,36 @@ dave: [Davey Boy | foo]
 [% ELSE -%]
 Skipping Tie::DBI tests
 [%- END %]
+
+
+#------------------------------------------------------------------------
+# test size() and max() methods
+#------------------------------------------------------------------------
+
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+[% users = dbi.query('SELECT * FROM usr ORDER BY id') -%]
+size: [% users.size +%]
+ max: [% users.max +%]
+-- expect --
+size: 6
+ max: 5
+
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+There are [% dbi.query('SELECT * FROM usr').size -%] users
+-- expect --
+There are 6 users
+
+-- test --
+[% USE dbi(dsn, user, pass, attr) -%]
+[% FOREACH user = dbi.query('SELECT * FROM usr ORDER BY id') -%]
+[% loop.count %]/[%loop.size %] ([% loop.index %]/[% loop.max %]) [% user.name %]
+[% END %]
+-- expect --
+1/6 (0/5) Andy Wardley
+2/6 (1/5) Craig Barratt
+3/6 (2/5) Davey Boy
+4/6 (3/5) Hans von Lengerke
+5/6 (4/5) Martin Portman
+6/6 (5/5) Simon Matthews
