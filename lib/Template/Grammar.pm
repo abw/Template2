@@ -5211,7 +5211,16 @@ sub
 { $factory->textblock($_[1])          }
 	],
 	[#Rule 7
-		 'chunk', 2, undef
+		 'chunk', 2,
+sub
+#line 77 "Parser.yp"
+{ return '' unless $_[1];
+                           my $line = ${$_[0]->{LINE}};
+                           my $info = $_[0]->{FILEINFO}->[-1];
+                           my $file = $info->{ path } || $info->{ name } 
+                              || '(unknown template)';
+                           $line =~ s/\-.*$//; # might be 'n-n'
+                           "#line $line \"$file\"\n$_[1]" }
 	],
 	[#Rule 8
 		 'statement', 1, undef
@@ -5240,13 +5249,13 @@ sub
 	[#Rule 16
 		 'statement', 1,
 sub
-#line 89 "Parser.yp"
+#line 94 "Parser.yp"
 { $factory->get($_[1])                }
 	],
 	[#Rule 17
 		 'statement', 2,
 sub
-#line 90 "Parser.yp"
+#line 95 "Parser.yp"
 { $_[0]->add_metadata($_[2]);         }
 	],
 	[#Rule 18
@@ -5255,7 +5264,7 @@ sub
 	[#Rule 19
 		 'directive', 1,
 sub
-#line 94 "Parser.yp"
+#line 99 "Parser.yp"
 { $factory->set($_[1])                }
 	],
 	[#Rule 20
@@ -5279,7 +5288,7 @@ sub
 	[#Rule 26
 		 'atomexpr', 1,
 sub
-#line 108 "Parser.yp"
+#line 113 "Parser.yp"
 { $factory->get($_[1])                }
 	],
 	[#Rule 27
@@ -5288,73 +5297,73 @@ sub
 	[#Rule 28
 		 'atomdir', 2,
 sub
-#line 112 "Parser.yp"
+#line 117 "Parser.yp"
 { $factory->get($_[2])                }
 	],
 	[#Rule 29
 		 'atomdir', 2,
 sub
-#line 113 "Parser.yp"
+#line 118 "Parser.yp"
 { $factory->call($_[2])               }
 	],
 	[#Rule 30
 		 'atomdir', 2,
 sub
-#line 114 "Parser.yp"
+#line 119 "Parser.yp"
 { $factory->set($_[2])                }
 	],
 	[#Rule 31
 		 'atomdir', 2,
 sub
-#line 115 "Parser.yp"
+#line 120 "Parser.yp"
 { $factory->default($_[2])            }
 	],
 	[#Rule 32
 		 'atomdir', 2,
 sub
-#line 116 "Parser.yp"
+#line 121 "Parser.yp"
 { $factory->insert($_[2])             }
 	],
 	[#Rule 33
 		 'atomdir', 2,
 sub
-#line 117 "Parser.yp"
+#line 122 "Parser.yp"
 { $factory->include($_[2])            }
 	],
 	[#Rule 34
 		 'atomdir', 2,
 sub
-#line 118 "Parser.yp"
+#line 123 "Parser.yp"
 { $factory->process($_[2])            }
 	],
 	[#Rule 35
 		 'atomdir', 2,
 sub
-#line 119 "Parser.yp"
+#line 124 "Parser.yp"
 { $factory->throw($_[2])              }
 	],
 	[#Rule 36
 		 'atomdir', 1,
 sub
-#line 120 "Parser.yp"
+#line 125 "Parser.yp"
 { $factory->return()                  }
 	],
 	[#Rule 37
 		 'atomdir', 1,
 sub
-#line 121 "Parser.yp"
+#line 126 "Parser.yp"
 { $factory->stop()                    }
 	],
 	[#Rule 38
 		 'atomdir', 1,
 sub
-#line 122 "Parser.yp"
+#line 127 "Parser.yp"
 { "\$output = '';";                   }
 	],
 	[#Rule 39
 		 'atomdir', 1,
 sub
-#line 123 "Parser.yp"
+#line 128 "Parser.yp"
 { $_[0]->{ INFOR } || $_[0]->{ INWHILE }
                                         ? 'last LOOP;'
                                         : 'last;'                         }
@@ -5362,7 +5371,7 @@ sub
 	[#Rule 40
 		 'atomdir', 1,
 sub
-#line 126 "Parser.yp"
+#line 131 "Parser.yp"
 { $_[0]->{ INFOR }
 					? $factory->next()
 				        : ($_[0]->{ INWHILE }
@@ -5372,7 +5381,7 @@ sub
 	[#Rule 41
 		 'atomdir', 2,
 sub
-#line 131 "Parser.yp"
+#line 136 "Parser.yp"
 { if ($_[2]->[0]->[0] =~ /^'(on|off)'$/) {
 				          $_[0]->{ DEBUG_DIRS } = ($1 eq 'on');
 					  $factory->debug($_[2]);
@@ -5391,213 +5400,213 @@ sub
 	[#Rule 44
 		 'condition', 6,
 sub
-#line 144 "Parser.yp"
+#line 149 "Parser.yp"
 { $factory->if(@_[2, 4, 5])           }
 	],
 	[#Rule 45
 		 'condition', 3,
 sub
-#line 145 "Parser.yp"
+#line 150 "Parser.yp"
 { $factory->if(@_[3, 1])              }
 	],
 	[#Rule 46
 		 'condition', 6,
 sub
-#line 147 "Parser.yp"
+#line 152 "Parser.yp"
 { $factory->if("!($_[2])", @_[4, 5])  }
 	],
 	[#Rule 47
 		 'condition', 3,
 sub
-#line 148 "Parser.yp"
+#line 153 "Parser.yp"
 { $factory->if("!($_[3])", $_[1])     }
 	],
 	[#Rule 48
 		 'else', 5,
 sub
-#line 152 "Parser.yp"
+#line 157 "Parser.yp"
 { unshift(@{$_[5]}, [ @_[2, 4] ]);
 				      $_[5];                              }
 	],
 	[#Rule 49
 		 'else', 3,
 sub
-#line 154 "Parser.yp"
+#line 159 "Parser.yp"
 { [ $_[3] ]                           }
 	],
 	[#Rule 50
 		 'else', 0,
 sub
-#line 155 "Parser.yp"
+#line 160 "Parser.yp"
 { [ undef ]                           }
 	],
 	[#Rule 51
 		 'switch', 6,
 sub
-#line 159 "Parser.yp"
+#line 164 "Parser.yp"
 { $factory->switch(@_[2, 5])          }
 	],
 	[#Rule 52
 		 'case', 5,
 sub
-#line 163 "Parser.yp"
+#line 168 "Parser.yp"
 { unshift(@{$_[5]}, [ @_[2, 4] ]); 
 				      $_[5];                              }
 	],
 	[#Rule 53
 		 'case', 4,
 sub
-#line 165 "Parser.yp"
+#line 170 "Parser.yp"
 { [ $_[4] ]                           }
 	],
 	[#Rule 54
 		 'case', 3,
 sub
-#line 166 "Parser.yp"
+#line 171 "Parser.yp"
 { [ $_[3] ]                           }
 	],
 	[#Rule 55
 		 'case', 0,
 sub
-#line 167 "Parser.yp"
+#line 172 "Parser.yp"
 { [ undef ]                           }
 	],
 	[#Rule 56
 		 '@1-3', 0,
 sub
-#line 170 "Parser.yp"
+#line 175 "Parser.yp"
 { $_[0]->{ INFOR }++                  }
 	],
 	[#Rule 57
 		 'loop', 6,
 sub
-#line 171 "Parser.yp"
+#line 176 "Parser.yp"
 { $_[0]->{ INFOR }--;
 				      $factory->foreach(@{$_[2]}, $_[5])  }
 	],
 	[#Rule 58
 		 'loop', 3,
 sub
-#line 175 "Parser.yp"
+#line 180 "Parser.yp"
 { $factory->foreach(@{$_[3]}, $_[1])  }
 	],
 	[#Rule 59
 		 '@2-3', 0,
 sub
-#line 176 "Parser.yp"
+#line 181 "Parser.yp"
 { $_[0]->{ INWHILE }++                }
 	],
 	[#Rule 60
 		 'loop', 6,
 sub
-#line 177 "Parser.yp"
+#line 182 "Parser.yp"
 { $_[0]->{ INWHILE }--;
                                       $factory->while(@_[2, 5])           }
 	],
 	[#Rule 61
 		 'loop', 3,
 sub
-#line 179 "Parser.yp"
+#line 184 "Parser.yp"
 { $factory->while(@_[3, 1])           }
 	],
 	[#Rule 62
 		 'loopvar', 4,
 sub
-#line 182 "Parser.yp"
+#line 187 "Parser.yp"
 { [ @_[1, 3, 4] ]                     }
 	],
 	[#Rule 63
 		 'loopvar', 4,
 sub
-#line 183 "Parser.yp"
+#line 188 "Parser.yp"
 { [ @_[1, 3, 4] ]                     }
 	],
 	[#Rule 64
 		 'loopvar', 2,
 sub
-#line 184 "Parser.yp"
+#line 189 "Parser.yp"
 { [ 0, @_[1, 2] ]                     }
 	],
 	[#Rule 65
 		 'wrapper', 5,
 sub
-#line 188 "Parser.yp"
+#line 193 "Parser.yp"
 { $factory->wrapper(@_[2, 4])         }
 	],
 	[#Rule 66
 		 'wrapper', 3,
 sub
-#line 190 "Parser.yp"
+#line 195 "Parser.yp"
 { $factory->wrapper(@_[3, 1])         }
 	],
 	[#Rule 67
 		 'try', 5,
 sub
-#line 194 "Parser.yp"
+#line 199 "Parser.yp"
 { $factory->try(@_[3, 4])             }
 	],
 	[#Rule 68
 		 'final', 5,
 sub
-#line 198 "Parser.yp"
+#line 203 "Parser.yp"
 { unshift(@{$_[5]}, [ @_[2,4] ]);
 				      $_[5];                              }
 	],
 	[#Rule 69
 		 'final', 5,
 sub
-#line 201 "Parser.yp"
+#line 206 "Parser.yp"
 { unshift(@{$_[5]}, [ undef, $_[4] ]);
 				      $_[5];                              }
 	],
 	[#Rule 70
 		 'final', 4,
 sub
-#line 204 "Parser.yp"
+#line 209 "Parser.yp"
 { unshift(@{$_[4]}, [ undef, $_[3] ]);
 				      $_[4];                              }
 	],
 	[#Rule 71
 		 'final', 3,
 sub
-#line 206 "Parser.yp"
+#line 211 "Parser.yp"
 { [ $_[3] ]                           }
 	],
 	[#Rule 72
 		 'final', 0,
 sub
-#line 207 "Parser.yp"
+#line 212 "Parser.yp"
 { [ 0 ] }
 	],
 	[#Rule 73
 		 'use', 2,
 sub
-#line 210 "Parser.yp"
+#line 215 "Parser.yp"
 { $factory->use($_[2])                }
 	],
 	[#Rule 74
 		 '@3-3', 0,
 sub
-#line 213 "Parser.yp"
+#line 218 "Parser.yp"
 { $_[0]->push_defblock();		  }
 	],
 	[#Rule 75
 		 'view', 6,
 sub
-#line 214 "Parser.yp"
+#line 219 "Parser.yp"
 { $factory->view(@_[2,5], 
 						     $_[0]->pop_defblock) }
 	],
 	[#Rule 76
 		 '@4-2', 0,
 sub
-#line 218 "Parser.yp"
+#line 223 "Parser.yp"
 { ${$_[0]->{ INPERL }}++;             }
 	],
 	[#Rule 77
 		 'perl', 5,
 sub
-#line 219 "Parser.yp"
+#line 224 "Parser.yp"
 { ${$_[0]->{ INPERL }}--;
 				      $_[0]->{ EVAL_PERL } 
 				      ? $factory->perl($_[4])             
@@ -5606,14 +5615,14 @@ sub
 	[#Rule 78
 		 '@5-1', 0,
 sub
-#line 225 "Parser.yp"
+#line 230 "Parser.yp"
 { ${$_[0]->{ INPERL }}++; 
 				      $rawstart = ${$_[0]->{'LINE'}};     }
 	],
 	[#Rule 79
 		 'rawperl', 5,
 sub
-#line 227 "Parser.yp"
+#line 232 "Parser.yp"
 { ${$_[0]->{ INPERL }}--;
 				      $_[0]->{ EVAL_PERL } 
 				      ? $factory->rawperl($_[4], $rawstart)
@@ -5622,19 +5631,19 @@ sub
 	[#Rule 80
 		 'filter', 5,
 sub
-#line 234 "Parser.yp"
+#line 239 "Parser.yp"
 { $factory->filter(@_[2,4])           }
 	],
 	[#Rule 81
 		 'filter', 3,
 sub
-#line 236 "Parser.yp"
+#line 241 "Parser.yp"
 { $factory->filter(@_[3,1])           }
 	],
 	[#Rule 82
 		 'defblock', 5,
 sub
-#line 241 "Parser.yp"
+#line 246 "Parser.yp"
 { my $name = join('/', @{ $_[0]->{ DEFBLOCKS } });
 				      pop(@{ $_[0]->{ DEFBLOCKS } });
 				      $_[0]->define_block($name, $_[4]); 
@@ -5644,7 +5653,7 @@ sub
 	[#Rule 83
 		 'defblockname', 2,
 sub
-#line 248 "Parser.yp"
+#line 253 "Parser.yp"
 { push(@{ $_[0]->{ DEFBLOCKS } }, $_[2]);
 				      $_[2];
 				    }
@@ -5655,7 +5664,7 @@ sub
 	[#Rule 85
 		 'blockname', 1,
 sub
-#line 254 "Parser.yp"
+#line 259 "Parser.yp"
 { $_[1] =~ s/^'(.*)'$/$1/; $_[1]      }
 	],
 	[#Rule 86
@@ -5667,7 +5676,7 @@ sub
 	[#Rule 88
 		 'anonblock', 5,
 sub
-#line 262 "Parser.yp"
+#line 267 "Parser.yp"
 { local $" = ', ';
 				      print STDERR "experimental block args: [@{ $_[2] }]\n"
 					  if $_[2];
@@ -5676,19 +5685,19 @@ sub
 	[#Rule 89
 		 'capture', 3,
 sub
-#line 268 "Parser.yp"
+#line 273 "Parser.yp"
 { $factory->capture(@_[1, 3])         }
 	],
 	[#Rule 90
 		 'macro', 6,
 sub
-#line 272 "Parser.yp"
+#line 277 "Parser.yp"
 { $factory->macro(@_[2, 6, 4])        }
 	],
 	[#Rule 91
 		 'macro', 3,
 sub
-#line 273 "Parser.yp"
+#line 278 "Parser.yp"
 { $factory->macro(@_[2, 3])           }
 	],
 	[#Rule 92
@@ -5697,31 +5706,31 @@ sub
 	[#Rule 93
 		 'mdir', 4,
 sub
-#line 277 "Parser.yp"
+#line 282 "Parser.yp"
 { $_[3]                               }
 	],
 	[#Rule 94
 		 'margs', 2,
 sub
-#line 280 "Parser.yp"
+#line 285 "Parser.yp"
 { push(@{$_[1]}, $_[2]); $_[1]        }
 	],
 	[#Rule 95
 		 'margs', 2,
 sub
-#line 281 "Parser.yp"
+#line 286 "Parser.yp"
 { $_[1]                               }
 	],
 	[#Rule 96
 		 'margs', 1,
 sub
-#line 282 "Parser.yp"
+#line 287 "Parser.yp"
 { [ $_[1] ]                           }
 	],
 	[#Rule 97
 		 'metadata', 2,
 sub
-#line 285 "Parser.yp"
+#line 290 "Parser.yp"
 { push(@{$_[1]}, @{$_[2]}); $_[1]     }
 	],
 	[#Rule 98
@@ -5733,7 +5742,7 @@ sub
 	[#Rule 100
 		 'meta', 3,
 sub
-#line 290 "Parser.yp"
+#line 295 "Parser.yp"
 { for ($_[3]) { s/^'//; s/'$//; 
 						       s/\\'/'/g  }; 
 					 [ @_[1,3] ] }
@@ -5741,13 +5750,13 @@ sub
 	[#Rule 101
 		 'meta', 5,
 sub
-#line 293 "Parser.yp"
+#line 298 "Parser.yp"
 { [ @_[1,4] ] }
 	],
 	[#Rule 102
 		 'meta', 3,
 sub
-#line 294 "Parser.yp"
+#line 299 "Parser.yp"
 { [ @_[1,3] ] }
 	],
 	[#Rule 103
@@ -5759,43 +5768,43 @@ sub
 	[#Rule 105
 		 'lterm', 3,
 sub
-#line 306 "Parser.yp"
+#line 311 "Parser.yp"
 { "[ $_[2] ]"                         }
 	],
 	[#Rule 106
 		 'lterm', 3,
 sub
-#line 307 "Parser.yp"
+#line 312 "Parser.yp"
 { "[ $_[2] ]"                         }
 	],
 	[#Rule 107
 		 'lterm', 2,
 sub
-#line 308 "Parser.yp"
+#line 313 "Parser.yp"
 { "[ ]"                               }
 	],
 	[#Rule 108
 		 'lterm', 3,
 sub
-#line 309 "Parser.yp"
+#line 314 "Parser.yp"
 { "{ $_[2]  }"                        }
 	],
 	[#Rule 109
 		 'sterm', 1,
 sub
-#line 312 "Parser.yp"
+#line 317 "Parser.yp"
 { $factory->ident($_[1])              }
 	],
 	[#Rule 110
 		 'sterm', 2,
 sub
-#line 313 "Parser.yp"
+#line 318 "Parser.yp"
 { $factory->identref($_[2])           }
 	],
 	[#Rule 111
 		 'sterm', 3,
 sub
-#line 314 "Parser.yp"
+#line 319 "Parser.yp"
 { $factory->quoted($_[2])             }
 	],
 	[#Rule 112
@@ -5807,7 +5816,7 @@ sub
 	[#Rule 114
 		 'list', 2,
 sub
-#line 319 "Parser.yp"
+#line 324 "Parser.yp"
 { "$_[1], $_[2]"                      }
 	],
 	[#Rule 115
@@ -5819,7 +5828,7 @@ sub
 	[#Rule 117
 		 'range', 3,
 sub
-#line 324 "Parser.yp"
+#line 329 "Parser.yp"
 { $_[1] . '..' . $_[3]                }
 	],
 	[#Rule 118
@@ -5828,13 +5837,13 @@ sub
 	[#Rule 119
 		 'hash', 0,
 sub
-#line 329 "Parser.yp"
+#line 334 "Parser.yp"
 { "" }
 	],
 	[#Rule 120
 		 'params', 2,
 sub
-#line 332 "Parser.yp"
+#line 337 "Parser.yp"
 { "$_[1], $_[2]"                      }
 	],
 	[#Rule 121
@@ -5846,25 +5855,25 @@ sub
 	[#Rule 123
 		 'param', 3,
 sub
-#line 337 "Parser.yp"
+#line 342 "Parser.yp"
 { "$_[1] => $_[3]"                    }
 	],
 	[#Rule 124
 		 'param', 3,
 sub
-#line 338 "Parser.yp"
+#line 343 "Parser.yp"
 { "$_[1] => $_[3]"                    }
 	],
 	[#Rule 125
 		 'ident', 3,
 sub
-#line 341 "Parser.yp"
+#line 346 "Parser.yp"
 { push(@{$_[1]}, @{$_[3]}); $_[1]     }
 	],
 	[#Rule 126
 		 'ident', 3,
 sub
-#line 342 "Parser.yp"
+#line 347 "Parser.yp"
 { push(@{$_[1]}, 
 					   map {($_, 0)} split(/\./, $_[3]));
 				      $_[1];			          }
@@ -5875,31 +5884,31 @@ sub
 	[#Rule 128
 		 'node', 1,
 sub
-#line 348 "Parser.yp"
+#line 353 "Parser.yp"
 { [ $_[1], 0 ]                        }
 	],
 	[#Rule 129
 		 'node', 4,
 sub
-#line 349 "Parser.yp"
+#line 354 "Parser.yp"
 { [ $_[1], $factory->args($_[3]) ]    }
 	],
 	[#Rule 130
 		 'item', 1,
 sub
-#line 352 "Parser.yp"
+#line 357 "Parser.yp"
 { "'$_[1]'"                           }
 	],
 	[#Rule 131
 		 'item', 3,
 sub
-#line 353 "Parser.yp"
+#line 358 "Parser.yp"
 { $_[2]                               }
 	],
 	[#Rule 132
 		 'item', 2,
 sub
-#line 354 "Parser.yp"
+#line 359 "Parser.yp"
 { $_[0]->{ V1DOLLAR }
 				       ? "'$_[2]'" 
 				       : $factory->ident(["'$_[2]'", 0])  }
@@ -5907,79 +5916,79 @@ sub
 	[#Rule 133
 		 'expr', 3,
 sub
-#line 359 "Parser.yp"
+#line 364 "Parser.yp"
 { "$_[1] $_[2] $_[3]"                 }
 	],
 	[#Rule 134
 		 'expr', 3,
 sub
-#line 360 "Parser.yp"
+#line 365 "Parser.yp"
 { "$_[1] $_[2] $_[3]"                 }
 	],
 	[#Rule 135
 		 'expr', 3,
 sub
-#line 361 "Parser.yp"
+#line 366 "Parser.yp"
 { "$_[1] $_[2] $_[3]"                 }
 	],
 	[#Rule 136
 		 'expr', 3,
 sub
-#line 362 "Parser.yp"
+#line 367 "Parser.yp"
 { "int($_[1] / $_[3])"                }
 	],
 	[#Rule 137
 		 'expr', 3,
 sub
-#line 363 "Parser.yp"
+#line 368 "Parser.yp"
 { "$_[1] % $_[3]"                     }
 	],
 	[#Rule 138
 		 'expr', 3,
 sub
-#line 364 "Parser.yp"
+#line 369 "Parser.yp"
 { "$_[1] $CMPOP{ $_[2] } $_[3]"       }
 	],
 	[#Rule 139
 		 'expr', 3,
 sub
-#line 365 "Parser.yp"
+#line 370 "Parser.yp"
 { "$_[1]  . $_[3]"                    }
 	],
 	[#Rule 140
 		 'expr', 3,
 sub
-#line 366 "Parser.yp"
+#line 371 "Parser.yp"
 { "$_[1] && $_[3]"                    }
 	],
 	[#Rule 141
 		 'expr', 3,
 sub
-#line 367 "Parser.yp"
+#line 372 "Parser.yp"
 { "$_[1] || $_[3]"                    }
 	],
 	[#Rule 142
 		 'expr', 2,
 sub
-#line 368 "Parser.yp"
+#line 373 "Parser.yp"
 { "! $_[2]"                           }
 	],
 	[#Rule 143
 		 'expr', 5,
 sub
-#line 369 "Parser.yp"
+#line 374 "Parser.yp"
 { "$_[1] ? $_[3] : $_[5]"             }
 	],
 	[#Rule 144
 		 'expr', 3,
 sub
-#line 370 "Parser.yp"
+#line 375 "Parser.yp"
 { $factory->assign(@{$_[2]})          }
 	],
 	[#Rule 145
 		 'expr', 3,
 sub
-#line 371 "Parser.yp"
+#line 376 "Parser.yp"
 { "($_[2])"                           }
 	],
 	[#Rule 146
@@ -5988,7 +5997,7 @@ sub
 	[#Rule 147
 		 'setlist', 2,
 sub
-#line 375 "Parser.yp"
+#line 380 "Parser.yp"
 { push(@{$_[1]}, @{$_[2]}); $_[1]     }
 	],
 	[#Rule 148
@@ -6000,50 +6009,50 @@ sub
 	[#Rule 150
 		 'assign', 3,
 sub
-#line 381 "Parser.yp"
+#line 386 "Parser.yp"
 { [ $_[1], $_[3] ]                    }
 	],
 	[#Rule 151
 		 'assign', 3,
 sub
-#line 382 "Parser.yp"
+#line 387 "Parser.yp"
 { [ @_[1,3] ]                         }
 	],
 	[#Rule 152
 		 'args', 2,
 sub
-#line 389 "Parser.yp"
+#line 394 "Parser.yp"
 { push(@{$_[1]}, $_[2]); $_[1]        }
 	],
 	[#Rule 153
 		 'args', 2,
 sub
-#line 390 "Parser.yp"
+#line 395 "Parser.yp"
 { push(@{$_[1]->[0]}, $_[2]); $_[1]   }
 	],
 	[#Rule 154
 		 'args', 4,
 sub
-#line 391 "Parser.yp"
+#line 396 "Parser.yp"
 { push(@{$_[1]->[0]}, "'', " . 
 				      $factory->assign(@_[2,4])); $_[1]  }
 	],
 	[#Rule 155
 		 'args', 2,
 sub
-#line 393 "Parser.yp"
+#line 398 "Parser.yp"
 { $_[1]                               }
 	],
 	[#Rule 156
 		 'args', 0,
 sub
-#line 394 "Parser.yp"
+#line 399 "Parser.yp"
 { [ [ ] ]                             }
 	],
 	[#Rule 157
 		 'lnameargs', 3,
 sub
-#line 404 "Parser.yp"
+#line 409 "Parser.yp"
 { push(@{$_[3]}, $_[1]); $_[3]        }
 	],
 	[#Rule 158
@@ -6055,7 +6064,7 @@ sub
 	[#Rule 160
 		 'lvalue', 3,
 sub
-#line 409 "Parser.yp"
+#line 414 "Parser.yp"
 { $factory->quoted($_[2])             }
 	],
 	[#Rule 161
@@ -6064,43 +6073,43 @@ sub
 	[#Rule 162
 		 'nameargs', 3,
 sub
-#line 413 "Parser.yp"
+#line 418 "Parser.yp"
 { [ [$factory->ident($_[2])], $_[3] ]   }
 	],
 	[#Rule 163
 		 'nameargs', 2,
 sub
-#line 414 "Parser.yp"
+#line 419 "Parser.yp"
 { [ @_[1,2] ] }
 	],
 	[#Rule 164
 		 'nameargs', 4,
 sub
-#line 415 "Parser.yp"
+#line 420 "Parser.yp"
 { [ @_[1,3] ] }
 	],
 	[#Rule 165
 		 'names', 3,
 sub
-#line 418 "Parser.yp"
+#line 423 "Parser.yp"
 { push(@{$_[1]}, $_[3]); $_[1] }
 	],
 	[#Rule 166
 		 'names', 1,
 sub
-#line 419 "Parser.yp"
+#line 424 "Parser.yp"
 { [ $_[1] ]                    }
 	],
 	[#Rule 167
 		 'name', 3,
 sub
-#line 422 "Parser.yp"
+#line 427 "Parser.yp"
 { $factory->quoted($_[2])  }
 	],
 	[#Rule 168
 		 'name', 1,
 sub
-#line 423 "Parser.yp"
+#line 428 "Parser.yp"
 { "'$_[1]'" }
 	],
 	[#Rule 169
@@ -6109,7 +6118,7 @@ sub
 	[#Rule 170
 		 'filename', 3,
 sub
-#line 435 "Parser.yp"
+#line 440 "Parser.yp"
 { "$_[1].$_[3]" }
 	],
 	[#Rule 171
@@ -6127,32 +6136,32 @@ sub
 	[#Rule 175
 		 'quoted', 2,
 sub
-#line 449 "Parser.yp"
+#line 454 "Parser.yp"
 { push(@{$_[1]}, $_[2]) 
 				          if defined $_[2]; $_[1]         }
 	],
 	[#Rule 176
 		 'quoted', 0,
 sub
-#line 451 "Parser.yp"
+#line 456 "Parser.yp"
 { [ ]                                 }
 	],
 	[#Rule 177
 		 'quotable', 1,
 sub
-#line 454 "Parser.yp"
+#line 459 "Parser.yp"
 { $factory->ident($_[1])              }
 	],
 	[#Rule 178
 		 'quotable', 1,
 sub
-#line 455 "Parser.yp"
+#line 460 "Parser.yp"
 { $factory->text($_[1])               }
 	],
 	[#Rule 179
 		 'quotable', 1,
 sub
-#line 456 "Parser.yp"
+#line 461 "Parser.yp"
 { undef                               }
 	]
 ];
