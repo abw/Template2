@@ -45,7 +45,7 @@ my $cfg = {
 };
 
 my $vars = {
-    entities => HAS_HTML_Entities || HAS_Apache_Util,
+    entities => HAS_HTML_Entities || HAS_Apache_Util || 0,
 };
 
 test_expect(\*DATA, $cfg, $vars); 
