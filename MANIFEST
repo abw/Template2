@@ -542,7 +542,10 @@ t/test/lib/header
 t/test/lib/header.tt2
 t/test/lib/incblock
 t/test/lib/menu
+t/test/lib/one/foo
 t/test/lib/trimme
+t/test/lib/two/bar
+t/test/lib/two/foo
 t/test/lib/udata1
 t/test/lib/udata2
 t/test/plugin/MyPlugs/Bar.pm
