@@ -291,7 +291,7 @@ value can be used to set binary mode.
     [% PROCESS my/png/generator 
          FILTER redirect("images/logo.png", 1) %]
 
-For the sake of future compatability and clarity, if nothing else, we
+For the sake of future compatibility and clarity, if nothing else, we
 would strongly recommend you explicitly use the named 'binmode' option
 as shown in the first example.
 
