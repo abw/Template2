@@ -270,16 +270,15 @@ sub query {
 
 
 #------------------------------------------------------------------------
-# do($sql)
+# do($sql, \%attr, @bind)
 #
 # Prepares and executes a SQL statement.
 #------------------------------------------------------------------------
 
 sub do {
     my $self = shift;
-    my $sql  = shift || return '';
 
-    return $self->dbh->do($sql) 
+    return $self->dbh->do(@_)
 	|| $self->_throw("DBI do failed: $DBI::errstr");
 }
 
