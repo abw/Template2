@@ -176,8 +176,9 @@ $LIST_OPS = {
 	     map { defined $_ ? $_ : '' } @$list) 
     },
     'sort'    => sub {
+        $^W = 0;
         my ($list, $field) = @_;
-        return $list unless $#$list;        # no need to sort 1 item lists
+        return $list unless @$list > 1;     # no need to sort 1 item lists
         return $field                       # Schwartzian Transform 
             ?  map  { $_->[0] }             # for case insensitivity
                sort { $a->[1] cmp $b->[1] }
