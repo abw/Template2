@@ -24,6 +24,21 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.07a -                                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed bug introduced to Template::Provider in 2.06g which changed 
+  handling of trailing slashes on COMPILE_DIR.
+
+* Fixed a bug in Template::Parser to preserve any post-chomp flags 
+  that were otherwise ignored when an entire directive is commented
+  out, e.g.
+
+    [%# blah
+      # blah 
+    -%]
+
+#------------------------------------------------------------------------
 # Version 2.07 - April 17th 2002 
 #------------------------------------------------------------------------
 
