@@ -101,7 +101,7 @@ sub new {
 	    || return $class->throw("$abs: $!");
 	@$self{ @STAT_KEYS } = @stat;
 	unless ($config->{ noid }) {
-	    $self->{ user  } = eval { &getpwuid( $self->{ uid }) || $self->{ uid } };
+	    $self->{ user  } = eval { getpwuid( $self->{ uid }) || $self->{ uid } };
 	    $self->{ group } = eval { getgrgid( $self->{ gid }) || $self->{ gid } };
 	}
 	$self->{ isdir } = -d $abs;
@@ -400,8 +400,8 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-2.64, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.65, distributed as part of the
+Template Toolkit version 2.14, released on 04 October 2004.
 
 
 
