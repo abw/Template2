@@ -75,12 +75,8 @@ chunks:	    chunks chunk	    { push(@{$_[1]}, $_[2])
 
 chunk:  TEXT             { $factory->textblock($_[1])          }
     |   statement ';'    { return '' unless $_[1];
-                           my $line = ${$_[0]->{LINE}};
-                           my $info = $_[0]->{FILEINFO}->[-1];
-                           my $file = $info->{ path } || $info->{ name } 
-                              || '(unknown template)';
-                           $line =~ s/\-.*$//; # might be 'n-n'
-                           "#line $line \"$file\"\n$_[1]" }
+                           $_[0]->location() . $_[1];
+                         }
 ;
 
 statement:  directive
