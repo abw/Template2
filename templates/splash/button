@@ -25,22 +25,22 @@
   <tr valign="top">
     <td width="[% imgsize %]"><img
         src="[% imgbase %]/tl.[% imgtype %]"
-        width="[% imgsize %]" height="[% imgsize %]"></td>
+        width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
     <td rowspan="2" valign="middle"
         [%- IF align %] align="[% align %]"[% END %]
         [%- IF width %] width="100%"[% END %]>
         [%- content.length ? content : '&nbsp;' -%]</td>
     <td width="[% imgsize %]" align="right"><img 
         src="[% imgbase %]/tr.[% imgtype %]" 
-        width="[% imgsize %]" height="[% imgsize %]"></td>
+        width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
   </tr>
   <tr valign="bottom">
      <td width="[% imgsize %]" align="left"><img 
          src="[% imgbase %]/bl.[% imgtype %]" 
-         width="[% imgsize %]" height="[% imgsize %]"></td>
+         width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
      <td width="[% imgsize %]" align="right"><img 
          src="[% imgbase %]/br.[% imgtype %]" 
-         width="[% imgsize %]" height="[% imgsize %]"></td>
+         width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
   </tr>
 </table>
 <!-- /tt2.splash.button -->

@@ -9,5 +9,5 @@
 %]
 [%- IF link %]<a href="[% link %]">[% END -%]
 <img src="[% splash.images %]/[% col %]/[% img or 'dot' %].[% splash.imgtype %]"
-width="[% splash.imgsize %]" height="[% splash.imgsize %]" border="0">
+width="[% splash.imgsize %]" height="[% splash.imgsize %]" border="0" alt="">
 [%- IF link %]</a>[% END %]

@@ -26,26 +26,26 @@
     ;
 -%]
 <!-- tt2.splash.dropbox -->  
-<table border=0 [% IF width  %]width="[% width %]"[% END %]
-       bgcolor="[% rgbfore %]" cellpadding=0 cellspacing=0>
-  <tr height="[% imgsize %]" valign=top>
+<table border="0" [% IF width  %]width="[% width %]"[% END %]
+       bgcolor="[% rgbfore %]" cellpadding="0" cellspacing="0">
+  <tr height="[% imgsize %]" valign="top">
     <td width="[% imgsize %]"><img
         src="[% imgback %]/tl.[% imgtype %]" 
-	width="[% imgsize %]" height="[% imgsize %]"></td>
-    <td rowspan=2 valign="middle"
+	width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
+    <td rowspan="2" valign="middle"
 	[%- IF align %] align="[% align %]"[% END %]
 	[%- IF width %] width="100%"[% END %]>
 	[%- title %]
     </td>
     <td width="[% imgsize %]" align="right"><img 
         src="[% imgback %]/tr.[% imgtype %]"
-        width="[% imgsize %]" height="[% imgsize %]"></td>
+        width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
   </tr>
-  <tr height="[% imgsize %]" valign=bottom>
-     <td width="[% imgsize %]" align=left><img src="[% imgback %]/bl.[% imgtype %]" 
-  	 width="[% imgsize %]" height="[% imgsize %]"></td>
-     <td width="[% imgsize %]" align=right><img src="[% imgback %]/br.[% imgtype %]" 
-  	 width="[% imgsize %]" height="[% imgsize %]"></td>
+  <tr height="[% imgsize %]" valign="bottom">
+     <td width="[% imgsize %]" align="left"><img src="[% imgback %]/bl.[% imgtype %]" 
+  	 width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
+     <td width="[% imgsize %]" align="right"><img src="[% imgback %]/br.[% imgtype %]" 
+  	 width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
   </tr>
   <tr> 
     <td></td>

@@ -9,8 +9,8 @@
   DEFAULT
         width = '100%';
 -%]
-<table border=0 [% IF width  %]width="[% width %]"[% END %]
-       cellpadding=0 cellspacing=0>
+<table border="0" [% IF width  %]width="[% width %]"[% END %]
+       cellpadding="0" cellspacing="0">
   <tr>
     <td>[% INCLUDE splash/button width="100%" align="left" select=1 %]</td>
     <td>[% INCLUDE splash/menu width=0 col=0 %]</td>

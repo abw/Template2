@@ -34,10 +34,10 @@
   <tr valign="top">
     <td width="[% img.size %]" align="left"><img 
         src="[% img.back %]/tl.[% img.type %]" 
-        width="[% img.size %]" height="[% img.size %]"></td>
+        width="[% img.size %]" height="[% img.size %]" alt=""></td>
     <td width="[% img.size %]" align="right"><img 
         src="[% img.back %]/tr.[% img.type %]"
-        width="[% img.size %]" height="[% img.size %]"></td>
+        width="[% img.size %]" height="[% img.size %]" alt=""></td>
   </tr>
   </table>
 </td>
@@ -79,10 +79,10 @@
   <tr valign="top">
     <td width="[% img.size %]" align="left"><img 
         src="[% img.back %]/bl.[% img.type %]" 
-        width="[% img.size %]" height="[% img.size %]"></td>
+        width="[% img.size %]" height="[% img.size %]" alt=""></td>
     <td width="[% img.size %]" align="right"><img 
         src="[% img.back %]/br.[% img.type %]"
-        width="[% img.size %]" height="[% img.size %]"></td>
+        width="[% img.size %]" height="[% img.size %]" alt=""></td>
   </tr>
   </table>
 </td>
@@ -96,7 +96,7 @@
 <tr>
   <td bgcolor="[% rgbcol %]"><img 
     src="[% splash.images %]/[% col %]/single.[% img.type %]"
-    width="[% gap %]" height="[% gap %]" border=0>---</td>
+    width="[% gap %]" height="[% gap %]" border="0" alt="">---</td>
 </tr>
 [%- END %]
 

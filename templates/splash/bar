@@ -28,13 +28,13 @@
   <tr height="[% imgsize %]" valign="[% up %]">
     <td width="[% imgsize %]"><img 
         src="[% imgback %]/[% invert ? 'bl' : 'tl' %].[% imgtype %]" 
-        width="[% imgsize %]" height="[% imgsize %]"></td>
+        width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
     <td valign="middle"[% IF align %] align="[% align %]"[% END %]
         [%- IF width %] width="100%"[% END %]>
         [%- content.length ? content : '&nbsp;' -%]</td>
     <td width="[% imgsize %]" align="right"><img 
         src="[% imgback %]/[% invert ? 'br' : 'tr' %].[% imgtype %]"
-        width="[% imgsize %]" height="[% imgsize %]"></td>
+        width="[% imgsize %]" height="[% imgsize %]" alt=""></td>
   </tr>
 </table>
 <!-- /tt2.splash.bar -->
