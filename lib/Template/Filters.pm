@@ -538,7 +538,7 @@ EOF
 
 
 #------------------------------------------------------------------------
-# redirect_filter_factory($context, $file)    [% Filter redirect(file) %]
+# redirect_filter_factory($context, $file)    [% FILTER redirect(file) %]
 #
 # Create a filter to redirect the block text to a file.
 #------------------------------------------------------------------------
@@ -567,7 +567,7 @@ sub redirect_filter_factory {
 
 
 #------------------------------------------------------------------------
-# stdout_filter_factory($context, $binmode)    [% Filter stdout(binmode) %]
+# stdout_filter_factory($context, $binmode)    [% FILTER stdout(binmode) %]
 #
 # Create a filter to print a block to stdout, with an optional binmode.
 #------------------------------------------------------------------------
@@ -586,7 +586,7 @@ sub stdout_filter_factory {
 }
 
 #------------------------------------------------------------------------
-# latex_filter_factory($context, $outputType)   [% Filter latex(outputType) %]
+# latex_filter_factory($context, $outputType)   [% FILTER latex(outputType) %]
 #
 # Return a filter sub that converts a (hopefully) complete LaTeX source
 # file to either "ps", "dvi", or "pdf".  Output type should be "ps", "dvi"
