@@ -41,7 +41,12 @@ use File::Path;
 $VERSION     = '2.09b';
 $ERROR       = '';
 $DEBUG       = 0;
-$BINMODE     = ($^O eq 'MSWin32') ? 1 : 0;
+
+# we used to default to binary mode for all win32 files but that make
+# line endings strange, so we're turning it off and letting users set
+# it explicitly as an argument to process()
+# $BINMODE     = ($^O eq 'MSWin32') ? 1 : 0;
+$BINMODE     = 0 unless defined $BINMODE;
 
 # preload all modules if we're running under mod_perl
 Template::Config->preload() if $ENV{ MOD_PERL };
