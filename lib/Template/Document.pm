@@ -283,10 +283,6 @@ sub write_perl_file {
 	close($fh);
     };
     return $class->error($@) if $@;
-
-    # untaint (blindly)
-    $file =~ /(.*)/; $file = $1;
-    $tmpfile =~ /(.*)/; $tmpfile = $1;
     return rename($tmpfile, $file)
 	|| $class->error($!);
 }
