@@ -490,7 +490,7 @@ sub tokenise_directive {
 	        (\#[^\n]*)
 	   |
 		# a quoted phrase matches in $3
-		(["'])                   # $2 - opening quote, " or '
+		(["'])                   # $2 - opening quote, ' or "
 		(                        # $3 - quoted text buffer
 		    (?:                  # repeat group (no backreference)
 			\\\\             # an escaped backslash \\
