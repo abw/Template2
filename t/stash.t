@@ -18,7 +18,7 @@
 
 use strict;
 use lib qw( ./lib ../lib );
-use Template::Constants qw( :status );
+use Template::Constants qw( :status :debug );
 use Template;
 use Template::Stash;
 use Template::Config;
@@ -64,7 +64,7 @@ match( $stash->get('bar.buz'), 100 );
 
 my $ttlist = [
     'default' => Template->new(),
-    'warn'    => Template->new(DEBUG => 1, DEBUG_FORMAT => ''),
+    'warn'    => Template->new(DEBUG => DEBUG_UNDEF, DEBUG_FORMAT => ''),
 ];
 
 test_expect(\*DATA, $ttlist, $data);

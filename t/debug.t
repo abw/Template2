@@ -20,10 +20,11 @@ use lib qw( ./lib ../lib );
 use Template::Test qw( :all );
 use Template::Parser;
 use Template::Directive;
+use Template::Constants qw( :debug );
 
 my $DEBUG = grep(/-d/, @ARGV);
-#$Template::Parser::DEBUG = $DEBUG;
-#$Template::Directive::Pretty = $DEBUG;
+#$Template::Parser::DEBUG = 1; #$DEBUG;
+$Template::Directive::Pretty = $DEBUG;
 $Template::Test::PRESERVE = 1;
 
 my $dir   = -d 't' ? 't/test' : 'test';
@@ -37,22 +38,36 @@ my $vars = {
     },
 };
 
+my $dummy = Template::Base->new() || die Template::Base->error();
+ok( $dummy, 'created a dummy object' );
+my $flags = Template::Constants::debug_flags($dummy, 'dirs, stash');
+ok( $flags, 'created flags' );
+is( $flags, DEBUG_DIRS | DEBUG_STASH, "flags value is $flags" );
+$flags = Template::Constants::debug_flags($dummy, $flags)
+    || die $dummy->error();
+ok( $flags, 'got more flags back' );
+is( $flags, 'dirs, stash', 'dirs, stash' );
+
+$flags = Template::Constants::debug_flags($dummy, 'bad stupid');
+ok( ! $flags, 'bad flags' );
+is( $dummy->error(), 'unknown debug flag: bad', 'error correct' );
+
 my $tt = Template->new( {
     DEBUG => 0,
     INCLUDE_PATH => "$dir/src:$dir/lib",
     DEBUG_FORMAT => "<!-- \$file line \$line : [% \$text %] -->",
-} );
+} ) || die Template->error();
 
 my $tt2 = Template->new( {
-    DEBUG => 1,
+    DEBUG => DEBUG_DIRS,
     INCLUDE_PATH => "$dir/src:$dir/lib",
-} );
+} ) || die Template->error();
 
 my $ttd = Template->new( {
-    DEBUG => 1,
+    DEBUG => 'dirs, vars',
     INCLUDE_PATH => "$dir/src:$dir/lib",
     DEBUG_FORMAT => "<!-- \$file line \$line : [% \$text %] -->",
-} );
+} ) || die Template->error();
 
 test_expect(\*DATA, [ default => $tt, debug => $ttd, debug2 => $tt2 ], $vars);
 #$tt->process(\*DATA, $vars) || die $tt->error();
@@ -103,6 +118,7 @@ Debugging enabled
 foo: <!-- input text line 6 : [% foo %] -->10
 
 -- test --
+-- name ping pong --
 foo: [% foo %]
 hello [% "$baz.ping/$baz.pong" %] world
 [% DEBUG off %]

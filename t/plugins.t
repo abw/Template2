@@ -19,8 +19,11 @@
 use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
+use Template::Constants qw( :debug );
 use Cwd qw( abs_path );
 $^W = 1;
+
+my $DEBUG = grep(/^--?d(debug)?$/, @ARGV);
 
 #$Template::Test::DEBUG = 0;
 #$Template::Plugins::DEBUG = 0;
@@ -30,6 +33,7 @@ unshift(@INC, $dir);
 
 my $tt1 = Template->new({      
     PLUGIN_BASE => 'MyPlugs',
+    DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
 });
 
 require "MyPlugs/Bar.pm";
@@ -41,10 +45,12 @@ my $tt2 = Template->new({
 	baz => 'MyPlugs::Foo',
 	cgi => 'MyPlugs::Bar',
     },
+    DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
 });
 
 my $tt3 = Template->new({
     LOAD_PERL => 1,
+    DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
 });
 
 my $tt = [

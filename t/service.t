@@ -21,6 +21,9 @@ use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Service;
 use Template::Document;
+use Template::Constants qw( :debug );
+
+my $DEBUG = grep(/^--?d(debug)?$/, @ARGV);
 
 my $dir    = -d 't' ? 't/test' : 'test';
 my $config = {
@@ -35,6 +38,7 @@ my $config = {
 	barf     => 'barfed',
 	default  => 'error',
     },
+    DEBUG => $DEBUG ? DEBUG_SERVICE : 0,
 };
 my $tt1 = Template->new($config);
 

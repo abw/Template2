@@ -24,16 +24,16 @@ use Template::Provider;
 use Cwd 'abs_path';
 
 $^W = 1;
+my $DEBUG = grep(/-d/, @ARGV);
 $Template::Test::DEBUG = 0;
-#$Template::Provider::DEBUG = 0;
+use Template::Constants qw( :debug );
+$Template::Provider::DEBUG = $DEBUG ? DEBUG_PROVIDER | DEBUG_CALLER : 0;
 #$Template::Parser::DEBUG = 1;
 #$Template::Directive::PRETTY = 1;
 
 # uncommenting the next line should cause test 43 to fail because
 # the provider doesn't stat the file.
 # $Template::Provider::STAT_TTL = 10;
-
-my $DEBUG = 0;
 
 my $factory = 'Template::Config';
 
@@ -118,24 +118,28 @@ ok( delivered( $provrel, $relfile ) );
 sub delivered {
     my ($provider, $file) = @_;
     my ($result, $error) = $provider->fetch($file);
-    print STDERR "$provider->fetch($file) -> [$result] [$error]\n"
-	if $DEBUG;
+    my $nice_result = defined $result ? $result : '<undef>';
+    my $nice_error  = defined $error  ? $error : '<undef>';
+#    print STDERR "$provider->fetch($file) -> [$nice_result] [$nice_error]\n"
+#	if $DEBUG;
     return ! $error;
 }
 
 sub declined {
     my ($provider, $file) = @_;
     my ($result, $error) = $provider->fetch($file);
-    print STDERR "$provider->fetch($file) -> [$result] [$error]\n"
-	if $DEBUG;
+    my $nice_result = defined $result ? $result : '<undef>';
+    my $nice_error  = defined $error  ? $error : '<undef>';
+#    print STDERR "$provider->fetch($file) -> [$nice_result] [$nice_error]\n"
+#	if $DEBUG;
     return ($error == Template::Constants::STATUS_DECLINED);
 }
 
 sub denied {
     my ($provider, $file) = @_;
     my ($result, $error) = $provider->fetch($file);
-    print STDERR "$provider->fetch($file) -> [$result] [$error]\n"
-	if $DEBUG;
+#    print STDERR "$provider->fetch($file) -> [$result] [$error]\n"
+#	if $DEBUG;
     return ($error == Template::Constants::STATUS_ERROR);
 }
 

@@ -22,7 +22,10 @@ use Template::Filters;
 use Template qw( :status );
 use Template::Parser;
 use Template::Test;
+use Template::Constants qw( :debug );
 $^W = 1;
+
+my $DEBUG = grep(/^--?d(debug)?$/, @ARGV);
 
 $Template::Test::DEBUG = 0;
 $Template::Test::EXTRA = 1;     # ensure redirected file is created
