@@ -681,11 +681,12 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 		    return &PL_sv_undef;
 	    }
 
+            newsv = newSVsv(value);
 	    if (looks_like_number(key_sv)) {
-		if (av_store(rootav, SvIV(key_sv), value))
-		    SvREFCNT_inc(value);
+                if (av_store(rootav, SvIV(key_sv), newsv))
+                   SvREFCNT_inc(newsv);
 		else 
-		    SvSETMAGIC(value);
+                    SvSETMAGIC(newsv);
 
 		return value;
 	    }
