@@ -48,6 +48,7 @@ use constant STATUS_ERROR    => 255;      # error condition
 # ERROR constants for indicating exception types
 use constant ERROR_RETURN    =>  'return'; # return a status code
 use constant ERROR_FILE      =>  'file';   # file error: I/O, parse, recursion
+use constant ERROR_VIEW      =>  'view';   # view error
 use constant ERROR_UNDEF     =>  'undef';  # undefined variable value used
 use constant ERROR_PERL      =>  'perl';   # error in [% PERL %] block
 use constant ERROR_FILTER    =>  'filter'; # filter error
@@ -55,8 +56,8 @@ use constant ERROR_PLUGIN    =>  'plugin'; # plugin error
 
 my @STATUS   = qw( STATUS_OK STATUS_RETURN STATUS_STOP STATUS_DONE
 		   STATUS_DECLINED STATUS_ERROR );
-my @ERROR    = qw( ERROR_FILE ERROR_UNDEF ERROR_PERL ERROR_RETURN
-		   ERROR_FILTER ERROR_PLUGIN );
+my @ERROR    = qw( ERROR_FILE ERROR_VIEW ERROR_UNDEF ERROR_PERL 
+		   ERROR_RETURN ERROR_FILTER ERROR_PLUGIN );
 
 @EXPORT_OK   =   ( @STATUS, @ERROR );
 %EXPORT_TAGS = (

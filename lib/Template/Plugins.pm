@@ -34,6 +34,7 @@ use Template::Constants;
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 $STD_PLUGINS   = {
+    'autoformat' => 'Template::Plugin::Autoformat',
     'cgi'        => 'Template::Plugin::CGI',
     'date'       => 'Template::Plugin::Date',
     'dbi'        => 'Template::Plugin::DBI',
@@ -43,8 +44,8 @@ $STD_PLUGINS   = {
     'iterator'   => 'Template::Plugin::Iterator',
     'datafile'   => 'Template::Plugin::Datafile',
     'dumper'     => 'Template::Plugin::Dumper',
+    'view'       => 'Template::Plugin::View',
     'wrap'       => 'Template::Plugin::Wrap',
-    'autoformat' => 'Template::Plugin::Autoformat',
 };
 
 

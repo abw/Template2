@@ -96,5 +96,10 @@ sub _init {
 }
 
 
+sub DEBUG {
+    my $self = shift;
+    print STDERR "DEBUG: ", @_;
+}
+
 1;
 

@@ -50,13 +50,12 @@ sub new {
     my $context = shift;
     my $args    = ref $_[-1] eq 'HASH' ? pop(@_) : { };
     
-    my $parser ||= XML::DOM::Parser->new(%$args);
-    return $class->error("failed to create XML::DOM::Parser\n")
-	unless $parser;
+    my $parser ||= XML::DOM::Parser->new(%$args)
+	|| return $class->_throw("failed to create XML::DOM::Parser\n");
 
     # we've had to deprecate the old usage because it broke things big time
     # with DOM trees never getting cleaned up.
-    $class->_throw("XML::DOM usage has changed - you must now call parse()\n")
+    return $class->_throw("XML::DOM usage has changed - you must now call parse()\n")
 	if @_;
     
     bless { 
@@ -164,8 +163,8 @@ sub DESTROY {
 #	    if $DEBUG;
 	if (ref $doc) {
 #	    print STDERR "disposing of $doc\n";
-#	    undef $doc->[ XML::DOM::Node::_UserData ]->{ _CONTEXT };
-#	    $doc->dispose();
+	    undef $doc->[ XML::DOM::Node::_UserData ]->{ _CONTEXT };
+	    $doc->dispose();
 	}
     }
     delete $self->{ _CONTEXT };
