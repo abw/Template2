@@ -4,3 +4,7 @@
    PROCESS misc/seealso
       seealso = page.seealso
 -%]
+
+=cut
+
+[% PROCESS misc/editor %]
