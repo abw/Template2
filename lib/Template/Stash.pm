@@ -91,46 +91,48 @@ $SCALAR_OPS = {
                                 : split(' ', $str, @args) ];
     },
     'chunk' => sub {
-	my ($string, $size) = @_;
-	my @list;
-	$size ||= 1;
-	if ($size < 0) {
-	    # sexeger!  It's faster to reverse the string, search
-	    # it from the front and then reverse the output than to 
-	    # search it from the end, believe it nor not!
-	    $string = reverse $string;
-	    $size = -$size;
-	    unshift(@list, scalar reverse $1) 
-		while ($string =~ /((.{$size})|(.+))/g);
-	}
-	else {
-	    push(@list, $1) while ($string =~ /((.{$size})|(.+))/g);
-	}
-	return \@list;
+        my ($string, $size) = @_;
+        my @list;
+        $size ||= 1;
+        if ($size < 0) {
+            # sexeger!  It's faster to reverse the string, search
+            # it from the front and then reverse the output than to 
+            # search it from the end, believe it nor not!
+            $string = reverse $string;
+            $size = -$size;
+            unshift(@list, scalar reverse $1) 
+                while ($string =~ /((.{$size})|(.+))/g);
+        }
+        else {
+            push(@list, $1) while ($string =~ /((.{$size})|(.+))/g);
+        }
+        return \@list;
     },
-	
+    
 
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
 $HASH_OPS = {
-    'item'   => sub { my ($hash, $item) = @_; 
-                      $item = '' unless defined $item;
-                      return if $item =~ /^[_.]/;
-                      $hash->{ $item };
-                  },
+    'item'   => sub { 
+        my ($hash, $item) = @_; 
+        $item = '' unless defined $item;
+        return if $item =~ /^[_.]/;
+        $hash->{ $item };
+    },
     'hash'   => sub { $_[0] },
     'size'   => sub { scalar keys %{$_[0]} },
     'keys'   => sub { [ keys   %{ $_[0] } ] },
     'values' => sub { [ values %{ $_[0] } ] },
     'each'   => sub { [        %{ $_[0] } ] },
-    'list'   => sub { my ($hash, $what) = @_;  $what ||= '';
-                      return ($what eq 'keys')   ? [   keys %$hash ]
-                           : ($what eq 'values') ? [ values %$hash ]
-                           : ($what eq 'each')   ? [        %$hash ]
-                           : [ map { { key => $_ , value => $hash->{ $_ } } }
-                               keys %$hash ];
-                },
+    'list'   => sub { 
+        my ($hash, $what) = @_;  $what ||= '';
+        return ($what eq 'keys')   ? [   keys %$hash ]
+            : ($what eq 'values') ? [ values %$hash ]
+            : ($what eq 'each')   ? [        %$hash ]
+            : [ map { { key => $_ , value => $hash->{ $_ } } }
+                keys %$hash ];
+    },
     'exists'  => sub { exists $_[0]->{ $_[1] } },
     'defined' => sub { defined $_[0]->{ $_[1] } },
     'import'  => \&hash_import,
@@ -185,9 +187,9 @@ $LIST_OPS = {
             ?  map  { $_->[0] }             # for case insensitivity
                sort { $a->[1] cmp $b->[1] }
                map  { [ $_, lc(ref($_) eq 'HASH' 
-			       ? $_->{ $field } : 
-			       UNIVERSAL::can($_, $field)
-			       ? $_->$field() : $_) ] } 
+                   ? $_->{ $field } : 
+                   UNIVERSAL::can($_, $field)
+                   ? $_->$field() : $_) ] } 
                @$list 
             :  map  { $_->[0] }
                sort { $a->[1] cmp $b->[1] }
@@ -201,9 +203,9 @@ $LIST_OPS = {
             ?  map  { $_->[0] }             # for case insensitivity
                sort { $a->[1] <=> $b->[1] }
                map  { [ $_, lc(ref($_) eq 'HASH' 
-			       ? $_->{ $field } : 
-			       UNIVERSAL::can($_, $field)
-			       ? $_->$field() : $_) ] } 
+                   ? $_->{ $field } : 
+                   UNIVERSAL::can($_, $field)
+                   ? $_->$field() : $_) ] } 
                @$list 
             :  map  { $_->[0] }
                sort { $a->[1] <=> $b->[1] }
@@ -212,34 +214,33 @@ $LIST_OPS = {
     },
     'unique'  => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
     'merge'   => sub {
-	my $list = shift;
-	return [ @$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_ ];
+        my $list = shift;
+        return [ @$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_ ];
     },
     'slice' => sub {
-	my ($list, $from, $to) = @_;
-	$from ||= 0;
-	$to = $#$list unless defined $to;
-	return [ @$list[$from..$to] ];
+        my ($list, $from, $to) = @_;
+        $from ||= 0;
+        $to = $#$list unless defined $to;
+        return [ @$list[$from..$to] ];
     },
     'splice'  => sub {
-	my ($list, $offset, $length, @replace) = @_;
- 
-	if (@replace) {
-	    # @replace can contain a list of multiple replace items, or 
-	    # be a single reference to a list
-	    @replace = @{ $replace[0] }
-	        if @replace == 1 && ref $replace[0] eq 'ARRAY';
-	    return [ splice @$list, $offset, $length, @replace ];
-	}
-	elsif (defined $length) {
-	    return [ splice @$list, $offset, $length ];
-	}
-	elsif (defined $offset) {
-	    return [ splice @$list, $offset ];
-	}
-	else {
-	    return [ splice(@$list) ];
-	}
+        my ($list, $offset, $length, @replace) = @_;
+        if (@replace) {
+            # @replace can contain a list of multiple replace items, or 
+            # be a single reference to a list
+            @replace = @{ $replace[0] }
+            if @replace == 1 && ref $replace[0] eq 'ARRAY';
+            return [ splice @$list, $offset, $length, @replace ];
+        }
+        elsif (defined $length) {
+            return [ splice @$list, $offset, $length ];
+        }
+        elsif (defined $offset) {
+            return [ splice @$list, $offset ];
+        }
+        else {
+            return [ splice(@$list) ];
+        }
     },
 
     defined $LIST_OPS ? %$LIST_OPS : (),
@@ -304,10 +305,10 @@ sub new {
     my $params = ref $_[0] eq 'HASH' ? shift(@_) : { @_ };
 
     my $self   = {
-	global  => { },
-	%$params,
-	%$ROOT_OPS,
-	'_PARENT' => undef,
+        global  => { },
+        %$params,
+        %$ROOT_OPS,
+        '_PARENT' => undef,
     };
 
     bless $self, $class;
@@ -343,26 +344,26 @@ sub clone {
     # look out for magical 'import' argument which imports another hash
     my $import = $params->{ import };
     if (defined $import && UNIVERSAL::isa($import, 'HASH')) {
-	delete $params->{ import };
+        delete $params->{ import };
     }
     else {
-	undef $import;
+        undef $import;
     }
 
     my $clone = bless { 
-	%$self,			# copy all parent members
-	%$params,		# copy all new data
+        %$self,         # copy all parent members
+        %$params,       # copy all new data
         '_PARENT' => $self,     # link to parent
     }, ref $self;
     
     # perform hash import if defined
     &{ $HASH_OPS->{ import }}($clone, $import)
-	if defined $import;
+        if defined $import;
 
     return $clone;
 }
 
-	
+    
 #------------------------------------------------------------------------
 # declone($export) 
 #
@@ -401,22 +402,22 @@ sub get {
     $root = $self;
 
     if (ref $ident eq 'ARRAY'
-	|| ($ident =~ /\./) 
-	&& ($ident = [ map { s/\(.*$//; ($_, 0) } split(/\./, $ident) ])) {
-	my $size = $#$ident;
+        || ($ident =~ /\./) 
+        && ($ident = [ map { s/\(.*$//; ($_, 0) } split(/\./, $ident) ])) {
+        my $size = $#$ident;
 
-	# if $ident is a list reference, then we evaluate each item in the 
-	# identifier against the previous result, using the root stash 
-	# ($self) as the first implicit 'result'...
-
-	foreach (my $i = 0; $i <= $size; $i += 2) {
-	    $result = $self->_dotop($root, @$ident[$i, $i+1]);
-	    last unless defined $result;
-	    $root = $result;
-	}
+        # if $ident is a list reference, then we evaluate each item in the 
+        # identifier against the previous result, using the root stash 
+        # ($self) as the first implicit 'result'...
+        
+        foreach (my $i = 0; $i <= $size; $i += 2) {
+            $result = $self->_dotop($root, @$ident[$i, $i+1]);
+            last unless defined $result;
+            $root = $result;
+        }
     }
     else {
-	$result = $self->_dotop($root, $ident, $args);
+        $result = $self->_dotop($root, $ident, $args);
     }
 
     return defined $result ? $result : $self->undefined($ident, $args);
@@ -445,31 +446,31 @@ sub set {
     $root = $self;
 
     ELEMENT: {
-	if (ref $ident eq 'ARRAY'
-	    || ($ident =~ /\./) 
-	    && ($ident = [ map { s/\(.*$//; ($_, 0) }
-			   split(/\./, $ident) ])) {
-
-	    # a compound identifier may contain multiple elements (e.g. 
-	    # foo.bar.baz) and we must first resolve all but the last, 
-	    # using _dotop() with the $lvalue flag set which will create 
-	    # intermediate hashes if necessary...
-	    my $size = $#$ident;
-	    foreach (my $i = 0; $i < $size - 2; $i += 2) {
-		$result = $self->_dotop($root, @$ident[$i, $i+1], 1);
-		last ELEMENT unless defined $result;
-		$root = $result;
-	    }
-
-	    # then we call _assign() to assign the value to the last element
-	    $result = $self->_assign($root, @$ident[$size-1, $size], 
-				     $value, $default);
-	}
-	else {
-	    $result = $self->_assign($root, $ident, 0, $value, $default);
-	}
+        if (ref $ident eq 'ARRAY'
+            || ($ident =~ /\./) 
+            && ($ident = [ map { s/\(.*$//; ($_, 0) }
+                           split(/\./, $ident) ])) {
+            
+            # a compound identifier may contain multiple elements (e.g. 
+            # foo.bar.baz) and we must first resolve all but the last, 
+            # using _dotop() with the $lvalue flag set which will create 
+            # intermediate hashes if necessary...
+            my $size = $#$ident;
+            foreach (my $i = 0; $i < $size - 2; $i += 2) {
+                $result = $self->_dotop($root, @$ident[$i, $i+1], 1);
+                last ELEMENT unless defined $result;
+                $root = $result;
+            }
+            
+            # then we call _assign() to assign the value to the last element
+            $result = $self->_assign($root, @$ident[$size-1, $size], 
+                                     $value, $default);
+        }
+        else {
+            $result = $self->_assign($root, $ident, 0, $value, $default);
+        }
     }
-
+    
     return defined $result ? $result : '';
 }
 
@@ -488,26 +489,26 @@ sub getref {
     $root = $self;
 
     if (ref $ident eq 'ARRAY') {
-	my $size = $#$ident;
-
-	foreach (my $i = 0; $i <= $size; $i += 2) {
-	    ($item, $args) = @$ident[$i, $i + 1]; 
-	    last if $i >= $size - 2;  # don't evaluate last node
-	    last unless defined 
-		($root = $self->_dotop($root, $item, $args));
-	}
+        my $size = $#$ident;
+        
+        foreach (my $i = 0; $i <= $size; $i += 2) {
+            ($item, $args) = @$ident[$i, $i + 1]; 
+            last if $i >= $size - 2;  # don't evaluate last node
+            last unless defined 
+                ($root = $self->_dotop($root, $item, $args));
+        }
     }
     else {
-	$item = $ident;
+        $item = $ident;
     }
-
+    
     if (defined $root) {
         return sub { my @args = (@{$args||[]}, @_);
-		     $self->_dotop($root, $item, \@args);
-		 }
+                     $self->_dotop($root, $item, \@args);
+                 }
     }
     else {
-	return sub { '' };
+        return sub { '' };
     }
 }
 
@@ -527,8 +528,8 @@ sub update {
     # look out for magical 'import' argument to import another hash
     my $import = $params->{ import };
     if (defined $import && UNIVERSAL::isa($import, 'HASH')) {
-	@$self{ keys %$import } = values %$import;
-	delete $params->{ import };
+        @$self{ keys %$import } = values %$import;
+        delete $params->{ import };
     }
 
     @$self{ keys %$params } = values %$params;
@@ -585,128 +586,155 @@ sub _dotop {
     $lvalue ||= 0;
 
 #    print STDERR "_dotop(root=$root, item=$item, args=[@$args])\n"
-#	if $DEBUG;
+#   if $DEBUG;
 
     # return undef without an error if either side of the dot is unviable
     # or if an attempt is made to access a private member, starting _ or .
     return undef
-	unless defined($root) and defined($item) and $item !~ /^[\._]/;
+        unless defined($root) and defined($item) and $item !~ /^[\._]/;
 
     if ($atroot || $rootref eq 'HASH') {
-
-	# if $root is a regular HASH or a Template::Stash kinda HASH (the 
-	# *real* root of everything).  We first lookup the named key 
-	# in the hash, or create an empty hash in its place if undefined
-	# and the $lvalue flag is set.  Otherwise, we check the HASH_OPS
-	# pseudo-methods table, calling the code if found, or return undef.
-
-	if (defined($value = $root->{ $item })) {
-	    return $value unless ref $value eq 'CODE';	    ## RETURN
-	    @result = &$value(@$args);			    ## @result
-	}
-	elsif ($lvalue) {
-	    # we create an intermediate hash if this is an lvalue
-	    return $root->{ $item } = { };		    ## RETURN
-	}
-	# ugly hack: only allow import vmeth to be called on root stash
-	elsif (($value = $HASH_OPS->{ $item })
-	       && ! $atroot || $item eq 'import') {
-	    @result = &$value($root, @$args);		    ## @result
-	}
-	elsif ( ref $item eq 'ARRAY' ) {
-	    # hash slice
-	    return [@$root{@$item}];                       ## RETURN
-	}
+        # if $root is a regular HASH or a Template::Stash kinda HASH (the 
+        # *real* root of everything).  We first lookup the named key 
+        # in the hash, or create an empty hash in its place if undefined
+        # and the $lvalue flag is set.  Otherwise, we check the HASH_OPS
+        # pseudo-methods table, calling the code if found, or return undef.
+        
+        if (defined($value = $root->{ $item })) {
+            return $value unless ref $value eq 'CODE';      ## RETURN
+            @result = &$value(@$args);                      ## @result
+        }
+        elsif ($lvalue) {
+            # we create an intermediate hash if this is an lvalue
+            return $root->{ $item } = { };                  ## RETURN
+        }
+        # ugly hack: only allow import vmeth to be called on root stash
+        elsif (($value = $HASH_OPS->{ $item })
+               && ! $atroot || $item eq 'import') {
+            @result = &$value($root, @$args);               ## @result
+        }
+        elsif ( ref $item eq 'ARRAY' ) {
+            # hash slice
+            return [@$root{@$item}];                        ## RETURN
+        }
     }
-    elsif ($rootref eq 'ARRAY') {
-
-	# if root is an ARRAY then we check for a LIST_OPS pseudo-method 
-	# (except for l-values for which it doesn't make any sense)
-	# or return the numerical index into the array, or undef
-
-	if (($value = $LIST_OPS->{ $item }) && ! $lvalue) {
-	    @result = &$value($root, @$args);		    ## @result
-	}
-	elsif ($item =~ /^-?\d+$/) {
-	    $value = $root->[$item];
-	    return $value unless ref $value eq 'CODE';	    ## RETURN
-	    @result = &$value(@$args);			    ## @result
-	}
+    elsif ($rootref eq 'ARRAY') {    
+        # if root is an ARRAY then we check for a LIST_OPS pseudo-method 
+        # (except for l-values for which it doesn't make any sense)
+        # or return the numerical index into the array, or undef
+        
+        if (($value = $LIST_OPS->{ $item }) && ! $lvalue) {
+            @result = &$value($root, @$args);               ## @result
+        }
+        elsif ($item =~ /^-?\d+$/) {
+            $value = $root->[$item];
+            return $value unless ref $value eq 'CODE';      ## RETURN
+            @result = &$value(@$args);                      ## @result
+        }
         elsif ( ref $item eq 'ARRAY' ) {
             # array slice
             return [@$root[@$item]];                        ## RETURN
         }
     }
-
+    
     # NOTE: we do the can-can because UNIVSERAL::isa($something, 'UNIVERSAL')
     # doesn't appear to work with CGI, returning true for the first call
     # and false for all subsequent calls. 
-
+    
     elsif (ref($root) && UNIVERSAL::can($root, 'can')) {
 
-	# if $root is a blessed reference (i.e. inherits from the 
-	# UNIVERSAL object base class) then we call the item as a method.
-	# If that fails then we try to fallback on HASH behaviour if 
-	# possible.
-	eval { @result = $root->$item(@$args); };	    
+        # if $root is a blessed reference (i.e. inherits from the 
+        # UNIVERSAL object base class) then we call the item as a method.
+        # If that fails then we try to fallback on HASH behaviour if 
+        # possible.
+        eval { @result = $root->$item(@$args); };       
+        
+        if ($@) {
+            # temporary hack - required to propogate errors thrown
+            # by views; if $@ is a ref (e.g. Template::Exception
+            # object then we assume it's a real error that needs
+            # real throwing
+            
+            die $@ if ref($@) || ($@ !~ /Can't locate object method/);
 
-	if ($@) {
-	    # temporary hack - required to propogate errors thrown
-	    # by views; if $@ is a ref (e.g. Template::Exception
-	    # object then we assume it's a real error that needs
-	    # real throwing
-
-	    die $@ if ref($@) || ($@ !~ /Can't locate object method/);
-
-	    # failed to call object method, so try some fallbacks
-	    if (UNIVERSAL::isa($root, 'HASH')
-		&& defined($value = $root->{ $item })) {
-		return $value unless ref $value eq 'CODE';	    ## RETURN
-		@result = &$value(@$args);
-	    }
-	    elsif (UNIVERSAL::isa($root, 'ARRAY') 
-		   && ($value = $LIST_OPS->{ $item })) {
-		@result = &$value($root, @$args);
-	    }
-	    elsif ($value = $SCALAR_OPS->{ $item }) {
-		@result = &$value($root, @$args);
-	    }
-	    elsif ($value = $LIST_OPS->{ $item }) {
-		@result = &$value([$root], @$args);
-	    }
-	    elsif ($self->{ _DEBUG }) {
-		@result = (undef, $@);
-	    }
-	}
+            # failed to call object method, so try some fallbacks
+# patch from Stephen Howard
+# -- remove from here... --
+            if (UNIVERSAL::isa($root, 'HASH')
+                && defined($value = $root->{ $item })) {
+                return $value unless ref $value eq 'CODE';      ## RETURN
+                @result = &$value(@$args);
+            }
+# -- and replace with this... --
+#            if (UNIVERSAL::isa($root, 'HASH') ) {
+#                if( defined($value = $root->{ $item })) {
+#                    return $value unless ref $value eq 'CODE';      ## RETURN
+#                    @result = &$value(@$args);
+#                }
+#                elsif ($value = $HASH_OPS->{ $item }) {
+#                    @result = &$value($root, @$args);
+#                }
+#            }
+# -- remove from here... --
+            elsif (UNIVERSAL::isa($root, 'ARRAY') 
+               && ($value = $LIST_OPS->{ $item })) {
+                @result = &$value($root, @$args);
+            }
+# -- and replace with this... --
+#            elsif (UNIVERSAL::isa($root, 'ARRAY') ) {
+#                if( $value = $LIST_OPS->{ $item }) {
+#                   @result = &$value($root, @$args);
+#                }
+#                elsif( $item =~ /^-?\d+$/ ) {
+#                   $value = $root->[$item];
+#                   return $value unless ref $value eq 'CODE';      ## RETURN
+#                   @result = &$value(@$args);                      ## @result
+#                }
+#                elsif ( ref $item eq 'ARRAY' ) {
+#                    # array slice
+#                    return [@$root[@$item]];                        ## RETURN
+#                }
+#            }
+# -- end --
+            elsif ($value = $SCALAR_OPS->{ $item }) {
+                @result = &$value($root, @$args);
+            }
+            elsif ($value = $LIST_OPS->{ $item }) {
+                @result = &$value([$root], @$args);
+            }
+            elsif ($self->{ _DEBUG }) {
+                @result = (undef, $@);
+            }
+        }
     }
     elsif (($value = $SCALAR_OPS->{ $item }) && ! $lvalue) {
-	# at this point, it doesn't look like we've got a reference to
-	# anything we know about, so we try the SCALAR_OPS pseudo-methods
-	# table (but not for l-values)
-	@result = &$value($root, @$args);		    ## @result
+        # at this point, it doesn't look like we've got a reference to
+        # anything we know about, so we try the SCALAR_OPS pseudo-methods
+        # table (but not for l-values)
+        @result = &$value($root, @$args);           ## @result
     }
     elsif (($value = $LIST_OPS->{ $item }) && ! $lvalue) {
-	# last-ditch: can we promote a scalar to a one-element
-	# list and apply a LIST_OPS virtual method?
-	@result = &$value([$root], @$args);
+        # last-ditch: can we promote a scalar to a one-element
+        # list and apply a LIST_OPS virtual method?
+        @result = &$value([$root], @$args);
     }
     elsif ($self->{ _DEBUG }) {
-	die "don't know how to access [ $root ].$item\n";   ## DIE
+        die "don't know how to access [ $root ].$item\n";   ## DIE
     }
     else {
-	@result = ();
+        @result = ();
     }
 
     # fold multiple return items into a list unless first item is undef
     if (defined $result[0]) {
-	return						    ## RETURN
-	    scalar @result > 1 ? [ @result ] : $result[0];
+        return                              ## RETURN
+        scalar @result > 1 ? [ @result ] : $result[0];
     }
     elsif (defined $result[1]) {
-	die $result[1];					    ## DIE
+        die $result[1];                     ## DIE
     }
     elsif ($self->{ _DEBUG }) {
-	die "$item is undefined\n";			    ## DIE
+        die "$item is undefined\n";         ## DIE
     }
 
     return undef;
@@ -734,54 +762,54 @@ sub _assign {
 
 #    print(STDERR "_assign(root=$root, item=$item, args=[@$args], \n",
 #                         "value=$value, default=$default)\n")
-#	if $DEBUG;
-
+#   if $DEBUG;
+    
     # return undef without an error if either side of the dot is unviable
     # or if an attempt is made to update a private member, starting _ or .
-    return undef						## RETURN
-	unless $root and defined $item and $item !~ /^[\._]/;
+    return undef                        ## RETURN
+    unless $root and defined $item and $item !~ /^[\._]/;
     
     if ($rootref eq 'HASH' || $atroot) {
-#	if ($item eq 'IMPORT' && UNIVERSAL::isa($value, 'HASH')) {
-#	    # import hash entries into root hash
-#	    @$root{ keys %$value } = values %$value;
-#	    return '';						## RETURN
-#	}
-	# if the root is a hash we set the named key
-	return ($root->{ $item } = $value)			## RETURN
-	    unless $default && $root->{ $item };
+#   if ($item eq 'IMPORT' && UNIVERSAL::isa($value, 'HASH')) {
+#       # import hash entries into root hash
+#       @$root{ keys %$value } = values %$value;
+#       return '';                      ## RETURN
+#   }
+        # if the root is a hash we set the named key
+        return ($root->{ $item } = $value)          ## RETURN
+            unless $default && $root->{ $item };
     }
     elsif ($rootref eq 'ARRAY' && $item =~ /^-?\d+$/) {
-	# or set a list item by index number
-	return ($root->[$item] = $value)			## RETURN
-	    unless $default && $root->{ $item };
+        # or set a list item by index number
+        return ($root->[$item] = $value)            ## RETURN
+            unless $default && $root->{ $item };
     }
     elsif (UNIVERSAL::isa($root, 'UNIVERSAL')) {
-	# try to call the item as a method of an object
-
-	return $root->$item(@$args, $value)			## RETURN
-	    unless $default && $root->$item();
-
+        # try to call the item as a method of an object
+        
+        return $root->$item(@$args, $value)         ## RETURN
+            unless $default && $root->$item();
+        
 # 2 issues:
 #   - method call should be wrapped in eval { }
 #   - fallback on hash methods if object method not found
 #
-# 	  eval { $result = $root->$item(@$args, $value); };	    
+#     eval { $result = $root->$item(@$args, $value); };     
 # 
-# 	  if ($@) {
-# 	      die $@ if ref($@) || ($@ !~ /Can't locate object method/);
+#     if ($@) {
+#         die $@ if ref($@) || ($@ !~ /Can't locate object method/);
 # 
-# 	      # failed to call object method, so try some fallbacks
-# 	      if (UNIVERSAL::isa($root, 'HASH') && exists $root->{ $item }) {
-# 		  $result = ($root->{ $item } = $value)
-# 		      unless $default && $root->{ $item };
-# 	      }
-# 	  }
-# 	  return $result;						## RETURN
+#         # failed to call object method, so try some fallbacks
+#         if (UNIVERSAL::isa($root, 'HASH') && exists $root->{ $item }) {
+#         $result = ($root->{ $item } = $value)
+#             unless $default && $root->{ $item };
+#         }
+#     }
+#     return $result;                       ## RETURN
 
     }
     else {
-	die "don't know how to assign to [$root].[$item]\n";	## DIE
+        die "don't know how to assign to [$root].[$item]\n";    ## DIE
     }
 
     return undef;
@@ -811,21 +839,21 @@ sub _dump_frame {
     my ($key, $value);
 
     return $text . "...excessive recursion, terminating\n"
-	if $indent > 32;
-
+        if $indent > 32;
+    
     foreach $key (keys %$self) {
-	$value = $self->{ $key };
-	$value = '<undef>' unless defined $value;
-	next if $key =~ /^\./;
-	if (ref($value) eq 'ARRAY') {
-	    $value = '[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
-				 @$value) . ' ]';
-	}
-	elsif (ref $value eq 'HASH') {
-	    $value = _dump_frame($value, $indent + 1);
-	}
-
-	$text .= sprintf("$pad%-16s => $value\n", $key);
+        $value = $self->{ $key };
+        $value = '<undef>' unless defined $value;
+        next if $key =~ /^\./;
+        if (ref($value) eq 'ARRAY') {
+            $value = '[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
+                                 @$value) . ' ]';
+        }
+        elsif (ref $value eq 'HASH') {
+            $value = _dump_frame($value, $indent + 1);
+        }
+        
+        $text .= sprintf("$pad%-16s => $value\n", $key);
     }
     $text .= $buffer x ($indent - 1) . '}';
     return $text;
@@ -906,7 +934,7 @@ A hash reference may be passed to provide variables and values which
 should be used to initialise the stash.
 
     my $stash = Template::Stash->new({ var1 => 'value1', 
-				       var2 => 'value2' });
+                       var2 => 'value2' });
 
 =head2 get($variable)
 
