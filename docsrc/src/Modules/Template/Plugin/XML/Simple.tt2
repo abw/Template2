@@ -1,8 +1,15 @@
 [% TAGS star -%]
 =head1 SYNOPSIS
 
-    # load plugin and specify XML file to parse
+    # load plugin and specify XML text or file to parse
     [% USE xml = XML.Simple(xml_file_or_text) %]
+
+    # or load plugin as an object...
+    [% USE xml = XML.Simple %]
+
+    # ...then use XMLin or XMLout as usual
+    [% xml.XMLout(data_ref, args) %]
+    [% xml.XMLin(xml_file_or_text, args) %]
 
 =head1 DESCRIPTION
 
