@@ -1,0 +1,294 @@
+#============================================================= -*-perl-*-
+#
+# Template::Manual::Syntax
+#
+# DESCRIPTION
+#   This section describes the syntax, structure and semantics of the
+#   Template Toolkit directives and general presentation language.
+#
+# AUTHOR
+#   Andy Wardley  <abw@kfs.org>
+#
+# COPYRIGHT
+#   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+# REVISION
+#   
+#
+#========================================================================
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Manual::Syntax - Directive syntax, structure and semantics
+
+=head1 DESCRIPTION
+
+This section describes the syntax, structure and semantics of the
+Template Toolkit directives and general presentation language.
+
+=head2 Tag Styles
+
+By default, template directives are embedded within the character sequences
+'[%' and '%]'.  e.g.
+
+    [% PROCESS header %]
+  
+    <h1>Hello World!</h1>
+    <a href="[% page.next %]"><img src="[% icon.next %].gif"></a>
+  
+    [% PROCESS footer %]
+
+You can change the tag characters using the START_TAG, END_TAG and
+TAG_STYLE configuration options.  You can also use the TAGS directive
+to define a new tag style for the current template file.
+
+You can also set the INTERPOLATE option to allow simple variable
+references to be embedded directly in templates, prefixed by a '$'.
+
+    # INTERPOLATE => 0
+    <td>[% name %]</td>  <td>[% email %]</td>
+
+    # INTERPOLATE => 1
+    <td>$name</td>  <td>$email</td>
+
+Directives may be embedded anywhere in a line of text and can be split
+across several lines.  Insignificant whitespace is generally ignored
+within the directive.
+
+    [% INCLUDE header		   
+       title = 'Hello World' 
+       bgcol = '#ffffff' 
+    %]
+  
+    [%INCLUDE menu align='right'%]
+  
+    Name: [% name %]  ([%id%])
+
+=head2 Comments
+
+The '#' character is used to indicate comments within a directive.
+When placed immediately inside the opening directive tag, it causes
+the entire directive to be ignored.
+
+    [%# this entire directive is ignored no
+        matter how many lines it wraps onto
+    %]
+
+In any other position, it causes the remainder of the current line to 
+be treated as a comment.
+
+    [% # this is a comment
+       theta = 20      # so is this
+       rho   = 30      # <aol>me too!</aol>
+    %]
+
+=head2 Chomping Whitespace
+
+You can add '-' or '+' to the immediate start or end of a directive
+tag to control the whitespace chomping options.  See the PRE_CHOMP and
+POST_CHOMP options for further details.
+
+    [% BLOCK foo -%]		# remove trailing newline
+    This is block foo
+    [%- END %]			# remove leading newline
+
+=head2 Implicit Directives: GET and SET
+
+The simplest directives are GET and SET which retrieve and update
+variable values respectively.  The GET and SET keywords are actually
+optional as the parser is smart enough to see them for what they
+really are (but note the caveat below on using side-effect notation).
+Thus, you'll generally see:
+
+    [% SET foo = 10 %]
+    [% GET foo %]
+
+written as:
+
+    [% foo = 10 %]
+    [% foo %]
+
+You can also express simple logical statements as implicit GET directives:
+
+    [% title or template.title or 'Default Title' %]
+
+    [% mode == 'graphics' ? "Graphics Mode Enabled" : "Text Mode" %]
+
+All other directives should start with a keyword specified in UPPER
+CASE (but see the ANYCASE option).  All directives keywords are in
+UPPER CASE to make them visually distinctive and to distinguish them
+from variables of the same name but different case.  It is perfectly
+valid, for example, to define a variable called 'stop' which is
+entirely separate from the STOP directive.
+
+    [% stop = 'Clackett Lane Bus Depot' %]
+
+    The bus will next stop at [% stop %]    # variable
+
+    [% STOP %]                              # directive
+
+=head2 Block Directives
+
+Directives such as FOREACH, WHILE, BLOCK, FILTER, etc., mark the start
+of a block which may contain text or other directives up to the
+matching END directive.  Blocks may be nested indefinitely.  The
+IF, UNLESS, ELSIF and ELSE directives also define blocks and may be
+grouped together in the usual manner.
+
+    [% FOREACH item = [ 'foo' 'bar' 'baz' ] %]
+       * Item: [% item %]
+    [% END %]
+  
+    [% BLOCK footer %]
+       Copyright 2000 [% me %]
+       [% INCLUDE company/logo %]
+    [% END %]
+  
+    [% IF foo %]
+       [% FOREACH thing = foo.things %]
+	  [% thing %]
+       [% END %]
+    [% ELSIF bar %]
+       [% INCLUDE barinfo %]
+    [% ELSE %]
+       do nothing...
+    [% END %]
+
+Block directives can also be used in a convenient side-effect notation.
+
+    [% INCLUDE userinfo FOREACH user = userlist %]
+
+    [% INCLUDE debugtxt msg="file: $error.info" 
+         IF debugging %] 
+
+    [% "Danger Will Robinson" IF atrisk %]
+
+versus:
+
+    [% FOREACH user = userlist %]
+       [% INCLUDE userinfo %]
+    [% END %]
+
+    [% IF debugging %]
+       [% INCLUDE debugtxt msg="file: $error.info" %]
+    [% END %]
+
+    [% IF atrisk %]
+    Danger Will Robinson
+    [% END %]
+
+=head2 Capturing Block Output
+
+The output of a directive can be captured by simply assigning the directive
+to a variable.
+
+    [% headtext = PROCESS header title="Hello World" %]
+
+    [% people = PROCESS userinfo FOREACH user = userlist %]
+
+This can be used in conjunction with the BLOCK directive for defining large 
+blocks of text or other content.
+
+    [% poem = BLOCK %]
+       The boy stood on the burning deck,
+       His fleece was white as snow.
+       A rolling stone gathers no moss,
+       And Keith is sure to follow.
+    [% END %]
+
+Note one important caveat of using this syntax in conjunction with side-effect
+notation.  The following directive does not behave as might be expected:
+
+    [% var = 'value' IF some_condition %]
+
+In this case, the directive is interpreted as (spacing added for clarity)
+
+    [% var = IF some_condition %]
+       value
+    [% END %]
+
+rather than
+
+    [% IF some_condition %]
+       [% var = 'value' %]
+    [% END %]
+
+The variable is assigned the output of the IF block which returns
+'value' if true, but nothing if false.  In other words, the following
+directive will always cause 'var' to be cleared.
+
+    [% var = 'value' IF 0 %]
+
+To achieve the expected behaviour, the directive should be written as:
+
+    [% SET var = 'value' IF some_condition %]
+
+=head2 Chaining Filters
+
+Multiple FILTER directives can be chained together in sequence.  They
+are called in the order defined, piping the output of one into the 
+input of the next.
+
+    [% PROCESS somefile FILTER truncate(100) FILTER html %]
+
+The pipe character, '|', can also be used as an alias for FILTER.
+
+    [% PROCESS somefile | truncate(100) | html %]
+
+=head2 Multiple Directive Blocks
+
+Multiple directives can be included within a single tag when delimited
+by semi-colons, ';'.  Note however that the TAGS directive must always
+be specified in a tag by itself.
+
+    [% IF title; 
+          INCLUDE header; 
+       ELSE; 
+	  INCLUDE other/header  title="Some Other Title";
+       END
+    %]
+
+versus
+
+    [% IF title %]
+       [% INCLUDE header %]
+    [% ELSE %]
+       [% INCLUDE other/header  title="Some Other Title" %]
+    [% END %]
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+
+

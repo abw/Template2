@@ -55,12 +55,23 @@ sub new {
 
 1;
 
-
 __END__
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
 
 =head1 NAME
 
-Template::Plugin::XML::RSS - Template Toolkit plugin to the XML::RSS module
+Template::Plugin::XML::RSS - Plugin interface to XML::RSS
 
 =head1 SYNOPSIS
 
@@ -145,34 +156,29 @@ The list of news items can be retrieved using the 'items' method:
        [% item.link  %]
     [% END %]
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Andy Wardley E<lt>cre.canon.co.ukE<gt>
-
-=head1 CREDITS
+This plugin was written by Andy Wardley E<lt>abw@kfs.orgE<gt>,
+inspired by an article in Web Techniques by Randal Schwartz
+E<lt>merlyn@stonehenge.comE<gt>.
 
 The XML::RSS module, which implements all of the functionality that
 this plugin delegates to, was written by Jonathan Eisenzopf 
 E<lt>eisen@pobox.comE<gt>.
 
-This plugin was inspired by an article in Web Techniques by Randal 
-Schwartz <merlyn@stonehenge.com>.
+=head1 VERSION
 
-=head1 REVISION
-
-$Revision$
+Template Toolkit version 2.01, released on 9th March 2000.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<XML::RSS|XML::RSS>,  L<Template::Plugin|Template::Plugin>, 
-
-=cut
-
+L<Template::Plugin|Template::Plugin>, L<XML::RSS|XML::RSS>, L<XML::Parser|XML::Parser>
 

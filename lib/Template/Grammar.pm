@@ -5261,7 +5261,7 @@ sub
 sub
 #line 182 "Parser.yp"
 { unshift(@{$_[5]}, [ undef, $_[4] ]);
-				      $_[4];                              }
+				      $_[5];                              }
 	],
 	[#Rule 67
 		 'final', 4,
@@ -5439,7 +5439,7 @@ sub
 		 'meta', 3,
 sub
 #line 269 "Parser.yp"
-{ for ($_[3]) { s/^'//; s/'$// }; 
+{ for ($_[3]) { s/^'//; s/'$//; s/\\'/'/g  }; 
 					 [ @_[1,3] ] }
 	],
 	[#Rule 97

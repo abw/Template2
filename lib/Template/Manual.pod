@@ -1,0 +1,161 @@
+#============================================================= -*-perl-*-
+#
+# Template::Manual
+#
+# DESCRIPTION
+#   This is the comprehensive user guide and reference manual for the
+#   Template Toolkit. For convenience, it is split into the following
+#   sections.
+#
+# AUTHOR
+#   Andy Wardley  <abw@kfs.org>
+#
+# COPYRIGHT
+#   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+# REVISION
+#   
+#
+#========================================================================
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Manual - User guide and reference manual for the Template Toolkit
+
+=head1 DESCRIPTION
+
+This is the comprehensive user guide and reference manual for the
+Template Toolkit. For convenience, it is split into the following
+sections.
+
+=over 4
+
+=item L<Template::Manual::Intro|Template::Manual::Intro>
+
+Introduction to the Template Toolkit
+
+This section provides a general introduction to the Template Toolkit,
+giving a quick overview of features, examples of template directives
+and use of the Template.pm module. It also described the basic concept
+underlying the toolkit: the separation of presentation elements from
+application logic and data.
+
+=item L<Template::Manual::Syntax|Template::Manual::Syntax>
+
+Directive syntax, structure and semantics
+
+This section describes the syntax, structure and semantics of the
+Template Toolkit directives and general presentation language.
+
+=item L<Template::Manual::Variables|Template::Manual::Variables>
+
+Template variables and code bindings
+
+This section describes the different ways in which Perl data can be
+bound to template variables and accessed via Template Toolkit
+directives.
+
+=item L<Template::Manual::Directives|Template::Manual::Directives>
+
+Template directives
+
+This section provides a reference of all Template Toolkit directives,
+complete with examples of use.
+
+=item L<Template::Manual::Config|Template::Manual::Config>
+
+Configuration options
+
+This section contains details of all the configuration options that can
+be used to customise the behaviour and extend the features of the
+Template Toolkit.
+
+=item L<Template::Manual::Filters|Template::Manual::Filters>
+
+Standard filters
+
+This section lists all the standard filters distributed with the
+Template Toolkit for post-processing output.
+
+=item L<Template::Manual::Plugins|Template::Manual::Plugins>
+
+Standard plugins
+
+This section lists the standard plugins which can be used to extend the
+runtime functionality of the Template Toolkit. The plugins are
+distributed with the Template Toolkit but may required additional
+modules from CPAN.
+
+=item L<Template::Manual::Internals|Template::Manual::Internals>
+
+Template Toolkit internals
+
+This document provides an overview of the internal architecture of the
+Template Toolkit. It is a work in progress and is far from complete,
+currently providing little more than an overview of how the major
+components fit together. Nevertheless, it's a good starting point for
+anyone wishing to delve into the source code to find out how it all
+works.
+
+=item L<Template::Manual::Views|Template::Manual::Views>
+
+Template Toolkit views (experimental)
+
+This section describes dynamic views: a powerful but experimental new
+feature in version 2.01 of the Template Toolkit.
+
+=item L<Template::Manual::Refs|Template::Manual::Refs>
+
+Related modules, projects and other resources
+
+This section provides references to external modules, projects and
+other resources related to the Template Toolkit.
+
+=item L<Template::Manual::Credits|Template::Manual::Credits>
+
+Author and contributor credits
+
+This section provides a brief history of the Template Toolkit and
+details the primary author and numerous other people who have
+contributed to it.
+
+
+
+=back
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+
+

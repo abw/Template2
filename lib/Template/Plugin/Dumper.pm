@@ -86,9 +86,21 @@ sub dump_html {
 
 __END__
 
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
 =head1 NAME
 
-Template::Plugin::Dumper - simple Template Plugin interface to Data::Dumper
+Template::Plugin::Dumper - Plugin interface to Data::Dumper
 
 =head1 SYNOPSIS
 
@@ -145,6 +157,12 @@ entities and newlines converted to E<lt>brE<gt>.
 
 Simon Matthews E<lt>sam@knowledgepool.comE<gt>
 
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+ 
+
 =head1 COPYRIGHT
 
 Copyright (C) 2000 Simon Matthews All Rights Reserved.
@@ -154,8 +172,5 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Data::Dumper|Data::Dumper>, L<Template::Plugin|Template::Plugin>, 
-
-=cut
-
+L<Template::Plugin|Template::Plugin>, L<Data::Dumper|Data::Dumper>
 

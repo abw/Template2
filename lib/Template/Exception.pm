@@ -150,3 +150,93 @@ sub select_handler {
     
 1;
 
+__END__
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Exception - Exception handling class module
+
+=head1 SYNOPSIS
+
+    use Template::Exception;
+
+    my $exception = Template::Exception->new($type, $info);
+    $type = $exception->type;
+    $info = $exception->info;
+    ($type, $info) = $exception->type_info;
+
+    print $exception->as_string();
+
+    $handler = $exception->select_handler(\@candidates);
+
+=head1 DESCRIPTION
+
+The Template::Exception module defines an object class for
+representing exceptions within the template processing life cycle.
+Exceptions can be raised by modules within the Template Toolkit, or
+can be generated and returned by user code bound to template
+variables.
+
+
+Exceptions can be raised in a template using the THROW directive,
+
+    [% THROW user.login 'no user id: please login' %]
+
+or by calling the throw() method on the current Template::Context object,
+
+    $context->throw('user.passwd', 'Incorrect Password');
+    $context->throw('Incorrect Password');    # type 'undef'
+
+or from Perl code by calling die() with a Template::Exception object,
+
+    die Template::Exception->new('user.denied', 'Invalid User ID');
+
+or by simply calling die() with an error string.  This is
+automagically caught and converted to an  exception of 'undef'
+type which can then be handled in the usual way.
+
+    die "I'm sorry Dave, I can't do that";
+
+
+
+Each exception is defined by its type and a information component
+(e.g. error message).  The type can be any identifying string and may
+contain dotted components (e.g. 'foo', 'foo.bar', 'foo.bar.baz').
+Exception types are considered to be hierarchical such that 'foo.bar'
+would be a specific type of the more general 'foo' type.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template|Template>, L<Template::Context|Template::Context>
+
+

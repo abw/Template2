@@ -390,9 +390,21 @@ sub AUTOLOAD {
 
 __END__
 
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
 =head1 NAME
 
-Template::Plugin::XML::DOM - Template Toolkit plugin to the XML::DOM module
+Template::Plugin::XML::DOM - Plugin interface to XML::DOM
 
 =head1 SYNOPSIS
 
@@ -400,7 +412,7 @@ Template::Plugin::XML::DOM - Template Toolkit plugin to the XML::DOM module
     [% USE dom = XML.DOM %]
 
     # also provide XML::Parser options
-    [% USE dom = XML.DOM(ProtocolEncoding => 'ISO-8859-1') %]
+    [% USE dom = XML.DOM(ProtocolEncoding =E<gt> 'ISO-8859-1') %]
 
     # parse an XML file
     [% doc = dom.parse(filename) %]
@@ -643,7 +655,9 @@ library.
 
 =head1 VERSION
 
-This is version 2.5 of the XML::DOM plugin.
+Template Toolkit version 2.01, released on 9th March 2000.
+
+
 
 =head1 HISTORY
 
@@ -670,19 +684,12 @@ change in the near future.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 Andy Wardley, Simon Matthews.  All Rights Reserved.
+Copyright (C) 2000-2001 Andy Wardley, Simon Matthews.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-For further information see L<XML::DOM>, L<XML::Parser> and 
-L<Template::Plugin>.
-
-=cut
-
-
-
-
+L<Template::Plugin|Template::Plugin>, L<XML::DOM|XML::DOM>, L<XML::Parser|XML::Parser>
 

@@ -70,7 +70,7 @@ sub template {
 
     return <<EOF;
 sub {
-    my \$context = shift || die "template sub called without context\n";
+    my \$context = shift || die "template sub called without context\\n";
     my \$stash   = \$context->stash;
     my \$output  = '';
     my \$error;
@@ -161,6 +161,9 @@ sub quoted {
     return '' unless @$items;
     return $items->[0] if scalar @$items == 1;
     return '(' . join(' . ', @$items) . ')';
+#    my $r = '(' . join(' . ', @$items) . ' . "")';
+#    print STDERR "[$r]\n";
+#    return $r;
 }
 
 
@@ -793,8 +796,8 @@ $OUTPUT do {
 
 $block
 
-    \$Template::Perl::context = \$context;
-    \$Template::Perl::stash   = \$stash;
+    local(\$Template::Perl::context) = \$context;
+    local(\$Template::Perl::stash)   = \$stash;
 
     my \$result = '';
     tie *Template::Perl::PERLOUT, 'Template::TieString', \\\$result;
@@ -930,7 +933,7 @@ sub macro {
     \$params = { } unless ref(\$params) eq 'HASH';
     \$params = { \%args, %\$params };
 
-    \$stash = \$context->localise(\$params);
+    my \$stash = \$context->localise(\$params);
     eval {
 $block
     };
@@ -949,7 +952,7 @@ EOF
     my \$params = \$_[0] if ref(\$_[0]) eq 'HASH';
     my \$output = '';
 
-    \$stash = \$context->localise(\$params);
+    my \$stash = \$context->localise(\$params);
     eval {
 $block
     };

@@ -36,7 +36,7 @@ package Template::Provider;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $ERROR );
+use vars qw( $VERSION $DEBUG $ERROR $STAT_TTL );
 use base qw( Template::Base );
 use Template::Config;
 use Template::Constants;
@@ -45,11 +45,15 @@ use File::Basename;
 
 $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
+# maximum time between performing stat() on file to check staleness
+$STAT_TTL = 1 unless defined $STAT_TTL;
+
 use constant PREV   => 0;
 use constant NAME   => 1;
 use constant DATA   => 2; 
 use constant LOAD   => 3;
 use constant NEXT   => 4;
+use constant STAT   => 5;
 
 $DEBUG = 0 unless defined $DEBUG;
 
@@ -538,19 +542,25 @@ sub _refresh {
     print STDERR "_refresh([ @$slot ])\n"
 	if $DEBUG;
 
-    # compare load time with current file modification time to see if
-    # its modified and we need to reload it
-    if ($slot->[ LOAD ] && stat $slot->[ NAME ]
-			&& (stat(_))[9] > $slot->[ LOAD ]) {
+    # if it's more than $STAT_TTL seconds since we last performed a 
+    # stat() on the file then we need to do it again and see if the file
+    # time has changed
+    if ( (time - $slot->[ STAT ]) > $STAT_TTL &&
+	 stat $slot->[ NAME ] && (stat(_))[9] != $slot->[ LOAD ]) {
+
 	print STDERR "refreshing cache file ", $slot->[ NAME ], "\n"
 	    if $DEBUG;
 
+	$slot->[ STAT ] = time;
 	($data, $error) = $self->_load($slot->[ NAME ], 
 				       $slot->[ DATA ]->{ name });
 	($data, $error) = $self->_compile($data)
 	    unless $error;
-	$slot->[ DATA ] = $data->{ data },
-	    unless $error;
+
+	unless ($error) {
+	    $slot->[ DATA ] = $data->{ data };
+	    $slot->[ LOAD ] = $data->{ time };
+	}
     }
 
     # remove existing slot from usage chain...
@@ -595,7 +605,8 @@ sub _store {
     my ($slot, $head);
 
     # extract the load time and compiled template from the data
-    my $load = $data->{ load };
+#    my $load = $data->{ load };
+    my $load = (stat($name))[9];
     $data = $data->{ data };
 
     print STDERR "_store($name, $data)\n"
@@ -618,7 +629,7 @@ sub _store {
 	# add modified node to head of list
 	$head = $self->{ HEAD };
 	$head->[ PREV ] = $slot if $head;
-	@$slot = ( undef, $name, $data, $load, $head );
+	@$slot = ( undef, $name, $data, $load, $head, time );
 	$self->{ HEAD } = $slot;
 
 	# add name lookup for new node
@@ -632,7 +643,7 @@ sub _store {
 
 	# add new node to head of list
 	$head = $self->{ HEAD };
-	$slot = [ undef, $name, $data, $load, $head ];
+	$slot = [ undef, $name, $data, $load, $head, time ];
 	$head->[ PREV ] = $slot if $head;
 	$self->{ HEAD } = $slot;
 	$self->{ TAIL } = $slot unless $self->{ TAIL };
@@ -691,9 +702,12 @@ sub _compile {
 	    $error = 'cache failed to write '
 		    . &File::Basename::basename($compfile)
 		    . ": $Template::Document::ERROR"
-		unless Template::Document::write_perl_file($compfile, 
-							   $parsedoc);
-	    print STDERR "error: $error" if $error;
+		unless Template::Document::write_perl_file($compfile, $parsedoc);
+
+	    if (!defined($error)) {
+		# set atime and mtime of newly compiled file
+		utime($data->{ time }, $data->{ time }, $compfile);
+	    }
 	}
 
 	unless ($error) {
@@ -778,4 +792,342 @@ sub _dump_cache {
 }
 
 1;
+
+__END__
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Provider - Provider module for loading/compiling templates
+
+=head1 SYNOPSIS
+
+    $provider = Template::Provider->new(\%options);
+
+    ($template, $error) = $provider->fetch($name);
+
+=head1 DESCRIPTION
+
+The Template::Provider is used to load, parse, compile and cache template
+documents.  This object may be sub-classed to provide more specific 
+facilities for loading, or otherwise providing access to templates.
+
+The Template::Context objects maintain a list of Template::Provider 
+objects which are polled in turn (via fetch()) to return a requested
+template.  Each may return a compiled template, raise an error, or 
+decline to serve the reqest, giving subsequent providers a chance to
+do so.
+
+This is the "Chain of Responsiblity" pattern.  See 'Design Patterns' for
+further information.
+
+This documentation needs work.
+
+=head1 PUBLIC METHODS
+
+=head2 new(\%options) 
+
+Constructor method which instantiates and returns a new Template::Provider
+object.  The optional parameter may be a hash reference containing any of
+the following items:
+
+=over 4
+
+
+
+
+=item INCLUDE_PATH
+
+The INCLUDE_PATH is used to specify one or more directories in which
+template files are located.  When a template is requested that isn't
+defined locally as a BLOCK, each of the INCLUDE_PATH directories is
+searched in turn to locate the template file.  Multiple directories
+can be specified as a reference to a list or as a single string where
+each directory is delimited by ':'. The DELIMITER option can be set
+to redefine the delimiter value.
+
+    my $provider = Template::Provider->new({
+        INCLUDE_PATH => '/usr/local/templates',
+    });
+  
+    my $provider = Template::Provider->new({
+        INCLUDE_PATH => '/usr/local/templates:/tmp/my/templates',
+    });
+  
+    my $provider = Template::Provider->new({
+        INCLUDE_PATH => [ '/usr/local/templates', 
+                          '/tmp/my/templates' ],
+    });
+
+
+
+
+=item DELIMITER
+
+Used to provide an alternative delimiter character sequence for 
+separating paths specified in the INCLUDE_PATH.  May be useful for 
+operating systems that permit the use of ':' in file names.
+
+    # tolerate Silly Billy's file system conventions
+    my $provider = Template::Provider->new({
+	DELIMITER    => ' ',
+        INCLUDE_PATH => 'C:/HERE/NOW D:/THERE/THEN',
+    });
+
+    # better solution: install Linux!  :-)
+
+
+
+
+=item ABSOLUTE
+
+The ABSOLUTE flag is used to indicate if templates specified with
+absolute filenames (e.g. '/foo/bar') should be processed.  It is
+disabled by default and any attempt to load a template by such a
+name will cause a 'file' exception to be raised.
+
+    my $provider = Template::Provider->new({
+	ABSOLUTE => 1,
+    });
+
+    # this is why it's disabled by default
+    [% INSERT /etc/passwd %]
+
+
+
+
+
+=item RELATIVE
+
+The RELATIVE flag is used to indicate if templates specified with
+filenames relative to the current directory (e.g. './foo/bar' or
+'../../some/where/else') should be loaded.  It is also disabled by
+default, and will raise a 'file' error if such template names are
+encountered.  
+
+    my $provider = Template::Provider->new({
+	RELATIVE => 1,
+    });
+
+    [% INCLUDE ../logs/error.log %]
+
+
+
+
+
+=item DEFAULT
+
+The DEFAULT option can be used to specify a default template which should 
+be used whenever a specified template can't be found in the INCLUDE_PATH.
+
+    my $provider = Template::Provider->new({
+	DEFAULT => 'notfound.html',
+    });
+
+If a non-existant template is requested through the Template process()
+method, or by an INCLUDE, PROCESS or WRAPPER directive, then the
+DEFAULT template will instead be processed, if defined.  Note that the
+DEFAULT template is not used when templates are specified with
+absolute or relative filenames, or as a reference to a input file
+handle or text string.
+
+
+
+
+
+=item CACHE_SIZE
+
+The Template::Provider module caches compiled templates to avoid the need
+to re-parse template files or blocks each time they are used.  The CACHE_SIZE
+option is used to limit the number of compiled templates that the module
+should cache.
+
+By default, the CACHE_SIZE is undefined and all compiled templates are
+cached.  When set to any positive value, the cache will be limited to
+storing no more than that number of compiled templates.  When a new
+template is loaded and compiled and the cache is full (i.e. the number
+of entries == CACHE_SIZE), the least recently used compiled template
+is discarded to make room for the new one.
+
+The CACHE_SIZE can be set to 0 to disable caching altogether.
+
+    my $provider = Template::Provider->new({
+	CACHE_SIZE => 64,   # only cache 64 compiled templates
+    });
+
+    my $provider = Template::Provider->new({
+	CACHE_SIZE => 0,   # don't cache any compiled templates
+    });
+
+
+
+
+
+
+=item COMPILE_EXT
+
+From version 2 onwards, the Template Toolkit has the ability to
+compile templates to Perl code and save them to disk for subsequent
+use (i.e. cache persistence).  The COMPILE_EXT option may be
+provided to specify a filename extension for compiled template files.
+It is undefined by default and no attempt will be made to read or write 
+any compiled template files.
+
+    my $provider = Template::Provider->new({
+	COMPILE_EXT => '.ttc',
+    });
+
+If COMPILE_EXT is defined (and COMPILE_DIR isn't, see below) then compiled
+template files with the COMPILE_EXT extension will be written to the same
+directory from which the source template files were loaded.
+
+Compiling and subsequent reuse of templates happens automatically
+whenever the COMPILE_EXT or COMPILE_DIR options are set.  The Template
+Toolkit will automatically reload and reuse compiled files when it 
+finds them on disk.  If the corresponding source file has been modified
+since the compiled version as written, then it will load and re-compile
+the source and write a new compiled version to disk.  
+
+This form of cache persistence offers significant benefits in terms of 
+time and resources required to reload templates.  Compiled templates can
+be reloaded by a simple call to Perl's require(), leaving Perl to handle
+all the parsing and compilation.  This is a Good Thing.
+
+=item COMPILE_DIR
+
+The COMPILE_DIR option is used to specify an alternate directory root
+under which compiled template files should be saved.  
+
+    my $provider = Template::Provider->new({
+	COMPILE_DIR => '/tmp/ttc',
+    });
+
+The COMPILE_EXT option may also be specified to have a consistent file
+extension added to these files.  
+
+    my $provider1 = Template::Provider->new({
+	COMPILE_DIR => '/tmp/ttc',
+	COMPILE_EXT => '.ttc1',
+    });
+
+    my $provider2 = Template::Provider->new({
+	COMPILE_DIR => '/tmp/ttc',
+	COMPILE_EXT => '.ttc2',
+    });
+
+
+When COMPILE_EXT is undefined, the compiled template files have the
+same name as the original template files, but reside in a different
+directory tree.
+
+Each directory in the INCLUDE_PATH is replicated in full beneath the 
+COMPILE_DIR directory.  This example:
+
+    my $provider = Template::Provider->new({
+	COMPILE_DIR  => '/tmp/ttc',
+	INCLUDE_PATH => '/home/abw/templates:/usr/share/templates',
+    });
+
+would create the following directory structure:
+
+    /tmp/ttc/home/abw/templates/
+    /tmp/ttc/usr/share/templates/
+
+Files loaded from different INCLUDE_PATH directories will have their
+compiled forms save in the relevant COMPILE_DIR directory.
+
+
+
+
+=item TOLERANT
+
+The TOLERANT flag is used by the various Template Toolkit provider
+modules (Template::Provider, Template::Plugins, Template::Filters) to
+control their behaviour when errors are encountered.  By default, any
+errors are reported as such, with the request for the particular
+resource (template, plugin, filter) being denied and an exception
+raised.  When the TOLERANT flag is set to any true values, errors will
+be silently ignored and the provider will instead return
+STATUS_DECLINED.  This allows a subsequent provider to take
+responsibility for providing the resource, rather than failing the
+request outright.  If all providers decline to service the request,
+either through tolerated failure or a genuine disinclination to
+comply, then a 'E<lt>resourceE<gt> not found' exception is raised.
+
+
+
+
+
+
+=item PARSER
+
+The Template::Parser module implements a parser object for compiling
+templates into Perl code which can then be executed.  A default object
+of this class is created automatically and then used by the
+Template::Provider whenever a template is loaded and requires 
+compilation.  The PARSER option can be used to provide a reference to 
+an alternate parser object.
+
+    my $provider = Template::Provider->new({
+	PARSER => MyOrg::Template::Parser->new({ ... }),
+    });
+
+
+
+=back
+
+=head2 fetch($name)
+
+Returns a compiled template for the name specified.  If the template 
+cannot be found then (undef, STATUS_DECLINED) is returned.  If an error
+occurs (e.g. read error, parse error) then ($error, STATUS_ERROR) is 
+returned, where $error is the error message generated.  If the TOLERANT
+flag is set the the method returns (undef, STATUS_DECLINED) instead of
+returning an error.
+
+=head2 store($name, $template)
+
+Stores the compiled template, $template, in the cache under the name, 
+$name.  Susbequent calls to fetch($name) will return this template in
+preference to any disk-based file.
+
+=head2 include_path(\@newpath))
+
+Accessor method for the INCLUDE_PATH setting.  If called with an
+argument, this method will replace the existing INCLUDE_PATH with
+the new value.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template|Template>, L<Template::Parser|Template::Parser>, L<Template::Context|Template::Context>
+
 

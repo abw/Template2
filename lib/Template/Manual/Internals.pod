@@ -1,0 +1,383 @@
+#============================================================= -*-perl-*-
+#
+# Template::Manual::Internals
+#
+# DESCRIPTION
+#   This document provides an overview of the internal architecture of
+#   the Template Toolkit. It is a work in progress and is far from
+#   complete, currently providing little more than an overview of how
+#   the major components fit together. Nevertheless, it's a good
+#   starting point for anyone wishing to delve into the source code to
+#   find out how it all works.
+#
+# AUTHOR
+#   Andy Wardley  <abw@kfs.org>
+#
+# COPYRIGHT
+#   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+# REVISION
+#   
+#
+#========================================================================
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Manual::Internals - Template Toolkit internals
+
+=head1 DESCRIPTION
+
+This document provides an overview of the internal architecture of the
+Template Toolkit. It is a work in progress and is far from complete,
+currently providing little more than an overview of how the major
+components fit together. Nevertheless, it's a good starting point for
+anyone wishing to delve into the source code to find out how it all
+works.
+
+=head2 Outside Looking In
+
+The B<Template> module is simply a front end module which creates and
+uses a Template::Service and pipes the output wherever you want it to
+go (STDOUT by default, or maybe a file, scalar, etc).  The
+Apache::Template module (available separately from CPAN) is another
+front end.  That creates a Template::Service::Apache object, calls on
+it as required and sends the output back to the relevant
+Apache::Request object.
+
+These front-end modules are really only there to handle any specifics
+of the environment in which they're being used.  The Apache::Template
+front end, for example, handles Apache::Request specifics and
+configuration via the httpd.conf.  The regular Template front-end
+deals with STDOUT, variable refs, etc.  Otherwise it is
+Template::Service (or subclass) which does all the work.
+
+The B<Template::Service> module provides a high-quality template
+delivery service, with bells, whistles, signed up service level
+agreement and a 30-day no quibble money back guarantee.  "Have
+a good time, all the time", that's our motto.
+
+Within the lower levels of the Template Toolkit, there are lots of
+messy details that we generally don't want to have to worry about most
+of the time.  Things like templates not being found, or failing to
+parse correctly, uncaught exceptions being thrown, missing plugin
+modules or dependencies, and so on.  Template::Service hides that all
+away and makes everything look simple to the outsider.  It provides
+extra features, like PRE_PROCESS, PROCESS and POST_PROCESS, and also
+provides the error recovery mechanism via ERROR.  You ask it to
+process a template and it takes care of everything for you.  The 
+Template::Service::Apache module goes a little bit further, adding 
+some extra headers to the Apache::Request, setting a few extra template
+variables, and so on.
+
+For the most part, the job of a service is really just one of
+scheduling and dispatching.  It receives a request in the form of a
+call to its process() method and schedules the named template
+specified as an argument, and possibly several other templates
+(PRE_PROCESS, etc) to be processed in order.  It doesn't actually
+process the templates itself, but instead makes a process() call
+against a Template::Context object.
+
+B<Template::Context> is the runtime engine for the Template Toolkit -
+the module that hangs everything together in the lower levels of the
+Template Toolkit and that one that does most of the real work, albeit
+by crafty delegation to various other friendly helper modules.  
+
+Given a template name (or perhaps a reference to a scalar or file
+handle) the context process() method must load and compile, or fetch a
+cached copy of a previously compiled template, corresponding to that
+name.  It does this by calling on a list of one or more
+Template::Provider objects (the LOAD_TEMPLATES posse) who themselves
+might get involved with a Template::Parser to help turn source
+templates into executable Perl code (but more on that later).  Thankfully,
+all of this complexity is hidden away behind a simple template()
+method.  You call it passing a template name as an argument, and it
+returns a compiled template in the form of a Template::Document
+object, or otherwise raises an exeception.
+
+A B<Template::Document> is a thin object wrapper around a compiled 
+template subroutine.  The object implements a process() method which
+performs a little bit of housekeeping and then calls the template 
+subroutine.  The object also defines template metadata (defined in 
+C<[% META ... %]> directives) and has a block() method which returns
+a hash of any additional C<[% BLOCK xxxx %]> definitions found in the 
+template source.
+
+So the context fetches a compiled document via its own template()
+method and then gets ready to process it.  It first updates the stash
+(the place where template variables get defined - more on that
+shortly) to set any template variable definitions specified as the
+second argument by reference to hash array.  Then, it calls the
+document process() method, passing a reference to itself, the context
+object, as an argument.  In doing this, it provides itself as an
+object against which template code can make callbacks to access
+runtime resources and Template Toolkit functionality.
+
+What we're trying to say here is this:  not only does the Template::Context
+object receive calls from the I<outside>, i.e. those originating in user
+code calling the process() method on a Template object, but it also 
+receives calls from the I<inside>, i.e. those originating in template
+directives of the form C<[% PROCESS template %]>.
+
+Before we move on to that, here's a simple structure diagram showing
+the outer layers of the Template Toolkit heading inwards, with pseudo
+code annotations showing a typical invocation sequence.
+
+     ,--------.
+     | Caller |	    use Template;
+     `--------'     my $tt = Template->new( ... );
+          |	    $tt->process($template, \%vars);
+          |                                                     Outside
+  - - - - | - - - - - - - - - - - - - - - - - - - - - - - - - - - - T T 
+	  |         package Template;                            Inside
+          V
+    +----------+    sub process($template, \%vars) {
+    | Template |	$out = $self->SERVICE->process($template, $vars);
+    +----------+	print $out or send it to $self->OUTPUT;
+          |	    }
+          |
+          |         package Template::Service;
+          |
+	  |	    sub process($template, \%vars) {
+	  |		try {
+    +----------+	    foreach $p in @self->PRE_PROCESS
+    | Service  |	        $self->CONTEXT->process($p, $vars);
+    +----------+
+	  |		    $self->CONTEXT->process($template, $vars);
+          |
+	  |		    foreach $p @self->POST_PROCESS
+	  |			$self->CONTEXT->process($p, $vars);
+	  |		}
+          |  		catch {
+	  |		    $self->CONTEXT->process($self->ERROR);
+	  |		}
+	  |	    }
+          |
+          V         package Template::Context;
+    +----------+    
+    | Context  |    sub process($template, \%vars) {
+    +----------+	# fetch compiled template
+	  |		$template = $self->template($template)
+          |             # update stash
+          |	        $self->STASH->update($vars);
+          |	        # process template
+          |             $template->process($self)
+          |         }
+          V     
+    +----------+    package Template::Document;
+    | Document |    
+    +----------+    sub process($context) {
+			$output = &{ $self->BLOCK }($context);
+		    }
+        
+
+=head2 Inside Looking Out
+
+To understand more about what's going on in these lower levels, we
+need to look at what a compiled template looks like.  In fact, a
+compiled template is just a regular Perl sub-routine.  Here's a very
+simple one.
+
+    sub my_compiled_template {
+	return "This is a compiled template.\n";
+    }
+
+You're unlikely to see a compiled template this simple unless you
+wrote it yourself but it is entirely valid.  All a template subroutine
+is obliged to do is return some output (which may be an empty of
+course).  If it can't for some reason, then it should raise an error
+via die().
+
+    sub my_todo_template {
+	die "This template not yet implemented\n";
+    }
+
+If it wants to get fancy, it can raise an error as a
+Template::Exception object.  An exception object is really just a
+convenient wrapper for the 'type' and 'info' fields.
+
+    sub my_solilique_template {
+	die Template::Exception->new('yorrick', 'Fellow of infinite jest');
+    }
+
+Templates generally need to do a lot more than just generate static
+output or raise errors.  They may want to inspect variable values,
+process another template, load a plugin, run a filter, and so on.
+Whenever a template subroutine is called, it gets passed a reference
+to a Template::Context object.  It is through this context object that
+template code can access the features of the Template Toolkit.
+
+We described earlier how the Template::Service object calls on
+Template::Context to handle a process() request from the I<outside>.
+We can make a similar request on a context to process a template, but
+from within the code of another template.  This is a call from the
+I<inside>.
+
+    sub my_process_template {
+	my $context = shift;
+
+	my $output = $context->process('header', { title => 'Hello World' })
+		   . "\nsome content\n"
+		   . $context->process('footer');
+    }
+
+This is then roughly equivalent to a source template something
+like this:
+
+    [% PROCESS header
+	title = 'Hello World'
+    %]
+    some content
+    [% PROCESS footer %]
+
+Template variables are stored in, and managed by a B<Template::Stash>
+object.  This is a blessed hash array in which template variables are
+defined.  The object wrapper provides get() and set() method which
+implement all the magical.variable.features of the Template Toolkit.
+
+Each context object has its own stash, a reference to which can be
+returned by the appropriately named stash() method.  So to print the
+value of some template variable, or for example, to represent the
+following source template:
+
+    <title>[% title %]</title>
+
+we might have a subroutine definition something like this:
+
+    sub {
+	my $context = shift;
+	my $stash = $context->stash();
+	return '<title>' . $stash->get('title') . '</title>';
+    }
+
+The stash get() method hides the details of the underlying variable
+types, automatically calling code references, checking return values,
+and performing other such tricks.  If 'title' happens to be bound to a
+subroutine then we can specify additional parameters as a list
+reference passed as the second argument to get().
+
+    [% title('The Cat Sat on the Mat') %]
+
+This translates to the stash get() call:
+
+    $stash->get('title', ['The Cat Sat on the Mat']);
+
+Dotted compound variables can be requested by passing a single 
+list reference to the get() method in place of the variable 
+name.  Each pair of elements in the list should correspond to the
+variable name and reference to a list of arguments for each 
+dot-delimited element of the variable.
+
+    [% foo(1, 2).bar(3, 4).baz(5) %]
+
+is thus equivalent to
+
+    $stash->get([ foo => [1,2], bar => [3,4], baz => [5] ]);
+
+If there aren't any arguments for an element, you can specify an 
+empty, zero or null argument list.
+
+    [% foo.bar %]
+    $stash->get([ 'foo', 0, 'bar', 0 ]);
+
+The set() method works in a similar way.  It takes a variable 
+name and a variable value which should be assigned to it.
+
+    [% x = 10 %]         
+    $stash->set('x', 10);
+
+    [% x.y = 10 %]
+    $stash->set([ 'x', 0, 'y', 0 ], 10);
+
+So the stash gives us access to template variables and the context
+provides the higher level functionality.  Alongside the process()
+method lies the include() method.  Just as with the PROCESS / INCLUDE
+directives, the key difference is in variable localisation.  Before
+processing a template, the process() method simply updates the stash
+to set any new variable definitions, overwriting any existing values.
+In contrast, the include() method creates a copy of the existing
+stash, in a process known as I<cloning> the stash, and then uses that
+as a temporary variable store.  Any previously existing variables are
+still defined, but any changes made to variables, including setting
+the new variable values passed aas arguments will affect only the
+local copy of the stash (although note that it's only a shallow copy,
+so it's not foolproof).  When the template has been processed, the include()
+method restores the previous variable state by I<decloning> the stash.
+
+The context also provides an insert() method to implement the INSERT 
+directive, but no wrapper() method.  This functionality can be implemented
+by rewriting the Perl code and calling include().
+
+    [% WRAPPER foo -%]
+       blah blah [% x %]
+    [%- END %]
+
+    $context->include('foo', {
+	content => 'blah blah ' . $stash->get('x'),
+    });
+
+Other than the template processing methods process(), include() and insert(),
+the context defines methods for fetching plugin objects, plugin(), and 
+filters, filter().
+
+    [% USE foo = Bar(10) %]
+
+    $stash->set('foo', $context->plugin('Bar', [10]));
+
+    [% FILTER bar(20) %]
+       blah blah blah
+    [% END %]
+
+    my $filter = $stash->filter('bar', [20]);
+    &$filter('blah blah blah');
+
+Pretty much everything else you might want to do in a template can be done
+in Perl code.  Things like IF, UNLESS, FOREACH and so on all have direct
+counterparts in Perl.
+
+    [% IF msg %]
+       Message: [% msg %]
+    [% END %];
+
+    if ($stash->get('msg')) {
+	$output .=  'Message: ';
+	$output .= $stash->get('msg');
+    }
+
+B<### WARNING: THIS IS THE ABRUPT END OF THE DOCUMENTATION ###>
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+
+

@@ -88,12 +88,23 @@ sub as_list {
 
 1;
 
-
 __END__
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
 
 =head1 NAME
 
-Template::Plugin::Datafile - plugin to construct records from a simple data file
+Template::Plugin::Datafile - Plugin to construct records from a simple data file
 
 =head1 SYNOPSIS
 
@@ -149,24 +160,24 @@ Doesn't permit use of ':' in a field.  Some escaping mechanism is required.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>kfs.orgE<gt>
+Andy Wardley E<lt>abw@kfs.orgE<gt>
 
-=head1 REVISION
+L<http://www.andywardley.com/|http://www.andywardley.com/>
 
-$Revision$
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-1999 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-1999 Canon Research Centre Europe Ltd.
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template::Plugin|Template::Plugin>, 
-
-=cut
+L<Template::Plugin|Template::Plugin>
 
 

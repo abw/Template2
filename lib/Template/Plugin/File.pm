@@ -142,12 +142,23 @@ sub throw {
     die Template::Exception->new('File', $error);
 }
 
-
 __END__
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
 
 =head1 NAME
 
-Template::Plugin::File - plugin providing information about a file
+Template::Plugin::File - Plugin providing information about files
 
 =head1 SYNOPSIS
 
@@ -379,14 +390,16 @@ item.
 
 =head1 AUTHORS
 
-Michael Stevens <michael@etla.org> wrote the original Directory plugin
-on which this is based.  Andy Wardley <abw@kfs.org> split it into 
+Michael Stevens E<lt>michael@etla.orgE<gt> wrote the original Directory plugin
+on which this is based.  Andy Wardley E<lt>abw@kfs.orgE<gt> split it into 
 separate File and Directory plugins, added some extra code and documentation
 for VIEW support, and made a few other minor tweaks.
 
-=head1 REVISION
+=head1 VERSION
 
-$Revision$
+Template Toolkit version 2.01, released on 9th March 2000.
+
+
 
 =head1 COPYRIGHT
 
@@ -395,8 +408,5 @@ modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-See also L<Template::Plugin::Directory>, L<Template::Plugin|Template::Plugin>
-and L<Template::View>.
-
-=cut
+L<Template::Plugin|Template::Plugin>, L<Template::Plugin::Directory|Template::Plugin::Directory>, L<Template::View|Template::View>
 

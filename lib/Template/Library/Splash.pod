@@ -1,0 +1,608 @@
+#============================================================= -*-perl-*-
+#
+# Template::Library::Splash
+#
+# DESCRIPTION
+#   The Splash! library is built on top of the HTML library and
+#   implements a set of widgets for easy construction of stylish HTML
+#   pages
+#
+# AUTHOR
+#   Andy Wardley  <abw@kfs.org>
+#
+# COPYRIGHT
+#   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+# REVISION
+#   
+#
+#========================================================================
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Library::Splash - Template widget set for fancy HTML user interfaces
+
+=head1 DESCRIPTION
+
+The 'Splash' template library is distributed as part of the Template
+Toolkit.  It can be found in the 'templates' sub-directory of the
+distribution directory.
+
+To use the Splash library, you simply need to tell the Template
+Toolkit where to find the template files.  The templates can be found
+in the 'templates' sub-directory of the distribution directory.
+
+    templates
+        |
+        +-- html
+        |
+        +-- pod
+        |
+        +-- splash
+
+You might like to copy the entire directory structure somewhere safe.
+, using the INCLUDE_PATH configuration item.
+
+    use Template;
+
+    my $tt2 = Template->new({
+	INCLUDE_PATH => '/usr/local/tt2/templates',
+	PRE_PROCESS  => 'splash/config',
+    });
+
+
+
+This documentation is incomplete.  Please see the examples in the
+'examples' sub-directory of the distribution directory for further
+enlightenment on using this library.
+
+=head2 CONFIGURATION
+
+
+
+=over 4
+
+=item splash/config
+
+This element defines configuration items for the Splash library.  It
+defines a 'splash' hash array which contains the configuration and you
+should PROCESS the splash/config template to ensure that the hash
+definition is imported into your calling template.  An INCLUDE is not
+sufficient as it localise variables and prevents the 'splash' hash
+array from existing outside the splash/config template.
+
+    [% PROCESS splash/config %]
+
+Alternately, you can define the splash/config template as a PRE_PROCESS
+item when you create the Template processor.  Note that you must specify
+an INCLUDE_PATH component which points to the top level 'templates' 
+directory of the distribution directory or your system installation.
+
+    use Template;
+
+    my $tt2 = Template->new({
+	INCLUDE_PATH => '/usr/local/tt2/templates',
+	PRE_PROCESS  => 'splash/config',
+    });
+
+Another approach is to create your own PRE_PROCESS config file which
+loads the 'splash/config', tweaks any setting to your own preferences,
+and sets up any other configuration items that may be relevant to you.
+Remember to set the INCLUDE_PATH to include the location of your
+'config' file.  It is usually best to put this before the "system"
+directory so that you can add templates to your "local" directory
+which will take preference over any such system files (i.e. a simple
+form of inheritance).
+
+    my $tt2 = Template->new({
+	INCLUDE_PATH => [ '/home/abw/tt2/templates',	# my stuff
+			  '/usr/local/tt2/templates' ], # Splash! etc.
+        PRE_PROCESS => 'config'
+    });
+
+/home/abw/tt2/templates:
+
+    [% PROCESS splash/config;
+       splash.images       = '/~abw/tt2/splash/images'
+       splash.select.col   = 'leaf'
+       splash.unselect.col = 'bud'
+    %]
+
+=back
+
+
+
+#------------------------------------------------------------------------
+
+=head1 Colours
+
+
+=head1 Styles
+
+=head2 splash/text
+
+Configuration items:
+
+=over 4
+
+=item content
+
+Text content.
+
+=item style
+
+Reference to a style hash.
+
+=item select
+
+Flag to default the style to splash.select (select == true value) or
+splash.unselect (select == false value).
+
+=item link
+
+URL which can be defined to make the text a link.
+
+=back
+
+The following items default to the relevant style values:
+
+=over 4
+
+=item col (style.col.text)
+
+Text colour.
+
+=item font (style.font.face)
+
+=item bold (style.font.bold)
+
+=item size (style.font.size)
+
+=back
+
+
+=head2 splash/button
+
+Configuration items:
+
+=over 4
+
+=item content
+
+=item style
+
+=item select
+
+=item width
+
+=item alt
+
+=back
+
+The following items default to the relevant style values:
+
+=over 4
+
+=item col (style.col.bar)
+
+=item textcol (style.col.text)
+
+=item font (style.font.face)
+
+=item size (style.font.size)
+
+=item bold (style.font.bold)
+
+=item width (style.button.width)
+
+=item align (style.button.align)
+
+=back
+
+
+=head2 splash/bar
+
+Configuration items:
+
+=over 4
+
+=item content
+
+=item style
+
+=item select
+
+=item width
+
+=item alt
+
+=back
+
+The following items default to the relevant style values:
+
+=over 4
+
+=item col (style.col.bar)
+
+=item textcol (style.col.text)
+
+=item font (style.font.face)
+
+=item size (style.font.size)
+
+=item bold (style.font.bold)
+
+=item width (style.button.width)
+
+=item align (style.button.align)
+
+=back
+
+
+=head2 splash/box
+
+Configuration items:
+
+from splash/table, splash/row and splash/cell
+
+=over 4
+
+=item col, border, width, pad, space 
+
+=item rowspan, valign (row)
+
+=item colspan, align (cell)
+
+=back
+
+
+=head2 splash/menu
+
+=over 4
+
+=item buttons = [ { text/link }* ]
+
+=item select (n or 0)
+
+=item width (menu width)
+
+=item align (button text alignment)
+
+=back
+
+
+=head2 splash/menubar
+
+=over 4
+
+=item buttons = [ { text/link }* ]
+
+=item select (n or 0)
+
+=item content
+
+=item width (menu width)
+
+=back
+
+
+=head2 splash/panel
+
+=over 4
+
+=item content
+
+=item select 
+
+=item width
+
+=back
+
+Default to style:
+
+=over 4
+
+=item edge
+
+=item fill
+
+=item border
+
+=item pad
+
+=back
+
+
+=head2 splash/pane
+
+splash/row + splash/cell
+
+
+=head2 splash/tab
+
+Configuration items:
+
+=over 4
+
+=item content
+
+=item style
+
+=item select
+
+=item width
+
+=item alt
+
+=back
+
+The following items default to the relevant style values:
+
+=over 4
+
+=item col (style.col.bar)
+
+=item textcol (style.col.text)
+
+=item font (style.font.face)
+
+=item size (style.font.size)
+
+=item bold (style.font.bold)
+
+=item align (style.tab.align)
+
+=back
+
+
+=head2 splash/tabset
+
+=over 4
+
+=item tabs = [ { text/link }* ]
+
+=item select (n or 0)
+
+=item invert
+
+=back
+
+
+=head2 splash/tabbox
+
+=over 4
+
+=item title
+
+=item content
+
+=item width
+
+=item tabwidth
+
+=item select
+
+=item col
+
+=item fill
+
+=item border
+
+=item pad
+
+=item tabalign
+
+=item tablocate
+
+=back
+
+
+=head2 splash/tabsbox
+
+=over 4
+
+=item tabs = [ { text/link }* ]
+
+=item select (n or 0)
+
+=item content
+
+=item width
+
+=item invert
+
+=back
+
+defaulting...
+
+=over 4
+
+=item fill
+
+=item border
+
+=item pad
+
+=item tabalign  ??
+
+=item tablocate
+
+=back
+
+
+=head2 splash/tabspanel
+
+TODO
+
+OLD STUFF FOLLOWS...
+
+=head2 Tables, Bars and Boxes
+
+=over 4
+
+=item table
+
+A basic element for creating HTML tables.
+
+    [% WRAPPER html/table pad=10 space=4 col='#404040' %]
+       <tr>
+	<td>Hello</td> <td>World</td>
+       </tr>
+    [% END %]
+
+The following variables may be defined:
+
+=over 4
+
+=item border
+
+Set the border width (default: 0)
+
+=item col
+
+Set the background colour (default: none).
+
+=item width
+
+Set a fixed table width.
+
+=item pad
+
+Set the cellpadding.
+
+=item space
+
+Set the cellspacing.
+
+=item content
+
+Content for the box.  Supplied automatically if used via WRAPPER.
+
+=back
+
+=item row
+
+A basic element for creating HTML table rows.
+
+    [% WRAPPER html/table %]
+       [% WRAPPER html/row %]
+	<td>Hello</td> <td>World</td>
+       [% END %]
+    [% END %]
+
+The following variables may be defined:
+
+=over 4
+
+=item col
+
+Set the background colour (default: none).
+
+=item valign
+
+Set the vertical alignment.
+
+=item rowspan
+
+Specify the number of rows to span.
+
+=item content
+
+Content for the box.  Supplied automatically if used via WRAPPER.
+
+=back
+
+=item cell
+
+A basic element for creating HTML table cells.
+
+    [% WRAPPER html/table %]
+       [% WRAPPER html/row %]
+	  [% INCLUDE html/cell 
+		FOREACH content = ['Hello', 'World'] %]
+       [% END %]
+    [% END %]
+
+The following variables may be defined:
+
+=over 4
+
+=item col
+
+Set the background colour (default: none).
+
+=item align
+
+Set the horizontal alignment.
+
+=item colspan
+
+Specify the number of columns to span.
+
+=item content
+
+Content for the cell.  Supplied automatically if used via WRAPPER.
+
+=back
+
+=item bar
+
+The bar element is a wrapping of html/table + html/row.
+
+    [% WRAPPER html/bar %]
+       <td>Foo</td>  <td>Bar</td>
+    [% END %]
+
+=item box
+
+The box element is a wrapping of html/table + html/row + html/cell
+
+    [% WRAPPER html/box %]
+       Hello World!
+    [% END %]
+
+=item panel
+
+TODO 
+
+=back
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template::Library::HTML|Template::Library::HTML>
+
+

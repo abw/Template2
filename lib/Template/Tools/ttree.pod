@@ -1,0 +1,111 @@
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Tools::ttree - Process entire directory trees of templates
+
+=head1 SYNOPSIS
+
+    ttree [options] [files]
+
+=head1 DESCRIPTION
+
+The F<ttree> script is used to process entire directory trees containing
+template files.  The resulting output from processing each file is then 
+written to a corresponding file in a destination directory.  The script
+compares the modification times of source and destination files (where
+they already exist) and processes only those files that have been modified.
+In other words, it is the equivalent of 'make' for the Template Toolkit.
+
+It supports a number of options which can be used to configure
+behaviour, define locations and set Template Toolkit options.  The
+script first reads the F<.ttreerc> configuration file in the HOME
+directory, or an alternative file specified in the TTREERC environment
+variable.  Then, it processes any command line arguments, including
+any additional configuration files specified via the B<-f> (file) option.
+
+A typical F<.ttreerc> file might look like this:
+
+    src    = /home/abw/websrc/doc
+    dest   = /home/abw/public_html
+    lib    = /home/abw/websrc/lib
+    lib    = /usr/local/templates/lib
+    cfg    = /home/abw/.ttree
+    ignore = \b(CVS|RCS)\b
+    ignore = ^#
+    copy   = \.(gif|png)$ 
+    accept = \.[ah]tml$
+
+The B<src> option indicates a directory containing the template files
+to be processed.  A list of files may be specified on the command line
+and each will be processed in turn, writing the generated output to a
+corresponding file in the B<dest> directory.  If no files are
+explicitly named then all files in the B<src> directory will be
+processed.  The B<-r> (recurse) option will also cause sub-directories
+to be searched for files.  A source file is only processed if it has a
+later modification time than any corresponding destination file.
+Files will always be processed, regardless of modification times, if
+they are named explicitly on the command line, or the B<-a> (all)
+option is used.
+
+The B<lib> option may be specified any number of times to indicate
+directories in which the Template Toolkit should look for other
+template files (INCLUDE_PATH) that it may need to INCLUDE or PROCESS,
+but don't represent complete documents that should be processed in
+their own right (e.g. headers, footers, menu).  The B<cfg> directory
+specifies the location of additional configuration files that may be
+loaded via the B<-f> option.  
+
+The B<ignore>, B<copy> and B<accept> options are used to specify Perl
+regexen to filter file names.  Files that match any of the B<ignore>
+options will not be processed.  Remaining files that match any of the
+B<copy> regexen will be copied to the destination directory.  Remaining
+files that then match any of the B<accept> criteria are then processed
+via the Template Toolkit.  If no B<accept> parameter is specified then 
+all files will be accepted for processing if not already copied or
+ ignored.
+
+Additional options may be used to set Template Toolkit parameters.
+For example:
+
+   interpolate        
+   post_chomp         
+   pre_process  = header
+   post_process = footer
+   perl5lib     = /home/abw/lib/perl5
+
+See B<ttree --help> for a summary of options.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<tpage|Template::Tools::tpage>
+
+

@@ -431,9 +431,21 @@ sub _fetchrow {
 
 __END__
 
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
 =head1 NAME
 
-Template::Plugin::DBI - Template Plugin interface to the DBI.pm module
+Template::Plugin::DBI - Interface to the DBI module
 
 =head1 SYNOPSIS
 
@@ -605,11 +617,6 @@ Disconnects the current database.
 
 Perl 5.005, Template-Toolkit 2.00, DBI 1.02
 
-=head1 SEE ALSO
-
-For general information on the Template Toolkit and DBI modules, see
-L<Template> and L<DBI>.
-
 =head1 AUTHORS
 
 The DBI plugin was written by Simon A Matthews,
@@ -651,4 +658,8 @@ Copyright (C) 1999-2000 Simon Matthews.  All Rights Reserved
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template::Plugin|Template::Plugin>, L<CPAN::DBI|CPAN::DBI>
 

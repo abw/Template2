@@ -97,9 +97,21 @@ sub _throw {
 
 __END__
 
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
 =head1 NAME
 
-Template::Plugin::XML::XPath - Template Toolkit plugin to the XML::XPath module
+Template::Plugin::XML::XPath - Plugin interface to XML::XPath
 
 =head1 SYNOPSIS
 
@@ -128,31 +140,26 @@ installed.  These are available from CPAN:
 =head1 DESCRIPTION
 
 This is a Template Toolkit plugin interfacing to the XML::XPath module.
-=head1 AUTHOR
+
+=head1 AUTHORS
 
 This plugin module was written by Andy Wardley E<lt>abw@kfs.orgE<gt>.
 
-The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.org<gt>.
+The XML::XPath module is by Matt Sergeant E<lt>matt@sergeant.orgE<gt>.
 
-=head1 REVISION
+=head1 VERSION
 
-$Revision$
+Template Toolkit version 2.01, released on 9th March 2000.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-For further information see L<XML::XPath>, L<XML::Parser> and 
-L<Template::Plugin>.
-
-=cut
-
-
-
-
+L<Template::Plugin|Template::Plugin>, L<XML::XPath|XML::XPath>, L<XML::Parser|XML::Parser>
 

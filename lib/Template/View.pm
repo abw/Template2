@@ -43,7 +43,8 @@ $MAP = {
     TEXT    => 'text',
     default => '',
 };
-    
+
+#$DEBUG = 1;    
 
 #------------------------------------------------------------------------
 # _init(\%config)
@@ -213,8 +214,9 @@ sub print {
 	elsif (! defined ($template = $map->{ $type })) {
 	    # no specific map entry for object, maybe it implements a 
 	    # 'present' (or other) method?
+#	    $self->DEBUG("determining if $item can $method\n") if $DEBUG;
 	    if ($method && UNIVERSAL::can($item, $method)) {
-		$self->DEBUG("Calling $item->$method\n") if $DEBUG;
+		$self->DEBUG("Calling \$item->$method\n") if $DEBUG;
 		$present = $item->$method($self);	## call item method
 		# undef returned indicates error, note that we expect 
 		# $item to have called error() on the view
@@ -227,6 +229,9 @@ sub print {
 		($template = $type) =~ s/\W+/_/g;
 	    }
 	}
+#	else {
+#	    $self->DEBUG("defined map type for $type: $template\n");
+#	}
 	$self->DEBUG("printing view '", $template || '', "', $item\n") if $DEBUG;
 	$output .= $self->view($template, $item)
 	    if $template;

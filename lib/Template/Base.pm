@@ -61,7 +61,7 @@ sub new {
     # fold all remaining args into a hash, or use provided hash ref
 #    local $" = ', ';
 #    print STDERR "args: [@_]\n";
-    $cfg  = ref $_[0] eq 'HASH' ? shift : { @_ };
+    $cfg  = UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
 
     my $self = bless {
 	map { ($_ => shift @args) } @$argnames,
@@ -122,4 +122,108 @@ sub DEBUG {
 }
 
 1;
+
+__END__
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Base - Base class module implementing common functionality
+
+=head1 SYNOPSIS
+
+    package Template::MyModule;
+    use base qw( Template::Base );
+
+    sub _init {
+	my ($self, $config) = @_;
+	$self->{ doodah } = $config->{ doodah }
+	    || return $self->error("No 'doodah' specified");
+	return $self;
+    }
+
+=head1 DESCRIPTION
+
+Base class module which implements a constructor and error reporting 
+functionality for various Template Toolkit modules.
+
+=head1 PUBLIC METHODS
+
+=head2 new(\%config)
+
+Constructor method which accepts a reference to a hash array or a list 
+of C<name =E<gt> value> parameters which are folded into a hash.  The 
+_init() method is then called, passing the configuration hash and should
+return true/false to indicate success or failure.  A new object reference
+is returned, or undef on error.  Any error message raised can be examined
+via the error() class method or directly via the package variable ERROR
+in the derived class.
+
+    my $module = Template::MyModule->new({ ... })
+        || die Template::MyModule->error(), "\n";
+
+    my $module = Template::MyModule->new({ ... })
+        || die "constructor error: $Template::MyModule::ERROR\n";
+
+=head2 error($msg)
+
+May be called as an object method to get/set the internal _ERROR member
+or as a class method to get/set the $ERROR variable in the derived class's
+package.
+
+    my $module = Template::MyModule->new({ ... })
+        || die Template::MyModule->error(), "\n";
+
+    $module->do_something() 
+	|| die $module->error(), "\n";
+
+When called with parameters (multiple params are concatenated), this
+method will set the relevant variable and return undef.  This is most
+often used within object methods to report errors to the caller.
+
+    package Template::MyModule;
+
+    ...
+
+    sub foobar {
+	my $self = shift;
+	...
+	return $self->error('some kind of error...')
+	    if $some_condition;
+	...
+    }
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template|Template>
+
 

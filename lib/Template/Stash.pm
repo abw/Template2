@@ -67,6 +67,8 @@ $SCALAR_OPS = {
 	$replace = '' unless defined $replace;
 	return $str unless defined $str and $search;
 	$str =~ s/$search/$replace/g;
+#	print STDERR "s [ $search ] [ $replace ] g\n";
+#	eval "\$str =~ s$search$replaceg";
 	return $str;
     },
     'split'   => sub { 
@@ -482,23 +484,23 @@ sub _dotop {
 	# UNIVERSAL object base class) then we call the item as a method.
 	# If that fails then we try to fallback on HASH behaviour if 
 	# possible.
-#	print STDERR "about to call $root->$item()\n";
 	eval { @result = $root->$item(@$args); };	    
 
-#	print STDERR "err: [$@]\nres: [@result]\n";
-	if ($@ && UNIVERSAL::isa($root, 'HASH') 
-	       && defined($value = $root->{ $item })) {
-	    return $value unless ref $value eq 'CODE';	    ## RETURN
-	    @result = &$value(@$args);
+	if ($@) {
+	    # failed to call object method, so try some fallbacks
+	    if (UNIVERSAL::isa($root, 'HASH')
+		&& defined($value = $root->{ $item })) {
+		return $value unless ref $value eq 'CODE';	    ## RETURN
+		@result = &$value(@$args);
+	    }
+	    elsif (UNIVERSAL::isa($root, 'ARRAY') 
+		   && ($value = $LIST_OPS->{ $item })) {
+		@result = &$value($root, @$args);
+	    }
+	    else {
+		@result = (undef, $@);
+	    }
 	}
-	elsif ($@) {
-#	    print STDERR "failing now\n";
-	    @result = (undef, $@);
-	}
-#	else {
-#	    local $" = ', ';
-#	    print STDERR "seemingly OK: [@result]\n";
-#	}
     }
     elsif (($value = $SCALAR_OPS->{ $item }) && ! $lvalue) {
 
@@ -625,3 +627,163 @@ sub _dump {
 
 
 1;
+
+__END__
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::Stash - Magical storage for template variables
+
+=head1 SYNOPSIS
+
+    use Template::Stash;
+
+    my $stash = Template::Stash->new(\%vars);
+
+    # get variable values
+    $value = $stash->get($variable);
+    $value = $stash->get(\@compound);
+
+    # set variable value
+    $stash->set($variable, $value);
+    $stash->set(\@compound, $value);
+
+    # default variable value
+    $stash->set($variable, $value, 1);
+    $stash->set(\@compound, $value, 1);
+
+    # set variable values en masse
+    $stash->update(\%new_vars)
+
+    # methods for (de-)localising variables
+    $stash = $stash->clone(\%new_vars);
+    $stash = $stash->declone();
+
+=head1 DESCRIPTION
+
+The Template::Stash module defines an object class which is used to store
+variable values for the runtime use of the template processor.  Variable
+values are stored internally in a hash reference (which itself is blessed 
+to create the object) and are accessible via the get() and set() methods.
+
+Variables may reference hash arrays, lists, subroutines and objects
+as well as simple values.  The stash automatically performs the right
+magic when dealing with variables, calling code or object methods,
+indexing into lists, hashes, etc.
+
+The stash has clone() and declone() methods which are used by the
+template processor to make temporary copies of the stash for
+localising changes made to variables.
+
+=head1 PUBLIC METHODS
+
+=head2 new(\%params)
+
+The new() constructor method creates and returns a reference to a new
+Template::Stash object.  
+
+    my $stash = Template::Stash->new();
+
+A hash reference may be passed to provide variables and values which
+should be used to initialise the stash.
+
+    my $stash = Template::Stash->new({ var1 => 'value1', 
+				       var2 => 'value2' });
+
+=head2 get($variable)
+
+The get() method retrieves the variable named by the first parameter.
+
+    $value = $stash->get('var1');
+
+Dotted compound variables can be retrieved by specifying the variable
+elements by reference to a list.  Each node in the variable occupies
+two entries in the list.  The first gives the name of the variable
+element, the second is a reference to a list of arguments for that 
+element, or 0 if none.
+
+    [% foo.bar(10).baz(20) %]
+
+    $stash->get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ]);
+
+=head2 set($variable, $value, $default)
+
+The set() method sets the variable name in the first parameter to the 
+value specified in the second.
+
+    $stash->set('var1', 'value1');
+
+Dotted compound variables may be specified as per get() above.
+
+    [% foo.bar = 30 %]
+
+    $stash->set([ 'foo', 0, 'bar', 0 ], 30);
+
+The magical variable 'IMPORT' can be specified whose corresponding
+value should be a hash reference.  The contents of the hash array are
+copied (i.e. imported) into the current namespace.
+
+    # foo.bar = baz, foo.wiz = waz
+    $stash->set('foo', { 'bar' => 'baz', 'wiz' => 'waz' });
+
+    # import 'foo' into main namespace: foo = baz, wiz = waz
+    $stash->set('IMPORT', $stash->get('foo'));
+
+=head2 clone(\%params)
+
+The clone() method creates and returns a new Template::Stash object which
+represents a localised copy of the parent stash.  Variables can be
+freely updated in the cloned stash and when declone() is called, the
+original stash is returned with all its members intact and in the
+same state as they were before clone() was called.
+
+For convenience, a hash of parameters may be passed into clone() which 
+is used to update any simple variable (i.e. those that don't contain any 
+namespace elements like 'foo' and 'bar' but not 'foo.bar') variables while 
+cloning the stash.  For adding and updating complex variables, the set() 
+method should be used after calling clone().  This will correctly resolve
+and/or create any necessary namespace hashes.
+
+A cloned stash maintains a reference to the stash that it was copied 
+from in its '_PARENT' member.
+
+=head2 declone()
+
+The declone() method returns the '_PARENT' reference and can be used to
+restore the state of a stash as described above.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template|Template>, L<Template::Context|Template::Context>
+
+

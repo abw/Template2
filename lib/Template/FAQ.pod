@@ -1,0 +1,134 @@
+#============================================================= -*-perl-*-
+#
+# Template::FAQ
+#
+# DESCRIPTION
+#   This is the Frequently Asked Questions list for the Template
+#   Toolkit. More accurately, it's a very thin placeholder for where
+#   the FAQ will soon be.
+#
+# AUTHOR
+#   Andy Wardley  <abw@kfs.org>
+#
+# COPYRIGHT
+#   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+# REVISION
+#   
+#
+#========================================================================
+
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
+=head1 NAME
+
+Template::FAQ - Frequently Asked Questions about the Template Toolkit
+
+=head1 DESCRIPTION
+
+This is the Frequently Asked Questions list for the Template Toolkit.
+More accurately, it's a very thin placeholder for where the FAQ will
+soon be.
+
+=head2 General Questions
+
+=over 4
+
+=item Why is the sky blue?
+
+Something to do with refraction.
+
+=back
+
+=head2 Language
+
+=over 4
+
+=item Why doesn't [% a = b IF c %] work as expected?
+
+Because the parser interprets it as [% a = (b IF c) %].
+
+=back
+
+=head2 Plugins
+
+=over 4
+
+=item Using the Table plugin, how do I order the data to go across rather than down?
+
+Order the data into rows:
+
+     Steve     Karen     Jeff
+     Brooklyn  Nantucket Fairfax
+     NY        MA        VA
+ 
+    [% USE table(data, rows=3) %]
+ 
+Then ask for each column
+ 
+    [% FOREACH column = table.cols %]
+ 
+And then print each item in the column going across the output rows
+ 
+    [% FOREACH item = column %]
+	<td>[% item %]</td>
+    [% END %]
+
+=back
+
+=head2 Extending the Template Toolkit
+
+=over 4
+
+=item Can I serve templates from a database?
+
+Short answer: yes, Chris Nandor has done this for Slash.  You need to 
+subclass Template::Provider.  See the mailing list archives for further
+info.
+
+=back
+
+=head2 Miscellaneous
+
+=over 4
+
+=item Can I have another cup of coffee?
+
+No, I think you've hhhaadd ennnough alllrready.
+
+=back
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@kfs.orgE<gt>
+
+L<http://www.andywardley.com/|http://www.andywardley.com/>
+
+=head1 VERSION
+
+Template Toolkit version 2.01, released on 9th March 2000.
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+
+

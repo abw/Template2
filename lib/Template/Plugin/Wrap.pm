@@ -41,8 +41,10 @@ sub new {
 sub tt_wrap {
     my $text  = shift;
     my $width = shift || 72;
-    my $itab  = shift || '';
-    my $ntab  = shift || '';
+    my $itab  = shift;
+    my $ntab  = shift;
+    $itab = '' unless defined $itab;
+    $ntab = '' unless defined $ntab;
     $Text::Wrap::columns = $width;
     Text::Wrap::wrap($itab, $ntab, $text);
 }
@@ -60,9 +62,21 @@ sub wrap_filter_factory {
 
 __END__
 
+
+#------------------------------------------------------------------------
+# IMPORTANT NOTE
+#   This documentation is generated automatically from source
+#   templates.  Any changes you make here may be lost.
+# 
+#   The 'docsrc' documentation source bundle is available for download
+#   from http://www.template-toolkit.org/download/ and contains all
+#   the source templates, XML files, scripts, etc., from which the
+#   documentation for the Template Toolkit is built.
+#------------------------------------------------------------------------
+
 =head1 NAME
 
-Template::Plugin::Wrap - wrap text using the Text::Wrap module.
+Template::Plugin::Wrap - Plugin interface to Text::Wrap
 
 =head1 SYNOPSIS
 
@@ -123,19 +137,20 @@ Output:
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>kfs.orgE<gt>
+Andy Wardley E<lt>abw@kfs.orgE<gt>
 
 The Text::Wrap module was written by David Muir Sharnoff
 E<lt>muir@idiom.comE<gt> with help from Tim Pierce and many
 others.
 
-=head1 REVISION
+=head1 VERSION
 
-$Revision$
+Template Toolkit version 2.01, released on 9th March 2000.
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -143,10 +158,4 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template::Plugin|Template::Plugin>, L<Text::Wrap|Text::Wrap>
-
-=cut
-
-
-
-
 
