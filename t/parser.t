@@ -21,8 +21,8 @@ use lib qw( . ../lib );
 use Template::Test;
 $^W = 1;
 
-$Template::Test::DEBUG = 0;
-$Template::Parser::DEBUG = 1;
+#$Template::Test::DEBUG = 0;
+#$Template::Parser::DEBUG = 0;
 
 my $config = {
     INTERPOLATE => 0,

@@ -115,7 +115,7 @@ trying
 
 
 #------------------------------------------------------------------------
-# endure PRE_PROCESS and POST_PROCESS templates get added with STOP
+# ensure PRE_PROCESS and POST_PROCESS templates get added with STOP
 #------------------------------------------------------------------------
 
 -- test --

@@ -25,9 +25,8 @@ use Cwd 'abs_path';
 
 $^W = 1;
 $Template::Test::DEBUG = 0;
-$Template::Provider::DEBUG = 0;
+#$Template::Provider::DEBUG = 0;
 my $DEBUG = 0;
-
 
 my $factory = 'Template::Config';
 
@@ -151,7 +150,7 @@ __DATA__
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file
+This is the foo file, a is 
 Error: file - not found
 
 -- test --
@@ -162,7 +161,7 @@ Error: file - not found
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file
+This is the foo file, a is 
 Error: file - not found
 
 #------------------------------------------------------------------------
@@ -176,7 +175,7 @@ Error: file - not found
 Error: [% error.type %] - [% error.info %]
 [% END %]
 -- expect --
-This is the foo file
+This is the foo file, a is 
 Error: file - foo: not found
 
 -- test --
@@ -187,7 +186,7 @@ Error: file - foo: not found
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file
+This is the foo file, a is 
 Error: file - not found
 
 #------------------------------------------------------------------------
@@ -201,7 +200,7 @@ Error: file - not found
 Error: [% error.type %] - [% error.info %]
 [% END %]
 -- expect --
-This is the foo file
+This is the foo file, a is 
 Error: file - foo: not found
 
 -- test --
@@ -212,7 +211,7 @@ Error: file - foo: not found
 Error: [% error.type %] - [% error.info.split(': ').1 %]
 [% END %]
 -- expect --
-This is the foo file
+This is the foo file, a is 
 Error: file - not found
 
 
@@ -222,13 +221,13 @@ Error: file - not found
 
 -- test --
 -- use ttinc --
-[% INCLUDE bar %]
+[% INCLUDE foobar %]
 -- expect --
 This is the old content
 
 -- test --
 [% CALL fixfile('This is the new content') %]
-[% INCLUDE bar %]
+[% INCLUDE foobar %]
 -- expect --
 This is the new content
 

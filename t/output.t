@@ -18,22 +18,65 @@
 
 use strict;
 use lib  qw( ./lib ../lib );
-use vars qw( $DEBUG );
 use Template::Test;
 
+ntests(8);
 
-ntests(37);
-$DEBUG = 1;
-$Template::Config::DEBUG = 1;
+my $dir   = -d 't' ? 't/test' : 'test';
+my $f1    = 'foo.bar';
+my $f2    = 'foo.baz';
+my $file1 = "$dir/tmp/$f1";
+my $file2 = "$dir/tmp/$f2";
 
-my $factory = 'Template::Config';
+#------------------------------------------------------------------------
 
 my $tt = Template->new({
-    INCLUDE_PATH => 'test/src:test/lib',
-    PRE_PROCESS  => 'config',
-    POST_PROCESS => 'footer',
-    OUTPUT_PATH  => '/tmp',
+    INCLUDE_PATH => "$dir/src:$dir/lib",
+    OUTPUT_PATH  => "$dir/tmp",
 }) || die Template->error();
 
-$tt->process('tryme', &callsign)
-    || print STDERR $tt->error, "\n";
+unlink($file1) if -f $file1;
+
+ok( $tt->process('foo', &callsign, $f1) );
+ok( -f $file1 );
+
+open(FP, $file1) || die "$file1: $!\n";
+local $/ = undef;
+my $out = <FP>;
+close(FP);
+
+ok( 1 );
+
+ok( $out eq "This is the foo file, a is alpha\n" );
+
+unlink($file1);
+
+#------------------------------------------------------------------------
+
+$tt = Template->new({
+    INCLUDE_PATH => "$dir/src:$dir/lib",
+    OUTPUT_PATH  => "$dir/tmp",
+    OUTPUT       => $f2,
+}) || die Template->error();
+
+unlink($file2) if -f $file2;
+
+ok( $tt->process('foo', &callsign) );
+ok( -f $file2 );
+
+open(FP, $file2) || die "$file2: $!\n";
+local $/ = undef;
+$out = <FP>;
+close(FP);
+
+ok( 1 );
+
+ok( $out eq "This is the foo file, a is alpha\n" );
+
+unlink($file2);
+
+
+
+
+
+

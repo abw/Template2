@@ -22,7 +22,7 @@ use Template::Test;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
-$Template::Parser::DEBUG = 1;
+#$Template::Parser::DEBUG = 0;
 
 my $ttcfg = {
     INCLUDE_PATH => [ qw( t/test/lib test/lib ) ],	

@@ -20,11 +20,11 @@
 use strict;
 use lib qw( ../lib );
 use Template::Test;
-#use Template::Parser;
+use Template::Parser;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
-#$Template::Parser::DEBUG = 1;
+$Template::Parser::DEBUG = 0;
 
 my $counter  = 0;
 my $params   = {

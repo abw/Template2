@@ -25,7 +25,6 @@ $^W = 1;
 
 use Template::Parser;
 $Template::Test::DEBUG = 0;
-$Template::Parser::DEBUG = 0;
 
 # sample data
 my ($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, 
@@ -121,3 +120,10 @@ Thu
 Fri
 Sat
 Sun
+
+-- test --
+[% data = [ 'one', 'two', data.first ] -%]
+[% data.join(', ') %]
+-- expect --
+one, two, romeo
+

@@ -2,7 +2,7 @@
 #
 # t/include.t
 #
-# Template script testing the INCLUDE directive.
+# Template script testing the INCLUDE and PROCESS directives.
 #
 # Written by Andy Wardley <abw@cre.canon.co.uk>
 #

@@ -1,5 +1,0 @@
-This is the src/tryme file
-[%# INCLUDE demo %]
-romeo is: [% r %]
-[%# THROW barf.ola 'been sick' %]
-end of src/tryme

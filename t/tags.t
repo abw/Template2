@@ -83,6 +83,17 @@ alpha
 (+ c +)
 
 -- test --
+# same as 'default'
+[% TAGS template -%]
+[% a %]
+%% b %%
+(+ c +)
+-- expect --
+alpha
+%% b %%
+(+ c +)
+
+-- test --
 [% TAGS metatext -%]
 [% a %]
 %% b %%
@@ -93,7 +104,7 @@ bravo
 <* c *>
 
 -- test --
-[% TAGS ttmeta -%]
+[% TAGS template1 -%]
 [% a %]
 %% b %%
 (+ c +)

@@ -1,25 +1,45 @@
-base.t          Test the Template::Base.pm module.
-binop.t         Test binary operators
-block.t         Test BLOCK definition
+Script          Testing...
+-----------------------------------------------------------------------------
+base.t          Template::Base.pm module
+binop.t         Binary operators
+block.t         BLOCK definition
 capture.t       Capture directive output and assign to a variable
 cgi.t           Test the CGI script
 compile1.t      Compile templates to Perl code and save to file
 compile2.t      Reload above compiled templates without re-parsing
-compile3.t      Test that touching source template causes re-compilation 
-config.t        Test the Template::Config factory module
-context.t       Test the Template::Context module
-datafile.t      Test the Datafile plugin (Template::Plugin::Datafile)
-document.t      Test the Template::Document module
-evalperl.t      Test the evaluation of PERL and RAWPERL blocks
-except.t        Test the Template::Exception module
-filter.t        Test the FILTER directive and various filters
-foreach.t       Test the FOREACH directive
-format.t        Test the Format plugin (Template::Plugin::Format)
-include.t       Test the INCLUDE directive
-iterator.t
+compile3.t      Ensure that touching source template causes re-compilation 
+config.t        Template::Config factory module
+context.t       Template::Context module
+datafile.t      Datafile plugin (Template::Plugin::Datafile)
+document.t      Template::Document module
+evalperl.t      Evaluation of PERL and RAWPERL blocks
+exception.t     Template::Exception module
+filter.t        FILTER directive and various filters
+foreach.t       FOREACH directive
+format.t        Format plugin (Template::Plugin::Format)
+include.t       INCLUDE and PROCESS directive
+iterator.t      Template::Iterator and Iterator plugin modules
+list.t          List definition and access via various methods
+object.t        Binding objects to template variables
+output.t        OUTPUT_PATH and OUTPUT options
+provider.t      Template::Provider module
+stop.t          STOP directive and throwing 'stop' exception
+table.t         Table plugin (Template::Plugin::Table)
+tags.t          TAGS directive
+url.t           URL plugin (Template::Plugin::URL)
+vars.t          Variable usage and GET / SET / CALL / DEFAULT directives
+varsv1.t        As above, using version 1 handling of leading '$'
+
 TODO:
 
-plugins.t to test PLUGIN_BASE, etc.
+if.t            IF / UNLESS / ELSEIF / ELSE directives
+parser.t        Template::Parser module
+service.t       Template::Service module
+switch.t        SWITCH / CASE directives
+plugins.t       Template::Plugins provider module
+template.t      Template module
+try.t           TRY / THROW / CATCH / FINAL directives
+
 
 NOTE: this is an older list.  Bit of a mess, don't trust anything here.
 
