@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06g - March                           ## DEVELOPER RELEASE ##
+# Version 2.06g - April 15th 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in ttree which prevented it from passing the recurse option
