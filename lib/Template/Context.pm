@@ -303,9 +303,6 @@ sub process {
 		unless ($localize) {
 		    # merge any local blocks defined in the Template::Document
 		    # into our local BLOCKS cache
-		    # dlc: Why does this only occur in process() and not in
-		    # include()?  I've maintained this split, but it makes
-		    # me wonder...
 		    @$blocks{ keys %$tblocks } = values %$tblocks
 			if UNIVERSAL::isa($compiled, 'Template::Document')
 			    && ($tblocks = $compiled->blocks());
