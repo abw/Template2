@@ -12,25 +12,32 @@
         page = 'Plugin_GD_Polygon'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="EXAMPLES";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'EXAMPLES';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE poly = GD.Polygon;
        poly.addPt(50,0);
        poly.addPt(99,99);
     [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="EXAMPLES"
+    title='EXAMPLES'
 -%]<pre>    [% tt_start_tag %] FILTER null;
         USE im   = GD.Image(100,100);
         USE c    = GD.Constants;</pre>
@@ -61,7 +68,7 @@
     -[% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The GD.Polygon plugin provides an interface to GD.pm's GD::Polygon class.
 </p>
@@ -75,7 +82,7 @@ access to GD.pm's constants.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -84,14 +91,14 @@ Lincoln D. Stein wrote the GD.pm interface to the GD library.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-1.20, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+1.23, distributed as part of the
+Template Toolkit version 2.06a, released on 16 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 Copyright (C) 2001 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -104,10 +111,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::GD', 'Template::Plugin::GD') -%], [% ttlink('Template::Plugin::GD::Image', 'Template::Plugin::GD::Image') -%], [% ttlink('Template::Plugin::GD::Constants', 'Template::Plugin::GD::Constants') -%], [% ttlink('GD', 'GD') -%]
 </p>
 [%- END %]
+
 
 

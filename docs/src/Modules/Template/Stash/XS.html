@@ -12,26 +12,34 @@
         page = 'Stash_XS'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="NOTE";
-	INCLUDE tocitem title="BUGS";
-	INCLUDE tocitem title="AUTHORS";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'NOTE';
+		INCLUDE tocitem 
+			title = 'BUGS';
+		INCLUDE tocitem 
+			title = 'AUTHORS';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    use Template;
     use Template::Stash::XS;</pre>
 <pre>    my $stash = Template::Stash::XS-&gt;new(\%vars);
     my $tt2   = Template-&gt;new({ STASH =&gt; $stash });</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 This module loads the XS version of Template::Stash::XS. It should 
 behave very much like the old one, but run about twice as fast. 
@@ -43,7 +51,7 @@ The others are inherited from Template::Stash.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="NOTE"
+    title='NOTE'
 -%]<p>
 To always use the XS version of Stash, modify the Template/Config.pm 
 module near line 45:
@@ -75,7 +83,7 @@ to make the XS Stash the default.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="BUGS"
+    title='BUGS'
 -%]<p>
 Please report bugs to the Template Toolkit mailing list
 templates@template-toolkit.org
@@ -114,7 +122,7 @@ enabled in preference.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHORS"
+    title='AUTHORS'
 -%]<p>
 Andy Wardley &lt;abw@tt2.org&gt;
 </p>
@@ -123,13 +131,13 @@ Doug Steinwand &lt;dsteinwand@citysearch.com&gt;
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-Template Toolkit version 2.05b, released on 21 September 2001.
+Template Toolkit version 2.06a, released on 16 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<pre>  Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.</pre>
 <p>
@@ -138,10 +146,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Stash', 'Template::Stash') -%]
 </p>
 [%- END %]
+
 
 

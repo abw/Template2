@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( . ./t ./lib ../lib ./blib/lib ../blib/lib );
+use lib qw( . ./t ./lib ../lib ./blib/lib ../blib/lib ../blib/arch );
 use vars qw( $DEBUG $run $dsn $user $pass );
 use Template::Test;
 
@@ -108,16 +108,23 @@ sub init_database {
                      VALUES ('foo', 'The Foo Group')");
     sql_query($dbh, "INSERT INTO grp 
                      VALUES ('bar', 'The Bar Group')");
+    sql_query($dbh, "INSERT INTO grp 
+                     VALUES ('baz', 'The Baz Group')");
 
     # add some records to the 'usr' table
     sql_query($dbh, "INSERT INTO usr 
 		     VALUES ('abw', 'Andy Wardley', 'foo')");
     sql_query($dbh, "INSERT INTO usr 
 		     VALUES ('sam', 'Simon Matthews', 'foo')");
+
     sql_query($dbh, "INSERT INTO usr 
 		     VALUES ('hans', 'Hans von Lengerke', 'bar')");
     sql_query($dbh, "INSERT INTO usr 
 		     VALUES ('mrp', 'Martin Portman', 'bar')");
+
+    sql_query($dbh, "INSERT INTO usr 
+		     VALUES ('craig', 'Craig Barratt', 'baz')");
+
 }
 
 
@@ -261,9 +268,10 @@ DBI error - data source not defined
 [% END %]
 -- expect --
 1: abw - Andy Wardley
-2: hans - Hans von Lengerke
-3: mrp - Martin Portman
-4: sam - Simon Matthews
+2: craig - Craig Barratt
+3: hans - Hans von Lengerke
+4: mrp - Martin Portman
+5: sam - Simon Matthews
 
 -- test --
 # DBI plugin before TT 2.00 used 'count' instead of 'number'
@@ -273,9 +281,10 @@ DBI error - data source not defined
 [% END %]
 -- expect --
 1: abw - Andy Wardley
-2: hans - Hans von Lengerke
-3: mrp - Martin Portman
-4: sam - Simon Matthews
+2: craig - Craig Barratt
+3: hans - Hans von Lengerke
+4: mrp - Martin Portman
+5: sam - Simon Matthews
 
 
 #------------------------------------------------------------------------
@@ -298,7 +307,9 @@ Group [% loop.number %]: [% group.name %] ([% group.id %])
 Group 1: The Bar Group (bar)
   #1: Hans von Lengerke (hans)
   #2: Martin Portman (mrp)
-Group 2: The Foo Group (foo)
+Group 2: The Baz Group (baz)
+  #1: Craig Barratt (craig)
+Group 3: The Foo Group (foo)
   #1: Andy Wardley (abw)
   #2: Simon Matthews (sam)
 
@@ -315,8 +326,9 @@ Group 2: The Foo Group (foo)
 [% loop.next ? " [$loop.next.id]" : " [no next]" %]
 [% END %]
 -- expect --
-[no prev] abw - Andy Wardley [hans]
-[abw] hans - Hans von Lengerke [mrp]
+[no prev] abw - Andy Wardley [craig]
+[abw] craig - Craig Barratt [hans]
+[craig] hans - Hans von Lengerke [mrp]
 [hans] mrp - Martin Portman [sam]
 [mrp] sam - Simon Matthews [no next]
 
@@ -406,7 +418,9 @@ Group [% groups.count %] : [% group.name %]
 Group 1 : The Bar Group
   User 0 : Hans von Lengerke (hans)
   User 1 : Martin Portman (mrp)
-Group 2 : The Foo Group
+Group 2 : The Baz Group
+  User 0 : Craig Barratt (craig)
+Group 3 : The Foo Group
   User 0 : Andy Wardley (abw)
   User 1 : Simon Matthews (sam)
 
@@ -466,6 +480,9 @@ Group 2 : The Foo Group
 <person id="abw">
   <name>Andy Wardley</name>
 </person>
+<person id="craig">
+  <name>Craig Barratt</name>
+</person>
 <person id="hans">
   <name>Hans von Lengerke</name>
 </person>
@@ -484,6 +501,7 @@ Group 2 : The Foo Group
 <person>Simon Matthews</person>
 <person>Martin Portman</person>
 <person>Hans von Lengerke</person>
+<person>Craig Barratt</person>
 <person>Andy Wardley</person>
 
 -- test --
@@ -495,7 +513,10 @@ rest: [% p.name %]
 [% END %]
 -- expect --
 first: Andy Wardley
+rest: Craig Barratt
 rest: Hans von Lengerke
 rest: Martin Portman
 rest: Simon Matthews
+
+
 

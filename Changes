@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.06, detailing
+#   Revision history for the Template Toolkit version 2.06a, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -15,6 +15,15 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.06a - TBA                 ## FORTHCOMING DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied a patch from Aleksey Nogin to Makefile.PL to call bin/gifsplash
+  with the '-i' option.  This fixes the problem reported by Kenny Flegal:
+  http://www.tt2.org/pipermail/templates/2001-November/002028.html
+
 
 #------------------------------------------------------------------------
 # Version 2.06 - 7th Nov 2001

@@ -843,6 +843,13 @@
 	      module="1"
 	      nofoot="1"/>
 
+	<!-- Template::Plugin::XML::Style -->
+	<page id="Plugin_XML_Style" 
+	      name="Template::Plugin::XML::Style"
+	      about="Simple XML stylesheet transfomations"
+	      seealso="Template::Plugin"
+	      module="1" />
+
 	<!-- Template::Plugin::XML::XPath -->
 	<page id="Plugin_XML_XPath" 
 	      name="Template::Plugin::XML::XPath"
@@ -851,6 +858,7 @@
 	      module="1"
 	      nofoot="1"/>
     </book>
+
 
 
     <!-- LIBRARY -->

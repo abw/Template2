@@ -125,8 +125,6 @@ sub end_tag {
 
 1;
 
-
-
 __END__
 
 
@@ -148,16 +146,16 @@ Template::Plugin::XML::Style - Simple XML stylesheet transfomations
 =head1 SYNOPSIS
 
     [% USE xmlstyle 
-		   table = { 
-		       attributes = { 
-			       border      = 0
-				   cellpadding = 4
-				   cellspacing = 1
-			   }
-		   }
+           table = { 
+               attributes = { 
+                   border      = 0
+                   cellpadding = 4
+                   cellspacing = 1
+               }
+           }
     %]
 
-	[% FILTER xmlstyle %]
+    [% FILTER xmlstyle %]
     <table>
     <tr>
       <td>Foo</td> <td>Bar</td> <td>Baz</td>
@@ -179,15 +177,15 @@ This example shows how the default attributes C<border="0"> and
 C<cellpadding="4"> can be added to E<lt>tableE<gt> elements.
 
     [% USE xmlstyle 
-		   table = { 
-		       attributes = { 
-			       border      = 0
-				   cellpadding = 4
-			   }
-		   }
+           table = { 
+               attributes = { 
+                   border      = 0
+                   cellpadding = 4
+               }
+           }
     %]
 
-	[% FILTER xmlstyle %]
+    [% FILTER xmlstyle %]
     <table>
        ...
     </table>
@@ -199,25 +197,25 @@ This produces the output:
        ...
     </table>
 
-Parameter specified within the USE directive are applied automatically each
+Parameters specified within the USE directive are applied automatically each
 time the C<xmlstyle> FILTER is used.  Additional parameters passed to the 
 FILTER directive apply for only that block.
 
     [% USE xmlstyle 
-		   table = { 
-		       attributes = { 
-			       border      = 0
-				   cellpadding = 4
-			   }
-		   }
+           table = { 
+               attributes = { 
+                   border      = 0
+                   cellpadding = 4
+               }
+           }
     %]
 
-	[% FILTER xmlstyle
+    [% FILTER xmlstyle
            tr = {
-		       attributes = {
-			       valign="top"
-			   }
-		   }
+               attributes = {
+                   valign="top"
+               }
+           }
     %]
     <table>
        <tr>
@@ -232,15 +230,15 @@ is just the same as specifying the named parameters as far as the Template
 Toolkit is concerned.
 
     [% style_one = {
-	      table = { ... }
+          table = { ... }
           tr    = { ... }
        }
        style_two = {
-	      table = { ... }
+          table = { ... }
           td    = { ... }
        }
        style_three = {
-	      th = { ... }
+          th = { ... }
           tv = { ... }
        }
     %]
@@ -258,12 +256,12 @@ Toolkit is concerned.
 Any attributes defined within the source tags will override those specified
 in the style sheet.
 
-	[% USE xmlstyle 
+    [% USE xmlstyle 
            div = { attributes = { align = 'left' } } 
     %]
 
 
-	[% FILTER xmlstyle %]
+    [% FILTER xmlstyle %]
     <div>foo</div>
     <div align="right">bar</div>
     [% END %]
@@ -275,11 +273,11 @@ The output produced is:
 
 The filter can also be used to change the element from one type to another.
 
-	[% FILTER xmlstyle 
+    [% FILTER xmlstyle 
               th = { 
-			      element = 'td'
-				  attributes = { bgcolor='red' }
-			  }
+                  element = 'td'
+                  attributes = { bgcolor='red' }
+              }
     %]
     <tr>
       <th>Heading</th>
@@ -302,17 +300,17 @@ changed to C<E<lt>/tdE<gt>> as well as the start tag.
 You can also define text to be added immediately before or after the 
 start or end tags.  For example:
 
-	[% FILTER xmlstyle 
-			  table = {
-			      pre_start = '<div align="center">'
-				  post_end  = '</div>'
+    [% FILTER xmlstyle 
+              table = {
+                  pre_start = '<div align="center">'
+                  post_end  = '</div>'
               }
               th = { 
-			      element    = 'td'
-				  attributes = { bgcolor='red' }
-				  post_start = '<b>'
+                  element    = 'td'
+                  attributes = { bgcolor='red' }
+                  post_start = '<b>'
                   pre_end    = '</b>'
-			  }
+              }
     %]
     <table>
     <tr>
@@ -349,7 +347,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-0.00, distributed as part of the
+2.01, distributed as part of the
 Template Toolkit version 2.06a, released on 16 November 2001.
 
 =head1 COPYRIGHT

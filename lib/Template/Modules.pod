@@ -362,6 +362,12 @@ Plugin interface to XML::Simple
 
 
 
+=item L<Template::Plugin::XML::Style|Template::Plugin::XML::Style>
+
+Simple XML stylesheet transfomations
+
+
+
 =item L<Template::Plugin::XML::XPath|Template::Plugin::XML::XPath>
 
 Plugin interface to XML::XPath
@@ -383,7 +389,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.06, released on 07 November 2001.
+Template Toolkit version 2.06a, released on 16 November 2001.
 
 =head1 COPYRIGHT
 

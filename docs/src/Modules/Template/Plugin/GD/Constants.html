@@ -12,24 +12,31 @@
         page = 'Plugin_GD_Constants'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="EXAMPLES";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'EXAMPLES';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE gdc = GD.Constants [% tt_end_tag %]</pre>
 <pre>    # --&gt; the constants gdc.gdBrushed, gdc.gdSmallFont, gdc.GD_CMP_IMAGE
     #     are now available</pre>
 [%- END %]
 [% WRAPPER section
-    title="EXAMPLES"
+    title='EXAMPLES'
 -%]<pre>    [% tt_start_tag %] FILTER null;
         USE gdc = GD.Constants;
         USE im  = GD.Image(200,100);
@@ -41,7 +48,7 @@
     -[% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The GD.Constants plugin provides access to the various GD module's
 constants (such as gdBrushed, gdSmallFont, gdTransparent, GD_CMP_IMAGE
@@ -55,7 +62,7 @@ details.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -64,14 +71,14 @@ Lincoln D. Stein wrote the GD.pm interface to the GD library.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-1.20, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+1.23, distributed as part of the
+Template Toolkit version 2.06a, released on 16 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 Copyright (C) 2001 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -84,10 +91,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::GD', 'Template::Plugin::GD') -%], [% ttlink('Template::Plugin::GD::Image', 'Template::Plugin::GD::Image') -%], [% ttlink('Template::Plugin::GD::Polygon', 'Template::Plugin::GD::Polygon') -%], [% ttlink('GD', 'GD') -%]
 </p>
 [%- END %]
+
 
 

@@ -12,22 +12,29 @@
         page = 'Plugin_GD_Text'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="EXAMPLES";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'EXAMPLES';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE gd_text = GD.Text [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="EXAMPLES"
+    title='EXAMPLES'
 -%]<pre>    [% tt_start_tag %]
         USE gd_c = GD.Constants;
         USE t = GD.Text;
@@ -42,7 +49,7 @@
     -[% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The GD.Text plugin provides an interface to the GD::Text module.
 It allows attributes of strings such as width and height in pixels
@@ -56,7 +63,7 @@ allow you to render aligned or wrapped text in GD images.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -65,14 +72,14 @@ The GD::Text module was written by Martien Verbruggen.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-1.20, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+1.23, distributed as part of the
+Template Toolkit version 2.06a, released on 16 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 Copyright (C) 2001 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -85,10 +92,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::GD', 'Template::Plugin::GD') -%], [% ttlink('Template::Plugin::GD::Text::Wrap', 'Template::Plugin::GD::Text::Wrap') -%], [% ttlink('Template::Plugin::GD::Text::Align', 'Template::Plugin::GD::Text::Align') -%], [% ttlink('GD', 'GD') -%], [% ttlink('GD::Text', 'GD::Text') -%]
 </p>
 [%- END %]
+
 
 

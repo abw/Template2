@@ -12,22 +12,29 @@
         page = 'Plugin_GD_Graph_lines'
 %]
 [%  WRAPPER toc;
-	INCLUDE tocitem title="SYNOPSIS";
-	INCLUDE tocitem title="EXAMPLES";
-	INCLUDE tocitem title="DESCRIPTION";
-	INCLUDE tocitem title="AUTHOR";
-	INCLUDE tocitem title="VERSION";
-	INCLUDE tocitem title="COPYRIGHT";
-	INCLUDE tocitem title="SEE ALSO";
+		INCLUDE tocitem 
+			title = 'SYNOPSIS';
+		INCLUDE tocitem 
+			title = 'EXAMPLES';
+		INCLUDE tocitem 
+			title = 'DESCRIPTION';
+		INCLUDE tocitem 
+			title = 'AUTHOR';
+		INCLUDE tocitem 
+			title = 'VERSION';
+		INCLUDE tocitem 
+			title = 'COPYRIGHT';
+		INCLUDE tocitem 
+			title = 'SEE ALSO';
     END
 %]
 <!-- Pod to HTML conversion by the Template Toolkit version 2 -->
 [% WRAPPER section
-    title="SYNOPSIS"
+    title='SYNOPSIS'
 -%]<pre>    [% tt_start_tag %] USE g = GD.Graph.lines(x_size, y_size); [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="EXAMPLES"
+    title='EXAMPLES'
 -%]<pre>    [% tt_start_tag %] FILTER null;
         USE g = GD.Graph.lines(300,200);
         x = [1, 2, 3, 4];
@@ -73,7 +80,7 @@
     -[% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
-    title="DESCRIPTION"
+    title='DESCRIPTION'
 -%]<p>
 The GD.Graph.lines plugin provides an interface to the GD::Graph::lines
 class defined by the GD::Graph module. It allows one or more (x,y) data
@@ -84,7 +91,7 @@ See [% ttlink('GD::Graph') -%] for more details.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="AUTHOR"
+    title='AUTHOR'
 -%]<p>
 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -93,14 +100,14 @@ The GD::Graph module was written by Martien Verbruggen.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="VERSION"
+    title='VERSION'
 -%]<p>
-1.20, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+1.23, distributed as part of the
+Template Toolkit version 2.06a, released on 16 November 2001.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="COPYRIGHT"
+    title='COPYRIGHT'
 -%]<p>
 Copyright (C) 2001 Craig Barratt &lt;craig@arraycomm.com&gt;
 </p>
@@ -113,10 +120,11 @@ modify it under the same terms as Perl itself.
 </p>
 [%- END %]
 [% WRAPPER section
-    title="SEE ALSO"
+    title='SEE ALSO'
 -%]<p>
 [% ttlink('Template::Plugin', 'Template::Plugin') -%], [% ttlink('Template::Plugin::GD', 'Template::Plugin::GD') -%], [% ttlink('Template::Plugin::GD::Graph::lines3d', 'Template::Plugin::GD::Graph::lines3d') -%], [% ttlink('Template::Plugin::GD::Graph::bars', 'Template::Plugin::GD::Graph::bars') -%], [% ttlink('Template::Plugin::GD::Graph::bars3d', 'Template::Plugin::GD::Graph::bars3d') -%], [% ttlink('Template::Plugin::GD::Graph::points', 'Template::Plugin::GD::Graph::points') -%], [% ttlink('Template::Plugin::GD::Graph::linespoints', 'Template::Plugin::GD::Graph::linespoints') -%], [% ttlink('Template::Plugin::GD::Graph::area', 'Template::Plugin::GD::Graph::area') -%], [% ttlink('Template::Plugin::GD::Graph::mixed', 'Template::Plugin::GD::Graph::mixed') -%], [% ttlink('Template::Plugin::GD::Graph::pie', 'Template::Plugin::GD::Graph::pie') -%], [% ttlink('Template::Plugin::GD::Graph::pie3d', 'Template::Plugin::GD::Graph::pie3d') -%], [% ttlink('GD::Graph', 'GD::Graph') -%]
 </p>
 [%- END %]
+
 
 
