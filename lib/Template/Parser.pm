@@ -42,7 +42,7 @@ require 5.004;
 use strict;
 use vars qw( $VERSION $DEBUG $ERROR );
 use base qw( Template::Base );
-use vars qw( $TAG_STYLE $DEFAULT_STYLE );
+use vars qw( $TAG_STYLE $DEFAULT_STYLE $QUOTED_ESCAPES );
 
 use Template::Constants qw( :status :chomp );
 use Template::Directive;
@@ -86,6 +86,12 @@ $DEFAULT_STYLE = {
     POST_CHOMP  => 0,
     V1DOLLAR    => 0,
     EVAL_PERL   => 0,
+};
+
+$QUOTED_ESCAPES = {
+	n => "\n",
+	r => "\r",
+	t => "\t",
 };
 
 
@@ -323,7 +329,7 @@ sub split_text {
 	# and now the directive, along with line number information
 	if (length $dir) {
 	    # the TAGS directive is a compile-time switch
-	    if ($dir =~ /TAGS\s+(.*)/i) {
+	    if ($dir =~ /^TAGS\s+(.*)/i) {
 		my @tags = split(/\s+/, $1);
 		if (scalar @tags > 1) {
 		    ($start, $end) = map { quotemeta($_) } @tags;
@@ -386,26 +392,26 @@ sub interpolate_text {
 	   )
 	/gx) {
     
-	($pre, $var, $dir) = ($1, $3 || $4, $2);
+		($pre, $var, $dir) = ($1, $3 || $4, $2);
 
-	# preceding text
-	if (defined($pre) && length($pre)) {
-	    $line += $pre =~ tr/\n//;
-	    $pre =~ s/\\\$/\$/g;
-	    push(@tokens, 'TEXT', $pre);
-	}
-	# $variable reference
+		# preceding text
+		if (defined($pre) && length($pre)) {
+			$line += $pre =~ tr/\n//;
+			$pre =~ s/\\\$/\$/g;
+			push(@tokens, 'TEXT', $pre);
+		}
+		# $variable reference
         if ($var) {
-	    $line += $dir =~ tr/\n/ /;
-	    push(@tokens, [ $dir, $line, $self->tokenise_directive($var) ]);
-	}
-	# other '$' reference - treated as text
-	elsif ($dir) {
-	    $line += $dir =~ tr/\n//;
-	    push(@tokens, 'TEXT', $dir);
-	}
+			$line += $dir =~ tr/\n/ /;
+			push(@tokens, [ $dir, $line, $self->tokenise_directive($var) ]);
+		}
+		# other '$' reference - treated as text
+		elsif ($dir) {
+			$line += $dir =~ tr/\n//;
+			push(@tokens, 'TEXT', $dir);
+		}
     }
-
+	
     return \@tokens;
 }
 
@@ -495,11 +501,13 @@ sub tokenise_directive {
 	        if ($token =~ /[\$\\]/) {
 		    $type = 'QUOTED';
 		    # unescape " and \ but leave \$ escaped so that 
-		    # interpolate_text() doesn't incorrectly treat it
+			# interpolate_text() doesn't incorrectly treat it
 		    # as a variable reference
 #		    $token =~ s/\\([\\"])/$1/g;
-		    $token =~ s/\\([^\$nrt])/$1/g;
-		    $token =~ s/\\n/\n/g;
+			for ($token) {
+				s/\\([^\$nrt])/$1/g;
+				s/\\([nrt])/$QUOTED_ESCAPES->{ $1 }/ge;
+			}
 		    push(@tokens, ('"') x 2,
 				  @{ $self->interpolate_text($token) },
 				  ('"') x 2);
@@ -1268,8 +1276,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.35, distributed as part of the
-Template Toolkit version 2.05b, released on 21 September 2001.
+2.36, distributed as part of the
+Template Toolkit version 2.05d, released on 05 November 2001.
 
  
 
