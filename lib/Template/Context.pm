@@ -325,7 +325,7 @@ sub process {
             $compiled = shift @compiled;
             my $element = ref $compiled eq 'CODE' 
                 ? { (name => (ref $name ? '' : $name), modtime => time()) }
-	        : $compiled;
+                : $compiled;
 
             if (UNIVERSAL::isa($component, 'Template::Document')) {
                 $element->{ caller } = $component->{ name };
@@ -361,6 +361,16 @@ sub process {
                 }
             }
             $output .= $tmpout;
+
+            # pop last item from callers.  
+            # NOTE - this will not be called if template throws an 
+            # error.  The whole issue of caller and callers should be 
+            # revisited to try and avoid putting this info directly into
+            # the component data structure.  Perhaps use a local element
+            # instead?
+
+            pop(@{$element->{ callers }})
+                if (UNIVERSAL::isa($element, 'Template::Document'));
         }
         $stash->set('component', $component);
     };
