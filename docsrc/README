@@ -1,17 +1,33 @@
-This directory contains the source kit for the Template Toolkit
-documentation.  Template files from 'src' are processed with library
-elements in 'lib' with additional data supplied from xml/ttdocs.xml,
-all under the control of bin/ttmkdocs.  The destination files come in
-the form of a set of .pod files in 'pod', release notes in 'txt' and a
-set of HTML templates in '../docs/src' and '../docs/lib'.  The
-bin/ttpodglu script can then be run to copy the documentation into 
-the right place or glue it onto the end of the relevant module file
-(../lib) or script (../bin).
+This directory contains the source templates, components and configuration 
+files for building the HTML documentation.   The documentation can be
+built using 'ttree'.  The 'config' directory contains a template for 
+generating an appropriate ttree configuration file which can then be used
+to building the documentation itself.  The installation process performs
+this step, generating 'plain.cfg' and 'splash.cfg' in that directory.
+Otherwise, see the 'config/README' directory for further instructions 
+on generating a config file.  You can then run ttree specifying the 
+relevant config file to build the docs in the style of your choice.  e.g
 
-    bin	    scripts for building the TT documentation
-    lib	    library containing shared document "chunks"
-    pod     output for generated .pod files
-    src	    source directory for documentation templates
-    txt     output for generated text files (e.g. Changes) 
-    xml     source directory for XML files
+    $ ttree -f ./config/plain.cfg
 
+and/or:
+
+    $ ttree -f ./config/splash.cfg
+
+These process the pages in the 'src' directory, using additional
+library elements in the 'lib' directory and style specific elements in
+'style/plain' or 'style/splash', depending on which style you choose.
+The HTML pages are written to the 'html' directory, in a subdirectory
+of the same name as the style, e.g. 'html/plain' or 'html/splash'.
+Thus, you can build both styles and they will co-exist.  All the pages
+use relative links to reference each other, so you can safely copy the
+contents of either directory anywhere you like, symlink to it, or do
+whatever else you need to do to make the pages visible to your web
+server.
+	
+    README	This file
+    config      contains ttree configuration files for different styles
+    html        destination directory for generate HTML pages
+    lib         library of template elements for building docs
+    src         source templates for documentation
+    style       style-specific libraries of template elements
