@@ -83,7 +83,7 @@ $LIST_OPS = {
 	    my ($list, $joint) = @_; 
 	    join(defined $joint ? $joint : ' ', 
 		 map { defined $_ ? $_ : '' } @$list) 
-	},
+    },
     'sort'    => sub {
 	my ($list, $field) = @_;
 	return $list unless $#$list;	    # no need to sort 1 item lists

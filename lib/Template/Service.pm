@@ -132,13 +132,15 @@ sub context {
 sub _init {
     my ($self, $config) = @_;
     my ($item, $data, $context, $block, $blocks);
+    my $delim = $config->{ DELIMITER };
+    $delim = ':' unless defined $delim;
 
     # coerce PRE_PROCESS, PROCESS and POST_PROCESS to arrays if necessary, 
     # by splitting on non-word characters
     foreach $item (qw( PRE_PROCESS PROCESS POST_PROCESS )) {
 	$data = $config->{ $item };
 	next unless defined $data;
-	$data = [ split(/\W+/, $data || '') ]
+	$data = [ split(/$delim/, $data || '') ]
 	    unless ref $data eq 'ARRAY';
         $self->{ $item } = $data;
     }

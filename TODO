@@ -2,6 +2,8 @@
 # PENDING TODO ITEMS
 #------------------------------------------------------------------------
 
+* add new Wrap plugin
+
 * document push/pop/shift/unshift as list methods and add any others 
   such as splice, etc.
 
