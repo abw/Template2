@@ -626,21 +626,26 @@ sub _load {
 		load => 0,
 	    };
 	}
-	elsif (open(FH, $name)) {
-	    my $text = <FH>;
-	    $data = {
-		name => $alias,
-		text => $text,
-		time => (stat $name)[9],
-		load => $now,
-	    };
-	}
-	elsif ($tolerant) {
-	    ($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
+	elsif (-f $name) {
+	    if (open(FH, $name)) {
+		my $text = <FH>;
+		$data = {
+		    name => $alias,
+		    text => $text,
+		    time => (stat $name)[9],
+		    load => $now,
+		};
+	    }
+	    elsif ($tolerant) {
+		($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
+	    }
+	    else {
+		$data  = "$alias: $!";
+		$error = Template::Constants::STATUS_ERROR;
+	    }
 	}
 	else {
-	    $data  = "$alias: $!";
-	    $error = Template::Constants::STATUS_ERROR;
+	    ($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
 	}
     }
 
