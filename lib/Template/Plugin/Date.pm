@@ -343,8 +343,8 @@ cute Date::Calc sub-plugin.
 
 =head1 VERSION
 
-2.69, distributed as part of the
-Template Toolkit version 2.12, released on 12 January 2004.
+2.70, distributed as part of the
+Template Toolkit version 2.12a, released on 13 January 2004.
 
 
 

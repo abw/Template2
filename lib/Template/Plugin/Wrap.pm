@@ -145,8 +145,8 @@ others.
 
 =head1 VERSION
 
-2.61, distributed as part of the
-Template Toolkit version 2.12, released on 12 January 2004.
+2.62, distributed as part of the
+Template Toolkit version 2.12a, released on 13 January 2004.
 
 =head1 COPYRIGHT
 

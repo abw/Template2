@@ -49,13 +49,13 @@ $CONSTANTS = 'Template::Namespace::Constants';
                $PLUGINS, $PROVIDER, $SERVICE, $STASH );
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+$INSTDIR  = '/usr/local/tt2';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
-$LATEX_PATH    = '';
-$PDFLATEX_PATH = '';
-$DVIPS_PATH    = '';
+$LATEX_PATH    = '/usr/bin/latex';
+$PDFLATEX_PATH = '/usr/bin/pdflatex';
+$DVIPS_PATH    = '/usr/bin/dvips';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -441,8 +441,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.65, distributed as part of the
-Template Toolkit version 2.12, released on 12 January 2004.
+2.66, distributed as part of the
+Template Toolkit version 2.12a, released on 13 January 2004.
 
 =head1 COPYRIGHT
 

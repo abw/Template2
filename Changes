@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.12, detailing
+#   Revision history for the Template Toolkit version 2.12a, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -21,6 +21,20 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.12a - 13th January 2004               ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed the bug in test 25 of t/date.t, hopefully for good this time, 
+  thanks to the efforts of Steve Peters.  See:
+  http://template-toolkit.org/pipermail/templates/2004-January/005560.html
+
+* Added the FILE_INFO option to Template::Parser.  Enabled by default, 
+  this can be set to 0 to prevent the parser from adding file and line
+  info to the generated Perl file.  Don't ask me why - Autrijus wanted
+  it (which probably means he's up to something twisted again :-).  See:
+  http://template-toolkit.org/pipermail/templates/2004-January/005552.html
 
 
 #------------------------------------------------------------------------
@@ -47,7 +61,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.11a - 6th Januray 2004                ## DEVELOPER RELEASE ##
+# Version 2.11a - 6th January 2004                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed bug in t/date.t and corrected version number of 
@@ -55,7 +69,7 @@
 
 
 #------------------------------------------------------------------------
-# Version 2.11 - 6th Januray 2004           
+# Version 2.11 - 6th January 2004           
 #------------------------------------------------------------------------
 
 * Bumped version number and updated documentation for release.
