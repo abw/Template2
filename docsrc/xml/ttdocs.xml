@@ -283,6 +283,13 @@
 	      module="1"
 	      seealso="Template"/>
 
+	<!-- Template::Namespace::Constants -->
+	<page id="Namespace_Constants" 
+	      name="Template::Namespace::Constants"
+	      about="Compile time constant folding"
+	      module="1"
+	      seealso="Template::Directive"/>
+
 	<!-- Template::Parser -->
 	<page id="Parser" 
 	      name="Template::Parser"
