@@ -1,11 +1,11 @@
 [% TAGS star %]
 =item DEBUG
 
-The DEBUG directive can be used to control debugging options within a
-template.  The DEBUG configuration option must be set to INCLUDE
-DEBUG_DIRS for the DEBUG directives to have any effect.  If DEBUG_DIRS
-is set false then the parser will automatically ignore and remove any
-DEBUG directives.
+The DEBUG directive can be used to enable or disable directive debug
+messages within a template.  The DEBUG configuration option must be
+set to include DEBUG_DIRS for the DEBUG directives to have any effect.
+If DEBUG_DIRS is not set then the parser will automatically ignore and
+remove any DEBUG directives.
 
 The DEBUG directive can be used with an 'on' or 'off' parameter to
 enable or disable directive debugging messages from that point
