@@ -34,11 +34,12 @@ use base qw( Template::Plugin );
 use vars qw( $VERSION $DEBUG $XML_PARSER_ARGS $ELEMENT );
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG = 1 unless defined $DEBUG;
+$DEBUG   = 0 unless defined $DEBUG;
 $XML_PARSER_ARGS = {
     ErrorContext  => 4,
     Namespaces    => 1,
     ParseParamEnt => 1,
+    NoExpand      => 1,
 };
 
 $ELEMENT = 'Template::Plugin::XML::View::Element';
@@ -51,7 +52,7 @@ sub new {
     my $class   = shift;
     my $context = shift;
     my $args    = ref $_[-1] eq 'HASH' ? pop(@_) : { };
-    my ($parser, $input, $about, $method);
+    my ($input, $about);
 
     # determine the input source from a positional parameter (may be a 
     # filename or XML text if it contains a '<' character) or by using
@@ -61,51 +62,65 @@ sub new {
     if ($input = shift) {
 	if ($input =~ /\</) {
 	    $about  = 'xml text';
-	    $method = 'parse';
 	}
 	else {
 	    $about = "xml file $input";
-	    $method = 'parsefile';
+	    $input = $class->file_contents($input);
 	}
     }
     elsif ($input = $args->{ text } || $args->{ xml }) {
 	$about = 'xml text';
-	$method = 'parse';
     }
     elsif ($input = $args->{ file } || $args->{ filename }) {
 	$about = "xml file $input";
-	$method = 'parsefile';
+        $input = $class->file_contents($input);
     }
-#    else {
-#	return $self->_throw('no filename or xml text specified');
-#    }
+    else {
+	$class->throw('no filename or xml text specified');
+    }
+
+    # munge input to protect entity refs
+    $input =~ s/&/&amp;/g;
 
     my $xpargs = {
-	%$XML_PARSER_ARGS,
-	map { defined $args->{$_} ? ( $_, $args->{$_} ) : ( ) }
-	qw( ErrorContext Namespaces ParseParamEnt ),
+	map { exists $args->{$_} 
+              ? ( $_, $args->{ $_ } )
+              : ( $_, $XML_PARSER_ARGS->{ $_ } ) }
+	keys %$XML_PARSER_ARGS,
     };
-    $parser = XML::Parser->new(
+
+    my $parser = XML::Parser->new(
 	%$xpargs,
 	Style    => 'Template::Plugin::XML::View::Parser',
         Handlers => {
 	    Init => sub {
 		my $expat = shift;
-		my $handler = $ELEMENT->new( document => { } );
-		DEBUG("[Init]\n");
+		DEBUG("[Init]\n") if $DEBUG;
 		$expat->{ _TT2_XVIEW_TEXT    }  = '';
 		$expat->{ _TT2_XVIEW_RESULT  }  = '';
 		$expat->{ _TT2_XVIEW_CONTEXT }  = $context;
-		$expat->{ _TT2_XVIEW_STACK   }  = [ $handler ];
+		$expat->{ _TT2_XVIEW_STACK   }  = [ ];
 	    },
 	},
     );
-    my $result = $parser->$method($input);
+    my $result = $parser->parse($input);
 
-    print STDERR "result: $result\n";
+    DEBUG("result: $result\n") if $DEBUG;
     return $result;
 }
 
+
+sub file_contents {
+    my ($self, $file) = @_;
+    my $text;
+    local *FP;
+    local $/ = undef;
+    open(FP, $file) || $self->throw("cannot read XML file $file: $!");
+    $text = <FP>;
+    close(FP);
+    return $text;
+}
+    
 
 #------------------------------------------------------------------------
 # _throw($errmsg)
@@ -113,7 +128,7 @@ sub new {
 # Raise a Template::Exception of type XML.View via die().
 #------------------------------------------------------------------------
 
-sub _throw {
+sub throw {
     my ($self, $error) = @_;
     die (Template::Exception->new('XML.View', $error));
 }
@@ -138,15 +153,6 @@ use vars qw( $DEBUG $ELEMENT );
 $ELEMENT = 'Template::Plugin::XML::View::Element';
 
 
-sub OldInit { 
-    my $expat = shift;
-    my $handler = $ELEMENT->new( document => { } );
-    DEBUG("[Init]\n");
-    $expat->{ _TT2_XVIEW_TEXT   }  = '';
-    $expat->{ _TT2_XVIEW_RESULT }  = '';
-    $expat->{ _TT2_XVIEW_STACK  }  = [ $handler ];
-}
-
 sub Start {
     my ($expat, $name, %attr) = @_;
     my $attr = \%attr;
@@ -166,10 +172,6 @@ sub Start {
 	|| $stack->[-1]->throw($ELEMENT->error());
 
     push(@$stack, $element);
-
-#    my $new = $top->element($expat, $name, \%attr)
-#	|| $top->throw($top->error());	    # just throw parse errors for now
-
 }
 
 sub End {
@@ -189,6 +191,7 @@ sub End {
     }
     else {
 	DEBUG("popped last handler off stack\n") if $DEBUG;
+#        die "corrupt stack\n";
 	$expat->{ _TT2_XVIEW_RESULT } = $end;
     }
 }
@@ -202,6 +205,7 @@ sub Char {
     $expat->{ _TT2_XVIEW_TEXT } .= $char;
 
 }
+
 
 #------------------------------------------------------------------------
 # Text()
@@ -228,11 +232,13 @@ sub Text {
 
 sub Final {
     my $expat = shift;
+    return $expat->{ _TT2_XVIEW_RESULT } || die "no result\n";
+
     my $stack = $expat->{ _TT2_XVIEW_STACK };
     my $top = pop(@$stack) || die "corrupt stack in Final";
     my $end = $top->end($expat)
 	|| $top->throw($top->error());
-    my $r = $expat->{ _TT2_VIEW_RESULT } || $end;
+    my $r = $expat->{ _TT2_XVIEW_RESULT } || die "no result\n";# $end;
     DEBUG("[Final] => [$r]\n") if $DEBUG;
     return $r;
 }
@@ -270,14 +276,56 @@ sub child {
     push(@{ $self->{ content } }, $child);    
 }
 
+# called at end of element
 sub end {
     my ($self, $expat, $name) = @_;
-    my $context = $expat->{ _TT2_XVIEW_CONTEXT };
+    return $self;
+}
+
+# generate element as XML
+sub xml {
+    my $self = shift;
+    my $name = $self->{ name };
+
+    # generate XML representation of attributes
     my $attr = $self->{ attr };
-    $attr->{ content } = join('', @{ $self->{ content } });
-    return $attr->{ content } unless $name;
-    $context->process($name, $attr);
-#    return $self;
+    $attr = join(' ', map {
+        "$_=\"$attr->{$_}\"";
+    } keys %$attr);
+    $attr = " $attr" if length $attr;
+
+    # generate XML representation of content
+    my $content = $self->{ content };
+    $content = join(' ', map {
+        ref $_ ? $_->xml() : $_;
+    } @$content);
+
+    # generate complete XML element
+    return length $content 
+        ? "<${name}${attr}>$content</$name>"
+        : "<${name}${attr} />";
+}
+
+
+sub present {
+    my ($self, $view) = @_;
+    my $vars = {
+        %$self,
+        %{ $self->{ attr } },
+        element => $self,
+        content => sub { $self->content($view) },
+    };
+    $view->include($self->{ name }, $vars)
+}
+
+sub content {
+    my ($self, $view) = @_;
+    return $self->{ content } unless $view;
+    my $output = '';
+    foreach my $node (@{ $self->{ content } }) {
+	$output .= ref $node ? $node->present($view) : $node;
+    }
+    return $output;
 }
 
 
