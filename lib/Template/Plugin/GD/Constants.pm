@@ -110,7 +110,7 @@ Lincoln D. Stein wrote the GD.pm interface to the GD library.
 
 =head1 VERSION
 
-1.19, distributed as part of the
+1.20, distributed as part of the
 Template Toolkit version 2.05b, released on 21 September 2001.
 
 =head1 COPYRIGHT
