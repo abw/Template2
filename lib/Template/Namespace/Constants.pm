@@ -56,6 +56,9 @@ sub ident {
 
     print STDERR "constant ident [ @$ident ] " if $DEBUG;
 
+    # discard first node indicating constants namespace
+    splice(@$ident, 0, 2);
+
     foreach $e (0..$nelems-1) {
 	# node name must be a constant
 	die "cannot fold constant ", $ident->[$e * 2], "\n"
