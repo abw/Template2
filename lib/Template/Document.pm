@@ -29,11 +29,26 @@ package Template::Document;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $ERROR $COMPERR $DEBUG $AUTOLOAD );
+use vars qw( $VERSION $ERROR $COMPERR $DEBUG $AUTOLOAD $UNICODE );
 use base qw( Template::Base );
 use Template::Constants;
 
 $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+
+BEGIN {
+    # UNICODE is supported in versions of Perl from 5.008 onwards
+    if ($UNICODE = $] > 5.007 ? 1 : 0) {
+        if ($^V gt v5.8.0) {
+            # utf8::is_utf8() available from Perl 5.8.1 onwards
+            *is_utf8 = \&utf8::is_utf8;
+        }
+        elsif ($^V eq v5.8.0) {
+            # use Encode::is_utf8() for Perl 5.8.0
+            require Encode;
+            *is_utf8 = \&Encode::is_utf8;
+        }
+    }
+}
 
 
 #========================================================================
@@ -280,12 +295,18 @@ sub write_perl_file {
         ($fh, $tmpfile) = File::Temp::tempfile( 
             DIR => File::Basename::dirname($file) 
         );
-	print $fh $class->as_perl($content) || die $!;
-	close($fh);
+        my $perlcode = $class->as_perl($content) || die $!;
+        
+        if ($UNICODE && is_utf8($perlcode)) {
+            $perlcode = "use utf8;\n\n$perlcode";
+            binmode $fh, ":utf8";
+        }
+        print $fh $perlcode;
+        close($fh);
     };
     return $class->error($@) if $@;
     return rename($tmpfile, $file)
-	|| $class->error($!);
+        || $class->error($!);
 }
 
 
