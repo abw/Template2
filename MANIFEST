@@ -88,6 +88,7 @@ docs/src/Modules/Template/Plugin/Wrap.html
 docs/src/Modules/Template/Plugin/XML/DOM.html
 docs/src/Modules/Template/Plugin/XML/RSS.html
 docs/src/Modules/Template/Plugin/XML/Simple.html
+docs/src/Modules/Template/Plugin/XML/Style.html
 docs/src/Modules/Template/Plugin/XML/XPath.html
 docs/src/Modules/Template/Plugins.html
 docs/src/Modules/Template/Provider.html
@@ -422,6 +423,7 @@ lib/Template/Plugin/Wrap.pm
 lib/Template/Plugin/XML/DOM.pm
 lib/Template/Plugin/XML/RSS.pm
 lib/Template/Plugin/XML/Simple.pm
+lib/Template/Plugin/XML/Style.pm
 lib/Template/Plugin/XML/XPath.pm
 lib/Template/Plugins.pm
 lib/Template/Provider.pm
@@ -568,6 +570,7 @@ t/vmeth.t
 t/while.t
 t/wrap.t
 t/wrapper.t
+t/xmlstyle.t
 t/xpath.t
 templates/README
 templates/html/bar

@@ -47,7 +47,7 @@ sub new {
 	}, $class;
 
 	# define 'xmlstyle' filter factory
-	$context->define_filter( xmlstyle => [ sub {
+	$context->define_filter( xmlstyle => sub {
 		my $context = shift;
 		my $options = ref $_[-1] eq 'HASH' ? pop : { };
 		
@@ -55,7 +55,7 @@ sub new {
 			my $text = shift;
 			$self->xmlstyle($text, $options);
 		}
-	}, 1 ]);
+	}, 1);
 
 	return $self;
 							
@@ -252,7 +252,7 @@ Toolkit is concerned.
     [% FILTER xmlstyle style_three %]
        # style_one and style_three applied here 
     [% END %]
-      
+
 Any attributes defined within the source tags will override those specified
 in the style sheet.
 
@@ -334,7 +334,6 @@ The output produced is:
     </tr>
     </table>
     </div>
-    [% END %]
 
 =head1 AUTHOR
 
@@ -347,8 +346,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.01, distributed as part of the
-Template Toolkit version 2.06a, released on 16 November 2001.
+2.02, distributed as part of the
+Template Toolkit version 2.06a, released on 19 November 2001.
 
 =head1 COPYRIGHT
 

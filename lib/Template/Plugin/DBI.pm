@@ -694,8 +694,10 @@ E<lt>abw@kfs.orgE<gt>.
 
 =head1 VERSION
 
-1.04, distributed as part of the
-Template Toolkit version 2.06a, released on 16 November 2001.
+2.26, distributed as part of the
+Template Toolkit version 2.06a, released on 19 November 2001.
+
+
 
 =head1 HISTORY
 

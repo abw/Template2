@@ -18,13 +18,17 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.06a - TBA                 ## FORTHCOMING DEVELOPER RELEASE ##
+# Version 2.06a - 19th November 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
+
+* Added the XML::Style plugin for doing simple XML stylesheet like 
+  transformations and t/xmlstyle.t.
 
 * Fixed a bug in the DBI plugin where nested loops could cause the inner
   query to overwrite the _STH of the outer query causing the outer loop
   to end prematurely.  Thanks to Dave Hodgkinson, Craig Barratt and Simon
-  Matthews for working on the problem and solution.
+  Matthews for working on the problem and solution.  For more info, see
+  http://tt2.org/pipermail/templates/2001-November/002067.html
 
 * Applied a patch from Aleksey Nogin to Makefile.PL to call bin/gifsplash
   with the '-i' option.  This fixes the problem reported by Kenny Flegal:
