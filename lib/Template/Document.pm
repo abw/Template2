@@ -81,10 +81,10 @@ sub new {
 	} values %$defblocks;
 
     bless {
-	%$metadata,
-	_BLOCK     => $block,
-	_DEFBLOCKS => $defblocks,
-	_HOT       => 0,
+        %$metadata,
+        _BLOCK     => $block,
+        _DEFBLOCKS => $defblocks,
+        _HOT       => 0,
     }, $class;
 }
 
@@ -131,20 +131,22 @@ sub process {
 
     # check we're not already visiting this template
     return $context->throw(Template::Constants::ERROR_FILE, 
-			   "recursion into '$self->{ name }'")
-	if $self->{ _HOT } && ! $context->{ RECURSION };   ## RETURN ##
+                           "recursion into '$self->{ name }'")
+        if $self->{ _HOT } && ! $context->{ RECURSION };   ## RETURN ##
 
-    $context->visit($defblocks);
+    $context->visit($self, $defblocks);
+
     $self->{ _HOT } = 1;
     eval {
-	my $block = $self->{ _BLOCK };
-	$output = &$block($context);
+        my $block = $self->{ _BLOCK };
+        $output = &$block($context);
     };
     $self->{ _HOT } = 0;
+
     $context->leave();
 
     die $context->catch($@)
-	if $@;
+        if $@;
 	
     return $output;
 }
@@ -466,8 +468,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.65, distributed as part of the
-Template Toolkit version 2.10, released on 24 July 2003.
+2.66, distributed as part of the
+Template Toolkit version 2.10a, released on 09 October 2003.
 
 =head1 COPYRIGHT
 
@@ -480,3 +482,11 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Parser|Template::Parser>
+
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
