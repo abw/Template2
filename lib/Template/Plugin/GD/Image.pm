@@ -156,8 +156,8 @@ Lincoln D. Stein wrote the GD.pm interface to the GD library.
 
 =head1 VERSION
 
-1.51, distributed as part of the
-Template Toolkit version 2.11, released on 06 January 2004.
+1.52, distributed as part of the
+Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
 
@@ -172,3 +172,12 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template::Plugin|Template::Plugin>, L<Template::Plugin::GD|Template::Plugin::GD>, L<Template::Plugin::GD::Polygon|Template::Plugin::GD::Polygon>, L<Template::Plugin::GD::Constants|Template::Plugin::GD::Constants>, L<GD|GD>
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
+#
+# vim: expandtab shiftwidth=4:

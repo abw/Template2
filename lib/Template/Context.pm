@@ -1537,8 +1537,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.84, distributed as part of the
-Template Toolkit version 2.11a, released on 06 January 2004.
+2.85, distributed as part of the
+Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
 
@@ -1551,3 +1551,12 @@ modify it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Template|Template>, L<Template::Document|Template::Document>, L<Template::Exception|Template::Exception>, L<Template::Filters|Template::Filters>, L<Template::Plugins|Template::Plugins>, L<Template::Provider|Template::Provider>, L<Template::Service|Template::Service>, L<Template::Stash|Template::Stash>
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
+#
+# vim: expandtab shiftwidth=4:

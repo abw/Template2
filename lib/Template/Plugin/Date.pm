@@ -89,24 +89,24 @@ sub format {
     my (@date, $datestr);
 
     if ($time =~ /^\d+$/) {
-	# $time is now in seconds since epoch
+        # $time is now in seconds since epoch
         if ($gmt) {
-	    @date = (gmtime($time))[0..6];
+            @date = (gmtime($time))[0..6];
         }
-	else {
-	    @date = (localtime($time))[0..6];
-	}
+        else {
+            @date = (localtime($time))[0..6];
+        }
     }
     else {
-	# if $time is numeric, then we assume it's seconds since the epoch
-	# otherwise, we try to parse it as a 'H:M:S D:M:Y' string
-	@date = (split(/(?:\/| |:|-)/, $time))[2,1,0,3..5];
-	return (undef, Template::Exception->new('date',
-	        "bad time/date string:  expects 'h:m:s d:m:y'  got: '$time'"))
-	    unless @date >= 6 && defined $date[5];
-	$date[4] -= 1;     # correct month number 1-12 to range 0-11
-	$date[5] -= 1900;  # convert absolute year to years since 1900
-	$time = &POSIX::mktime(@date);
+        # if $time is numeric, then we assume it's seconds since the epoch
+        # otherwise, we try to parse it as a 'H:M:S D:M:Y' string
+        @date = (split(/(?:\/| |:|-)/, $time))[2,1,0,3..5];
+        return (undef, Template::Exception->new('date',
+               "bad time/date string:  expects 'h:m:s d:m:y'  got: '$time'"))
+            unless @date >= 6 && defined $date[5];
+        $date[4] -= 1;     # correct month number 1-12 to range 0-11
+        $date[5] -= 1900;  # convert absolute year to years since 1900
+        $time = &POSIX::mktime(@date);
     }
     
     if ($locale) {
@@ -343,8 +343,8 @@ cute Date::Calc sub-plugin.
 
 =head1 VERSION
 
-2.67, distributed as part of the
-Template Toolkit version 2.11, released on 06 January 2004.
+2.68, distributed as part of the
+Template Toolkit version 2.12, released on 12 January 2004.
 
 
 

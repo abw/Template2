@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.11, detailing
+#   Revision history for the Template Toolkit version 2.12, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,37 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+
+#------------------------------------------------------------------------
+# Version 2.12 - 12th January 2004
+#------------------------------------------------------------------------
+
+* Added the version() method to Template::Base to report the version 
+  number of a module.  Added some tests to t/base.t.
+
+* Added the --template_module option to ttree, to allow the user to 
+  specify a template processing module other than the default 'Template'
+  to be used.  Also changed various print statements to send all
+  verbose output to stdout, whereas previously it was split across stdout
+  and stderr.
+
+
+#------------------------------------------------------------------------
+# Version 2.11b - 7th January 2004                ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Applied patch from Myk Melez to ensure the 'component' variable 
+  remains correctly set to the current templates.  See
+  http://template-toolkit.org/pipermail/templates/2004-January/005483.html
+
+
+#------------------------------------------------------------------------
+# Version 2.11a - 6th Januray 2004                ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed bug in t/date.t and corrected version number of 
+  Template::Grammar.
 
 
 #------------------------------------------------------------------------

@@ -1029,11 +1029,6 @@ options correspond to the C<PRE_CHOMP> and C<POST_CHOMP> options.
 
 Run C<ttree -h> for a summary of the options available.
 
-The C<--template_module> option allows you to provide the name of 
-an alternate module for processing templates.  The Template module 
-is used by default.
-
-
 =head1 AUTHORS
 
 Andy Wardley E<lt>abw@andywardley.comE<gt>
@@ -1048,7 +1043,7 @@ Brocard who gets everywhere, it seems.
 =head1 VERSION
 
 2.66, distributed as part of the
-Template Toolkit version 2.11b, released on 07 January 2004.
+Template Toolkit version 2.12, released on 12 January 2004.
 
 =head1 COPYRIGHT
 
