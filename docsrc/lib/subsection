@@ -1,0 +1,5 @@
+<a name="[% title.replace('\W+', '_') %]">
+<h3>[% title %]</h3>
+</a>
+
+[% content %]
