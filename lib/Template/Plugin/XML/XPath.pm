@@ -156,6 +156,16 @@ sub present {
     $view->view('text', $self->string_value);
 }
 
+
+#========================================================================
+package XML::XPath::Node::Comment;
+#========================================================================
+
+sub present  { return ''; }
+sub starttag { return ''; }
+sub endtag   { return ''; }
+
+
 1;
 
 __END__
