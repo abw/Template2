@@ -5,12 +5,12 @@
 
                              [* tt.release *]
 
-[* INCLUDE misc/copymid -*]
+[* PROCESS misc/copymid -*]
 
 QUICK START (see INSTALL for further details)
 -----------
 
-[% PROCESS misc/install %]
+[* PROCESS misc/install *]
 
 For further details on installation, see the separate INSTALL file.
 
