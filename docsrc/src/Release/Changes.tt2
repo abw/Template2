@@ -18,7 +18,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.04f - 06 Sep 2001                     ## DEVELOPER RELEASE ##
+# Version 2.04f - 10 Sep 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in the Date plugin which was performing one localtime() too 
@@ -31,6 +31,10 @@
   with strings not being recognized as integers (and the item = item + 1 
   problem). It also adds a few additional tests for this situation to 
   t/stash-xs.t
+
+* Fixed a minor bug in Makefile.PL which looked for 'msql' or 'mysql' as
+  the default DBD for testing DBI but didn't select a suitable default
+  if the above drivers weren't available.
 
 
 #------------------------------------------------------------------------
