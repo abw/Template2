@@ -1,0 +1,122 @@
+[% TAGS star %]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+
+=item WRAPPER
+
+The WRAPPER option can be used to specify one or more templates which
+should be used to wrap around the output of the main page template.
+The main template is processed first (or any PROCESS template(s)) and
+the output generated is then passed as the 'content' variable to the
+WRAPPER template(s) as they are processed.
+
+    my [* obj *] = [* pkg *]->new({
+	WRAPPER => 'wrapper',
+    };
+
+    # process 'foo' then wrap in 'wrapper'
+    [* obj *]->process('foo', { message => 'Hello World!' });
+
+wrapper:
+
+    <wrapper>
+    [% content %]
+    </wrapper>
+
+foo:
+
+    This is the foo file!
+    Message: [% message %]
+
+The output generated from this example is:
+
+    <wrapper>
+    This is the foo file!
+    Message: Hello World!
+    </wrapper>
+
+You can specify more than one WRAPPER template by setting the value to
+be a reference to a list of templates.  The WRAPPER templates will be
+processed in reverse order with the output of each being passed to the
+next (or previous, depending on how you look at it) as the 'content'
+variable.  It sounds complicated, but the end result is that it just
+"Does The Right Thing" to make wrapper templates nest in the order you
+specify.
+
+    my [* obj *] = [* pkg *]->new({
+	WRAPPER => [ 'outer', 'inner' ],
+    };
+
+    # process 'foo' then wrap in 'inner', then in 'outer'
+    [* obj *]->process('foo', { message => 'Hello World!' });
+
+outer:
+
+    <outer>
+    [% content %]
+    </outer>
+
+inner:
+
+    <inner>
+    [% content %]
+    </inner>
+
+The output generated is then:
+
+    <outer>
+    <inner>
+    This is the foo file!
+    Message: Hello World!
+    </inner>
+    </outer>
+
+One side-effect of the "inside-out" processing of the WRAPPER
+configuration item (and also the WRAPPER directive) is that any
+variables set in the template being wrapped will be visible to the
+template doing the wrapping, but not the other way around.
+
+You can use this to good effect in allowing page templates to set
+pre-defined values which are then used in the wrapper templates.  For
+example, our main page template 'foo' might look like this:
+
+foo:
+
+    [% page = {
+           title    = 'Foo Page'
+           subtitle = 'Everything There is to Know About Foo'
+           author   = 'Frank Oliver Octagon'
+       }
+    %]
+
+    <p>
+    Welcome to the page that tells you everything about foo
+    blah blah blah...
+    </p>
+
+The 'foo' template is processed before the wrapper template meaning
+that the 'page' data structure will be defined for use in the wrapper
+template.
+
+wrapper:
+
+    <html>
+      <head>
+        <title>[% page.title %]</title>
+      </head>
+      <body>
+        <h1>[% page.title %]</h1>
+        <h2>[% page.subtitle %]</h1>
+        <h3>by [% page.author %]</h3>
+
+        [% content %]
+      </body>
+    </html>
+
+It achieves the same effect as defining META items which are then 
+accessed via the 'template' variable (which you are still free to 
+use within WRAPPER templates), but gives you more flexibility in 
+the type and complexity of data that you can define.
+
