@@ -1,0 +1,30 @@
+<div align="center">
+[% WRAPPER html/edgebox
+     edge    = rgb.grey50
+     fill    = rgb.grey75
+     border  = 1
+     pad     = 6
+     width   = '50%'
+%]
+
+<h2>Abstract Factory</h2>
+
+<h3>Intent</h3>
+<ul>
+  Provide an interface for creating families of 
+  related or dependant objects without specifying
+  their concrete classes.
+</ul>
+
+<h3>Also Known As</h3>
+<ul>
+  Kit
+</ul>
+
+<h3>Motivation</h3>
+<ul>
+  Consider a user interface toolkit that supports
+  multiple look-and-feel standards, . . .
+</ul>
+[% END %]
+</div>

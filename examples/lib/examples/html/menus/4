@@ -1,0 +1,10 @@
+[% PROCESS html/rgb %]
+
+[% INCLUDE html/menubar
+     width   = "100%"
+     content = "Menu Bar"
+     border  = 1
+     pad     = 6
+     fill    = rgb.grey75
+     edge    = rgb.blue.mid
+%]

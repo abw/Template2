@@ -1,0 +1,10 @@
+[% WRAPPER html/edgebar 
+     edge    = rgb.lavender.dark
+     fill    = rgb.lavender.light
+     border  = 2
+     pad     = 4
+     width   = '100%'
+%]
+<td align="left">Left Side</td>
+<td align="right">Right Side</td>
+[% END %]

@@ -1,0 +1,6 @@
+[% INCLUDE ps/cross;
+   INCLUDE ps/ring;
+%]
+
+20 mm 20 mm cross
+20 mm 20 mm ring

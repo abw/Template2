@@ -1,0 +1,63 @@
+[% INCLUDE splash/bar
+   style   = splash.select
+   content = 'one'
+%]
+<br>
+[% INCLUDE splash/bar
+   style   = splash.unselect
+   content = 'two'
+%]
+<br>
+[% INCLUDE splash/bar
+   style   = splash
+   content = 'three'
+%]
+<br>
+[% INCLUDE splash/bar
+   col     = 'aqua'
+   content = 'four'
+%]
+<br>
+[% INCLUDE splash/bar
+   textcol ='leaf'
+   content = 'five'
+%]
+<br>
+[% INCLUDE splash/bar
+   font    = 'Times-Roman'
+   content = 'six'
+%]
+<br>
+[% INCLUDE splash/bar
+   size    = '+2'
+   content = 'seven'
+%]
+<br>
+[% INCLUDE splash/bar
+   width   = '50%'
+   content = 'eight'
+%]
+<br>
+[% INCLUDE splash/bar
+   width   = '50%'
+   align   = 'right'
+   content = 'nine'
+%]
+<br>
+[% INCLUDE splash/bar
+   bold    = 1
+   content = 'ten'
+%]
+<br>
+[% INCLUDE splash/bar
+   select  = 1
+   bold    = 0
+   content = 'eleven'
+%]
+<br>
+[% INCLUDE splash/bar
+   invert  = 1
+   select  = 1
+   bold    = 0
+   content = 'twelve'
+%]

@@ -1,0 +1,31 @@
+This directory contains the source templates, components and
+configuration file for building the HTML pages showing examples
+of use of the 'html', 'ps' and 'splash' libraries.
+	
+    README	This file
+    ttree.cfg   ttree configuration file
+    html        destination directory for generated HTML pages
+    lib         library of common template elements for building docs
+    src         source templates for examples
+
+The 'ttree.cfg' file is a default ttree configuration file which is
+automatically generated at installation time when the Makefile.PL is
+run.  It contains values based on those specified for the TT2
+installation directory.
+
+If the user requests it, then the pages for the examples are built at
+run time when the "make install" happens.  This is achieved by calling
+ttree and specifying the config file via the -f option.  Something
+like this:
+
+    $ ttree -f /usr/local/tt2/examples/ttree.cfg
+
+All the source templates are in the 'src' directory.  The 'lib'
+directory contains some general purpose template elements.
+
+All the pages use relative links to reference each other, so you can
+safely copy the generated HTML pages anywhere you like, symlink to it,
+or do whatever else you need to do to make the pages visible to your
+web server.  This may including setting the correct permissions to 
+allow read access.
+

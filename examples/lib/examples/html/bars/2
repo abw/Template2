@@ -1,0 +1,5 @@
+[% INCLUDE html/box 
+    col     = rgb.lilac
+    pad     = 4
+    content = 'Hello World'
+ %]

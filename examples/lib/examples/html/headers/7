@@ -1,0 +1,14 @@
+[% headers = BLOCK %]
+<META name="description" content="Template Toolkit">
+<META name="REVISIT-AFTER" content="14 days">	
+<META name="keywords" content="Templates, Web, ...">
+[% END %]
+
+[% WRAPPER html/page 
+     title = 'Template Toolkit'
+     bgcol = '#ffffff'
+%]
+
+...page content goes here...
+
+[% END %]

@@ -1,0 +1,5 @@
+[%  INCLUDE splash/text
+	content = 'Hello World'
+	link    = 'hello.html'
+	col     = 'blood'
+%]

@@ -1,0 +1,36 @@
+[% tabs = [
+    { link => 'page1.html', text => 'First Page' },
+    { link => 'page2.html', text => 'Second Page' },
+   ]
+%]
+
+[% INCLUDE splash/tabsbox
+   content = 'one'
+%]
+<br>
+[% INCLUDE splash/tabsbox 
+   select  = 1
+   content = 'two'
+%]
+<br>
+[% INCLUDE splash/tabsbox
+   width = '50%'
+   content = 'three'
+%]
+<br>
+[% INCLUDE splash/tabsbox
+   width = '50%'
+   tablocate = 'center'
+   content = 'four'
+%]
+<br>
+[% INCLUDE splash/tabsbox
+   fill = 'grey75'
+   content = 'five'
+%]
+<br>
+[% INCLUDE splash/tabsbox
+   pad = 20
+   content = 'five'
+%]
+<br>

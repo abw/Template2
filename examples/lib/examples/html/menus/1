@@ -1,0 +1,8 @@
+[% buttons = [
+     { link => 'headers.html', text => 'Headers' }
+     { link => 'links.html',   text => 'Links'   }
+     { link => 'bars.html',    text => 'Bars'    }
+   ]
+%]
+
+[% INCLUDE html/menu %]

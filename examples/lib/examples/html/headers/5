@@ -1,0 +1,8 @@
+[% WRAPPER html/page 
+     title = 'Template Toolkit'
+     bgcol = '#ffffff'
+%]
+
+...page content goes here...
+
+[% END %]

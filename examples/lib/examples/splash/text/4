@@ -1,0 +1,11 @@
+[%  WRAPPER splash/text
+	link    = 'hello.html'
+	col     = 'blood'
+	bold    = 1
+-%]
+
+If I were the sun, 
+you would be in shadow.
+
+[%- END %]
+

@@ -1,0 +1,5 @@
+[%  WRAPPER html/list %]
+[%- FOREACH item = [ 'One' 'Two' 'Three' ] -%]
+<li>[% item %]</li>
+[%  END %]
+[%  END %]

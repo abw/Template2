@@ -1,0 +1,17 @@
+[% WRAPPER html/list 
+    title = 'Another Test List Title'
+%]
+[% INCLUDE html/item 
+     title = "Item The First"  
+   content = "This is the first item" 
+%]
+[% INCLUDE html/item 
+     title = "Item The Second"  
+   content = "This is the second item" 
+%]
+[% WRAPPER html/item 
+     title = "Item The Third"  
+%]
+This is the third item
+[% END %]
+[% END %]

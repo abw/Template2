@@ -1,0 +1,17 @@
+[% buttons = [
+    { link => 'headers.html', text => 'Headers' }
+    { link => 'links.html',   text => 'Links'   }
+    { link => 'bars.html',    text => 'Bars'    }
+    { link => 'tables.html',  text => 'Tables'  }
+    { link => 'menus.html',   text => 'Menus'   }
+   ]
+%]
+
+[% INCLUDE html/menubar
+    content = "Another Menu Bar"
+    select  = 5
+    width   = '100%'
+    border  = 1
+    fill    = rgb.red.light
+    edge    = rgb.red.dark
+%]

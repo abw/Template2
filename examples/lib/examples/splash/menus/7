@@ -1,0 +1,5 @@
+<div align="center">
+[% WRAPPER splash/menubar select=2 width="70%" %]
+Template Toolkit
+[% END %]
+</div>

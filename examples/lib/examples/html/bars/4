@@ -1,0 +1,3 @@
+[% INCLUDE html/edgebox 
+     content = "The Cat Sat on the Mat"
+%]

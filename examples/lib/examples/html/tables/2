@@ -1,0 +1,10 @@
+[% WRAPPER html/table 
+     border = 2
+     col    = '#aaaaff'
+%]
+<tr>
+  <td>
+    This is some content within the table.
+  </td>
+</tr>
+[% END %]

@@ -1,0 +1,6 @@
+[% WRAPPER html/list 
+    title = 'Test List Title'
+%]
+[% "<li>$item</li>\n" 
+	FOREACH item = [ 'Foo' 'Bar' 'Baz' ] -%]
+[% END %]

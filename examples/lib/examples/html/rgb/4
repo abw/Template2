@@ -1,0 +1,16 @@
+<table border=0>
+[%- FOREACH col = ['grey' 'red' 'green' 'blue' 'lavender'] %]
+<tr>
+  <td bgcolor="[% rgb.white %]">
+  <b>[% col %]</b>
+  </td>
+  [%- FOREACH shade = ['dark' 'mid' 'light'] %]
+  <td bgcolor="[% rgb.${col}.${shade} %]">
+  [% shade %] [% col %]<br>(rgb.[% col %].[% shade %])
+  </td>
+  [%- END %]
+</tr>
+[%- END %]
+</table>
+</ul>
+

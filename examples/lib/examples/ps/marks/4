@@ -1,0 +1,3 @@
+[% PROCESS ps/ring radius='10 mm' %]
+
+20 mm 20 mm ring

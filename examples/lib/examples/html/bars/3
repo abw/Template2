@@ -1,0 +1,8 @@
+[% WRAPPER html/box 
+     col   = rgb.bud
+     width = '100%'
+     align = 'right'
+     pad   = 4
+%]
+<font color="[% rgb.white %]"><b>Hello World</b></font>
+[% END %]

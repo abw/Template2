@@ -1,0 +1,5 @@
+The cat sat on the mat.
+[% INCLUDE html/indent 
+   content='The dog sat on the log.'
+%]
+The fish lay on the dish.

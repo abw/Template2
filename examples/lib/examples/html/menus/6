@@ -1,0 +1,21 @@
+[% buttons = [
+     { link => 'tables.html',  text => 'Prev' },
+     { link => 'index.html',   text => 'Index'  },
+     { link => '',             text => 'Menus'  },
+     { link => 'headers.html', text => 'Next'   },
+   ]
+%]
+
+<font size="-1">
+[% INCLUDE html/menubar
+     content = "Current Menu Items"
+     left    = 1
+     right   = 1
+     select  = 3
+     width   = '100%'
+     border  = 2
+     pad     = 4
+     fill    = rgb.green.light
+     edge    = rgb.green.dark
+%]
+</font>

@@ -1,0 +1,11 @@
+[% INCLUDE html/button 
+    text  = "Prev Item"
+    link  = "headers.html"
+    left = 1
+%]
+
+[% INCLUDE html/button 
+    text  = "Next Item"
+    link  = "menus.html"
+    right = 1
+%]

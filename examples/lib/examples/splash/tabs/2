@@ -1,0 +1,13 @@
+[% INCLUDE splash/tab
+    col     = 'aqua'
+    content = 'Foo'
+%]
+
+<br>
+
+[% INCLUDE splash/tab
+    col     = 'marine'
+    content = 'Bar'
+    invert  = 1
+%]
+

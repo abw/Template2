@@ -1,0 +1,7 @@
+[% PROCESS html/rgb %]
+
+[% WRAPPER html/table col=rgb.blue.light pad=10 %]
+   [%- WRAPPER html/row %]
+   <td>Hello</td> <td>World</td>
+   [%- END %]
+[% END %]

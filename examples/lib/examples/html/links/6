@@ -1,0 +1,4 @@
+[% INCLUDE html/button 
+    text   = "Selected Item"
+    select = 1
+%]

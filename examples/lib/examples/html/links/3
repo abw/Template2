@@ -1,0 +1,17 @@
+[% section = {
+       headers => 'Headers and Footers'
+       links   => 'Links and Buttons'
+       tables  => 'Tables, Rows and Cells'
+       bars    => 'Bars, Boxes and Edges'
+   }
+   order = [ 'headers', 'links', 
+             'tables',  'bars' ]
+%]
+
+<ul>
+[% FOREACH item = order -%]
+  <li>[% PROCESS html/link 
+         link = "${item}.html"
+         text = section.$item  %]
+[% END %]
+</ul>

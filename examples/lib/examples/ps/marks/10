@@ -1,0 +1,6 @@
+[% PROCESS ps/cross radius='20 mm';
+   PROCESS ps/ring  radius='10 mm';
+   PROCESS ps/crosshair;
+-%]
+
+20 mm 20 mm crosshair

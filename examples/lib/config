@@ -1,0 +1,72 @@
+[%  # root URL
+    root = root_url or '/';
+
+    # define library data
+    libs = {
+    	html = {
+    	    name  = 'html'
+    	    title = "HTML"
+    	    pages = {
+    		index   => 'Index Page'
+    		rgb     => 'RGB Colours'
+    		headers => 'Headers, Footers and Pages'
+    		lists   => 'Lists, Items and Indents'
+    		links   => 'Links and Buttons'
+    		tables  => 'Tables, Rows and Cells'
+    		bars    => 'Bars, Boxes and Edges'
+    		menus   => 'Menus and Menu Bars'
+    	    }
+    	    order => [ 'index', 'rgb', 'headers', 'lists',
+    		       'links', 'tables', 'bars', 'menus' ]
+    	}
+    	splash = {
+    	    name  = 'splash'
+    	    title = "Splash!"
+    	    pages = {
+    		index   => 'About Splash!'
+    		config  => 'Configuration'
+    		text    => 'Text'
+		buttons => 'Buttons, Bars and Panels'
+		menus   => 'Menus and Menu Bars'
+		tabs    => 'Tabs and Tabbed Boxes'
+		tabsets => 'Tab Sets and Boxes'
+		dropbox => 'Dropped Boxes'
+    	    }
+    	    order => [ 'index', 'config', 'text', 'buttons', 
+		       'menus', 'tabs', 'tabsets', 'dropbox' ]
+    	}
+    	ps = {
+    	    name  = 'ps'
+    	    title = "PostScript"
+    	    pages = {
+    		index   => 'Index Page'
+    		marks   => 'Various useful marks'
+    	    }
+    	    order => [ 'index', 'marks' ]
+    	}
+    };
+    liblist = [ libs.html, libs.splash, libs.ps ];
+
+    # build the main menu
+    menu = [ ];
+    FOREACH lib = liblist;
+	item = { 
+	    link => "../$lib.name/index.html", 
+	    text => lib.title,
+	};
+	menu.push(item);
+    END;
+
+    # build the tab sets
+    FOREACH  library = libs.values;
+	library.tabs = [ ];
+	FOREACH page = library.order;
+	    tab = { text  => page
+	            title => library.pages.$page
+		    link  => "${page}.html" } ;
+	    library.tabs.push(tab);
+	END ;
+    END;
+
+    PROCESS splash/config
+-%]

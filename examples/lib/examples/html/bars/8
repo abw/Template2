@@ -1,0 +1,9 @@
+[% WRAPPER html/edgebar 
+     edge    = rgb.green.dark
+     fill    = rgb.green.light
+     border  = 1
+     pad     = 4
+     width   = '100%'
+%]
+<td>Foo</td> <td>Bar</td> <td>Baz</td>
+[% END %]
