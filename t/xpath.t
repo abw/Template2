@@ -23,8 +23,12 @@ use Template::Test;
 use Cwd qw( abs_path );
 $^W = 1;
 
+# I hate having to do this
+my $shut_up_warnings = $XML::XPath::VERSION;
+
 eval "use XML::XPath";
-if ($@) {
+
+if ($@ || $XML::XPath::VERSION < 1.1) {
     print "1..0\n";
     exit(0);
 }

@@ -23,8 +23,11 @@ use Template::Test;
 use Cwd qw( abs_path );
 $^W = 1;
 
+# I hate having to do this
+my $shut_up_warnings = $XML::RSS::VERSION;
+
 eval "use XML::RSS";
-if ($@) {
+if ($@ || ($] == 5.006 && $XML::RSS::VERSION < 0.9)) {
     print "1..0\n";
     exit(0);
 }

@@ -57,9 +57,10 @@ foreach my $mods ( [ XML::DOM   => \&check_dom   ],
 		   [ DBI        => \&dbi_config  ] ) {
     my ($module, $code) = @$mods;
 
+    printf("  %-12s - ", $module);
     eval "use $module";
     if ($@) {
-	print "    $module - skipping test (module not installed)\n";
+	print "skipping test (module not installed)\n";
     }
     else {
 	&$code;
@@ -113,35 +114,50 @@ EOF
 
 
 #------------------------------------------------------------------------
-# check_dom_version()
+# check_dom()
+#
+# XML::DOM version 1.25 (and earlier?) dump core with Perl 5.6.0
 #------------------------------------------------------------------------
 
 sub check_dom {
     if ($] == 5.006 && $XML::DOM::VERSION <= 1.25) {
-	print "    XML::DOM - version $XML::DOM::VERSION may not work with Perl $], skipping\n";
+	print "version $XML::DOM::VERSION may not work with Perl $], skipping\n";
     }
     else {
-	print "    XML::DOM - including tests\n";
+	print "version $XML::DOM::VERSION installed, including tests\n";
     }
 }
 
+
+#------------------------------------------------------------------------
+# check_rss()
+#
+# Version 0.8 of XML::RSS gave warnings under Perl 5.6.0 so issue an 
+# upgrade recommendation
+#------------------------------------------------------------------------
 
 sub check_rss {
-    if ($XML::RSS::VERSION < 0.9) {
-	print "    XML::RSS - please upgrade to version 0.9 or later ($XML::RSS::VERSION installed)\n";
+    if ($] == 5.006 && $XML::RSS::VERSION < 0.9) {
+	print "please upgrade to version 0.9 or later ($XML::RSS::VERSION installed)\n";
     }
     else {
-	print "    XML::RSS - including tests\n";
+	print "version $XML::RSS::VERSION installed, including tests\n";
     }
 }
 
+#------------------------------------------------------------------------
+# check_xpath()
+#
+# Tests fail under some of the earlier versions (e.g. 0.55) so we issue
+# an upgrade recommendation.
+#------------------------------------------------------------------------
 
 sub check_xpath {
     if ($XML::XPath::VERSION < 1.00) {
-	print "    XML::XPath - please upgrade to version 1.00 or later ($XML::XPath::VERSION installed)\n";
+	print "please upgrade to version 1.00 or later ($XML::XPath::VERSION installed)\n";
     }
     else {
-	print "    XML::XPath - including tests\n";
+	print "version $XML::XPath::VERSION installed, including tests\n";
     }
 }
 
@@ -156,7 +172,7 @@ sub dbi_config {
     my ($dsn, $user, $pass, $run);
     $run = 1;
 
-    print "\nConfiguration for DBI tests\n";
+    print "version $DBI::VERSION installed, configuring tests\n";
 
     if (prompt("- Do you want to run the DBI tests?\n" .
 	       "  It requires access to an existing test database.",

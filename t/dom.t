@@ -23,8 +23,13 @@ use Template::Test;
 use Cwd qw( abs_path );
 $^W = 1;
 
+# I hate having to do this
+my $shut_up_warnings = $XML::DOM::VERSION;
+
 eval "use XML::DOM";
-if ($@) {
+
+# XML::DOM version 1.25 (and earlier?) dump core with Perl 5.006
+if ($@ || ($] == 5.006 && $XML::DOM::VERSION <= 1.25)) {
     print "1..0\n";
     exit(0);
 }
