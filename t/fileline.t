@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( . ../lib );
+use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Parser;
 use Template::Directive;
@@ -70,7 +70,7 @@ warn: Argument "" isn't numeric in addition (+)
 -- start --
 -- test --
 [% INCLUDE warning -%]
-file: [% file %]
+file: [% file.chunk(-16).last %]
 line: [% line %]
 warn: [% warn %]
 -- expect --
