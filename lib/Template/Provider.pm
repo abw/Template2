@@ -638,6 +638,7 @@ sub _load {
 		my $text = <FH>;
 		$data = {
 		    name => $alias,
+                    path => $name,
 		    text => $text,
 		    time => (stat $name)[9],
 		    load => $now,
@@ -655,6 +656,9 @@ sub _load {
 	    ($data, $error) = (undef, Template::Constants::STATUS_DECLINED);
 	}
     }
+
+    $data->{ path } = $data->{ name }
+        if $data and ! defined $data->{ path };
 
     return ($data, $error);
 }
