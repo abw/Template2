@@ -20,7 +20,7 @@ use strict;
 use lib  qw( ./lib ../lib );
 use Template::Test;
 
-ntests(8);
+ntests(14);
 
 my $dir   = -d 't' ? 't/test' : 'test';
 my $f1    = 'foo.bar';
@@ -72,6 +72,43 @@ close(FP);
 ok( 1 );
 
 match( $out, "This is the foo file, a is alpha" );
+
+unlink($file2);
+
+
+#------------------------------------------------------------------------
+# test passing options like 'binmode' to Template process() method to 
+# ensure they get passed onto _output() subroutine.
+#------------------------------------------------------------------------
+package My::Template;
+use Template;
+use base qw( Template );
+use vars qw( $MESSAGE );
+
+sub DEBUG {
+    my $self = shift;
+    $MESSAGE = join('', @_);
+}
+
+package main;
+
+$tt = My::Template->new({
+    INCLUDE_PATH => "$dir/src:$dir/lib",
+    OUTPUT_PATH  => "$dir/tmp",
+    OUTPUT       => $f2,
+}) || die Template->error();
+
+$Template::DEBUG = 1;
+
+ok( $tt->process('foo', &callsign, undef, { binmode => 1 }), 'processed' );
+ok( -f $file2, 'output file exists' );
+is( $My::Template::MESSAGE, "set binmode\n", 'set binmode via hashref' );
+
+$My::Template::MESSAGE = 'reset';
+
+ok( $tt->process('foo', &callsign, $f2, binmode => 1), 'processed again' );
+ok( -f $file2, 'output file exists' );
+is( $My::Template::MESSAGE, "set binmode\n", 'set binmode via arglist' );
 
 unlink($file2);
 
