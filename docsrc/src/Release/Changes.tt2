@@ -27,6 +27,9 @@
 # Version 2.08b - August nth 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
+* Applied two patches from Leon to fix bug in constant folding with
+  multiple replacements (a missing 'g' on a s///)
+
 * Applied a patch from Tatsuhiko Miyagawa to Template::Constants to 
   replace 'our' perl5.6isms.
 
