@@ -315,6 +315,46 @@ Tom
 --expect --
 1, 2, 3, 4, 5
 
+-- test --
+[% duplicates.unique.join(', ') %]
+-- expect --
+1, 2, 3, 4, 5
+
+-- test --
+[% big_num = "1234567890"; big_num.commify %]
+-- expect --
+1,234,567,890
+
+-- test --
+[% big_num = "1234567890"; big_num.commify(":", 2) %]
+-- expect --
+12:34:56:78:90
+
+-- test --
+[% big_num = "1234567812345678"; big_num.commify(" ", 4) %]
+-- expect --
+1234 5678 1234 5678
+
+-- test --
+[% big_num = "hello world"; big_num.commify %]
+-- expect --
+hello world
+
+-- test --
+[% list_one = [ 1 2 3 ];
+   list_two = [ 4 5 6 ];
+   "'$l' " FOREACH l = list_one.merge(list_two) %]
+-- expect --
+'1' '2' '3' '4' '5' '6' 
+
+-- test --
+[% list_one = [ 1 2 3 ];
+   list_two = [ 4 5 6 ];
+   list_three = [ 7 8 9 0 ];
+   "'$l' " FOREACH l = list_one.merge(list_two, list_three) %]
+-- expect --
+'1' '2' '3' '4' '5' '6' '7' '8' '9' '0' 
+
 # USER DEFINED LIST OPS
 
 -- test --

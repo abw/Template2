@@ -89,6 +89,7 @@ $SCALAR_OPS = {
         return [ defined $split ? split($split, $str, @args)
                                 : split(' ', $str, @args) ];
     },
+    'commify' => \&commify,
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
@@ -180,6 +181,10 @@ $LIST_OPS = {
                @$list
     },
     'unique'  => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
+    'merge'   => sub {
+	my $list = shift;
+	return [ @$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_ ];
+    },
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
 
@@ -188,6 +193,16 @@ sub hash_import {
     $imp = {} unless ref $imp eq 'HASH';
     @$hash{ keys %$imp } = values %$imp;
     return '';
+}
+
+# stolen from perlfaq 5
+sub commify {
+    local $_  = shift;
+    my $c = shift || ",";
+    my $n = int(shift || 3);
+    return $_ if $n<1;
+    1 while s/^([-+]?\d+)(\d{$n})/$1$c$2/;
+    return $_;
 }
 
 

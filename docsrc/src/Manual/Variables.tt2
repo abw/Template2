@@ -544,6 +544,23 @@ into different formats.
 Always returns 1 for scalar values.  This method is provided for 
 consistency with the hash and list size methods.
 
+=item commify
+
+Applies the commify function from perlfaq5 ("How can I output my
+numbers with commas added?"), with optionally configurable separators
+(default to ",") and an optionally configurable number of grouped
+numbers (defaults to 3).
+
+    [% big_number = 1234567890 %]
+    [% big_number.commify %]
+    [% big_number.commify(".") %]
+    [% big_number.commify(",", 4) %]
+    1,234,567,890
+    1.234.567.890
+    12,3456,7890
+
+Usually, commify without options does The Right Thing.
+
 =back
 
 The following can be called against hash references.
@@ -710,6 +727,18 @@ be sorted before the unique elements pulled out (unlike the Unix
 command line utility).
 
     [% numbers = mylist.unique.sort %]
+
+=item merge
+
+Returns a list composed of zero or more other lists:
+
+    [% list_one = [ 1 2 3 ];
+       list_two = [ 4 5 6 ];
+       list_three = [ 7 8 9 ];
+       list_four = list_one.merge(list_two, list_three);
+    %]
+
+The original lists are not modified.
 
 =back
 
