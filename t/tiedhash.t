@@ -19,6 +19,7 @@
 use strict;
 use lib qw( blib/lib blib/arch lib ../blib/lib ../blib/arch ../lib );
 use Template::Test;
+use Template::Stash;
 $^W = 1;
 
 eval {
@@ -95,8 +96,6 @@ my $hash = My::Tied::Hash->new({
 });
 
 #------------------------------------------------------------------------
-use Template::Stash;
-use Template::Stash::XS;
 
 my $stash_perl = Template::Stash->new({ hash => $hash });
 my $stash_xs   = Template::Stash::XS->new({ hash => $hash });
