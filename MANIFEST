@@ -554,6 +554,7 @@ t/test/xml/example.rdf
 t/test/xml/testfile.xml
 t/text.t
 t/throw.t
+t/tiedhash.t
 t/try.t
 t/url.t
 t/vars.t

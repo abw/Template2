@@ -14,7 +14,7 @@
 [%  WRAPPER toc;
 	INCLUDE tocitem title="DESCRIPTION";
 	INCLUDE tocitem title="STANDARD FILTERS"
-                         subs=["format(format)", "upper", "lower", "trim", "collapse", "html", "html_para", "html_break", "indent(pad)", "truncate(length)", "repeat(iterations)", "remove(string) ", "replace(search, replace) ", "redirect(file)", "eval(template_text)", "perl(perlcode)", "stdout(binmode)", "stderr", "null", "latex(outputType)"];
+                         subs=["format(format)", "upper", "lower", "trim", "collapse", "html", "html_para", "html_break", "uri", "indent(pad)", "truncate(length)", "repeat(iterations)", "remove(string) ", "replace(search, replace) ", "redirect(file)", "eval(template_text)", "perl(perlcode)", "stdout(binmode)", "stderr", "null", "latex(outputType)"];
 	INCLUDE tocitem title="AUTHOR";
 	INCLUDE tocitem title="VERSION";
 	INCLUDE tocitem title="COPYRIGHT";
@@ -147,6 +147,26 @@ output:
     &lt;br&gt;
     &lt;br&gt;
     Mary had a little lamb.</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "uri"
+-%]<p>
+This filter URI escapes the input text, converting any characters 
+outside of the permitted URI character set (as defined by RFC 2396)
+into a <code>'%nn'</code> hex escape.
+</p>
+<pre>    [% tt_start_tag %] 'my file.html' | uri [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    my%20file.html</pre>
+<p>
+Note that URI escaping isn't always enough when generating hyperlinks in
+an HTML document.  The <code>'&amp;'</code> character, for example, is valid in a URI and
+will not be escaped by the URI filter.  In this case you should also filter
+the text through the 'html' filter.
+</p>
+<pre>    &lt;a href=&quot;[% tt_start_tag %] filename | uri | html [% tt_end_tag %]&quot;&gt;click here&lt;/a&gt;</pre>
 [%- END %]
 [% WRAPPER subsection
    title = "indent(pad)"
@@ -417,7 +437,7 @@ Andy Wardley &lt;abw@kfs.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.05, released on 11 September 2001.
+Template Toolkit version 2.05b, released on 21 September 2001.
 </p>
 [%- END %]
 [% WRAPPER section

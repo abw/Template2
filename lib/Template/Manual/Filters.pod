@@ -163,6 +163,25 @@ output:
     <br>
     Mary had a little lamb.
 
+=head2 uri
+
+This filter URI escapes the input text, converting any characters 
+outside of the permitted URI character set (as defined by RFC 2396)
+into a C<%nn> hex escape.
+
+    [% 'my file.html' | uri %]
+
+output:
+
+    my%20file.html
+
+Note that URI escaping isn't always enough when generating hyperlinks in
+an HTML document.  The C<&> character, for example, is valid in a URI and
+will not be escaped by the URI filter.  In this case you should also filter
+the text through the 'html' filter.
+
+    <a href="[% filename | uri | html %]">click here</a>
+
 =head2 indent(pad)
 
 Indents the text block by a fixed pad string or width.  The 'pad' argument
@@ -411,7 +430,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.05, released on 11 September 2001.
+Template Toolkit version 2.05b, released on 21 September 2001.
 
 =head1 COPYRIGHT
 

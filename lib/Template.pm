@@ -889,7 +889,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.05a, released on 12 September 2001.
+Template Toolkit version 2.05b, released on 21 September 2001.
 
 =head1 COPYRIGHT
 

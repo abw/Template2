@@ -5,9 +5,9 @@
 
                             Template Toolkit
 
-                              Version 2.05
+                              Version 2.05b
 
-                              11 September 2001
+                              21 September 2001
 
         Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
@@ -46,8 +46,8 @@ need to install them.  They're all available from CPAN if you do.
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.05.tar.gz
-    cd Template-Toolkit-2.05
+    tar zxf Template-Toolkit-2.05b.tar.gz
+    cd Template-Toolkit-2.05b
     perl Makefile.PL
     make
     make test
@@ -243,19 +243,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-&lt;version&gt;.tar.gz
 
-where &lt;version&gt; represents the current version number, e.g. 2.05.
+where &lt;version&gt; represents the current version number, e.g. 2.05b.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    tar zxf Template-Toolkit-2.05.tar.gz
+    tar zxf Template-Toolkit-2.05b.tar.gz
 or
-    gunzip Template-Toolkit-2.05.tar.gz
-    tar xf Template-Toolkit-2.05.tar
+    gunzip Template-Toolkit-2.05b.tar.gz
+    tar xf Template-Toolkit-2.05b.tar
 
 You can then 'cd' into the directory created,
 
-    cd Template-Toolkit-2.05
+    cd Template-Toolkit-2.05b
 
 and perform the usual Perl installation procedure:
 
@@ -306,17 +306,12 @@ the relevant database.  Please ensure that your database server is
 running and that the database you specify exists before executing
 'make test' (otherwise, expect a failure for the t/dbi.t test).
 
-The Template Toolkit now boast a high-speed implementation of 
+The Template Toolkit now boasts a high-speed implementation of 
 Template::Stash written in XS.  You can choose to build this as
 an optional module for using explicitly as an alternative to
 the regular pure-perl stash module.  In additional, you can opt
 to use the XS Stash as the default, typically making the Template
 Toolkit run twice as fast!
-
-However, please note that there may be outstanding issues relating to 
-accessing data from tied hashes (e.g. Apache::Session).  For further
-information, see the related thread on the Template Toolkit mailing list:
-http://www.tt2.org/pipermail/templates/2001-September/001568.html
 
 When prompted, answer 'y' or 'n' to build and optionally use
 the XS Stash module by default:
@@ -803,8 +798,8 @@ VERSION COMPATABILITY
 ---------------------
 
 In terms of the template language and features available, versions
-2.01 through to 2.05 should be fully backwardly 
-compatible with version 2.00.  
+2.01 through to 2.05b should be fully backwardly compatible with 
+version 2.00.  
 
 Version 2.00 is backwardly compatible with version 1 in all but a few
 minor areas.  The 'Changes' file details all the visible changes

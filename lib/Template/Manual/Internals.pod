@@ -359,7 +359,168 @@ counterparts in Perl.
 	$output .= $stash->get('msg');
     }
 
-B<### WARNING: THIS IS THE ABRUPT END OF THE DOCUMENTATION ###>
+The best way to get a better understanding of what's going on underneath
+the hood is to set the C<$Template::Parser::DEBUG> flag to a true value
+and start processing templates.  This will cause the parser to print the
+generated Perl code for each template it compiles to STDERR.  You'll 
+probably also want to set the C<$Template::Directive::PRETTY> option to
+have the Perl pretty-printed for human consumption.
+
+    use Template;
+    use Template::Parser;
+    use Template::Directive;
+    
+    $Template::Parser::DEBUG = 1;
+    $Template::Directive::PRETTY = 1;
+    
+    my $template = Template->new();
+    $template->process(\*DATA, { cat => 'dog', mat => 'log' });
+    
+    __DATA__
+    The [% cat %] sat on the [% mat %]
+
+The output sent to STDOUT remains as you would expect:
+
+    The dog sat on the log
+
+The output sent to STDERR would look something like this:
+
+    compiled main template document block:
+    sub {
+    	my $context = shift || die "template sub called without context\n";
+    	my $stash   = $context->stash;
+    	my $output  = '';
+    	my $error;
+    	
+    	eval { BLOCK: {
+    	    $output .=  "The ";
+    	    $output .=  $stash->get('cat');
+    	    $output .=  " sat on the ";
+    	    $output .=  $stash->get('mat');
+    	    $output .=  "\n";
+    	} };
+    	if ($@) {
+    	    $error = $context->catch($@, \$output);
+    	    die $error unless $error->type eq 'return';
+    	}
+    
+    	return $output;
+    }
+
+
+=head1 HACKING ON THE TEMPLATE TOOLKIT
+
+Please feel free to hack on the Template Toolkit.  If you find a bug
+that needs fixing, if you have an idea for something that's missing,
+or you feel inclined to tackle something on the TODO list, then by all
+means go ahead and do it!  
+
+If you're contemplating something non-trivial then you'll probably
+want to bring it up on the mailing list first to get an idea about the
+current state of play, find out if anyone's already working on it, and
+so on.
+
+When you start to hack on the Template Toolkit, please make sure you
+start from the latest developer release.  Stable releases are uploaded
+to CPAN and have all-numerical version numbers, e.g. 2.04, 2.05. 
+Developer releases are available from the Template Toolkit web site
+and have a character suffix on the version, e.g. 2.04a, 2.04b, etc.
+
+Once you've made your changes, please remember to update the test 
+suite by adding extra tests to one of the existing test scripts in
+the 't' sub-directory, or by adding a new test script of your own.
+And of course, run C<make test> to ensure that all the tests pass
+with your new code.
+
+Don't forget that any files you do add will need to be added to the
+MANIFEST.  Running 'make manifest' will do this for you, but you need
+to make sure you haven't got any other temporary files lying around 
+that might also get added to it.
+
+Documentation is often something that gets overlooked but it's just
+as important as the code.  If you're updating existing documentation
+then you should download the 'docsrc' bundle from which all the 
+Template Toolkit documentation is built and make your changes in there.
+It's also available from the Template Toolkit web site.  See the 
+README distributed in the archive for further information.
+
+If you're adding a new module, a plugin module, for example, then it's
+OK to include the POD documentation in with the module, but I<please>
+write it all in one piece at the end of the file, I<after> the code
+(just look at any other Template::* module for an example).  It's a 
+religious issue, I know, but I have a strong distaste for POD documentation
+interspersed throughout the code.  In my not-so-humble opinion, it makes 
+both the code and the documentation harder to read (same kinda problem
+as embedding Perl in HTML).
+
+Aesthetics aside, if I do want to extract the documentation into the
+docsrc bundle then it's easy for me to do it if it's all written in
+one chunk and extremely tedious if not.  So for practical reasons
+alone, please keep Perl and POD sections separate.  Comment blocks
+within the code are of course welcome.
+
+To share your changes with the rest of the world, you'll need to 
+prepare a patch file.  To do this you should have 2 directories
+side-by-side, one which is the original, unmodified distribution
+directory for the latest developer release, and the other is a
+copy of that same directory which includes your changes. 
+
+The following example shows a typical hacking session.  First we
+unpack the latest developer release.
+
+    $ tar zxf Template-Toolkit-2.05c.tar.gz
+
+At this point, it's a good idea to rename the directory to give 
+some indicate of what it contains.
+
+    $ mv Template-Toolkit-2.05c Template-Toolkit-2.05c-abw-xyz-hack
+
+Then go hack!
+
+    $ cd Template-Toolkit-2.05c-abw-xyz-hack
+
+      [ hacking ]
+
+    $ cd ..
+
+When you're all done and ready to prepare a patch, unpack the 
+distribution archive again so that you've got the original to 
+diff against your new code.
+
+    $ tar zxf Template-Toolkit-2.05c.tar.gz
+
+You should now have an original distribution directory and a modified
+version of that same directory, side-by-side.  
+
+    $ ls
+    Template-Toolkit-2.05c  Template-Toolkit-2.05c-abw-xyz-hack
+
+Now run diff and save the output into an appropriately named patch
+file.  
+
+    $ diff -Naur Template-Toolkit-2.05c Template-Toolkit-2.05c-abw-xyz-hack > patch-TT205c-abw-xyz-hack
+
+You can then post the generated patch file to the mailing list, 
+describing what it does, why it does it, how it does it and any 
+other relevant information.
+
+If you want to apply someone else's patch then you should start with the
+same original distribution source on which the patch is based.  From within
+the root of the distribution, run 'patch' feeding in the patch file as 
+standard input.  The 'p1' option is required to strip the first element
+of the path name (e.g. Template-Toolkit-2.05c/README becomes README which
+is then the correct path).
+
+    $ tar zxf Template-Toolkit-2.05c.tar.gz
+    $ cd Template-Toolkit-2.05c
+    $ patch -p1 < ../patch-TT205c-abw-xyz-hack
+
+The output generated by 'patch' should be something like the following:
+
+    patching file README
+    patching file lib/Template.pm
+    patching file lib/Template/Provider.pm
+    patching file t/provider.t
 
 =head1 AUTHOR
 
@@ -372,7 +533,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.05, released on 11 September 2001.
+Template Toolkit version 2.05b, released on 21 September 2001.
 
 =head1 COPYRIGHT
 

@@ -3,7 +3,7 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.05, containing
+#   TODO list for the Template Toolkit version 2.05b, containing
 #   known bugs, limitations, planned enhancements, long term visions 
 #   and a few whacky ideas.
 #
@@ -18,11 +18,10 @@
 # Miscellaneous
 #------------------------------------------------------------------------
 
-* Apply pudge's patch to use File::Spec consistently across TT.
-
 * Errors thrown via the Error module are not correctly caught.  I looked
   at this briefly but the problem wasn't immediately obvious and needs some
-  more considered investigation.
+  more considered investigation.  There are also problems with CGI::Carp
+  throwing errors that don't get properly caught.
 
 * The 'eval' filter leaks memory, as reported by Colin Johnson.  The
   filter subroutine created contains a reference to the context and then
@@ -51,28 +50,6 @@
   allow recursion testing for BLOCKs as well as Template::Document
   objects.
 
-* A ':preload' use option to Template.pm to preload all modules?  Or
-  should it be ':noload' and have them preloaded by default? 
-
-* It should be possible to access template BLOCK definitions via the 
-  'template' variable.  This would be particularly useful in conjunction
-  with the PRE_PROCESS, PROCESS and/or POST_PROCESS options, e.g.
-
-    <table>
-    <tr>
-      <td>[% INCLUDE $template.blocks.sidebar %]</td>
-      <td>[% INCLUDE $template %]
-    </tr>
-    </table>
-
-  Currently you *can* access these blocks, but the stash automatically
-  calls these unblessed subs, generating an error due to the fact that 
-  no context reference is passed to the sub to allow it to act as a 
-  template.
-
-* The issue of CGI::Carp throwing non-reference error might need closer
-  investigation.
-
 * It would be nice if there was an option so that the files generated
   under the COMPILE_DIR are relative to the INCLUDE_PATH and not absolute.
   This could cause potential conflicts (e.g. if INCLUDE_PATH changes
@@ -82,10 +59,10 @@
 
 * Richard Tietjen's patch for stash replace.  Allows back references
   (e.g. $1) but it would be nice to find a rock-solid way to implement
-  it without relying on unusual ^A delimiter character.
+  it without relying on unusual ^A delimiter character. 
 
 * Further to the above, Craig Barratt has this solution which will be 
-  going into the next verion (2.05) unless anyone has any further 
+  going into the next verion (2.05b) unless anyone has any further 
   suggestions to make before then.
 
     It would be great if replace handled backreferences.  I don't like
@@ -127,9 +104,6 @@
 
 * Document the Splash! library properly, once the interface is a little
   more settled.
-
-* Various bits of the documentation like Changes, TODO, FAQ, etc., should
-  be built from XML files.
 
 * Examples for libraries (HTML, Splash & PostScript) should be integrated
   into the documentation.
@@ -174,15 +148,16 @@
   installed in an architecture-dependant directory.  For info, see
   http://www.tt2.org/pipermail/templates/2001-September/001568.html
 
+* Jonas Liljegren reports a segfault when using the XS Stash under 
+  Apache/mod_perl with certain undefined variables.  At the time of
+  writing detail is scarce.  Check the mailing list for further
+  details.
+
 * Stas Bekman raised the issue of the Stash not being able to correctly
   differentiate between scalar/list context and in particular, the 
   cgi.param examples not working as expected.  This is fixed in v3 and 
   in Craig's Stash/Context.pm which does the right lookahead to allow
   'scalar' and 'list' postfix operators.  e.g. cgi.param.list
-
-* Richard Tietjen's patch for stash replace.  Allows back references
-  (e.g. $1) but it would be nice to find a rock-solid way to implement
-  it without relying on unusual ^A delimiter character.
 
 * Have stash, etc., add current template name/line when reporting errors.
   (may be tricky under the current implementation)
@@ -195,10 +170,6 @@
 * Lists don't accept arbitrary expressions as elements.  In other words
   you can't do this:   [% foo(bar + 1) %].  This has been fixed in the v3
   parser.  See http://www.tt2.org/v3/
-
-* Stas reported a problem with spacing, something like : [% a =b+10 %] but
-  I can't seem to reproduce it (or remember exactly what the problem 
-  was... I need to check the archives for his email).
 
 * The parser isn't as intelligent as it could be about blocks of template
   code commented out en masse.  The pre-scanner find the first terminating 
@@ -268,19 +239,6 @@
   parser for this up and running.  It might get back-pactched into 
   version 2, otherwise you might have to wait for the first alpha 
   release of verion 3.
-
-* Note that this might also allow a default view to be set for a BLOCK:
-
-    [% BLOCK document view=my.view.pod %]
-       ...
-    [% END %]
-
-  Being able to set a default VIEW is another issue altogether.  In
-  many ways it's orthogonal to the definition of VIEWs which is
-  discussed below.  It should be fairly straightforward as there
-  aren't that many issues to consider (syntax perhaps being the only
-  major one) but I haven't really considered them yet so watch this
-  space for details.
 
 * Craig Barratt reports the following:
 

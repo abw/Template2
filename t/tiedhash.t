@@ -21,6 +21,13 @@ use lib qw( blib/lib blib/arch lib ../blib/lib ../blib/arch ../lib );
 use Template::Test;
 $^W = 1;
 
+eval {
+  require Template::Stash::XS;
+};
+if ($@) {
+  exit(0);
+}
+
 #print "stash: $Template::Config::STASH\n";
 #$Template::Config::STASH = 'Template::Stash::XS';
 
@@ -164,3 +171,5 @@ nothing
 %]
 -- expect --
 1
+
+
