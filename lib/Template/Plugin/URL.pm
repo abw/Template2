@@ -46,20 +46,20 @@ sub new {
     $args ||= { };
 
     return sub {
-	my $newbase = shift unless ref $_[0] eq 'HASH';
-	my $newargs = shift || { };
-	my $combo   = { %$args, %$newargs };
-	my $urlargs = join('&amp;', 
+        my $newbase = shift unless ref $_[0] eq 'HASH';
+        my $newargs = shift || { };
+        my $combo   = { %$args, %$newargs };
+        my $urlargs = join('&amp;', 
 #			   map  { "$_=" . escape($combo->{ $_ }) }
 			   map  { args($_, $combo->{ $_ }) }
-			   grep { defined $combo->{ $_ } }
+			   grep { defined $combo->{ $_ } && length $combo->{ $_ } }
 			   sort keys %$combo);
 
-	my $query = $newbase || $base || '';
-	$query .= '?' if length $query && length $urlargs;
-	$query .= $urlargs if length $urlargs;
+        my $query = $newbase || $base || '';
+        $query .= '?' if length $query && length $urlargs;
+        $query .= $urlargs if length $urlargs;
 
-	return $query
+        return $query
     }
 }
 
@@ -67,8 +67,9 @@ sub new {
 sub args {
     my ($key, $val) = @_;
     $key = escape($key);
+    
     return map {
-	"$key=" . escape($_);
+        "$key=" . escape($_);
     } ref $val eq 'ARRAY' ? @$val : $val;
     
 }
