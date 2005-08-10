@@ -39,6 +39,8 @@
 
 * Added the Math Plugin to MANIFEST.
 
+* Changed the URL plugin to ignore parameters that are unset (e.g. 
+  defined but zero length)
 
 
 #------------------------------------------------------------------------
