@@ -163,7 +163,8 @@ sub tag {
 
     if (%$options) {
         while (my ($key, $val) = each %$options) {
-            $tag .= " $key=\"$val\"";
+            my $escaped = escape( $val );
+            $tag .= qq[ $key="$escaped"];
         }
     }
 
@@ -172,6 +173,16 @@ sub tag {
     return $tag;
 }
 
+sub escape {
+    my ($text) = @_;
+    for ($text) {
+        s/&/&amp;/g;
+        s/</&lt;/g;
+        s/>/&gt;/g;
+        s/"/&quot;/g;
+    }
+    $text;
+}
 
 sub throw {
     my ($self, $error) = @_;
