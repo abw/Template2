@@ -61,18 +61,19 @@ my ($factory, $rawstart);
 # are not converted to their stringwise equivalents.  I added 'gt' et al, 
 # briefly for v2.04d and then took them out again in 2.04e.
 
+
 %CMPOP = qw( 
     != ne
     == eq
-#    eq eq  # uncomment these lines to enable the eq, lt and gt operators      
-#    lt lt
-#    gt gt
     <  <
     >  >
     >= >=
     <= <=
 );
 
+#    eq eq  # add these lines to the above to 
+#    lt lt  # enable the eq, lt and gt operators      
+#    gt gt
 
 #========================================================================
 # Lexer Token Table
