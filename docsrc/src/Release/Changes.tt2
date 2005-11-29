@@ -42,6 +42,9 @@
 * Changed the URL plugin to ignore parameters that are unset (e.g. 
   defined but zero length)
 
+* Applied a patch to the Image plugin from Bill Moseley to escape 
+  attributes in the tag() method of the Image plugin.
+
 
 #------------------------------------------------------------------------
 # Version 2.14 - 4th October 2004
