@@ -599,6 +599,7 @@ t/throw.t
 t/tiedhash.t
 t/try.t
 t/url.t
+t/url2.t
 t/vars.t
 t/varsv1.t
 t/view.t
