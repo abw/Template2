@@ -49,7 +49,7 @@ sub new {
         my $newbase = shift unless ref $_[0] eq 'HASH';
         my $newargs = shift || { };
         my $combo   = { %$args, %$newargs };
-        my $urlargs = join('&amp;', 
+        my $urlargs = join('&',
 #			   map  { "$_=" . escape($combo->{ $_ }) }
 			   map  { args($_, $combo->{ $_ }) }
 			   grep { defined $combo->{ $_ } && length $combo->{ $_ } }
