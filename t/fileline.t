@@ -91,6 +91,6 @@ warn: [% warn %]
 -- expect --
 Hello
 World
-file: (eval 8)
+file: (eval 10)
 line: 10
 warn: Argument "" isn't numeric in addition (+)

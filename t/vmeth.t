@@ -33,6 +33,9 @@ $Template::Stash::LIST_OPS->{ sum } = \&sum;
 $Template::Stash::LIST_OPS->{ odd } = \&odd;
 $Template::Stash::LIST_OPS->{ jumble } = \&jumble;
 
+# make sure we're using the Perl stash
+$Template::Config::STASH = 'Template::Stash';
+
 $Template::Stash::SCALAR_OPS->{ commify } = sub {
     local $_  = shift;
     my $c = shift || ",";
@@ -50,7 +53,7 @@ package My::Object;
 sub new { 
     my ($class, $name) = @_;
     bless {
-	_NAME => $name,
+        _NAME => $name,
     }, $class;
 }
 sub name { 
@@ -664,8 +667,18 @@ matched animal: cat  place: mat
 no match
 
 
+-- test --
+[% hash = { }
+   list = [ hash ]
+   list.last.message = 'Hello World';
+   "message: $list.last.message\n"
+-%]
+
+-- expect --
+message: Hello World
 
 -- stop --
+
 
 -- test --
 [% var = 'foo'; var.replace('f(o+)$', 'b$1') %]

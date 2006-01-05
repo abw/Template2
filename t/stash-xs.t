@@ -262,3 +262,15 @@ an object
 hello, there
 ==
 hello, there
+
+
+-- test --
+[% hash = { }
+   list = [ hash ]
+   list.last.message = 'Hello World';
+   "message: $list.last.message\n"
+-%]
+
+-- expect --
+message: Hello World
+

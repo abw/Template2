@@ -186,3 +186,19 @@ outer [bar]: The title is foo
 -- expect --
 <a><b><c>FOO</c></b></a>
 
+-- stop --
+# This next text demonstrates a limitation in the parser
+# http://tt2.org/pipermail/templates/2006-January/008197.html
+
+-- test--
+[% BLOCK a; "<a>$content</a>"; END; 
+   BLOCK b; "<b>$content</b>"; END;
+   BLOCK c; "<c>$content</c>"; END;
+   A='a'; 
+   B='b';
+   C='c';
+   WRAPPER $A + $B + $C; 'BAR'; END;
+%]
+-- expect --
+<a><b><c>BAR</c></b></a>
+
