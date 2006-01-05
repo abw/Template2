@@ -27,12 +27,10 @@ package Template::Plugin::URL;
 require 5.004;
 
 use strict;
-use vars qw( @ISA $VERSION $JOINER );
-use Template::Plugin;
+use base 'Template::Plugin';
 
-@ISA     = qw( Template::Plugin );
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$JOINER  = ';';
+our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $JOINT   = '&amp;';
 
 
 #------------------------------------------------------------------------
@@ -50,7 +48,7 @@ sub new {
         my $newbase = shift unless ref $_[0] eq 'HASH';
         my $newargs = shift || { };
         my $combo   = { %$args, %$newargs };
-        my $urlargs = join($JOINER,
+        my $urlargs = join($JOINT,
 #			   map  { "$_=" . escape($combo->{ $_ }) }
 			   map  { args($_, $combo->{ $_ }) }
 			   grep { defined $combo->{ $_ } && length $combo->{ $_ } }
