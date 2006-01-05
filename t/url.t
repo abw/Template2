@@ -23,7 +23,6 @@ use Template::Plugin::URL;
 $^W = 1;
 
 $Template::Test::DEBUG = 0;
-$Template::Plugin::URL::JOINER = '&';
 
 my $urls = {
     product => {
@@ -121,7 +120,7 @@ here
 there
 here?any=where
 every?which=way
-every?which=way&you=can
+every?which=way&amp;you=can
 
 -- test --
 [% USE url('there', name='fred') -%]
@@ -133,8 +132,8 @@ every?which=way&you=can
 -- expect --
 there?name=fred
 there?name=tom
-there?age=24&name=fred
-there?age=42&name=frank
+there?age=24&amp;name=fred
+there?age=42&amp;name=frank
 
 -- test --
 [% USE url('/cgi-bin/woz.pl') -%]
@@ -148,7 +147,7 @@ there?age=42&name=frank
 [% url  %]
 
 -- expect --
-/script?one=1&three=3&three=6&three=9&two=2&two=4
+/script?one=1&amp;three=3&amp;three=6&amp;three=9&amp;two=2&amp;two=4
 
 -- test --
 [% url.product.view %]
@@ -162,11 +161,11 @@ there?age=42&name=frank
 [% url.product.add(style='compact') %]
 -- expect --
 /product?action=add
-/product?action=add&style=compact
+/product?action=add&amp;style=compact
 
 -- test --
 [% url.product.edit %]
 [% url.product.edit(style='compact') %]
 -- expect --
-/product?action=edit&style=editor
-/product?action=edit&style=compact
+/product?action=edit&amp;style=editor
+/product?action=edit&amp;style=compact
