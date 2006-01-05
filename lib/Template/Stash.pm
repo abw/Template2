@@ -620,10 +620,8 @@ sub _dotop {
     }
     elsif ($rootref eq 'ARRAY') {    
         # if root is an ARRAY then we check for a LIST_OPS pseudo-method 
-        # (except for l-values for which it doesn't make any sense)
         # or return the numerical index into the array, or undef
-        
-        if (($value = $LIST_OPS->{ $item }) && ! $lvalue) {
+        if ($value = $LIST_OPS->{ $item }) {
             @result = &$value($root, @$args);               ## @result
         }
         elsif ($item =~ /^-?\d+$/) {
@@ -658,44 +656,15 @@ sub _dotop {
             die $@ if ref($@) || ($@ !~ /Can't locate object method/);
 
             # failed to call object method, so try some fallbacks
-# patch from Stephen Howard
-# -- remove from here... --
             if (UNIVERSAL::isa($root, 'HASH')
                 && defined($value = $root->{ $item })) {
                 return $value unless ref $value eq 'CODE';      ## RETURN
                 @result = &$value(@$args);
             }
-# -- and replace with this... --
-#            if (UNIVERSAL::isa($root, 'HASH') ) {
-#                if( defined($value = $root->{ $item })) {
-#                    return $value unless ref $value eq 'CODE';      ## RETURN
-#                    @result = &$value(@$args);
-#                }
-#                elsif ($value = $HASH_OPS->{ $item }) {
-#                    @result = &$value($root, @$args);
-#                }
-#            }
-# -- remove from here... --
             elsif (UNIVERSAL::isa($root, 'ARRAY') 
                && ($value = $LIST_OPS->{ $item })) {
                 @result = &$value($root, @$args);
             }
-# -- and replace with this... --
-#            elsif (UNIVERSAL::isa($root, 'ARRAY') ) {
-#                if( $value = $LIST_OPS->{ $item }) {
-#                   @result = &$value($root, @$args);
-#                }
-#                elsif( $item =~ /^-?\d+$/ ) {
-#                   $value = $root->[$item];
-#                   return $value unless ref $value eq 'CODE';      ## RETURN
-#                   @result = &$value(@$args);                      ## @result
-#                }
-#                elsif ( ref $item eq 'ARRAY' ) {
-#                    # array slice
-#                    return [@$root[@$item]];                        ## RETURN
-#                }
-#            }
-# -- end --
             elsif ($value = $SCALAR_OPS->{ $item }) {
                 @result = &$value($root, @$args);
             }
@@ -760,21 +729,12 @@ sub _assign {
     $args ||= [ ];
     $default ||= 0;
 
-#    print(STDERR "_assign(root=$root, item=$item, args=[@$args], \n",
-#                         "value=$value, default=$default)\n")
-#   if $DEBUG;
-    
     # return undef without an error if either side of the dot is unviable
     # or if an attempt is made to update a private member, starting _ or .
     return undef                        ## RETURN
     unless $root and defined $item and $item !~ /^[\._]/;
     
     if ($rootref eq 'HASH' || $atroot) {
-#   if ($item eq 'IMPORT' && UNIVERSAL::isa($value, 'HASH')) {
-#       # import hash entries into root hash
-#       @$root{ keys %$value } = values %$value;
-#       return '';                      ## RETURN
-#   }
         # if the root is a hash we set the named key
         return ($root->{ $item } = $value)          ## RETURN
             unless $default && $root->{ $item };
@@ -806,7 +766,6 @@ sub _assign {
 #         }
 #     }
 #     return $result;                       ## RETURN
-
     }
     else {
         die "don't know how to assign to [$root].[$item]\n";    ## DIE
