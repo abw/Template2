@@ -83,7 +83,7 @@ sub ntests {
     print $ntests ? "1..$ntests\n" : "1..$ntests # skipped: $REASON\n";
     # flush cached results
     foreach my $pre_test (@results) {
-	ok(@$pre_test);
+        ok(@$pre_test);
     }
 }
 
@@ -101,17 +101,17 @@ sub ok {
 
     # cache results if ntests() not yet called
     unless ($ok_count) {
-	push(@results, [ $ok, $msg ]);
-	return $ok;
+        push(@results, [ $ok, $msg ]);
+        return $ok;
     }
 
     $msg = defined $msg ? " - $msg" : '';
     if ($ok) {
-	print "ok ", $ok_count++, "$msg\n";
+        print "ok ", $ok_count++, "$msg\n";
     }
     else {
-	print STDERR "FAILED $ok_count: $msg\n" if defined $msg;
-	print "not ok ", $ok_count++, "$msg\n";
+        print STDERR "FAILED $ok_count: $msg\n" if defined $msg;
+        print "not ok ", $ok_count++, "$msg\n";
     }
 }
 
@@ -147,11 +147,11 @@ sub match {
     $result = "$result" if ref $result;	   
 
     if ($result eq $expect) {
-	return ok(1, $msg);
+        return ok(1, $msg);
     }
     else {
-	print STDERR "FAILED $count:\n  expect: [$expect]\n  result: [$result]\n";
-	return ok(0, $msg);
+        print STDERR "FAILED $count:\n  expect: [$expect]\n  result: [$result]\n";
+        return ok(0, $msg);
     }
 }
 
@@ -221,12 +221,12 @@ sub test_expect {
     # read input text
     eval {
         local $/ = undef;
-	$input = ref $src ? <$src> : $src;
+        $input = ref $src ? <$src> : $src;
     };
     if ($@) {
-	ntests(1); ok(0);
-	warn "Cannot read input text from $src\n";
-	return undef;
+        ntests(1); ok(0);
+        warn "Cannot read input text from $src\n";
+        return undef;
     }
 
     # remove any comment lines
@@ -250,18 +250,18 @@ sub test_expect {
     # optional second param may contain a Template reference or a HASH ref
     # of constructor options, or may be undefined
     if (ref($tproc) eq 'HASH') {
-	# create Template object using hash of config items
-	$tproc = Template->new($tproc)
-	    || die Template->error(), "\n";
+        # create Template object using hash of config items
+        $tproc = Template->new($tproc)
+            || die Template->error(), "\n";
     }
     elsif (ref($tproc) eq 'ARRAY') {
-	# list of [ name => $tproc, name => $tproc ], use first $tproc
-	$ttprocs = { @$tproc };
-	$tproc   = $tproc->[1];
+        # list of [ name => $tproc, name => $tproc ], use first $tproc
+        $ttprocs = { @$tproc };
+        $tproc   = $tproc->[1];
     }
     elsif (! ref $tproc) {
-	$tproc = Template->new()
-	    || die Template->error(), "\n";
+        $tproc = Template->new()
+            || die Template->error(), "\n";
     }
     # otherwise, we assume it's a Template reference
 
@@ -273,90 +273,90 @@ sub test_expect {
 
     # the remaining tests are defined in @tests...
     foreach $input (@tests) {
-	$count++;
-	my $name = '';
+        $count++;
+        my $name = '';
+        
+        if ($input =~ s/^\s*-- name:? (.*?) --\s*\n//im) {
+            $name = $1; 
+        }
+        else {
+            $name = "template text $count";
+        }
 
-	if ($input =~ s/^\s*-- name:? (.*?) --\s*\n//im) {
-	    $name = $1; 
-	}
-	else {
-	    $name = "template text $count";
-	}
+        # split input by a line like "-- expect --"
+        ($input, $expect) = 
+            split(/^\s*--\s*expect\s*--\s*\n/im, $input);
+        $expect = '' 
+            unless defined $expect;
 
-	# split input by a line like "-- expect --"
-	($input, $expect) = 
-	    split(/^\s*--\s*expect\s*--\s*\n/im, $input);
-	$expect = '' 
-	    unless defined $expect;
+        $output = '';
 
-	$output = '';
+        # input text may be prefixed with "-- use name --" to indicate a
+        # Template object in the $ttproc hash which we should use
+        if ($input =~ s/^\s*--\s*use\s+(\S+)\s*--\s*\n//im) {
+            my $ttname = $1;
+            my $ttlookup;
+            if ($ttlookup = $ttprocs->{ $ttname }) {
+                $tproc = $ttlookup;
+            }
+            else {
+                warn "no such template object to use: $ttname\n";
+            }
+        }
 
-	# input text may be prefixed with "-- use name --" to indicate a
-	# Template object in the $ttproc hash which we should use
-	if ($input =~ s/^\s*--\s*use\s+(\S+)\s*--\s*\n//im) {
-	    my $ttname = $1;
-	    my $ttlookup;
-	    if ($ttlookup = $ttprocs->{ $ttname }) {
-		$tproc = $ttlookup;
-	    }
-	    else {
-		warn "no such template object to use: $ttname\n";
-	    }
-	}
+        # process input text
+        $tproc->process(\$input, $params, \$output) || do {
+            warn "Template process failed: ", $tproc->error(), "\n";
+            # report failure and automatically fail the expect match
+            ok(0, "$name process FAILED: " . subtext($input));
+            ok(0, '(obviously did not match expected)');
+            next;
+        };
 
-	# process input text
-	$tproc->process(\$input, $params, \$output) || do {
-	    warn "Template process failed: ", $tproc->error(), "\n";
-	    # report failure and automatically fail the expect match
-	    ok(0, "$name process FAILED: " . subtext($input));
-	    ok(0, '(obviously did not match expected)');
-	    next;
-	};
+        # processed OK
+        ok(1, "$name processed OK: " . subtext($input));
 
-	# processed OK
-	ok(1, "$name processed OK: " . subtext($input));
+        # another hack: if the '-- expect --' section starts with 
+        # '-- process --' then we process the expected output 
+        # before comparing it with the generated output.  This is
+        # slightly twisted but it makes it possible to run tests 
+        # where the expected output isn't static.  See t/date.t for
+        # an example.
 
-	# another hack: if the '-- expect --' section starts with 
-	# '-- process --' then we process the expected output 
-	# before comparing it with the generated output.  This is
-	# slightly twisted but it makes it possible to run tests 
-	# where the expected output isn't static.  See t/date.t for
-	# an example.
-
-	if ($expect =~ s/^\s*--+\s*process\s*--+\s*\n//im) {
-	    my $out;
-	    $tproc->process(\$expect, $params, \$out) || do {
-		warn("Template process failed (expect): ", 
-		     $tproc->error(), "\n");
-		# report failure and automatically fail the expect match
-		ok(0, "failed to process expected output ["
-		     . subtext($expect) . ']');
-		next;
-	    };
-	    $expect = $out;
-	};		
-
-	# strip any trailing blank lines from expected and real output
-	foreach ($expect, $output) {
-	    s/\n*\Z//mg;
-	}
-
-	$match = ($expect eq $output) ? 1 : 0;
-	if (! $match || $DEBUG) {
-	    print "MATCH FAILED\n"
-		unless $match;
-
-	    my ($copyi, $copye, $copyo) = ($input, $expect, $output);
-	    unless ($PRESERVE) {
-		foreach ($copyi, $copye, $copyo) {
-		    s/\n/\\n/g;
-		}
-	    }
-	    printf(" input: [%s]\nexpect: [%s]\noutput: [%s]\n", 
-		   $copyi, $copye, $copyo);
-	}
-
-	ok($match, $match ? "$name matched expected" : "$name did not match expected");
+        if ($expect =~ s/^\s*--+\s*process\s*--+\s*\n//im) {
+            my $out;
+            $tproc->process(\$expect, $params, \$out) || do {
+                warn("Template process failed (expect): ", 
+                     $tproc->error(), "\n");
+                # report failure and automatically fail the expect match
+                ok(0, "failed to process expected output ["
+                   . subtext($expect) . ']');
+                next;
+            };
+            $expect = $out;
+        };		
+        
+        # strip any trailing blank lines from expected and real output
+        foreach ($expect, $output) {
+            s/\n*\Z//mg;
+        }
+        
+        $match = ($expect eq $output) ? 1 : 0;
+        if (! $match || $DEBUG) {
+            print "MATCH FAILED\n"
+                unless $match;
+            
+            my ($copyi, $copye, $copyo) = ($input, $expect, $output);
+            unless ($PRESERVE) {
+                foreach ($copyi, $copye, $copyo) {
+                    s/\n/\\n/g;
+                }
+            }
+            printf(" input: [%s]\nexpect: [%s]\noutput: [%s]\n", 
+                   $copyi, $copye, $copyo);
+        }
+        
+        ok($match, $match ? "$name matched expected" : "$name did not match expected");
     };
 }
 
@@ -685,8 +685,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.69, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.70, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
