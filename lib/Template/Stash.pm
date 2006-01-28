@@ -78,17 +78,23 @@ $SCALAR_OPS = {
 #       eval "\$str =~ s$search$replaceg";
         return $str;
     },
+    'remove'  => sub { 
+        my ($str, $search) = @_;
+        return $str unless defined $str and defined $search;
+        $str =~ s/$search//g;
+        return $str;
+    },
     'match' => sub {
         my ($str, $search) = @_;
         return $str unless defined $str and defined $search;
         my @matches = ($str =~ /$search/);
         return @matches ? \@matches : '';
     },
-    'split'   => sub { 
+    split => sub {
         my ($str, $split, @args) = @_;
         $str = '' unless defined $str;
-        return [ defined $split ? split($split, $str, @args)
-                                : split(' ', $str, @args) ];
+        return [ defined $split ? split($split, $str, $args[0])
+                 : split(' ', $str, $args[0]) ];
     },
     'chunk' => sub {
         my ($string, $size) = @_;
@@ -130,11 +136,18 @@ $HASH_OPS = {
         return ($what eq 'keys')   ? [   keys %$hash ]
             : ($what eq 'values') ? [ values %$hash ]
             : ($what eq 'each')   ? [        %$hash ]
-            : [ map { { key => $_ , value => $hash->{ $_ } } }
-                keys %$hash ];
+# replace this utterly useless hash-to-list conversion with what it 
+# should have been all along... sorry if my stupidity broke your code!
+#           : [ map { { key => $_ , value => $hash->{ $_ } } }
+#               keys %$hash ];
+            : [ %$hash ];
     },
     'exists'  => sub { exists $_[0]->{ $_[1] } },
     'defined' => sub { defined $_[0]->{ $_[1] } },
+    'delete'  => sub { 
+        my $hash = shift; 
+        delete $hash->{ $_ } for @_;
+    },
     'import'  => \&hash_import,
     'sort'    => sub {
         my ($hash) = @_;
@@ -150,8 +163,14 @@ $HASH_OPS = {
 $LIST_OPS = {
     'item'    => sub { $_[0]->[ $_[1] || 0 ] },
     'list'    => sub { $_[0] },
-    'hash'    => sub { my $list = shift; my $n = 0; 
-                       return { map { ($n++, $_) } @$list }; },
+    'hash'    => sub { 
+        my $list = shift;
+# make this do what it always should have done.
+#       $n = 0; 
+#       return { map { ($n++, $_) } @$list }; 
+        no warnings;
+        return { @$list };
+    },
     'push'    => sub { my $list = shift; push(@$list, shift); return '' },
     'pop'     => sub { my $list = shift; pop(@$list) },
     'unshift' => sub { my $list = shift; unshift(@$list, shift); return '' },
@@ -652,18 +671,32 @@ sub _dotop {
             # by views; if $@ is a ref (e.g. Template::Exception
             # object then we assume it's a real error that needs
             # real throwing
-            
+
             die $@ if ref($@) || ($@ !~ /Can't locate object method/);
 
             # failed to call object method, so try some fallbacks
-            if (UNIVERSAL::isa($root, 'HASH')
-                && defined($value = $root->{ $item })) {
-                return $value unless ref $value eq 'CODE';      ## RETURN
-                @result = &$value(@$args);
+            if (UNIVERSAL::isa($root, 'HASH') ) {
+                if( defined($value = $root->{ $item })) {
+                    return $value unless ref $value eq 'CODE';      ## RETURN
+                    @result = &$value(@$args);
+                }
+                elsif ($value = $HASH_OPS->{ $item }) {
+                    @result = &$value($root, @$args);
+                }
             }
-            elsif (UNIVERSAL::isa($root, 'ARRAY') 
-               && ($value = $LIST_OPS->{ $item })) {
-                @result = &$value($root, @$args);
+            elsif (UNIVERSAL::isa($root, 'ARRAY') ) {
+                if( $value = $LIST_OPS->{ $item }) {
+                   @result = &$value($root, @$args);
+                }
+                elsif( $item =~ /^-?\d+$/ ) {
+                   $value = $root->[$item];
+                   return $value unless ref $value eq 'CODE';      ## RETURN
+                   @result = &$value(@$args);                      ## @result
+                }
+                elsif ( ref $item eq 'ARRAY' ) {
+                    # array slice
+                    return [@$root[@$item]];                        ## RETURN
+                }
             }
             elsif ($value = $SCALAR_OPS->{ $item }) {
                 @result = &$value($root, @$args);
@@ -973,8 +1006,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.85, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.87, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
