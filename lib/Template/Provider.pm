@@ -33,27 +33,14 @@
 
 package Template::Provider;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION $DEBUG $ERROR $DOCUMENT $STAT_TTL $MAX_DIRS $UNICODE );
-use base qw( Template::Base );
+use warnings;
+use base 'Template::Base'
 use Template::Config;
 use Template::Constants;
 use Template::Document;
 use File::Basename;
 use File::Spec;
-
-$VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-
-# name of document class
-$DOCUMENT = 'Template::Document' unless defined $DOCUMENT;
-
-# maximum time between performing stat() on file to check staleness
-$STAT_TTL = 1 unless defined $STAT_TTL;
-
-# maximum number of directories in an INCLUDE_PATH, to prevent runaways
-$MAX_DIRS = 64 unless defined $MAX_DIRS;
 
 use constant PREV   => 0;
 use constant NAME   => 1;
@@ -62,10 +49,21 @@ use constant LOAD   => 3;
 use constant NEXT   => 4;
 use constant STAT   => 5;
 
-$DEBUG = 0 unless defined $DEBUG;
+our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $DEBUG   = 0 unless defined $DEBUG;
+our $ERROR   = ''
+
+# name of document class
+our $DOCUMENT = 'Template::Document' unless defined $DOCUMENT;
+
+# maximum time between performing stat() on file to check staleness
+our $STAT_TTL = 1 unless defined $STAT_TTL;
+
+# maximum number of directories in an INCLUDE_PATH, to prevent runaways
+our $MAX_DIRS = 64 unless defined $MAX_DIRS;
 
 # UNICODE is supported in versions of Perl from 5.007 onwards
-$UNICODE = $] > 5.007 ? 1 : 0;
+our $UNICODE = $] > 5.007 ? 1 : 0;
 
 my $boms = [
     'UTF-8'    => "\x{ef}\x{bb}\x{bf}",
@@ -74,6 +72,10 @@ my $boms = [
     'UTF-16BE' => "\x{fe}\x{ff}",
     'UTF-16LE' => "\x{ff}\x{fe}",
 ];
+
+# regex to match relative paths
+our $RELATIVE_PATH = qr[(?:^|/)\.+/];
+
 
 # hack so that 'use bytes' will compile on versions of Perl earlier than 
 # 5.6, even though we never call _decode_unicode() on those systems
@@ -133,7 +135,7 @@ sub fetch {
             : ("$name: absolute paths are not allowed (set ABSOLUTE option)",
                Template::Constants::STATUS_ERROR);
     }
-    elsif ($name =~ m[^\.+/]) {
+    elsif ($name =~ m/$RELATIVE_PATH/o) {
         # anything starting "./" is relative to cwd, allowed if RELATIVE set
         ($data, $error) = $self->{ RELATIVE } 
 	    ? $self->_fetch($name) 
@@ -189,7 +191,7 @@ sub load {
         $error = "$name: absolute paths are not allowed (set ABSOLUTE option)" 
             unless $self->{ ABSOLUTE };
     }
-    elsif ($name =~ m[^\.+/]) {
+    elsif ($name =~ m[$RELATIVE_PATH]o) {
         # anything starting "./" is relative to cwd, allowed if RELATIVE set
         $error = "$name: relative paths are not allowed (set RELATIVE option)"
             unless $self->{ RELATIVE };
@@ -1482,8 +1484,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.81, distributed as part of the
-Template Toolkit version 2.14, released on 04 October 2004.
+2.82, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
