@@ -52,6 +52,7 @@ my $data = {
     obj => bless({
         name => 'an object',
     }, 'AnObject'),
+    listobj => bless([10, 20, 30], 'AListObject'),
     correct => sub { die @_ },
     buggy => Buggy->new(),
 };
@@ -143,11 +144,11 @@ one
 + three
 
 -- test --
-[% "* $item.key => $item.value\n" FOREACH item = global.mylist.hash -%]
+[% global.mylist.push('bar');
+   "* $item.key => $item.value\n" FOREACH item = global.mylist.hash -%]
 -- expect --
-* 0 => one
-* 1 => foo
-* 2 => three
+* one => foo
+* three => bar
 
 -- test --
 [% myhash = { msg => 'Hello World', things => global.mylist, a => 'alpha' };
@@ -158,12 +159,19 @@ one
 * Hello World
 
 -- test --
-[% "* $item.key => $item.value.item\n" 
-    FOREACH item = global.myhash.list.sort('key') -%]
+[% global.myhash.delete('things') -%]
+keys: [% global.myhash.keys.sort.join(', ') %]
 -- expect --
-* a => alpha
-* msg => Hello World
-* things => one
+keys: a, msg
+
+-- test --
+[% "* $item\n" 
+    FOREACH item IN global.myhash.list.sort -%]
+-- expect --
+* a
+* alpha
+* Hello World
+* msg
 
 -- test --
 [% items = [ 'foo', 'bar', 'baz' ];
@@ -234,9 +242,16 @@ an object
 an object
 
 -- test --
-[% obj.list.first.name %]
+[% obj.list.first %]
+-- expect --
+name
+
+
+-- test --
+[% obj.list.1 %]
 -- expect --
 an object
+
 
 -- test --
 =[% size %]=
@@ -273,4 +288,5 @@ hello, there
 
 -- expect --
 message: Hello World
+
 
