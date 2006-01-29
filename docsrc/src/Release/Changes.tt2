@@ -27,9 +27,43 @@
 # Version 2.15
 #------------------------------------------------------------------------
 
+* Activated a patch in Template::Stash from Stephen Howard which adds
+  code for the full set of fallbacks for dot ops called against objects
+  which don't implement the specific method.  For example 
+  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now
+  all work with the Perl Template::Stash.  Added code to the XS Stash 
+  to do the same and updated tests.
+
+  http://template-toolkit.org/pipermail/templates/2003-December/005417.html
+
+* Added full support for tied hashes and tied lists in the XS Stash.
+  Added some further tests to make sure it's all working as expected.
+
+* Changed list.hash and hash.list vmethods to Do The Right Thing instead
+  of some crack fuelled nonsense.  hash.list now returns [ %$hash ]
+  and list.hash now returns [ @$list ]
+
+  http://template-toolkit.org/pipermail/templates/2006-January/008256.html
+
+* Added the 'delete' hash virtual method and the 'remove' scalar virtual
+  method.
+
 * Changed $element to $component in Template::Context to fix callers bug, 
   thanks to Andy Maas who identified the problem and found the solution:
+
   http://tt2.org/pipermail/templates/2004-December/007020.html
+
+* Fixed the regex matching relative paths in Template::Provider, thanks
+  to Josh Rosenbaum 
+
+  http://tt2.org/pipermail/templates/2005-January/007141.html
+
+* Fixed the split scalar virtual method which wasn't accepting the second
+  argument (limit) correctly.  Thanks again to Josh Rosenbaum for pointing
+  out the problem, although the solution turned out to be a litte more 
+  complicated.
+
+  http://tt2.org/pipermail/templates/2005-October/007982.html
 
 * Applied a single character patch from Lubomir Host which fixes the 
   user attribute in Template::Plugin::File.
@@ -44,6 +78,22 @@
 
 * Applied a patch to the Image plugin from Bill Moseley to escape 
   attributes in the tag() method of the Image plugin.
+
+* Changed Template::Stash and Template::Stash::XS to evaluate list 
+  vmethods in lvalues.
+
+  http://tt2.org/pipermail/templates/2006-January/008198.html
+
+* Removed redundant performance profiling code from Template::Stash::XS.
+
+* Moved all XML plugins and related tests into a separate Template-XML
+  distribution.
+
+* Moved DBI plugin and tests into Template-DBI distribution.
+
+* Moved GD plugins and tests into Template-GD distribution.
+
+* Moved Latex filters into Template-Latex distribution.
 
 
 #------------------------------------------------------------------------
