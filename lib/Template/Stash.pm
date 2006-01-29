@@ -90,11 +90,25 @@ $SCALAR_OPS = {
         my @matches = ($str =~ /$search/);
         return @matches ? \@matches : '';
     },
-    split => sub {
-        my ($str, $split, @args) = @_;
+    'split' => sub {
+        my ($str, $split, $limit) = @_;
         $str = '' unless defined $str;
-        return [ defined $split ? split($split, $str, $args[0])
-                 : split(' ', $str, $args[0]) ];
+
+        # we have to be very careful about spelling out each possible 
+        # combination of arguments because split() is very sensitive
+        # to them, for example C<split(' ', ...)> behaves differently 
+        # to C<$space=' '; split($space, ...)>
+
+        if (defined $limit) {
+            return [ defined $split 
+                     ? split($split, $str, $limit)
+                     : split(' ', $str, $limit) ];
+        }
+        else {
+            return [ defined $split 
+                     ? split($split, $str)
+                     : split(' ', $str) ];
+        }
     },
     'chunk' => sub {
         my ($string, $size) = @_;
