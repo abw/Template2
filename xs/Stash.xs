@@ -10,11 +10,11 @@
 *   first, last, reverse, etc.)
 *
 * AUTHORS
-*   Andy Wardley   <abw@kfs.org>
+*   Andy Wardley   <abw@cpan.org>
 *   Doug Steinwand <dsteinwand@citysearch.com>
 *
 * COPYRIGHT
-*   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+*   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 *   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 *
 *   This module is free software; you can redistribute it and/or
@@ -45,9 +45,15 @@ extern "C" {
 }
 #endif
 
+#if 0
+#define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
+#else
+#define debug(format, ...)
+#endif
+
 #define TT_STASH_PKG	"Template::Stash::XS"
-#define TT_LIST_OPS	"Template::Stash::LIST_OPS"
-#define TT_HASH_OPS	"Template::Stash::HASH_OPS"
+#define TT_LIST_OPS	    "Template::Stash::LIST_OPS"
+#define TT_HASH_OPS	    "Template::Stash::HASH_OPS"
 #define TT_SCALAR_OPS	"Template::Stash::SCALAR_OPS"
 
 #define TT_LVALUE_FLAG	1
@@ -182,6 +188,8 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
     SV *result = &PL_sv_undef;
     I32 atroot;
 
+    debug("dotop(%s)\n", item);
+
     /* ignore _private or .private members */
     if (!root || *item == '_' || *item == '.')
         return &PL_sv_undef;
@@ -192,12 +200,12 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
         if (atroot || ((SvTYPE(SvRV(root)) == SVt_PVHV) && !sv_isobject(root))) {
             /* root is a HASH or Template::Stash */
             switch(tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
-              case TT_RET_OK:
+            case TT_RET_OK:
                 /* return immediately */
                 return result;
                 break;
-
-              case TT_RET_CODEREF:
+                
+            case TT_RET_CODEREF:
                 /* fall through */
                 break;
                 
@@ -206,17 +214,21 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                 if (flags & TT_LVALUE_FLAG) {
                     SV *newhash;
                     HV *roothv = (HV *) SvRV(root);
-                    
                     newhash = SvREFCNT_inc((SV *) newRV_noinc((SV *) newHV()));
-                    if (! hv_store(roothv, item, item_len, newhash, 0)) {
+
+                    debug("- auto-vivifying intermediate hash\n");
+
+                    if (hv_store(roothv, item, item_len, newhash, 0)) {
                         /* trigger any tied magic to STORE value */
                         SvSETMAGIC(newhash);
+                    }
+                    else {
                         SvREFCNT_dec(newhash);
                     }
                     return sv_2mortal(newhash);
                 }
 
-                /* try hash pseudo-method (not at stash root, except import) */
+                /* try hash virtual method (not at stash root, except import) */
                 if ((! atroot || (strcmp(item, "import") == 0))
                     && hash_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF) {
                     /* try hash slice */ 
@@ -229,13 +241,14 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                         STRLEN tlen;
                         SV **svp;
                         
-                        /* TODO: SvGETMAGIC x 2 below */
-                        
                         for (i = 0; i <= av_len(k_av); i++) {
                             if ((svp = av_fetch(k_av, i, 0))) {
+                                SvGETMAGIC(*svp);
                                 t = SvPV(*svp, tlen);
-                                if((svp = hv_fetch(r_hv, t, tlen, FALSE)))
+                                if((svp = hv_fetch(r_hv, t, tlen, FALSE))) {
+                                    SvGETMAGIC(*svp);
                                     av_push(a_av, SvREFCNT_inc(*svp));
+                                }
                             }
                         }
                         
@@ -265,13 +278,14 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                         I32 i;
                         SV **svp;
                         
-                        /* TODO: SvGETMAGIC x 2 below */
-                        
                         for (i = 0; i <= av_len(k_av); i++) {
                             if ((svp = av_fetch(k_av, i, FALSE))) {
+                                SvGETMAGIC(*svp);
                                 if (looks_like_number(*svp) && 
-                                    (svp = av_fetch(r_av, SvIV(*svp), FALSE)))
+                                    (svp = av_fetch(r_av, SvIV(*svp), FALSE))) {
+                                    SvGETMAGIC(*svp);
                                     av_push(a_av, SvREFCNT_inc(*svp));
+                                }
                             }
                         }
                         
@@ -321,18 +335,48 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
             
             if (!result) {
                 /* failed to call object method, so try some fallbacks */
-                if ((SvTYPE(SvRV(root)) == SVt_PVHV)
-                    && ((n = tt_fetch_item(aTHX_ root, key_sv, args, &result)) != TT_RET_UNDEF)) {
-                    if (n == TT_RET_OK)
+                if (SvTYPE(SvRV(root)) == SVt_PVHV) {
+                    /* hash based object - first try to fetch item */
+                    switch(tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
+                    case TT_RET_OK:
+                        /* return immediately */
                         return result;
-                } 
-                else if (SvTYPE(SvRV(root)) == SVt_PVAV) {
-                    if ((list_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF)
-                        && (flags & TT_DEBUG_FLAG))
-                        result = (SV *) mk_mortal_av(aTHX_ &PL_sv_undef, NULL, ERRSV);
+                        break;
+                
+                    case TT_RET_CODEREF:
+                        /* fall through */
+                        break;
+                
+                    default:
+                        /* then try hash vmethod if that failed */
+                        if (hash_op(aTHX_ root, item, args, &result) == TT_RET_OK) 
+                            return result;
+                    }
                 }
-                else 
-                    scalar_op(aTHX_ root, item, args, &result, flags);
+                else if (SvTYPE(SvRV(root)) == SVt_PVAV) {
+                    /* list based object - first try to fetch item */
+                    switch (tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
+                    case TT_RET_OK:
+                        /* return immediately */
+                        return result;
+                        break;
+                        
+                    case TT_RET_CODEREF:
+                        /* fall through */
+                        break;
+                
+                    default:
+                        /* try list vmethod */
+                        if (list_op(aTHX_ root, item, args, &result) == TT_RET_OK) 
+                            return result;
+                    }
+                }
+                else if (scalar_op(aTHX_ root, item, args, &result, flags) == TT_RET_OK) {
+                    return result;
+                }
+                else if (flags & TT_DEBUG_FLAG) {
+                    result = (SV *) mk_mortal_av(aTHX_ &PL_sv_undef, NULL, ERRSV);
+                }
             }
         }
     }
@@ -395,6 +439,9 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
     AV *rootav;
     STRLEN key_len;
     char *key = SvPV(key_sv, key_len);
+    char *key2 = SvPV(key_sv, key_len);     /* TMP DEBUG HACK */
+
+    debug("assign(%s)\n", key2);
 
     if (!root || !key_len || *key == '_' || *key == '.') {
         /* ignore _private or .private members */
@@ -420,6 +467,7 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
                 }
                 XPUSHs(value);
                 PUTBACK;
+                debug(" - calling object method\n");
                 count = perl_call_method(key, G_ARRAY);
                 SPAGAIN;
                 return fold_results(aTHX_ count);		
@@ -432,10 +480,13 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
         case SVt_PVHV:				    /* HASH */
             roothv = (HV *) SvRV(root);
 
+            debug(" - hash assign\n");
+
             /* check for any existing value if ''default'' flag set */
             if ((flags & TT_DEFAULT_FLAG)
                 && (svp = hv_fetch(roothv, key, key_len, FALSE))) {
                 /* invoke any tied magical FETCH method */
+                debug(" - fetched default\n");
                 SvGETMAGIC(*svp);
                 if (SvTRUE(*svp))
                     return &PL_sv_undef;
@@ -443,34 +494,55 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
             
             /* avoid 'modification of read-only value' error */
             newsv = newSVsv(value); 
-            if (! hv_store(roothv, key, key_len, newsv, 0)) {
+            if (hv_store(roothv, key, key_len, newsv, 0)) {
                 /* invoke any tied magical STORE method */
+                debug(" - stored hash item\n");
                 SvSETMAGIC(newsv);
-                SvREFCNT_dec(newsv);
             }
+            else {
+                printf(" - did not store hash item (hv_store() returned NULL)\n");
+            }
+
             return value;
             break;
 
         case SVt_PVAV:				    /* ARRAY */
             rootav = (AV *) SvRV(root);
 
-            /* check for any existing value if default flag set */
-            if ((flags & TT_DEFAULT_FLAG)
-                && looks_like_number(key_sv)
-                && (svp = av_fetch(rootav, SvIV(key_sv), FALSE))) {
-                /* invoke any tied magical FETCH method */
-                SvGETMAGIC(*svp);
-                if (SvTRUE(*svp))
-                    return &PL_sv_undef;
-            }
+            debug(" - list assign\n");
 
-            newsv = newSVsv(value);
             if (looks_like_number(key_sv)) {
-                if (av_store(rootav, SvIV(key_sv), newsv))
-                    SvREFCNT_inc(newsv);
-                else 
-                    SvSETMAGIC(newsv);
-                
+
+                /* if the TT_DEFAULT_FLAG is set then first look to see if the 
+                 * target is already set to some true value;  if it is then 
+                 * we return that value (after invoking any SvGETMAGIC required
+                 * for tied arrays) and bypass the assignment altogether
+                 */
+
+                if ( (flags & TT_DEFAULT_FLAG) 
+                  && (svp = av_fetch(rootav, SvIV(key_sv), FALSE))) {
+
+                    debug(" - fetched default, invoking any tied magic\n");
+                    SvGETMAGIC(*svp);
+
+                    if (SvTRUE(*svp))
+                        return &PL_sv_undef;
+                }
+
+                /* create a new SV for the value and call av_store(),
+                 * incrementing the reference count on the way; we
+                 * then invoke any set magic for tied arrays; if the
+                 * return value from av_store is NULL (as appears to
+                 * be the case with tied arrays - although the same
+                 * isn't true of hv_store() for some reason???) then
+                 * we decrement the reference counter because that's
+                 * what perlguts tells us to do...
+                 */
+
+                newsv = newSVsv(value);
+                svp = av_store(rootav, SvIV(key_sv), newsv);
+                SvSETMAGIC(newsv);
+
                 return value;
             }
             else
