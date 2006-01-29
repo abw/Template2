@@ -166,6 +166,12 @@ The cat sat on the mat
 The_cat_sat_on_the_mat
 -- test --
 
+-- test --
+[% string.split(' ', 3).join('_') %]
+-- expect --
+The_cat_sat on the mat
+
+-- test --
 [% spaced.split.join('_') %]
 -- expect --
 The_dog_sat_on_the_log
