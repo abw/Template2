@@ -17,8 +17,9 @@
 #========================================================================
 
 use strict;
-use lib qw( ./lib ../lib );
+use lib qw( ./lib ../lib ../blib/arch );
 use Template::Test;
+use Template::Plugins;
 use Template::Constants qw( :debug );
 use Cwd qw( abs_path );
 $^W = 1;
@@ -34,30 +35,51 @@ unshift(@INC, $dir);
 my $tt1 = Template->new({      
     PLUGIN_BASE => 'MyPlugs',
     DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
-});
+}) || die Template->error();
 
 require "MyPlugs/Bar.pm";
 my $bar = MyPlugs::Bar->new(4);
 
 my $tt2 = Template->new({      
     PLUGINS => {
-	bar => 'MyPlugs::Bar',
-	baz => 'MyPlugs::Foo',
-	cgi => 'MyPlugs::Bar',
+        bar => 'MyPlugs::Bar',
+        baz => 'MyPlugs::Foo',
+        cgi => 'MyPlugs::Bar',
     },
     DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
-});
+}) || die Template->error();
 
 my $tt3 = Template->new({
     LOAD_PERL => 1,
     DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
+}) || die Template->error();
+
+
+# we need to delete one of the standard plugins from the $STD_PLUGINS hash
+# for the purposes of testing
+delete $Template::Plugins::STD_PLUGINS->{ date };
+
+# for these we don't want the default Template::Plugin added to the 
+# PLUGIN_BASE search path
+$Template::Plugins::PLUGIN_BASE = '';
+
+my $tt4 = Template->new({
+    PLUGIN_BASE => 'MyPlugs',
+    DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
 });
+
+my $tt5 = Template->new({
+    DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
+});
+
 
 my $tt = [
     def => Template->new(),
     tt1 => $tt1,
     tt2 => $tt2,
     tt3 => $tt3,
+    tt4 => $tt4,
+    tt5 => $tt5,
 ];
 
 test_expect(\*DATA, $tt, &callsign());
@@ -168,3 +190,63 @@ This is the Baz module, value is 128
 [% boz.output %]
 -- expect --
 This is the Baz module, value is 256
+
+
+#------------------------------------------------------------------------
+# Test case insensitivity of plugin names.  We first look for the plugin 
+# using the name specified in its original case. From v2.15 we also look 
+# for standard plugins using the lower case conversion of the plugin name
+# specified.
+#------------------------------------------------------------------------
+
+-- test --
+[% USE mycgi = url('/cgi-bin/bar.pl', debug=1); %][% mycgi %]
+-- expect --
+/cgi-bin/bar.pl?debug=1
+
+-- test --
+[% USE mycgi = URL('/cgi-bin/bar.pl', debug=1); %][% mycgi %]
+-- expect --
+/cgi-bin/bar.pl?debug=1
+
+-- test --
+[% USE mycgi = UrL('/cgi-bin/bar.pl', debug=1); %][% mycgi %]
+-- expect --
+/cgi-bin/bar.pl?debug=1
+
+
+
+
+#------------------------------------------------------------------------
+# ADD_DEFAULT_PLUGIN_BASE = 0.
+# Template::Plugins::URL no longer works since Template::Plugins is not
+# added to the default plugin base. Same with others. However, url will
+# work since it is specified as a plugin in
+# Template::Plugins::STD_PLUGINS.
+#------------------------------------------------------------------------
+
+# should find Foo as we've specified 'MyPlugs' in the PLUGIN_BASE
+-- test --
+-- use tt4 --
+[% USE Foo(20) -%]
+[% Foo.output %]
+-- expect --
+This is the Foo plugin, value is 20
+
+
+-- test --
+-- use tt4 --
+[% TRY -%]
+[% USE Date() -%]
+[% CATCH -%]
+ERROR: [% error.info %]
+[% END %]
+-- expect --
+ERROR: Date: plugin not found
+
+-- test --
+[% USE mycgi = url('/cgi-bin/bar.pl', debug=1); %][% mycgi %]
+-- expect --
+/cgi-bin/bar.pl?debug=1
+
+
