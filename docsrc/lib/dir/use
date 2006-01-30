@@ -18,12 +18,13 @@ module name.  Any periods, '.', in the name will be converted to '::'.
     [% USE MyPlugin %]     #  => Template::Plugin::MyPlugin
     [% USE Foo.Bar  %]     #  => Template::Plugin::Foo::Bar
 
-Various standard plugins are included with the Template Toolkit (see 
-below and L<Template::Manual::Plugins>).  These can be specified in lower
-case and are mapped to the appropriate name.
+Various standard plugins are included with the Template Toolkit (see
+below and L<Template::Manual::Plugins>).  The names of these standard
+plugins are case insensitive.
 
+    [% USE CGI   %]        # => Template::Plugin::CGI
+    [% USE Cgi   %]        # => Template::Plugin::CGI
     [% USE cgi   %]        # => Template::Plugin::CGI
-    [% USE table %]        # => Template::Plugin::Table
 
 Any additional parameters supplied in parenthesis after the plugin
 name will be also be passed to the new() constructor.  A reference to
