@@ -13,11 +13,10 @@ select STDERR;
 $| = 1;
 select STDOUT;
 
-use vars qw( $TT_VERSION $TT_PREFIX $TT_IMAGES $TT_RUN_DBI
-	     $TT_BUILD_DOCS $TT_SPLASH_DOCS $TT_EXAMPLES $TT_EXTRAS
-	     $TT_LATEX_ENABLE $TT_LATEX_PATH $TT_PDFLATEX_PATH $TT_DVIPS_PATH 
-	     $TT_XS_ENABLE $TT_XS_DEFAULT
-	     $TT_SPLASH_THEME $TT_QUIET $TT_ACCEPT $TT_YES );
+use vars qw( $TT_VERSION $TT_PREFIX $TT_IMAGES 
+             $TT_BUILD_DOCS $TT_SPLASH_DOCS $TT_EXAMPLES $TT_EXTRAS
+             $TT_XS_ENABLE $TT_XS_DEFAULT
+             $TT_SPLASH_THEME $TT_QUIET $TT_ACCEPT $TT_YES );
 
 # check O/S to set sensible defaults
 
@@ -72,13 +71,6 @@ arguments to 'perl Makefile.PL'.  e.g.
   TT_EXTRAS      install optional extras (y)
   TT_XS_ENABLE   Enable XS Stash         (y)
   TT_XS_DEFAULT  Use XS Stash by default (y)
-  TT_DBI         run DBI tests           (y if DBI installed)
-
-  TT_LATEX       install LaTeX filter    (y if LaTeX found)
-  TT_LATEX_PATH      path to latex       (system dependant)
-  TT_PDFLATEX_PATH   path to pdflatex    (  "     "     " )
-  TT_DVIPS_PATH      path to dvips       (  "     "     " )
-
   TT_QUIET       no messages	         (n)
   TT_ACCEPT      accept defaults         (n)
 
@@ -99,7 +91,6 @@ EOF
 $TT_VERSION       = $Template::VERSION;
 $TT_PREFIX        = $PREFIX;
 $TT_IMAGES        = $IMAGES;
-$TT_RUN_DBI       = 'y';
 $TT_BUILD_DOCS    = 'y';
 $TT_SPLASH_DOCS   = 'y';
 $TT_EXAMPLES      = 'y';
@@ -107,10 +98,6 @@ $TT_EXTRAS        = 'y';
 $TT_SPLASH_THEME  = 'default';
 $TT_XS_ENABLE     = 'y';
 $TT_XS_DEFAULT    = 'y';
-$TT_LATEX_ENABLE  = 'y';
-$TT_LATEX_PATH    = '';
-$TT_PDFLATEX_PATH = '';
-$TT_DVIPS_PATH    = '';
 $TT_QUIET         = 'n';
 $TT_ACCEPT        = 'n';
 
@@ -120,7 +107,6 @@ my $TT_SPLASH_FT  = '';
 my $TT_SPLASH_BT  = '';
 
 my $DEFAULTS_FILE   = '.defaults.cfg';
-my $DBI_CONFIG_FILE = catfile('t', 'dbi_test.cfg');
 my $TT_DOCS_CFG     = catfile('docs','ttree.cfg');
 my $TT_EXAMPLE_CFG  = catfile('examples','ttree.cfg');
 my $DEFAULTS = '';
@@ -133,22 +119,24 @@ if (-f $DEFAULTS_FILE) {
 $TT_PREFIX        = $ttconfig{ TT_PREFIX     } if $ttconfig{ TT_PREFIX     };
 $TT_IMAGES        = $ttconfig{ TT_IMAGES     } if $ttconfig{ TT_IMAGES     };
 $TT_SPLASH_THEME  = $ttconfig{ TT_THEME      } if $ttconfig{ TT_THEME      };
-$TT_LATEX_PATH    = $ttconfig{ TT_LATEX_PATH } if $ttconfig{ TT_LATEX_PATH };
-$TT_PDFLATEX_PATH = $ttconfig{ TT_PDFLATEX_PATH } if $ttconfig{ TT_PDFLATEX_PATH };
-$TT_DVIPS_PATH    = $ttconfig{ TT_DVIPS_PATH } if $ttconfig{ TT_DVIPS_PATH };
-$TT_RUN_DBI       = $ttconfig{ TT_DBI        } if defined $ttconfig{ TT_DBI        };
 $TT_BUILD_DOCS    = $ttconfig{ TT_DOCS       } if defined $ttconfig{ TT_DOCS       };
 $TT_SPLASH_DOCS   = $ttconfig{ TT_SPLASH     } if defined $ttconfig{ TT_SPLASH     };
 $TT_EXAMPLES      = $ttconfig{ TT_EXAMPLES   } if defined $ttconfig{ TT_EXAMPLES   };
 $TT_EXTRAS        = $ttconfig{ TT_EXTRAS     } if defined $ttconfig{ TT_EXTRAS     };
-$TT_LATEX_ENABLE  = $ttconfig{ TT_LATEX      } if defined $ttconfig{ TT_LATEX      };
 $TT_XS_ENABLE     = $ttconfig{ TT_XS_ENABLE  } if defined $ttconfig{ TT_XS_ENABLE  };
 $TT_XS_DEFAULT    = $ttconfig{ TT_XS_DEFAULT } if defined $ttconfig{ TT_XS_DEFAULT };
 $TT_QUIET         = $ttconfig{ TT_QUIET      } if defined $ttconfig{ TT_QUIET      };
-$TT_ACCEPT        = $ttconfig{ TT_ACCEPT     } if defined $ttconfig{ TT_ACCEPT     };
 
-foreach ($TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, 
-	 $TT_EXTRAS, $TT_LATEX_ENABLE, $TT_XS_ENABLE, $TT_XS_DEFAULT ) {
+if (defined $ttconfig{ TT_ACCEPT }) {
+    $TT_ACCEPT = $ttconfig{ TT_ACCEPT };
+}
+else {
+    # standard behaviour for MakeMaker to indicate accept all defaults
+    $TT_ACCEPT = $ENV{PERL_MM_USE_DEFAULT} ? 'y' : 'n';
+}
+
+foreach ($TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, 
+	 $TT_EXTRAS, $TT_XS_ENABLE, $TT_XS_DEFAULT ) {
     $_ = 'n' if ! $_;
 }
 $TT_ACCEPT = 0 if $TT_ACCEPT eq 'n';
@@ -177,9 +165,7 @@ my $TT_FILE_TEMP_VERSION = '0.12';
 welcome_message();
 version_check();
 mandatory_modules();
-optional_modules();
 optional_stash_xs();
-optional_latex();
 optional_extras();
 splash_images();
 html_docs();
@@ -317,7 +303,6 @@ sub welcome_message {
                     =============================
 
 Using $FLAVOUR defaults$DEFAULTS.
-
 Run 'perl Makefile.PL TT_HELP' for a summary of options.
 EOF
     print "Messages suppressed (TT_QUIET).  " if $TT_QUIET;
@@ -408,60 +393,6 @@ EOF
 
 
 #------------------------------------------------------------------------
-# optional_modules()
-#
-# Detect additional modules required by plugins (just for fun)
-#------------------------------------------------------------------------
-
-sub optional_modules {
-    message(<<EOF);
-
-External Modules
-----------------
-
-The Template Toolkit includes a number of plugin modules, some of
-which interface to external Perl modules available from CPAN.  All the
-plugins will be installed regardless so that they will automatically
-work as and when you install the relevant modules.  The tests will be
-skipped for plugins that require external modules not currently
-available on your system.
-
-EOF
-
-    foreach my $mods ( [ 'Text::Autoformat' => \&check_taf ],
-                       [ 'GD'          => undef         ],
-                       [ 'GD::Text'    => undef         ],
-                       [ 'GD::Graph'   => undef         ],
-                       [ 'GD::Graph3d' => undef         ],
-                       [ 'Image::Info' => undef         ],
-                       [ 'Image::Size' => undef         ],
-                       [ 'Date::Calc'  => undef         ],
-                       [ 'Pod::POM'    => undef         ],
-                       [ 'Tie::DBI'    => undef         ],
-                       [ 'XML::DOM'    => \&check_dom   ],
-                       [ 'XML::RSS'    => \&check_rss   ],
-                       [ 'XML::XPath'  => \&check_xpath ],
-                       [ 'DBI'         => \&dbi_config  ] ) {
-        my ($module, $code) = ref $mods ? @$mods : ($mods, 0);
-	
-        printf("  %-16s ", $module) unless $TT_QUIET;
-        eval "use $module";
-        if ($@) {
-            nope("module not installed");
-        }
-        elsif ($code) {
-            &$code;
-        }
-        else {
-            no strict qw( refs );
-            my $ver = ${"$module\::VERSION"};
-    	    yep("version $ver installed");
-        }
-    }
-}
-
-
-#------------------------------------------------------------------------
 # optional_stash_xs()
 #
 # Prompt for installation and default use of XS Stash.
@@ -473,29 +404,34 @@ sub optional_stash_xs {
     message(<<EOF);
 
 
-XS Stash: TT2 now twice as fast!
---------------------------------
+Template::Stash::XS
+-------------------
 
-We have a new high speed version of the Template::Stash. It's 
-a Perl XS module which can evaluate templates about twice as fast as 
-the pure-Perl version.  It is stable and reliable but be warned that
-it doesn't yet support access to tied hashes (e.g. Tie::DBI) so for
-certain applications you may need to explicitly use the regular stash.
+The Template::Stash module is a core part of the Template Toolkit, 
+implementing the magic for accessing data using the dot notation.
 
-You can choose to build the XS stash module and enable it by default
-so that it is used automatically for all templates.  If you build it
-but don't enable it by default then you can use it something like
-this:
+There is a high speed version, Template::Stash::XS, written in C.
+This makes the Template Toolkit run about twice as fast as when using
+the regular Template::Stash written in Perl.  If you've got a C
+compiler on your system then you can elect to have the XS Stash built.
+You can also specify that you want to use the XS Stash by default.
+
+Please note that the XS Stash doesn't support access to tied hashes or
+tied lists (e.g. Tie::DBI).  If you're using tied objects then you'll
+need to explicitly tell the Template Toolkit that you want to use the
+Perl version.  You can specify which stash module you want by setting
+the \$Template::Config::STASH package variable.
 
     use Template;
-    use Template::Stash::XS;
+    use Template::Config;
 
-    my \$tt = new Template ({ STASH => new Template::Stash::XS, ... });
+    \$Template::Config::STASH = 'Template::Stash';
+    \$tt = Template->new();   # uses Perl stash
 
-You can also enable the XS stash (or the regular stash if you opt to
-use the XS stash by default) by setting the \$STASH package variable
-in the Template/Config.pm module.  See 'perldoc Template::Config' for
-further details.
+    \$Template::Config::STASH = 'Template::Stash::XS';
+    \$tt = Template->new();   # uses XS stash
+
+See 'perldoc Template::Config' for further details.
 
 EOF
 
@@ -504,8 +440,8 @@ EOF
 
     if ($TT_XS_ENABLE) {
         $TT_XS_DEFAULT =
-            (ttprompt('Do you want to use the XS Stash for all Templates?',
-				   $TT_XS_DEFAULT) =~ /^y/i); 
+            (ttprompt('Do you want to use the XS Stash by default?', 
+                      $TT_XS_DEFAULT) =~ /^y/i); 
     }
     else {
         # If the XS stash is disabled, we cannot use it as the default stash.
@@ -517,72 +453,9 @@ EOF
 	fix_file(catfile('lib','Template','Config.pm'),
 		 '$STASH', 
 		 $TT_XS_DEFAULT ? 'Template::Stash::XS' : 'Template::Stash');
-    }
-
-
-#------------------------------------------------------------------------
-# optional_latex()
-#
-# Prompt for installation of latex filter
-#------------------------------------------------------------------------
-
-sub optional_latex {
-#    return if $TT_ACCEPT && (! $TT_LATEX_ENABLE || $TT_LATEX_ENABLE eq 'n');
-
-    $TT_LATEX_PATH    ||= find_program($ENV{PATH}, "latex")    || '';
-    $TT_PDFLATEX_PATH ||= find_program($ENV{PATH}, "pdflatex") || '';
-    $TT_DVIPS_PATH    ||= find_program($ENV{PATH}, "dvips")    || '';
-
-    message(<<EOF);
-
-
-LaTeX Support
--------------
-
-TT2 supports PDF, DVI and PostScript output using the latex filter,
-implemented with the programs pdflatex, latex and dvips.
-
-Because the latex filter runs latex and pdflatex, template authors could
-use this feature to include any arbitrary file in their latex input, or
-also open an arbitrary output file, independent of the ABSOLUTE or
-RELATIVE configuration settings. This might create a security concern at
-your site. If you don't trust your template authors then don't enable
-the latex filter.
-
-I found the following locations for pdflatex, latex and dvips:
-  + pdflatex => $TT_PDFLATEX_PATH
-  + latex    => $TT_LATEX_PATH
-  + dvips    => $TT_DVIPS_PATH
-
-EOF
-
-    if ( $TT_LATEX_PATH    eq "" 
-      || $TT_PDFLATEX_PATH eq "" 
-      || $TT_DVIPS_PATH    eq "" ) {
-         $TT_LATEX_ENABLE = 'n';
-    }
-    $TT_LATEX_ENABLE ||= 'y';
-    $TT_LATEX_ENABLE = (
-			ttprompt('Do you want to enable the latex filter?',
-				 $TT_LATEX_ENABLE) =~ /^y/i
-			);
-    if ( $TT_LATEX_ENABLE ) {
-        if (ttprompt('Are the pdflatex, latex and dvips paths ok?', 'y') !~ /^y/i) {
-            $TT_PDFLATEX_PATH = ttprompt('pdflatex path', $TT_PDFLATEX_PATH);
-            $TT_LATEX_PATH    = ttprompt('latex path',    $TT_LATEX_PATH);
-            $TT_DVIPS_PATH    = ttprompt('dvips path',    $TT_DVIPS_PATH);
-        }
-    } else {
-        #
-        # Empty paths will cause the latex filter to throw an error
-        #
-        $TT_PDFLATEX_PATH = $TT_LATEX_PATH = $TT_DVIPS_PATH = "";
-    }
-    
-    fix_file(catfile('lib','Template','Config.pm'), '$PDFLATEX_PATH', $TT_PDFLATEX_PATH);
-    fix_file(catfile('lib','Template','Config.pm'), '$LATEX_PATH',    $TT_LATEX_PATH);
-    fix_file(catfile('lib','Template','Config.pm'), '$DVIPS_PATH',    $TT_DVIPS_PATH);
 }
+
+
 
 
 #------------------------------------------------------------------------
@@ -909,24 +782,19 @@ EOF
 
 sub write_defaults {
     open(FP, "> $DEFAULTS_FILE") || die "$DEFAULTS_FILE: $!\n";
-    my ( $ttdbi, $ttdocs, $ttsplash, $ttexamples, $ttextras,
-	 $ttlatex, $ttxs_enable, $ttxs_default ) 
+    my ( $ttdocs, $ttsplash, $ttexamples, 
+         $ttextras, $ttxs_enable, $ttxs_default ) 
 	    = map { $_ ? 'y' : 'n' } 
-       ( $TT_RUN_DBI, $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, 
-     $TT_EXTRAS, $TT_LATEX_ENABLE, $TT_XS_ENABLE, $TT_XS_DEFAULT );
+    ( $TT_BUILD_DOCS, $TT_SPLASH_DOCS, $TT_EXAMPLES, 
+      $TT_EXTRAS, $TT_XS_ENABLE, $TT_XS_DEFAULT );
     print FP <<EOF;
 \$TT_PREFIX        = '$TT_PREFIX';
 \$TT_IMAGES        = '$TT_IMAGES';
-\$TT_RUN_DBI       = '$ttdbi';
 \$TT_BUILD_DOCS    = '$ttdocs';
 \$TT_SPLASH_DOCS   = '$ttsplash';
 \$TT_EXAMPLES      = '$ttexamples';
 \$TT_EXTRAS        = '$ttextras';
 \$TT_SPLASH_THEME  = '$TT_SPLASH_THEME';
-\$TT_LATEX_ENABLE  = '$ttlatex';
-\$TT_LATEX_PATH    = '$TT_LATEX_PATH';
-\$TT_PDFLATEX_PATH = '$TT_PDFLATEX_PATH';
-\$TT_DVIPS_PATH    = '$TT_DVIPS_PATH';
 \$TT_XS_ENABLE     = '$ttxs_enable';
 \$TT_XS_DEFAULT    = '$ttxs_default';
 \$TT_ACCEPT        = '$TT_ACCEPT';
@@ -949,159 +817,6 @@ sub build_docs {
 echo "Building documentation for version \$(VERSION)" ;           \\
 \$(PERL) -I\$(INST_ARCHLIB) -I\$(INST_LIB) bin/ttree -f ./docs/ttdist.cfg --define version=\$(VERSION) -a;  \\
 EOF
-}
-
-
-
-#------------------------------------------------------------------------
-# check_taf()
-#
-# There are some problems with Text::Autoformat with version of Perl 
-# prior to 5.6.0 not working properly with locales that use a numerical 
-# separator other than '.' (e.g. Swedish)
-#------------------------------------------------------------------------
-
-sub check_taf {
-    use POSIX qw( localeconv );
-    my $loc = localeconv;
-    my $dec = $loc->{ decimal_point };
-
-    yep("version $Text::Autoformat::VERSION installed");
-
-    if ($] <= 5.006 && $dec ne '.') {
-        print ' ' x 6, 
-        "NOTE: tests 23 and 25 may fail under your locale, see TODO file.\n";
-    }
-}
-
-
-#------------------------------------------------------------------------
-# check_dom()
-#
-# XML::DOM changed from HASH to ARRAY objects somewhere between versions
-# 1.25 and 1.27, so the latter version is an absolute necessity.
-#------------------------------------------------------------------------
-
-sub check_dom {
-    if ($XML::DOM::VERSION < 1.27) {
-        nope("requires version 1.27 or later ($XML::DOM::VERSION installed)");
-    }
-    else {
-        yep("version $XML::DOM::VERSION installed");
-    }
-}
-
-
-#------------------------------------------------------------------------
-# check_rss()
-#
-# Version 0.8 of XML::RSS gave warnings under Perl 5.6.0 so issue an 
-# upgrade recommendation
-#------------------------------------------------------------------------
-
-sub check_rss {
-    if ($] >= 5.006 && $XML::RSS::VERSION < 0.9) {
-        nope("requires version 0.9 or later ($XML::RSS::VERSION installed)");
-    }
-    else {
-        yep("version $XML::RSS::VERSION installed");
-    }
-}
-
-
-#------------------------------------------------------------------------
-# check_xpath()
-#
-# Tests fail under some of the earlier versions (e.g. 0.55) so we issue
-# an upgrade recommendation.
-#------------------------------------------------------------------------
-
-sub check_xpath {
-    if ($XML::XPath::VERSION < 1.00) {
-        nope("requires version 1.00 or later ($XML::XPath::VERSION installed)");
-    }
-    else {
-        yep("version $XML::XPath::VERSION installed");
-    }
-}
-
-
-#------------------------------------------------------------------------
-# dbi_config()
-#
-# Quiz the user for options related to running the DBI tests.
-#------------------------------------------------------------------------
-
-sub dbi_config {
-    my ($dsn, $user, $pass) = ('') x 3;
-
-    message("[X] version $DBI::VERSION installed, configuring tests\n\n");
-
-    if (ttprompt("Do you want to run the DBI tests?\n" .
-	       "It requires access to an existing test database.",
-	       $TT_RUN_DBI) =~ /y/i) {
-
-        $TT_RUN_DBI = 1;
-        my ($driver, $dbname);
-        my @drivers = DBI->available_drivers();
-        local $" = ', ';
-        
-        my $default = (grep(/m.?sql/i, @drivers))[0] 
-            || $drivers[0] || '';
-        
-        message(<<EOF);
-
-DBI Test Configuration
-----------------------
-
-Please enter the driver name for the test database.
-The DBD drivers installed on your system are
-
-    @drivers
-
-EOF
-
-        while (! $driver) {
-            $driver = ttprompt("Enter driver name: ", $default);
-            message("! No such DBD driver\n"), undef $driver
-                unless grep(/^$driver$/, @drivers);
-        }
-        
-        message(<<EOF);
-
-Now enter the data source (DSN) for the test database.
-Many DBD drivers require only a database name (e.g. 'test') while
-others may require an alternate format or additional parameters
-(e.g. 'dbname=test').  Please consult your DBD documentation for
-further details.
-
-EOF
-
-    	my $dbname_eg = $driver eq 'Pg' ? 'dbname=test' : 'test';
-        while (! $dbname) {
-            $dbname = ttprompt('Database name: ', $dbname_eg);
-        }
-    
-        $dsn = "dbi:$driver:$dbname";
-    	$user = ttprompt('Enter user name : ', '');
-    	$pass = ttprompt('Enter password  : ', '');
-    	$user = '' unless defined $user;
-        $pass = '' unless defined $pass;
-    }
-    else {
-        $TT_RUN_DBI = 0;
-    }
-
-    message("\nwriting $DBI_CONFIG_FILE\n");
-    open(CFGFILE, ">$DBI_CONFIG_FILE") || die "$DBI_CONFIG_FILE: $!\n";
-    print CFGFILE <<EOF;
-\$run  = $TT_RUN_DBI;
-\$dsn  = '$dsn';
-\$user = '$user';
-\$pass = '$pass';
-1;
-EOF
-    close(CFGFILE);
 }
 
 
