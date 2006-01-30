@@ -481,15 +481,17 @@ sub remove_filter_factory {
 #------------------------------------------------------------------------
 
 sub truncate_filter_factory {
-    my ($context, $len) = @_;
+    my ($context, $len, $char) = @_;
     $len = 32 unless defined $len;
+    $char = "..." unless defined $char;
 
     return sub {
         my $text = shift;
         return $text if length $text < $len;
-        return substr($text, 0, $len - 3) . "...";
+        return substr($text, 0, $len - length($char)) . $char;
     }
 }
+
 
 
 #------------------------------------------------------------------------
@@ -1351,65 +1353,9 @@ generates output to stdout (in this case in binary mode).
 
 =head2 latex(outputType)
 
-Passes the text block to LaTeX and produces either PDF, DVI or
-PostScript output.  The 'outputType' argument determines the output
-format and it should be set to one of the strings: "pdf" (default),
-"dvi", or "ps".
-
-The text block should be a complete LaTeX source file.
-
-    [% FILTER latex("pdf") -%]
-    \documentclass{article}
-
-    \begin{document}
-
-    \title{A Sample TT2 \LaTeX\ Source File}
-    \author{Craig Barratt}
-    \maketitle
-
-    \section{Introduction}
-    This is some text.
-
-    \end{document}
-    [% END -%]
-
-The output will be a PDF file. You should be careful not to prepend or
-append any extraneous characters or text outside the FILTER block,
-since this text will wrap the (binary) output of the latex filter.
-Notice the END directive uses '-%]' for the END_TAG to remove the
-trailing new line.
-
-One example where you might prepend text is in a CGI script where
-you might include the Content-Type before the latex output, eg:
-
-    Content-Type: application/pdf
-
-    [% FILTER latex("pdf") -%]
-    \documentclass{article}
-    \begin{document}
-    ...
-    \end{document}
-    [% END -%]
-
-In other cases you might use the redirect filter to put the output
-into a file, rather than delivering it to stdout.  This might be
-suitable for batch scripts:
-
-    [% output = FILTER latex("pdf") -%]
-    \documentclass{article}
-    \begin{document}
-    ...
-    \end{document}
-    [% END; output | redirect("document.pdf", 1) -%]
-
-(Notice the second argument to redirect to force binary mode.)
-
-Note that the latex filter runs one or two external programs, so it
-isn't very fast.  But for modest documents the performance is adequate,
-even for interactive applications.
-
-A error of type 'latex' will be thrown if there is an error reported
-by latex, pdflatex or dvips.
+The latex() filter is no longer part of the core Template Toolkit
+distribution as of version 2.15.  You can download it as a 
+separate Template-Latex distribution from CPAN.
 
 =head1 AUTHOR
 
@@ -1422,8 +1368,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.77, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.78, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
