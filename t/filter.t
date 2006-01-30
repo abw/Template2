@@ -468,9 +468,11 @@ Mary ...
 [% 'Hello World' | truncate(8) +%]
 [% 'Hello World' | truncate(10) +%]
 [% 'Hello World' | truncate(20) +%]
+[% 'Hello World' | truncate(11) +%]
 -- expect --
 Hello...
 Hello W...
+Hello World
 Hello World
 
 -- test --
