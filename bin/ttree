@@ -181,8 +181,10 @@ if ($verbose) {
     if ($depends && $DEP_DEBUG) {
         print "Dependencies:\n";
         foreach my $key ('*', grep { !/\*/ } keys %$depends) {
-            printf("    %-16s %s\n", $key, 
-                   join(', ', @{ $depends->{ $key } }));
+            printf( "    %-16s %s\n", $key, 
+                    join(', ', @{ $depends->{ $key } }) ) 
+                if defined $depends->{ $key };
+
         }
     }
     print "\n";
@@ -1053,8 +1055,8 @@ Brocard who gets everywhere, it seems.
 
 =head1 VERSION
 
-2.69, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.35, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
