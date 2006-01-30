@@ -151,15 +151,9 @@ sub _init {
     # update PLUGIN_BASE to an array ref if necessary
     $pbase = [ ] unless defined $pbase;
     $pbase = [ $pbase ] unless ref($pbase) eq 'ARRAY';
-
-    # add $params->{ PLUGIN_DEFAULT } or $PLUGIN_BASE (Template::Plugin)
-    if (exists $params->{ PLUGIN_DEFAULT }) {
-        push(@$pbase, $params->{ PLUGIN_DEFAULT })
-            if $params->{ PLUGIN_DEFAULT };
-    }
-    else {
-        push(@$pbase, $PLUGIN_BASE);
-    }
+    
+    # add default plugin base (Template::Plugin) if set
+    push(@$pbase, $PLUGIN_BASE) if $PLUGIN_BASE;
 
     $self->{ PLUGIN_BASE } = $pbase;
     $self->{ PLUGINS     } = { %$STD_PLUGINS, %$plugins };
