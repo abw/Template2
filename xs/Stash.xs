@@ -161,10 +161,11 @@ static TT_RET tt_fetch_item(pTHX_ SV *root, SV *key_sv, AV *args, SV **result) {
             return TT_RET_CODEREF;
             
         } 
-        else if (*value != &PL_sv_undef) {
+        else if (SvOK(*value)) {
             *result = *value;
             return TT_RET_OK;
         }
+
     } 
 
     *result = &PL_sv_undef;
