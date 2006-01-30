@@ -588,7 +588,7 @@ sub visit {
 #
 # The leave() method is called when the document has finished
 # processing itself.  This removes the entry from the BLKSTACK list
-# that was added visit() above.  For persistance of BLOCK definitions,
+# that was added visit() above.  For persistence of BLOCK definitions,
 # the process() method (i.e. the PROCESS directive) does some extra
 # magic to copy BLOCKs into a shared hash.
 #------------------------------------------------------------------------
@@ -606,7 +606,7 @@ sub leave {
 # be specified as a reference to a sub-routine or Template::Document
 # object or as text which is compiled into a template.  Returns a true
 # value (the $block reference or compiled block reference) if
-# succesful or undef on failure.  Call error() to retrieve the
+# successful or undef on failure.  Call error() to retrieve the
 # relevent error message (i.e. compilation failure).
 #------------------------------------------------------------------------
 
@@ -1554,8 +1554,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.91, distributed as part of the
-Template Toolkit version 2.14, released on 04 October 2004.
+2.92, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
