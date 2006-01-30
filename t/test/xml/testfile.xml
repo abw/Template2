@@ -1,7 +1,0 @@
-<website id="webzone1">
-  <section name="alpha" title="The Alpha Zone">
-    <page href="/foo/bar" title="The Foo Page"/>
-    <page href="/bar/baz" title="The Bar Page"/>
-    <page href="/baz/qux" title="The Baz Page"/>
-  </section>
-</website>
