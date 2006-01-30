@@ -157,7 +157,12 @@ $HASH_OPS = {
             : [ %$hash ];
     },
     'exists'  => sub { exists $_[0]->{ $_[1] } },
-    'defined' => sub { defined $_[0]->{ $_[1] } },
+    'defined' => sub { 
+        # return the item requested, or 1 if no argument 
+        # to indicate that the hash itself is defined
+        my $hash = shift;
+        return @_ ? defined $hash->{ $_[0] } : 1;
+    },
     'delete'  => sub { 
         my $hash = shift; 
         delete $hash->{ $_ } for @_;
@@ -191,6 +196,12 @@ $LIST_OPS = {
     'shift'   => sub { my $list = shift; shift(@$list) },
     'max'     => sub { local $^W = 0; my $list = shift; $#$list; },
     'size'    => sub { local $^W = 0; my $list = shift; $#$list + 1; },
+    'defined' => sub { 
+        # return the item requested, or 1 if no argument to 
+        # indicate that the hash itself is defined
+        my $list = shift;
+        return @_ ? defined $list->[$_[0]] : 1;
+    },
     'first'   => sub {
         my $list = shift;
         return $list->[0] unless @_;
