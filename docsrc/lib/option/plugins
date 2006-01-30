@@ -13,12 +13,24 @@ their corresponding Template::Plugin::* counterparts.  These can be
 redefined by values in the PLUGINS hash.
 
     my [* obj *] = [* pkg *]->new({
-	PLUGINS => {
-	    cgi => 'MyOrg::Template::Plugin::CGI',
-    	    foo => 'MyOrg::Template::Plugin::Foo',
-	    bar => 'MyOrg::Template::Plugin::Bar',
-	},
-    });
+        PLUGINS => {
+            cgi => 'MyOrg::Template::Plugin::CGI',
+            foo => 'MyOrg::Template::Plugin::Foo',
+            bar => 'MyOrg::Template::Plugin::Bar',
+        },  
+    }); 
+
+The recommended convention is to specify these plugin names in lower
+case.  The Template Toolkit first looks for an exact case-sensitive
+match and then tries the lower case conversion of the name specified.
+
+    [% USE Foo %]      # look for 'Foo' then 'foo'
+
+If you define all your PLUGINS with lower case names then they will be
+located regardless of how the user specifies the name in the USE
+directive.  If, on the other hand, you define your PLUGINS with upper
+or mixed case names then the name specified in the USE directive must
+match the case exactly.  
 
 The USE directive is used to create plugin objects and does so by
 calling the plugin() method on the current Template::Context object.
@@ -28,6 +40,6 @@ calls the load() class method which should return the class name
 (default and general case) or a prototype object against which the 
 new() method can be called to instantiate individual plugin objects.
 
-If the plugin name is not defined in the PLUGINS hash then the PLUGIN_BASE
-and/or LOAD_PERL options come into effect.
+If the plugin name is not defined in the PLUGINS hash then the
+PLUGIN_BASE and/or LOAD_PERL options come into effect.
 
