@@ -46,6 +46,10 @@ You can also provide an alternate name for an Image plugin object.
     [% USE img1 = image 'foo.gif' %]
     [% USE img2 = image 'bar.gif' %]
 
+The 'name' method returns the image file name.
+
+    [% img1.name %]     # foo.gif
+
 The 'width' and 'height' methods return the width and height of the
 image, respectively.  The 'size' method returns a reference to a 2
 element list containing the width and height.
