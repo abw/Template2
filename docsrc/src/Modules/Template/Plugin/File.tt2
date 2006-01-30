@@ -184,49 +184,50 @@ item.
 
     [% USE file('/foo/bar/baz.html') %]
 
-    [% file.path %]	  # /foo/bar/baz.html
-    [% file.dir %]        # /foo/bar
-    [% file.name %]	  # baz.html
-    [% file.home %]       # ../..
-    [% file.root %]       # ''
-    [% file.abspath %]    # /foo/bar/baz.html
-    [% file.ext %]        # html
+    [% file.path  %]      # /foo/bar/baz.html
+    [% file.dir   %]      # /foo/bar
+    [% file.name  %]      # baz.html
+    [% file.home  %]      # ../..
+    [% file.root  %]      # ''
+    [% file.abs   %]      # /foo/bar/baz.html
+    [% file.ext   %]      # html
     [% file.mtime %]	  # 987654321
     [% file.atime %]      # 987654321
-    [% file.uid %]	  # 500
-    [% file.user %]	  # abw
+    [% file.uid   %]      # 500
+    [% file.user  %]      # abw
 
     [% USE file('foo.html') %]
 
-    [% file.path %]	  # foo.html
-    [% file.dir %]        # ''
-    [% file.name %]	  # foo.html
+    [% file.path %]	      # foo.html
+    [% file.dir  %]       # ''
+    [% file.name %]	      # foo.html
     [% file.root %]       # ''
     [% file.home %]       # ''
-    [% file.abspath %]    # foo.html
+    [% file.abs  %]       # foo.html
 
     [% USE file('foo/bar/baz.html') %]
 
-    [% file.path %]	  # foo/bar/baz.html
-    [% file.dir %]        # foo/bar
-    [% file.name %]	  # baz.html
+    [% file.path %]	      # foo/bar/baz.html
+    [% file.dir  %]       # foo/bar
+    [% file.name %]	      # baz.html
     [% file.root %]       # ''
     [% file.home %]       # ../..
-    [% file.abspath %]    # foo/bar/baz.html
+    [% file.abs  %]       # foo/bar/baz.html
 
     [% USE file('foo/bar/baz.html', root='/tmp') %]
 
-    [% file.path %]	  # foo/bar/baz.html
-    [% file.dir %]        # foo/bar
-    [% file.name %]	  # baz.html
+    [% file.path %]	      # foo/bar/baz.html
+    [% file.dir  %]       # foo/bar
+    [% file.name %]	      # baz.html
     [% file.root %]       # /tmp
     [% file.home %]       # ../..
-    [% file.abspath %]    # /tmp/foo/bar/baz.html
+    [% file.abs  %]       # /tmp/foo/bar/baz.html
 
     # calculate other file paths relative to this file and its root
     [% USE file('foo/bar/baz.html', root => '/tmp/tt2') %]
+
     [% file.path('baz/qux.html') %]	    # ../../baz/qux.html
-    [% file.dir('wiz/woz.html') %]          # ../../wiz/woz.html
+    [% file.dir('wiz/woz.html')  %]     # ../../wiz/woz.html
 
 
 =head1 AUTHORS
