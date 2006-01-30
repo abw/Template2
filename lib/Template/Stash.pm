@@ -216,7 +216,8 @@ $LIST_OPS = {
         $^W = 0;
         my ($list, $field) = @_;
         return $list unless @$list > 1;     # no need to sort 1 item lists
-        return $field                       # Schwartzian Transform 
+        return [
+            $field                          # Schwartzian Transform 
             ?  map  { $_->[0] }             # for case insensitivity
                sort { $a->[1] cmp $b->[1] }
                map  { [ $_, lc(ref($_) eq 'HASH' 
@@ -227,12 +228,14 @@ $LIST_OPS = {
             :  map  { $_->[0] }
                sort { $a->[1] cmp $b->[1] }
                map  { [ $_, lc $_ ] } 
-               @$list
+               @$list,
+       ];
    },
    'nsort'    => sub {
         my ($list, $field) = @_;
         return $list unless @$list > 1;     # no need to sort 1 item lists
-        return $field                       # Schwartzian Transform 
+        return [ 
+            $field                          # Schwartzian Transform 
             ?  map  { $_->[0] }             # for case insensitivity
                sort { $a->[1] <=> $b->[1] }
                map  { [ $_, lc(ref($_) eq 'HASH' 
@@ -243,7 +246,8 @@ $LIST_OPS = {
             :  map  { $_->[0] }
                sort { $a->[1] <=> $b->[1] }
                map  { [ $_, lc $_ ] } 
-               @$list
+               @$list,
+        ];
     },
     'unique'  => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
     'merge'   => sub {
