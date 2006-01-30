@@ -211,11 +211,15 @@ a, b, c, d
 [% hash.a.defined ? 'good' : 'bad' %]
 [% hash.defined('x') ? 'bad' : 'good' %]
 [% hash.x.defined ? 'bad' : 'good' %]
+[% hash.defined ? 'good def' : 'bad def' %]
+[% no_such_hash.defined ? 'bad no def' : 'good no def' %]
 -- expect --
 good
 good
 good
 good
+good def
+good no def
 
 -- test --
 [% uhash.defined('tobe') ? 'good' : 'bad' %]
@@ -296,6 +300,15 @@ foo, bar, baz, qux, wiz, waz, woz
 [% metavars.sort.join(', ') %]
 -- expect --
 bar, baz, foo, qux, waz, wiz, woz
+
+-- test --
+[% metavars.defined ? 'list def ok' : 'list def not ok' %]
+[% metavars.defined(2) ? 'list two ok' : 'list two not ok' %]
+[% metavars.defined(7) ? 'list seven not ok' : 'list seven ok' %]
+-- expect --
+list def ok
+list two ok
+list seven ok
 
 -- test --
 [% FOREACH person = people.sort('id') -%]

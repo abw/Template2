@@ -58,13 +58,13 @@ The VARIABLES (a.k.a. PRE_DEFINE) option can also be used to pre-define
 variables for all templates processed by the object.
 </p>
 <pre>    my $tt = Template-&gt;new({
-	VARIABLES =&gt; {
-	    version =&gt; 3.14,
-	    release =&gt; 'Sahara',
-	},
+        VARIABLES =&gt; {
+            version =&gt; 3.14,
+            release =&gt; 'Sahara',
+        },  
     });</pre>
 <pre>    my $vars = {
-	serial_no =&gt; 271828,
+        serial_no =&gt; 271828,
     };</pre>
 <pre>    $tt-&gt;process('myfile', $vars);</pre>
 <p>
@@ -101,15 +101,15 @@ procedure to accessing these values as they are used in the template.
 Example:
 </p>
 <pre>    my $vars = {
-	article =&gt; 'The Third Shoe',
-	person  =&gt; { 
-	    id    =&gt; 314, 
-	    name  =&gt; 'Mr. Blue',
-	    email =&gt; 'blue@nowhere.org',
-	},
-	primes  =&gt; [ 2, 3, 5, 7, 11, 13 ],
-	wizard  =&gt; sub { return join(' ', 'Abracadabra!', @_) },
-	cgi     =&gt; CGI-&gt;new('mode=submit&amp;debug=1'),
+        article =&gt; 'The Third Shoe',
+        person  =&gt; { 
+            id    =&gt; 314, 
+            name  =&gt; 'Mr. Blue',
+            email =&gt; 'blue@nowhere.org',
+        },
+        primes  =&gt; [ 2, 3, 5, 7, 11, 13 ],
+        wizard  =&gt; sub { return join(' ', 'Abracadabra!', @_) },
+        cgi     =&gt; CGI-&gt;new('mode=submit&amp;debug=1'),
     };</pre>
 <p>
 template:
@@ -150,12 +150,12 @@ Members of hash arrays are accessed by specifying the hash reference
 and key separated by the dot '.' operator.
 </p>
 <pre>    my $vars = {
-  	'home' =&gt; 'http://www.myserver.com/homepage.html',
-  	'page' =&gt; {
-  	    'this' =&gt; 'mypage.html',
-  	    'next' =&gt; 'nextpage.html',
-  	    'prev' =&gt; 'prevpage.html',
-  	},
+        'home' =&gt; 'http://www.myserver.com/homepage.html',
+        'page' =&gt; {
+            'this' =&gt; 'mypage.html',
+            'next' =&gt; 'nextpage.html',
+            'prev' =&gt; 'prevpage.html',
+        },
     };</pre>
 <p>
 template:
@@ -177,18 +177,18 @@ accessed which the Template Toolkit will silently ignore (unless the
 DEBUG option is enabled).
 </p>
 <pre>    my $vars = {
-	message =&gt; 'Hello World!',
-	_secret =&gt; &quot;On the Internet, no-one knows you're a dog&quot;,
-	thing   =&gt; {
-	     public  =&gt; 123,
-	    _private =&gt; 456,
-	   '.hidden' =&gt; 789,
-	},
+    message =&gt; 'Hello World!',
+    _secret =&gt; &quot;On the Internet, no-one knows you're a dog&quot;,
+    thing   =&gt; {
+         public  =&gt; 123,
+        _private =&gt; 456,
+       '.hidden' =&gt; 789,
+    },
     };</pre>
 <p>
 template:
 </p>
-<pre>    [% tt_start_tag %] message [% tt_end_tag %]		# outputs &quot;Hello World!&quot;
+<pre>    [% tt_start_tag %] message [% tt_end_tag %]       # outputs &quot;Hello World!&quot;
     [% tt_start_tag %] _secret [% tt_end_tag %]               # no output
     [% tt_start_tag %] thing.public [% tt_end_tag %]          # outputs &quot;123&quot;
     [% tt_start_tag %] thing._private [% tt_end_tag %]        # no output
@@ -226,9 +226,9 @@ a hash and assign it to a variable.  Note that commas are optional
 between key/value pairs and '=' can be used in place of '=&gt;'.
 </p>
 <pre>    [% tt_start_tag %] product = {
-  	 id    =&gt; 'XYZ-2000',
-  	 desc  =&gt; 'Bogon Generator',
-  	 price =&gt; 666,
+     id    =&gt; 'XYZ-2000',
+     desc  =&gt; 'Bogon Generator',
+     price =&gt; 666,
        }
     [% tt_end_tag %]</pre>
 [%- END %]
@@ -238,14 +238,14 @@ between key/value pairs and '=' can be used in place of '=&gt;'.
 Items in lists are also accessed by use of the dot operator.
 </p>
 <pre>    my $vars = {
-  	'people' =&gt; [ 'Tom', 'Dick', 'Larry' ],
+    'people' =&gt; [ 'Tom', 'Dick', 'Larry' ],
     };</pre>
 <p>
 template:
 </p>
-<pre>    [% tt_start_tag %] people.0 [% tt_end_tag %]			# Tom
-    [% tt_start_tag %] people.1 [% tt_end_tag %]			# Dick
-    [% tt_start_tag %] people.2 [% tt_end_tag %]			# Larry</pre>
+<pre>    [% tt_start_tag %] people.0 [% tt_end_tag %]          # Tom
+    [% tt_start_tag %] people.1 [% tt_end_tag %]          # Dick
+    [% tt_start_tag %] people.2 [% tt_end_tag %]          # Larry</pre>
 <p>
 The FOREACH directive can be used to iterate through items in a list.
 </p>
@@ -290,13 +290,13 @@ value from the subroutine is used as the variable value and inserted
 into the document output.
 </p>
 <pre>    my $vars = {
-	wizard  =&gt; sub { return join(' ', 'Abracadabra!', @_) },
-    };	</pre>
+    wizard  =&gt; sub { return join(' ', 'Abracadabra!', @_) },
+    };  </pre>
 <p>
 template:
 </p>
-<pre>    [% tt_start_tag %] wizard [% tt_end_tag %]			# Abracadabra!
-    [% tt_start_tag %] wizard('Hocus Pocus!') [% tt_end_tag %]	# Abracadabra! Hocus Pocus!</pre>
+<pre>    [% tt_start_tag %] wizard [% tt_end_tag %]            # Abracadabra!
+    [% tt_start_tag %] wizard('Hocus Pocus!') [% tt_end_tag %]    # Abracadabra! Hocus Pocus!</pre>
 [%- END %]
 [% WRAPPER subsection
    title = "Objects"
@@ -309,14 +309,14 @@ as with subroutines.
 <pre>    use CGI;</pre>
 <pre>    ...</pre>
 <pre>    my $vars = {
-	# hard coded CGI params for purpose of example
-	cgi  =&gt; CGI-&gt;new('mode=submit&amp;debug=1'),
+    # hard coded CGI params for purpose of example
+    cgi  =&gt; CGI-&gt;new('mode=submit&amp;debug=1'),
     };</pre>
 <p>
 template:
 </p>
-<pre>    [% tt_start_tag %] FOREACH p = cgi.param [% tt_end_tag %]		# returns list of param keys
-    [% tt_start_tag %] p [% tt_end_tag %] =&gt; [% tt_start_tag %] cgi.param(p) [% tt_end_tag %]	# fetch each param value
+<pre>    [% tt_start_tag %] FOREACH p = cgi.param [% tt_end_tag %]     # returns list of param keys
+    [% tt_start_tag %] p [% tt_end_tag %] =&gt; [% tt_start_tag %] cgi.param(p) [% tt_end_tag %]   # fetch each param value
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
 output:
@@ -342,13 +342,13 @@ template.  Any template variables in the argument list will first be
 evaluated and their resultant values passed to the code.
 </p>
 <pre>    my $vars = {
-	mycode =&gt; sub { return 'received ' . join(', ', @_) },
+    mycode =&gt; sub { return 'received ' . join(', ', @_) },
     };</pre>
 <p>
 template:
 </p>
 <pre>    [% tt_start_tag %] foo = 10 [% tt_end_tag %]
-    [% tt_start_tag %] mycode(foo, 20) [% tt_end_tag %]		# received 10, 20</pre>
+    [% tt_start_tag %] mycode(foo, 20) [% tt_end_tag %]       # received 10, 20</pre>
 <p>
 Named parameters may also be specified.  These are automatically collected
 into a single hash array which is passed by reference as the <b>last</b> 
@@ -356,12 +356,12 @@ parameter to the sub-routine.  Named parameters can be specified using
 either '=&gt;' or '=' and can appear anywhere in the argument list.
 </p>
 <pre>    my $vars = {
-	myjoin =&gt; \&amp;myjoin,
+    myjoin =&gt; \&amp;myjoin,
     };</pre>
 <pre>    sub myjoin {
-	# look for hash ref as last argument
-	my $params = ref $_[-1] eq 'HASH' ? pop : { };
-	return join($params-&gt;{ joint } || ' + ', @_);
+    # look for hash ref as last argument
+    my $params = ref $_[-1] eq 'HASH' ? pop : { };
+    return join($params-&gt;{ joint } || ' + ', @_);
     }</pre>
 <p>
 template:
@@ -383,7 +383,7 @@ supported for future extensions.  Think of them as &quot;hints&quot; to that
 variable, rather than just arguments passed to a function.
 </p>
 <pre>    [% tt_start_tag %] r = 'Romeo' [% tt_end_tag %]
-    [% tt_start_tag %] r(100, 99, s, t, v) [% tt_end_tag %]		# outputs &quot;Romeo&quot;</pre>
+    [% tt_start_tag %] r(100, 99, s, t, v) [% tt_end_tag %]       # outputs &quot;Romeo&quot;</pre>
 <p>
 User code should return a value for the variable it represents. This
 can be any of the Perl data types described above: a scalar, or
@@ -392,9 +392,9 @@ list of multiple values the items will automatically be folded into a
 list reference which can be accessed as per normal.
 </p>
 <pre>    my $vars = {
-	# either is OK, first is recommended
-	items1 =&gt; sub { return [ 'foo', 'bar', 'baz' ] },
-	items2 =&gt; sub { return ( 'foo', 'bar', 'baz' ) },
+    # either is OK, first is recommended
+    items1 =&gt; sub { return [ 'foo', 'bar', 'baz' ] },
+    items2 =&gt; sub { return ( 'foo', 'bar', 'baz' ) },
     };</pre>
 <p>
 template:
@@ -416,17 +416,17 @@ A reference to the exception object is then available as the 'error'
 variable.
 </p>
 <pre>    my $vars = {
-	barf =&gt; sub { 
-	    die &quot;a sick error has occurred\n&quot;;
-	},
+    barf =&gt; sub { 
+        die &quot;a sick error has occurred\n&quot;;
+    },
     };</pre>
 <p>
 template:
 </p>
 <pre>    [% tt_start_tag %] TRY [% tt_end_tag %]
-       [% tt_start_tag %] barf [% tt_end_tag %]	    # calls sub which throws error via die()
+       [% tt_start_tag %] barf [% tt_end_tag %]       # calls sub which throws error via die()
     [% tt_start_tag %] CATCH [% tt_end_tag %]
-       [% tt_start_tag %] error.info [% tt_end_tag %]	    # outputs &quot;a sick error has occurred\n&quot;
+       [% tt_start_tag %] error.info [% tt_end_tag %]     # outputs &quot;a sick error has occurred\n&quot;
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
 Error messages thrown via die() are converted to exceptions of type
@@ -437,11 +437,11 @@ die() with a reference to a Template::Exception object.
 <pre>    ...
     
     my $vars = {
-	login =&gt; sub { 
-	    ...
-	    die Template::Exception-&gt;new('badpwd',
-					 'password too silly');
-	},
+    login =&gt; sub { 
+        ...
+        die Template::Exception-&gt;new('badpwd',
+                     'password too silly');
+    },
     };</pre>
 <p>
 template:
@@ -470,13 +470,13 @@ compatibility with version 1 but may be deprecated in some future
 version.
 </p>
 <pre>    my $vars = {
-	# currently equivalent
-	barf =&gt; sub {
-	    die &quot;I'm sorry Dave, I can't do that&quot;;
-	},
-	yack =&gt; sub {
-	    return (undef, &quot;I'm sorry Dave, I can't do that&quot;);
-	},
+    # currently equivalent
+    barf =&gt; sub {
+        die &quot;I'm sorry Dave, I can't do that&quot;;
+    },
+    yack =&gt; sub {
+        return (undef, &quot;I'm sorry Dave, I can't do that&quot;);
+    },
     };</pre>
 [%- END %]
 [% WRAPPER subsection
@@ -523,7 +523,7 @@ most common use is to retrieve an element from a hash where the key is
 stored in a variable.
 </p>
 <pre>    [% tt_start_tag %] uid = 'abw' [% tt_end_tag %]
-    [% tt_start_tag %] userlist.$uid [% tt_end_tag %]		    # same as 'userlist.abw'</pre>
+    [% tt_start_tag %] userlist.$uid [% tt_end_tag %]         # same as 'userlist.abw'</pre>
 <p>
 Curly braces can be used to delimit interpolated variable names where
 necessary.
@@ -553,7 +553,7 @@ Note also that a variable containing a reference to a Template::Document
 object can also be processed in this way.
 </p>
 <pre>    my $vars = {
-	header =&gt; Template::Document-&gt;new({ ... }),
+    header =&gt; Template::Document-&gt;new({ ... }),
     };</pre>
 <p>
 template:
@@ -580,9 +580,9 @@ variables within the processed template.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] name = 'foo' [% tt_end_tag %] 
     [% tt_start_tag %] INCLUDE change_name [% tt_end_tag %]
-    [% tt_start_tag %] name [% tt_end_tag %]			    # foo
+    [% tt_start_tag %] name [% tt_end_tag %]              # foo
     [% tt_start_tag %] PROCESS change_name [% tt_end_tag %]
-    [% tt_start_tag %] name [% tt_end_tag %]			    # bar</pre>
+    [% tt_start_tag %] name [% tt_end_tag %]              # bar</pre>
 <p>
 Dotted compound variables behave slightly differently because the
 localisation process is only skin deep.  The current variable
@@ -594,15 +594,15 @@ general rule is that simple variables (undotted variables) are
 localised, but existing complex structures (dotted variables) are not.
 </p>
 <pre>    [% tt_start_tag %] BLOCK all_change [% tt_end_tag %]
-       [% tt_start_tag %] x = 20 [% tt_end_tag %]		    # changes copy
-       [% tt_start_tag %] y.z = 'zulu' [% tt_end_tag %]	    # changes original
+       [% tt_start_tag %] x = 20 [% tt_end_tag %]         # changes copy
+       [% tt_start_tag %] y.z = 'zulu' [% tt_end_tag %]       # changes original
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] x = 10
        y = { z =&gt; 'zebra' }
     [% tt_end_tag %]
     [% tt_start_tag %] INCLUDE all_change [% tt_end_tag %]
-    [% tt_start_tag %] x [% tt_end_tag %]			    # still '10'
-    [% tt_start_tag %] y.z [% tt_end_tag %]			    # now 'zulu'</pre>
+    [% tt_start_tag %] x [% tt_end_tag %]             # still '10'
+    [% tt_start_tag %] y.z [% tt_end_tag %]               # now 'zulu'</pre>
 <p>
 If you create a complex structure such as a hash or list reference
 within a local template context then it will cease to exist when 
@@ -615,8 +615,8 @@ the template is finished processing.
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] x = 10 [% tt_end_tag %]
     [% tt_start_tag %] INCLUDE new_stuff [% tt_end_tag %]
-    [% tt_start_tag %] x [% tt_end_tag %]			    # outputs '10'
-    [% tt_start_tag %] y [% tt_end_tag %]			    # nothing, y is undefined</pre>
+    [% tt_start_tag %] x [% tt_end_tag %]             # outputs '10'
+    [% tt_start_tag %] y [% tt_end_tag %]             # nothing, y is undefined</pre>
 <p>
 Similarly, if you update an element of a compound variable which
 <i>doesn't</i> already exists then a hash will be created automatically
@@ -655,17 +655,17 @@ kind of complex, nested, or dynamic data structures, just like regular
 variables.
 </p>
 <pre>    my $tt = Template-&gt;new({
-	CONSTANTS =&gt; {
-	    version =&gt; 3.14,
-	    release =&gt; 'skyrocket',
-	    col     =&gt; {
-		back =&gt; '#ffffff',
-		fore =&gt; '#000000',
-	    },
-	    myobj =&gt; My::Object-&gt;new(),
-	    mysub =&gt; sub { ... },
-	    joint =&gt; ', ',
-	},
+    CONSTANTS =&gt; {
+        version =&gt; 3.14,
+        release =&gt; 'skyrocket',
+        col     =&gt; {
+        back =&gt; '#ffffff',
+        fore =&gt; '#000000',
+        },
+        myobj =&gt; My::Object-&gt;new(),
+        mysub =&gt; sub { ... },
+        joint =&gt; ', ',
+    },
     });</pre>
 <p>
 Within a template, you access these variables using the 'constants'
@@ -708,11 +708,11 @@ The CONSTANTS_NAMESPACE option can be used to provide a different
 namespace prefix for constant variables.  For example:
 </p>
 <pre>    my $tt = Template-&gt;new({
-	CONSTANTS =&gt; {
-	    version =&gt; 3.14,
-	    # ...etc...
-	},
-	CONSTANTS_NAMESPACE =&gt; 'const',
+    CONSTANTS =&gt; {
+        version =&gt; 3.14,
+        # ...etc...
+    },
+    CONSTANTS_NAMESPACE =&gt; 'const',
     });</pre>
 <p>
 Constants would then be referenced in templates as:
@@ -756,18 +756,50 @@ to the current component.
 This example should demonstrate the difference:
 </p>
 <pre>    $template-&gt;process('foo')
-	|| die $template-&gt;error(), &quot;\n&quot;;</pre>
+    || die $template-&gt;error(), &quot;\n&quot;;</pre>
 <p>
 'foo':
 </p>
-<pre>    [% tt_start_tag %] template.name [% tt_end_tag %]		    # foo
-    [% tt_start_tag %] component.name [% tt_end_tag %]	    # foo
+<pre>    [% tt_start_tag %] template.name [% tt_end_tag %]         # foo
+    [% tt_start_tag %] component.name [% tt_end_tag %]        # foo
     [% tt_start_tag %] PROCESS footer [% tt_end_tag %]</pre>
 <p>
 'footer':
 </p>
-<pre>    [% tt_start_tag %] template.name [% tt_end_tag %]		    # foo
-    [% tt_start_tag %] component.name [% tt_end_tag %]            # footer</pre>
+<pre>    [% tt_start_tag %] template.name [% tt_end_tag %]         # foo
+    [% tt_start_tag %] component.name [% tt_end_tag %]        # footer</pre>
+<p>
+Additionally, the 'component' variable has two special fields:
+'caller' and 'callers'.  'caller' contains the name of the template
+that called the current template (or undef if the values of 'template'
+and 'component' are the same).  'callers' contains a reference to a
+list of all the templates that have been called on the road to calling
+the current component template (like a call stack), with the
+outer-most template first.
+</p>
+<p>
+Here's an example:
+</p>
+<p>
+'outer.tt2':
+</p>
+<pre>    [% tt_start_tag %] component.name [% tt_end_tag %]        # 'outer.tt2'
+    [% tt_start_tag %] component.caller [% tt_end_tag %]      # undef
+    [% tt_start_tag %] component.callers [% tt_end_tag %]     # undef
+    [% tt_start_tag %] PROCESS 'middle.tt2' [% tt_end_tag %]</pre>
+<p>
+'middle.tt2':
+</p>
+<pre>    [% tt_start_tag %] component.name [% tt_end_tag %]        # 'middle.tt2'
+    [% tt_start_tag %] component.caller [% tt_end_tag %]      # 'outer.tt2'
+    [% tt_start_tag %] component.callers [% tt_end_tag %]     # [ 'outer.tt2' ]
+    [% tt_start_tag %] PROCESS 'inner.tt2' [% tt_end_tag %]</pre>
+<p>
+'inner.tt2':
+</p>
+<pre>    [% tt_start_tag %] component.name [% tt_end_tag %]        # 'inner.tt2'
+    [% tt_start_tag %] component.caller [% tt_end_tag %]      # 'middle.tt2'
+    [% tt_start_tag %] component.callers [% tt_end_tag %]     # [ 'outer.tt2', 'middle.tt2' ]</pre>
 
 <li><b>loop</b><br>
 <p>
@@ -850,7 +882,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

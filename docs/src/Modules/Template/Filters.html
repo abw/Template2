@@ -44,7 +44,7 @@
 		    "html_line_break",
 		    "uri",
 		    "indent(pad)",
-		    "truncate(length)",
+		    "truncate(length,dots)",
 		    "repeat(iterations)",
 		    "remove(string) ",
 		    "replace(search, replace) ",
@@ -355,9 +355,9 @@ output:
 [% WRAPPER subsection
    title = "html"
 -%]<p>
-Converts the characters '&lt;', '&gt;' and '&amp;' to '&amp;lt;', '&amp;gt;' and
-'&amp;amp;', respectively, protecting them from being interpreted as
-representing HTML tags or entities.
+Converts the characters '&lt;', '&gt;', '&amp;' and '&quot;' to '&amp;lt;',
+'&amp;gt;', '&amp;amp;', and '&amp;quot;' respectively, protecting them from being
+interpreted as representing HTML tags or entities.
 </p>
 <pre>    [% tt_start_tag %] FILTER html [% tt_end_tag %]
     Binary &quot;&lt;=&gt;&quot; returns -1, 0, or 1 depending on...
@@ -481,11 +481,11 @@ output:
     ME&gt; cabbages, rhubard, onions</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "truncate(length)"
+   title = "truncate(length,dots)"
 -%]<p>
-Truncates the text block to the length specified, or a default length of
-32.  Truncated text will be terminated with '...' (i.e. the '...' falls
-inside the required length, rather than appending to it).
+Truncates the text block to the length specified, or a default length
+of 32.  Truncated text will be terminated with '...' (i.e. the '...'
+falls inside the required length, rather than appending to it).
 </p>
 <pre>    [% tt_start_tag %] FILTER truncate(21) [% tt_end_tag %]
     I have much to say on this matter that has previously 
@@ -495,6 +495,18 @@ inside the required length, rather than appending to it).
 output:
 </p>
 <pre>    I have much to say...</pre>
+<p>
+If you want to use something other than '...' you can pass that as a 
+second argument.
+</p>
+<pre>    [% tt_start_tag %] FILTER truncate(26, '&amp;hellip;') [% tt_end_tag %]
+    I have much to say on this matter that has previously 
+    been said on more than one occasion.
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+output:
+</p>
+<pre>    I have much to say&amp;hellip;</pre>
 [%- END %]
 [% WRAPPER subsection
    title = "repeat(iterations)"
@@ -681,64 +693,9 @@ generates output to stdout (in this case in binary mode).
 [% WRAPPER subsection
    title = "latex(outputType)"
 -%]<p>
-Passes the text block to LaTeX and produces either PDF, DVI or
-PostScript output.  The 'outputType' argument determines the output
-format and it should be set to one of the strings: &quot;pdf&quot; (default),
-&quot;dvi&quot;, or &quot;ps&quot;.
-</p>
-<p>
-The text block should be a complete LaTeX source file.
-</p>
-<pre>    [% tt_start_tag %] FILTER latex(&quot;pdf&quot;) -[% tt_end_tag %]
-    \documentclass{article}</pre>
-<pre>    \begin{document}</pre>
-<pre>    \title{A Sample TT2 \LaTeX\ Source File}
-    \author{Craig Barratt}
-    \maketitle</pre>
-<pre>    \section{Introduction}
-    This is some text.</pre>
-<pre>    \end{document}
-    [% tt_start_tag %] END -[% tt_end_tag %]</pre>
-<p>
-The output will be a PDF file. You should be careful not to prepend or
-append any extraneous characters or text outside the FILTER block,
-since this text will wrap the (binary) output of the latex filter.
-Notice the END directive uses '-[% tt_end_tag %]' for the END_TAG to remove the
-trailing new line.
-</p>
-<p>
-One example where you might prepend text is in a CGI script where
-you might include the Content-Type before the latex output, eg:
-</p>
-<pre>    Content-Type: application/pdf</pre>
-<pre>    [% tt_start_tag %] FILTER latex(&quot;pdf&quot;) -[% tt_end_tag %]
-    \documentclass{article}
-    \begin{document}
-    ...
-    \end{document}
-    [% tt_start_tag %] END -[% tt_end_tag %]</pre>
-<p>
-In other cases you might use the redirect filter to put the output
-into a file, rather than delivering it to stdout.  This might be
-suitable for batch scripts:
-</p>
-<pre>    [% tt_start_tag %] output = FILTER latex(&quot;pdf&quot;) -[% tt_end_tag %]
-    \documentclass{article}
-    \begin{document}
-    ...
-    \end{document}
-    [% tt_start_tag %] END; output | redirect(&quot;document.pdf&quot;, 1) -[% tt_end_tag %]</pre>
-<p>
-(Notice the second argument to redirect to force binary mode.)
-</p>
-<p>
-Note that the latex filter runs one or two external programs, so it
-isn't very fast.  But for modest documents the performance is adequate,
-even for interactive applications.
-</p>
-<p>
-A error of type 'latex' will be thrown if there is an error reported
-by latex, pdflatex or dvips.
+The latex() filter is no longer part of the core Template Toolkit
+distribution as of version 2.15.  You can download it as a 
+separate Template-Latex distribution from CPAN.
 </p>
 [%- END %]
 [%- END %]
@@ -754,8 +711,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.77, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.80, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

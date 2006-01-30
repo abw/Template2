@@ -218,42 +218,42 @@ item.
 [% WRAPPER section
     title="EXAMPLES"
 -%]<pre>    [% tt_start_tag %] USE file('/foo/bar/baz.html') [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	  # /foo/bar/baz.html
-    [% tt_start_tag %] file.dir [% tt_end_tag %]        # /foo/bar
-    [% tt_start_tag %] file.name [% tt_end_tag %]	  # baz.html
-    [% tt_start_tag %] file.home [% tt_end_tag %]       # ../..
-    [% tt_start_tag %] file.root [% tt_end_tag %]       # ''
-    [% tt_start_tag %] file.abspath [% tt_end_tag %]    # /foo/bar/baz.html
-    [% tt_start_tag %] file.ext [% tt_end_tag %]        # html
+<pre>    [% tt_start_tag %] file.path  [% tt_end_tag %]      # /foo/bar/baz.html
+    [% tt_start_tag %] file.dir   [% tt_end_tag %]      # /foo/bar
+    [% tt_start_tag %] file.name  [% tt_end_tag %]      # baz.html
+    [% tt_start_tag %] file.home  [% tt_end_tag %]      # ../..
+    [% tt_start_tag %] file.root  [% tt_end_tag %]      # ''
+    [% tt_start_tag %] file.abs   [% tt_end_tag %]      # /foo/bar/baz.html
+    [% tt_start_tag %] file.ext   [% tt_end_tag %]      # html
     [% tt_start_tag %] file.mtime [% tt_end_tag %]	  # 987654321
     [% tt_start_tag %] file.atime [% tt_end_tag %]      # 987654321
-    [% tt_start_tag %] file.uid [% tt_end_tag %]	  # 500
-    [% tt_start_tag %] file.user [% tt_end_tag %]	  # abw</pre>
+    [% tt_start_tag %] file.uid   [% tt_end_tag %]      # 500
+    [% tt_start_tag %] file.user  [% tt_end_tag %]      # abw</pre>
 <pre>    [% tt_start_tag %] USE file('foo.html') [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	  # foo.html
-    [% tt_start_tag %] file.dir [% tt_end_tag %]        # ''
-    [% tt_start_tag %] file.name [% tt_end_tag %]	  # foo.html
+<pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	      # foo.html
+    [% tt_start_tag %] file.dir  [% tt_end_tag %]       # ''
+    [% tt_start_tag %] file.name [% tt_end_tag %]	      # foo.html
     [% tt_start_tag %] file.root [% tt_end_tag %]       # ''
     [% tt_start_tag %] file.home [% tt_end_tag %]       # ''
-    [% tt_start_tag %] file.abspath [% tt_end_tag %]    # foo.html</pre>
+    [% tt_start_tag %] file.abs  [% tt_end_tag %]       # foo.html</pre>
 <pre>    [% tt_start_tag %] USE file('foo/bar/baz.html') [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	  # foo/bar/baz.html
-    [% tt_start_tag %] file.dir [% tt_end_tag %]        # foo/bar
-    [% tt_start_tag %] file.name [% tt_end_tag %]	  # baz.html
+<pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	      # foo/bar/baz.html
+    [% tt_start_tag %] file.dir  [% tt_end_tag %]       # foo/bar
+    [% tt_start_tag %] file.name [% tt_end_tag %]	      # baz.html
     [% tt_start_tag %] file.root [% tt_end_tag %]       # ''
     [% tt_start_tag %] file.home [% tt_end_tag %]       # ../..
-    [% tt_start_tag %] file.abspath [% tt_end_tag %]    # foo/bar/baz.html</pre>
+    [% tt_start_tag %] file.abs  [% tt_end_tag %]       # foo/bar/baz.html</pre>
 <pre>    [% tt_start_tag %] USE file('foo/bar/baz.html', root='/tmp') [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	  # foo/bar/baz.html
-    [% tt_start_tag %] file.dir [% tt_end_tag %]        # foo/bar
-    [% tt_start_tag %] file.name [% tt_end_tag %]	  # baz.html
+<pre>    [% tt_start_tag %] file.path [% tt_end_tag %]	      # foo/bar/baz.html
+    [% tt_start_tag %] file.dir  [% tt_end_tag %]       # foo/bar
+    [% tt_start_tag %] file.name [% tt_end_tag %]	      # baz.html
     [% tt_start_tag %] file.root [% tt_end_tag %]       # /tmp
     [% tt_start_tag %] file.home [% tt_end_tag %]       # ../..
-    [% tt_start_tag %] file.abspath [% tt_end_tag %]    # /tmp/foo/bar/baz.html</pre>
+    [% tt_start_tag %] file.abs  [% tt_end_tag %]       # /tmp/foo/bar/baz.html</pre>
 <pre>    # calculate other file paths relative to this file and its root
-    [% tt_start_tag %] USE file('foo/bar/baz.html', root =&gt; '/tmp/tt2') [% tt_end_tag %]
-    [% tt_start_tag %] file.path('baz/qux.html') [% tt_end_tag %]	    # ../../baz/qux.html
-    [% tt_start_tag %] file.dir('wiz/woz.html') [% tt_end_tag %]          # ../../wiz/woz.html</pre>
+    [% tt_start_tag %] USE file('foo/bar/baz.html', root =&gt; '/tmp/tt2') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] file.path('baz/qux.html') [% tt_end_tag %]	    # ../../baz/qux.html
+    [% tt_start_tag %] file.dir('wiz/woz.html')  [% tt_end_tag %]     # ../../wiz/woz.html</pre>
 [%- END %]
 [% WRAPPER section
     title="AUTHORS"
@@ -267,8 +267,8 @@ for VIEW support, and made a few other minor tweaks.
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.66, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.67, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -467,7 +467,6 @@ t/proc.t
 t/process.t
 t/provider.t
 t/ref.t
-t/rss.t
 t/service.t
 t/skel.t
 t/stash-xs.t
@@ -531,20 +530,12 @@ t/test/src/leak2
 t/test/src/metadata
 t/test/src/mywrap
 t/test/src/recurse
-t/test/src/one
-t/test/src/one
-t/test/src/two
-t/test/src/three
-t/test/src/four
 t/test/tmp/README
-t/test/xml/example.rdf
-t/test/xml/testfile.xml
 t/text.t
 t/throw.t
 t/tiedhash.t
 t/try.t
 t/url.t
-t/url2.t
 t/vars.t
 t/varsv1.t
 t/view.t
@@ -641,3 +632,4 @@ xs/Makefile.PL
 xs/README
 xs/Stash.xs
 xs/ppport.h
+META.yml                                 Module meta-data (added by MakeMaker)

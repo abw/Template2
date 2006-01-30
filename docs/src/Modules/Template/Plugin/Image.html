@@ -66,10 +66,31 @@ the image should be specified as a positional or named argument.
     [% tt_start_tag %] USE image(name='baz.gif') [% tt_end_tag %]
     [% tt_start_tag %] USE Image name='pong.gif' [% tt_end_tag %]</pre>
 <p>
+A &quot;root&quot; parameter can be used to specify the location of the image file:
+</p>
+<pre>    [% tt_start_tag %] USE Image(root='/path/to/root', name='images/home.png') [% tt_end_tag %]
+    # image path: /path/to/root/images/home.png
+    # img src: images/home.png</pre>
+<p>
+In cases where the image path and image url do not match up, specify the
+file name directly:
+</p>
+<pre>    [% tt_start_tag %] USE Image(file='/path/to/home.png', name='/images/home.png') [% tt_end_tag %]</pre>
+<p>
+The &quot;alt&quot; parameter can be used to specify an alternate name for the
+image, for use in constructing an XHTML element (see the tag() method
+below).
+</p>
+<pre>    [% tt_start_tag %] USE Image('home.png', alt=&quot;Home&quot;) [% tt_end_tag %]</pre>
+<p>
 You can also provide an alternate name for an Image plugin object.
 </p>
 <pre>    [% tt_start_tag %] USE img1 = image 'foo.gif' [% tt_end_tag %]
     [% tt_start_tag %] USE img2 = image 'bar.gif' [% tt_end_tag %]</pre>
+<p>
+The 'name' method returns the image file name.
+</p>
+<pre>    [% tt_start_tag %] img1.name [% tt_end_tag %]     # foo.gif</pre>
 <p>
 The 'width' and 'height' methods return the width and height of the
 image, respectively.  The 'size' method returns a reference to a 2
@@ -79,6 +100,13 @@ element list containing the width and height.
     width: [% tt_start_tag %] image.width [% tt_end_tag %]
     height: [% tt_start_tag %] image.height [% tt_end_tag %]
     size: [% tt_start_tag %] image.size.join(', ') [% tt_end_tag %]</pre>
+<p>
+The 'modtime' method returns the ctime of the file in question, suitable
+for use with date.format:
+</p>
+<pre>    [% tt_start_tag %] USE image 'foo.gif' [% tt_end_tag %]
+    [% tt_start_tag %] USE date [% tt_end_tag %]
+    [% tt_start_tag %] date.format(image.modtime, &quot;%B, %e %Y&quot;) [% tt_end_tag %]</pre>
 <p>
 The 'attr' method returns the height and width as HTML/XML attributes.
 </p>
@@ -96,24 +124,24 @@ The 'tag' method returns a complete XHTML tag referencing the image.
 <p>
 Typical output:
 </p>
-<pre>    &lt;img src=&quot;foo.gif&quot; width=&quot;60&quot; height=&quot;20&quot; /&gt;</pre>
+<pre>    &lt;img src=&quot;foo.gif&quot; width=&quot;60&quot; height=&quot;20&quot; alt=&quot;&quot; /&gt;</pre>
 <p>
 You can provide any additional attributes that should be added to the 
 XHTML tag.
 </p>
 <pre>    [% tt_start_tag %] USE image 'foo.gif' [% tt_end_tag %]
-    [% tt_start_tag %] image.tag(border=0, class=&quot;logo&quot;) [% tt_end_tag %]</pre>
+    [% tt_start_tag %] image.tag(class=&quot;logo&quot; alt=&quot;Logo&quot;) [% tt_end_tag %]</pre>
 <p>
 Typical output:
 </p>
-<pre>    &lt;img src=&quot;foo.gif&quot; width=&quot;60&quot; height=&quot;20&quot; border=&quot;0&quot; class=&quot;logo&quot; /&gt;</pre>
+<pre>    &lt;img src=&quot;foo.gif&quot; width=&quot;60&quot; height=&quot;20&quot; alt=&quot;Logo&quot; class=&quot;logo&quot; /&gt;</pre>
 <p>
-The 'modtime' method returns the ctime of the file in question, suitable
-for use with date.format:
+Note that the 'alt' attribute is mandatory in a strict XHTML 'img'
+element (even if it's empty) so it is always added even if you don't
+explicitly provide a value for it.  You can do so as an argument to 
+the 'tag' method, as shown in the previous example, or as an argument
 </p>
-<pre>    [% tt_start_tag %] USE image 'foo.gif' [% tt_end_tag %]
-    [% tt_start_tag %] USE date [% tt_end_tag %]
-    [% tt_start_tag %] date.format(image.modtime, &quot;%B, %e %Y&quot;) [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] USE image('foo.gif', alt='Logo') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER section
     title="CATCHING ERRORS"
@@ -245,8 +273,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-1.15, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+1.17, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

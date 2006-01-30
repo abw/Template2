@@ -52,14 +52,14 @@ The VARIABLES (a.k.a. PRE_DEFINE) option can also be used to pre-define
 variables for all templates processed by the object.
 
     my $tt = Template->new({
-	VARIABLES => {
-	    version => 3.14,
-	    release => 'Sahara',
-	},
+        VARIABLES => {
+            version => 3.14,
+            release => 'Sahara',
+        },  
     });
 
     my $vars = {
-	serial_no => 271828,
+        serial_no => 271828,
     };
 
     $tt->process('myfile', $vars);
@@ -97,15 +97,15 @@ procedure to accessing these values as they are used in the template.
 Example:
 
     my $vars = {
-	article => 'The Third Shoe',
-	person  => { 
-	    id    => 314, 
-	    name  => 'Mr. Blue',
-	    email => 'blue@nowhere.org',
-	},
-	primes  => [ 2, 3, 5, 7, 11, 13 ],
-	wizard  => sub { return join(' ', 'Abracadabra!', @_) },
-	cgi     => CGI->new('mode=submit&debug=1'),
+        article => 'The Third Shoe',
+        person  => { 
+            id    => 314, 
+            name  => 'Mr. Blue',
+            email => 'blue@nowhere.org',
+        },
+        primes  => [ 2, 3, 5, 7, 11, 13 ],
+        wizard  => sub { return join(' ', 'Abracadabra!', @_) },
+        cgi     => CGI->new('mode=submit&debug=1'),
     };
 
 template:
@@ -151,12 +151,12 @@ Members of hash arrays are accessed by specifying the hash reference
 and key separated by the dot '.' operator.
 
     my $vars = {
-  	'home' => 'http://www.myserver.com/homepage.html',
-  	'page' => {
-  	    'this' => 'mypage.html',
-  	    'next' => 'nextpage.html',
-  	    'prev' => 'prevpage.html',
-  	},
+        'home' => 'http://www.myserver.com/homepage.html',
+        'page' => {
+            'this' => 'mypage.html',
+            'next' => 'nextpage.html',
+            'prev' => 'prevpage.html',
+        },
     };
 
 template:
@@ -178,18 +178,18 @@ accessed which the Template Toolkit will silently ignore (unless the
 DEBUG option is enabled).
 
     my $vars = {
-	message => 'Hello World!',
-	_secret => "On the Internet, no-one knows you're a dog",
-	thing   => {
-	     public  => 123,
-	    _private => 456,
-	   '.hidden' => 789,
-	},
+    message => 'Hello World!',
+    _secret => "On the Internet, no-one knows you're a dog",
+    thing   => {
+         public  => 123,
+        _private => 456,
+       '.hidden' => 789,
+    },
     };
 
 template:
 
-    [% message %]		# outputs "Hello World!"
+    [% message %]       # outputs "Hello World!"
     [% _secret %]               # no output
     [% thing.public %]          # outputs "123"
     [% thing._private %]        # no output
@@ -227,9 +227,9 @@ a hash and assign it to a variable.  Note that commas are optional
 between key/value pairs and '=' can be used in place of '=E<gt>'.
 
     [% product = {
-  	 id    => 'XYZ-2000',
-  	 desc  => 'Bogon Generator',
-  	 price => 666,
+     id    => 'XYZ-2000',
+     desc  => 'Bogon Generator',
+     price => 666,
        }
     %]
 
@@ -238,14 +238,14 @@ between key/value pairs and '=' can be used in place of '=E<gt>'.
 Items in lists are also accessed by use of the dot operator.
 
     my $vars = {
-  	'people' => [ 'Tom', 'Dick', 'Larry' ],
+    'people' => [ 'Tom', 'Dick', 'Larry' ],
     };
 
 template:
 
-    [% people.0 %]			# Tom
-    [% people.1 %]			# Dick
-    [% people.2 %]			# Larry
+    [% people.0 %]          # Tom
+    [% people.1 %]          # Dick
+    [% people.2 %]          # Larry
 
 The FOREACH directive can be used to iterate through items in a list.
 
@@ -291,13 +291,13 @@ value from the subroutine is used as the variable value and inserted
 into the document output.
 
     my $vars = {
-	wizard  => sub { return join(' ', 'Abracadabra!', @_) },
-    };	
+    wizard  => sub { return join(' ', 'Abracadabra!', @_) },
+    };  
 
 template:
 
-    [% wizard %]			# Abracadabra!
-    [% wizard('Hocus Pocus!') %]	# Abracadabra! Hocus Pocus!
+    [% wizard %]            # Abracadabra!
+    [% wizard('Hocus Pocus!') %]    # Abracadabra! Hocus Pocus!
 
 
 =head2 Objects
@@ -312,14 +312,14 @@ as with subroutines.
     ...
 
     my $vars = {
-	# hard coded CGI params for purpose of example
-	cgi  => CGI->new('mode=submit&debug=1'),
+    # hard coded CGI params for purpose of example
+    cgi  => CGI->new('mode=submit&debug=1'),
     };
 
 template:
 
-    [% FOREACH p = cgi.param %]		# returns list of param keys
-    [% p %] => [% cgi.param(p) %]	# fetch each param value
+    [% FOREACH p = cgi.param %]     # returns list of param keys
+    [% p %] => [% cgi.param(p) %]   # fetch each param value
     [% END %]
 
 output:
@@ -344,13 +344,13 @@ template.  Any template variables in the argument list will first be
 evaluated and their resultant values passed to the code.
 
     my $vars = {
-	mycode => sub { return 'received ' . join(', ', @_) },
+    mycode => sub { return 'received ' . join(', ', @_) },
     };
 
 template:
 
     [% foo = 10 %]
-    [% mycode(foo, 20) %]		# received 10, 20
+    [% mycode(foo, 20) %]       # received 10, 20
 
 Named parameters may also be specified.  These are automatically collected
 into a single hash array which is passed by reference as the B<last> 
@@ -358,13 +358,13 @@ parameter to the sub-routine.  Named parameters can be specified using
 either '=E<gt>' or '=' and can appear anywhere in the argument list.
 
     my $vars = {
-	myjoin => \&myjoin,
+    myjoin => \&myjoin,
     };
 
     sub myjoin {
-	# look for hash ref as last argument
-	my $params = ref $_[-1] eq 'HASH' ? pop : { };
-	return join($params->{ joint } || ' + ', @_);
+    # look for hash ref as last argument
+    my $params = ref $_[-1] eq 'HASH' ? pop : { };
+    return join($params->{ joint } || ' + ', @_);
     }
 
 template:
@@ -386,7 +386,7 @@ supported for future extensions.  Think of them as "hints" to that
 variable, rather than just arguments passed to a function.
 
     [% r = 'Romeo' %]
-    [% r(100, 99, s, t, v) %]		# outputs "Romeo"
+    [% r(100, 99, s, t, v) %]       # outputs "Romeo"
 
 User code should return a value for the variable it represents. This
 can be any of the Perl data types described above: a scalar, or
@@ -395,9 +395,9 @@ list of multiple values the items will automatically be folded into a
 list reference which can be accessed as per normal.
 
     my $vars = {
-	# either is OK, first is recommended
-	items1 => sub { return [ 'foo', 'bar', 'baz' ] },
-	items2 => sub { return ( 'foo', 'bar', 'baz' ) },
+    # either is OK, first is recommended
+    items1 => sub { return [ 'foo', 'bar', 'baz' ] },
+    items2 => sub { return ( 'foo', 'bar', 'baz' ) },
     };
 
 template:
@@ -419,17 +419,17 @@ A reference to the exception object is then available as the 'error'
 variable.
 
     my $vars = {
-	barf => sub { 
-	    die "a sick error has occurred\n";
-	},
+    barf => sub { 
+        die "a sick error has occurred\n";
+    },
     };
 
 template:
 
     [% TRY %]
-       [% barf %]	    # calls sub which throws error via die()
+       [% barf %]       # calls sub which throws error via die()
     [% CATCH %]
-       [% error.info %]	    # outputs "a sick error has occurred\n"
+       [% error.info %]     # outputs "a sick error has occurred\n"
     [% END %]
 
 Error messages thrown via die() are converted to exceptions of type
@@ -441,11 +441,11 @@ die() with a reference to a Template::Exception object.
     ...
     
     my $vars = {
-	login => sub { 
-	    ...
-	    die Template::Exception->new('badpwd',
-					 'password too silly');
-	},
+    login => sub { 
+        ...
+        die Template::Exception->new('badpwd',
+                     'password too silly');
+    },
     };
 
 template:
@@ -474,13 +474,13 @@ compatibility with version 1 but may be deprecated in some future
 version.
 
     my $vars = {
-	# currently equivalent
-	barf => sub {
-	    die "I'm sorry Dave, I can't do that";
-	},
-	yack => sub {
-	    return (undef, "I'm sorry Dave, I can't do that");
-	},
+    # currently equivalent
+    barf => sub {
+        die "I'm sorry Dave, I can't do that";
+    },
+    yack => sub {
+        return (undef, "I'm sorry Dave, I can't do that");
+    },
     };
 
 =head2 Virtual Methods
@@ -524,7 +524,7 @@ most common use is to retrieve an element from a hash where the key is
 stored in a variable.
 
     [% uid = 'abw' %]
-    [% userlist.$uid %]		    # same as 'userlist.abw'
+    [% userlist.$uid %]         # same as 'userlist.abw'
 
 Curly braces can be used to delimit interpolated variable names where
 necessary.
@@ -554,7 +554,7 @@ Note also that a variable containing a reference to a Template::Document
 object can also be processed in this way.
 
     my $vars = {
-	header => Template::Document->new({ ... }),
+    header => Template::Document->new({ ... }),
     };
 
 template:
@@ -581,9 +581,9 @@ variables within the processed template.
 
     [% name = 'foo' %] 
     [% INCLUDE change_name %]
-    [% name %]			    # foo
+    [% name %]              # foo
     [% PROCESS change_name %]
-    [% name %]			    # bar
+    [% name %]              # bar
 
 Dotted compound variables behave slightly differently because the
 localisation process is only skin deep.  The current variable
@@ -595,16 +595,16 @@ general rule is that simple variables (undotted variables) are
 localised, but existing complex structures (dotted variables) are not.
 
     [% BLOCK all_change %]
-       [% x = 20 %]		    # changes copy
-       [% y.z = 'zulu' %]	    # changes original
+       [% x = 20 %]         # changes copy
+       [% y.z = 'zulu' %]       # changes original
     [% END %]
 
     [% x = 10
        y = { z => 'zebra' }
     %]
     [% INCLUDE all_change %]
-    [% x %]			    # still '10'
-    [% y.z %]			    # now 'zulu'
+    [% x %]             # still '10'
+    [% y.z %]               # now 'zulu'
 
 
 If you create a complex structure such as a hash or list reference
@@ -619,8 +619,8 @@ the template is finished processing.
 
     [% x = 10 %]
     [% INCLUDE new_stuff %]
-    [% x %]			    # outputs '10'
-    [% y %]			    # nothing, y is undefined
+    [% x %]             # outputs '10'
+    [% y %]             # nothing, y is undefined
 
 Similarly, if you update an element of a compound variable which
 I<doesn't> already exists then a hash will be created automatically
@@ -656,17 +656,17 @@ kind of complex, nested, or dynamic data structures, just like regular
 variables.
 
     my $tt = Template->new({
-	CONSTANTS => {
-	    version => 3.14,
-	    release => 'skyrocket',
-	    col     => {
-		back => '#ffffff',
-		fore => '#000000',
-	    },
-	    myobj => My::Object->new(),
-	    mysub => sub { ... },
-	    joint => ', ',
-	},
+    CONSTANTS => {
+        version => 3.14,
+        release => 'skyrocket',
+        col     => {
+        back => '#ffffff',
+        fore => '#000000',
+        },
+        myobj => My::Object->new(),
+        mysub => sub { ... },
+        joint => ', ',
+    },
     });
 
 Within a template, you access these variables using the 'constants'
@@ -709,11 +709,11 @@ The CONSTANTS_NAMESPACE option can be used to provide a different
 namespace prefix for constant variables.  For example:
 
     my $tt = Template->new({
-	CONSTANTS => {
-	    version => 3.14,
-	    # ...etc...
-	},
-	CONSTANTS_NAMESPACE => 'const',
+    CONSTANTS => {
+        version => 3.14,
+        # ...etc...
+    },
+    CONSTANTS_NAMESPACE => 'const',
     });
 
 Constants would then be referenced in templates as:
@@ -754,18 +754,49 @@ to the current component.
 This example should demonstrate the difference:
 
     $template->process('foo')
-	|| die $template->error(), "\n";
+    || die $template->error(), "\n";
 
 'foo':
 
-    [% template.name %]		    # foo
-    [% component.name %]	    # foo
+    [% template.name %]         # foo
+    [% component.name %]        # foo
     [% PROCESS footer %]
 
 'footer':
 
-    [% template.name %]		    # foo
-    [% component.name %]            # footer
+    [% template.name %]         # foo
+    [% component.name %]        # footer
+
+Additionally, the 'component' variable has two special fields:
+'caller' and 'callers'.  'caller' contains the name of the template
+that called the current template (or undef if the values of 'template'
+and 'component' are the same).  'callers' contains a reference to a
+list of all the templates that have been called on the road to calling
+the current component template (like a call stack), with the
+outer-most template first.
+
+Here's an example:
+
+'outer.tt2':
+
+    [% component.name %]        # 'outer.tt2'
+    [% component.caller %]      # undef
+    [% component.callers %]     # undef
+    [% PROCESS 'middle.tt2' %]
+
+'middle.tt2':
+
+    [% component.name %]        # 'middle.tt2'
+    [% component.caller %]      # 'outer.tt2'
+    [% component.callers %]     # [ 'outer.tt2' ]
+    [% PROCESS 'inner.tt2' %]
+
+'inner.tt2':
+
+    [% component.name %]        # 'inner.tt2'
+    [% component.caller %]      # 'middle.tt2'
+    [% component.callers %]     # [ 'outer.tt2', 'middle.tt2' ]
+
 
 =item loop
 
@@ -845,7 +876,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

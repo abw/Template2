@@ -1191,7 +1191,7 @@ is passed as the argument to Apache/mod_perl handlers.
 example 1 (file name):
 
     my $template = Template->new({
-	OUTPUT => "/tmp/foo",
+        OUTPUT => "/tmp/foo",
     });
 
 example 2 (text string):
@@ -1199,7 +1199,7 @@ example 2 (text string):
     my $output = '';
 
     my $template = Template->new({
-	OUTPUT => \$output,
+        OUTPUT => \$output,
     });
 
 example 3 (file handle):
@@ -1207,7 +1207,7 @@ example 3 (file handle):
     open (TOUT, "> $file") || die "$file: $!\n";
 
     my $template = Template->new({
-	OUTPUT => \*TOUT,
+        OUTPUT => \*TOUT,
     });
 
 example 4 (subroutine):
@@ -1215,24 +1215,24 @@ example 4 (subroutine):
     sub output { my $out = shift; print "OUTPUT: $out" }
 
     my $template = Template->new({
-	OUTPUT => \&output,
+        OUTPUT => \&output,
     });
 
 example 5 (array reference):
 
     my $template = Template->new({
-	OUTPUT => \@output,
+        OUTPUT => \@output,
     })
 
 example 6 (Apache/mod_perl handler):
 
     sub handler {
-	my $r = shift;
+    my $r = shift;
 
-	my $t = Template->new({
-	    OUTPUT => $r,
-	});
-	...
+    my $t = Template->new({
+        OUTPUT => $r,
+    });
+    ...
     }
 
 The default OUTPUT location be overridden by passing a third parameter
@@ -1240,14 +1240,11 @@ to the Template process() method.  This can be specified as any of the
 above argument types.
 
     $t->process($file, $vars, "/tmp/foo");
-    $t->process($file, $vars, "bar");
+    $t->process($file, $vars, \$output);
     $t->process($file, $vars, \*MYGLOB);
     $t->process($file, $vars, \@output); 
     $t->process($file, $vars, $r);  # Apache::Request
     ...
-
-
-
 
 
 
@@ -1556,12 +1553,24 @@ their corresponding Template::Plugin::* counterparts.  These can be
 redefined by values in the PLUGINS hash.
 
     my $template = Template->new({
-	PLUGINS => {
-	    cgi => 'MyOrg::Template::Plugin::CGI',
-    	    foo => 'MyOrg::Template::Plugin::Foo',
-	    bar => 'MyOrg::Template::Plugin::Bar',
-	},
-    });
+        PLUGINS => {
+            cgi => 'MyOrg::Template::Plugin::CGI',
+            foo => 'MyOrg::Template::Plugin::Foo',
+            bar => 'MyOrg::Template::Plugin::Bar',
+        },  
+    }); 
+
+The recommended convention is to specify these plugin names in lower
+case.  The Template Toolkit first looks for an exact case-sensitive
+match and then tries the lower case conversion of the name specified.
+
+    [% USE Foo %]      # look for 'Foo' then 'foo'
+
+If you define all your PLUGINS with lower case names then they will be
+located regardless of how the user specifies the name in the USE
+directive.  If, on the other hand, you define your PLUGINS with upper
+or mixed case names then the name specified in the USE directive must
+match the case exactly.  
 
 The USE directive is used to create plugin objects and does so by
 calling the plugin() method on the current Template::Context object.
@@ -1571,8 +1580,8 @@ calls the load() class method which should return the class name
 (default and general case) or a prototype object against which the 
 new() method can be called to instantiate individual plugin objects.
 
-If the plugin name is not defined in the PLUGINS hash then the PLUGIN_BASE
-and/or LOAD_PERL options come into effect.
+If the plugin name is not defined in the PLUGINS hash then the
+PLUGIN_BASE and/or LOAD_PERL options come into effect.
 
 
 
@@ -1584,17 +1593,15 @@ If a plugin is not defined in the PLUGINS hash then the PLUGIN_BASE is used
 to attempt to construct a correct Perl module name which can be successfully 
 loaded.  
 
-The PLUGIN_BASE can be specified as a single value or as a reference
-to an array of multiple values.  The default PLUGIN_BASE value,
-'Template::Plugin', is always added the the end of the PLUGIN_BASE
-list (a single value is first converted to a list).  Each value should
-contain a Perl package name to which the requested plugin name is
-appended.
+The PLUGIN_BASE can be specified as a reference to an array of module
+namespaces, or as a single value which is automatically converted to a
+list.  The default PLUGIN_BASE value ('Template::Plugin') is then added
+to the end of this list.
 
 example 1:
 
     my $template = Template->new({
-	PLUGIN_BASE => 'MyOrg::Template::Plugin',
+        PLUGIN_BASE => 'MyOrg::Template::Plugin',
     });
 
     [% USE Foo %]    # => MyOrg::Template::Plugin::Foo
@@ -1603,13 +1610,33 @@ example 1:
 example 2:
 
     my $template = Template->new({
-	PLUGIN_BASE => [   'MyOrg::Template::Plugin',
-			 'YourOrg::Template::Plugin'  ],
+        PLUGIN_BASE => [   'MyOrg::Template::Plugin',
+                           'YourOrg::Template::Plugin'  ],
     });
 
     [% USE Foo %]    # =>   MyOrg::Template::Plugin::Foo
                        or YourOrg::Template::Plugin::Foo 
                        or          Template::Plugin::Foo 
+
+If you don't want the default Template::Plugin namespace added to the
+end of the PLUGIN_BASE, then set the $Template::Plugins::PLUGIN_BASE
+variable to a false value before calling the Template new()
+constructor method.  This is shown in the example below where the
+'Foo' is located as 'My::Plugin::Foo' or 'Your::Plugin::Foo' but not 
+as 'Template::Plugin::Foo'.
+
+example 3:
+
+    use Template::Plugins;
+    $Template::Plugins::PLUGIN_BASE = '';
+
+    my $template = Template->new({
+        PLUGIN_BASE => [   'My::Plugin',
+                           'Your::Plugin'  ],
+    });
+
+    [% USE Foo %]    # =>   My::Plugin::Foo
+                       or Your::Plugin::Foo 
 
 
 
@@ -2099,7 +2126,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

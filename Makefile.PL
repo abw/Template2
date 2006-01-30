@@ -155,7 +155,7 @@ my $SPLASH_STYLES = {
 
 
 # define version numbers of required modules
-my $TT_APPCONFIG_VERSION = '1.55';
+my $TT_APPCONFIG_VERSION = '1.56';
 my $TT_FILE_SPEC_VERSION = '0.8';
 my $TT_FILE_TEMP_VERSION = '0.12';
 
@@ -416,20 +416,8 @@ the regular Template::Stash written in Perl.  If you've got a C
 compiler on your system then you can elect to have the XS Stash built.
 You can also specify that you want to use the XS Stash by default.
 
-Please note that the XS Stash doesn't support access to tied hashes or
-tied lists (e.g. Tie::DBI).  If you're using tied objects then you'll
-need to explicitly tell the Template Toolkit that you want to use the
-Perl version.  You can specify which stash module you want by setting
-the \$Template::Config::STASH package variable.
-
-    use Template;
-    use Template::Config;
-
-    \$Template::Config::STASH = 'Template::Stash';
-    \$tt = Template->new();   # uses Perl stash
-
-    \$Template::Config::STASH = 'Template::Stash::XS';
-    \$tt = Template->new();   # uses XS stash
+Note that as of version 2.15 the XS Stash now supports access to tied
+hashes and arrays.
 
 See 'perldoc Template::Config' for further details.
 

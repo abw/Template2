@@ -1046,23 +1046,65 @@ automatically by the Template Toolkit.  For details of this interface
 and information on writing plugins, consult [% ttlink('Template::Plugin') -%]. 
 </p>
 <p>
-The plugin name is case-sensitive and will be appended to the
-PLUGIN_BASE value (default: 'Template::Plugin') to construct a full
-module name.  Any periods, '.', in the name will be converted to '::'.
+A number of standard plugins are included with the Template Toolkit
+(see below and [% ttlink('Template::Manual::Plugins') -%]).  The names of these
+standard plugins are case insensitive.  
+</p>
+<pre>    [% tt_start_tag %] USE CGI   [% tt_end_tag %]        # =&gt; Template::Plugin::CGI
+    [% tt_start_tag %] USE Cgi   [% tt_end_tag %]        # =&gt; Template::Plugin::CGI
+    [% tt_start_tag %] USE cgi   [% tt_end_tag %]        # =&gt; Template::Plugin::CGI</pre>
+<p>
+You can also define further plugins using the PLUGINS option.  
+</p>
+<pre>    my $tt = Template-&gt;new({
+        PLUGINS =&gt; {
+            foo =&gt; 'My::Plugin::Foo',
+            bar =&gt; 'My::Plugin::Bar',
+        },
+    });</pre>
+<p>
+The recommended convention is to specify these plugin names in lower
+case.  The Template Toolkit first looks for an exact case-sensitive
+match and then tries the lower case conversion of the name specified.
+</p>
+<pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]      # look for 'Foo' then 'foo'</pre>
+<p>
+If you define all your PLUGINS with lower case names then they will be
+located regardless of how the user specifies the name in the USE
+directive.  If, on the other hand, you define your PLUGINS with upper
+or mixed case names then the name specified in the USE directive must
+match the case exactly.  
+</p>
+<p>
+If the plugin isn't defined in either the standard plugins
+($Template::Plugins::STD_PLUGINS) or via the PLUGINS option, then 
+the PLUGIN_BASE is searched.
+</p>
+<p>
+In this case the plugin name <i>is</i> case-sensitive.  It is appended to
+each of the PLUGIN_BASE module namespaces in turn (default:
+'Template::Plugin') to construct a full module name which it attempts
+to locate and load.  Any periods, '.', in the name will be converted
+to '::'.
 </p>
 <pre>    [% tt_start_tag %] USE MyPlugin [% tt_end_tag %]     #  =&gt; Template::Plugin::MyPlugin
     [% tt_start_tag %] USE Foo.Bar  [% tt_end_tag %]     #  =&gt; Template::Plugin::Foo::Bar</pre>
 <p>
-Various standard plugins are included with the Template Toolkit (see 
-below and [% ttlink('Template::Manual::Plugins') -%]).  These can be specified in lower
-case and are mapped to the appropriate name.
+The LOAD_PERL option (disabled by default) provides a further way by
+which external Perl modules may be loaded.  If a regular Perl module
+(i.e. not a Template::Plugin::* or other module relative to some
+PLUGIN_BASE) supports an object-oriented interface and a new()
+constructor then it can be loaded and instantiated automatically.  The
+following trivial example shows how the IO::File module might be used.
 </p>
-<pre>    [% tt_start_tag %] USE cgi   [% tt_end_tag %]        # =&gt; Template::Plugin::CGI
-    [% tt_start_tag %] USE table [% tt_end_tag %]        # =&gt; Template::Plugin::Table</pre>
+<pre>    [% tt_start_tag %] USE file = IO.File('/tmp/mydata') [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] WHILE (line = file.getline) [% tt_end_tag %]
+       &lt;!-- [% tt_start_tag %] line [% tt_end_tag %] --&gt;
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
 Any additional parameters supplied in parenthesis after the plugin
 name will be also be passed to the new() constructor.  A reference to
-the current Template::Context object is always passed as the first
+the current Template::Context object is passed as the first
 parameter.
 </p>
 <pre>    [% tt_start_tag %] USE MyPlugin('foo', 123) [% tt_end_tag %]</pre>
@@ -1070,6 +1112,14 @@ parameter.
 equivalent to:
 </p>
 <pre>    Template::Plugin::MyPlugin-&gt;new($context, 'foo', 123);</pre>
+<p>
+The only exception to this is when a module is loaded via the
+LOAD_PERL option.  In this case the $context reference is <i>not</i>
+passed to the new() constructor.  This is based on the assumption that
+the module is a regular Perl module rather than a Template Toolkit
+plugin so isn't expecting a context reference and wouldn't know what
+to do with it anyway.
+</p>
 <p>
 Named parameters may also be specified.  These are collated into a
 hash which is passed by reference as the last parameter to the
@@ -1157,18 +1207,6 @@ example:
 See [% ttlink('Template::Manual::Plugins') -%] for more information on the plugins
 distributed with the toolkit or available from CPAN.
 </p>
-<p>
-The LOAD_PERL option (disabled by default) provides a further way by
-which external Perl modules may be loaded.  If a regular Perl module
-(i.e. not a Template::Plugin::* or other module relative to some
-PLUGIN_BASE) supports an object-oriented interface and a new()
-constructor then it can be loaded and instantiated automatically.  The
-following trivial example shows how the IO::File module might be used.
-</p>
-<pre>    [% tt_start_tag %] USE file = IO.File('/tmp/mydata') [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] WHILE (line = file.getline) [% tt_end_tag %]
-       &lt;!-- [% tt_start_tag %] line [% tt_end_tag %] --&gt;
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
 
 <li><b>MACRO</b><br>
 <p>
@@ -2007,7 +2045,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

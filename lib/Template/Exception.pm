@@ -228,8 +228,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.64, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.65, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

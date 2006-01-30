@@ -80,6 +80,14 @@ as a Perl regular expression) with the second.
     [% name = 'foo, bar & baz' %]
     [% name.replace('\W+', '_') %]    # foo_bar_baz
 
+=item remove(pattern)
+
+Outputs the string with all instances of the pattern (specified
+as a Perl regular expression) removed.
+
+    [% name = 'foo, bar & baz' %]
+    [% name.remove('\W+') %]    # foobarbaz
+
 =item match(pattern)
 
 Performs a regular expression match on the string using the pattern
@@ -241,6 +249,15 @@ passed as an argument is defined or exists, respectively.
     [% hash.defined('somekey') ? 'yes' : 'no' %]
     [% hash.exists('somekey') ? 'yes' : 'no' %]
 
+When called without any argument, hash.defined returns true if the hash
+itself is defined (e.g. the same effect as scalar.defined).
+
+=item delete 
+
+Delete one or more items from the hash.
+
+    [% hash.delete('foo', 'bar') %]
+
 =item size
 
 Returns the number of key =E<gt> value pairs in the hash.
@@ -257,13 +274,21 @@ Returns the contents of the hash in list form.  An argument can be
 passed to indicate the desired items required in the list: 'keys' to
 return a list of the keys (same as hash.keys), 'values' to return a
 list of the values (same as hash.values), or 'each' to return as list
-of (key, value) pairs (same as hash.each).  When called without an
-argument it returns a list of hash references, each of which contains
-a 'key' and 'value' item representing a single key =E<gt> value pair
-in the hash.
+of (key, value) pairs (same as hash.each).  
+
+When called without an argument it returns a reference to a list containing
+the contents of the hash.
+
+    [% hash = { pi => 3.14 } %]
+    [% hash.list.join  %]    # pi 3.14
+
+Please note that this is a new behaviour for version 2.15.  Prior to
+this the method returned an insanely complex data structure comprised of
+a reference to a list containing references to hash arrays containing 
+'key' and 'value' items representing each corresponding key/value pair 
+in the hash.  You can see why we changed it.
 
 =back
-
 
 =head2 List Virtual Methods
 
@@ -287,6 +312,16 @@ Returns the size of a list (number of elements) and the maximum
 index number (size - 1), respectively.
 
     [% results.size %] search results matched your query
+
+=item defined
+
+Returns a true or false value if the item in the list denoted by the
+argument is defined.
+
+    [% list.defined(3) ? 'yes' : 'no' %]
+
+When called without any argument, list.defined returns true if the list
+itself is defined (e.g. the same effect as scalar.defined).
 
 =item reverse
 
@@ -422,6 +457,16 @@ need to be explicit:
      CALL list.splice(-1, 0, [ another_list ]);
   %]
 
+=item hash 
+
+Returns a reference to a hash array comprised of the elements 
+in the list.
+
+    [% list = ['pi', 3.14, 'e', 2.718] %]
+    [% hash = list.hash %]
+    [% hash.pi %]               # 3.14
+    [% hash.e  %]               # 2.718
+
 =back
 
 =head2 Automagic Promotion of Scalar to List for Virtual Methods
@@ -455,7 +500,7 @@ item which it will treat as a list.  So it's safe to write directives
 like this, where we assume that 'something' is bound to a subroutine
 which might return 1 or more items:
 
-    [% FOREACH item = something %]
+    [% FOREACH item IN something %]
        ...
     [% END %]
 
@@ -506,7 +551,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

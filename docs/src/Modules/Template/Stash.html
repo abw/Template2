@@ -137,7 +137,7 @@ copied (i.e. imported) into the current namespace.
 </p>
 <pre>    # foo.bar = baz, foo.wiz = waz
     $stash-&gt;set('foo', { 'bar' =&gt; 'baz', 'wiz' =&gt; 'waz' });</pre>
-<pre>    # import 'foo' into main namespace: foo = baz, wiz = waz
+<pre>    # import 'foo' into main namespace: bar = baz, wiz = waz
     $stash-&gt;set('IMPORT', $stash-&gt;get('foo'));</pre>
 [%- END %]
 [% WRAPPER subsection
@@ -182,8 +182,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.85, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.93, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

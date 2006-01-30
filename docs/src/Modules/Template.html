@@ -102,8 +102,8 @@ class) instantiates a new Template object.  A reference to a hash
 array of configuration items may be passed as a parameter.
 </p>
 <pre>    my $tt = Template-&gt;new({
-	INCLUDE_PATH =&gt; '/usr/local/templates',
-	EVAL_PERL    =&gt; 1,
+    	INCLUDE_PATH =&gt; '/usr/local/templates',
+	    EVAL_PERL    =&gt; 1,
     }) || die $Template::ERROR, &quot;\n&quot;;</pre>
 <p>
 A reference to a new Template object is returned, or undef on error.
@@ -171,8 +171,8 @@ Examples:
         || die $tt-&gt;error(), &quot;\n&quot;;</pre>
 <pre>    # reference to output subroutine
     sub myout {
-	my $output = shift;
-	...
+    	my $output = shift;
+	    ...
     }
     $tt-&gt;process('welcome.tt2', $vars, \&amp;myout)
         || die $tt-&gt;error(), &quot;\n&quot;;</pre>
@@ -210,13 +210,19 @@ binary mode.
     $tt-&gt;process($infile, $vars, $outfile, binmode =&gt; 1)
         || die $tt-&gt;error(), &quot;\n&quot;;</pre>
 <p>
+Alternately, the binmode argument can specify a particular IO layer such 
+as &quot;:utf8&quot;.
+</p>
+<pre>    $tt-&gt;process($infile, $vars, $outfile, binmode =&gt; ':utf8')
+        || die $tt-&gt;error(), &quot;\n&quot;;</pre>
+<p>
 The OUTPUT configuration item can be used to specify a default output 
 location other than \*STDOUT.  The OUTPUT_PATH specifies a directory
 which should be prefixed to all output locations specified as filenames.
 </p>
 <pre>    my $tt = Template-&gt;new({
-	OUTPUT      =&gt; sub { ... },       # default
-	OUTPUT_PATH =&gt; '/tmp',
+    	OUTPUT      =&gt; sub { ... },       # default
+	    OUTPUT_PATH =&gt; '/tmp',
 	...
     }) || die Template-&gt;error(), &quot;\n&quot;;</pre>
 <pre>    # use default OUTPUT (sub is called)
@@ -261,10 +267,10 @@ operator allowing the object reference itself to be printed to return
 the formatted error string.
 </p>
 <pre>    $tt-&gt;process('somefile') || do {
-	my $error = $tt-&gt;error();
-	print &quot;error type: &quot;, $error-&gt;type(), &quot;\n&quot;;
-	print &quot;error info: &quot;, $error-&gt;info(), &quot;\n&quot;;
-	print $error, &quot;\n&quot;;
+    	my $error = $tt-&gt;error();
+	    print &quot;error type: &quot;, $error-&gt;type(), &quot;\n&quot;;
+    	print &quot;error info: &quot;, $error-&gt;info(), &quot;\n&quot;;
+	    print $error, &quot;\n&quot;;
     };</pre>
 [%- END %]
 [% WRAPPER subsection
@@ -781,7 +787,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

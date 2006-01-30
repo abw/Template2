@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.13
+                              Version 2.15
 
-                             30 January 2004
+                             30 January 2006
 
         Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
@@ -18,32 +18,15 @@ The latest version of the Template Toolkit can be retrieved from:
 
     http://www.cpan.org/modules/by-module/Template/
 
-Fetch and install AppConfig 1.55 if you don't already have it installed.
+Fetch and install AppConfig 1.56 if you don't already have it installed.
 Available from CPAN in:
 
     http://www.cpan.org/authors/Andy_Wardley/
 
-The following modules are optional.  If you have them installed then 
-you will be able to access them via the appropriate Template Toolkit 
-plugins.  If you don't have them and don't want them, then there's no
-need to install them.  They're all available from CPAN if you do.
-
-    Text::Autoformat 1.03+
-    DBI 1.14+ (and relevant DBD drivers)
-    GD 1.32+
-    GD::Text 0.80+
-    GD::Graph 1.33+
-    GD::Graph3d 0.55+
-    Pod::POM 0.1+
-    XML::Parser 2.23+
-    XML::DOM 1.27+ (in libxml-enno)
-    XML::RSS 0.9+ 
-    XML::XPath 1.00+
-
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.13.tar.gz
-    cd Template-Toolkit-2.13
+    tar zxf Template-Toolkit-2.15.tar.gz
+    cd Template-Toolkit-2.15
     perl Makefile.PL
     make
     make test
@@ -81,34 +64,10 @@ available from CPAN:
 The Template Toolkit implements a "plugin" architecture which allow
 you to incorporate the functionality of virtually any Perl module into
 your templates.  A number of plugin modules are included with the
-distribution for interfacing to databases (DBI), XML files (XML::DOM,
-XML::RSS, XML::XPath), CGI scripts (CGI), and so on.  Some of these
-plugin modules are dependant on external modules but these are not
-pre-requisites for installation.  All plugin modules are installed,
-regardless of any unsatisfied dependencies, so that you can install an
-external module at a later date and then use the plugin without
-requiring re-installation of the Template Toolkit.
-
-If you want to enable all plugin modules then the following modules,
-all available from CPAN, should be installed:
-
-    Plugin		Requires
-    ------              --------
-    Autoformat          Text::Autoformat 1.03+
-    DBI                 DBI 1.14+ and relevant DBD drivers
-    GD                  GD 1.32+
-    GD::Text            GD::Text 0.80+
-    GD::Graph           GD::Graph 1.33+
-    GD::Graph::lines3d  GD::Graph3d 0.55+
-    Pod                 Pod::POM 0.1+
-    XML::DOM            XML::DOM 1.27+   (requires XML::Parser 2.23+)
-    XML::RSS            XML::RSS 0.9+    (ditto)
-    XML::XPath          XML::XPath 1.00+ (ditto)
-
-NOTES:
-
-  * XML::DOM can be found in the 'libxml-enno' distribution, available
-    from http://www.cpan.org/modules/by-module/XML/
+distribution for adding extra functionality or interfacing to external
+CPAN modules.  You don't need to install any of these external modules
+unless you plan to use those particular plugins.  See Template::Plugins
+and Template::Manual::Plugins for further details.
 
 
 OBTAINING AND INSTALLING THE TEMPLATE TOOLKIT
@@ -129,19 +88,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.13.
+where <version> represents the current version number, e.g. 2.15.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    tar zxf Template-Toolkit-2.13.tar.gz
+    tar zxf Template-Toolkit-2.15.tar.gz
 or
-    gunzip Template-Toolkit-2.13.tar.gz
-    tar xf Template-Toolkit-2.13.tar
+    gunzip Template-Toolkit-2.15.tar.gz
+    tar xf Template-Toolkit-2.15.tar
 
 You can then 'cd' into the directory created,
 
-    cd Template-Toolkit-2.13
+    cd Template-Toolkit-2.15
 
 and perform the usual Perl installation procedure:
 
@@ -201,19 +160,6 @@ install the Template Toolkit.
 
     perl Makefile.PL
 
-It first determines which modules you have installed to configure the
-test suite accordingly.  If you have the DBI module installed then it
-will ask you if you want to run the DBI tests.  
-
-    Do you want to run the DBI tests?\n" .
-    It requires access to an existing test database. [y]
-
-If you answer 'y' then it will prompt you for the DBD driver and the
-data source parameters (name, user, password) required to connect to
-the relevant database.  Please ensure that your database server is
-running and that the database you specify exists before executing
-'make test' (otherwise, expect a failure for the t/dbi.t test).
-
 The Template Toolkit now boasts a high-speed implementation of 
 Template::Stash written in XS.  You can choose to build this as
 an optional module for using explicitly as an alternative to
@@ -226,30 +172,6 @@ the XS Stash module by default:
 
     Do you want to build the XS Stash module? [y] 
     Do you want to use the XS Stash for all Templates? [n] 
-
-The latex filter, new to release 2.03, allows you to generate
-PostScript, PDF and DVI files directly from LaTeX source templates.
-It relies on 3 external programs which the Makefile.PL script 
-will attempt to locate.  You will then be prompted to enable or
-disable the latex filter:
-
-    TT2 supports PDF, DVI and PostScript output using the latex
-    filter, implemented with the programs pdflatex, latex and dvips.
-
-    Because the latex filter runs latex and pdflatex, template authors
-    could use this feature to include any arbitrary file in their
-    latex input, or also open an arbitrary output file, independent of
-    the ABSOLUTE or RELATIVE configuration settings. This might create
-    a security concern at your site. If you don't trust your template
-    authors then don't enable the latex filter.
-
-   I found the following locations for pdflatex, latex and dvips:
-     + pdflatex => /usr/bin/pdflatex
-     + latex    => /usr/bin/latex
-     + dvips    => /usr/bin/dvips
-
-   Do you want to enable the latex filter? [y] 
-   Are the pdflatex, latex and dvips paths ok? [y] 
 
 In additional to the Perl modules and POD documentation installed in
 the usual way, the Template Toolkit distribution also contains a

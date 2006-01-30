@@ -955,7 +955,7 @@ A hash reference may be passed to provide variables and values which
 should be used to initialise the stash.
 
     my $stash = Template::Stash->new({ var1 => 'value1', 
-                       var2 => 'value2' });
+				       var2 => 'value2' });
 
 =head2 get($variable)
 
@@ -998,7 +998,7 @@ copied (i.e. imported) into the current namespace.
     # foo.bar = baz, foo.wiz = waz
     $stash->set('foo', { 'bar' => 'baz', 'wiz' => 'waz' });
 
-    # import 'foo' into main namespace: foo = baz, wiz = waz
+    # import 'foo' into main namespace: bar = baz, wiz = waz
     $stash->set('IMPORT', $stash->get('foo'));
 
 =head2 clone(\%params)
@@ -1035,8 +1035,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.87, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.93, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.13
+                              Version 2.15
 
-                             30 January 2004
+                             30 January 2006
 
         Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
@@ -19,32 +19,15 @@ The latest version of the Template Toolkit can be retrieved from:
 
     http://www.cpan.org/modules/by-module/Template/
 
-Fetch and install AppConfig 1.55 if you don't already have it installed.
+Fetch and install AppConfig 1.56 if you don't already have it installed.
 Available from CPAN in:
 
     http://www.cpan.org/authors/Andy_Wardley/
 
-The following modules are optional.  If you have them installed then 
-you will be able to access them via the appropriate Template Toolkit 
-plugins.  If you don't have them and don't want them, then there's no
-need to install them.  They're all available from CPAN if you do.
-
-    Text::Autoformat 1.03+
-    DBI 1.14+ (and relevant DBD drivers)
-    GD 1.32+
-    GD::Text 0.80+
-    GD::Graph 1.33+
-    GD::Graph3d 0.55+
-    Pod::POM 0.1+
-    XML::Parser 2.23+
-    XML::DOM 1.27+ (in libxml-enno)
-    XML::RSS 0.9+ 
-    XML::XPath 1.00+
-
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.13.tar.gz
-    cd Template-Toolkit-2.13
+    tar zxf Template-Toolkit-2.15.tar.gz
+    cd Template-Toolkit-2.15
     perl Makefile.PL
     make
     make test
@@ -82,73 +65,28 @@ content.  A number of Perl scripts are also provided which can greatly
 simplify the process of creating and managing static web content and 
 other offline document systems.
 
-Version 2 is a near-total rewrite which adds many new features while
-remaining *almost* fully backwardly compatible with version 1 (see
-'VERSION COMPATABILITY' below).  The internal design and
-architecture have been greatly improved and the template language
-offers a number of powerful new directives, while retaining all but
-the broken, buggy, undocumented or experimental features that had
-crept into versions 0.* and 1.* over the years.  Version 2 also offers
-important performance benefits, running significantly faster and using
-less memory than version 1.  This can only be described as a Good
-Thing.
-
-The Template Toolkit (version 1) received the award for "Best New Perl
-Module" at the 4th Perl Conference in Monterey last year (2000).
-Version 2 is even better and if it doesn't make your content funkier,
-your job easier, your life more fun and you more attractive to the
-appropriate sex, then you can always return it for a full refund. :-)
-
 
 WHAT'S NEW?
 -----------
 
-Version 2.13 followed on quickly from 2.13 to fix a minor, but 
-annoying bug in the date.t test script that we thought we had 
-fixed in 2.12 but hadn't.
+Version 2.15 features a number of enhancements to the XS Stash that
+includes support for tied hashes and arrays.  There are numerous other
+bug fixes and enhancements, described in detail in the Changes file.
 
-Version 2.12 followed on quickly from 2.11 to fix a minor, but 
-annoying bug in the date.t test script. 
+More significant is what's not in version 2.15.  The DBI plugin has
+been moved into a separate Template-DBI distribution, the GD plugins
+into Template-GD, the XML plugins into Template-XML, and the Latex
+filters into Template-Latex.  This has been done in an effort to make
+the Template Toolkit core distribution smaller, cleaner and easier to
+configure and install.
 
-Version 2.11 includes a number of enhancements to ttree, and several
-minor bug fixes.  It also improves on how runtime errors and warnings
-are reported, by adding the template file and line number to the 
-message generated.
+Version 2.14 added Unicode support to TT, a full set of command line
+options for tpage, the 'caller' and 'callers' items to each template
+component, some enhancements to the XML::Simple plugin, and a number
+of minor bug fixes.
 
-Version 2.10 provided a few trivial new features and applies fixes to
-some small bugs.  For example, you can now use IN instead of = in a
-loop, e.g. FOREACH item IN list.  The WRAPPER configuration option is
-new, and Template::Context and Template::Stash now both implement
-define_vmethod() methods which make it easier to define new virtual
-methods.
-
-Version 2.09 contained mostly bug fixes and minor enhancements.
-
-Version 2.08 added compile time constant folding which can result in a
-significant performance boost when processing templates.  It also 
-offered several other minor enhancements and bug fixes.
-
-Version 2.07 was a major maintenance release, fixing numerous minor bugs
-and smoothing out various rough edges.  Version 2.06 was a very minor
-bug release version.
-
-The most exciting new feature in version 2.05 was Doug Steinwand's
-high-speed drop-in replacement for Template::Stash written in 
-Perl XS.  With this in place, the Template Toolkit typically runs
-twice as fast as before!
-
-Pretty much everything else in 2.05 and 2.04 before it consisted
-of minor bug fixes and improvements.
-
-Version 2.03 included Craig Barratt's 'latex' filter and GD plugins
-and Dave Cross's tutorial on using the Template Toolkit for creating
-and reusing XML data files.
-
-Version 2.02 was another bugfix release.
-
-Version 2.01 was a major release containing new filters, plugins, 
-template libraries, the experimental VIEW directive, and a total
-overhaul of the documentation.
+See the Changes file for further details of the changes in these and
+earlier releases.
 
 
 GENERAL FEATURES
@@ -225,17 +163,6 @@ The Pod pages are installed when you 'make install' and can be viewed
 using 'perldoc', e.g.
 
     perldoc Template
-
-IMPORTANT NOTE: if you've had a previous verion of the Template
-Toolkit installed (e.g. version 2.00) then perldoc might be displaying
-an old version of the Pod documentation.  This is because previous
-versions distributed the Pod in separate .pod files but it's now
-living back inside the relevant .pm files.  Alas, perldoc selects the
-older .pod files in preference over the newer .pm.  The only solution
-at present is to manually delete all the older .pod files in the
-Template part of your Perl installation directory.  Of course, if I had
-thought of this back when I decided to move all the .pod back into the
-.pm files...
 
 If you're using a Unix based system then the pages should also be
 converted to manpages suring the 'make install'.  Thus, you can also:
@@ -351,62 +278,6 @@ for subscription and browsing the archives:
 
 For information about commercial support and consultancy for the Template 
 Toolkit, please contact the author.
-
-
-VERSION COMPATABILITY
----------------------
-
-In terms of the template language and features available, versions
-2.01 through to 2.13 should be fully backwardly compatible with 
-version 2.00.  
-
-Version 2.00 is backwardly compatible with version 1 in all but a few
-minor areas.  The 'Changes' file details all the visible changes
-between version 1 and version 2, including deltas between alphas and
-betas.  Within this file there is a 'Gotchas' section which lists the
-changes that may affect backwards compatability with existing template
-files.  These are listed in brief below.  Please consult the 'Changes'
-file for full details.
-
-* All directive keywords should now be written in UPPER CASE (by default)
-  to avoid conflict with reserved words.  The CASE option is now called
-  ANYCASE and can be set true to permit lower case directive keywords.
-
-* CATCH blocks must now be scoped with a TRY block.
-
-* The ERROR directive is no longer supported.  THROW an exception instead
-  or use the 'stderr' filter if you really must write to STDERR and nowhere
-  else.
-
-* The ERROR configuration option (previously used to customise the ERROR
-  directive) is now used to specify handling for uncaught exceptions.
-
-* Version 1 allowed (but didn't recommend) the use of a leading '$' on a 
-  variable name (i.e. like Perl) which was silently ignored.  Version 2
-  no longer ignores them and treats it as a variable
-  pre-interpolation.  Most of the time you *don't* want to do this, so 
-  don't add a leading '$' unless you know what you're doing.  You can set
-  V1DOLLAR => 1 to revert to the old behaviour if you really have to.
-
-* The default tag style for version 1 accepted [% ... %] or %% ... %%
-  (the latter for backwards compatability with Text::MetaText, the 
-  predecessor to TT).  Version 2 now only accepts [% ... %] by default.
-  You can set TAG_STYLE => 'template1' to get both.
-
-* The 'into' filter is obsolete.  You can now simply assign the output 
-  of a directive into a variable, e.g. [% foo = INCLUDE header %]
-
-* The IMPORT directive has been removed and replaced by an 'import'
-  hash method.
-
-Most of the significant changes are in the internals of the Template
-Toolkit.  If you have any v1 code that delves into the individual
-modules and tinkers with their guts then will need to check the
-'Changes' file very carefully indeed and re-evaluate your code in the
-light of the new architecture.  The internals are cleaner and better
-organised making extension code much easier to write.  The downside is
-that some of the old and crusty ways you previously had to do things
-may no longer work.
 
 
 AUTHOR

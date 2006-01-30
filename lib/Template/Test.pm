@@ -9,10 +9,10 @@
 #   originally the t/texpect.pl script.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@cpan.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -30,8 +30,8 @@ require 5.004;
 
 use strict;
 use vars qw( @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
-	     $VERSION $DEBUG $EXTRA $PRESERVE $REASON $NO_FLUSH
-	     $loaded %callsign);
+         $VERSION $DEBUG $EXTRA $PRESERVE $REASON $NO_FLUSH
+         $loaded %callsign);
 use Template qw( :template );
 use Exporter;
 
@@ -46,7 +46,7 @@ $| = 1;
 $REASON   = 'not applicable on this platform';
 $NO_FLUSH = 0;
 $EXTRA    = 0;   # any extra tests to come after test_expect()
-$PRESERVE = 0	 # don't mangle newlines in output/expect
+$PRESERVE = 0    # don't mangle newlines in output/expect
     unless defined $PRESERVE;
 
 # always set binmode on Win32 machines so that any output generated
@@ -78,7 +78,7 @@ sub ntests {
     $ntests = shift;
     # add any pre-declared extra tests, or pre-stored test @results, to 
     # the grand total of tests
-    $ntests += $EXTRA + scalar @results;	 
+    $ntests += $EXTRA + scalar @results;     
     $ok_count = 1;
     print $ntests ? "1..$ntests\n" : "1..$ntests # skipped: $REASON\n";
     # flush cached results
@@ -144,7 +144,7 @@ sub match {
     my $count = $ok_count ? $ok_count : scalar @results + 1;
 
     # force stringification of $result to avoid 'no eq method' overload errors
-    $result = "$result" if ref $result;	   
+    $result = "$result" if ref $result;    
 
     if ($result eq $expect) {
         return ok(1, $msg);
@@ -164,7 +164,7 @@ sub match {
 
 sub flush {
     ntests(0)
-	unless $ok_count || $NO_FLUSH;
+    unless $ok_count || $NO_FLUSH;
 }
 
 
@@ -334,7 +334,7 @@ sub test_expect {
                 next;
             };
             $expect = $out;
-        };		
+        };      
         
         # strip any trailing blank lines from expected and real output
         foreach ($expect, $output) {
@@ -370,9 +370,9 @@ sub test_expect {
 sub callsign {
     my %callsign;
     @callsign{ 'a'..'z' } = qw( 
-	    alpha bravo charlie delta echo foxtrot golf hotel india 
-	    juliet kilo lima mike november oscar papa quebec romeo 
-	    sierra tango umbrella victor whisky x-ray yankee zulu );
+        alpha bravo charlie delta echo foxtrot golf hotel india 
+        juliet kilo lima mike november oscar papa quebec romeo 
+        sierra tango umbrella victor whisky x-ray yankee zulu );
     return \%callsign;
 }
 
@@ -685,8 +685,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.70, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.71, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

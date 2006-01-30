@@ -343,3 +343,4 @@ ERROR: undef error - Can't locate object method "no_such_method" via package "Ha
 %]
 -- expect --
 ERROR: undef error - Can't locate object method "this_method_does_not_exist" via package "HashObject"
+

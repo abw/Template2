@@ -28,9 +28,9 @@ require 5.004;
 use strict;
 use base qw( Template::Base );
 use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
-	     $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
+             $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
              $LATEX_PATH $PDFLATEX_PATH $DVIPS_PATH
-	     $STASH $SERVICE $CONTEXT $CONSTANTS @PRELOAD );
+             $STASH $SERVICE $CONTEXT $CONSTANTS @PRELOAD );
 
 $VERSION   = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 $DEBUG     = 0 unless defined $DEBUG;
@@ -441,8 +441,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.67, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.68, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

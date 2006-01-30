@@ -40,11 +40,7 @@
 		    "File",
 		    "Filter",
 		    "Format",
-		    "GD::Image, GD::Polygon, GD::Constants",
-		    "GD::Text, GD::Text::Align, GD::Text::Wrap",
-		    "GD::Graph::lines, GD::Graph::bars, GD::Graph::points, GD::Graph::linespoin
-ts, GD::Graph::area, GD::Graph::mixed, GD::Graph::pie",
-		    "GD::Graph::bars3d, GD::Graph::lines3d, GD::Graph::pie3d",
+		    "GD",
 		    "HTML",
 		    "Iterator",
 		    "Pod",
@@ -52,11 +48,8 @@ ts, GD::Graph::area, GD::Graph::mixed, GD::Graph::pie",
 		    "Table",
 		    "URL",
 		    "Wrap",
-		    "XML::DOM",
-		    "XML::RSS",
-		    "XML::Simple",
 		    "XML::Style",
-		    "XML::XPath"
+		    "XML"
 		];
 	PROCESS tocitem 
 	        title ="BUGS / ISSUES"
@@ -162,12 +155,25 @@ their corresponding Template::Plugin::* counterparts.  These can be
 redefined by values in the PLUGINS hash.
 </p>
 <pre>    my $plugins = Template::Plugins-&gt;new({
-	PLUGINS =&gt; {
-	    cgi =&gt; 'MyOrg::Template::Plugin::CGI',
-    	    foo =&gt; 'MyOrg::Template::Plugin::Foo',
-	    bar =&gt; 'MyOrg::Template::Plugin::Bar',
-	},
-    });</pre>
+        PLUGINS =&gt; {
+            cgi =&gt; 'MyOrg::Template::Plugin::CGI',
+            foo =&gt; 'MyOrg::Template::Plugin::Foo',
+            bar =&gt; 'MyOrg::Template::Plugin::Bar',
+        },  
+    }); </pre>
+<p>
+The recommended convention is to specify these plugin names in lower
+case.  The Template Toolkit first looks for an exact case-sensitive
+match and then tries the lower case conversion of the name specified.
+</p>
+<pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]      # look for 'Foo' then 'foo'</pre>
+<p>
+If you define all your PLUGINS with lower case names then they will be
+located regardless of how the user specifies the name in the USE
+directive.  If, on the other hand, you define your PLUGINS with upper
+or mixed case names then the name specified in the USE directive must
+match the case exactly.  
+</p>
 <p>
 The USE directive is used to create plugin objects and does so by
 calling the plugin() method on the current Template::Context object.
@@ -178,8 +184,8 @@ calls the load() class method which should return the class name
 new() method can be called to instantiate individual plugin objects.
 </p>
 <p>
-If the plugin name is not defined in the PLUGINS hash then the PLUGIN_BASE
-and/or LOAD_PERL options come into effect.
+If the plugin name is not defined in the PLUGINS hash then the
+PLUGIN_BASE and/or LOAD_PERL options come into effect.
 </p>
 
 <li><b>PLUGIN_BASE</b><br>
@@ -189,18 +195,16 @@ to attempt to construct a correct Perl module name which can be successfully
 loaded.  
 </p>
 <p>
-The PLUGIN_BASE can be specified as a single value or as a reference
-to an array of multiple values.  The default PLUGIN_BASE value,
-'Template::Plugin', is always added the the end of the PLUGIN_BASE
-list (a single value is first converted to a list).  Each value should
-contain a Perl package name to which the requested plugin name is
-appended.
+The PLUGIN_BASE can be specified as a reference to an array of module
+namespaces, or as a single value which is automatically converted to a
+list.  The default PLUGIN_BASE value ('Template::Plugin') is then added
+to the end of this list.
 </p>
 <p>
 example 1:
 </p>
 <pre>    my $plugins = Template::Plugins-&gt;new({
-	PLUGIN_BASE =&gt; 'MyOrg::Template::Plugin',
+        PLUGIN_BASE =&gt; 'MyOrg::Template::Plugin',
     });</pre>
 <pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]    # =&gt; MyOrg::Template::Plugin::Foo
                        or        Template::Plugin::Foo </pre>
@@ -208,12 +212,31 @@ example 1:
 example 2:
 </p>
 <pre>    my $plugins = Template::Plugins-&gt;new({
-	PLUGIN_BASE =&gt; [   'MyOrg::Template::Plugin',
-			 'YourOrg::Template::Plugin'  ],
+        PLUGIN_BASE =&gt; [   'MyOrg::Template::Plugin',
+                           'YourOrg::Template::Plugin'  ],
     });</pre>
 <pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]    # =&gt;   MyOrg::Template::Plugin::Foo
                        or YourOrg::Template::Plugin::Foo 
                        or          Template::Plugin::Foo </pre>
+<p>
+If you don't want the default Template::Plugin namespace added to the
+end of the PLUGIN_BASE, then set the $Template::Plugins::PLUGIN_BASE
+variable to a false value before calling the Template::Plugins new()
+constructor method.  This is shown in the example below where the
+'Foo' is located as 'My::Plugin::Foo' or 'Your::Plugin::Foo' but not 
+as 'Template::Plugin::Foo'.
+</p>
+<p>
+example 3:
+</p>
+<pre>    use Template::Plugins;
+    $Template::Plugins::PLUGIN_BASE = '';</pre>
+<pre>    my $plugins = Template::Plugins-&gt;new({
+        PLUGIN_BASE =&gt; [   'My::Plugin',
+                           'Your::Plugin'  ],
+    });</pre>
+<pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]    # =&gt;   My::Plugin::Foo
+                       or Your::Plugin::Foo </pre>
 
 <li><b>LOAD_PERL</b><br>
 <p>
@@ -323,7 +346,7 @@ or is available from CPAN.
 Provides an interface to data stored in a plain text file in a simple
 delimited format.  The first line in the file specifies field names
 which should be delimiter by any non-word character sequence.
-Subsequent lines define data using the same delimiter as int he first
+Subsequent lines define data using the same delimiter as in the first
 line.  Blank lines and comments (lines starting '#') are ignored.  See
 [% ttlink('Template::Plugin::Datafile') -%] for further details.
 </p>
@@ -372,19 +395,10 @@ details.
 [% WRAPPER subsection
    title = "DBI"
 -%]<p>
-The DBI plugin, developed by Simon Matthews
-&lt;sam@knowledgepool.com&gt;, brings the full power of Tim Bunce's
-&lt;Tim.Bunce@ig.co.uk&gt; database interface module (DBI) to your
-templates.  See [% ttlink('Template::Plugin::DBI') -%] and [% ttlink('DBI') -%] for further details.
+The DBI plugin is no longer distributed as part of the Template Toolkit
+(as of version 2.15).  It is now available as a separate Template-Plugin-DBI 
+distribution from CPAN.
 </p>
-<pre>    [% tt_start_tag %] USE DBI('dbi:driver:database', 'user', 'pass') [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] FOREACH user = DBI.query( 'SELECT * FROM users' ) [% tt_end_tag %]
-       [% tt_start_tag %] user.id [% tt_end_tag %] [% tt_start_tag %] user.name [% tt_end_tag %]
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<p>
-The DBI and relevant DBD modules are available from CPAN:
-</p>
-<pre>  http://www.cpan.org/modules/by-module/DBI/</pre>
 [%- END %]
 [% WRAPPER subsection
    title = "Dumper"
@@ -442,137 +456,16 @@ details.
     [% tt_start_tag %] bold('Hello') [% tt_end_tag %]</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "GD::Image, GD::Polygon, GD::Constants"
+   title = "GD"
 -%]<p>
-These plugins provide access to the GD graphics library via Lincoln
-D. Stein's GD.pm interface.  These plugins allow PNG, JPEG and other
-graphical formats to be generated.
-</p>
-<pre>    [% tt_start_tag %] FILTER null;
-        USE im = GD.Image(100,100);
-        # allocate some colors
-        black = im.colorAllocate(0,   0, 0);
-        red   = im.colorAllocate(255,0,  0);
-        blue  = im.colorAllocate(0,  0,  255);
-        # Draw a blue oval
-        im.arc(50,50,95,75,0,360,blue);
-        # And fill it with red
-        im.fill(50,50,red);
-        # Output image in PNG format
-        im.png | stdout(1);
-       END;
-    -[% tt_end_tag %]</pre>
-<p>
-See [% ttlink('Template::Plugin::GD::Image') -%] for further details.
-</p>
-[%- END %]
-[% WRAPPER subsection
-   title = "GD::Text, GD::Text::Align, GD::Text::Wrap"
--%]<p>
-These plugins provide access to Martien Verbruggen's GD::Text,
-GD::Text::Align and GD::Text::Wrap modules. These plugins allow the
-layout, alignment and wrapping of text when drawing text in GD images.
-</p>
-<pre>    [% tt_start_tag %] FILTER null;
-        USE gd  = GD.Image(200,400);
-        USE gdc = GD.Constants;
-        black = gd.colorAllocate(0,   0, 0);
-        green = gd.colorAllocate(0, 255, 0);
-        txt = &quot;This is some long text. &quot; | repeat(10);
-        USE wrapbox = GD.Text.Wrap(gd,
-         line_space  =&gt; 4,
-         color       =&gt; green,
-         text        =&gt; txt,
-        );
-        wrapbox.set_font(gdc.gdMediumBoldFont);
-        wrapbox.set(align =&gt; 'center', width =&gt; 160);
-        wrapbox.draw(20, 20);
-        gd.png | stdout(1);
-      END;
-    -[% tt_end_tag %]</pre>
-<p>
-See [% ttlink('Template::Plugin::GD::Text') -%], [% ttlink('Template::Plugin::GD::Text::Align') -%]
-and [% ttlink('Template::Plugin::GD::Text::Wrap') -%] for further details.
-</p>
-[%- END %]
-[% WRAPPER subsection
-   title = "GD::Graph::lines, GD::Graph::bars, GD::Graph::points, GD::Graph::linespoin
-ts, GD::Graph::area, GD::Graph::mixed, GD::Graph::pie"
--%]<p>
-These plugins provide access to Martien Verbruggen's GD::Graph module
-that allows graphs, plots and charts to be created. These plugins allow
-graphs, plots and charts to be generated in PNG, JPEG and other
-graphical formats.
-</p>
-<pre>    [% tt_start_tag %] FILTER null;
-        data = [
-            [&quot;1st&quot;,&quot;2nd&quot;,&quot;3rd&quot;,&quot;4th&quot;,&quot;5th&quot;,&quot;6th&quot;],
-            [    4,    2,    3,    4,    3,  3.5]
-        ];
-        USE my_graph = GD.Graph.pie(250, 200);
-        my_graph.set(
-                title =&gt; 'A Pie Chart',
-                label =&gt; 'Label',
-                axislabelclr =&gt; 'black',
-                pie_height =&gt; 36,
-                transparent =&gt; 0,
-        );
-        my_graph.plot(data).png | stdout(1);
-      END;
-    -[% tt_end_tag %]</pre>
-<p>
-See
-[% ttlink('Template::Plugin::GD::Graph::lines') -%],
-[% ttlink('Template::Plugin::GD::Graph::bars') -%],
-[% ttlink('Template::Plugin::GD::Graph::points') -%],
-[% ttlink('Template::Plugin::GD::Graph::linespoints') -%],
-[% ttlink('Template::Plugin::GD::Graph::area') -%],
-[% ttlink('Template::Plugin::GD::Graph::mixed') -%],
-[% ttlink('Template::Plugin::GD::Graph::pie') -%], and
-[% ttlink('GD::Graph') -%],
-for more details.
-</p>
-[%- END %]
-[% WRAPPER subsection
-   title = "GD::Graph::bars3d, GD::Graph::lines3d, GD::Graph::pie3d"
--%]<p>
-These plugins provide access to Jeremy Wadsack's GD::Graph3d
-module.  This allows 3D bar charts and 3D lines plots to
-be generated.
-</p>
-<pre>    [% tt_start_tag %] FILTER null;
-        data = [
-            [&quot;1st&quot;,&quot;2nd&quot;,&quot;3rd&quot;,&quot;4th&quot;,&quot;5th&quot;,&quot;6th&quot;,&quot;7th&quot;, &quot;8th&quot;, &quot;9th&quot;],
-            [    1,    2,    5,    6,    3,  1.5,    1,     3,     4],
-        ];
-        USE my_graph = GD.Graph.bars3d();
-        my_graph.set(
-            x_label         =&gt; 'X Label',
-            y_label         =&gt; 'Y label',
-            title           =&gt; 'A 3d Bar Chart',
-            y_max_value     =&gt; 8,
-            y_tick_number   =&gt; 8,
-            y_label_skip    =&gt; 2,
-            # shadows
-            bar_spacing     =&gt; 8,
-            shadow_depth    =&gt; 4,
-            shadowclr       =&gt; 'dred',
-            transparent     =&gt; 0,
-        my_graph.plot(data).png | stdout(1);
-      END;
-    -[% tt_end_tag %]</pre>
-<p>
-See
-[% ttlink('Template::Plugin::GD::Graph::lines3d') -%],
-[% ttlink('Template::Plugin::GD::Graph::bars3d') -%], and
-[% ttlink('Template::Plugin::GD::Graph::pie3d') -%]
-for more details.
+The GD plugins are no longer part of the core Template Toolkit distribution.
+They are now available in a separate Template-GD distribution.
 </p>
 [%- END %]
 [% WRAPPER subsection
    title = "HTML"
 -%]<p>
-The HTML plugin is very new and very basic, implementing a few useful
+The HTML plugin is very basic, implementing a few useful
 methods for generating HTML.  It is likely to be extended in the future
 or integrated with a larger project to generate HTML elements in a generic
 way (as discussed recently on the mod_perl mailing list).
@@ -673,56 +566,6 @@ The Text::Wrap module is available from CPAN:
 <pre>    http://www.cpan.org/modules/by-module/Text/</pre>
 [%- END %]
 [% WRAPPER subsection
-   title = "XML::DOM"
--%]<p>
-The XML::DOM plugin gives access to the XML Document Object Module via
-Clark Cooper &lt;cooper@sch.ge.com&gt; and Enno Derksen's 
-&lt;enno@att.com&gt; XML::DOM module.  See [% ttlink('Template::Plugin::XML::DOM') -%] 
-and [% ttlink('XML::DOM') -%] for further details.
-</p>
-<pre>    [% tt_start_tag %] USE dom = XML.DOM [% tt_end_tag %]
-    [% tt_start_tag %] doc = dom.parse(filename) [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] FOREACH node = doc.getElementsByTagName('CODEBASE') [% tt_end_tag %]
-       * [% tt_start_tag %] node.getAttribute('href') [% tt_end_tag %]
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<p>
-The plugin requires the XML::DOM module, available from CPAN:
-</p>
-<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
-[%- END %]
-[% WRAPPER subsection
-   title = "XML::RSS"
--%]<p>
-The XML::RSS plugin is a simple interface to Jonathan Eisenzopf's
-&lt;eisen@pobox.com&gt; XML::RSS module.  A RSS (Rich Site Summary)
-file is typically used to store short news 'headlines' describing
-different links within a site.  This plugin allows you to parse RSS
-files and format the contents accordingly using templates.  
-See [% ttlink('Template::Plugin::XML::RSS') -%] and [% ttlink('XML::RSS') -%] for further details.
-</p>
-<pre>    [% tt_start_tag %] USE news = XML.RSS(filename) [% tt_end_tag %]
-   
-    [% tt_start_tag %] FOREACH item = news.items [% tt_end_tag %]
-       &lt;a href=&quot;[% tt_start_tag %] item.link [% tt_end_tag %]&quot;&gt;[% tt_start_tag %] item.title [% tt_end_tag %]&lt;/a&gt;
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
-<p>
-The XML::RSS module is available from CPAN:
-</p>
-<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
-[%- END %]
-[% WRAPPER subsection
-   title = "XML::Simple"
--%]<p>
-This plugin implements an interface to the [% ttlink('XML::Simple', 'XML::Simple') -%]
-module.
-</p>
-<pre>    [% tt_start_tag %] USE xml = XML.Simple(xml_file_or_text) [% tt_end_tag %]</pre>
-<pre>    [% tt_start_tag %] xml.head.title [% tt_end_tag %]</pre>
-<p>
-See [% ttlink('Template::Plugin::XML::Simple') -%] for further details.
-</p>
-[%- END %]
-[% WRAPPER subsection
    title = "XML::Style"
 -%]<p>
 This plugin defines a filter for performing simple stylesheet based 
@@ -749,20 +592,14 @@ See [% ttlink('Template::Plugin::XML::Style') -%] for further details.
 </p>
 [%- END %]
 [% WRAPPER subsection
-   title = "XML::XPath"
+   title = "XML"
 -%]<p>
-The XML::XPath plugin provides an interface to Matt Sergeant's
-&lt;matt@sergeant.org&gt; XML::XPath module.  See 
-[% ttlink('Template::Plugin::XML::XPath') -%] and [% ttlink('XML::XPath') -%] for further details.
+The XML::DOM, XML::RSS, XML::Simple and XML::XPath plugins are no
+longer distributed with the Template Toolkit as of version 2.15
 </p>
-<pre>    [% tt_start_tag %] USE xpath = XML.XPath(xmlfile) [% tt_end_tag %]
-    [% tt_start_tag %] FOREACH page = xpath.findnodes('/html/body/page') [% tt_end_tag %]
-       [% tt_start_tag %] page.getAttribute('title') [% tt_end_tag %]
-    [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
-The plugin requires the XML::XPath module, available from CPAN:
+They are now available in a separate Template-XML distribution.
 </p>
-<pre>    http://www.cpan.org/modules/by-module/XML/</pre>
 [%- END %]
 [%- END %]
 [% WRAPPER section
@@ -790,8 +627,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.70, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.73, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

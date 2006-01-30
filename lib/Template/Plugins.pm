@@ -390,12 +390,24 @@ their corresponding Template::Plugin::* counterparts.  These can be
 redefined by values in the PLUGINS hash.
 
     my $plugins = Template::Plugins->new({
-	PLUGINS => {
-	    cgi => 'MyOrg::Template::Plugin::CGI',
-    	    foo => 'MyOrg::Template::Plugin::Foo',
-	    bar => 'MyOrg::Template::Plugin::Bar',
-	},
-    });
+        PLUGINS => {
+            cgi => 'MyOrg::Template::Plugin::CGI',
+            foo => 'MyOrg::Template::Plugin::Foo',
+            bar => 'MyOrg::Template::Plugin::Bar',
+        },  
+    }); 
+
+The recommended convention is to specify these plugin names in lower
+case.  The Template Toolkit first looks for an exact case-sensitive
+match and then tries the lower case conversion of the name specified.
+
+    [% USE Foo %]      # look for 'Foo' then 'foo'
+
+If you define all your PLUGINS with lower case names then they will be
+located regardless of how the user specifies the name in the USE
+directive.  If, on the other hand, you define your PLUGINS with upper
+or mixed case names then the name specified in the USE directive must
+match the case exactly.  
 
 The USE directive is used to create plugin objects and does so by
 calling the plugin() method on the current Template::Context object.
@@ -405,8 +417,8 @@ calls the load() class method which should return the class name
 (default and general case) or a prototype object against which the 
 new() method can be called to instantiate individual plugin objects.
 
-If the plugin name is not defined in the PLUGINS hash then the PLUGIN_BASE
-and/or LOAD_PERL options come into effect.
+If the plugin name is not defined in the PLUGINS hash then the
+PLUGIN_BASE and/or LOAD_PERL options come into effect.
 
 
 
@@ -418,17 +430,15 @@ If a plugin is not defined in the PLUGINS hash then the PLUGIN_BASE is used
 to attempt to construct a correct Perl module name which can be successfully 
 loaded.  
 
-The PLUGIN_BASE can be specified as a single value or as a reference
-to an array of multiple values.  The default PLUGIN_BASE value,
-'Template::Plugin', is always added the the end of the PLUGIN_BASE
-list (a single value is first converted to a list).  Each value should
-contain a Perl package name to which the requested plugin name is
-appended.
+The PLUGIN_BASE can be specified as a reference to an array of module
+namespaces, or as a single value which is automatically converted to a
+list.  The default PLUGIN_BASE value ('Template::Plugin') is then added
+to the end of this list.
 
 example 1:
 
     my $plugins = Template::Plugins->new({
-	PLUGIN_BASE => 'MyOrg::Template::Plugin',
+        PLUGIN_BASE => 'MyOrg::Template::Plugin',
     });
 
     [% USE Foo %]    # => MyOrg::Template::Plugin::Foo
@@ -437,13 +447,33 @@ example 1:
 example 2:
 
     my $plugins = Template::Plugins->new({
-	PLUGIN_BASE => [   'MyOrg::Template::Plugin',
-			 'YourOrg::Template::Plugin'  ],
+        PLUGIN_BASE => [   'MyOrg::Template::Plugin',
+                           'YourOrg::Template::Plugin'  ],
     });
 
     [% USE Foo %]    # =>   MyOrg::Template::Plugin::Foo
                        or YourOrg::Template::Plugin::Foo 
                        or          Template::Plugin::Foo 
+
+If you don't want the default Template::Plugin namespace added to the
+end of the PLUGIN_BASE, then set the $Template::Plugins::PLUGIN_BASE
+variable to a false value before calling the Template::Plugins new()
+constructor method.  This is shown in the example below where the
+'Foo' is located as 'My::Plugin::Foo' or 'Your::Plugin::Foo' but not 
+as 'Template::Plugin::Foo'.
+
+example 3:
+
+    use Template::Plugins;
+    $Template::Plugins::PLUGIN_BASE = '';
+
+    my $plugins = Template::Plugins->new({
+        PLUGIN_BASE => [   'My::Plugin',
+                           'Your::Plugin'  ],
+    });
+
+    [% USE Foo %]    # =>   My::Plugin::Foo
+                       or Your::Plugin::Foo 
 
 
 
@@ -561,7 +591,7 @@ or is available from CPAN.
 Provides an interface to data stored in a plain text file in a simple
 delimited format.  The first line in the file specifies field names
 which should be delimiter by any non-word character sequence.
-Subsequent lines define data using the same delimiter as int he first
+Subsequent lines define data using the same delimiter as in the first
 line.  Blank lines and comments (lines starting '#') are ignored.  See
 L<Template::Plugin::Datafile> for further details.
 
@@ -834,8 +864,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.71, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.73, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

@@ -73,6 +73,14 @@ as a Perl regular expression) with the second.
 <pre>    [% tt_start_tag %] name = 'foo, bar &amp; baz' [% tt_end_tag %]
     [% tt_start_tag %] name.replace('\W+', '_') [% tt_end_tag %]    # foo_bar_baz</pre>
 
+<li><b>remove(pattern)</b><br>
+<p>
+Outputs the string with all instances of the pattern (specified
+as a Perl regular expression) removed.
+</p>
+<pre>    [% tt_start_tag %] name = 'foo, bar &amp; baz' [% tt_end_tag %]
+    [% tt_start_tag %] name.remove('\W+') [% tt_end_tag %]    # foobarbaz</pre>
+
 <li><b>match(pattern)</b><br>
 <p>
 Performs a regular expression match on the string using the pattern
@@ -232,6 +240,16 @@ passed as an argument is defined or exists, respectively.
 </p>
 <pre>    [% tt_start_tag %] hash.defined('somekey') ? 'yes' : 'no' [% tt_end_tag %]
     [% tt_start_tag %] hash.exists('somekey') ? 'yes' : 'no' [% tt_end_tag %]</pre>
+<p>
+When called without any argument, hash.defined returns true if the hash
+itself is defined (e.g. the same effect as scalar.defined).
+</p>
+
+<li><b>delete </b><br>
+<p>
+Delete one or more items from the hash.
+</p>
+<pre>    [% tt_start_tag %] hash.delete('foo', 'bar') [% tt_end_tag %]</pre>
 
 <li><b>size</b><br>
 <p>
@@ -250,10 +268,20 @@ Returns the contents of the hash in list form.  An argument can be
 passed to indicate the desired items required in the list: 'keys' to
 return a list of the keys (same as hash.keys), 'values' to return a
 list of the values (same as hash.values), or 'each' to return as list
-of (key, value) pairs (same as hash.each).  When called without an
-argument it returns a list of hash references, each of which contains
-a 'key' and 'value' item representing a single key =&gt; value pair
-in the hash.
+of (key, value) pairs (same as hash.each).  
+</p>
+<p>
+When called without an argument it returns a reference to a list containing
+the contents of the hash.
+</p>
+<pre>    [% tt_start_tag %] hash = { pi =&gt; 3.14 } [% tt_end_tag %]
+    [% tt_start_tag %] hash.list.join  [% tt_end_tag %]    # pi 3.14</pre>
+<p>
+Please note that this is a new behaviour for version 2.15.  Prior to
+this the method returned an insanely complex data structure comprised of
+a reference to a list containing references to hash arrays containing 
+'key' and 'value' items representing each corresponding key/value pair 
+in the hash.  You can see why we changed it.
 </p>
 
 </ul>
@@ -279,6 +307,17 @@ Returns the size of a list (number of elements) and the maximum
 index number (size - 1), respectively.
 </p>
 <pre>    [% tt_start_tag %] results.size [% tt_end_tag %] search results matched your query</pre>
+
+<li><b>defined</b><br>
+<p>
+Returns a true or false value if the item in the list denoted by the
+argument is defined.
+</p>
+<pre>    [% tt_start_tag %] list.defined(3) ? 'yes' : 'no' [% tt_end_tag %]</pre>
+<p>
+When called without any argument, list.defined returns true if the list
+itself is defined (e.g. the same effect as scalar.defined).
+</p>
 
 <li><b>reverse</b><br>
 <p>
@@ -412,6 +451,16 @@ need to be explicit:
      CALL list.splice(-1, 0, [ another_list ]);
   [% tt_end_tag %]</pre>
 
+<li><b>hash </b><br>
+<p>
+Returns a reference to a hash array comprised of the elements 
+in the list.
+</p>
+<pre>    [% tt_start_tag %] list = ['pi', 3.14, 'e', 2.718] [% tt_end_tag %]
+    [% tt_start_tag %] hash = list.hash [% tt_end_tag %]
+    [% tt_start_tag %] hash.pi [% tt_end_tag %]               # 3.14
+    [% tt_start_tag %] hash.e  [% tt_end_tag %]               # 2.718</pre>
+
 </ul>
 [%- END %]
 [% WRAPPER subsection
@@ -450,7 +499,7 @@ item which it will treat as a list.  So it's safe to write directives
 like this, where we assume that 'something' is bound to a subroutine
 which might return 1 or more items:
 </p>
-<pre>    [% tt_start_tag %] FOREACH item = something [% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH item IN something [% tt_end_tag %]
        ...
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
 <p>
@@ -504,7 +553,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

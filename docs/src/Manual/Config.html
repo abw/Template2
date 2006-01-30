@@ -1088,44 +1088,44 @@ is passed as the argument to Apache/mod_perl handlers.
 example 1 (file name):
 </p>
 <pre>    my $template = Template-&gt;new({
-	OUTPUT =&gt; &quot;/tmp/foo&quot;,
+        OUTPUT =&gt; &quot;/tmp/foo&quot;,
     });</pre>
 <p>
 example 2 (text string):
 </p>
 <pre>    my $output = '';</pre>
 <pre>    my $template = Template-&gt;new({
-	OUTPUT =&gt; \$output,
+        OUTPUT =&gt; \$output,
     });</pre>
 <p>
 example 3 (file handle):
 </p>
 <pre>    open (TOUT, &quot;&gt; $file&quot;) || die &quot;$file: $!\n&quot;;</pre>
 <pre>    my $template = Template-&gt;new({
-	OUTPUT =&gt; \*TOUT,
+        OUTPUT =&gt; \*TOUT,
     });</pre>
 <p>
 example 4 (subroutine):
 </p>
 <pre>    sub output { my $out = shift; print &quot;OUTPUT: $out&quot; }</pre>
 <pre>    my $template = Template-&gt;new({
-	OUTPUT =&gt; \&amp;output,
+        OUTPUT =&gt; \&amp;output,
     });</pre>
 <p>
 example 5 (array reference):
 </p>
 <pre>    my $template = Template-&gt;new({
-	OUTPUT =&gt; \@output,
+        OUTPUT =&gt; \@output,
     })</pre>
 <p>
 example 6 (Apache/mod_perl handler):
 </p>
 <pre>    sub handler {
-	my $r = shift;</pre>
-<pre>	my $t = Template-&gt;new({
-	    OUTPUT =&gt; $r,
-	});
-	...
+    my $r = shift;</pre>
+<pre>    my $t = Template-&gt;new({
+        OUTPUT =&gt; $r,
+    });
+    ...
     }</pre>
 <p>
 The default OUTPUT location be overridden by passing a third parameter
@@ -1133,7 +1133,7 @@ to the Template process() method.  This can be specified as any of the
 above argument types.
 </p>
 <pre>    $t-&gt;process($file, $vars, &quot;/tmp/foo&quot;);
-    $t-&gt;process($file, $vars, &quot;bar&quot;);
+    $t-&gt;process($file, $vars, \$output);
     $t-&gt;process($file, $vars, \*MYGLOB);
     $t-&gt;process($file, $vars, \@output); 
     $t-&gt;process($file, $vars, $r);  # Apache::Request
@@ -1432,12 +1432,25 @@ their corresponding Template::Plugin::* counterparts.  These can be
 redefined by values in the PLUGINS hash.
 </p>
 <pre>    my $template = Template-&gt;new({
-	PLUGINS =&gt; {
-	    cgi =&gt; 'MyOrg::Template::Plugin::CGI',
-    	    foo =&gt; 'MyOrg::Template::Plugin::Foo',
-	    bar =&gt; 'MyOrg::Template::Plugin::Bar',
-	},
-    });</pre>
+        PLUGINS =&gt; {
+            cgi =&gt; 'MyOrg::Template::Plugin::CGI',
+            foo =&gt; 'MyOrg::Template::Plugin::Foo',
+            bar =&gt; 'MyOrg::Template::Plugin::Bar',
+        },  
+    }); </pre>
+<p>
+The recommended convention is to specify these plugin names in lower
+case.  The Template Toolkit first looks for an exact case-sensitive
+match and then tries the lower case conversion of the name specified.
+</p>
+<pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]      # look for 'Foo' then 'foo'</pre>
+<p>
+If you define all your PLUGINS with lower case names then they will be
+located regardless of how the user specifies the name in the USE
+directive.  If, on the other hand, you define your PLUGINS with upper
+or mixed case names then the name specified in the USE directive must
+match the case exactly.  
+</p>
 <p>
 The USE directive is used to create plugin objects and does so by
 calling the plugin() method on the current Template::Context object.
@@ -1448,8 +1461,8 @@ calls the load() class method which should return the class name
 new() method can be called to instantiate individual plugin objects.
 </p>
 <p>
-If the plugin name is not defined in the PLUGINS hash then the PLUGIN_BASE
-and/or LOAD_PERL options come into effect.
+If the plugin name is not defined in the PLUGINS hash then the
+PLUGIN_BASE and/or LOAD_PERL options come into effect.
 </p>
 
 <li><b>PLUGIN_BASE</b><br>
@@ -1459,18 +1472,16 @@ to attempt to construct a correct Perl module name which can be successfully
 loaded.  
 </p>
 <p>
-The PLUGIN_BASE can be specified as a single value or as a reference
-to an array of multiple values.  The default PLUGIN_BASE value,
-'Template::Plugin', is always added the the end of the PLUGIN_BASE
-list (a single value is first converted to a list).  Each value should
-contain a Perl package name to which the requested plugin name is
-appended.
+The PLUGIN_BASE can be specified as a reference to an array of module
+namespaces, or as a single value which is automatically converted to a
+list.  The default PLUGIN_BASE value ('Template::Plugin') is then added
+to the end of this list.
 </p>
 <p>
 example 1:
 </p>
 <pre>    my $template = Template-&gt;new({
-	PLUGIN_BASE =&gt; 'MyOrg::Template::Plugin',
+        PLUGIN_BASE =&gt; 'MyOrg::Template::Plugin',
     });</pre>
 <pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]    # =&gt; MyOrg::Template::Plugin::Foo
                        or        Template::Plugin::Foo </pre>
@@ -1478,12 +1489,31 @@ example 1:
 example 2:
 </p>
 <pre>    my $template = Template-&gt;new({
-	PLUGIN_BASE =&gt; [   'MyOrg::Template::Plugin',
-			 'YourOrg::Template::Plugin'  ],
+        PLUGIN_BASE =&gt; [   'MyOrg::Template::Plugin',
+                           'YourOrg::Template::Plugin'  ],
     });</pre>
 <pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]    # =&gt;   MyOrg::Template::Plugin::Foo
                        or YourOrg::Template::Plugin::Foo 
                        or          Template::Plugin::Foo </pre>
+<p>
+If you don't want the default Template::Plugin namespace added to the
+end of the PLUGIN_BASE, then set the $Template::Plugins::PLUGIN_BASE
+variable to a false value before calling the Template new()
+constructor method.  This is shown in the example below where the
+'Foo' is located as 'My::Plugin::Foo' or 'Your::Plugin::Foo' but not 
+as 'Template::Plugin::Foo'.
+</p>
+<p>
+example 3:
+</p>
+<pre>    use Template::Plugins;
+    $Template::Plugins::PLUGIN_BASE = '';</pre>
+<pre>    my $template = Template-&gt;new({
+        PLUGIN_BASE =&gt; [   'My::Plugin',
+                           'Your::Plugin'  ],
+    });</pre>
+<pre>    [% tt_start_tag %] USE Foo [% tt_end_tag %]    # =&gt;   My::Plugin::Foo
+                       or Your::Plugin::Foo </pre>
 
 <li><b>LOAD_PERL</b><br>
 <p>
@@ -1940,7 +1970,7 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

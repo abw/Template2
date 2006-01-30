@@ -72,7 +72,16 @@ For the above three examples, these will produce the following outputs:
     /cgi-bin/bar.pl?mode=browse
     /cgi-bin/baz.pl?mode=browse&amp;amp;debug=1</pre>
 <p>
-Additional parameters may be also be specified:
+Note that additional parameters are seperated by '&amp;amp;' rather than
+simply '&amp;'.  This is the correct behaviour for HTML pages but is,
+unfortunately, incorrect when creating URLs that do not need to be
+encoded safely for HTML.  This is likely to be corrected in a future
+version of the plugin (most probably with TT3).  In the mean time, you
+can set <code>'$Template::Plugin::URL::JOINT'</code> to <code>'&amp;'</code> to get the correct
+behaviour.
+</p>
+<p>
+Additional parameters may be also be specified to the URL:
 </p>
 <pre>    [% tt_start_tag %] url(mode='submit', id='wiz') [% tt_end_tag %]</pre>
 <p>
@@ -105,18 +114,11 @@ Here the spaces and &quot;'&quot; character are escaped in the output:
 </p>
 <pre>    /cgi-bin/woz.pl?name=Elrich%20von%20Benjy%20d%27Weiro</pre>
 <p>
-Alternate name may be provided for the plugin at construction time
+An alternate name may be provided for the plugin at construction time
 as per regular Template Toolkit syntax.
 </p>
 <pre>    [% tt_start_tag %] USE mycgi = url('cgi-bin/min.pl') [% tt_end_tag %]</pre>
 <pre>    [% tt_start_tag %] mycgi(debug=1) [% tt_end_tag %]</pre>
-<p>
-Note that in the following line, additional parameters are seperated
-by '&amp;amp;', while common usage on the Web is to just use '&amp;'. '&amp;amp;'
-is actually the Right Way to do it. See this URL for more information:
-http://ppewww.ph.gla.ac.uk/~flavell/www/formgetbyurl.html
-</p>
-<pre>    /cgi-bin/waz.pl?mode=browse&amp;amp;debug=1&amp;amp;test=1</pre>
 [%- END %]
 [% WRAPPER section
     title="AUTHOR"
@@ -130,8 +132,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.69, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.70, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

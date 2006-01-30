@@ -27,6 +27,8 @@ package Template::Filters;
 require 5.004;
 
 use strict;
+use warnings;
+use locale;
 use base qw( Template::Base );
 use vars qw( $VERSION $DEBUG $FILTERS $URI_ESCAPES $PLUGIN_FILTER );
 use Template::Constants;
@@ -1049,9 +1051,9 @@ output:
 
 =head2 html
 
-Converts the characters 'E<lt>', 'E<gt>' and '&' to '&lt;', '&gt;' and
-'&amp;', respectively, protecting them from being interpreted as
-representing HTML tags or entities.
+Converts the characters 'E<lt>', 'E<gt>', '&' and '"' to '&lt;',
+'&gt;', '&amp;', and '&quot;' respectively, protecting them from being
+interpreted as representing HTML tags or entities.
 
     [% FILTER html %]
     Binary "<=>" returns -1, 0, or 1 depending on...
@@ -1169,11 +1171,11 @@ output:
     ME> blah blah blah
     ME> cabbages, rhubard, onions
 
-=head2 truncate(length)
+=head2 truncate(length,dots)
 
-Truncates the text block to the length specified, or a default length of
-32.  Truncated text will be terminated with '...' (i.e. the '...' falls
-inside the required length, rather than appending to it).
+Truncates the text block to the length specified, or a default length
+of 32.  Truncated text will be terminated with '...' (i.e. the '...'
+falls inside the required length, rather than appending to it).
 
     [% FILTER truncate(21) %]
     I have much to say on this matter that has previously 
@@ -1183,6 +1185,18 @@ inside the required length, rather than appending to it).
 output:
 
     I have much to say...
+
+If you want to use something other than '...' you can pass that as a 
+second argument.
+
+    [% FILTER truncate(26, '&hellip;') %]
+    I have much to say on this matter that has previously 
+    been said on more than one occasion.
+    [% END %]
+
+output:
+
+    I have much to say&hellip;
 
 =head2 repeat(iterations)
 
@@ -1368,8 +1382,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.78, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.80, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

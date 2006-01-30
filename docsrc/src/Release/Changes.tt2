@@ -44,6 +44,11 @@ Stash
 
   http://tt2.org/pipermail/templates/2006-January/008266.html
 
+* Applied path from Slaven Rezic to Template::Stash::XS to check return 
+  code in tt_fetch_item() in a way which plays nicely with tied hashes.
+
+  http://rt.cpan.org/Ticket/Display.html?id=7830
+
 * Changed Template::Stash and Template::Stash::XS to evaluate list 
   vmethods in lvalues.
 
@@ -58,13 +63,8 @@ Stash
 
   http://tt2.org/pipermail/templates/2005-April/007375.html
 
-* Applied path from Slaven Rezic to Template::Stash::XS to check return 
-  code in tt_fetch_item() in a way which plays nicely with tied hashes.
-
-  http://rt.cpan.org/Ticket/Display.html?id=7830
-
 * Removed redundant performance profiling code from Template::Stash::XS.
-
+  Must check with Doug that this is OK and he's not still using it...
 
 Virtual Methods
 ---------------
@@ -76,7 +76,7 @@ Virtual Methods
   http://template-toolkit.org/pipermail/templates/2006-January/008256.html
 
 * Fixed the split scalar virtual method which wasn't accepting the second
-  argument (limit) correctly.  Thanks again to Josh Rosenbaum for pointing
+  argument (limit) correctly.  Thanks to Josh Rosenbaum for pointing
   out the problem, although the solution turned out to be a little more 
   complicated.
 
@@ -97,6 +97,12 @@ Virtual Methods
 
 * Changed the sort and nsort list virtual methods to always return 
   references to lists, avoiding any ambiguity in return results.
+
+* Changed the hash.defined method to do the same thing as scalar.defined
+  when called without arguments.  Added list.defined to do the same thing
+  as hash.defined.
+
+  http://rt.cpan.org/Ticket/Display.html?id=9094
 
 
 Plugins
@@ -127,6 +133,13 @@ Plugins
   http://tt2.org/pipermail/templates/2005-November/008086.html
   http://tt2.org/pipermail/templates/2005-December/008189.html
 
+* Added the $JOINT package variable to Template::Plugin::URL to 
+  provide a work-around for the URL plugin which incorrectly (as
+  we now know) encodes '&' as '&amp;'
+
+  http://rt.cpan.org//Ticket/Display.html?id=11551
+  http://tt2.org/pipermail/templates/2005-December/008158.html
+
 * Added substr() method to the String plugin, as suggested here:
 
   http://rt.cpan.org/Ticket/Display.html?id=2619
@@ -153,6 +166,12 @@ Filters
 
   http://rt.cpan.org/Ticket/Display.html?id=8911
 
+* Added "use locale" to Template::Filters to enable locale-specific
+  filters.
+
+  http://rt.cpan.org/Ticket/Display.html?id=9094
+  http://rt.cpan.org/Ticket/Display.html?id=5695
+
 * Updated documentation to reflect the fact that the html filter also
   escapes " as &quot;  Thanks to Geoff Richards for reporting it.
 
@@ -177,6 +196,12 @@ ttree
 
   https://rt.cpan.org/Ticket/Display.html?id=14905
 
+* Fixed configuration section to not prompt "Do you want me to create
+  a sample .ttreerc file?" if the -h/--help options are specified, 
+  thanks to Slaven Rezic for reporting the problem.
+
+  http://rt.cpan.org/Ticket/Display.html?id=4180
+
 
 Miscellaneous
 -------------
@@ -195,6 +220,11 @@ Miscellaneous
   Template::Parser line counting when using chomp flags.
 
   http://tt2.org/pipermail/templates/2005-December/008157.html
+
+* Applied a patch to Template::Provider to prevent a misleading error
+  message, thanks to Slaven Rezic.
+
+  http://rt.cpan.org/Ticket/Display.html?id=5327
 
 * Added an eval wrapper around mkpath() in Template::Provider to handle
   errors more nicely.

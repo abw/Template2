@@ -1387,14 +1387,21 @@ would generate this output:
 =head2 parse($text)
 
 The parse() method parses the text passed in the first parameter and
-returns a reference to a Template::Document object which contains the
-compiled representation of the template text.  On error, undef is
+returns a reference to a hash array of data defining the compiled
+representation of the template text, suitable for passing to the
+Template::Document new() constructor method.  On error, undef is
 returned.
 
 Example:
 
-    $doc = $parser->parse($text)
-	|| die $parser->error();
+    $data = $parser->parse($text)
+    	|| die $parser->error();
+
+The $data hash reference returned contains a BLOCK item containing the
+compiled Perl code for the template, a DEFBLOCKS item containing a
+reference to a hash array of sub-template BLOCKs defined within in the
+template, and a METADATA item containing a reference to a hash array
+of metadata values defined in META tags.
 
 =head1 AUTHOR
 
@@ -1409,8 +1416,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.82, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.83, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
  
 

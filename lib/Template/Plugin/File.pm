@@ -22,22 +22,17 @@
 
 package Template::Plugin::File;
 
-require 5.004;
-
 use strict;
+use warnings;
 use Cwd;
 use File::Spec;
 use File::Basename;
-use Template::Plugin;
+use base 'Template::Plugin';
 
-use vars qw( $VERSION );
-use base qw( Template::Plugin );
-use vars qw( @STAT_KEYS );
+our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-
-@STAT_KEYS = qw( dev ino mode nlink uid gid rdev size 
-		 atime mtime ctime blksize blocks );
+our @STAT_KEYS = qw( dev ino mode nlink uid gid rdev size 
+                     atime mtime ctime blksize blocks );
 
 
 #------------------------------------------------------------------------
@@ -59,14 +54,14 @@ sub new {
     # path, dir, name, root, home
 
     if (File::Spec->file_name_is_absolute($path)) {
-	$root = '';
+        $root = '';
     }
     elsif (($root = $config->{ root })) {
-	# strip any trailing '/' from root
-	$root =~ s[/$][];
+        # strip any trailing '/' from root
+        $root =~ s[/$][];
     }
     else {
-	$root = '';
+        $root = '';
     }
 
     my ($name, $dir, $ext) = fileparse($path, '\.\w+');
@@ -75,36 +70,40 @@ sub new {
     $dir  = '' if $dir eq '.';
     $name = $name . $ext;
     $ext  =~ s/^\.//g;
+
     my @fields = File::Spec->splitdir($dir);
     shift @fields if @fields && ! length $fields[0];
     $home = join('/', ('..') x @fields);
     $abs = File::Spec->catfile($root ? $root : (), $path);
 
     my $self = { 
-	path  => $path,
-	name  => $name,
-	root  => $root,
+        path  => $path,
+        name  => $name,
+        root  => $root,
         home  => $home,
-	dir   => $dir,
-	ext   => $ext,
-	abs   => $abs,
+        dir   => $dir,
+        ext   => $ext,
+        abs   => $abs,
         user  => '',
         group => '',
         isdir => '',
-	stat  => defined $config->{ stat } ? $config->{ stat } 
-	            : ! $config->{ nostat },
-	map { ($_ => '') } @STAT_KEYS,
+        stat  => defined $config->{ stat } 
+                       ? $config->{ stat } 
+                       : ! $config->{ nostat },
+        map { ($_ => '') } @STAT_KEYS,
     };
 
     if ($self->{ stat }) {
-	(@stat = stat( $abs ))
-	    || return $class->throw("$abs: $!");
-	@$self{ @STAT_KEYS } = @stat;
-	unless ($config->{ noid }) {
-	    $self->{ user  } = eval { getpwuid( $self->{ uid }) || $self->{ uid } };
-	    $self->{ group } = eval { getgrgid( $self->{ gid }) || $self->{ gid } };
-	}
-	$self->{ isdir } = -d $abs;
+        (@stat = stat( $abs ))
+            || return $class->throw("$abs: $!");
+
+        @$self{ @STAT_KEYS } = @stat;
+
+        unless ($config->{ noid }) {
+            $self->{ user  } = eval { getpwuid( $self->{ uid }) || $self->{ uid } };
+            $self->{ group } = eval { getgrgid( $self->{ gid }) || $self->{ gid } };
+        }
+        $self->{ isdir } = -d $abs;
     }
 
     bless $self, $class;
@@ -346,49 +345,50 @@ item.
 
     [% USE file('/foo/bar/baz.html') %]
 
-    [% file.path %]	  # /foo/bar/baz.html
-    [% file.dir %]        # /foo/bar
-    [% file.name %]	  # baz.html
-    [% file.home %]       # ../..
-    [% file.root %]       # ''
-    [% file.abspath %]    # /foo/bar/baz.html
-    [% file.ext %]        # html
+    [% file.path  %]      # /foo/bar/baz.html
+    [% file.dir   %]      # /foo/bar
+    [% file.name  %]      # baz.html
+    [% file.home  %]      # ../..
+    [% file.root  %]      # ''
+    [% file.abs   %]      # /foo/bar/baz.html
+    [% file.ext   %]      # html
     [% file.mtime %]	  # 987654321
     [% file.atime %]      # 987654321
-    [% file.uid %]	  # 500
-    [% file.user %]	  # abw
+    [% file.uid   %]      # 500
+    [% file.user  %]      # abw
 
     [% USE file('foo.html') %]
 
-    [% file.path %]	  # foo.html
-    [% file.dir %]        # ''
-    [% file.name %]	  # foo.html
+    [% file.path %]	      # foo.html
+    [% file.dir  %]       # ''
+    [% file.name %]	      # foo.html
     [% file.root %]       # ''
     [% file.home %]       # ''
-    [% file.abspath %]    # foo.html
+    [% file.abs  %]       # foo.html
 
     [% USE file('foo/bar/baz.html') %]
 
-    [% file.path %]	  # foo/bar/baz.html
-    [% file.dir %]        # foo/bar
-    [% file.name %]	  # baz.html
+    [% file.path %]	      # foo/bar/baz.html
+    [% file.dir  %]       # foo/bar
+    [% file.name %]	      # baz.html
     [% file.root %]       # ''
     [% file.home %]       # ../..
-    [% file.abspath %]    # foo/bar/baz.html
+    [% file.abs  %]       # foo/bar/baz.html
 
     [% USE file('foo/bar/baz.html', root='/tmp') %]
 
-    [% file.path %]	  # foo/bar/baz.html
-    [% file.dir %]        # foo/bar
-    [% file.name %]	  # baz.html
+    [% file.path %]	      # foo/bar/baz.html
+    [% file.dir  %]       # foo/bar
+    [% file.name %]	      # baz.html
     [% file.root %]       # /tmp
     [% file.home %]       # ../..
-    [% file.abspath %]    # /tmp/foo/bar/baz.html
+    [% file.abs  %]       # /tmp/foo/bar/baz.html
 
     # calculate other file paths relative to this file and its root
     [% USE file('foo/bar/baz.html', root => '/tmp/tt2') %]
+
     [% file.path('baz/qux.html') %]	    # ../../baz/qux.html
-    [% file.dir('wiz/woz.html') %]          # ../../wiz/woz.html
+    [% file.dir('wiz/woz.html')  %]     # ../../wiz/woz.html
 
 
 =head1 AUTHORS
@@ -400,8 +400,8 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-2.66, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.67, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 
 

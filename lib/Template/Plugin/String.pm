@@ -579,6 +579,26 @@ Delegates to Perl's internal split() so the parameters are exactly the same.
          ...
     [% END %]
 
+=item substr($offset, $length, $replacement)
+
+Returns a substring starting at $offset, for $length characters.
+
+    [% str = String.new('foo bar baz wiz waz woz') %]
+    [% str.substr(4, 3) %]    # bar
+
+If $length is not specified then it returns everything from the $offset
+to the end of the string.
+
+    [% str.substr(12) %]      # wiz waz woz
+
+If both $length and $replacement are specified, then the method
+replaces everything from $offset for $length characters with
+$replacement.  The substring removed from the string is then 
+returned.
+
+    [% str.substr(0, 11, 'FOO') %]   # foo bar baz
+    [% str %]                        # FOO wiz waz woz
+
 =back
 
 =head2 Mutation Methods
@@ -790,8 +810,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.34, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.36, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

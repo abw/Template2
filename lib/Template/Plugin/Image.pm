@@ -253,10 +253,31 @@ the image should be specified as a positional or named argument.
     [% USE image(name='baz.gif') %]
     [% USE Image name='pong.gif' %]
 
+A "root" parameter can be used to specify the location of the image file:
+
+    [% USE Image(root='/path/to/root', name='images/home.png') %]
+    # image path: /path/to/root/images/home.png
+    # img src: images/home.png
+
+In cases where the image path and image url do not match up, specify the
+file name directly:
+
+    [% USE Image(file='/path/to/home.png', name='/images/home.png') %]
+
+The "alt" parameter can be used to specify an alternate name for the
+image, for use in constructing an XHTML element (see the tag() method
+below).
+
+    [% USE Image('home.png', alt="Home") %]
+
 You can also provide an alternate name for an Image plugin object.
 
     [% USE img1 = image 'foo.gif' %]
     [% USE img2 = image 'bar.gif' %]
+
+The 'name' method returns the image file name.
+
+    [% img1.name %]     # foo.gif
 
 The 'width' and 'height' methods return the width and height of the
 image, respectively.  The 'size' method returns a reference to a 2
@@ -266,6 +287,13 @@ element list containing the width and height.
     width: [% image.width %]
     height: [% image.height %]
     size: [% image.size.join(', ') %]
+
+The 'modtime' method returns the ctime of the file in question, suitable
+for use with date.format:
+
+    [% USE image 'foo.gif' %]
+    [% USE date %]
+    [% date.format(image.modtime, "%B, %e %Y") %]
 
 The 'attr' method returns the height and width as HTML/XML attributes.
 
@@ -283,25 +311,24 @@ The 'tag' method returns a complete XHTML tag referencing the image.
 
 Typical output:
 
-    <img src="foo.gif" width="60" height="20" />
+    <img src="foo.gif" width="60" height="20" alt="" />
 
 You can provide any additional attributes that should be added to the 
 XHTML tag.
 
-
     [% USE image 'foo.gif' %]
-    [% image.tag(border=0, class="logo") %]
+    [% image.tag(class="logo" alt="Logo") %]
 
 Typical output:
 
-    <img src="foo.gif" width="60" height="20" border="0" class="logo" />
+    <img src="foo.gif" width="60" height="20" alt="Logo" class="logo" />
 
-The 'modtime' method returns the ctime of the file in question, suitable
-for use with date.format:
+Note that the 'alt' attribute is mandatory in a strict XHTML 'img'
+element (even if it's empty) so it is always added even if you don't
+explicitly provide a value for it.  You can do so as an argument to 
+the 'tag' method, as shown in the previous example, or as an argument
 
-    [% USE image 'foo.gif' %]
-    [% USE date %]
-    [% date.format(image.modtime, "%B, %e %Y") %]
+    [% USE image('foo.gif', alt='Logo') %]
 
 =head1 CATCHING ERRORS
 
@@ -421,8 +448,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-1.15, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+1.17, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

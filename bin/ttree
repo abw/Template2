@@ -48,7 +48,7 @@ my $TTMODULE = 'Template';
 
 # offer create a sample config file if it doesn't exist, unless a '-f'
 # has been specified on the command line
-unless (-f $RCFILE or grep(/^-f$/, @ARGV) ) {
+unless (-f $RCFILE or grep(/^(-f|-h|--help)$/, @ARGV) ) {
     print("Do you want me to create a sample '.ttreerc' file for you?\n",
       "(file: $RCFILE)   [y/n]: ");
     my $y = <STDIN>;
@@ -1055,8 +1055,8 @@ Brocard who gets everywhere, it seems.
 
 =head1 VERSION
 
-2.35, distributed as part of the
-Template Toolkit version 2.15, released on 27 January 2006.
+2.65, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 

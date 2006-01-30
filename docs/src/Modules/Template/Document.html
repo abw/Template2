@@ -188,7 +188,7 @@ An autoload method returns METADATA items.
 -%][% WRAPPER subsection
    title = "write_perl_file(\\%config)"
 -%]<p>
-This package subroutine is provided to effect persistance of compiled
+This package subroutine is provided to effect persistence of compiled
 templates.  If the COMPILE_EXT option (to indicate a file extension
 for saving compiled templates) then the Template::Parser module calls
 this subroutine before calling the new() constructor.  At this stage,
@@ -196,7 +196,7 @@ the parser has a representation of the template as text strings
 containing Perl code.  We can write that to a file, enclosed in a
 small wrapper which will allow us to susequently require() the file
 and have Perl parse and compile it into a Template::Document.  Thus we
-have persistance of compiled templates.
+have persistence of compiled templates.
 </p>
 [%- END %]
 [%- END %]
@@ -212,8 +212,8 @@ Andy Wardley &lt;abw@andywardley.com&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.71, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.75, distributed as part of the
+Template Toolkit version 2.15, released on 30 January 2006.
 </p>
 [%- END %]
 [% WRAPPER section

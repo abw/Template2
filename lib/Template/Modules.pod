@@ -170,12 +170,6 @@ Interface to the CGI module
 
 
 
-=item L<Template::Plugin::DBI|Template::Plugin::DBI>
-
-Template interface to the DBI module
-
-
-
 =item L<Template::Plugin::Datafile|Template::Plugin::Datafile>
 
 Plugin to construct records from a simple data file
@@ -215,102 +209,6 @@ Base class for plugin filters
 =item L<Template::Plugin::Format|Template::Plugin::Format>
 
 Plugin to create formatting functions
-
-
-
-=item L<Template::Plugin::GD::Image|Template::Plugin::GD::Image>
-
-Interface to GD Graphics Library
-
-
-
-=item L<Template::Plugin::GD::Polygon|Template::Plugin::GD::Polygon>
-
-Interface to GD module Polygon class
-
-
-
-=item L<Template::Plugin::GD::Constants|Template::Plugin::GD::Constants>
-
-Interface to GD module constants
-
-
-
-=item L<Template::Plugin::GD::Text|Template::Plugin::GD::Text>
-
-Text utilities for use with GD
-
-
-
-=item L<Template::Plugin::GD::Text::Align|Template::Plugin::GD::Text::Align>
-
-Draw aligned strings in GD images
-
-
-
-=item L<Template::Plugin::GD::Text::Wrap|Template::Plugin::GD::Text::Wrap>
-
-Break and wrap strings in GD images
-
-
-
-=item L<Template::Plugin::GD::Graph::lines|Template::Plugin::GD::Graph::lines>
-
-Create line graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::lines3d|Template::Plugin::GD::Graph::lines3d>
-
-Create 3D line graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::bars|Template::Plugin::GD::Graph::bars>
-
-Create bar graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::bars3d|Template::Plugin::GD::Graph::bars3d>
-
-Create 3D bar graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::points|Template::Plugin::GD::Graph::points>
-
-Create point graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::linespoints|Template::Plugin::GD::Graph::linespoints>
-
-Create line/point graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::area|Template::Plugin::GD::Graph::area>
-
-Create area graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::mixed|Template::Plugin::GD::Graph::mixed>
-
-Create mixed graphs with axes and legends
-
-
-
-=item L<Template::Plugin::GD::Graph::pie|Template::Plugin::GD::Graph::pie>
-
-Create pie charts with legends
-
-
-
-=item L<Template::Plugin::GD::Graph::pie3d|Template::Plugin::GD::Graph::pie3d>
-
-Create 3D pie charts with legends
 
 
 
@@ -380,36 +278,6 @@ Plugin interface to Text::Wrap
 
 
 
-=item L<Template::Plugin::XML::DOM|Template::Plugin::XML::DOM>
-
-Plugin interface to XML::DOM
-
-
-
-=item L<Template::Plugin::XML::RSS|Template::Plugin::XML::RSS>
-
-Plugin interface to XML::RSS
-
-
-
-=item L<Template::Plugin::XML::Simple|Template::Plugin::XML::Simple>
-
-Plugin interface to XML::Simple
-
-
-
-=item L<Template::Plugin::XML::Style|Template::Plugin::XML::Style>
-
-Simple XML stylesheet transfomations
-
-
-
-=item L<Template::Plugin::XML::XPath|Template::Plugin::XML::XPath>
-
-Plugin interface to XML::XPath
-
-
-
 
 
 =back
@@ -425,7 +293,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-Template Toolkit version 2.13, released on 30 January 2004.
+Template Toolkit version 2.15, released on 30 January 2006.
 
 =head1 COPYRIGHT
 
