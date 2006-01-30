@@ -3,7 +3,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.13, detailing
+#   Revision history for the Template Toolkit version 2.15, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
@@ -23,12 +23,250 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# 
+# Version 2.15
 #------------------------------------------------------------------------
 
-* Updated URL plugin to not encode parameter by default, in response
-  to Randal Schwartz's bug report
-  (http://lists.template-toolkit.org/pipermail/templates/2005-December/008158.html)
+Stash
+-----
+
+* Activated a patch in Template::Stash from Stephen Howard which adds
+  code for the full set of fallbacks for dot ops called against objects
+  which don't implement the specific method.  For example 
+  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now
+  all work with the Perl Template::Stash.  Added code to the XS Stash 
+  to do the same and updated tests.
+
+  http://template-toolkit.org/pipermail/templates/2003-December/005417.html
+
+* Added full support for tied hashes and tied lists in the XS Stash.
+  Added some further tests to make sure it's all working as expected.
+
+  http://tt2.org/pipermail/templates/2006-January/008266.html
+
+* Applied path from Slaven Rezic to Template::Stash::XS to check return 
+  code in tt_fetch_item() in a way which plays nicely with tied hashes.
+
+  http://rt.cpan.org/Ticket/Display.html?id=7830
+
+* Changed Template::Stash and Template::Stash::XS to evaluate list 
+  vmethods in lvalues.
+
+  http://tt2.org/pipermail/templates/2006-January/008198.html
+
+* Changed Template::Stash to be a little more strict about what it
+  considers a failed method call.  This allows exception thrown 
+  within called methods to be propagated correctly rather than 
+  being ignored as undefined method.  Thanks to Dave Howorth for
+  reporting the problem and providing a fix.  Also ported to the
+  Template::Stash::XS module.
+
+  http://tt2.org/pipermail/templates/2005-April/007375.html
+
+* Removed redundant performance profiling code from Template::Stash::XS.
+  Must check with Doug that this is OK and he's not still using it...
+
+Virtual Methods
+---------------
+
+* Changed list.hash and hash.list vmethods to Do The Right Thing instead
+  of some crack fuelled nonsense.  hash.list now returns [ %$hash ]
+  and list.hash now returns [ @$list ]
+
+  http://template-toolkit.org/pipermail/templates/2006-January/008256.html
+
+* Fixed the split scalar virtual method which wasn't accepting the second
+  argument (limit) correctly.  Thanks to Josh Rosenbaum for pointing
+  out the problem, although the solution turned out to be a little more 
+  complicated.
+
+  http://tt2.org/pipermail/templates/2005-October/007982.html
+
+* Added the 'delete' hash virtual method and the 'remove' scalar virtual
+  method.
+
+* Changed $element to $component in Template::Context to fix callers bug, 
+  thanks to Andy Maas who identified the problem and found the solution:
+
+  http://tt2.org/pipermail/templates/2004-December/007020.html
+
+* Fixed the regex matching relative paths in Template::Provider, thanks
+  to Josh Rosenbaum 
+
+  http://tt2.org/pipermail/templates/2005-January/007141.html
+
+* Changed the sort and nsort list virtual methods to always return 
+  references to lists, avoiding any ambiguity in return results.
+
+* Changed the hash.defined method to do the same thing as scalar.defined
+  when called without arguments.  Added list.defined to do the same thing
+  as hash.defined.
+
+  http://rt.cpan.org/Ticket/Display.html?id=9094
+
+
+Plugins
+-------
+
+* Added the $Template::Plugins::PLUGIN_BASE package variable to define
+  the default 'Template::Plugin' value for the PLUGIN_BASE option.
+  By clearing this value before calling the Template new() constructor,
+  you can avoid having Template::Plugin added to the PLUGIN_BASE by 
+  default.  Also changed PLUGINS search to look for lower case plugin
+  name as well as case-specific name.  Thanks yet again Josh for 
+  addressing this issue.
+
+  http://tt2.org/pipermail/templates/2006-January/008225.html
+
+* Applied a single character patch from Lubomir Host which fixes the 
+  user attribute in Template::Plugin::File.
+
+* Added the Math Plugin to MANIFEST.
+
+* Changed the URL plugin to ignore parameters that are unset (e.g. 
+  defined but zero length)
+
+* Applied two patches to the Image plugin from Bill Moseley to escape
+  attributes in the tag() method and to provide the 'file' options.
+  Also adds proper documentation for the 'root' option.
+
+  http://tt2.org/pipermail/templates/2005-November/008086.html
+  http://tt2.org/pipermail/templates/2005-December/008189.html
+
+* Added the $JOINT package variable to Template::Plugin::URL to 
+  provide a work-around for the URL plugin which incorrectly (as
+  we now know) encodes '&' as '&amp;'
+
+  http://rt.cpan.org//Ticket/Display.html?id=11551
+  http://tt2.org/pipermail/templates/2005-December/008158.html
+
+* Added substr() method to the String plugin, as suggested here:
+
+  http://rt.cpan.org/Ticket/Display.html?id=2619
+
+* Moved all XML plugins and related tests into a separate Template-XML
+  distribution.
+
+* Moved DBI plugin and tests into Template-DBI distribution.
+
+* Moved GD plugins and tests into Template-GD distribution.
+
+
+Filters
+-------
+
+* Applied a patch to the truncate() filter from "Ashley" which 
+  adds a second argument.
+
+  http://tt2.org/pipermail/templates/2005-December/008145.html
+
+* Fixed a bug in the same truncate() filter to stop it from truncating
+  strings that are exactly as long as the limit (change '<' to '<='),
+  thanks to Nicholas at oxhoej.dk.
+
+  http://rt.cpan.org/Ticket/Display.html?id=8911
+
+* Added "use locale" to Template::Filters to enable locale-specific
+  filters.
+
+  http://rt.cpan.org/Ticket/Display.html?id=9094
+  http://rt.cpan.org/Ticket/Display.html?id=5695
+
+* Updated documentation to reflect the fact that the html filter also
+  escapes " as &quot;  Thanks to Geoff Richards for reporting it.
+
+* Moved Latex filters into Template-Latex distribution.
+
+
+ttree
+-----
+
+* Applied patch from Yuri Pimenov to prevent ttree from raising a 
+  warning when the --depend_debug option is used.
+
+  http://tt2.org/pipermail/templates/2005-May/007400.html
+
+* Applied a patch to ttree from Slaven Rezic which fixes the arguments
+  passed to mkpath.
+
+  http://rt.cpan.org//Ticket/Display.html?id=14216
+
+* Applied a patch to ttree from Mike Schilli to prevent it from going
+  into an infinite loop on encountering a directory called "0"
+
+  https://rt.cpan.org/Ticket/Display.html?id=14905
+
+* Fixed configuration section to not prompt "Do you want me to create
+  a sample .ttreerc file?" if the -h/--help options are specified, 
+  thanks to Slaven Rezic for reporting the problem.
+
+  http://rt.cpan.org/Ticket/Display.html?id=4180
+
+
+Miscellaneous
+-------------
+
+* Added code to Makefile.PL to detect $ENV{PERL_MM_USE_DEFAULT} to 
+  accept all defaults.  Thanks to KANE.
+
+  http://rt.cpan.org/Ticket/Display.html?id=14613
+
+* Removed vStrings from Template::Document.  Thanks to Dave Cross for
+  reporting the problem.
+
+  http://tt2.org/pipermail/templates/2005-April/007357.html
+
+* Applied a patch from Barrie Slaymaker which corrects a bug in the
+  Template::Parser line counting when using chomp flags.
+
+  http://tt2.org/pipermail/templates/2005-December/008157.html
+
+* Applied a patch to Template::Provider to prevent a misleading error
+  message, thanks to Slaven Rezic.
+
+  http://rt.cpan.org/Ticket/Display.html?id=5327
+
+* Added an eval wrapper around mkpath() in Template::Provider to handle
+  errors more nicely.
+
+* Numerous documentation fixes.
+
+
+
+#------------------------------------------------------------------------
+# Version 2.14 - 4th October 2004
+#------------------------------------------------------------------------
+
+* Applied patch from Harald Joerg to prevent ttree from spewing warnings 
+  when copying files.
+  http://template-toolkit.org/pipermail/templates/2004-March/005897.html
+
+* Applied a patch from Paul Orrock to fix a couple of missing errors in 
+  ttree.
+  http://template-toolkit.org/pipermail/templates/2004-September/006605.html
+
+* Commented out line 797 of Template::Directive.pm which serves no 
+  purpose and generates a warning.
+
+* Applied a patch from Mark Fowler to add support for Unicode to TT.
+  http://template-toolkit.org/pipermail/templates/2004-June/006270.html
+
+* Changed the fourth argument to process() to accept named IO layers for
+  binmode, e.g. process($in, $vars, $out, binmode => ':utf8');
+
+* Added full range of command line options to tpage.
+  http://template-toolkit.org/pipermail/templates/2004-September/006545.html
+
+* Applied patches from Tosh Cooey, Simon Wilcox and Kenny Gatdula to fix
+  XML::Simple to allow direct access to XMLin() and XMLout() methods. See
+  http://template-toolkit.org/pipermail/templates/2004-September/006620.html
+
+* Fixed a bug in the 'callers' list maintained by a template component
+  which was failing to remove callers from the list after processing.
+  http://template-toolkit.org/pipermail/templates/2004-April/006070.html
+
+* Applied a doc patch from Dave Cash documenting caller and callers.
+  http://template-toolkit.org/pipermail/templates/2004-March/005960.html
+
 
 #------------------------------------------------------------------------
 # Version 2.13 - 30th January 2004
@@ -932,7 +1170,7 @@
 
 * Applied a patch to the DBI plugin from Rafael Kitover which calls
   the DBI connect_cached() method instead of connect() to allow 
-  connection caching in a persistant server environment (e.g. Apache
+  connection caching in a persistent server environment (e.g. Apache
   mod_perl).
 
 * Changed html filter to be a dynamic filter factory, allowing the 
@@ -1901,7 +2139,7 @@
 
 * Changed the (undocumented) FORNEXT directive to NEXT and documented it.
 
-* Fixed a bug in the persistant caching mechanism in Template::Provider
+* Fixed a bug in the persistent caching mechanism in Template::Provider
   which was failing to write compiled template files for source templates
   specifed in the form [% INCLUDE foo/bar %].  Intermediate directories 
   (like 'foo' in this example) weren't being created and the disk write 
@@ -2087,12 +2325,12 @@
 * Added an iterator() method to Template::Config to require
   Template::Iterator and instantiate an iterator, and changed
   generated code for FOREACH to call this factory method.  This fixes
-  a bug with pre-compiled (i.e persistant) templates which were
+  a bug with pre-compiled (i.e persistent) templates which were
   failing if Template::Iterator wasn't already loaded.  Thanks to Doug
   Steinwand, Rafael Kitover and Jonas Lilegren who all identified the
   problem and hounded me until I fixed it.  :-)
- 
-* Fixed a problem with persistant templates not being reloaded due to 
+
+* Fixed a problem with persistent templates not being reloaded due to 
   the %INC hash.  This caused 1 to be returned from require() instead 
   of the compiled template.
 
@@ -2166,7 +2404,7 @@
 
 * Fixed bug in parse grammer preventing commas in a META list
 
-* Added cache persistance by writing real Perl to file (rather than
+* Added cache persistence by writing real Perl to file (rather than
   the previous Data::Dumper dump of the opcode tree).  Had to
   re-organise a bunch of code around the parser/provider/document.  
   Activated by COMPILE_EXT configuration item.
@@ -2175,7 +2413,7 @@
   membership of the UNIVERSAL class after the first method call.
 
 * Added AUTO_RESET option which is enabled by default.  Disable this 
-  (AUTO_RESET => 0) for block persistance across service invocations.
+  (AUTO_RESET => 0) for block persistence across service invocations.
 
 * Fixed \@ quoting (and others) in Directive thanks to Perrin Harkins 
   who reported the bug and Chuck Adams who provided a patch.
@@ -2498,7 +2736,7 @@ Configuration Options
   compile modified source templates.
 
 * The Template::Provider cache can write compiled templates (e.g. Perl code)
-  to disk to create a persistant cache.  The COMPILE_EXT may be used to 
+  to disk to create a persistent cache.  The COMPILE_EXT may be used to 
   specify a filename extension (e.g. '.ttc') which is used to create
   compiled template files.  These compiled template files 
   can then be reloaded on subsequent invocations using via Perl's 
@@ -2572,7 +2810,7 @@ new parser was built.  This brings a number of important benefits:
   sub-routine which can then be executed and re-executed significantly
   faster and with far less memory overhead.
 
-* Persistance.
+* Persistence.
 
   Once a template has been compiled to Perl code it can be saved to
   disk as a "compiled template" by defining the COMPILE_EXT option.
@@ -2587,7 +2825,7 @@ new parser was built.  This brings a number of important benefits:
   Template::Grammar modules won't even be loaded, further reducing
   startup time and memory consumption (the grammar file, in particular
   is rather large).  The Template::Provider module handles the
-  loading, caching and persistance of templates, and will examine file
+  loading, caching and persistence of templates, and will examine file
   timestamps and re-compiled modified templates as required.
 
 * Flexibility.  
