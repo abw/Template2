@@ -678,8 +678,8 @@ sub _load {
     }
     
     $data->{ path } = $data->{ name }
-        if $data and ! defined $data->{ path };
-    
+        if $data and ref $data and ! defined $data->{ path };
+
     return ($data, $error);
 }
 
