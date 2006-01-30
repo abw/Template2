@@ -94,3 +94,14 @@ World
 file: (eval 10)
 line: 10
 warn: Argument "" isn't numeric in addition (+)
+
+-- test --
+[% TRY; 
+     INCLUDE chomp; 
+   CATCH; 
+     error; 
+   END 
+%]
+-- expect --
+file error - parse error - chomp line 6: unexpected token (END)
+  [% END %]
