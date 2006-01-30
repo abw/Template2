@@ -262,8 +262,8 @@ sub process_tree {
                 # create target directory if required
                 $target = "$destdir/$path";
                 unless (-d $target || $dryrun) {
-                    mkpath $target, $mode or 
-                             die "Could not mkpath ($target): $!\n";
+                    mkpath($target, $verbose, $mode) or 
+                        die "Could not mkpath ($target): $!\n";
 
                     # commented out by abw on 2000/12/04 - seems to raise a warning?
                     # chown($uid, $gid, $target) || warn "chown($target): $!\n";
