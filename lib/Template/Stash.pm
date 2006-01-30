@@ -7,10 +7,10 @@
 #   variables for the Template Toolkit. 
 #
 # AUTHOR
-#   Andy Wardley   <abw@wardley.org>
+#   Andy Wardley   <abw@cpan.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -686,7 +686,7 @@ sub _dotop {
             # object then we assume it's a real error that needs
             # real throwing
 
-            die $@ if ref($@) || ($@ !~ /Can't locate object method/);
+            die $@ if ref($@) || ($@ !~ /Can't locate object method "\Q$item\E/);
 
             # failed to call object method, so try some fallbacks
             if (UNIVERSAL::isa($root, 'HASH') ) {
@@ -940,7 +940,7 @@ A hash reference may be passed to provide variables and values which
 should be used to initialise the stash.
 
     my $stash = Template::Stash->new({ var1 => 'value1', 
-				       var2 => 'value2' });
+                       var2 => 'value2' });
 
 =head2 get($variable)
 
