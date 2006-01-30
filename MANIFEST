@@ -75,7 +75,6 @@ docs/src/Modules/Template/Plugin/Table.html
 docs/src/Modules/Template/Plugin/URL.html
 docs/src/Modules/Template/Plugin/View.html
 docs/src/Modules/Template/Plugin/Wrap.html
-docs/src/Modules/Template/Plugin/XML/Style.html
 docs/src/Modules/Template/Plugins.html
 docs/src/Modules/Template/Provider.html
 docs/src/Modules/Template/Service.html
@@ -396,7 +395,6 @@ lib/Template/Plugin/Table.pm
 lib/Template/Plugin/URL.pm
 lib/Template/Plugin/View.pm
 lib/Template/Plugin/Wrap.pm
-lib/Template/Plugin/XML/Style.html
 lib/Template/Plugins.pm
 lib/Template/Provider.pm
 lib/Template/Service.pm
@@ -554,7 +552,6 @@ t/vmeth.t
 t/while.t
 t/wrap.t
 t/wrapper.t
-t/xmlstyle.t
 templates/README
 templates/html/bar
 templates/html/body
