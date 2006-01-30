@@ -319,14 +319,10 @@ sub split_text {
             }
             else {
                 $chomp = ($1 && $1 eq '+') ? 0 : ($1 || $prechomp);
-#               my $space = $prechomp == &Template::Constants::CHOMP_COLLAPSE 
-                my $space = $prechomp == CHOMP_COLLAPSE 
-                    ? ' ' : '';
+                my $space = $prechomp == CHOMP_COLLAPSE ? ' ' : '';
                 
                 # chomp off whitespace and newline preceding directive
-                $chomp and $pre =~ s/(\n|^)([ \t]*)\Z/($1||$2) ? $space : ''/me
-                    and $1 eq "\n"
-                    and $prelines++;
+                $chomp and $pre =~ s/(\n|^)([ \t]*)\Z/($1||$2) ? $space : ''/me;
             }
             
             # remove trailing whitespace and check for a '-' chomp flag
@@ -350,8 +346,8 @@ sub split_text {
             push(@tokens, $interp
                  ? [ $pre, $line, 'ITEXT' ]
                  : ('TEXT', $pre) );
-            $line += $prelines;
         }
+        $line += $prelines;
             
         # and now the directive, along with line number information
         if (length $dir) {
@@ -1413,8 +1409,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.81, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.82, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
  
 
