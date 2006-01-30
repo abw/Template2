@@ -20,7 +20,7 @@ is passed as the argument to Apache/mod_perl handlers.
 example 1 (file name):
 
     my [* obj *] = [* pkg *]->new({
-	OUTPUT => "/tmp/foo",
+        OUTPUT => "/tmp/foo",
     });
 
 example 2 (text string):
@@ -28,7 +28,7 @@ example 2 (text string):
     my $output = '';
 
     my [* obj *] = [* pkg *]->new({
-	OUTPUT => \$output,
+        OUTPUT => \$output,
     });
 
 example 3 (file handle):
@@ -36,7 +36,7 @@ example 3 (file handle):
     open (TOUT, "> $file") || die "$file: $!\n";
 
     my [* obj *] = [* pkg *]->new({
-	OUTPUT => \*TOUT,
+        OUTPUT => \*TOUT,
     });
 
 example 4 (subroutine):
@@ -44,24 +44,24 @@ example 4 (subroutine):
     sub output { my $out = shift; print "OUTPUT: $out" }
 
     my [* obj *] = [* pkg *]->new({
-	OUTPUT => \&output,
+        OUTPUT => \&output,
     });
 
 example 5 (array reference):
 
     my [* obj *] = [* pkg *]->new({
-	OUTPUT => \@output,
+        OUTPUT => \@output,
     })
 
 example 6 (Apache/mod_perl handler):
 
     sub handler {
-	my $r = shift;
+    my $r = shift;
 
-	my $t = Template->new({
-	    OUTPUT => $r,
-	});
-	...
+    my $t = Template->new({
+        OUTPUT => $r,
+    });
+    ...
     }
 
 The default OUTPUT location be overridden by passing a third parameter
@@ -69,12 +69,9 @@ to the Template process() method.  This can be specified as any of the
 above argument types.
 
     $t->process($file, $vars, "/tmp/foo");
-    $t->process($file, $vars, "bar");
+    $t->process($file, $vars, \$output);
     $t->process($file, $vars, \*MYGLOB);
     $t->process($file, $vars, \@output); 
     $t->process($file, $vars, $r);  # Apache::Request
     ...
-
-
-
 
