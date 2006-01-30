@@ -79,11 +79,11 @@ attr: width="110" height="60"
 -- test --
 [% USE image file.logo -%]
 tag: [% image.tag %]
-tag: [% image.tag(class="myimage") %]
+tag: [% image.tag(class="myimage", alt="image") %]
 -- expect --
 -- process --
-tag: <img src="[% file.logo %]" width="110" height="60" />
-tag: <img src="[% file.logo %]" width="110" height="60" class="myimage" />
+tag: <img src="[% file.logo %]" width="110" height="60" alt="" />
+tag: <img src="[% file.logo %]" width="110" height="60" alt="image" class="myimage" />
 
 
 # test "root"
@@ -92,11 +92,11 @@ tag: <img src="[% file.logo %]" width="110" height="60" class="myimage" />
 [% image.tag %]
 -- expect --
 -- process --
-<img src="[% file.lname %]" width="110" height="60" />
+<img src="[% file.lname %]" width="110" height="60" alt="" />
 
 # test separate file and name
 -- test --
-[% USE image( file= file.logo  name = "other.jpg" ) -%]
+[% USE image( file= file.logo  name = "other.jpg" alt="myfile") -%]
 [% image.tag %]
 -- expect --
-<img src="other.jpg" width="110" height="60" />
+<img src="other.jpg" width="110" height="60" alt="myfile" />
