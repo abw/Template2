@@ -91,10 +91,13 @@ sub new {
     # Make a note of whether we are using Image::Size or
     # Image::Info -- at least for the test suite
     $type = $INC{"Image/Size.pm"} ? "Image::Size" : "Image::Info";
-        
-    # do we want to check to see if file exists?
 
+    # set a default (empty) alt attribute for tag()
+    $config->{ alt } = '' unless defined $config->{ alt };
+
+    # do we want to check to see if file exists?
     bless { 
+        %$config,
         name => $name,
         file => $file,
         root => $root,
@@ -135,6 +138,7 @@ sub attr {
     return "width=\"$size->[0]\" height=\"$size->[1]\"";
 }
 
+
 #------------------------------------------------------------------------
 # modtime()
 #
@@ -149,6 +153,7 @@ sub modtime {
     return $self->{ modtime };
 }
 
+
 #------------------------------------------------------------------------
 # tag(\%options)
 #
@@ -160,6 +165,12 @@ sub tag {
     my $options = ref $_[0] eq 'HASH' ? shift : { @_ };
 
     my $tag = "<img src=\"$self->{ name }\" " . $self->attr();
+
+    # XHTML spec says that the alt attribute is mandatory, so who
+    # are we to argue?
+
+    $options->{ alt } = $self->{ alt }
+        unless defined $options->{ alt };
 
     if (%$options) {
         while (my ($key, $val) = each %$options) {
