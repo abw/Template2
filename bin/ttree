@@ -231,14 +231,14 @@ sub process_tree {
     my $target;
     local *DIR;
 
-    my $absdir = join('/', $srcdir ? $srcdir : (), $dir ? $dir : ());
+    my $absdir = join('/', $srcdir ? $srcdir : (), defined $dir ? $dir : ());
     $absdir ||= '.';
 
     opendir(DIR, $absdir) || do { warn "$absdir: $!\n"; return undef; };
 
     FILE: while (defined ($file = readdir(DIR))) {
         next if $file eq '.' || $file eq '..';
-        $path = $dir ? "$dir/$file" : $file;
+        $path = defined $dir ? "$dir/$file" : $file;
         $abspath = "$absdir/$file";
         
         next unless -e $abspath;
