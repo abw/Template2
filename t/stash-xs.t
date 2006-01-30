@@ -32,10 +32,36 @@ if ($@) {
     skip_all('cannot load Template::Stash::XS');
 }
 
+#------------------------------------------------------------------------
+# define some simple objects for testing
+#------------------------------------------------------------------------
+
 package Buggy;
 sub new { bless {}, shift }
 sub croak { my $self = shift; die @_ }
+
+package ListObject;
+
+package HashObject;
+
+sub hello {
+    my $self = shift;
+    return "Hello $self->{ planet }";
+}
+
+sub goodbye {
+    my $self = shift;
+    return $self->no_such_method();
+}
+
+sub now_is_the_time_to_test_a_very_long_method_to_see_what_happens {
+    my $self = shift;
+    return $self->this_method_does_not_exist();
+}
+
+
 package main;
+
 
 my $count = 20;
 my $data = {
@@ -52,7 +78,13 @@ my $data = {
     obj => bless({
         name => 'an object',
     }, 'AnObject'),
-    listobj => bless([10, 20, 30], 'AListObject'),
+    listobj => bless([10, 20, 30], 'ListObject'),
+    hashobj => bless({ planet => 'World' }, 'HashObject'),
+    clean   => sub {
+        my $error = shift;
+        $error =~ s/\s+at.*$//;
+        return $error;
+    },
     correct => sub { die @_ },
     buggy => Buggy->new(),
 };
@@ -289,4 +321,25 @@ hello, there
 -- expect --
 message: Hello World
 
+# test Dave Howorth's patch (v2.15) which makes the stash more strict
+# about what it considers to be a missing method error
 
+-- test --
+[% hashobj.hello %]
+-- expect --
+Hello World
+
+-- test --
+[% TRY; hashobj.goodbye; CATCH; "ERROR: "; clean(error); END %]
+-- expect --
+ERROR: undef error - Can't locate object method "no_such_method" via package "HashObject"
+
+-- test --
+[% TRY; 
+    hashobj.now_is_the_time_to_test_a_very_long_method_to_see_what_happens;
+   CATCH; 
+     "ERROR: "; clean(error); 
+   END 
+%]
+-- expect --
+ERROR: undef error - Can't locate object method "this_method_does_not_exist" via package "HashObject"

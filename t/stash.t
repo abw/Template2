@@ -29,6 +29,26 @@ my $DEBUG = grep(/-d/, @ARGV);
 #$Template::Parser::DEBUG     = $DEBUG;
 #$Template::Directive::PRETTY = $DEBUG;
 
+#------------------------------------------------------------------------
+# define some simple objects for testing
+#------------------------------------------------------------------------
+
+package ListObject;
+package HashObject;
+
+sub hello {
+    my $self = shift;
+    return "Hello $self->{ planet }";
+}
+
+sub goodbye {
+    my $self = shift;
+    return $self->no_such_method();
+}
+
+package main;
+    
+
 $Template::Config::STASH = 'Template::Stash';
 
 my $count = 20;
@@ -46,8 +66,13 @@ my $data = {
     obj => bless({
         name => 'an object',
     }, 'AnObject'),
-    listobj => bless([10, 20, 30], 'AListObject')
-                      
+    hashobj => bless({ planet => 'World' }, 'HashObject'),
+    listobj => bless([10, 20, 30], 'ListObject'),
+    clean   => sub {
+        my $error = shift;
+        $error =~ s/\s+at.*$//;
+        return $error;
+    },
 };
 
 my $stash = Template::Stash->new($data);
@@ -238,3 +263,16 @@ an object
 =[% size %]=
 -- expect --
 ==
+
+# test Dave Howorth's patch (v2.15) which makes the stash more strict
+# about what it considers to be a missing method error
+
+-- test --
+[% hashobj.hello %]
+-- expect --
+Hello World
+
+-- test --
+[% TRY; hashobj.goodbye; CATCH; "ERROR: "; clean(error); END %]
+-- expect --
+ERROR: undef error - Can't locate object method "no_such_method" via package "HashObject"
