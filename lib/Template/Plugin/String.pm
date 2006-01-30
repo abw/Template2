@@ -313,9 +313,29 @@ sub truncate {
     return $self unless defined $length;
     $suffix ||= '';
     return $self if CORE::length $self->{ text } <= $length;
-    $self->{ text } = substr($self->{ text }, 0, 
+    $self->{ text } = CORE::substr($self->{ text }, 0, 
 			     $length - CORE::length($suffix)) . $suffix;
     return $self;
+}
+
+
+sub substr {
+    my ($self, $offset, $length, $replacement) = @_;
+    $offset ||= 0;
+
+    if(defined $length) {
+        if (defined $replacement) {
+            my $removed = CORE::substr( $self->{text}, $offset, $length );
+            CORE::substr( $self->{text}, $offset, $length ) = $replacement;
+            return $removed;
+        }
+        else {
+            return CORE::substr( $self->{text}, $offset, $length );
+        }
+    } 
+    else {
+        return CORE::substr( $self->{text}, $offset );
+    }
 }
 
 
