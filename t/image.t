@@ -34,6 +34,7 @@ my $vars = {
     file => {
         logo  => File::Spec->catfile($dir, 'ttdotorg.gif'),
         power => File::Spec->catfile($dir, 'tt2power.gif'),
+        lname => 'ttdotorg.gif',
     },
 };
 
@@ -85,4 +86,17 @@ tag: <img src="[% file.logo %]" width="110" height="60" />
 tag: <img src="[% file.logo %]" width="110" height="60" class="myimage" />
 
 
+# test "root"
+-- test --
+[% USE image( root=dir name=file.lname ) -%]
+[% image.tag %]
+-- expect --
+-- process --
+<img src="[% file.lname %]" width="110" height="60" />
 
+# test separate file and name
+-- test --
+[% USE image( file= file.logo  name = "other.jpg" ) -%]
+[% image.tag %]
+-- expect --
+<img src="other.jpg" width="110" height="60" />
