@@ -487,7 +487,7 @@ sub truncate_filter_factory {
 
     return sub {
         my $text = shift;
-        return $text if length $text < $len;
+        return $text if length $text <= $len;
         return substr($text, 0, $len - length($char)) . $char;
     }
 }
