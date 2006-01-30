@@ -35,7 +35,7 @@ package Template::Provider;
 
 use strict;
 use warnings;
-use base 'Template::Base'
+use base 'Template::Base';
 use Template::Config;
 use Template::Constants;
 use Template::Document;
@@ -51,7 +51,7 @@ use constant STAT   => 5;
 
 our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 our $DEBUG   = 0 unless defined $DEBUG;
-our $ERROR   = ''
+our $ERROR   = '';
 
 # name of document class
 our $DOCUMENT = 'Template::Document' unless defined $DOCUMENT;
