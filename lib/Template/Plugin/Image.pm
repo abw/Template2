@@ -85,7 +85,7 @@ sub new {
         $file = File::Spec->catfile($root, $name);
     }
     else {
-        $file = $name;
+        $file = defined $config->{file} ? $config->{file} : $name;
     }
 
     # Make a note of whether we are using Image::Size or
@@ -410,8 +410,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-1.13, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+1.15, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
