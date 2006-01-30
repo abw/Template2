@@ -38,11 +38,11 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 BEGIN {
     # UNICODE is supported in versions of Perl from 5.008 onwards
     if ($UNICODE = $] > 5.007 ? 1 : 0) {
-        if ($^V gt v5.8.0) {
+        if ($] > 5.008) {
             # utf8::is_utf8() available from Perl 5.8.1 onwards
             *is_utf8 = \&utf8::is_utf8;
         }
-        elsif ($^V eq v5.8.0) {
+        elsif ($] == 5.008) {
             # use Encode::is_utf8() for Perl 5.8.0
             require Encode;
             *is_utf8 = \&Encode::is_utf8;
@@ -487,8 +487,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.71, distributed as part of the
-Template Toolkit version 2.13, released on 30 January 2004.
+2.74, distributed as part of the
+Template Toolkit version 2.15, released on 27 January 2006.
 
 =head1 COPYRIGHT
 
