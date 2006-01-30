@@ -24,6 +24,17 @@ the image should be specified as a positional or named argument.
     [% USE image(name='baz.gif') %]
     [% USE Image name='pong.gif' %]
 
+A "root" parameter can be used to specify the location of the image file:
+
+    [% USE Image(root='/path/to/root', name='images/home.png') %]
+    # image path: /path/to/root/images/home.png
+    # img src: images/home.png
+
+In cases where the image path and image url do not match up, specify the
+file name directly:
+
+    [% USE Image(file='/path/to/home.png', name='/images/home.png') %]
+
 You can also provide an alternate name for an Image plugin object.
 
     [% USE img1 = image 'foo.gif' %]
