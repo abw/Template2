@@ -97,7 +97,7 @@ copied (i.e. imported) into the current namespace.
     # foo.bar = baz, foo.wiz = waz
     $stash->set('foo', { 'bar' => 'baz', 'wiz' => 'waz' });
 
-    # import 'foo' into main namespace: foo = baz, wiz = waz
+    # import 'foo' into main namespace: bar = baz, wiz = waz
     $stash->set('IMPORT', $stash->get('foo'));
 
 =head2 clone(\%params)
