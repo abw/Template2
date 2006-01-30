@@ -43,7 +43,15 @@ For the above three examples, these will produce the following outputs:
     /cgi-bin/bar.pl?mode=browse
     /cgi-bin/baz.pl?mode=browse&amp;debug=1
 
-Additional parameters may be also be specified:
+Note that additional parameters are seperated by '&amp;' rather than
+simply '&'.  This is the correct behaviour for HTML pages but is,
+unfortunately, incorrect when creating URLs that do not need to be
+encoded safely for HTML.  This is likely to be corrected in a future
+version of the plugin (most probably with TT3).  In the mean time, you
+can set C<$Template::Plugin::URL::JOINT> to C<&> to get the correct
+behaviour.
+
+Additional parameters may be also be specified to the URL:
 
     [% url(mode='submit', id='wiz') %]
 
@@ -63,7 +71,6 @@ producing
     /cgi-bin/waz.pl?mode=browse&amp;test=1
     /cgi-bin/waz.pl?mode=browse&amp;debug=1&amp;test=1
 
-
 The ordering of the parameters is non-deterministic due to fact that 
 Perl's hashes themselves are unordered.  This isn't a problem as the 
 ordering of CGI parameters is insignificant (to the best of my knowledge).
@@ -77,18 +84,10 @@ Here the spaces and "'" character are escaped in the output:
 
     /cgi-bin/woz.pl?name=Elrich%20von%20Benjy%20d%27Weiro
 
-Alternate name may be provided for the plugin at construction time
+An alternate name may be provided for the plugin at construction time
 as per regular Template Toolkit syntax.
 
     [% USE mycgi = url('cgi-bin/min.pl') %]
 
     [% mycgi(debug=1) %]
-
-Note that in the following line, additional parameters are seperated
-by '&amp;', while common usage on the Web is to just use '&'. '&amp;'
-is actually the Right Way to do it. See this URL for more information:
-http://ppewww.ph.gla.ac.uk/~flavell/www/formgetbyurl.html
-
-    /cgi-bin/waz.pl?mode=browse&amp;debug=1&amp;test=1
-
 
