@@ -270,6 +270,16 @@ index number (size - 1), respectively.
 
     [% results.size %] search results matched your query
 
+=item defined
+
+Returns a true or false value if the item in the list denoted by the
+argument is defined.
+
+    [% list.defined(3) ? 'yes' : 'no' %]
+
+When called without any argument, list.defined returns true if the list
+itself is defined (e.g. the same effect as scalar.defined).
+
 =item reverse
 
 Returns the items of the list in reverse order.
