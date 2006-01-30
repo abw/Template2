@@ -205,11 +205,11 @@ output:
     ME> blah blah blah
     ME> cabbages, rhubard, onions
 
-=head2 truncate(length)
+=head2 truncate(length,dots)
 
-Truncates the text block to the length specified, or a default length of
-32.  Truncated text will be terminated with '...' (i.e. the '...' falls
-inside the required length, rather than appending to it).
+Truncates the text block to the length specified, or a default length
+of 32.  Truncated text will be terminated with '...' (i.e. the '...'
+falls inside the required length, rather than appending to it).
 
     [% FILTER truncate(21) %]
     I have much to say on this matter that has previously 
@@ -219,6 +219,18 @@ inside the required length, rather than appending to it).
 output:
 
     I have much to say...
+
+If you want to use something other than '...' you can pass that as a 
+second argument.
+
+    [% FILTER truncate(26, '&hellip;') %]
+    I have much to say on this matter that has previously 
+    been said on more than one occasion.
+    [% END %]
+
+output:
+
+    I have much to say&hellip;
 
 =head2 repeat(iterations)
 
