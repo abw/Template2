@@ -89,7 +89,11 @@ static SV*      hash_dot_values(pTHX_ HV*, AV*);
 static SV*      scalar_dot_defined(pTHX_ SV*, AV*);
 static SV*      scalar_dot_length(pTHX_ SV*, AV*);
 
-static char rcsid[] = "$Id$";
+static char rcsid[]  = "$Id$";
+
+#define THROW_SIZE 64
+static char throw_str[THROW_SIZE+1];
+static char throw_fmt[] = "Can't locate object method \"%s\"";
 
 /* dispatch table for XS versions of special "virtual methods",
  * names must be in alphabetical order 		
@@ -300,6 +304,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
             SV **svp;
             HV *stash = SvSTASH((SV *) SvRV(root));
             GV *gv;
+            char *error_string;
             result = NULL;
             
             if ((gv = gv_fetchmethod_autoload(stash, item, 1))) {
@@ -319,14 +324,30 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                     PUTBACK;
                     result = NULL;
                     
-                    /* temporary hack - required to propogate errors thrown
-                       by views; if $@ is a ref (e.g. Template::Exception)
-                       object then we assume it's a real error that needs
-                       real throwing */
-                    
-                    if (SvROK(ERRSV) || !strstr(SvPV(ERRSV, PL_na), 
-                                                "Can't locate object method")) {
+                    /* if we get an exception object throw ($@ is a
+                     * ref) or a error other than "Can't locate object
+                     * method "blah"" then it's a real error that need
+                     * to be re-thrown.
+                     */
+
+                            
+                    if (SvROK(ERRSV)) {
                         die_object(aTHX_ ERRSV);
+                    }
+                    else {
+                        /* We use throw_str to construct the error
+                         * message that indicates a missing method.
+                         * We use snprintf() to avoid overflowing 
+                         * throw_str, and always ensure the last character
+                         * is NULL (if the item name is too long to fit
+                         * into throw_str then snprintf() doesn't add the 
+                         * terminating NULL
+                         */
+                        snprintf( throw_str, THROW_SIZE, throw_fmt, item);
+                        throw_str[THROW_SIZE] = '\0';
+
+                        if (! strstr( SvPV(ERRSV, PL_na), throw_str)) 
+                            die_object(aTHX_ ERRSV);
                     }
                 } else {
                     result = fold_results(aTHX_ n);
