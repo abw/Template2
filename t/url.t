@@ -53,6 +53,7 @@ my $urls = {
 my $vars = {
     url => $urls,
     sorted => \&sort_params,
+    no_escape => sub { $Template::Plugin::URL::JOINT = '&' },
 };
 
 test_expect(\*DATA, { INTERPOLATE => 1 }, $vars);
@@ -169,3 +170,11 @@ there?age=42&amp;name=frank
 -- expect --
 /product?action=edit&amp;style=editor
 /product?action=edit&amp;style=compact
+
+-- test --
+[% CALL no_escape -%]
+[% url.product.edit %]
+[% url.product.edit(style='compact') %]
+-- expect --
+/product?action=edit&style=editor
+/product?action=edit&style=compact
