@@ -19,8 +19,8 @@
 # Miscellaneous
 #------------------------------------------------------------------------
 
-* The ENCODING options needs testing and documenting.  Bill Moseley is 
-  working on this.
+* The ENCODING options needs testing and documenting.  Bill Moseley said
+  he may be able to do this.
 
 * The 'eval' filter leaks memory, as reported by Colin Johnson.  The
   filter subroutine created contains a reference to the context and then
@@ -56,33 +56,7 @@
   maps to the samed compiled version) but is convenient for those times
   when you know that's not going to be a problem.
 
-* Richard Tietjen's patch for stash replace.  Allows back references
-  (e.g. $1) but it would be nice to find a rock-solid way to implement
-  it without relying on unusual ^A delimiter character. 
-
-* Further to the above, Craig Barratt has this solution which will be 
-  going into the next verion (2.05b) unless anyone has any further 
-  suggestions to make before then.
-
-    It would be great if replace handled backreferences.  I don't like
-    the ^A solution since the string could contain ^A, plus it is a
-    security hole.  The attempt I posted only works for up to 9
-    backreferences and doesn't handle an escaped '\$' and uses nested
-    evals:
-
-        $str =~ s{$search}{
-		my $r = $replace;
-		my @d = (0, $1, $2, $3, $4, $5, $6, $7, $8, $9);
-		$r =~ s/\$(\d+)/$d[$1]/eg;
-		$r;
-	      }eg;
-
-    I wish there was a perl predefined variable array containing all
-    the backreferences (is there one?).  You can avoid the hard-coded
-    limit of 9 with extra evals, and a bit of work on the re could
-    handle the escaped '\$' case, so maybe that would be good enough.
-
-* Craig also notes, in fixing the problem with NEXT not working 
+* Craig Barratt notes, in fixing the problem with NEXT not working 
   inside SWITCH (see Changes v2.04):
 
     By the way, I came across another arcane bug:
