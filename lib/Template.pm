@@ -143,6 +143,7 @@ sub _init {
         || Template::Config->service($config)
         || return $self->error(Template::Config->error);
     
+    $self->{ ENCODING    } = $config->{ ENCODING };
     $self->{ OUTPUT      } = $config->{ OUTPUT } || \*STDOUT;
     $self->{ OUTPUT_PATH } = $config->{ OUTPUT_PATH };
 
@@ -192,7 +193,9 @@ sub _output {
         }
         elsif (open(FP, ">$where")) { 
             # binmode option can be 1 or a specific layer, e.g. :utf8
-            my $bm = $options->{ binmode };
+            my $bm = $options->{ binmode  } 
+                  || $options->{ encoding }
+                  || $self->{ ENCODING };
             if ($bm && +$bm == 1) { 
                 binmode FP;
             }
