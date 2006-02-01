@@ -401,9 +401,10 @@ sub _init {
     $self->{ RELATIVE     } = $params->{ RELATIVE } || 0;
     $self->{ TOLERANT     } = $params->{ TOLERANT } || 0;
     $self->{ DOCUMENT     } = $params->{ DOCUMENT } || $DOCUMENT;
-    $self->{ PARSER       } = $params->{ PARSER };
-    $self->{ DEFAULT      } = $params->{ DEFAULT };
-#   $self->{ PREFIX       } = $params->{ PREFIX };
+    $self->{ PARSER       } = $params->{ PARSER   };
+    $self->{ DEFAULT      } = $params->{ DEFAULT  };
+    $self->{ ENCODING     } = $params->{ ENCODING };
+#   $self->{ PREFIX       } = $params->{ PREFIX   };
     $self->{ PARAMS       } = $params;
 
     # look for user-provided UNICODE parameter or use default from package var
@@ -1001,16 +1002,20 @@ sub _dump_cache {
 #------------------------------------------------------------------------
 
 
-sub _decode_unicode
-{
-    use bytes;
-
+sub _decode_unicode {
     my $self   = shift;
     my $string = shift;
 
+    use bytes;
+    require Encode;
+    
+    return $string if Encode::is_utf8( $string );
+    
     # try all the BOMs in order looking for one (order is important
     # 32bit BOMs look like 16bit BOMs)
-    my $count = 0;
+
+    my $count  = 0;
+
     while ($count < @{ $boms }) {
         my $enc = $boms->[$count++];
         my $bom = $boms->[$count++];
@@ -1018,13 +1023,13 @@ sub _decode_unicode
         # does the string start with the bom?
         if ($bom eq substr($string, 0, length($bom))) {
             # decode it and hand it back
-            require Encode;
             return Encode::decode($enc, substr($string, length($bom)), 1);
         }
     }
 
-    # no boms matched so it must be a non unicode string which we return as is
-    return $string;
+    return $self->{ ENCODING }
+        ? Encode::decode( $self->{ ENCODING }, $string )
+        : $string;
 }
 
 
