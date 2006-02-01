@@ -709,3 +709,26 @@ boo
 -- expect --
 [ foo | bar | ]
 
+-- test --
+[% text = 'Hello World' -%]
+a: [% text.substr(6) %]!
+b: [% text.substr(0, 5) %]!
+c: [% text.substr(0, 5, 'Goodbye') %]!
+d: [% text %]!
+-- expect --
+a: World!
+b: Hello!
+c: Hello!
+d: Goodbye World!
+
+-- test --
+[% text = 'foo bar baz wiz waz woz' -%]
+a: [% text.substr(4, 3) %]
+b: [% text.substr(12) %]
+c: [% text.substr(0, 11, 'FOO') %]
+d: [% text %]
+-- expect --
+a: bar
+b: wiz waz woz
+c: foo bar baz
+d: FOO wiz waz woz
