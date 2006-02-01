@@ -323,10 +323,15 @@ an 'author' key or objects with an 'author' method.
 
 =item unshift(item), push(item)
 
-Adds an item to the start/end of a list.
+The push() method adds an item or items to the end of list.
 
-    [% mylist.unshift('prev item') %]
-    [% mylist.push('next item')    %]
+    [% mylist.push(foo) %]
+    [% mylist.push(foo, bar) %]
+    
+The unshift() method adds an item or items to the start of a list.
+
+    [% mylist.unshift(foo) %]
+    [% mylist.push(foo, bar)    %]
 
 =item shift, pop
 
