@@ -696,18 +696,12 @@ no match
 -- expect --
 message: Hello World
 
--- stop --
 
 
--- test --
-[% var = 'foo'; var.replace('f(o+)$', 'b$1') %]
--- expect --
-boo
+#------------------------------------------------------------------------
+# test the new substr() method 
+#------------------------------------------------------------------------
 
--- test --
-[% var = 'foo|bar/baz'; var.replace('(fo+)|(bar)(.*)$', '[ $1 | $2 | $3 ]') %]
--- expect --
-[ foo | bar | ]
 
 -- test --
 [% text = 'Hello World' -%]
@@ -718,8 +712,8 @@ d: [% text %]!
 -- expect --
 a: World!
 b: Hello!
-c: Hello!
-d: Goodbye World!
+c: Goodbye World!
+d: Hello World!
 
 -- test --
 [% text = 'foo bar baz wiz waz woz' -%]
@@ -730,5 +724,53 @@ d: [% text %]
 -- expect --
 a: bar
 b: wiz waz woz
-c: foo bar baz
-d: FOO wiz waz woz
+c: FOO wiz waz woz
+d: foo bar baz wiz waz woz
+
+
+#------------------------------------------------------------------------
+# test the new replace() method with backrefs
+#------------------------------------------------------------------------
+
+-- test --
+[% text = 'The cat sat on the mat';
+   text.replace( '(\w+) sat on the (\w+)',
+                 'dirty $1 shat on the filthy $2' )
+%]
+-- expect --
+The dirty cat shat on the filthy mat
+
+
+# test more than 9 captures to make sure $10, $11, etc., work ok
+-- test --
+[% text = 'one two three four five six seven eight nine ten eleven twelve thirteen';
+   text.replace(
+      '(\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+)',
+      '[$12-$11-$10-$9-$8-$7-$6-$5-$4-$3-$2-$1]'
+   )
+%]
+-- expect --
+[twelve-eleven-ten-nine-eight-seven-six-five-four-three-two-one] thirteen
+
+
+-- test --
+[% text = 'one two three four five six seven eight nine ten eleven twelve thirteen';
+   text.replace(
+      '(\w+) ',
+      '[$1]-'
+   )
+%]
+-- expect --
+[one]-[two]-[three]-[four]-[five]-[six]-[seven]-[eight]-[nine]-[ten]-[eleven]-[twelve]-thirteen
+
+-- test --
+[% var = 'foo'; var.replace('f(o+)$', 'b$1') %]
+-- expect --
+boo
+
+-- test --
+[% var = 'foo|bar/baz'; var.replace('(fo+)\|(bar)(.*)$', '[ $1, $2, $3 ]') %]
+-- expect --
+[ foo, bar, /baz ]
+
+
