@@ -36,9 +36,26 @@ other offline document systems.
 WHAT'S NEW?
 -----------
 
-Version 2.15 features a number of enhancements to the XS Stash that
-includes support for tied hashes and arrays.  There are numerous other
-bug fixes and enhancements, described in detail in the Changes file.
+Version 2.15 is a major maintenance release.  It applies all outstanding
+patches and closed all open bugs listed on http://rt.cpan.org/  It
+includes:
+
+ * XS Stash: enhancements include support for tied hashes/arrays
+   and "fallback" methods on objects (e.g. accessing hash and 
+   list items and calling virtual methods)
+
+ * Virtual Methods: added the scalar.remove, scalar.substr,
+   hash.delete, hash.items, hash.pairs, list.import and list.hash
+   virtual methods.  Added support for backreferences to
+   scalar.replace and other improvements to list.push, list.unshift,
+   list.hash, hash.list
+
+ * Plugins: Added Math plugin, Bug fixes and enhancements to File,
+   Image, URL and String plugins.  Moved DBI, XML and GD plugins 
+   into separate distributions.
+
+ * Numerous other bug fixes, enhancements, documentation updates, all
+   described in detail in the Changes file.
 
 More significant is what's not in version 2.15.  The DBI plugin has
 been moved into a separate Template-DBI distribution, the GD plugins
