@@ -68,7 +68,7 @@ sub sum {
     my $list = shift;
     my $n = 0;
     foreach (@$list) {
-	$n += $_;
+        $n += $_;
     }
     return $n;
 }
@@ -90,6 +90,7 @@ my $params = {
     undef    => undef,
     zero     => 0,
     one      => 1,
+    animal   => 'cat',
     string   => 'The cat sat on the mat',
     spaced   => '  The dog sat on the log',
     hash     => { a => 'b', c => 'd' },
@@ -128,7 +129,9 @@ test_expect(\*DATA, undef, $params);
 
 __DATA__
 
-# SCALAR_OPS
+#------------------------------------------------------------------------
+# scalar virtual methods
+#------------------------------------------------------------------------
 
 -- test --
 [% notdef.defined ? 'def' : 'undef' %]
@@ -181,27 +184,194 @@ The_dog_sat_on_the_log
 -- expect --
 __The_dog_sat_on_the_log
 
+-- test --
+-- name: text.list --
+[% string.list.join %]
+-- expect --
+The cat sat on the mat
+
+-- test --
+-- name: text.hash --
+[% string.hash.value %]
+-- expect --
+The cat sat on the mat
+
+-- test --
+-- name: text.size --
+[% string.size %]
+-- expect --
+1
+
+-- test --
+-- name: text.repeat --
+[% animal.repeat(3) %]
+-- expect --
+catcatcat
+
+-- test --
+-- name: text.search --
+[% animal.search('at$') ? "found 'at\$'" : "didn't find 'at\$'" %]
+-- expect --
+found 'at$'
+
+-- test --
+-- name: text.search --
+[% animal.search('^at') ? "found '^at'" : "didn't find '^at'" %]
+-- expect --
+didn't find '^at'
+
+-- test --
+-- name: text.match an --
+[% text = 'bandanna';
+   text.match('an') ? 'match' : 'no match'
+%]
+-- expect --
+match
+
+-- test --
+-- name: text.match on --
+[% text = 'bandanna';
+   text.match('on') ? 'match' : 'no match'
+%]
+-- expect --
+no match
+
+-- test --
+-- name: text.match global an --
+[% text = 'bandanna';
+   text.match('an', 1).size %] matches
+-- expect --
+2 matches
+
+-- test --
+-- name: text.match global an --
+[% text = 'bandanna' -%]
+matches are [% text.match('an+', 1).join(', ') %]
+-- expect --
+matches are an, ann
+
+-- test --
+-- name: text.match global on --
+[% text = 'bandanna';
+   text.match('on+', 1) ? 'match' : 'no match'
+%]
+-- expect --
+no match
+
+-- test --
+-- name: text substr method --
+[% text = 'Hello World' -%]
+a: [% text.substr(6) %]!
+b: [% text.substr(0, 5) %]!
+c: [% text.substr(0, 5, 'Goodbye') %]!
+d: [% text %]!
+-- expect --
+a: World!
+b: Hello!
+c: Goodbye World!
+d: Hello World!
+
+-- test --
+-- name: another text substr method --
+[% text = 'foo bar baz wiz waz woz' -%]
+a: [% text.substr(4, 3) %]
+b: [% text.substr(12) %]
+c: [% text.substr(0, 11, 'FOO') %]
+d: [% text %]
+-- expect --
+a: bar
+b: wiz waz woz
+c: FOO wiz waz woz
+d: foo bar baz wiz waz woz
+
+
+-- test --
+-- name: text.remove --
+[% text = 'hello world!';
+   text.remove('\s+world')
+%]
+-- expect --
+hello!
+
+
+-- test --
+-- name: text replace method with backrefs --
+[% text = 'The cat sat on the mat';
+   text.replace( '(\w+) sat on the (\w+)',
+                 'dirty $1 shat on the filthy $2' )
+%]
+-- expect --
+The dirty cat shat on the filthy mat
+
+
+# test more than 9 captures to make sure $10, $11, etc., work ok
+-- test --
+-- name: ten+ backrefs --
+[% text = 'one two three four five six seven eight nine ten eleven twelve thirteen';
+   text.replace(
+      '(\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+)',
+      '[$12-$11-$10-$9-$8-$7-$6-$5-$4-$3-$2-$1]'
+   )
+%]
+-- expect --
+[twelve-eleven-ten-nine-eight-seven-six-five-four-three-two-one] thirteen
+
+
+-- test --
+-- name: repeat backrefs --
+[% text = 'one two three four five six seven eight nine ten eleven twelve thirteen';
+   text.replace(
+      '(\w+) ',
+      '[$1]-'
+   )
+%]
+-- expect --
+[one]-[two]-[three]-[four]-[five]-[six]-[seven]-[eight]-[nine]-[ten]-[eleven]-[twelve]-thirteen
+
+-- test --
+-- name: another backref test --
+[% var = 'foo'; var.replace('f(o+)$', 'b$1') %]
+-- expect --
+boo
+
+-- test --
+-- name: yet another backref test --
+[% var = 'foo|bar/baz'; var.replace('(fo+)\|(bar)(.*)$', '[ $1, $2, $3 ]') %]
+-- expect --
+[ foo, bar, /baz ]
+
+
 
 #------------------------------------------------------------------------
-# HASH_OPS
+# hash virtual methods
 #------------------------------------------------------------------------
 
 -- test --
+-- name: hash keys --
 [% hash.keys.sort.join(', ') %]
 -- expect --
 a, c
 
 -- test --
+-- name: hash values --
 [% hash.values.sort.join(', ') %]
 -- expect --
 b, d
 
 -- test --
+-- name: hash each --
 [% hash.each.sort.join(', ') %]
 -- expect --
 a, b, c, d
 
 -- test --
+-- name: hash items --
+[% hash.items.sort.join(', ') %]
+-- expect --
+a, b, c, d
+
+-- test --
+-- name: hash size --
 [% hash.size %]
 -- expect --
 2
@@ -236,9 +406,28 @@ good
 good
 good
 
+-- test --
+-- name: hash.pairs --
+[% FOREACH pair IN hash.pairs -%]
+* [% pair.key %] => [% pair.value %]
+[% END %]
+-- expect --
+* a => b
+* c => d
+
+-- test --
+-- name: hash.list (old style) --
+[% FOREACH pair IN hash.list -%]
+* [% pair.key %] => [% pair.value %]
+[% END %]
+-- expect --
+* a => b
+* c => d
+
+
 
 #------------------------------------------------------------------------
-# USER DEFINED HASH_OPS
+# user defined hash virtual methods
 #------------------------------------------------------------------------
 
 -- test --
@@ -256,7 +445,7 @@ good
 
 
 #------------------------------------------------------------------------
-# LIST_OPS
+# list virtual methods
 #------------------------------------------------------------------------
 
 -- test --
@@ -421,6 +610,25 @@ hello world
 
 
 -- test --
+-- name: list import one --
+[% list_one = [ 1 2 3 ];
+   list_two = [ 4 5 6 ];
+   list_one.import(list_two).join(', ') %]
+-- expect --
+1, 2, 3, 4, 5, 6
+
+-- test --
+-- name: list import two --
+[% list_one = [ 1 2 3 ];
+   list_two = [ 4 5 6 ];
+   list_three = [ 7 8 9 0 ];
+   list_one.import(list_two, list_three).join(', ') %]
+-- expect --
+1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+
+
+-- test --
+-- name: list merge one --
 [% list_one = [ 1 2 3 ];
    list_two = [ 4 5 6 ];
    "'$l' " FOREACH l = list_one.merge(list_two) %]
@@ -428,6 +636,7 @@ hello world
 '1' '2' '3' '4' '5' '6' 
 
 -- test --
+-- name: list merge two --
 [% list_one = [ 1 2 3 ];
    list_two = [ 4 5 6 ];
    list_three = [ 7 8 9 0 ];
@@ -553,6 +762,42 @@ Th, eCa, tSa, ton, The, Mat
 %]
 -- expect --
 1234 5678 2468 3579
+
+
+-- test --
+-- name: list.hash --
+[% items = ['zero', 'one', 'two', 'three'];
+   hash = items.hash(0);
+   "$key = $value\n" FOREACH hash.pairs;
+-%]
+-- expect --
+0 = zero
+1 = one
+2 = two
+3 = three
+
+-- test --
+-- name: list.hash(10) --
+[% items = ['zero', 'one', 'two', 'three'];
+   hash = items.hash(10);
+   "$key = $value\n" FOREACH hash.pairs;
+-%]
+-- expect --
+10 = zero
+11 = one
+12 = two
+13 = three
+
+
+-- test --
+-- name: list.hash --
+[% items = ['zero', 'one', 'two', 'three'];
+   hash = items.hash;
+   "$key = $value\n" FOREACH hash.pairs;
+-%]
+-- expect --
+two = three
+zero = one
 
 
 
@@ -697,80 +942,5 @@ no match
 message: Hello World
 
 
-
-#------------------------------------------------------------------------
-# test the new substr() method 
-#------------------------------------------------------------------------
-
-
--- test --
-[% text = 'Hello World' -%]
-a: [% text.substr(6) %]!
-b: [% text.substr(0, 5) %]!
-c: [% text.substr(0, 5, 'Goodbye') %]!
-d: [% text %]!
--- expect --
-a: World!
-b: Hello!
-c: Goodbye World!
-d: Hello World!
-
--- test --
-[% text = 'foo bar baz wiz waz woz' -%]
-a: [% text.substr(4, 3) %]
-b: [% text.substr(12) %]
-c: [% text.substr(0, 11, 'FOO') %]
-d: [% text %]
--- expect --
-a: bar
-b: wiz waz woz
-c: FOO wiz waz woz
-d: foo bar baz wiz waz woz
-
-
-#------------------------------------------------------------------------
-# test the new replace() method with backrefs
-#------------------------------------------------------------------------
-
--- test --
-[% text = 'The cat sat on the mat';
-   text.replace( '(\w+) sat on the (\w+)',
-                 'dirty $1 shat on the filthy $2' )
-%]
--- expect --
-The dirty cat shat on the filthy mat
-
-
-# test more than 9 captures to make sure $10, $11, etc., work ok
--- test --
-[% text = 'one two three four five six seven eight nine ten eleven twelve thirteen';
-   text.replace(
-      '(\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+) (\w+)',
-      '[$12-$11-$10-$9-$8-$7-$6-$5-$4-$3-$2-$1]'
-   )
-%]
--- expect --
-[twelve-eleven-ten-nine-eight-seven-six-five-four-three-two-one] thirteen
-
-
--- test --
-[% text = 'one two three four five six seven eight nine ten eleven twelve thirteen';
-   text.replace(
-      '(\w+) ',
-      '[$1]-'
-   )
-%]
--- expect --
-[one]-[two]-[three]-[four]-[five]-[six]-[seven]-[eight]-[nine]-[ten]-[eleven]-[twelve]-thirteen
-
--- test --
-[% var = 'foo'; var.replace('f(o+)$', 'b$1') %]
--- expect --
-boo
-
--- test --
-[% var = 'foo|bar/baz'; var.replace('(fo+)\|(bar)(.*)$', '[ $1, $2, $3 ]') %]
--- expect --
-[ foo, bar, /baz ]
 
 
