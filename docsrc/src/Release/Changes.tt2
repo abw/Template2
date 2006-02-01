@@ -70,17 +70,14 @@ Stash
 Virtual Methods
 ---------------
 
+* Added the scalar.remove, hash.delete, hash.items, hash.pairs,
+  list.import and list.hash virtual methods.  
+
 * Changed the scalar.replace method to work properly with back
   references ($1, $2, etc) by incorporating the code from Nik
   Clayton's Template::Plugin::Subst module.
 
   http://tt2.org/pipermail/templates/2006-February/008306.html
-
-* Changed list.hash and hash.list vmethods to Do The Right Thing instead
-  of some crack fuelled nonsense.  hash.list now returns [ %$hash ]
-  and list.hash now returns [ @$list ]
-
-  http://template-toolkit.org/pipermail/templates/2006-January/008256.html
 
 * Changed list.push and list.unshift to accept multiple arguments, thanks
   to Bill Moseley.
@@ -89,23 +86,19 @@ Virtual Methods
 
 * Fixed the split scalar virtual method which wasn't accepting the second
   argument (limit) correctly.  Thanks to Josh Rosenbaum for pointing
-  out the problem, although the solution turned out to be a little more 
-  complicated.
+  out the problem.
 
   http://tt2.org/pipermail/templates/2005-October/007982.html
 
-* Added the 'delete' hash virtual method and the 'remove' scalar virtual
-  method.
+* Documented the fact that hash.list is going to change in the future,
+  recommending people switch to hash.pairs.
+
+* Added the global option to the 'match' scalar virtual method.
 
 * Changed $element to $component in Template::Context to fix callers bug, 
   thanks to Andy Maas who identified the problem and found the solution:
 
   http://tt2.org/pipermail/templates/2004-December/007020.html
-
-* Fixed the regex matching relative paths in Template::Provider, thanks
-  to Josh Rosenbaum 
-
-  http://tt2.org/pipermail/templates/2005-January/007141.html
 
 * Changed the sort and nsort list virtual methods to always return 
   references to lists, avoiding any ambiguity in return results.
@@ -232,6 +225,11 @@ Miscellaneous
   Template::Parser line counting when using chomp flags.
 
   http://tt2.org/pipermail/templates/2005-December/008157.html
+
+* Fixed the regex matching relative paths in Template::Provider, thanks
+  to Josh Rosenbaum 
+
+  http://tt2.org/pipermail/templates/2005-January/007141.html
 
 * Applied a patch to Template::Provider to prevent a misleading error
   message, thanks to Slaven Rezic.
