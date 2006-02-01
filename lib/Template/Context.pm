@@ -777,56 +777,53 @@ sub _init {
     my ($self, $config) = @_;
     my ($name, $item, $method, $block, $blocks);
     my @itemlut = ( 
-	LOAD_TEMPLATES => 'provider',
-	LOAD_PLUGINS   => 'plugins',
-	LOAD_FILTERS   => 'filters' 
+        LOAD_TEMPLATES => 'provider',
+    	LOAD_PLUGINS   => 'plugins',
+        LOAD_FILTERS   => 'filters' 
     );
 
     # LOAD_TEMPLATE, LOAD_PLUGINS, LOAD_FILTERS - lists of providers
     while (($name, $method) = splice(@itemlut, 0, 2)) {
-	$item = $config->{ $name } 
-	     || Template::Config->$method($config)
-	     || return $self->error($Template::Config::ERROR);
-	$self->{ $name } = ref $item eq 'ARRAY' ? $item : [ $item ];
+        $item = $config->{ $name } 
+            || Template::Config->$method($config)
+            || return $self->error($Template::Config::ERROR);
+        $self->{ $name } = ref $item eq 'ARRAY' ? $item : [ $item ];
     }
 
     my $providers  = $self->{ LOAD_TEMPLATES };
     my $prefix_map = $self->{ PREFIX_MAP } = $config->{ PREFIX_MAP } || { };
     while (my ($key, $val) = each %$prefix_map) {
-	$prefix_map->{ $key } = [ ref $val ? $val :
-				  map { $providers->[$_] } 
-				  split(/\D+/, $val) ]
-	    unless ref $val eq 'ARRAY';
-#	print(STDERR "prefix $key => $val => [", 
-#	      join(', ', @{ $prefix_map->{ $key } }), "]\n");
+        $prefix_map->{ $key } = [ ref $val ? $val : 
+                                  map { $providers->[$_] } split(/\D+/, $val) ]
+                                  unless ref $val eq 'ARRAY';
     }
 
     # STASH
     $self->{ STASH } = $config->{ STASH } || do {
       	my $predefs  = $config->{ VARIABLES } 
-		    || $config->{ PRE_DEFINE } 
-		    || { };
+            || $config->{ PRE_DEFINE } 
+            || { };
 
-	# hack to get stash to know about debug mode
-	$predefs->{ _DEBUG } = ( ($config->{ DEBUG } || 0)
-                               & &Template::Constants::DEBUG_UNDEF ) ? 1 : 0
-            unless defined $predefs->{ _DEBUG };
-                                
-	Template::Config->stash($predefs)
-	    || return $self->error($Template::Config::ERROR);
+        # hack to get stash to know about debug mode
+        $predefs->{ _DEBUG } = ( ($config->{ DEBUG } || 0)
+                                 & &Template::Constants::DEBUG_UNDEF ) ? 1 : 0
+                                 unless defined $predefs->{ _DEBUG };
+        
+        Template::Config->stash($predefs)
+            || return $self->error($Template::Config::ERROR);
     };
-
+    
     # compile any template BLOCKS specified as text
     $blocks = $config->{ BLOCKS } || { };
     $self->{ INIT_BLOCKS } = $self->{ BLOCKS } = { 
-	map {
-	    $block = $blocks->{ $_ };
-	    $block = $self->template(\$block)
-		|| return undef
-		    unless ref $block;
-	    ($_ => $block);
-	} 
-	keys %$blocks
+        map {
+            $block = $blocks->{ $_ };
+            $block = $self->template(\$block)
+                || return undef
+                unless ref $block;
+            ($_ => $block);
+        } 
+        keys %$blocks
     };
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
