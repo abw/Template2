@@ -426,38 +426,38 @@ sub insert {
 
 
     FILE: foreach $file (@$files) {
-	my $name = $file;
+    my $name = $file;
 
-	if ($^O eq 'MSWin32') {
-	    # let C:/foo through
-	    $prefix = $1 if $name =~ s/^(\w{2,})://o;
-	}
-	else {
-	    $prefix = $1 if $name =~ s/^(\w+)://;
-	}
+    if ($^O eq 'MSWin32') {
+        # let C:/foo through
+        $prefix = $1 if $name =~ s/^(\w{2,})://o;
+    }
+    else {
+        $prefix = $1 if $name =~ s/^(\w+)://;
+    }
 
-	if (defined $prefix) {
-	    $providers = $self->{ PREFIX_MAP }->{ $prefix } 
-	    || return $self->throw(Template::Constants::ERROR_FILE,
-				   "no providers for file prefix '$prefix'");
-	}
-	else {
-	    $providers = $self->{ PREFIX_MAP }->{ default }
-	    || $self->{ LOAD_TEMPLATES };
-	}
+    if (defined $prefix) {
+        $providers = $self->{ PREFIX_MAP }->{ $prefix } 
+        || return $self->throw(Template::Constants::ERROR_FILE,
+                   "no providers for file prefix '$prefix'");
+    }
+    else {
+        $providers = $self->{ PREFIX_MAP }->{ default }
+        || $self->{ LOAD_TEMPLATES };
+    }
 
-	foreach my $provider (@$providers) {
-	    ($text, $error) = $provider->load($name, $prefix);
-	    next FILE unless $error;
-	    if ($error == Template::Constants::STATUS_ERROR) {
-		$self->throw($text) if ref $text;
-		$self->throw(Template::Constants::ERROR_FILE, $text);
-	    }
-	}
-	$self->throw(Template::Constants::ERROR_FILE, "$file: not found");
+    foreach my $provider (@$providers) {
+        ($text, $error) = $provider->load($name, $prefix);
+        next FILE unless $error;
+        if ($error == Template::Constants::STATUS_ERROR) {
+        $self->throw($text) if ref $text;
+        $self->throw(Template::Constants::ERROR_FILE, $text);
+        }
+    }
+    $self->throw(Template::Constants::ERROR_FILE, "$file: not found");
     }
     continue {
-	$output .= $text;
+    $output .= $text;
     }
     return $output;
 }
@@ -496,14 +496,14 @@ sub throw {
 
     # die! die! die!
     if (UNIVERSAL::isa($error, 'Template::Exception')) {
-	die $error;
+    die $error;
     }
     elsif (defined $info) {
-	die (Template::Exception->new($error, $info, $output));
+    die (Template::Exception->new($error, $info, $output));
     }
     else {
-	$error ||= '';
-	die (Template::Exception->new('undef', $error, $output));
+    $error ||= '';
+    die (Template::Exception->new('undef', $error, $output));
     }
 
     # not reached
@@ -533,11 +533,11 @@ sub catch {
     my ($self, $error, $output) = @_;
 
     if (UNIVERSAL::isa($error, 'Template::Exception')) {
-	$error->text($output) if $output;
-	return $error;
+    $error->text($output) if $output;
+    return $error;
     }
     else {
-	return Template::Exception->new('undef', $error, $output);
+    return Template::Exception->new('undef', $error, $output);
     }
 }
 
@@ -613,8 +613,8 @@ sub leave {
 sub define_block {
     my ($self, $name, $block) = @_;
     $block = $self->template(\$block)
-	|| return undef
-	    unless ref $block;
+    || return undef
+        unless ref $block;
     $self->{ BLOCKS }->{ $name } = $block;
 }
 
@@ -631,13 +631,13 @@ sub define_filter {
     $filter = [ $filter, 1 ] if $is_dynamic;
 
     foreach my $provider (@{ $self->{ LOAD_FILTERS } }) {
-	($result, $error) = $provider->store($name, $filter);
-	return 1 unless $error;
-	$self->throw(&Template::Constants::ERROR_FILTER, $result)
-	    if $error == &Template::Constants::STATUS_ERROR;
+    ($result, $error) = $provider->store($name, $filter);
+    return 1 unless $error;
+    $self->throw(&Template::Constants::ERROR_FILTER, $result)
+        if $error == &Template::Constants::STATUS_ERROR;
     }
     $self->throw(&Template::Constants::ERROR_FILTER, 
-		 "FILTER providers declined to store filter $name");
+         "FILTER providers declined to store filter $name");
 }
 
 
@@ -697,28 +697,28 @@ sub debugging {
 
 #    print "*** debug(@args)\n";
     if (@args) {
-	if ($args[0] =~ /^on|1$/i) {
-	    $self->{ DEBUG_DIRS } = 1;
-	    shift(@args);
-	}
-	elsif ($args[0] =~ /^off|0$/i) {
-	    $self->{ DEBUG_DIRS } = 0;
-	    shift(@args);
-	}
+    if ($args[0] =~ /^on|1$/i) {
+        $self->{ DEBUG_DIRS } = 1;
+        shift(@args);
+    }
+    elsif ($args[0] =~ /^off|0$/i) {
+        $self->{ DEBUG_DIRS } = 0;
+        shift(@args);
+    }
     }
 
     if (@args) {
-	if ($args[0] =~ /^msg$/i) {
+    if ($args[0] =~ /^msg$/i) {
             return unless $self->{ DEBUG_DIRS };
-	    my $format = $self->{ DEBUG_FORMAT };
-	    $format = $DEBUG_FORMAT unless defined $format;
-	    $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
-	    return $format;
-	}
-	elsif ($args[0] =~ /^format$/i) {
-	    $self->{ DEBUG_FORMAT } = $args[1];
-	}
-	# else ignore
+        my $format = $self->{ DEBUG_FORMAT };
+        $format = $DEBUG_FORMAT unless defined $format;
+        $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
+        return $format;
+    }
+    elsif ($args[0] =~ /^format$/i) {
+        $self->{ DEBUG_FORMAT } = $args[1];
+    }
+    # else ignore
     }
 
     return '';
@@ -743,7 +743,7 @@ sub AUTOLOAD {
     return if $method eq 'DESTROY';
 
     warn "no such context method/member: $method\n"
-	unless defined ($result = $self->{ uc $method });
+    unless defined ($result = $self->{ uc $method });
 
     return $result;
 }
@@ -778,7 +778,7 @@ sub _init {
     my ($name, $item, $method, $block, $blocks);
     my @itemlut = ( 
         LOAD_TEMPLATES => 'provider',
-    	LOAD_PLUGINS   => 'plugins',
+        LOAD_PLUGINS   => 'plugins',
         LOAD_FILTERS   => 'filters' 
     );
 
@@ -800,7 +800,7 @@ sub _init {
 
     # STASH
     $self->{ STASH } = $config->{ STASH } || do {
-      	my $predefs  = $config->{ VARIABLES } 
+        my $predefs  = $config->{ VARIABLES } 
             || $config->{ PRE_DEFINE } 
             || { };
 
@@ -871,18 +871,18 @@ sub _dump {
     my $key;
 
     foreach $key (qw( RECURSION EVAL_PERL TRIM )) {
-	$output .= sprintf($format, $key, $self->{ $key });
+    $output .= sprintf($format, $key, $self->{ $key });
     }
     foreach my $pname (qw( LOAD_TEMPLATES LOAD_PLUGINS LOAD_FILTERS )) {
-	my $provtext = "[\n";
-	foreach my $prov (@{ $self->{ $pname } }) {
-	    $provtext .= $prov->_dump();
-#	    $provtext .= ",\n";
-	}
-	$provtext =~ s/\n/\n        /g;
-	$provtext =~ s/\s+$//;
-	$provtext .= ",\n    ]";
-	$output .= sprintf($format, $pname, $provtext);
+    my $provtext = "[\n";
+    foreach my $prov (@{ $self->{ $pname } }) {
+        $provtext .= $prov->_dump();
+#       $provtext .= ",\n";
+    }
+    $provtext =~ s/\n/\n        /g;
+    $provtext =~ s/\s+$//;
+    $provtext .= ",\n    ]";
+    $output .= sprintf($format, $pname, $provtext);
     }
     $output .= sprintf($format, STASH => $self->{ STASH }->_dump());
     $output .= '}';
@@ -916,7 +916,7 @@ Template::Context - Runtime context in which templates are processed
 
     # constructor
     $context = Template::Context->new(\%config)
-	|| die $Template::Context::ERROR;
+    || die $Template::Context::ERROR;
 
     # fetch (load and compile) a template
     $template = $context->template($template_name);
@@ -974,12 +974,12 @@ constructor.
     use Template;
     
     my $template = Template->new({
-	TRIM      => 1,
-	EVAL_PERL => 1,
-	BLOCKS    => {
-	    header => 'This is the header',
-	    footer => 'This is the footer',
-	},
+    TRIM      => 1,
+    EVAL_PERL => 1,
+    BLOCKS    => {
+        header => 'This is the header',
+        footer => 'This is the footer',
+    },
     });
 
 Similarly, the Template::Context constructor will forward all configuration
@@ -987,8 +987,8 @@ parameters onto other default objects (e.g. Template::Provider, Template::Plugin
 Template::Filters, etc.) that it may need to instantiate.
 
     $context = Template::Context->new({
-	INCLUDE_PATH => '/home/abw/templates', # provider option
-	TAG_STYLE    => 'html',                # parser option
+    INCLUDE_PATH => '/home/abw/templates', # provider option
+    TAG_STYLE    => 'html',                # parser option
     });
 
 A Template::Context object (or subclass/derivative) can be explicitly
@@ -1013,9 +1013,9 @@ a default context object is required.
     $Template::Config::CONTEXT = 'MyOrg::Template::Context';
 
     my $template = Template->new({
-	EVAL_PERL   => 1,
-	EXTRA_MAGIC => 'red hot',  # your extra config items
-	...
+    EVAL_PERL   => 1,
+    EXTRA_MAGIC => 'red hot',  # your extra config items
+    ...
     });
 
 =head1 METHODS
@@ -1027,8 +1027,8 @@ object.  Configuration parameters may be specified as a HASH reference or
 as a list of (name =E<gt> value) pairs.
 
     my $context = Template::Context->new({
-	INCLUDE_PATH => 'header',
-	POST_PROCESS => 'footer',
+    INCLUDE_PATH => 'header',
+    POST_PROCESS => 'footer',
     });
 
     my $context = Template::Context->new( EVAL_PERL => 1 );
@@ -1039,10 +1039,10 @@ retrieved by the error() class method or directly from the
 $Template::Context::ERROR package variable.
 
     my $context = Template::Context->new(\%config)
-	|| die Template::Context->error();
+    || die Template::Context->error();
 
     my $context = Template::Context->new(\%config)
-	|| die $Template::Context::ERROR;
+    || die $Template::Context::ERROR;
 
 The following configuration items may be specified.
 
@@ -1057,21 +1057,21 @@ pre-initialise the stash when it is created.  These items are ignored
 if the STASH item is defined.
 
     my $context = Template::Context->new({
-	VARIABLES => {
-	    title   => 'A Demo Page',
-	    author  => 'Joe Random Hacker',
-	    version => 3.14,
-	},
+    VARIABLES => {
+        title   => 'A Demo Page',
+        author  => 'Joe Random Hacker',
+        version => 3.14,
+    },
     };
 
 or
 
     my $context = Template::Context->new({
-	PRE_DEFINE => {
-	    title   => 'A Demo Page',
-	    author  => 'Joe Random Hacker',
-	    version => 3.14,
-	},
+    PRE_DEFINE => {
+        title   => 'A Demo Page',
+        author  => 'Joe Random Hacker',
+        version => 3.14,
+    },
     };
 
 
@@ -1086,11 +1086,11 @@ mapping template names to template text, subroutines or Template::Document
 objects.
 
     my $context = Template::Context->new({
-	BLOCKS => {
-	    header  => 'The Header.  [% title %]',
-	    footer  => sub { return $some_output_text },
-	    another => Template::Document->new({ ... }),
-	},
+    BLOCKS => {
+        header  => 'The Header.  [% title %]',
+        footer  => sub { return $some_output_text },
+        another => Template::Document->new({ ... }),
+    },
     }); 
 
 
@@ -1209,10 +1209,10 @@ of Template::Provider objects or sub-classes thereof which will take
 responsibility for loading and compiling templates.
 
     my $context = Template::Context->new({
-	LOAD_TEMPLATES => [
-    	    MyOrg::Template::Provider->new({ ... }),
-    	    Template::Provider->new({ ... }),
-	],
+    LOAD_TEMPLATES => [
+            MyOrg::Template::Provider->new({ ... }),
+            Template::Provider->new({ ... }),
+    ],
     });
 
 When a PROCESS, INCLUDE or WRAPPER directive is encountered, the named
@@ -1242,7 +1242,7 @@ the Template::Provider INCLUDE_PATH option can be specified in the Template::Con
 constructor method.
 
     my $context = Template::Context->new({
-	INCLUDE_PATH => '/here:/there',
+    INCLUDE_PATH => '/here:/there',
     });
 
 
@@ -1258,10 +1258,10 @@ Template::Content plugin() method queries each provider in turn in a
 "Chain of Responsibility" as per the template() and filter() methods.
 
     my $context = Template::Context->new({
-	LOAD_PLUGINS => [
-    	    MyOrg::Template::Plugins->new({ ... }),
-    	    Template::Plugins->new({ ... }),
-	],
+    LOAD_PLUGINS => [
+            MyOrg::Template::Plugins->new({ ... }),
+            Template::Plugins->new({ ... }),
+    ],
     });
 
 By default, a single Template::Plugins object is created using the 
@@ -1270,8 +1270,8 @@ Template::Plugins constructor may be added to the Template::Context
 constructor.
 
     my $context = Template::Context->new({
-	PLUGIN_BASE => 'MyOrg::Template::Plugins',
-	LOAD_PERL   => 1,
+    PLUGIN_BASE => 'MyOrg::Template::Plugins',
+    LOAD_PERL   => 1,
     });
 
 
@@ -1287,10 +1287,10 @@ Template::Context filter() method queries each provider in turn in a
 "Chain of Responsibility" as per the template() and plugin() methods.
 
     my $context = Template::Context->new({
-	LOAD_FILTERS => [
-    	    MyTemplate::Filters->new(),
-    	    Template::Filters->new(),
-	],
+    LOAD_FILTERS => [
+            MyTemplate::Filters->new(),
+            Template::Filters->new(),
+    ],
     });
 
 By default, a single Template::Filters object is created for the
@@ -1305,7 +1305,7 @@ responsibility for managing template variables.
 
     my $stash = MyOrg::Template::Stash->new({ ... });
     my $context = Template::Context->new({
-	STASH => $stash,
+    STASH => $stash,
     });
 
 If unspecified, a default stash object is created using the VARIABLES
@@ -1314,10 +1314,10 @@ be specified as the PRE_DEFINE option for backwards compatibility with
 version 1.
 
     my $context = Template::Context->new({
-	VARIABLES => {
-	    id    => 'abw',
-	    name  => 'Andy Wardley',
-	},
+    VARIABLES => {
+        id    => 'abw',
+        name  => 'Andy Wardley',
+    },
     };
 
 
@@ -1330,7 +1330,7 @@ of the Template::Context module.
     use Template::Constants qw( :debug );
 
     my $template = Template->new({
-	DEBUG => DEBUG_CONTEXT | DEBUG_DIRS,
+    DEBUG => DEBUG_CONTEXT | DEBUG_DIRS,
     });
 
 The DEBUG value can include any of the following.  Multiple values
@@ -1384,10 +1384,10 @@ die().  This can be caught by enclosing the call to template() in an
 eval block and examining $@.
 
     eval {
-	$template = $context->template('header');
+    $template = $context->template('header');
     };
     if ($@) {
-	print "failed to fetch template: $@\n";
+    print "failed to fetch template: $@\n";
     }
 
 =head2 plugin($name, \@args)
