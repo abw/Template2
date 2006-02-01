@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.15
+# Version 2.14a - 31st January 2006               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 Stash
@@ -66,14 +66,26 @@ Stash
 * Removed redundant performance profiling code from Template::Stash::XS.
   Must check with Doug that this is OK and he's not still using it...
 
+
 Virtual Methods
 ---------------
+
+* Changed the scalar.replace method to work properly with back
+  references ($1, $2, etc) by incorporating the code from Nik
+  Clayton's Template::Plugin::Subst module.
+
+  http://tt2.org/pipermail/templates/2006-February/008306.html
 
 * Changed list.hash and hash.list vmethods to Do The Right Thing instead
   of some crack fuelled nonsense.  hash.list now returns [ %$hash ]
   and list.hash now returns [ @$list ]
 
   http://template-toolkit.org/pipermail/templates/2006-January/008256.html
+
+* Changed list.push and list.unshift to accept multiple arguments, thanks
+  to Bill Moseley.
+
+  http://tt2.org/pipermail/templates/2006-January/008294.html
 
 * Fixed the split scalar virtual method which wasn't accepting the second
   argument (limit) correctly.  Thanks to Josh Rosenbaum for pointing
