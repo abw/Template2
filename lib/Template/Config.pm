@@ -49,7 +49,7 @@ $CONSTANTS = 'Template::Namespace::Constants';
                $PLUGINS, $PROVIDER, $SERVICE, $STASH );
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+$INSTDIR  = '/usr/local/tt2';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
@@ -134,8 +134,8 @@ sub provider {
 
     return undef unless $class->load($PROVIDER);
     return $PROVIDER->new($params) 
-	|| $class->error("failed to create template provider: ",
-			 $PROVIDER->error);
+        || $class->error("failed to create template provider: ",
+                         $PROVIDER->error);
 }
 
 
