@@ -70,8 +70,8 @@ Stash
 Virtual Methods
 ---------------
 
-* Added the scalar.remove, hash.delete, hash.items, hash.pairs,
-  list.import and list.hash virtual methods.  
+* Added the scalar.remove, scalar.substr, hash.delete, hash.items,
+  hash.pairs, list.import and list.hash virtual methods.  
 
 * Changed the scalar.replace method to work properly with back
   references ($1, $2, etc) by incorporating the code from Nik
@@ -92,6 +92,9 @@ Virtual Methods
 
 * Documented the fact that hash.list is going to change in the future,
   recommending people switch to hash.pairs.
+
+  http://tt2.org/pipermail/templates/2006-January/008256.html
+  http://tt2.org/pipermail/templates/2006-February/008312.html
 
 * Added the global option to the 'match' scalar virtual method.
 
