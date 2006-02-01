@@ -57,26 +57,24 @@ $SCALAR_OPS = {
     'length'  => sub { length $_[0] },
     'size'    => sub { return 1 },
     'defined' => sub { return 1 },
-    'repeat'  => sub { 
-        my ($str, $count) = @_;
-        $str = '' unless defined $str;  
-        return '' unless $count;
-        $count ||= 1;
-        return $str x $count;
+    'match' => sub {
+        my ($str, $search, $global) = @_;
+        return $str unless defined $str and defined $search;
+        my @matches = $global ? ($str =~ /$search/g)
+                              : ($str =~ /$search/);
+        return @matches ? \@matches : '';
     },
     'search'  => sub { 
         my ($str, $pattern) = @_;
         return $str unless defined $str and defined $pattern;
         return $str =~ /$pattern/;
     },
-    'old_replace'  => sub { 
-        my ($str, $search, $replace) = @_;
-        $replace = '' unless defined $replace;
-        return $str unless defined $str and defined $search;
-        $str =~ s/$search/$replace/g;
-#       print STDERR "s [ $search ] [ $replace ] g\n";
-#       eval "\$str =~ s$search$replaceg";
-        return $str;
+    'repeat'  => sub { 
+        my ($str, $count) = @_;
+        $str = '' unless defined $str;  
+        return '' unless $count;
+        $count ||= 1;
+        return $str x $count;
     },
     'replace' => sub {
         my ($text, $pattern, $replace, $global) = @_;
@@ -118,18 +116,11 @@ $SCALAR_OPS = {
         }
         return $result . $text;
     },
-
     'remove'  => sub { 
         my ($str, $search) = @_;
         return $str unless defined $str and defined $search;
         $str =~ s/$search//g;
         return $str;
-    },
-    'match' => sub {
-        my ($str, $search) = @_;
-        return $str unless defined $str and defined $search;
-        my @matches = ($str =~ /$search/);
-        return @matches ? \@matches : '';
     },
     'split' => sub {
         my ($str, $split, $limit) = @_;
@@ -199,19 +190,24 @@ $HASH_OPS = {
     },
     'hash'   => sub { $_[0] },
     'size'   => sub { scalar keys %{$_[0]} },
+    'each'   => sub { # this will be changed in TT3 to do what pairs does
+                      [        %{ $_[0] } ] },
     'keys'   => sub { [ keys   %{ $_[0] } ] },
     'values' => sub { [ values %{ $_[0] } ] },
-    'each'   => sub { [        %{ $_[0] } ] },
+    'items'  => sub { [        %{ $_[0] } ] },
+    'pairs'  => sub { [ map   { { key => $_ , value => $_[0]->{ $_ } } }
+                        sort keys %{ $_[0] } ] },
     'list'   => sub { 
-        my ($hash, $what) = @_;  $what ||= '';
+        my ($hash, $what) = @_;  
+        $what ||= '';
         return ($what eq 'keys')   ? [   keys %$hash ]
-            : ($what eq 'values') ? [ values %$hash ]
-            : ($what eq 'each')   ? [        %$hash ]
-# replace this utterly useless hash-to-list conversion with what it 
-# should have been all along... sorry if my stupidity broke your code!
-#           : [ map { { key => $_ , value => $hash->{ $_ } } }
-#               keys %$hash ];
-            : [ %$hash ];
+            :  ($what eq 'values') ? [ values %$hash ]
+            :  ($what eq 'each')   ? [        %$hash ]
+            :  # for now we do what pairs does but this will be changed 
+               # in TT3 to return [ $hash ] by default
+               [ map { { key => $_ , value => $hash->{ $_ } } }
+                 sort keys %$hash 
+               ];
     },
     'exists'  => sub { exists $_[0]->{ $_[1] } },
     'defined' => sub { 
@@ -241,9 +237,10 @@ $LIST_OPS = {
     'list'    => sub { $_[0] },
     'hash'    => sub { 
         my $list = shift;
-# make this do what it always should have done.
-#       $n = 0; 
-#       return { map { ($n++, $_) } @$list }; 
+        if (@_) {
+            my $n = shift || 0;
+            return { map { ($n++, $_) } @$list }; 
+        }
         no warnings;
         return { @$list };
     },
@@ -318,6 +315,11 @@ $LIST_OPS = {
         ];
     },
     'unique'  => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
+    'import'  => sub {
+        my $list = shift;
+        push(@$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_);
+        return $list;
+    },
     'merge'   => sub {
         my $list = shift;
         return [ @$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_ ];
@@ -1092,12 +1094,12 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.93, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.96, distributed as part of the
+Template Toolkit version 2.14a, released on 01 February 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
