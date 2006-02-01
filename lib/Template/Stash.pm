@@ -128,7 +128,24 @@ $SCALAR_OPS = {
         }
         return \@list;
     },
-    
+    'substr' => sub {
+        my ($text, $offset, $length, $replacement) = @_;
+        $offset ||= 0;
+
+        if(defined $length) {
+            if (defined $replacement) {
+                my $removed = substr( $text, $offset, $length );
+                substr( $text, $offset, $length ) = $replacement;
+                return $removed;
+            }
+            else {
+                return substr( $text, $offset, $length );
+            }
+        }
+        else {
+            return substr( $text, $offset );
+        }
+    },
 
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
@@ -190,9 +207,9 @@ $LIST_OPS = {
         no warnings;
         return { @$list };
     },
-    'push'    => sub { my $list = shift; push(@$list, shift); return '' },
+    'push'    => sub { my $list = shift; push(@$list, @_); return '' },
     'pop'     => sub { my $list = shift; pop(@$list) },
-    'unshift' => sub { my $list = shift; unshift(@$list, shift); return '' },
+    'unshift' => sub { my $list = shift; unshift(@$list, @_); return '' },
     'shift'   => sub { my $list = shift; shift(@$list) },
     'max'     => sub { local $^W = 0; my $list = shift; $#$list; },
     'size'    => sub { local $^W = 0; my $list = shift; $#$list + 1; },
