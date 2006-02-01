@@ -45,7 +45,7 @@ as a Perl regular expression) removed.
     [% name = 'foo, bar & baz' %]
     [% name.remove('\W+') %]    # foobarbaz
 
-=item match(pattern)
+=item match(pattern, global)
 
 Performs a regular expression match on the string using the pattern
 passed as an argument.  If the pattern matches the string then the
@@ -79,6 +79,14 @@ whitespace (the C</x> switch), use:
                (\w+)
              ';
       matches = name.match(re);
+    %]
+
+To perform a global search to match the pattern as many times as it
+appears in the source string, provide a true value for the 'global' 
+argument following the pattern.
+
+    [% text = 'bandanna';
+       text.match('an+', 1).join(', )      # an, ann
     %]
 
 =item search(pattern)
