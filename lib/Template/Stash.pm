@@ -69,7 +69,7 @@ $SCALAR_OPS = {
         return $str unless defined $str and defined $pattern;
         return $str =~ /$pattern/;
     },
-    'replace'  => sub { 
+    'old_replace'  => sub { 
         my ($str, $search, $replace) = @_;
         $replace = '' unless defined $replace;
         return $str unless defined $str and defined $search;
@@ -78,6 +78,47 @@ $SCALAR_OPS = {
 #       eval "\$str =~ s$search$replaceg";
         return $str;
     },
+    'replace' => sub {
+        my ($text, $pattern, $replace, $global) = @_;
+        my ($matched, $after, $backref, @start, @end);
+        my $result = '';
+
+        $global = 1 unless defined $global;
+        
+        while ($text =~ m/$pattern/) {
+            if($#- == 0) {  
+                # no captured groups so do a simple search and replace
+                if($global) { $text =~ s/$pattern/$replace/g }
+                else        { $text =~ s/$pattern/$replace/  }
+                last;
+            }
+
+            # extract the bit before the match, the match itself, the 
+            # bit after and the positions of all subgroups
+            $result .= substr($text, 0, $-[0]) if $-[0];
+            $matched = substr($text, $-[0], $+[0] - $-[0]);
+            $after   = substr($text, $+[0]);
+            @start   = @-;
+            @end     = @+;
+
+            # do the s/// leaving the placeholders (literally '$1' etc) in place
+            $matched =~ s/$pattern/$replace/;
+
+            # then replace the $1, $2, etc., placeholders in reverse order 
+            # to ensure we do $10 before $1
+            for (my $i = $#start; $i; $i--) {
+                $backref = substr( $text, $start[$i], $end[$i] - $start[$i] );
+                $matched =~ s/\$$i/$backref/g;
+            }
+
+            # add the modified $matched output to the result and loop if global
+            $result .= $matched;
+            $text    = $after;
+            last unless $global && length $text;
+        }
+        return $result . $text;
+    },
+
     'remove'  => sub { 
         my ($str, $search) = @_;
         return $str unless defined $str and defined $search;
@@ -134,9 +175,8 @@ $SCALAR_OPS = {
 
         if(defined $length) {
             if (defined $replacement) {
-                my $removed = substr( $text, $offset, $length );
-                substr( $text, $offset, $length ) = $replacement;
-                return $removed;
+                substr( $text, $offset, $length, $replacement );
+                return $text;
             }
             else {
                 return substr( $text, $offset, $length );
