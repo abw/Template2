@@ -61,8 +61,18 @@ sub process {
     my $options = (@opts == 1) && UNIVERSAL::isa($opts[0], 'HASH')
         ? shift(@opts) : { @opts };
     
-    $options->{ binmode } = $BINMODE 
-        unless defined $options->{ binmode };
+    unless (defined $options->{ binmode }) {
+        my $enc = $options->{ encoding } || $self->{ ENCODING };
+        if ($enc) {
+            # express encoding as a Perl IO layer
+            # e.g. 'utf-8' => ':utf8',
+            $enc =~ s/\W//;
+            $options->{ binmode } = ":$enc";
+        }
+        else {
+            $options->{ binmode } = $BINMODE;
+        }
+    }
 
     # we're using this for testing in t/output.t and t/filter.t so 
     # don't remove it if you don't want tests to fail...
@@ -193,9 +203,7 @@ sub _output {
         }
         elsif (open(FP, ">$where")) { 
             # binmode option can be 1 or a specific layer, e.g. :utf8
-            my $bm = $options->{ binmode  } 
-                  || $options->{ encoding }
-                  || $self->{ ENCODING };
+            my $bm = $options->{ binmode  };
             if ($bm && +$bm == 1) { 
                 binmode FP;
             }
