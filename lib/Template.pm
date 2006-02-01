@@ -60,20 +60,10 @@ sub process {
     my ($output, $error);
     my $options = (@opts == 1) && UNIVERSAL::isa($opts[0], 'HASH')
         ? shift(@opts) : { @opts };
-    
-    unless (defined $options->{ binmode }) {
-        my $enc = $options->{ encoding } || $self->{ ENCODING };
-        if ($enc) {
-            # express encoding as a Perl IO layer
-            # e.g. 'utf-8' => ':utf8',
-            $enc =~ s/\W//;
-            $options->{ binmode } = ":$enc";
-        }
-        else {
-            $options->{ binmode } = $BINMODE;
-        }
-    }
 
+    $options->{ binmode } = $BINMODE
+        unless defined $options->{ binmode };
+    
     # we're using this for testing in t/output.t and t/filter.t so 
     # don't remove it if you don't want tests to fail...
     $self->DEBUG("set binmode\n") if $DEBUG && $options->{ binmode };
@@ -86,7 +76,7 @@ sub process {
             my $outpath = $self->{ OUTPUT_PATH };
             $outstream = "$outpath/$outstream" if $outpath;
         }	
-        
+
         # send processed template to output stream, checking for error
         return ($self->error($error))
             if ($error = &_output($outstream, \$output, $options));
@@ -153,7 +143,6 @@ sub _init {
         || Template::Config->service($config)
         || return $self->error(Template::Config->error);
     
-    $self->{ ENCODING    } = $config->{ ENCODING };
     $self->{ OUTPUT      } = $config->{ OUTPUT } || \*STDOUT;
     $self->{ OUTPUT_PATH } = $config->{ OUTPUT_PATH };
 
