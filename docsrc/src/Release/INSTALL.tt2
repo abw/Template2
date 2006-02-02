@@ -80,11 +80,6 @@ The Makefile.PL performs various sanity checks and then prompts for a
 number of configuration items.  The following CONFIGURATION section
 covers this in greater detail.
 
-There are known to be a few minor issues with the test suite, with
-some tests failing in certain conditions.  None of these are thought
-to be serious problems.  The BUILDING AND TESTING section provides
-more detail on this.
-
 If you choose to install the optional components then you may need to
 perform some post-installation steps to ensure that the template
 libraries, HTML documentation and examples can be correctly viewed via
@@ -293,11 +288,8 @@ usual manner.
     make
 
 The 'make test' command runs the test scripts in the 't' subdirectory.
-There is known to be at least one failures under certain conditions:
 
-  * The Text::Autoformat plugin may fail on tests 23 and 25 with
-    versions of Perl prior to 5.6.0 when using a locale which has a
-    decimal separator other than '.'.
+    make test
 
 You can set the TEST_VERBOSE flag when running 'make test' to see the
 results of the individual tests:
