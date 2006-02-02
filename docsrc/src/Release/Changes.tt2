@@ -117,6 +117,8 @@ Virtual Methods
 
   http://rt.cpan.org/Ticket/Display.html?id=9094
 
+* Moved all the tests into t/vmethods/*
+
 
 Plugins
 -------
@@ -233,6 +235,12 @@ Miscellaneous
   Template::Parser line counting when using chomp flags.
 
   http://tt2.org/pipermail/templates/2005-December/008157.html
+
+* Applied a patch from Jess Robinson to move the Template::Provider
+  check for file freshness into a separate method, in order to 
+  play nicely with his Template::Provider::DBI module.
+
+  http://tt2.org/pipermail/templates/2005-December/008143.html
 
 * Fixed the regex matching relative paths in Template::Provider, thanks
   to Josh Rosenbaum 
