@@ -31,9 +31,9 @@ Stash
 -----
 
 * Activated a patch in Template::Stash from Stephen Howard which adds
-  code for the full set of fallbacks for dot ops called against objects
-  which don't implement the specific method.  For example 
-  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now
+  code for the full set of fallbacks for dot ops called against
+  objects which don't implement the specific method.  For example 
+  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now 
   all work with the Perl Template::Stash.  Added code to the XS Stash 
   to do the same and updated tests.
 
@@ -44,49 +44,53 @@ Stash
 
   http://tt2.org/pipermail/templates/2006-January/008266.html
 
-* Applied path from Slaven Rezic to Template::Stash::XS to check return 
-  code in tt_fetch_item() in a way which plays nicely with tied hashes.
+* Applied path from Slaven Rezic to Template::Stash::XS to check
+  return code in tt_fetch_item() in a way which plays nicely with tied
+  hashes.
 
   http://rt.cpan.org/Ticket/Display.html?id=7830
 
-* Changed Template::Stash and Template::Stash::XS to evaluate list 
+* Changed Template::Stash and Template::Stash::XS to evaluate list
   vmethods in lvalues.
 
   http://tt2.org/pipermail/templates/2006-January/008198.html
 
 * Changed Template::Stash to be a little more strict about what it
-  considers a failed method call.  This allows exception thrown 
-  within called methods to be propagated correctly rather than 
-  being ignored as undefined method.  Thanks to Dave Howorth for
-  reporting the problem and providing a fix.  Also ported to the
-  Template::Stash::XS module.
+  considers a failed method call.  This allows exception thrown within
+  called methods to be propagated correctly rather than being ignored
+  as undefined method.  Thanks to Dave Howorth for reporting the
+  problem and providing a fix.  Also ported to the Template::Stash::XS
+  module.
 
   http://tt2.org/pipermail/templates/2005-April/007375.html
 
-* Removed redundant performance profiling code from Template::Stash::XS.
-  Must check with Doug that this is OK and he's not still using it...
+* Removed redundant performance profiling code from
+  Template::Stash::XS.  Must check with Doug that this is OK and he's
+  not still using it...
 
 
 Virtual Methods
 ---------------
 
 * Added the scalar.remove, scalar.substr, hash.delete, hash.items,
-  hash.pairs, list.import and list.hash virtual methods.  
+  hash.pairs, list.import and list.hash virtual methods.
 
 * Changed the scalar.replace method to work properly with back
-  references ($1, $2, etc) by incorporating the code from Nik
-  Clayton's Template::Plugin::Subst module.
+  references ($1, $2, etc) by incorporating ideas, code and tests from
+  Nik Clayton, Paul Seamon, Sergey Martynoff, Josh Rosenbaum and
+  others.
 
   http://tt2.org/pipermail/templates/2006-February/008306.html
+  http://tt2.org/pipermail/templates/2006-February/008326.html
 
-* Changed list.push and list.unshift to accept multiple arguments, thanks
-  to Bill Moseley.
+* Changed list.push and list.unshift to accept multiple arguments,
+  thanks to Bill Moseley.
 
   http://tt2.org/pipermail/templates/2006-January/008294.html
 
-* Fixed the split scalar virtual method which wasn't accepting the second
-  argument (limit) correctly.  Thanks to Josh Rosenbaum for pointing
-  out the problem.
+* Fixed the split scalar virtual method which wasn't accepting the
+  second argument (limit) correctly.  Thanks to Josh Rosenbaum for
+  pointing out the problem.
 
   http://tt2.org/pipermail/templates/2005-October/007982.html
 
@@ -98,17 +102,18 @@ Virtual Methods
 
 * Added the global option to the 'match' scalar virtual method.
 
-* Changed $element to $component in Template::Context to fix callers bug, 
-  thanks to Andy Maas who identified the problem and found the solution:
+* Changed $element to $component in Template::Context to fix callers
+  bug, thanks to Andy Maas who identified the problem and found the
+  solution:
 
   http://tt2.org/pipermail/templates/2004-December/007020.html
 
-* Changed the sort and nsort list virtual methods to always return 
+* Changed the sort and nsort list virtual methods to always return
   references to lists, avoiding any ambiguity in return results.
 
-* Changed the hash.defined method to do the same thing as scalar.defined
-  when called without arguments.  Added list.defined to do the same thing
-  as hash.defined.
+* Changed the hash.defined method to do the same thing as
+  scalar.defined when called without arguments.  Added list.defined to
+  do the same thing as hash.defined.
 
   http://rt.cpan.org/Ticket/Display.html?id=9094
 
@@ -117,11 +122,11 @@ Plugins
 -------
 
 * Added the $Template::Plugins::PLUGIN_BASE package variable to define
-  the default 'Template::Plugin' value for the PLUGIN_BASE option.
-  By clearing this value before calling the Template new() constructor,
-  you can avoid having Template::Plugin added to the PLUGIN_BASE by 
+  the default 'Template::Plugin' value for the PLUGIN_BASE option.  By
+  clearing this value before calling the Template new() constructor,
+  you can avoid having Template::Plugin added to the PLUGIN_BASE by
   default.  Also changed PLUGINS search to look for lower case plugin
-  name as well as case-specific name.  Thanks yet again Josh for 
+  name as well as case-specific name.  Thanks yet again Josh for
   addressing this issue.
 
   http://tt2.org/pipermail/templates/2006-January/008225.html
@@ -181,7 +186,7 @@ Filters
   http://rt.cpan.org/Ticket/Display.html?id=5695
 
 * Updated documentation to reflect the fact that the html filter also
-  escapes " as &quot;  Thanks to Geoff Richards for reporting it.
+  escapes " as &quot; Thanks to Geoff Richards for reporting it.
 
 * Moved Latex filters into Template-Latex distribution.
 
