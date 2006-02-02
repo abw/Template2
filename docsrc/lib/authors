@@ -1,8 +1,8 @@
 [%  authors = {
 	abw = {
 	    name  = 'Andy Wardley' 
-	    email = 'abw@andywardley.com'
-	    home  = 'http://www.andywardley.com/'
+	    email = 'abw@wardley.org'
+	    home  = 'http://wardley.org/'
 	}
 	craig = {
 	    name  = 'Craig Barratt' 
