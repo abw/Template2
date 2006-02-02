@@ -78,43 +78,26 @@ $SCALAR_OPS = {
     },
     'replace' => sub {
         my ($text, $pattern, $replace, $global) = @_;
-        my ($matched, $after, $backref, @start, @end);
-        my $result = '';
-
-        $global = 1 unless defined $global;
-        
-        while ($text =~ m/$pattern/) {
-            if($#- == 0) {  
-                # no captured groups so do a simple search and replace
-                if($global) { $text =~ s/$pattern/$replace/g }
-                else        { $text =~ s/$pattern/$replace/  }
-                last;
-            }
-
-            # extract the bit before the match, the match itself, the 
-            # bit after and the positions of all subgroups
-            $result .= substr($text, 0, $-[0]) if $-[0];
-            $matched = substr($text, $-[0], $+[0] - $-[0]);
-            $after   = substr($text, $+[0]);
-            @start   = @-;
-            @end     = @+;
-
-            # do the s/// leaving the placeholders (literally '$1' etc) in place
-            $matched =~ s/$pattern/$replace/;
-
-            # then replace the $1, $2, etc., placeholders in reverse order 
-            # to ensure we do $10 before $1
-            for (my $i = $#start; $i; $i--) {
-                $backref = substr( $text, $start[$i], $end[$i] - $start[$i] );
-                $matched =~ s/\$$i/$backref/g;
-            }
-
-            # add the modified $matched output to the result and loop if global
-            $result .= $matched;
-            $text    = $after;
-            last unless $global && length $text;
+        $text    = '' unless defined $text;
+        $pattern = '' unless defined $pattern;
+        $replace = '' unless defined $replace;
+        $global  = 1  unless defined $global;
+        my $expand = sub {
+            my ($chunk, $start, $end) = @_;
+            $chunk =~ s{ \\(\\|\$) | \$ (\d+) }{
+                $1 ? $1
+                    : ($2 > $#$start || $2 == 0) ? '' 
+                    : substr($text, $start->[$2], $end->[$2] - $start->[$2]);
+            }exg;
+            $chunk;
+        };
+        if ($global) {
+            $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }eg;
+        } 
+        else {
+            $text =~ s{$pattern}{ &$expand($replace, , [@-], [@+]) }e;
         }
-        return $result . $text;
+        return $text;
     },
     'remove'  => sub { 
         my ($str, $search) = @_;
@@ -1094,7 +1077,7 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.96, distributed as part of the
+2.97, distributed as part of the
 Template Toolkit version 2.14a, released on 01 February 2006.
 
 =head1 COPYRIGHT
