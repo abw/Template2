@@ -37,7 +37,7 @@ WHAT'S NEW?
 -----------
 
 Version 2.15 is a major maintenance release.  It applies all outstanding
-patches and closed all open bugs listed on http://rt.cpan.org/  It
+patches and closes all open bugs listed on http://rt.cpan.org/  It
 includes:
 
  * XS Stash: enhancements include support for tied hashes/arrays
