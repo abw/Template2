@@ -243,6 +243,9 @@ my %opts = (
         'COMPRESS' => 'gzip',
         'SUFFIX'   => 'gz',
     },
+    'test'         => {
+        TESTS      => 't/*.t t/vmethods/*.t',
+    },
     'clean'        => {
         'FILES'        => join(' ', qw( docs/ttree.cfg 
                                         examples/ttree.cfg 
