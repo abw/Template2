@@ -1,5 +1,4 @@
-[%  # docset/maker
-    # 
+[%  # docset/maker    # 
     # This template controls the production of a docset.
     # 
     # expects arguments:
@@ -18,9 +17,9 @@
 
     # define a macro to extract an element from an XML DOM node
     MACRO xcontent(xnode, name) BLOCK;
-	node = xnode.getElementsByTagName(name, 0);
-	text = node.childrenToTemplate(verbose=1, default="asis");
-	text.replace('\s+', ' ').replace('^\s+', '').replace('\s+$', '');
+    node = xnode.getElementsByTagName(name, 0);
+    text = node.childrenToTemplate(verbose=1, default="asis");
+    text.replace('\s+', ' ').replace('^\s+', '').replace('\s+$', '');
     END;
 
     # define simple block for use with xcontent MACRO above
@@ -30,12 +29,12 @@
     id   = xdocset.id;
     name = xdocset.name or id;
     docset = {
-	id    = id
+        id    = id
         name  = name
-	title = xdocset.title or name
-	about = xdocset.about or xcontent(xdocset, 'about')
-	intro = xcontent(xdocset, 'intro')
-	books = [ ]
+        title = xdocset.title or name
+        about = xdocset.about or xcontent(xdocset, 'about')
+        intro = xcontent(xdocset, 'intro')
+        books = [ ]
     };
 
     # status info
@@ -43,8 +42,8 @@
 
     # process all books in docset
     FOREACH xbook = xdocset.getElementsByTagName('book');
-#	NEXT UNLESS xbook.id == 'FAQ';
-	PROCESS book/maker;
+    #   NEXT UNLESS xbook.id == 'FAQ';
+        PROCESS book/maker;
         docset.books.push(book);
     END;
 

@@ -10,15 +10,15 @@
     book = {
         id     = id
         name   = name
-	src    = xbook.src or id
-	type   = xbook.type or 'pod'
-	html   = html
-	title  = xbook.title or name
-	prefix = xbook.prefix
-	about  = xbook.about or xcontent(xbook, 'about')
-	intro  = xcontent(xbook, 'intro')
-	uplink = html.replace('[^/]+', '..')
-	pages  = [ ]
+    	src    = xbook.src or id
+	    type   = xbook.type or 'pod'
+    	html   = html
+	    title  = xbook.title or name
+    	prefix = xbook.prefix
+	    about  = xbook.about or xcontent(xbook, 'about')
+    	intro  = xcontent(xbook, 'intro')
+	    uplink = html.replace('[^/]+', '..')
+    	pages  = [ ]
     };
 
     IF debug;

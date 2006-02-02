@@ -195,29 +195,35 @@ The C<template> variable always references the I<main> template being processed.
 So even if you call [% INCLUDE header %], and that calls [% INCLUDE menu %],
 the C<template> variable will be unchanged.
 
-index.html
+index.html:
+
     [% template.name  %]     # index.html
     [% INCLUDE header %]
 
 header:
+
     [% template.name  %]     # index.html
     [% INCLUDE menu   %]
 
 menu:
+
     [% template.name  %]     # index.html
 
 In constrast, the C<component> variable always references the I<current>
 template being processed.  
 
 index.html
+
     [% component.name %]     # index.html
     [% INCLUDE header %]
 
 header:
+
     [% component.name %]     # header
     [% INCLUDE menu   %]
 
 menu:
+
     [% component.name  %]     # menu
 
 =head2 How do I print the modification time of the template or component?
@@ -308,6 +314,4 @@ config/section/info:
 
 This illustrates the basic principal but you can extend it to perform
 pretty much any kind of per-document initialisation that you require.
-
-
 
