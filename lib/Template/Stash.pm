@@ -95,7 +95,7 @@ $SCALAR_OPS = {
             $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }eg;
         } 
         else {
-            $text =~ s{$pattern}{ &$expand($replace, , [@-], [@+]) }e;
+            $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }e;
         }
         return $text;
     },
@@ -1077,8 +1077,8 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.97, distributed as part of the
-Template Toolkit version 2.14a, released on 01 February 2006.
+2.98, distributed as part of the
+Template Toolkit version 2.14a, released on 02 February 2006.
 
 =head1 COPYRIGHT
 
