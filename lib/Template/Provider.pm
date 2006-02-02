@@ -435,7 +435,7 @@ sub _fetch {
     if (defined $size && ! $size) {
         # caching disabled so load and compile but don't cache
         if ($compiled && -f $compiled 
-            && (stat($name))[9] <= (stat($compiled))[9]) {
+            && $self->_mtime($name) <= (stat($compiled))[9]) {
             $data = $self->_load_compiled($compiled);
             $error = $self->error() unless $data;
         }
@@ -770,9 +770,10 @@ sub _store {
     my $size = $self->{ SIZE };
     my ($slot, $head);
 
-    # extract the load time and compiled template from the data
-#    my $load = $data->{ load };
-    my $load = (stat($name))[9];
+    # check the modification time
+    my $load = $self->_mtime($name);
+
+    # extract the compiled template from the data hash
     $data = $data->{ data };
 
     $self->debug("_store($name, $data)") if $self->{ DEBUG };
@@ -915,6 +916,12 @@ sub _compile {
         : ($error,  Template::Constants::STATUS_ERROR)
 }
 
+
+sub _mtime {
+    my ($self, $name) = @_;
+    my $load = (stat($name))[9];
+    return $load;
+}
 
 #------------------------------------------------------------------------
 # _dump()
@@ -1489,12 +1496,12 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.85, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.87, distributed as part of the
+Template Toolkit version 2.14a, released on 02 February 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
