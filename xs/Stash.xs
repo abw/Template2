@@ -92,8 +92,7 @@ static SV*      scalar_dot_length(pTHX_ SV*, AV*);
 static char rcsid[]  = "$Id$";
 
 #define THROW_SIZE 64
-static char throw_str[THROW_SIZE+1];
-static char throw_fmt[] = "Can't locate object method \"%s\"";
+static char throw_fmt[] = "Can't locate object method \"%s\" via package \"%s\"";
 
 /* dispatch table for XS versions of special "virtual methods",
  * names must be in alphabetical order 		
@@ -321,6 +320,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                 SPAGAIN;
                 
                 if (SvTRUE(ERRSV)) {
+                    char throw_str[THROW_SIZE+1];
                     (void) POPs;		/* remove undef from stack */
                     PUTBACK;
                     result = NULL;
@@ -344,7 +344,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                          * into throw_str then snprintf() doesn't add the 
                          * terminating NULL
                          */
-                        snprintf( throw_str, THROW_SIZE, throw_fmt, item);
+                        snprintf(throw_str, THROW_SIZE, throw_fmt, item, HvNAME(stash));
                         throw_str[THROW_SIZE] = '\0';
 
                         if (! strstr( SvPV(ERRSV, PL_na), throw_str)) 

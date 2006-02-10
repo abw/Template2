@@ -743,7 +743,8 @@ sub _dotop {
             # object then we assume it's a real error that needs
             # real throwing
 
-            die $@ if ref($@) || ($@ !~ /Can't locate object method "\Q$item\E/);
+            my $class = ref($root) || $root;
+            die $@ if ref($@) || ($@ !~ /Can't locate object method "\Q$item\E" via package "\Q$class\E"/);
 
             # failed to call object method, so try some fallbacks
             if (UNIVERSAL::isa($root, 'HASH') ) {
@@ -1068,16 +1069,16 @@ restore the state of a stash as described above.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
 
 =head1 VERSION
 
-2.98, distributed as part of the
+2.99, distributed as part of the
 Template Toolkit version 2.14a, released on 02 February 2006.
 
 =head1 COPYRIGHT
