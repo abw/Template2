@@ -525,8 +525,8 @@ sub read_config {
         'copy=s@',
         'accept=s@',
         'depend=s%',
-        'depend_file|depfile=s',
         'depend_debug|depdbg',
+        'depend_file|depfile=s' => { EXPAND => EXPAND_ALL },
         'template_module|module=s',
         'template_anycase|anycase',
         'template_eval_perl|eval_perl',
@@ -548,9 +548,9 @@ sub read_config {
         'template_end_tag|end_tag|endtag=s',
         'template_tag_style|tag_style|tagstyle=s',
         'template_compile_ext|compile_ext=s',
-        'template_compile_dir|compile_dir=s',
-        'template_plugin_base|plugin_base|pluginbase=s@',
-        'perl5lib|perllib=s@'
+        'template_compile_dir|compile_dir=s' => { EXPAND => EXPAND_ALL },
+        'template_plugin_base|plugin_base|pluginbase=s@' => { EXPAND => EXPAND_ALL },
+        'perl5lib|perllib=s@' => { EXPAND => EXPAND_ALL },
     );
 
     # add the 'file' option now that we have a $config object that we 
@@ -1055,12 +1055,12 @@ Brocard who gets everywhere, it seems.
 
 =head1 VERSION
 
-2.65, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.66, distributed as part of the
+Template Toolkit version 2.14a, released on 02 February 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
