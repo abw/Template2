@@ -217,6 +217,11 @@ ttree
 
   http://rt.cpan.org/Ticket/Display.html?id=4180
 
+* added AppConfig EXPAND => EXPAND_ALL option to perl5lib, 
+  template_plugin_base, template_compile_dir and depend_file
+  configuration options to allow them to contain ~ to indicate
+  the user's home directory, or $WHATEVER for environment variables,
+  as per the other path-specific options like src, lib, etc.
 
 Miscellaneous
 -------------
