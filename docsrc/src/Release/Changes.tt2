@@ -24,6 +24,20 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.15 - 
+#------------------------------------------------------------------------
+
+Stash
+-----
+
+* Changed various tests for private/hidden variables (starting '_' 
+  or '.') to use a regex defined in the $PRIVATE package variable in 
+  Template::Stash.  This can be redefined or undefined.  Not that 
+  there is currently no equivalent functionality for the XS Stash.
+
+
+
+#------------------------------------------------------------------------
 # Version 2.14a - 2nd February 2006               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
