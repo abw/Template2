@@ -32,9 +32,9 @@ Stash
 
 * Changed various tests for private/hidden variables (starting '_' 
   or '.') to use a regex defined in the $PRIVATE package variable in 
-  Template::Stash.  This can be redefined or undefined.  Not that 
-  there is currently no equivalent functionality for the XS Stash.
-
+  Template::Stash.  This can be redefined or undefined.  Note that 
+  the XS Stash only looks to see if $PRIVATE is defined or not, and
+  currently hard-codes the regex.
 
 
 #------------------------------------------------------------------------
