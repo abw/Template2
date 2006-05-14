@@ -55,6 +55,7 @@ extern "C" {
 #define TT_LIST_OPS	    "Template::Stash::LIST_OPS"
 #define TT_HASH_OPS	    "Template::Stash::HASH_OPS"
 #define TT_SCALAR_OPS	"Template::Stash::SCALAR_OPS"
+#define TT_PRIVATE  	"Template::Stash::PRIVATE"
 
 #define TT_LVALUE_FLAG	1
 #define TT_DEBUG_FLAG	2
@@ -75,6 +76,7 @@ static SV*      do_getset(pTHX_ SV*, AV*, SV*, int);
 static AV*      convert_dotted_string(pTHX_ const char*, I32);
 static int      get_debug_flag(pTHX_ SV*);
 static int      cmp_arg(const void *, const void *);
+static int      looks_private(pTHX_ const char*);
 static void     die_object(pTHX_ SV *);
 static struct xs_arg *find_xs_op(char *);
 static SV*      list_dot_first(pTHX_ AV*, AV*);
@@ -195,7 +197,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
     debug("dotop(%s)\n", item);
 
     /* ignore _private or .private members */
-    if (!root || *item == '_' || *item == '.')
+    if (!root || looks_private(aTHX_ item))
         return &PL_sv_undef;
     
     if (SvROK(root)) {
@@ -465,7 +467,7 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 
     debug("assign(%s)\n", key2);
 
-    if (!root || !key_len || *key == '_' || *key == '.') {
+    if (!root || !key_len || looks_private(aTHX_ key)) {
         /* ignore _private or .private members */
         return &PL_sv_undef;
     } 
@@ -939,6 +941,26 @@ static int get_debug_flag (pTHX_ SV *sv) {
         && SvTRUE(*debug)) 
         return TT_DEBUG_FLAG;
     
+    return 0;
+}
+
+
+static int looks_private(pTHX_ const char *name) {
+    SV *priv;
+
+    /* For now we hard-code the regex to match _private or .hidden
+     * variables, but we do check to see if $Template::Stash::PRIVATE
+     * is defined, allowing a user to undef it to defeat the check.
+     * The better solution would be to match the string using the regex
+     * defined in the $PRIVATE package varible, but I've been searching 
+     * for well over an hour now and I can't find any documentation or 
+     * examples showing me how to match a string against a pre-compiled 
+     * regex from XS.  The Perl internals docs really suck in places.
+     */
+    
+    if (SvTRUE(perl_get_sv(TT_PRIVATE, FALSE))) {
+        return (*name == '_' || *name == '.');
+    }  
     return 0;
 }
 
