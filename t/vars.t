@@ -81,7 +81,9 @@ my $params = {
     'gee'      =>  'g',
     "letter$a" => "'$a'",
     'yankee'   => \&yankee,
-    _private   => 123,
+    '_private' => 123,
+    '_hidden'  => 456,
+    expose     => sub { undef $Template::Stash::PRIVATE },
 
     # don't define a 'z' - DEFAULT test relies on its non-existance
 };
@@ -525,10 +527,21 @@ keys: bar, foo, wiz, woz
 Gandalf
 Mithrandir, Olorin, Incanus
 
+
+# test private variables
 -- test --
-[[% _private %]]
+[[% _private %]][[% _hidden %]]
 -- expect --
-[]
+[][]
+
+# make them visible
+-- test --
+[% CALL expose -%]
+[[% _private %]][[% _hidden %]]
+-- expect --
+[123][456]
+
+
 
 # Stas reported a problem with spacing in expressions but I can't
 # seem to reproduce it...
