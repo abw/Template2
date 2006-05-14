@@ -150,6 +150,11 @@ template:
     [% thing._private %]        # no output
     [% thing..hidden %]         # ERROR: unexpected token (..)
 
+You can disable this feature by setting the $Template::Stash::PRIVATE
+package variable to a false value.
+
+    $Template::Stash::PRIVATE = undef;   # now you can thing._private
+
 To access a hash entry using a key stored in another variable, prefix
 the key variable with '$' to have it interpolated before use (see
 L<Variable Interpolation>).
