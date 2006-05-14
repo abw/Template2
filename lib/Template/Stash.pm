@@ -27,9 +27,10 @@ package Template::Stash;
 require 5.004;
 
 use strict;
-use vars qw( $VERSION $DEBUG $ROOT_OPS $SCALAR_OPS $HASH_OPS $LIST_OPS );
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $DEBUG   = 0 unless defined $DEBUG;
+our $PRIVATE = qr/^[_.]/;
 
 
 #========================================================================
@@ -43,14 +44,14 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 # respectively for LIST_OPS and HASH_OPS
 #------------------------------------------------------------------------
 
-$ROOT_OPS = {
+our $ROOT_OPS = {
     'inc'  => sub { local $^W = 0; my $item = shift; ++$item }, 
     'dec'  => sub { local $^W = 0; my $item = shift; --$item }, 
 #    import => \&hash_import,
     defined $ROOT_OPS ? %$ROOT_OPS : (),
 };
 
-$SCALAR_OPS = {
+our $SCALAR_OPS = {
     'item'    => sub {   $_[0] },
     'list'    => sub { [ $_[0] ] },
     'hash'    => sub { { value => $_[0] } },
@@ -164,11 +165,11 @@ $SCALAR_OPS = {
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
-$HASH_OPS = {
+our $HASH_OPS = {
     'item'   => sub { 
         my ($hash, $item) = @_; 
         $item = '' unless defined $item;
-        return if $item =~ /^[_.]/;
+        return if $PRIVATE && $item =~ /$PRIVATE/;
         $hash->{ $item };
     },
     'hash'   => sub { $_[0] },
@@ -215,7 +216,7 @@ $HASH_OPS = {
     defined $HASH_OPS ? %$HASH_OPS : (),
 };
 
-$LIST_OPS = {
+our $LIST_OPS = {
     'item'    => sub { $_[0]->[ $_[1] || 0 ] },
     'list'    => sub { $_[0] },
     'hash'    => sub { 
@@ -679,9 +680,10 @@ sub _dotop {
 #   if $DEBUG;
 
     # return undef without an error if either side of the dot is unviable
+    return undef unless defined($root) and defined($item);
+
     # or if an attempt is made to access a private member, starting _ or .
-    return undef
-        unless defined($root) and defined($item) and $item !~ /^[\._]/;
+    return undef if $PRIVATE && $item =~ /$PRIVATE/;
 
     if ($atroot || $rootref eq 'HASH') {
         # if $root is a regular HASH or a Template::Stash kinda HASH (the 
@@ -835,9 +837,10 @@ sub _assign {
     $default ||= 0;
 
     # return undef without an error if either side of the dot is unviable
+    return undef unless $root and defined $item;
+
     # or if an attempt is made to update a private member, starting _ or .
-    return undef                        ## RETURN
-    unless $root and defined $item and $item !~ /^[\._]/;
+    return undef if $PRIVATE && $item =~ /$PRIVATE/;
     
     if ($rootref eq 'HASH' || $atroot) {
         # if the root is a hash we set the named key
