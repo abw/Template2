@@ -305,9 +305,9 @@ sub split_text {
         $pre = '' unless defined $pre;
         $dir = '' unless defined $dir;
         
-        $postlines = 0;                      # denotes lines chomped
-        $prelines  = ($pre =~ tr/\n//);      # NULL - count only
-        $dirlines  = ($dir =~ tr/\n//);      # ditto
+        $prelines  = ($pre =~ tr/\n//);  # newlines in preceeding text
+        $dirlines  = ($dir =~ tr/\n//);  # newlines in directive tag
+        $postlines = 0;                  # newlines chomped after tag
         
         for ($dir) {
             if (/^\#/) {
@@ -322,16 +322,13 @@ sub split_text {
                 if ($chomp && $pre) {
                     # chomp off whitespace and newline preceding directive
                     if ($chomp == CHOMP_ALL) { 
-                        $pre =~ s{ (\n|^) [^\S\n]* \z }{}mx  
-                            && $1 eq "\n" && $prelines++;
+                        $pre =~ s{ (\n|^) [^\S\n]* \z }{}mx;
                     }
                     elsif ($chomp == CHOMP_COLLAPSE) { 
-                        $pre =~ s{ (\s+) \z }{ }x 
-                            && ($prelines += $1=~y/\n//);
+                        $pre =~ s{ (\s+) \z }{ }x;
                     }
                     elsif ($chomp == CHOMP_GREEDY) { 
-                        $pre =~ s{ (\s+) \z }{}x 
-                            && ($prelines += $1=~y/\n//);
+                        $pre =~ s{ (\s+) \z }{}x;
                     }
                 }
             }
@@ -1421,9 +1418,9 @@ of metadata values defined in META tags.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
@@ -1432,14 +1429,14 @@ L<http://www.andywardley.com/|http://www.andywardley.com/>
 
 =head1 VERSION
 
-2.83, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.84, distributed as part of the
+Template Toolkit version 2.14a, released on 02 February 2006.
 
  
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or
