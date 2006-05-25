@@ -83,20 +83,32 @@ our $SCALAR_OPS = {
         $pattern = '' unless defined $pattern;
         $replace = '' unless defined $replace;
         $global  = 1  unless defined $global;
-        my $expand = sub {
-            my ($chunk, $start, $end) = @_;
-            $chunk =~ s{ \\(\\|\$) | \$ (\d+) }{
-                $1 ? $1
-                    : ($2 > $#$start || $2 == 0) ? '' 
-                    : substr($text, $start->[$2], $end->[$2] - $start->[$2]);
-            }exg;
-            $chunk;
-        };
-        if ($global) {
-            $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }eg;
-        } 
+
+        if ($replace =~ /\$\d+/) {
+            # replacement string may contain backrefs
+            my $expand = sub {
+                my ($chunk, $start, $end) = @_;
+                $chunk =~ s{ \\(\\|\$) | \$ (\d+) }{
+                    $1 ? $1
+                        : ($2 > $#$start || $2 == 0) ? '' 
+                        : substr($text, $start->[$2], $end->[$2] - $start->[$2]);
+                }exg;
+                $chunk;
+            };
+            if ($global) {
+                $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }eg;
+            } 
+            else {
+                $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }e;
+            }
+        }
         else {
-            $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }e;
+            if ($global) {
+                $text =~ s/$pattern/$replace/g;
+            } 
+            else {
+                $text =~ s/$pattern/$replace/;
+            }
         }
         return $text;
     },
