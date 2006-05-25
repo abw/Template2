@@ -24,8 +24,28 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.15 - 
+# Version 2.15 - 25th May 2006
 #------------------------------------------------------------------------
+
+Chomping Options
+----------------
+
+* Added the CHOMP_GREEDY option and '~' chomping flag.  Changed 
+  CHOMP_COLLAPSE to greedily chomp all whitespace (including multiple
+  newlines) and replace it with a single space.  Previously it only
+  chomped one line.  Renamed the CHOMP_ALL option to CHOMP_ONE which
+  makes more sense.  CHOMP_ALL is still provided as an alias for 
+  CHOMP_ONE for backwards compatibility.  Thanks to Paul Seamons for
+  doing all the hard work on this.
+
+  http://tt2.org/pipermail/templates/2006-February/thread.html#8354
+
+* Added code to the replace text virtual method to use a faster and 
+  simpler implementation if the replacement text doesn't contain any
+  back references.  Thanks to Josh Rosenbaum for all his efforts on 
+  this.
+
+  http://tt2.org/pipermail/templates/2006-February/008344.html
 
 Stash
 -----
@@ -35,6 +55,26 @@ Stash
   Template::Stash.  This can be redefined or undefined.  Note that 
   the XS Stash only looks to see if $PRIVATE is defined or not, and
   currently hard-codes the regex.
+
+Plugins
+-------
+
+* Changed the Image plugin tag() method to call the name() method 
+  instead of accessing the name directly, making it easier for
+  subclasses to provide an alternate name.  Thanks to Cees Hek for 
+  his patch.
+
+  http://tt2.org/pipermail/templates/2006-February/008423.html
+
+* Change the AUTOLOAD regex in the Table plugin to be more robust.
+
+  http://tt2.org/pipermail/templates/2006-May/008602.html
+
+Documentation
+-------------
+
+* Added the Template::Toolkit documentation pointing people to 
+  the right place.
 
 
 #------------------------------------------------------------------------
