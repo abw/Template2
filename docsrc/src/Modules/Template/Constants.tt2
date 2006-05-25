@@ -54,8 +54,10 @@ The following tag sets and associated constants are defined:
 
   :chomp                      # for PRE_CHOMP and POST_CHOMP
     CHOMP_NONE                # do not remove whitespace
-    CHOMP_ALL                 # remove whitespace
+    CHOMP_ONE                 # remove whitespace to newline
+    CHOMP_ALL                 # old name for CHOMP_ONE (deprecated)
     CHOMP_COLLAPSE            # collapse whitespace to a single space
+    CHOMP_GREEDY              # remove all whitespace including newlines
 
   :debug
     DEBUG_OFF                 # do nothing

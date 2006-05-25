@@ -9,10 +9,10 @@
 #   on Francois Desarmenien's Parse::Yapp module.  Kudos to him.
 # 
 # AUTHOR
-#   Andy Wardley <abw@kfs.org>
+#   Andy Wardley <abw@cpan.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -29,20 +29,16 @@
 #      the GNU General Public License or the Artistic License, as
 #      specified in the Perl README file.
 # 
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
 package Template::Parser;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION $DEBUG $ERROR );
-use base qw( Template::Base );
-use vars qw( $TAG_STYLE $DEFAULT_STYLE $QUOTED_ESCAPES );
+use warnings;
+use base 'Template::Base';
 
 use Template::Constants qw( :status :chomp );
 use Template::Directive;
@@ -54,16 +50,16 @@ use constant ACCEPT   => 1;
 use constant ERROR    => 2;
 use constant ABORT    => 3;
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG   = 0 unless defined $DEBUG;
-$ERROR   = '';
+our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $DEBUG   = 0 unless defined $DEBUG;
+our $ERROR   = '';
 
 
 #========================================================================
 #                        -- COMMON TAG STYLES --
 #========================================================================
 
-$TAG_STYLE   = {
+our $TAG_STYLE   = {
     'default'   => [ '\[%',    '%\]'    ],
     'template1' => [ '[\[%]%', '%[\]%]' ],
     'metatext'  => [ '%%',     '%%'     ],
@@ -76,7 +72,7 @@ $TAG_STYLE   = {
 $TAG_STYLE->{ template } = $TAG_STYLE->{ tt2 } = $TAG_STYLE->{ default };
 
 
-$DEFAULT_STYLE = {
+our $DEFAULT_STYLE = {
     START_TAG   => $TAG_STYLE->{ default }->[0],
     END_TAG     => $TAG_STYLE->{ default }->[1],
 #    TAG_STYLE   => 'default',
@@ -88,11 +84,15 @@ $DEFAULT_STYLE = {
     EVAL_PERL   => 0,
 };
 
-$QUOTED_ESCAPES = {
+our $QUOTED_ESCAPES = {
 	n => "\n",
 	r => "\r",
 	t => "\t",
 };
+
+# note that '-' must come first so Perl doesn't think it denotes a range
+our $CHOMP_FLAGS  = qr/[-=~+]/;
+
 
 
 #========================================================================
@@ -309,36 +309,52 @@ sub split_text {
         $prelines  = ($pre =~ tr/\n//);      # NULL - count only
         $dirlines  = ($dir =~ tr/\n//);      # ditto
         
-        # the directive CHOMP options may modify the preceding text
         for ($dir) {
-            # remove leading whitespace and check for a '-' chomp flag
-            s/^([-+\#])?\s*//s;
-            if ($1 && $1 eq '#') {
-                # comment out entire directive except for any chomp flag
-                $dir = ($dir =~ /([-+])$/) ? $1 : '';
+            if (/^\#/) {
+                # comment out entire directive except for any end chomp flag
+                $dir = ($dir =~ /($CHOMP_FLAGS)$/o) ? $1 : '';
             }
             else {
-                $chomp = ($1 && $1 eq '+') ? 0 : ($1 || $prechomp);
-                my $space = $prechomp == CHOMP_COLLAPSE ? ' ' : '';
-                
-                # chomp off whitespace and newline preceding directive
-                $chomp and $pre =~ s/(\n|^)([ \t]*)\Z/($1||$2) ? $space : ''/me;
+                s/^($CHOMP_FLAGS)?\s*//so;
+                # PRE_CHOMP: process whitespace before tag
+                $chomp = $1 ? $1 : $prechomp;
+                $chomp =~ tr/-=~+/1230/;
+                if ($chomp && $pre) {
+                    # chomp off whitespace and newline preceding directive
+                    if ($chomp == CHOMP_ALL) { 
+                        $pre =~ s{ (\n|^) [^\S\n]* \z }{}mx  
+                            && $1 eq "\n" && $prelines++;
+                    }
+                    elsif ($chomp == CHOMP_COLLAPSE) { 
+                        $pre =~ s{ (\s+) \z }{ }x 
+                            && ($prelines += $1=~y/\n//);
+                    }
+                    elsif ($chomp == CHOMP_GREEDY) { 
+                        $pre =~ s{ (\s+) \z }{}x 
+                            && ($prelines += $1=~y/\n//);
+                    }
+                }
             }
             
-            # remove trailing whitespace and check for a '-' chomp flag
-            s/\s*([-+])?\s*$//s;
-            $chomp = ($1 && $1 eq '+') ? 0 : ($1 || $postchomp);
-            my $space = $postchomp == &Template::Constants::CHOMP_COLLAPSE 
-                ? ' ' : '';
-            
-            $postlines++ 
-                if $chomp and $text =~ s/ 
-                ^
-                ([ \t]*)\n    # whitespace to newline
-                (?:(.|\n)|$)      # any char (not EOF)
-                 / 
-                 (($1||$2) ? $space : '') . (defined $2 ? $2 : '')
-                 /ex;
+            # POST_CHOMP: process whitespace after tag
+            s/\s*($CHOMP_FLAGS)?\s*$//so;
+            $chomp = $1 ? $1 : $postchomp;
+            $chomp =~ tr/-=~+/1230/;
+            if ($chomp) {
+                if ($chomp == CHOMP_ALL) { 
+                    $text =~ s{ ^ ([^\S\n]* \n) }{}x  
+                        && $postlines++;
+                }
+                elsif ($chomp == CHOMP_COLLAPSE) { 
+                    $text =~ s{ ^ (\s+) }{ }x  
+                        && ($postlines += $1=~y/\n//);
+                }
+                # any trailing whitespace
+                elsif ($chomp == CHOMP_GREEDY) { 
+                    $text =~ s{ ^ (\s+) }{}x  
+                        && ($postlines += $1=~y/\n//);
+                }
+            }
         }
             
         # any text preceding the directive can now be added

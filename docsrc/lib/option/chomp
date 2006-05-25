@@ -28,8 +28,8 @@ The PRE_CHOMP and POST_CHOMP options can help to clean up some of this
 extraneous whitespace.  Both are disabled by default.
 
     my [* obj *] = [* pkg *]->new({
-	PRE_CHOMP  => 1,
-	POST_CHOMP => 1,
+        PRE_CHOMP  => 1,
+        POST_CHOMP => 1,
     });
 
 With PRE_CHOMP set to 1, the newline and whitespace preceding a directive
@@ -37,12 +37,12 @@ at the start of a line will be deleted.  This has the effect of
 concatenating a line that starts with a directive onto the end of the 
 previous line.
 
- 	Foo <----------.
- 		       |
+        Foo <----------.
+                       |
     ,---(PRE_CHOMP)----'
     |
     `-- [% a = 10 %] --.
- 		       |
+                       |
     ,---(POST_CHOMP)---'
     |
     `-> Bar
@@ -51,44 +51,81 @@ With POST_CHOMP set to 1, any whitespace after a directive up to and
 including the newline will be deleted.  This has the effect of joining
 a line that ends with a directive onto the start of the next line.
 
-If PRE_CHOMP or POST_CHOMP is set to 2, then instead of removing all
-the whitespace, the whitespace will be collapsed to a single space.
+If PRE_CHOMP or POST_CHOMP is set to 2, all whitespace including any
+number of newline will be removed and replaced with a single space.
 This is useful for HTML, where (usually) a contiguous block of
 whitespace is rendered the same as a single space.
 
-You may use the CHOMP_NONE, CHOMP_ALL, and CHOMP_COLLAPSE constants
-from the Template::Constants module to deactivate chomping, remove
-all whitespace, or collapse whitespace to a single space.
+With PRE_CHOMP or POST_CHOMP set to 3, all adjacent whitespace
+(including newlines) will be removed entirely.
+
+These values are defined as CHOMP_NONE, CHOMP_ONE, CHOMP_COLLAPSE and
+CHOMP_GREEDY constants in the Template::Constants module.  CHOMP_ALL
+is also defined as an alias for CHOMP_ONE to provide backwards
+compatability with earlier version of the Template Toolkit.  
+
+Additionally the chomp tag modifiers listed below may also be used for
+the PRE_CHOMP and POST_CHOMP configuration.
+ 
+     my $template = Template->new({
+        PRE_CHOMP  => '~',
+        POST_CHOMP => '-',
+     });
 
 PRE_CHOMP and POST_CHOMP can be activated for individual directives by
 placing a '-' immediately at the start and/or end of the directive.
 
-    [% FOREACH user = userlist %]
+    [% FOREACH user IN userlist %]
        [%- user -%]
     [% END %]
 
-The '-' characters activate both PRE_CHOMP and POST_CHOMP for the one
-directive '[%- name -%]'.  Thus, the template will be processed as if
-written:
+This has the same effect as CHOMP_ONE in removing all whitespace
+before or after the directive up to and including the newline.  The
+template will be processed as if written:
 
-    [% FOREACH user = userlist %][% user %][% END %]
+    [% FOREACH user IN userlist %][% user %][% END %]
 
-Note that this is the same as if PRE_CHOMP and POST_CHOMP were set
-to CHOMP_ALL; the only way to get the CHOMP_COLLAPSE behavior is
-to set PRE_CHOMP or POST_CHOMP accordingly.  If PRE_CHOMP or POST_CHOMP
-is already set to CHOMP_COLLAPSE, using '-' will give you CHOMP_COLLAPSE
-behavior, not CHOMP_ALL behavior.
+To remove all whitespace including any number of newlines, use the '~' 
+character instead.
 
-Similarly, '+' characters can be used to disable PRE_CHOMP or
-POST_CHOMP (i.e.  leave the whitespace/newline intact) options on a
-per-directive basis.
+    [% FOREACH user IN userlist %]
+    
+       [%~ user ~%]
+    
+    [% END %]
+
+To collapse all whitespace to a single space, use the '=' character.
+
+    [% FOREACH user IN userlist %]
+ 
+       [%= user =%]
+    
+    [% END %]
+
+Here the template is processed as if written:
+
+    [% FOREACH user IN userlist %] [% user %] [% END %]
+
+If you have PRE_CHOMP or POST_CHOMP set as configuration options then
+you can use '+' to disable any chomping options (i.e.  leave the
+whitespace intact) on a per-directive basis.
 
     [% FOREACH user = userlist %]
     User: [% user +%]
     [% END %]
 
-With POST_CHOMP enabled, the above example would be parsed as if written:
+With POST_CHOMP set to CHOMP_ONE, the above example would be parsed as
+if written:
 
     [% FOREACH user = userlist %]User: [% user %]
     [% END %]
+
+For reference, the PRE_CHOMP and POST_CHOMP configuration options may be set to any of the following:
+
+     Constant      Value   Tag Modifier
+     ----------------------------------
+     CHOMP_NONE      0          +
+     CHOMP_ONE       1          -
+     CHOMP_COLLAPSE  2          =
+     CHOMP_GREEDY    3          ~
 

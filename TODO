@@ -722,3 +722,27 @@ gs/complex:
 
     [% tt2.ps.require.mm = 1 %]		    # either
     [% tt2.ps.require('mm', 'simple')  %]   # or
+
+
+
+
+------------------------------------------------------------------------
+-------------------------------------------------------
+my $replace_has_backref;
+while ($replace =~ m/(\\*) \$\d+/gx) {
+  if (length($1 || '') % 2 == 0) {
+    $replace_has_backref = 1;
+    last;
+  }
+}
+
+if (!$replace_has_backref) {
+  if ($global) {
+    $text =~ s/$pattern/$replace/g;
+  } else {
+    $text =~ s/$pattern/$replace/;
+  }
+  return $text;
+}
+-------------------------------------------------------
+

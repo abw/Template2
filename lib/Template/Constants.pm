@@ -57,8 +57,10 @@ use constant ERROR_PLUGIN    =>  'plugin'; # plugin error
 
 # CHOMP constants for PRE_CHOMP and POST_CHOMP
 use constant CHOMP_NONE      => 0; # do not remove whitespace
-use constant CHOMP_ALL       => 1; # remove whitespace
+use constant CHOMP_ALL       => 1; # remove whitespace up to newline
+use constant CHOMP_ONE       => 1; # new name for CHOMP_ALL
 use constant CHOMP_COLLAPSE  => 2; # collapse whitespace to a single space
+use constant CHOMP_GREEDY    => 3; # remove all whitespace including newlines
 
 # DEBUG constants to enable various debugging options
 use constant DEBUG_OFF       =>    0; # do nothing
@@ -100,7 +102,7 @@ $DEBUG_OPTIONS  = {
                STATUS_DECLINED STATUS_ERROR );
 @ERROR   = qw( ERROR_FILE ERROR_VIEW ERROR_UNDEF ERROR_PERL 
                ERROR_RETURN ERROR_FILTER ERROR_PLUGIN );
-@CHOMP   = qw( CHOMP_NONE CHOMP_ALL CHOMP_COLLAPSE );
+@CHOMP   = qw( CHOMP_NONE CHOMP_ALL CHOMP_ONE CHOMP_COLLAPSE CHOMP_GREEDY );
 @DEBUG   = qw( DEBUG_OFF DEBUG_ON DEBUG_UNDEF DEBUG_VARS 
                DEBUG_DIRS DEBUG_STASH DEBUG_CONTEXT DEBUG_PARSER
                DEBUG_PROVIDER DEBUG_PLUGINS DEBUG_FILTERS DEBUG_SERVICE
