@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.15 - 25th May 2006
+# Version 2.15 - 26th May 2006
 #------------------------------------------------------------------------
 
 Chomping Options
@@ -75,6 +75,9 @@ Documentation
 
 * Added the Template::Toolkit documentation pointing people to 
   the right place.
+
+* Updated the Template::Stash::XS documentation to remove the 
+  "experimental" description and tidy things up a bit. 
 
 
 #------------------------------------------------------------------------
