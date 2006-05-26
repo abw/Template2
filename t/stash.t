@@ -182,7 +182,7 @@ keys: a, msg
 
 -- test --
 [% "* $item\n" 
-    FOREACH item IN global.myhash.list.sort -%]
+    FOREACH item IN global.myhash.items.sort -%]
 -- expect --
 * a
 * alpha
@@ -235,12 +235,12 @@ an object
 an object
 
 -- test --
-[% obj.list.first %]
+[% obj.items.first %]
 -- expect --
 name
 
 -- test --
-[% obj.list.1 %]
+[% obj.items.1 %]
 -- expect --
 an object
 

@@ -38,7 +38,7 @@ use File::Path;
 
 ## This is the main version number for the Template Toolkit.
 ## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.14a';
+$VERSION     = '2.15';
 $ERROR       = '';
 $DEBUG       = 0;
 $BINMODE     = 0 unless defined $BINMODE;
@@ -937,20 +937,20 @@ Ignored and deleted.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
 
 =head1 VERSION
 
-Template Toolkit version 2.15, released on 30 January 2006.
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

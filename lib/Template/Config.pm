@@ -6,26 +6,23 @@
 #   Template Toolkit configuration module.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@cpan.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#------------------------------------------------------------------------
-#
+# REVISION
 #   $Id$
 #
 #========================================================================
  
 package Template::Config;
 
-require 5.004;
-
 use strict;
+use warnings;
 use base qw( Template::Base );
 use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
              $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
@@ -49,7 +46,7 @@ $CONSTANTS = 'Template::Namespace::Constants';
                $PLUGINS, $PROVIDER, $SERVICE, $STASH );
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '/usr/local/tt2';
+$INSTDIR  = '';
 
 # LaTeX executable paths set at installation time by the Makefile.PL
 # Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
@@ -432,21 +429,21 @@ optional components of the Template Toolkit have not been installed.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
 
 =head1 VERSION
 
-2.68, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.70, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

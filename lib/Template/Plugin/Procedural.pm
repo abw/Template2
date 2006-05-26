@@ -144,8 +144,8 @@ L<http://www.twoshortplanks.com|http://www.twoshortplanks.com>
 
 =head1 VERSION
 
-1.13, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+1.14, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 

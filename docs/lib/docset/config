@@ -261,7 +261,7 @@ docset => {
             prev   => 'Manual',
             next   => 'Library',
         
-            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Namespace_Constants', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_HTML', 'Plugin_Image', 'Plugin_Iterator', 'Plugin_Math', 'Plugin_Pod', 'Plugin_Procedural', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap' ],
+            pagelist => [ 'Template', 'Base', 'Config', 'Constants', 'Context', 'Document', 'Exception', 'Filters', 'Iterator', 'Namespace_Constants', 'Parser', 'Plugin', 'Plugins', 'Provider', 'Service', 'Stash', 'Stash_Context', 'Stash_XS', 'Test', 'Toolkit', 'Plugin_Autoformat', 'Plugin_CGI', 'Plugin_Datafile', 'Plugin_Date', 'Plugin_Directory', 'Plugin_Dumper', 'Plugin_File', 'Plugin_Filter', 'Plugin_Format', 'Plugin_HTML', 'Plugin_Image', 'Plugin_Iterator', 'Plugin_Math', 'Plugin_Pod', 'Plugin_Procedural', 'Plugin_String', 'Plugin_Table', 'Plugin_URL', 'Plugin_View', 'Plugin_Wrap' ],
         
             pages  => {
                 Template => {
@@ -493,7 +493,7 @@ docset => {
                     url     => 'Modules/Template/Stash/XS.html',
                     uplink  => '../../..',
                     author  => 'abw',
-                    about   => 'Experimetal high-speed stash written in XS',
+                    about   => 'High-speed variable stash written in C',
                 
                     prev    => 'Stash_Context',
                     next    => 'Test',
@@ -509,6 +509,19 @@ docset => {
                     about   => 'Module for automating TT2 test scripts',
                 
                     prev    => 'Stash_XS',
+                    next    => 'Toolkit',
+                },
+                Toolkit => {
+                    id      => 'Toolkit',
+                    name    => 'Template::Toolkit',
+                    title   => 'Template::Toolkit',
+                    podname => 'Template::Toolkit',
+                    url     => 'Modules/Template/Toolkit.html',
+                    uplink  => '../..',
+                    author  => 'abw',
+                    about   => 'Template processing system',
+                
+                    prev    => 'Test',
                     next    => 'Plugin_Autoformat',
                 },
                 Plugin_Autoformat => {
@@ -521,7 +534,7 @@ docset => {
                     author  => 'abw',
                     about   => 'Interface to Text::Autoformat module',
                 
-                    prev    => 'Test',
+                    prev    => 'Toolkit',
                     next    => 'Plugin_CGI',
                 },
                 Plugin_CGI => {
@@ -1089,6 +1102,7 @@ docset => {
 	'Template::Stash::Context' => 'Modules/Template/Stash/Context.html',
 	'Template::Stash::XS' => 'Modules/Template/Stash/XS.html',
 	'Template::Test' => 'Modules/Template/Test.html',
+	'Template::Toolkit' => 'Modules/Template/Toolkit.html',
 	'Template::Plugin::Autoformat' => 'Modules/Template/Plugin/Autoformat.html',
 	'Template::Plugin::CGI' => 'Modules/Template/Plugin/CGI.html',
 	'Template::Plugin::Datafile' => 'Modules/Template/Plugin/Datafile.html',

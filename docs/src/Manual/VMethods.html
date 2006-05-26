@@ -81,7 +81,7 @@ as a Perl regular expression) removed.
 <pre>    [% tt_start_tag %] name = 'foo, bar &amp; baz' [% tt_end_tag %]
     [% tt_start_tag %] name.remove('\W+') [% tt_end_tag %]    # foobarbaz</pre>
 
-<li><b>match(pattern)</b><br>
+<li><b>match(pattern, global)</b><br>
 <p>
 Performs a regular expression match on the string using the pattern
 passed as an argument.  If the pattern matches the string then the
@@ -114,6 +114,14 @@ whitespace (the <code>'/x'</code> switch), use:
                (\w+)
              ';
       matches = name.match(re);
+    [% tt_end_tag %]</pre>
+<p>
+To perform a global search to match the pattern as many times as it
+appears in the source string, provide a true value for the 'global' 
+argument following the pattern.
+</p>
+<pre>    [% tt_start_tag %] text = 'bandanna';
+       text.match('an+', 1).join(', )      # an, ann
     [% tt_end_tag %]</pre>
 
 <li><b>search(pattern)</b><br>
@@ -161,6 +169,25 @@ Output:
 </p>
 <pre>    1,234,567</pre>
 
+<li><b>substr(offset, length, replacement)</b><br>
+<p>
+Returns a substring starting at 'offset', for 'length' characters.
+</p>
+<pre>    [% tt_start_tag %] str 'foo bar baz wiz waz woz') [% tt_end_tag %]
+    [% tt_start_tag %] str.substr(4, 3) [% tt_end_tag %]    # bar</pre>
+<p>
+If 'length' is not specified then it returns everything from the
+'offset' to the end of the string.
+</p>
+<pre>    [% tt_start_tag %] str.substr(12) [% tt_end_tag %]      # wiz waz woz</pre>
+<p>
+If both 'length' and 'replacement' are specified, then the method
+replaces everything from 'offset' for 'length' characters with
+$replacement.  The substring removed from the string is then returned.
+</p>
+<pre>    [% tt_start_tag %] str.substr(0, 11, 'FOO') [% tt_end_tag %]   # foo bar baz
+    [% tt_start_tag %] str [% tt_end_tag %]                        # FOO wiz waz woz</pre>
+
 <li><b>list</b><br>
 <p>
 Return the value as a single element list.  This can be useful if you
@@ -190,15 +217,102 @@ consistency with the hash and list size methods.
 [% WRAPPER subsection
    title = "Hash Virtual Methods"
 -%]<ul>
-<li><b>keys, values, each</b><br>
+<li><b>keys</b><br>
 <p>
-The regular hash operators returning lists of keys, values or both.
-Note how we use a '$' prefix on the 'key' variable in this example to
-have it interpolated (i.e. replaced with its value) before use.
+Returns a list of keys in the hash.  They are not returned in any 
+particular order, but the order is the same as for the corresponding
+values method.
 </p>
-<pre>    [% tt_start_tag %] FOREACH key = product.keys [% tt_end_tag %]
-       [% tt_start_tag %] key [% tt_end_tag %] =&gt; [% tt_start_tag %] product.$key [% tt_end_tag %]
+<pre>    [% tt_start_tag %] FOREACH key IN hash.keys [% tt_end_tag %]
+       * [% tt_start_tag %] key [% tt_end_tag %]
     [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+If you want the keys in sorted order, use the list 'sort' method.
+</p>
+<pre>    [% tt_start_tag %] FOREACH key IN hash.keys.sort [% tt_end_tag %]
+       * [% tt_start_tag %] key [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Having got the keys in sorted order, you can then use variable
+interpolation to fetch the value.  This is shown in the following 
+example by the use of '$key' to fetch the item from 'hash' whose
+key is stored in the 'key' variable.
+</p>
+<pre>    [% tt_start_tag %] FOREACH key IN hash.keys.sort [% tt_end_tag %]
+       * [% tt_start_tag %] key [% tt_end_tag %] = [% tt_start_tag %] hash.$key [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+<p>
+Alternately, you can use the 'pairs' method to get a list of 
+key/value pairs in sorted order.
+</p>
+
+<li><b>values</b><br>
+<p>
+Returns a list of the values in the hash.  As with the 'keys' method, 
+they are not returned in any particular order, although it is the same
+order that the keys are returned in.
+</p>
+<pre>    [% tt_start_tag %] hash.values.join(', ') [% tt_end_tag %]</pre>
+
+<li><b>items</b><br>
+<p>
+Returns a list of both the keys and the values expanded into a single list.
+</p>
+<pre>    [% tt_start_tag %] hash = {
+          a = 10
+          b = 20
+       };</pre>
+<pre>       hash.items.join(', ')    # a, 10, b, 20
+    [% tt_end_tag %]</pre>
+
+<li><b>each</b><br>
+<p>
+This method currently returns the same thing as the 'items' method.
+</p>
+<p>
+However, please note that this method will change in the next major
+version of the Template Toolkit (v3) to return the same thing as the
+'pairs' method.  This will be done in an effort to make these virtual
+method more consistent with each other and how Perl works.
+</p>
+<p>
+In anticipation of this, we recommend that you stop using 'hash.each'
+and instead use 'hash.items'.
+</p>
+
+<li><b>pairs </b><br>
+<p>
+This method returns a list of key/value pairs.  They are returned in
+sorted order according to the keys.
+</p>
+<pre>    [% tt_start_tag %] FOREACH pair IN product.pairs [% tt_end_tag %]
+       * [% tt_start_tag %] pair.key [% tt_end_tag %] is [% tt_start_tag %] pair.value [% tt_end_tag %]
+    [% tt_start_tag %] END [% tt_end_tag %]</pre>
+
+<li><b>list</b><br>
+<p>
+Returns the contents of the hash in list form.  An argument can be
+passed to indicate the desired items required in the list: 'keys' to
+return a list of the keys (same as hash.keys), 'values' to return a
+list of the values (same as hash.values), 'each' to return as list
+of key and values (same as hash.each), or 'pairs' to return a list
+of key/value pairs (same as hash.pairs).
+</p>
+<pre>    [% tt_start_tag %] keys   = hash.list('keys') [% tt_end_tag %]
+    [% tt_start_tag %] values = hash.list('values') [% tt_end_tag %]
+    [% tt_start_tag %] items  = hash.list('each') [% tt_end_tag %]
+    [% tt_start_tag %] pairs  = hash.list('pairs') [% tt_end_tag %]</pre>
+<p>
+When called without an argument it currently returns the same thing as
+the 'pairs' method.  However, please note that this method will change
+in the next major version of the Template Toolkit (v3) to return a
+reference to a list containing the single hash reference (as per the
+scalar list method).
+</p>
+<p>
+In anticipation of this, we recommend that you stop using 'hash.list'
+and instead use 'hash.pairs'.
+</p>
 
 <li><b>sort, nsort</b><br>
 <p>
@@ -253,7 +367,7 @@ Delete one or more items from the hash.
 
 <li><b>size</b><br>
 <p>
-Returns the number of key =&gt; value pairs in the hash.
+Returns the number of key/value pairs in the hash.
 </p>
 
 <li><b>item</b><br>
@@ -261,28 +375,6 @@ Returns the number of key =&gt; value pairs in the hash.
 Returns an item from the hash using a key passed as an argument.
 </p>
 <pre>    [% tt_start_tag %] hash.item('foo') [% tt_end_tag %]  # same as hash.foo</pre>
-
-<li><b>list</b><br>
-<p>
-Returns the contents of the hash in list form.  An argument can be
-passed to indicate the desired items required in the list: 'keys' to
-return a list of the keys (same as hash.keys), 'values' to return a
-list of the values (same as hash.values), or 'each' to return as list
-of (key, value) pairs (same as hash.each).  
-</p>
-<p>
-When called without an argument it returns a reference to a list containing
-the contents of the hash.
-</p>
-<pre>    [% tt_start_tag %] hash = { pi =&gt; 3.14 } [% tt_end_tag %]
-    [% tt_start_tag %] hash.list.join  [% tt_end_tag %]    # pi 3.14</pre>
-<p>
-Please note that this is a new behaviour for version 2.15.  Prior to
-this the method returned an insanely complex data structure comprised of
-a reference to a list containing references to hash arrays containing 
-'key' and 'value' items representing each corresponding key/value pair 
-in the hash.  You can see why we changed it.
-</p>
 
 </ul>
 [%- END %]
@@ -363,10 +455,14 @@ an 'author' key or objects with an 'author' method.
 
 <li><b>unshift(item), push(item)</b><br>
 <p>
-Adds an item to the start/end of a list.
+The push() method adds an item or items to the end of list.
 </p>
-<pre>    [% tt_start_tag %] mylist.unshift('prev item') [% tt_end_tag %]
-    [% tt_start_tag %] mylist.push('next item')    [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] mylist.push(foo) [% tt_end_tag %]
+    [% tt_start_tag %] mylist.push(foo, bar) [% tt_end_tag %]
+    
+The unshift() method adds an item or items to the start of a list.</pre>
+<pre>    [% tt_start_tag %] mylist.unshift(foo) [% tt_end_tag %]
+    [% tt_start_tag %] mylist.push(foo, bar)    [% tt_end_tag %]</pre>
 
 <li><b>shift, pop</b><br>
 <p>
@@ -388,6 +484,18 @@ be sorted before the unique elements are pulled out (unlike the Unix
 command line utility).
 </p>
 <pre>    [% tt_start_tag %] numbers = mylist.unique.sort [% tt_end_tag %]</pre>
+
+<li><b>import</b><br>
+<p>
+Appends the contents of one or more other lists to the end of the
+current list.
+</p>
+<pre>    [% tt_start_tag %] one   = [ 1 2 3 ];
+       two   = [ 4 5 6 ];
+       three = [ 7 8 9 ];</pre>
+<pre>       one.import(two, three);</pre>
+<pre>       one.join(', );     # 1, 2, 3, 4, 5, 6, 7, 8, 9       
+    [% tt_end_tag %]</pre>
 
 <li><b>merge</b><br>
 <p>
@@ -453,13 +561,22 @@ need to be explicit:
 
 <li><b>hash </b><br>
 <p>
-Returns a reference to a hash array comprised of the elements 
-in the list.
+Returns a reference to a hash array comprised of the elements in the
+list.  The even-numbered elements (0, 2, 4, etc) become the keys and
+the odd-numbered elements (1, 3, 5, etc) the values.
 </p>
 <pre>    [% tt_start_tag %] list = ['pi', 3.14, 'e', 2.718] [% tt_end_tag %]
     [% tt_start_tag %] hash = list.hash [% tt_end_tag %]
     [% tt_start_tag %] hash.pi [% tt_end_tag %]               # 3.14
     [% tt_start_tag %] hash.e  [% tt_end_tag %]               # 2.718</pre>
+<p>
+If a numerical argument is provided then the hash returned will have
+keys generated for each item starting at the number specified.
+</p>
+<pre>    [% tt_start_tag %] list = ['beer', 'peanuts'] [% tt_end_tag %]
+    [% tt_start_tag %] hash = list.hash(1) [% tt_end_tag %]
+    [% tt_start_tag %] hash.1  [% tt_end_tag %]               # beer          
+    [% tt_start_tag %] hash.2  [% tt_end_tag %]               # peanuts</pre>
 
 </ul>
 [%- END %]
@@ -544,21 +661,21 @@ template:
 [% WRAPPER section
     title="AUTHOR"
 -%]<p>
-Andy Wardley &lt;abw@andywardley.com&gt;
+Andy Wardley &lt;abw@wardley.org&gt;
 </p>
 <p>
-[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+[% ttlink('http://wardley.org/', 'http://wardley.org/') -%]
 </p>
 [%- END %]
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.15, released on 30 January 2006.
+Template Toolkit version 2.15, released on 26 May 2006.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+-%]<pre>  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or

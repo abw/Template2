@@ -37,7 +37,10 @@
 	PROCESS tocitem 
 	        title ="Miscellaneous"
                 subs  = [
-                    "How can I configure variables on a per-request basis?"
+                    "How can I find out the name of the main template being processed?",
+		    "How can I find out the name of the current template being processed?",
+		    "How do I print the modification time of the template or component?",
+		    "How can I configure variables on a per-request basis?"
 		];
 	PROCESS tocitem 
 	        title ="AUTHOR"
@@ -247,6 +250,73 @@ pointers on how to acheive this using existing modules:
 [% WRAPPER section
     title="Miscellaneous"
 -%][% WRAPPER subsection
+   title = "How can I find out the name of the main template being processed?"
+-%]<p>
+The <code>'template'</code> variable contains a reference to the
+Template::Document object for the main template you're processing
+(i.e. the one provided as the first argument to the Template process()
+method).  The <code>'name'</code> method returns its name.
+</p>
+<pre>    [% tt_start_tag %] template.name [% tt_end_tag %]     # e.g. index.html</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "How can I find out the name of the current template being processed?"
+-%]<p>
+The <code>'template'</code> variable always references the <i>main</i> template being processed.
+So even if you call [% tt_start_tag %] INCLUDE header [% tt_end_tag %], and that calls [% tt_start_tag %] INCLUDE menu [% tt_end_tag %],
+the <code>'template'</code> variable will be unchanged.
+</p>
+<p>
+index.html:
+</p>
+<pre>    [% tt_start_tag %] template.name  [% tt_end_tag %]     # index.html
+    [% tt_start_tag %] INCLUDE header [% tt_end_tag %]</pre>
+<p>
+header:
+</p>
+<pre>    [% tt_start_tag %] template.name  [% tt_end_tag %]     # index.html
+    [% tt_start_tag %] INCLUDE menu   [% tt_end_tag %]</pre>
+<p>
+menu:
+</p>
+<pre>    [% tt_start_tag %] template.name  [% tt_end_tag %]     # index.html</pre>
+<p>
+In constrast, the <code>'component'</code> variable always references the <i>current</i>
+template being processed.  
+</p>
+<p>
+index.html
+</p>
+<pre>    [% tt_start_tag %] component.name [% tt_end_tag %]     # index.html
+    [% tt_start_tag %] INCLUDE header [% tt_end_tag %]</pre>
+<p>
+header:
+</p>
+<pre>    [% tt_start_tag %] component.name [% tt_end_tag %]     # header
+    [% tt_start_tag %] INCLUDE menu   [% tt_end_tag %]</pre>
+<p>
+menu:
+</p>
+<pre>    [% tt_start_tag %] component.name  [% tt_end_tag %]     # menu</pre>
+[%- END %]
+[% WRAPPER subsection
+   title = "How do I print the modification time of the template or component?"
+-%]<p>
+The <code>'template'</code> and <code>'component'</code> variables reference the main template
+and the current template being processed (see previous questions).
+The <code>'modtime'</code> method returns the modification time of the
+corresponding template file as a number of seconds since the Unix
+epoch (00:00:00 GMT 1st January 1970).
+</p>
+<p>
+This number doesn't mean much to anyone (except perhaps serious Unix
+geeks) so you'll probably want to use the Date plugin to format it for
+human consumption.
+</p>
+<pre>    [% tt_start_tag %] USE Date [% tt_end_tag %]</pre>
+<pre>    [% tt_start_tag %] template.name [% tt_end_tag %] last modified [% tt_start_tag %] Date.format(template.modtime) [% tt_end_tag %]</pre>
+[%- END %]
+[% WRAPPER subsection
    title = "How can I configure variables on a per-request basis?"
 -%]<p>
 One easy way to acheive this is to define a single PRE_PROCESS template which
@@ -281,12 +351,12 @@ config/style/basic:
 	    name = style    # save existing 'style' var as 'style.name'</pre>
 <pre>	    # define various other style variables....
             col = {
-		back =&gt; '#ffffff'
-		text =&gt; '#000000'
-		# ...etc...
+    		back =&gt; '#ffffff'
+	    	text =&gt; '#000000'
+		    # ...etc...
 	    }</pre>
 <pre>	    logo = {
-		# ...etc...
+		    # ...etc...
 	    }</pre>
 <pre>	    # ...etc...
 	}
@@ -308,11 +378,11 @@ other variables for defining the section title, menu, etc.
 config/section/info:
 </p>
 <pre>    [% tt_start_tag %]  section = {
-	    name   = section  # save 'section' var as 'section.name'
-	    title  = 'Information'
-	    menu   = [ ... ]
-	    # ...etc...
-	}
+	        name   = section  # save 'section' var as 'section.name'
+	        title  = 'Information'
+	        menu   = [ ... ]
+	        # ...etc...
+	    }
     [% tt_end_tag %]</pre>
 <p>
 This illustrates the basic principal but you can extend it to perform
@@ -323,22 +393,22 @@ pretty much any kind of per-document initialisation that you require.
 [% WRAPPER section
     title="AUTHOR"
 -%]<p>
-Andy Wardley &lt;abw@andywardley.com&gt;
+Andy Wardley &lt;abw@wardley.org&gt;
 </p>
 <p>
-[% ttlink('http://www.andywardley.com/', 'http://www.andywardley.com/') -%]
+[% ttlink('http://wardley.org/', 'http://wardley.org/') -%]
 </p>
 [%- END %]
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.65, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.66, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 </p>
 [%- END %]
 [% WRAPPER section
     title="COPYRIGHT"
--%]<pre>  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+-%]<pre>  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.</pre>
 <p>
 This module is free software; you can redistribute it and/or

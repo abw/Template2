@@ -1093,8 +1093,8 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.99, distributed as part of the
-Template Toolkit version 2.14a, released on 02 February 2006.
+2.102, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 

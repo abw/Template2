@@ -916,7 +916,7 @@ Template::Context - Runtime context in which templates are processed
 
     # constructor
     $context = Template::Context->new(\%config)
-    || die $Template::Context::ERROR;
+	|| die $Template::Context::ERROR;
 
     # fetch (load and compile) a template
     $template = $context->template($template_name);
@@ -974,12 +974,12 @@ constructor.
     use Template;
     
     my $template = Template->new({
-    TRIM      => 1,
-    EVAL_PERL => 1,
-    BLOCKS    => {
-        header => 'This is the header',
-        footer => 'This is the footer',
-    },
+	TRIM      => 1,
+	EVAL_PERL => 1,
+	BLOCKS    => {
+	    header => 'This is the header',
+	    footer => 'This is the footer',
+	},
     });
 
 Similarly, the Template::Context constructor will forward all configuration
@@ -987,8 +987,8 @@ parameters onto other default objects (e.g. Template::Provider, Template::Plugin
 Template::Filters, etc.) that it may need to instantiate.
 
     $context = Template::Context->new({
-    INCLUDE_PATH => '/home/abw/templates', # provider option
-    TAG_STYLE    => 'html',                # parser option
+	INCLUDE_PATH => '/home/abw/templates', # provider option
+	TAG_STYLE    => 'html',                # parser option
     });
 
 A Template::Context object (or subclass/derivative) can be explicitly
@@ -1013,9 +1013,9 @@ a default context object is required.
     $Template::Config::CONTEXT = 'MyOrg::Template::Context';
 
     my $template = Template->new({
-    EVAL_PERL   => 1,
-    EXTRA_MAGIC => 'red hot',  # your extra config items
-    ...
+	EVAL_PERL   => 1,
+	EXTRA_MAGIC => 'red hot',  # your extra config items
+	...
     });
 
 =head1 METHODS
@@ -1027,8 +1027,8 @@ object.  Configuration parameters may be specified as a HASH reference or
 as a list of (name =E<gt> value) pairs.
 
     my $context = Template::Context->new({
-    INCLUDE_PATH => 'header',
-    POST_PROCESS => 'footer',
+	INCLUDE_PATH => 'header',
+	POST_PROCESS => 'footer',
     });
 
     my $context = Template::Context->new( EVAL_PERL => 1 );
@@ -1039,10 +1039,10 @@ retrieved by the error() class method or directly from the
 $Template::Context::ERROR package variable.
 
     my $context = Template::Context->new(\%config)
-    || die Template::Context->error();
+	|| die Template::Context->error();
 
     my $context = Template::Context->new(\%config)
-    || die $Template::Context::ERROR;
+	|| die $Template::Context::ERROR;
 
 The following configuration items may be specified.
 
@@ -1057,21 +1057,21 @@ pre-initialise the stash when it is created.  These items are ignored
 if the STASH item is defined.
 
     my $context = Template::Context->new({
-    VARIABLES => {
-        title   => 'A Demo Page',
-        author  => 'Joe Random Hacker',
-        version => 3.14,
-    },
+	VARIABLES => {
+	    title   => 'A Demo Page',
+	    author  => 'Joe Random Hacker',
+	    version => 3.14,
+	},
     };
 
 or
 
     my $context = Template::Context->new({
-    PRE_DEFINE => {
-        title   => 'A Demo Page',
-        author  => 'Joe Random Hacker',
-        version => 3.14,
-    },
+	PRE_DEFINE => {
+	    title   => 'A Demo Page',
+	    author  => 'Joe Random Hacker',
+	    version => 3.14,
+	},
     };
 
 
@@ -1086,11 +1086,11 @@ mapping template names to template text, subroutines or Template::Document
 objects.
 
     my $context = Template::Context->new({
-    BLOCKS => {
-        header  => 'The Header.  [% title %]',
-        footer  => sub { return $some_output_text },
-        another => Template::Document->new({ ... }),
-    },
+	BLOCKS => {
+	    header  => 'The Header.  [% title %]',
+	    footer  => sub { return $some_output_text },
+	    another => Template::Document->new({ ... }),
+	},
     }); 
 
 
@@ -1209,10 +1209,10 @@ of Template::Provider objects or sub-classes thereof which will take
 responsibility for loading and compiling templates.
 
     my $context = Template::Context->new({
-    LOAD_TEMPLATES => [
-            MyOrg::Template::Provider->new({ ... }),
-            Template::Provider->new({ ... }),
-    ],
+	LOAD_TEMPLATES => [
+    	    MyOrg::Template::Provider->new({ ... }),
+    	    Template::Provider->new({ ... }),
+	],
     });
 
 When a PROCESS, INCLUDE or WRAPPER directive is encountered, the named
@@ -1242,7 +1242,7 @@ the Template::Provider INCLUDE_PATH option can be specified in the Template::Con
 constructor method.
 
     my $context = Template::Context->new({
-    INCLUDE_PATH => '/here:/there',
+	INCLUDE_PATH => '/here:/there',
     });
 
 
@@ -1258,10 +1258,10 @@ Template::Content plugin() method queries each provider in turn in a
 "Chain of Responsibility" as per the template() and filter() methods.
 
     my $context = Template::Context->new({
-    LOAD_PLUGINS => [
-            MyOrg::Template::Plugins->new({ ... }),
-            Template::Plugins->new({ ... }),
-    ],
+	LOAD_PLUGINS => [
+    	    MyOrg::Template::Plugins->new({ ... }),
+    	    Template::Plugins->new({ ... }),
+	],
     });
 
 By default, a single Template::Plugins object is created using the 
@@ -1270,8 +1270,8 @@ Template::Plugins constructor may be added to the Template::Context
 constructor.
 
     my $context = Template::Context->new({
-    PLUGIN_BASE => 'MyOrg::Template::Plugins',
-    LOAD_PERL   => 1,
+	PLUGIN_BASE => 'MyOrg::Template::Plugins',
+	LOAD_PERL   => 1,
     });
 
 
@@ -1287,10 +1287,10 @@ Template::Context filter() method queries each provider in turn in a
 "Chain of Responsibility" as per the template() and plugin() methods.
 
     my $context = Template::Context->new({
-    LOAD_FILTERS => [
-            MyTemplate::Filters->new(),
-            Template::Filters->new(),
-    ],
+	LOAD_FILTERS => [
+    	    MyTemplate::Filters->new(),
+    	    Template::Filters->new(),
+	],
     });
 
 By default, a single Template::Filters object is created for the
@@ -1305,7 +1305,7 @@ responsibility for managing template variables.
 
     my $stash = MyOrg::Template::Stash->new({ ... });
     my $context = Template::Context->new({
-    STASH => $stash,
+	STASH => $stash,
     });
 
 If unspecified, a default stash object is created using the VARIABLES
@@ -1314,10 +1314,10 @@ be specified as the PRE_DEFINE option for backwards compatibility with
 version 1.
 
     my $context = Template::Context->new({
-    VARIABLES => {
-        id    => 'abw',
-        name  => 'Andy Wardley',
-    },
+	VARIABLES => {
+	    id    => 'abw',
+	    name  => 'Andy Wardley',
+	},
     };
 
 
@@ -1330,7 +1330,7 @@ of the Template::Context module.
     use Template::Constants qw( :debug );
 
     my $template = Template->new({
-    DEBUG => DEBUG_CONTEXT | DEBUG_DIRS,
+	DEBUG => DEBUG_CONTEXT | DEBUG_DIRS,
     });
 
 The DEBUG value can include any of the following.  Multiple values
@@ -1384,10 +1384,10 @@ die().  This can be caught by enclosing the call to template() in an
 eval block and examining $@.
 
     eval {
-    $template = $context->template('header');
+	$template = $context->template('header');
     };
     if ($@) {
-    print "failed to fetch template: $@\n";
+	print "failed to fetch template: $@\n";
     }
 
 =head2 plugin($name, \@args)
@@ -1542,21 +1542,21 @@ An AUTOLOAD method provides access to context configuration items.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
 
 =head1 VERSION
 
-2.93, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.96, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

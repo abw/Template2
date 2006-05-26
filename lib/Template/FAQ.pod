@@ -8,7 +8,7 @@
 #   the FAQ will soon be.
 #
 # AUTHOR
-#   Andy Wardley  <abw@andywardley.com>
+#   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
 #   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
@@ -18,7 +18,7 @@
 #   modify it under the same terms as Perl itself.
 #
 # REVISION
-#   2.65
+#   2.66
 #
 #========================================================================
 
@@ -221,6 +221,68 @@ pointers on how to acheive this using existing modules:
 
 =head1 Miscellaneous
 
+=head2 How can I find out the name of the main template being processed?
+
+The C<template> variable contains a reference to the
+Template::Document object for the main template you're processing
+(i.e. the one provided as the first argument to the Template process()
+method).  The C<name> method returns its name.
+
+    [% template.name %]     # e.g. index.html
+
+=head2 How can I find out the name of the current template being processed?
+
+The C<template> variable always references the I<main> template being processed.
+So even if you call [% INCLUDE header %], and that calls [% INCLUDE menu %],
+the C<template> variable will be unchanged.
+
+index.html:
+
+    [% template.name  %]     # index.html
+    [% INCLUDE header %]
+
+header:
+
+    [% template.name  %]     # index.html
+    [% INCLUDE menu   %]
+
+menu:
+
+    [% template.name  %]     # index.html
+
+In constrast, the C<component> variable always references the I<current>
+template being processed.  
+
+index.html
+
+    [% component.name %]     # index.html
+    [% INCLUDE header %]
+
+header:
+
+    [% component.name %]     # header
+    [% INCLUDE menu   %]
+
+menu:
+
+    [% component.name  %]     # menu
+
+=head2 How do I print the modification time of the template or component?
+
+The C<template> and C<component> variables reference the main template
+and the current template being processed (see previous questions).
+The C<modtime> method returns the modification time of the
+corresponding template file as a number of seconds since the Unix
+epoch (00:00:00 GMT 1st January 1970).
+
+This number doesn't mean much to anyone (except perhaps serious Unix
+geeks) so you'll probably want to use the Date plugin to format it for
+human consumption.
+
+    [% USE Date %]
+
+    [% template.name %] last modified [% Date.format(template.modtime) %]
+
 =head2 How can I configure variables on a per-request basis?
 
 One easy way to acheive this is to define a single PRE_PROCESS template which
@@ -255,13 +317,13 @@ config/style/basic:
 
 	    # define various other style variables....
             col = {
-		back => '#ffffff'
-		text => '#000000'
-		# ...etc...
+    		back => '#ffffff'
+	    	text => '#000000'
+		    # ...etc...
 	    }
 
 	    logo = {
-		# ...etc...
+		    # ...etc...
 	    }
 
 	    # ...etc...
@@ -284,11 +346,11 @@ other variables for defining the section title, menu, etc.
 config/section/info:
 
     [%  section = {
-	    name   = section  # save 'section' var as 'section.name'
-	    title  = 'Information'
-	    menu   = [ ... ]
-	    # ...etc...
-	}
+	        name   = section  # save 'section' var as 'section.name'
+	        title  = 'Information'
+	        menu   = [ ... ]
+	        # ...etc...
+	    }
     %]
 
 This illustrates the basic principal but you can extend it to perform
@@ -296,21 +358,21 @@ pretty much any kind of per-document initialisation that you require.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
 
 =head1 VERSION
 
-2.65, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.66, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

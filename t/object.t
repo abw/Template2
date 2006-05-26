@@ -47,13 +47,13 @@ sub new {
     $params ||= {};
 
     bless {
-	PARAMS  => $params,
-	DAYS    => [ qw( Monday Tuesday Wednesday Thursday 
-			 Friday Saturday Sunday ) ],
-	DAY     => 0,
+        PARAMS  => $params,
+        DAYS    => [ qw( Monday Tuesday Wednesday Thursday 
+                         Friday Saturday Sunday ) ],
+        DAY     => 0,
         'public'   => 314,
-	'.private' => 425,
-	'_hidden'  => 537,
+        '.private' => 425,
+        '_hidden'  => 537,
     }, $class;
 }
 
@@ -102,13 +102,13 @@ sub AUTOLOAD {
 
     my $value = $self->{ PARAMS }->{ $name };
     if (ref($value) eq 'CODE') {
-	return &$value(@params);
+        return &$value(@params);
     }
     elsif (@params) {
-	return $self->{ PARAMS }->{ $name } = shift @params;
+        return $self->{ PARAMS }->{ $name } = shift @params;
     }
     else {
-	return $value;
+        return $value;
     }
 }
 

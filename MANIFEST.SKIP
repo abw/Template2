@@ -23,7 +23,6 @@
 ^lib/Template/Arena
 ^lib/Template/Map
 ^lib/Template/Plugin/XML/View
-^lib/Template/Plugin/Math
 ^lib/Template/Plugin/List
 ^pm_to_blib$
 ^bin/prep
@@ -45,7 +44,6 @@
 ^t/dbi_test.cfg
 ^t/shout.t
 ^t/map.t
-^t/math.t
 ^t/docset.t
 ^t/xmlview.t
 ^t/test/src/complex.org

@@ -23,16 +23,73 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.15
+# Version 2.15 - 26th May 2006
+#------------------------------------------------------------------------
+
+Chomping Options
+----------------
+
+* Added the CHOMP_GREEDY option and '~' chomping flag.  Changed 
+  CHOMP_COLLAPSE to greedily chomp all whitespace (including multiple
+  newlines) and replace it with a single space.  Previously it only
+  chomped one line.  Renamed the CHOMP_ALL option to CHOMP_ONE which
+  makes more sense.  CHOMP_ALL is still provided as an alias for 
+  CHOMP_ONE for backwards compatibility.  Thanks to Paul Seamons for
+  doing all the hard work on this.
+
+  http://tt2.org/pipermail/templates/2006-February/thread.html#8354
+
+* Added code to the replace text virtual method to use a faster and 
+  simpler implementation if the replacement text doesn't contain any
+  back references.  Thanks to Josh Rosenbaum for all his efforts on 
+  this.
+
+  http://tt2.org/pipermail/templates/2006-February/008344.html
+
+Stash
+-----
+
+* Changed various tests for private/hidden variables (starting '_' 
+  or '.') to use a regex defined in the $PRIVATE package variable in 
+  Template::Stash.  This can be redefined or undefined.  Note that 
+  the XS Stash only looks to see if $PRIVATE is defined or not, and
+  currently hard-codes the regex.
+
+Plugins
+-------
+
+* Changed the Image plugin tag() method to call the name() method 
+  instead of accessing the name directly, making it easier for
+  subclasses to provide an alternate name.  Thanks to Cees Hek for 
+  his patch.
+
+  http://tt2.org/pipermail/templates/2006-February/008423.html
+
+* Change the AUTOLOAD regex in the Table plugin to be more robust.
+
+  http://tt2.org/pipermail/templates/2006-May/008602.html
+
+Documentation
+-------------
+
+* Added the Template::Toolkit documentation pointing people to 
+  the right place.
+
+* Updated the Template::Stash::XS documentation to remove the 
+  "experimental" description and tidy things up a bit. 
+
+
+#------------------------------------------------------------------------
+# Version 2.14a - 2nd February 2006               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 Stash
 -----
 
 * Activated a patch in Template::Stash from Stephen Howard which adds
-  code for the full set of fallbacks for dot ops called against objects
-  which don't implement the specific method.  For example 
-  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now
+  code for the full set of fallbacks for dot ops called against
+  objects which don't implement the specific method.  For example 
+  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now 
   all work with the Perl Template::Stash.  Added code to the XS Stash 
   to do the same and updated tests.
 
@@ -43,76 +100,91 @@ Stash
 
   http://tt2.org/pipermail/templates/2006-January/008266.html
 
-* Applied path from Slaven Rezic to Template::Stash::XS to check return 
-  code in tt_fetch_item() in a way which plays nicely with tied hashes.
+* Applied path from Slaven Rezic to Template::Stash::XS to check
+  return code in tt_fetch_item() in a way which plays nicely with tied
+  hashes.
 
   http://rt.cpan.org/Ticket/Display.html?id=7830
 
-* Changed Template::Stash and Template::Stash::XS to evaluate list 
+* Changed Template::Stash and Template::Stash::XS to evaluate list
   vmethods in lvalues.
 
   http://tt2.org/pipermail/templates/2006-January/008198.html
 
 * Changed Template::Stash to be a little more strict about what it
-  considers a failed method call.  This allows exception thrown 
-  within called methods to be propagated correctly rather than 
-  being ignored as undefined method.  Thanks to Dave Howorth for
-  reporting the problem and providing a fix.  Also ported to the
-  Template::Stash::XS module.
+  considers a failed method call.  This allows exception thrown within
+  called methods to be propagated correctly rather than being ignored
+  as undefined method.  Thanks to Dave Howorth, Tom Insam and Stig 
+  Brautaset for reporting the problem and providing fixes.
 
   http://tt2.org/pipermail/templates/2005-April/007375.html
+  http://tt2.org/pipermail/templates/2006-February/008367.html
 
-* Removed redundant performance profiling code from Template::Stash::XS.
-  Must check with Doug that this is OK and he's not still using it...
+* Removed redundant performance profiling code from
+  Template::Stash::XS.  Must check with Doug that this is OK and he's
+  not still using it...
+
 
 Virtual Methods
 ---------------
 
-* Changed list.hash and hash.list vmethods to Do The Right Thing instead
-  of some crack fuelled nonsense.  hash.list now returns [ %$hash ]
-  and list.hash now returns [ @$list ]
+* Added the scalar.remove, scalar.substr, hash.delete, hash.items,
+  hash.pairs, list.import and list.hash virtual methods.
 
-  http://template-toolkit.org/pipermail/templates/2006-January/008256.html
+* Changed the scalar.replace method to work properly with back
+  references ($1, $2, etc) by incorporating ideas, code and tests from
+  Nik Clayton, Paul Seamon, Sergey Martynoff, Josh Rosenbaum and
+  others.
 
-* Fixed the split scalar virtual method which wasn't accepting the second
-  argument (limit) correctly.  Thanks to Josh Rosenbaum for pointing
-  out the problem, although the solution turned out to be a little more 
-  complicated.
+  http://tt2.org/pipermail/templates/2006-February/008306.html
+  http://tt2.org/pipermail/templates/2006-February/008326.html
+
+* Changed list.push and list.unshift to accept multiple arguments,
+  thanks to Bill Moseley.
+
+  http://tt2.org/pipermail/templates/2006-January/008294.html
+
+* Fixed the split scalar virtual method which wasn't accepting the
+  second argument (limit) correctly.  Thanks to Josh Rosenbaum for
+  pointing out the problem.
 
   http://tt2.org/pipermail/templates/2005-October/007982.html
 
-* Added the 'delete' hash virtual method and the 'remove' scalar virtual
-  method.
+* Documented the fact that hash.list is going to change in the future,
+  recommending people switch to hash.pairs.
 
-* Changed $element to $component in Template::Context to fix callers bug, 
-  thanks to Andy Maas who identified the problem and found the solution:
+  http://tt2.org/pipermail/templates/2006-January/008256.html
+  http://tt2.org/pipermail/templates/2006-February/008312.html
+
+* Added the global option to the 'match' scalar virtual method.
+
+* Changed $element to $component in Template::Context to fix callers
+  bug, thanks to Andy Maas who identified the problem and found the
+  solution:
 
   http://tt2.org/pipermail/templates/2004-December/007020.html
 
-* Fixed the regex matching relative paths in Template::Provider, thanks
-  to Josh Rosenbaum 
-
-  http://tt2.org/pipermail/templates/2005-January/007141.html
-
-* Changed the sort and nsort list virtual methods to always return 
+* Changed the sort and nsort list virtual methods to always return
   references to lists, avoiding any ambiguity in return results.
 
-* Changed the hash.defined method to do the same thing as scalar.defined
-  when called without arguments.  Added list.defined to do the same thing
-  as hash.defined.
+* Changed the hash.defined method to do the same thing as
+  scalar.defined when called without arguments.  Added list.defined to
+  do the same thing as hash.defined.
 
   http://rt.cpan.org/Ticket/Display.html?id=9094
+
+* Moved all the tests into t/vmethods/*
 
 
 Plugins
 -------
 
 * Added the $Template::Plugins::PLUGIN_BASE package variable to define
-  the default 'Template::Plugin' value for the PLUGIN_BASE option.
-  By clearing this value before calling the Template new() constructor,
-  you can avoid having Template::Plugin added to the PLUGIN_BASE by 
+  the default 'Template::Plugin' value for the PLUGIN_BASE option.  By
+  clearing this value before calling the Template new() constructor,
+  you can avoid having Template::Plugin added to the PLUGIN_BASE by
   default.  Also changed PLUGINS search to look for lower case plugin
-  name as well as case-specific name.  Thanks yet again Josh for 
+  name as well as case-specific name.  Thanks yet again Josh for
   addressing this issue.
 
   http://tt2.org/pipermail/templates/2006-January/008225.html
@@ -172,7 +244,7 @@ Filters
   http://rt.cpan.org/Ticket/Display.html?id=5695
 
 * Updated documentation to reflect the fact that the html filter also
-  escapes " as &quot;  Thanks to Geoff Richards for reporting it.
+  escapes " as &quot; Thanks to Geoff Richards for reporting it.
 
 * Moved Latex filters into Template-Latex distribution.
 
@@ -201,6 +273,11 @@ ttree
 
   http://rt.cpan.org/Ticket/Display.html?id=4180
 
+* added AppConfig EXPAND => EXPAND_ALL option to perl5lib, 
+  template_plugin_base, template_compile_dir and depend_file
+  configuration options to allow them to contain ~ to indicate
+  the user's home directory, or $WHATEVER for environment variables,
+  as per the other path-specific options like src, lib, etc.
 
 Miscellaneous
 -------------
@@ -219,6 +296,17 @@ Miscellaneous
   Template::Parser line counting when using chomp flags.
 
   http://tt2.org/pipermail/templates/2005-December/008157.html
+
+* Applied a patch from Jess Robinson to move the Template::Provider
+  check for file freshness into a separate method, in order to 
+  play nicely with his Template::Provider::DBI module.
+
+  http://tt2.org/pipermail/templates/2005-December/008143.html
+
+* Fixed the regex matching relative paths in Template::Provider, thanks
+  to Josh Rosenbaum 
+
+  http://tt2.org/pipermail/templates/2005-January/007141.html
 
 * Applied a patch to Template::Provider to prevent a misleading error
   message, thanks to Slaven Rezic.

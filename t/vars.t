@@ -4,9 +4,9 @@
 #
 # Template script testing variable use.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
@@ -17,10 +17,11 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template::Test;
+use Template::Stash;
 use Template::Constants qw( :status );
-$^W = 1;
 
 use Template::Parser;
 $Template::Test::DEBUG = 0;
@@ -29,9 +30,9 @@ $Template::Parser::DEBUG = 0;
 # sample data
 my ($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k, $l, $m, 
     $n, $o, $p, $q, $r, $s, $t, $u, $v, $w, $x, $y, $z) = 
-	qw( alpha bravo charlie delta echo foxtrot golf hotel india 
-	    juliet kilo lima mike november oscar papa quebec romeo 
-	    sierra tango umbrella victor whisky x-ray yankee zulu );
+    qw( alpha bravo charlie delta echo foxtrot golf hotel india 
+        juliet kilo lima mike november oscar papa quebec romeo 
+        sierra tango umbrella victor whisky x-ray yankee zulu );
 
 my @days   = qw( Monday Tuesday Wednesday Thursday Friday Saturday Sunday );
 my $day    = -1;
@@ -43,12 +44,12 @@ my $params = {
     'd' => $d,
     'e' => $e,
     'f' => {
-	'g' => $g,
-	'h' => $h,
-	'i' => {
-	    'j' => $j,
-	    'k' => $k,
-	},
+        'g' => $g,
+        'h' => $h,
+        'i' => {
+            'j' => $j,
+            'k' => $k,
+        },
     },
     'g' => "solo $g",
     'l' => $l,
@@ -66,15 +67,15 @@ my $params = {
     'halt'   => sub { die Template::Exception->new('stop', 'stopped') },
     'join'   => sub { join(shift, @_) },
     'split'  => sub { my $s = shift; $s = quotemeta($s); 
-		     my @r = split(/$s/, shift); \@r },
+                      my @r = split(/$s/, shift); \@r },
     'magic'  => {
-	'chant' => 'Hocus Pocus',
-	'spell' => sub { join(" and a bit of ", @_) },
+        'chant' => 'Hocus Pocus',
+        'spell' => sub { join(" and a bit of ", @_) },
     }, 
     'day'    => {
-	'prev' => \&yesterday,
-	'this' => \&today,
-	'next' => \&tomorrow,
+        'prev' => \&yesterday,
+        'this' => \&today,
+        'next' => \&tomorrow,
     },
     'belief'   => \&belief,
     'people'   => sub { return qw( Tom Dick Larry ) },
@@ -89,7 +90,7 @@ my $params = {
 };
 
 my $tt = [ default => Template->new({ INTERPOLATE => 1, ANYCASE => 1 }),
-	   notcase => Template->new({ INTERPOLATE => 1, ANYCASE => 0 }) ];
+       notcase => Template->new({ INTERPOLATE => 1, ANYCASE => 0 }) ];
 
 test_expect(\*DATA, $tt, $params);
 
@@ -110,9 +111,9 @@ sub today {
 sub tomorrow {
     my $dayno = shift;
     unless (defined $dayno) {
-	$day++;
-	$day %= 7;
-	$dayno = $day;
+    $day++;
+    $day %= 7;
+    $dayno = $day;
     }
     return $days[$dayno];
 }
@@ -518,7 +519,7 @@ keys: bar, foo, wiz, woz
 
 -- test --
 [% mage = { name    =>    'Gandalf', 
-	    aliases =>  [ 'Mithrandir', 'Olorin', 'Incanus' ] }
+        aliases =>  [ 'Mithrandir', 'Olorin', 'Incanus' ] }
 -%]
 [% import(mage) -%]
 [% name %]

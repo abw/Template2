@@ -7,9 +7,9 @@
 
                               Version 2.15
 
-                             30 January 2006
+                             26 May 2006
 
-        Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved
         Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
           This is free software; you can redistribute it and/or
@@ -57,9 +57,9 @@ PREREQUISITES
 -------------
 
 The Template Toolkit is written entirely in Perl and should run on any 
-platform on which Perl is available.  It requires Perl 5.005 or later.
+platform on which Perl is available.  It requires Perl 5.006 or later.
 
-The 'ttree' utility uses the AppConfig module (version 1.55 or above)
+The 'ttree' utility uses the AppConfig module (version 1.56 or above)
 for parsing command line options and configuration files.  It is
 available from CPAN:
 
@@ -116,11 +116,6 @@ and perform the usual Perl installation procedure:
 The Makefile.PL performs various sanity checks and then prompts for a
 number of configuration items.  The following CONFIGURATION section
 covers this in greater detail.
-
-There are known to be a few minor issues with the test suite, with
-some tests failing in certain conditions.  None of these are thought
-to be serious problems.  The BUILDING AND TESTING section provides
-more detail on this.
 
 If you choose to install the optional components then you may need to
 perform some post-installation steps to ensure that the template
@@ -330,11 +325,8 @@ usual manner.
     make
 
 The 'make test' command runs the test scripts in the 't' subdirectory.
-There is known to be at least one failures under certain conditions:
 
-  * The Text::Autoformat plugin may fail on tests 23 and 25 with
-    versions of Perl prior to 5.6.0 when using a locale which has a
-    decimal separator other than '.'.
+    make test
 
 You can set the TEST_VERBOSE flag when running 'make test' to see the
 results of the individual tests:
@@ -490,7 +482,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This is free software; you can redistribute it and/or modify it under

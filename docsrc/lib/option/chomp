@@ -27,9 +27,9 @@ Output:
 The PRE_CHOMP and POST_CHOMP options can help to clean up some of this
 extraneous whitespace.  Both are disabled by default.
 
-    my [* obj *] = [* pkg *]->new({
-        PRE_CHOMP  => 1,
-        POST_CHOMP => 1,
+    my [* obj *] = [* pkg *]-E<gt>new({
+        PRE_CHOMP  =E<gt> 1,
+        POST_CHOMP =E<gt> 1,
     });
 
 With PRE_CHOMP set to 1, the newline and whitespace preceding a directive
@@ -37,7 +37,7 @@ at the start of a line will be deleted.  This has the effect of
 concatenating a line that starts with a directive onto the end of the 
 previous line.
 
-        Foo <----------.
+        Foo E<lt>----------.
                        |
     ,---(PRE_CHOMP)----'
     |
@@ -45,7 +45,7 @@ previous line.
                        |
     ,---(POST_CHOMP)---'
     |
-    `-> Bar
+    `-E<gt> Bar
 
 With POST_CHOMP set to 1, any whitespace after a directive up to and
 including the newline will be deleted.  This has the effect of joining
@@ -67,9 +67,9 @@ compatability with earlier version of the Template Toolkit.
 Additionally the chomp tag modifiers listed below may also be used for
 the PRE_CHOMP and POST_CHOMP configuration.
  
-     my $template = Template->new({
-        PRE_CHOMP  => '~',
-        POST_CHOMP => '-',
+     my $template = Template-E<gt>new({
+        PRE_CHOMP  =E<lt> '~',
+        POST_CHOMP =E<gt> '-',
      });
 
 PRE_CHOMP and POST_CHOMP can be activated for individual directives by

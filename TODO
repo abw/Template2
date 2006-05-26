@@ -8,7 +8,7 @@
 #   and a few whacky ideas.
 #
 # AUTHOR
-#   Andy Wardley   <abw@wardley.org>
+#   Andy Wardley   <abw@cpan.org>
 #
 #------------------------------------------------------------------------
 # $Id$
@@ -17,6 +17,9 @@
 #------------------------------------------------------------------------
 # Miscellaneous
 #------------------------------------------------------------------------
+
+* The ENCODING options needs testing and documenting.  Bill Moseley said
+  he may be able to do this.
 
 * The 'eval' filter leaks memory, as reported by Colin Johnson.  The
   filter subroutine created contains a reference to the context and then
@@ -52,33 +55,7 @@
   maps to the samed compiled version) but is convenient for those times
   when you know that's not going to be a problem.
 
-* Richard Tietjen's patch for stash replace.  Allows back references
-  (e.g. $1) but it would be nice to find a rock-solid way to implement
-  it without relying on unusual ^A delimiter character. 
-
-* Further to the above, Craig Barratt has this solution which will be 
-  going into the next verion (2.05b) unless anyone has any further 
-  suggestions to make before then.
-
-    It would be great if replace handled backreferences.  I don't like
-    the ^A solution since the string could contain ^A, plus it is a
-    security hole.  The attempt I posted only works for up to 9
-    backreferences and doesn't handle an escaped '\$' and uses nested
-    evals:
-
-        $str =~ s{$search}{
-		my $r = $replace;
-		my @d = (0, $1, $2, $3, $4, $5, $6, $7, $8, $9);
-		$r =~ s/\$(\d+)/$d[$1]/eg;
-		$r;
-	      }eg;
-
-    I wish there was a perl predefined variable array containing all
-    the backreferences (is there one?).  You can avoid the hard-coded
-    limit of 9 with extra evals, and a bit of work on the re could
-    handle the escaped '\$' case, so maybe that would be good enough.
-
-* Craig also notes, in fixing the problem with NEXT not working 
+* Craig Barratt notes, in fixing the problem with NEXT not working 
   inside SWITCH (see Changes v2.04):
 
     By the way, I came across another arcane bug:
@@ -135,30 +112,6 @@
 
 
 #------------------------------------------------------------------------
-# Stash
-#------------------------------------------------------------------------
-
-* The XS Stash does not work with tied hashes (e.g. DBI.tie).  Also note
-  that enabling the XS Stash cause all the Template::* modules to be 
-  installed in an architecture-dependant directory.  For info, see
-  http://www.tt2.org/pipermail/templates/2001-September/001568.html
-
-* Jonas Liljegren reports a segfault when using the XS Stash under 
-  Apache/mod_perl with certain undefined variables.  At the time of
-  writing detail is scarce.  Check the mailing list for further
-  details.
-
-* Stas Bekman raised the issue of the Stash not being able to correctly
-  differentiate between scalar/list context and in particular, the 
-  cgi.param examples not working as expected.  This is fixed in v3 and 
-  in Craig's Stash/Context.pm which does the right lookahead to allow
-  'scalar' and 'list' postfix operators.  e.g. cgi.param.list
-
-* Have stash, etc., add current template name/line when reporting errors.
-  (may be tricky under the current implementation)
-
-
-#------------------------------------------------------------------------
 # Parser
 #------------------------------------------------------------------------
 
@@ -176,64 +129,6 @@
       #  [% INCLUDE blah %] <- directive ends here
       #  foo                <- this gets printed
     %]
-
-* Allow { and } as block delimiters, replacing for the ugly ';' and
-  big, chunky [% END %] approach.
-
-  e.g. something like:
-
-    [% FOREACH a = [ 1 2 3 ] %]
-       [% IF b == a %]
-	  [% INCLUDE foo %]
-       [% ELSE %]
-	  [% INCLUDE bar %]
-       [% END %]
-    [% END %]
-
-   could be written as:
-
-    [%	FOREACH a = [ 1 2 3 ] {
-	    IF b == a {
-		INCLUDE foo
-	    }
-	    ELSE {
-		INCLUDE bar
-	    }
-	}
-    %]
-
-* Ability to set different parser options for BLOCK definitions, etc.
-
-    [% BLOCK header
-         eval_perl = 0
-         pre_chomp = 1
-    %]
-       ...
-    [% END %]
-
-  Anonymous BLOCK can then be used to set a parser scope
-
-    [% BLOCK trim=1 %]
-       ...
-    [% END %]
-
-    [% BLOCK trim=0 %]
-       ...
-    [% END %]
-
-  And/or set different tag styles, etc.
-
-    [% BLOCK tags='star' %]
-       [* INCLUDE this_is_a_directive *]
-       [% INCLUDE this_is_not %]   
-    [* END *]
-
-    [% INCLUDE back_to_normal %]
-
-  This is likely to be a TT3 feature and I've already got the basic
-  parser for this up and running.  It might get back-pactched into 
-  version 2, otherwise you might have to wait for the first alpha 
-  release of verion 3.
 
 * Craig Barratt reports the following:
 
@@ -332,25 +227,15 @@
 * We need a way to easily enable/disable certain plugins.  This should
   be addressed by facility provision.  Probably something for v3.
 
-* The Text::Autoformat module has some problems with versions of Perl
-  prior to 5.6.0 when using a locale which has a decimal separator
-  other than '.' (e.g. Swedish, which uses ',').  Damian has been made
-  aware of the problem (and I note he now has a new version out which
-  I need to check).  For now, the Makefile.PL issues a warning but
-  continues regardless.
-
 * The Template::Plugin DBI iterator first/last() methods don't behave 
   the same as list first/last().  Randal also reports that get_all()
-  doesn't work as it should - may be a conflict in code/docs?
+  doesn't work as it should - may be a conflict in code/docs?  Again,
+  this is a problem to solve in TT3.
 
 * PLUGINS could accept a reference to an object which is used as a 
   singleton factory for a plugin.  (NOTE: 2.01 includes PLUGIN_FACTORY
   to implement this, but currently undocumented because it's likely to
   change).
-
-* Add Leo & Leon's Page plugin, or try to find some way of implementing
-  it in terms of the Table plugin.  I think the jury is still out on the
-  matter of whether it counts as duplicated functionality.
 
 * A more general solution for XML (e.g. DOM, XPath, etc) would be for
   TT to support a PerlSAX handler which generates the appropriate
@@ -414,6 +299,11 @@ General thoughts:
 # Splash!
 #------------------------------------------------------------------------
 
+The Splash! library will be extracted into a separate distribution at
+some point (probably when TT3 is released, possibly before).  At that
+point it will deprecated (read: not supported by me any more) in favour
+of something better.
+
 The current implementation is a fairly ugly hack to get something up
 and running that's good enough to use.  It's mainly template driven
 and doesn't scale very well, particularly with global variables
@@ -464,266 +354,3 @@ being generated.  These include:
   a chance to fix a couple of minor bugs relating to '/' vs '\' file
   separators.
 
-
-#------------------------------------------------------------------------
-# Facilities
-#------------------------------------------------------------------------
-
-Core facilities currently implemented by Template::Context should be
-moved out into separate facilities.  These currently fall into the
-categories of things like stash, view, plugins, filters, parser and
-maybe some others.  (NOTE: this might tie in very closely with Camelot
-and the resource/presenter/actor breakdown, aka model/view/controller).
-
-* 'view' would handle template fetching and processing.  It is the view
-  that talks to a provider, possibly adding special prefixes, suffixes,
-  doing default templates, special dispatch logic, etc.
-
-* 'stash' is responsible for storing variables, as it currently is.
-
-* 'plugins' is responsible for fetching plugins.
-
-* 'filters' is responsible for fetching filters.
-
-* maybe both the above would get bundled into something like 'logic'?
-
-* 'parser' would make parts of the parser accessible
-
-* 'output' could be used to generate output
-
-There would be some facility to install, customise and remove facilities
-to modify TT behaviour as required.  This would allow us to disable 
-certain plugins, or remove the plugin facility altogether, for example.
-Or we could install a new stash facility which generated a different kind
-of code (e.g. less magic, more speed).  Or install a new custom facility
-to do some application or domain specific task.
-
-Facilities should be accessible via the context:
-
-    my $stash = $context->stash();	# currently works
-    my $view  = $context->view();	# not yet
-
-General form:
-
-    my $xyz = $context->facility('xyz');
-
-Multiple form:
-
-    my ($a, $b, $c) = $context->facility(qw[ a b c ]);
-
-This can then be written into generated code pretty much as the stash
-currently is.  The facilities would define the code generators that
-currently clutter up Template::Directives.  They would ensure that the
-facility is scheduled to be requested from the context at the start of
-the sub:
-
-    sub {
-	my $context = shift;
-	my ($stash, $view) = $context->faciity(qw( stash view ));
-
-and then transform the various directives into appropriate callbacks
-into the facility:
-
-	$output .= $stash->get('x');
-	$output .= $view->process('header');
-
-The context becomes a switching centre for the Template Toolkit, with
-most, if not all of its existing functionality moved out to
-facilities.  The context should acquire all facilities at the start of
-a process lifecycle, run the template, and then release them all
-again.  This should all be done according to the process contract
-which specifies which facilities should be installed, which can be
-modified, what can and can't be be loaded, and so on.  The
-contract would also define things like PRE_PROCESS templates, error 
-handling, etc.
-
-Thus the role of Template::Service is to undertake a contract with the
-client and attempt to fulfill it.  A Template::Contract defines the
-terms of the contract and the Template::Context becomes an embodiment
-(runtime instance) of a contract.
-
-The current context would be available as the 'tt2' template variable,
-with facilities available as object methods.  Thus, the following become
-possible:
-
-    [% tt2.stash.get('foo') %]		# [% foo %]
-    [% tt2.view.process('header') %]	# [% PROCESS header %]
-    [% tt2.parser.start_tag %]		# can't do this currently
-
-Directives would be re-written into code like that above.  You can 
-use the 'tt2.facility.whatever' form when directive syntax would 
-otherwise get in the way:
-
-    [% mycode( header = tt2.view.process('my/fancy/header'),
-	       footer = tt2.view.process('your/dull/footer') ) %]
-
-Or to explicitly disambiguate:
-
-    [% tt2.stash.get('foo.size') %]	# object method
-    [% tt2.stash.list.size(foo) %]	# virtual method
-    [% foo.size %]			# lucky dip  :-)
-
-Facility management would itself be a facility.  Thus, to disable runtime
-facility loading, you would simply unload (or not load) the facility
-management facility.
-
-    [% tt2.facility.install(module='my_facility', name='foo') %]
-    [% tt2.foo.bar(123) %]
-
-Note that there are some issues relating to cross-cutting facilities,
-otherwise known as "aspects" (see Aspect Oriented Programming).  For
-example, variable localisation cross cuts views and data management
-(i.e. tt2.view.include('header', title='my title') must first localise
-the stash and delocalise it again afterwards).  It may be appropriate
-to install aspects as separate entities (e.g. 'localisation') which
-can be invoked to apply cross cutting concerns in a generic way.
-Perhaps aspects are implemented as their own facility?
-
-    [% tt2.aspect.localise %] ... [% tt2.aspect.delocalise %]
-or
-    [% aspect = tt2.aspect.localise %]   # cloned & specialised context
-    [% aspect.view.process('header', title='my title') %]
-or
-    ...
-
-Another example would be debugging:
-
-    [% tt2dbg = tt2.aspect.debug(...params...) %]
-    [% tt2dbg.view.process('header') %]
-or:
-    [% tt2 = tt2.aspect.debug(...) %]
-	...
-    [% tt2 = tt2.release %]
-
-
-#------------------------------------------------------------------------
-# Output
-#------------------------------------------------------------------------
-
-It should be possible to stack output buffers.  In other words, you 
-stop writing to the current output buffer and open a new buffer and
-start writing to that.  The final output is simply the concatenation
-of all output buffers.  
-
-The clever part of all this is that is should be possible to keep a
-handle on an earlier buffer and go back and append to it at some point 
-in the future.  A typical use is for generating tables of contents at
-the start of a document when you don't know in advance what the document
-contains.  Simply push a new output buffer at the point of the TOC, 
-generate the rest of the document (keeping track of all the section 
-titles, etc) and at the end of the document, go back and generate the 
-TOC onto the end of the first buffer.
-
-Haven't decided on any syntax yet, but it will almost certainly be 
-implemented as a facility.  At the lowest level, something like 
-this perhaps:
-
-    [% INCLUDE header %]	  # write content to first buffer
-
-    [% toc = tt2.output.push %]   # save current buffer as toc
-
-    Blah blah blah		  # write content to second buffer
-
-    [% INCLUDE footer %] 
-
-    [% tt2.output.buffer = toc %] # re-instate first buffer
-
-    This is the TOC		  # append to first buffer
-
-The output stack would look something like this:
-
-    +-----------------+
-    | <header>        |
-    | This is the TOC |
-    +-----------------+
-             |
-             V
-    +-----------------+
-    | Blah blah blah  |
-    | <footer>        |
-    +-----------------+
-
-Which to the end user, would silently be concatenated into:
-
-    <header>
-    This is the TOC
-    Blah blah blah
-    <footer>
-
-Another use is to ensure dependencies on other templates get resolved.
-For example, many of the PostScript library templates rely on other
-templates.  At present, each template sets a global variable to
-say "I've been loaded" while also inspecting these variables for any
-templates that it relies on, loading them via INCLUDE/PROCESS if not
-set.  e.g. ps/cross:
-
-    [%  # this works, but it's a bit clunky 
-        DEFAULT radius = '5 mm';
-        PROCESS ps/mm UNLESS global.ps.loaded.mm;
-        global.ps.loaded.cross = 1;
-    -%]
-    /cross {
-	...
-    }
-
-Better would be to have each template simply activate the flags for
-those templates that it relies on.  The header file pushes a new output
-buffer and the footer file goes back to the header buffer and INCLUDEs
-the dependant templates.  
-
-    [% PROCESS ps/header + ps/complex %]
-
-    10 mm 10 mm complex
-
-    [% PROCESS ps/footer %]
-
-ps/complex:
-
-    [% global.ps.require.simple = 1 %]
-    /complex {
-	...
-	simple
-	...
-    }
-
-ps/simple:
-
-    [% global.ps.require.mm = 1 %]
-    /simple {
-	...
-        31 mm 41 mm moveto 
-        ...
-    }
-
-ps/header:
-
-    %%!PS-Adobe-3.0
-    ...
-    %%EndComments
-
-    [% global.ps.header = tt2.output.push %]
-
-ps/footer:
-
-    [%  FOREACH file = ['mm','simple',...];
-	    INCLUDE $file IF global.ps.require.$file;
-	END;
-    %]
-
-Ultimately, the whole ps library would become a facility.  The 
-acquire() method (called by the Template::Service to acquire the 
-facility at the start of processing a template) would do the 'header'
-part (i.e. push the output buffer), and the release() method (called
-at the tail end to release the facility) would do the dependency 
-checks.  The dependency registrations would be facility features, 
-e.g.
-
-gs/complex:
-
-    [% tt2.ps.require.mm = 1 %]		    # either
-    [% tt2.ps.require('mm', 'simple')  %]   # or
-
-
-
-
-------------------------------------------------------------------------

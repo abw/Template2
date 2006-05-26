@@ -426,21 +426,21 @@ remaining items.  These are then available via the usual Table interface.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
 
 =head1 VERSION
 
-2.66, distributed as part of the
-Template Toolkit version 2.15, released on 30 January 2006.
+2.68, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2004 Andy Wardley.  All Rights Reserved.
+  Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 
 This module is free software; you can redistribute it and/or

@@ -435,7 +435,7 @@ sub _fetch {
     if (defined $size && ! $size) {
         # caching disabled so load and compile but don't cache
         if ($compiled && -f $compiled 
-            && $self->_mtime($name) <= (stat($compiled))[9]) {
+            && ! $self->_modified($name, (stat(_))[9])) {
             $data = $self->_load_compiled($compiled);
             $error = $self->error() unless $data;
         }
@@ -771,7 +771,7 @@ sub _store {
     my ($slot, $head);
 
     # check the modification time
-    my $load = $self->_mtime($name);
+    my $load = $self->_modified($name);
 
     # extract the compiled template from the data hash
     $data = $data->{ data };
@@ -917,10 +917,23 @@ sub _compile {
 }
 
 
-sub _mtime {
-    my ($self, $name) = @_;
-    my $load = (stat($name))[9];
-    return $load;
+#------------------------------------------------------------------------
+# _modified($name)        
+# _modified($name, $time) 
+#
+# When called with a single argument, it returns the modification time 
+# of the named template.  When called with a second argument it returns 
+# true if $name has been modified since $time.
+#------------------------------------------------------------------------
+
+sub _modified {
+    my ($self, $name, $time) = @_;
+    my $load = (stat($name))[9] 
+        || return $time ? 1 : 0;
+
+    return $time 
+         ? $load > $time 
+         : $load;
 }
 
 #------------------------------------------------------------------------
@@ -1487,17 +1500,17 @@ reporting as much.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://wardley.org/|http://wardley.org/>
 
 
 
 
 =head1 VERSION
 
-2.87, distributed as part of the
-Template Toolkit version 2.14a, released on 02 February 2006.
+2.88, distributed as part of the
+Template Toolkit version 2.15, released on 26 May 2006.
 
 =head1 COPYRIGHT
 

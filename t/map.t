@@ -29,7 +29,7 @@ use Template::Map;
 #$Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 1;
 #$Template::Directive::PRETTY = 1;
-$Template::Test::PRESERVE = 1;
+#$Template::Test::PRESERVE = 1;
 
 #------------------------------------------------------------------------
 package Some::Kind::Of::Noodle;

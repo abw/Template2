@@ -81,20 +81,23 @@ my $parser = $factory->parser(POST_CHOMP => 1)
     || die $factory->error();
 ok( $parser );
 
-my $provinc = $factory->provider(INCLUDE_PATH => $dir, 
-				 PARSER => $parser,
-				 TOLERANT => 1)
-    || die $factory->error();
+my $provinc = $factory->provider(
+    INCLUDE_PATH => $dir, 
+    PARSER => $parser,
+    TOLERANT => 1
+) || die $factory->error();
 ok( $provinc );
 
-my $provabs = $factory->provider({ ABSOLUTE => 1, 
-				   PARSER => $parser, })
-    || die $factory->error();
+my $provabs = $factory->provider({ 
+    ABSOLUTE => 1, 
+    PARSER => $parser, 
+}) || die $factory->error();
 ok( $provabs );
 
-my $provrel = Template::Provider->new({ RELATIVE => 1, 
-					PARSER => $parser, })
-    || die $Template::Provider::ERROR;
+my $provrel = Template::Provider->new({ 
+    RELATIVE => 1, 
+    PARSER => $parser, 
+}) || die $Template::Provider::ERROR;
 ok( $provrel );
 
 ok( $provinc->{ PARSER } == $provabs->{ PARSER } );
@@ -211,8 +214,13 @@ my $ttd3 = Template->new({
 ok( $ttd3, 'dynamic path (bad) template object created' );
 
 
-my $uselist = [ ttinc => $ttinc, ttabs => $ttabs, ttrel => $ttrel,
-		ttd1 => $ttd1, ttd2 => $ttd2, ttdbad => $ttd3 ];
+my $uselist = [ 
+    ttinc  => $ttinc, 
+    ttabs  => $ttabs, 
+    ttrel  => $ttrel,
+	ttd1   => $ttd1, 
+    ttd2   => $ttd2, 
+    ttdbad => $ttd3 ];
 
 test_expect(\*DATA, $uselist, $vars);
 
