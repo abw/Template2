@@ -356,7 +356,7 @@
 	<!-- Template::Stash::Context -->
 	<page id="Stash_XS" 
 	      name="Template::Stash::XS"
-	      about="Experimetal high-speed stash written in XS"
+	      about="High-speed variable stash written in C"
 	      module="1"
 	      nofoot="1"
 	      seealso="Template::Stash"/>
@@ -367,6 +367,13 @@
 	      about="Module for automating TT2 test scripts"
 	      module="1"
 	      seealso="Template"/>
+
+	<!-- Template::Toolkit -->
+	<page id="Toolkit" 
+	      name="Template::Toolkit"
+	      about="Template processing system"
+          standalone="1"
+	      seealso="Template, Template::Manual"/>
 
 	<!-- Template::Plugin::Autoformat -->
 	<page id="Plugin_Autoformat" 
