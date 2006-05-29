@@ -49,27 +49,25 @@ sub new {
 #    $class->error('');		# always clear package $ERROR var?
 
     {	no strict qw( refs );
-	$argnames = \@{"$class\::BASEARGS"} || [ ];
+        $argnames = \@{"$class\::BASEARGS"} || [ ];
     }
 
     # shift off all mandatory args, returning error if undefined or null
     foreach $arg (@$argnames) {
-	return $class->error("no $arg specified")
-	    unless ($cfg = shift);
-	push(@args, $cfg);
+        return $class->error("no $arg specified")
+            unless ($cfg = shift);
+        push(@args, $cfg);
     }
 
     # fold all remaining args into a hash, or use provided hash ref
-#    local $" = ', ';
-#    print STDERR "args: [@_]\n";
     $cfg  = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
 
     my $self = bless {
-	map { ($_ => shift @args) } @$argnames,
-	_ERROR  => '',
+        map { ($_ => shift @args) } @$argnames,
+        _ERROR  => '',
         DEBUG   => 0,
     }, $class;
-
+    
     return $self->_init($cfg) ? $self : $class->error($self->error);
 }
 
@@ -90,15 +88,15 @@ sub error {
     my $errvar;
 
     { 
-	no strict qw( refs );
-	$errvar = ref $self ? \$self->{ _ERROR } : \${"$self\::ERROR"};
+        no strict qw( refs );
+        $errvar = ref $self ? \$self->{ _ERROR } : \${"$self\::ERROR"};
     }
     if (@_) {
-	$$errvar = ref($_[0]) ? shift : join('', @_);
-	return undef;
+        $$errvar = ref($_[0]) ? shift : join('', @_);
+        return undef;
     }
     else {
-	return $$errvar;
+        return $$errvar;
     }
 }
 
@@ -129,9 +127,9 @@ sub debug {
     my ($pkg, $file, $line) = caller();
 
     unless ($msg =~ /\n$/) {
-	$msg .= ($self->{ DEBUG } & Template::Constants::DEBUG_CALLER)
-		 ? " at $file line $line\n"
-		 : "\n";
+        $msg .= ($self->{ DEBUG } & Template::Constants::DEBUG_CALLER)
+            ? " at $file line $line\n"
+            : "\n";
     }
 
     print STDERR "[$pkg] $msg";
