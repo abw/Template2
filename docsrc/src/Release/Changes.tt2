@@ -24,6 +24,20 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.16 - 
+#------------------------------------------------------------------------
+
+* Removed the latex filter from Template::Filters and related config
+  variables from Template::Config
+
+* Changed the t/fileline.t test to remove the line number from what Perl
+  reports as "(eval $line)".  It appears to get the $line wrong on 
+  FreeBSD, although the correct line number is reported following that
+  so the tests still do the right thing.  Thanks to Anton Berezin for 
+  reporting the problem.
+
+
+#------------------------------------------------------------------------
 # Version 2.15 - 26th May 2006
 #------------------------------------------------------------------------
 
