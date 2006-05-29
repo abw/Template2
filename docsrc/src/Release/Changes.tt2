@@ -36,6 +36,8 @@
   so the tests still do the right thing.  Thanks to Anton Berezin for 
   reporting the problem.
 
+* Changes the t/compile3.t test to do something similar.
+
 
 #------------------------------------------------------------------------
 # Version 2.15 - 26th May 2006
