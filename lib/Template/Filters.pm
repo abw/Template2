@@ -6,34 +6,30 @@
 #   Defines filter plugins as used by the FILTER directive.
 #
 # AUTHORS
-#   Andy Wardley <abw@kfs.org>, with a number of filters contributed
+#   Andy Wardley <abw@wardley.org>, with a number of filters contributed
 #   by Leslie Michael Orchard <deus_x@nijacode.com>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
 package Template::Filters;
 
-require 5.004;
-
 use strict;
 use warnings;
 use locale;
-use base qw( Template::Base );
-use vars qw( $VERSION $DEBUG $FILTERS $URI_ESCAPES $PLUGIN_FILTER );
+use base 'Template::Base'
 use Template::Constants;
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 
 #------------------------------------------------------------------------
@@ -46,7 +42,7 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 # for every filter request for that name.
 #------------------------------------------------------------------------
 
-$FILTERS = {
+our $FILTERS = {
     # static filters 
     'html'            => \&html_filter,
     'html_para'       => \&html_paragraph,
@@ -79,11 +75,10 @@ $FILTERS = {
     'redirect'    => [ \&redirect_filter_factory,    1 ],
     'file'        => [ \&redirect_filter_factory,    1 ],  # alias
     'stdout'      => [ \&stdout_filter_factory,      1 ],
-    'latex'       => [ \&latex_filter_factory,       1 ],
 };
 
 # name of module implementing plugin filters
-$PLUGIN_FILTER = 'Template::Plugin::Filter';
+our $PLUGIN_FILTER = 'Template::Plugin::Filter';
 
 
 #========================================================================
@@ -589,159 +584,6 @@ sub stdout_filter_factory {
     }
 }
 
-
-#------------------------------------------------------------------------
-# latex_filter_factory($context, $outputType)   [% FILTER latex(outputType) %]
-#
-# Return a filter sub that converts a (hopefully) complete LaTeX source
-# file to either "ps", "dvi", or "pdf".  Output type should be "ps", "dvi"
-# or "pdf" (pdf is default).
-#
-# Creates a temporary directory below File::Spec->tmpdir() (often /tmp)
-# and writes the text into doc.tex. It then runs either pdflatex or
-# latex and optionally dvips. Based on the exit status either returns
-# the entire doc.(pdf|ps|dvi) output or throws an error with a summary
-# of the error messages from doc.log.
-#
-# Written by Craig Barratt, Apr 28 2001.
-# Win32 additions by Richard Tietjen.
-#------------------------------------------------------------------------
-use File::Path;
-use File::Spec;
-use Cwd;
-
-sub latex_filter_factory
-{
-    my($context, $output) = @_;
-
-    $output = lc($output);
-    my $fName = "latex";
-    my($LaTeXPath, $PdfLaTeXPath, $DviPSPath)
-                        = @{Template::Config->latexpaths()};
-    if ( $output eq "ps" || $output eq "dvi" ) {
-        $context->throw($fName,
-                "latex not installed (see Template::Config::LATEX_PATH)")
-                                if ( $LaTeXPath eq "" );
-    } else {
-        $output = "pdf";
-        $LaTeXPath = $PdfLaTeXPath;
-        $context->throw($fName,
-                "pdflatex not installed (see Template::Config::PDFLATEX_PATH)")
-                                if ( $LaTeXPath eq "" );
-    }
-    if ( $output eq "ps" && $DviPSPath eq "" ) {
-        $context->throw($fName,
-                "dvips not installed (see Template::Config::DVIPS_PATH)");
-    }
-    if ( $^O !~ /^(MacOS|os2|VMS)$/i ) {
-        return sub {
-            local(*FH);
-            my $text = shift;
-            my $tmpRootDir = File::Spec->tmpdir();
-            my $cnt = 0;
-            my($tmpDir, $fileName, $devnull);
-            my $texDoc = 'doc';
-
-            do {
-                $tmpDir = File::Spec->catdir($tmpRootDir,
-                                             "tt2latex$$" . "_$cnt");
-                $cnt++;
-            } while ( -e $tmpDir );
-            mkpath($tmpDir, 0, 0700);
-            $context->throw($fName, "can't create temp dir $tmpDir")
-                    if ( !-d $tmpDir );
-            $fileName = File::Spec->catfile($tmpDir, "$texDoc.tex");
-            $devnull  = File::Spec->devnull();
-            if ( !open(FH, ">$fileName") ) {
-                rmtree($tmpDir);
-                $context->throw($fName, "can't open $fileName for output");
-            }
-            print(FH $text);
-            close(FH);
-
-            # latex must run in tmpDir directory
-            my $currDir = cwd();
-            if ( !chdir($tmpDir) ) {
-                rmtree($tmpDir);
-                $context->throw($fName, "can't chdir $tmpDir");
-            }
-            #
-            # We don't need to quote the backslashes on windows, but we
-            # do on other OSs
-            #
-            my $LaTeX_arg = "\\nonstopmode\\input{$texDoc}";
-            $LaTeX_arg = "'$LaTeX_arg'" if ( $^O ne 'MSWin32' );
-            if ( system("$LaTeXPath $LaTeX_arg"
-                   . " 1>$devnull 2>$devnull 0<$devnull") ) {
-                my $texErrs = "";
-                $fileName = File::Spec->catfile($tmpDir, "$texDoc.log");
-                if ( open(FH, "<$fileName") ) {
-                    my $state = 0;
-                    #
-                    # Try to extract just the interesting errors from
-                    # the verbose log file
-                    #
-                    while ( <FH> ) {
-                        #
-                        # TeX errors seems to start with a "!" at the
-                        # start of the line, and are followed several
-                        # lines later by a line designator of the
-                        # form "l.nnn" where nnn is the line number.
-                        # We make sure we pick up every /^!/ line, and
-                        # the first /^l.\d/ line after each /^!/ line.
-                        #
-                        if ( /^(!.*)/ ) {
-                            $texErrs .= $1 . "\n";
-                            $state = 1;
-                        }
-                        if ( $state == 1 && /^(l\.\d.*)/ ) {
-                            $texErrs .= $1 . "\n";
-                            $state = 0;
-                        }
-                    }
-                    close(FH);
-                } else {
-                    $texErrs = "Unable to open $fileName\n";
-                }
-                my $ok = chdir($currDir);
-                rmtree($tmpDir);
-                $context->throw($fName, "can't chdir $currDir") if ( !$ok );
-                $context->throw($fName, "latex exited with errors:\n$texErrs");
-            }
-            if ( $output eq "ps" ) {
-                $fileName = File::Spec->catfile($tmpDir, "$texDoc.dvi");
-                if ( system("$DviPSPath $texDoc -o"
-                       . " 1>$devnull 2>$devnull 0<$devnull") ) {
-                    my $ok = chdir($currDir);
-                    rmtree($tmpDir);
-                    $context->throw($fName, "can't chdir $currDir") if ( !$ok );
-                    $context->throw($fName, "can't run $DviPSPath $fileName");
-                }
-            }
-            if ( !chdir($currDir) ) {
-                rmtree($tmpDir);
-                $context->throw($fName, "can't chdir $currDir");
-            }
-
-            my $retStr;
-            $fileName = File::Spec->catfile($tmpDir, "$texDoc.$output");
-            if ( open(FH, $fileName) ) {
-                local $/ = undef;       # slurp file in one go
-                binmode(FH);
-                $retStr = <FH>;
-                close(FH);
-            } else {
-                rmtree($tmpDir);
-                $context->throw($fName, "Can't open output file $fileName");
-            }
-            rmtree($tmpDir);
-            return $retStr;
-        }
-    } else {
-        $context->throw("$fName not yet supported on $^O OS."
-                      . "  Please contribute code!!");
-    }
-}
 
 1;
 

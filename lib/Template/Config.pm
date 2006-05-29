@@ -48,11 +48,6 @@ $CONSTANTS = 'Template::Namespace::Constants';
 # the following is set at installation time by the Makefile.PL 
 $INSTDIR  = '';
 
-# LaTeX executable paths set at installation time by the Makefile.PL
-# Empty strings cause the latex(pdf|dvi|ps) filters to throw an error.
-$LATEX_PATH    = '';
-$PDFLATEX_PATH = '';
-$DVIPS_PATH    = '';
 
 #========================================================================
 #                       --- CLASS METHODS ---
@@ -281,18 +276,6 @@ sub instdir {
     return $inst;
 }
 
-#------------------------------------------------------------------------
-# latexpaths()
-#
-# Returns a reference to a three element array:
-#    [latex_path,  pdf2latex_path, dvips_path]
-# These values are determined by Makefile.PL at installation time
-# and are used by the latex(pdf|dvi|ps) filters.
-#------------------------------------------------------------------------
-
-sub latexpaths {
-    return [$LATEX_PATH, $PDFLATEX_PATH, $DVIPS_PATH];
-}
 
 #========================================================================
 # This should probably be moved somewhere else in the long term, but for
