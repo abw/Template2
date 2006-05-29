@@ -24,13 +24,11 @@
  
 package Template::Base;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION );
+use warnings;
 use Template::Constants;
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 
 #------------------------------------------------------------------------
