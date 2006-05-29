@@ -71,7 +71,25 @@ append_file("\n");
 # define 'bust_it' to append a lone "[% TRY %]" onto the end of the 
 # source file to cause re-compilation to fail
 my $replace = {
-    bust_it => sub { append_file('[% TRY %]') },
+    bust_it   => sub { append_file('[% TRY %]') },
+    near_line => sub {
+        my ($warning, $n) = @_;
+        if ($warning =~ s/line (\d+)/line ${n}ish/) {
+            my $diff = abs($1 - $n);
+            if ($diff < 4) {
+                # That's close enough for rock'n'roll.  The line
+                # number reported appears to vary from one version of
+                # Perl to another
+                return $warning;
+            }
+            else {
+                return $warning . " (where 'ish' means $diff!)";
+            }
+        }
+        else {
+            return "no idea what line number that is\n";
+        }
+    }
 };
 
 test_expect(\*DATA, $ttcfg, $replace );
@@ -106,9 +124,6 @@ This is the footer, author: albert, version: emc2
 -- test --
 [%# we want to break 'compile' to check that errors get reported -%]
 [% CALL bust_it -%]
-[% TRY; INCLUDE complex; CATCH; "$error"; END %]
+[% TRY; INCLUDE complex; CATCH; near_line("$error", 18); END %]
 -- expect --
-file error - parse error - complex line 18: unexpected end of input
-
-
-
+file error - parse error - complex line 18ish: unexpected end of input
