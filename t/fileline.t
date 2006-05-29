@@ -37,7 +37,12 @@ my $vars = {
     warning => sub { return $warning },
     file => sub {
         $warning =~ /at (.*?) line/;
-        return $1;
+        my $file = $1;
+        # Perl appears to report different (eval $line) line numbers 
+        # on FreeBSD, but it's not important to the success or failure
+        # of the test, so we delete the line number
+        $file =~ s/eval\s+\d+/eval/;
+        return $file;
     },
     line => sub {
         $warning =~ /line (\d*)/;
@@ -91,7 +96,7 @@ warn: [% warn %]
 -- expect --
 Hello
 World
-file: (eval 10)
+file: (eval)
 line: 10
 warn: Argument "" isn't numeric in addition (+)
 
