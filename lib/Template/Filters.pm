@@ -29,7 +29,7 @@ use locale;
 use base 'Template::Base';
 use Template::Constants;
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.85;
 
 
 #------------------------------------------------------------------------
@@ -272,8 +272,18 @@ sub uri_filter {
     $URI_ESCAPES ||= {
         map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
     };
+
+    if ($] < 5.008) {
+        $text =~ s/([^\0-\x7F])/do { 
+            my $o = ord($1); 
+            sprintf("%c%c", 0xc0 | ($o >> 6), 0x80 | ($o & 0x3f));
+        }/ge;
+    }
+    else {
+        utf8::encode($text);
+    }
     
-    $text =~ s/([^A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/g;
+    $text =~ s/([^A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/eg;
     $text;
 }
 
@@ -547,6 +557,9 @@ sub redirect_filter_factory {
     return (undef, Template::Exception->new('redirect', 
                                             'OUTPUT_PATH is not set'))
         unless $outpath;
+
+    $context->throw('redirect', "relative filenames are not supported: $file")
+        if $file =~ m{(^|/)\.\./};
 
     $options = { binmode => $options } unless ref $options;
 
@@ -988,12 +1001,11 @@ output:
 
     my%20file.html
 
-Note that URI escaping isn't always enough when generating hyperlinks in
-an HTML document.  The C<&> character, for example, is valid in a URI and
-will not be escaped by the URI filter.  In this case you should also filter
-the text through the 'html' filter.
-
-    <a href="[% filename | uri | html %]">click here</a>
+Note that as of TT version 2.16, the uri filter now correctly encodes
+all reserved characters.  This includes C<&>, C<@>, C</>, C<;>, C<:>,
+C<=>, C<+>, C<?> and C<$> which were not escaped (incorrectly) by the
+uri filter in versions 2.15 and earlier.  See RFC 2396 for further
+details.
 
 =head2 indent(pad)
 
@@ -1222,8 +1234,8 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.83, distributed as part of the
-Template Toolkit version 2.15a, released on 29 May 2006.
+2.85, distributed as part of the
+Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT
 
