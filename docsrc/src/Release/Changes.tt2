@@ -64,7 +64,10 @@
 
 * Fixed a bug in the Template::Provider _load() method to check that 
   $data is a hash ref before trying to mess with its innards.  Thanks
-  
+  to barbie@cpan.org for reporting the problem.
+
+  http://rt.cpan.org/Ticket/Display.html?id=18653
+
 
 #------------------------------------------------------------------------
 # Version 2.15a - 29th May 2006                   ## DEVELOPER RELEASE ##
