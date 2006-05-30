@@ -8,35 +8,32 @@
 #   ERROR recovery.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 # 
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
 package Template::Service;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION $DEBUG $ERROR );
-use base qw( Template::Base );
-use Template::Base;
+use warnings;
+use base 'Template::Base'
 use Template::Config;
 use Template::Exception;
 use Template::Constants;
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG   = 0 unless defined $DEBUG;
+our $VERSION = 2.80;
+our $DEBUG   = 0 unless defined $DEBUG;
+our $ERROR   = '';
 
 
 #========================================================================
@@ -204,7 +201,7 @@ sub _recover {
     # point... unless a module like CGI::Carp messes around with the 
     # DIE handler. 
     return undef
-	unless (ref $$error);
+        unless UNIVERSAL::isa($$error, 'Template::Exception');
 
     # a 'stop' exception is thrown by [% STOP %] - we return the output
     # buffer stored in the exception object
@@ -749,8 +746,8 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.88, distributed as part of the
-Template Toolkit version 2.15, released on 26 May 2006.
+2.89, distributed as part of the
+Template Toolkit version 2.15a, released on 29 May 2006.
 
 =head1 COPYRIGHT
 
