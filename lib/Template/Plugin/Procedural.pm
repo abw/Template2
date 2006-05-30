@@ -3,36 +3,31 @@
 # Template::Plugin::Procedural
 #
 # DESCRIPTION
-#
-# A Template Plugin to provide a Template Interface to Data::Dumper
+#   A Template Plugin to provide a Template Interface to Data::Dumper
 #
 # AUTHOR
 #   Mark Fowler <mark@twoshortplanks.com>
 #
 # COPYRIGHT
-#
 #   Copyright (C) 2002 Mark Fowler.  All Rights Reserved
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#------------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 # 
 #==============================================================================
 
 package Template::Plugin::Procedural;
 
-require 5.004;
-
 use strict;
+use warnings;
+use base 'Template::Plugin';
 
-use vars qw( $VERSION $DEBUG $AUTOLOAD );
-use base qw( Template::Plugin );
-
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG   = 0 unless defined $DEBUG;
+our $VERSION = 1.17;
+our $DEBUG   = 0 unless defined $DEBUG;
+our $AUTOLOAD;
 
 #------------------------------------------------------------------------
 # load
@@ -144,7 +139,7 @@ L<http://www.twoshortplanks.com|http://www.twoshortplanks.com>
 
 =head1 VERSION
 
-1.15, distributed as part of the
+1.17, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

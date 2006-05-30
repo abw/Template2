@@ -16,29 +16,24 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#------------------------------------------------------------------------
+# REVISION
+#   $Id$
 #
-# NOTE: this module is constructed from the parser/Grammar.pm.skel
-# file by running the parser/yc script.  You only need to do this if 
-# you have modified the grammar in the parser/Parser.yp file and need
-# to-recompile it.  See the README in the 'parser' directory for more
-# information (sub-directory of the Template distribution).
-#
-#------------------------------------------------------------------------
-#
-# $Id$
+# IMPORTANT NOTE
+#   This module is constructed from the parser/Grammar.pm.skel file by
+#   running the parser/yc script.  You only need to do this if # you
+#   have modified the grammar in the parser/Parser.yp file and need #
+#   to-recompile it.  See the README in the 'parser' directory for
+#   more information (sub-directory of the Template distribution).
 #
 #========================================================================
 
 package Template::Grammar;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION );
+use warnings;
 
-$VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-
+our $VERSION  = 2.25;
 my (@RESERVED, %CMPOP, $LEXTABLE, $RULES, $STATES);
 my ($factory, $rawstart);
 

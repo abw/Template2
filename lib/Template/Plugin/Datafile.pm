@@ -8,31 +8,27 @@
 #   list object containing hashes representing records in the file.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
 package Template::Plugin::Datafile;
 
-require 5.004;
-
 use strict;
-use vars qw( @ISA $VERSION );
-use base qw( Template::Plugin );
-use Template::Plugin;
+use warnings;
+use base 'Template::Plugin';
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.72;
 
 sub new {
     my ($class, $context, $filename, $params) = @_;
@@ -172,7 +168,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.70, distributed as part of the
+2.72, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

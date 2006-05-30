@@ -28,23 +28,21 @@
 
 package Template::View;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION $DEBUG $AUTOLOAD @BASEARGS $MAP );
-use base qw( Template::Base );
+use warnings;
+use base 'Template::Base';
 
-$VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG    = 0 unless defined $DEBUG;
-@BASEARGS = qw( context );
-$MAP = {
+our $VERSION  = 2.91;
+our $DEBUG    = 0 unless defined $DEBUG;
+our @BASEARGS = qw( context );
+our $AUTOLOAD;
+our $MAP = {
     HASH    => 'hash',
     ARRAY   => 'list',
     TEXT    => 'text',
     default => '',
 };
 
-$DEBUG = 0;    
 
 #------------------------------------------------------------------------
 # _init(\%config)
@@ -728,10 +726,6 @@ TODO
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@kfs.orgE<gt>
-
-=head1 REVISION
-
-$Revision$
 
 =head1 COPYRIGHT
 

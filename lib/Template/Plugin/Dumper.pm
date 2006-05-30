@@ -10,33 +10,28 @@
 #   Simon Matthews <sam@knowledgepool.com>
 #
 # COPYRIGHT
-#
 #   Copyright (C) 2000 Simon Matthews.  All Rights Reserved
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#------------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 # 
 #==============================================================================
 
 package Template::Plugin::Dumper;
 
-require 5.004;
-
 use strict;
-use Template::Plugin;
+use warnings;
+use base 'Template::Plugin';
 use Data::Dumper;
 
-use vars qw( $VERSION $DEBUG @DUMPER_ARGS $AUTOLOAD );
-use base qw( Template::Plugin );
-
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG   = 0 unless defined $DEBUG;
-@DUMPER_ARGS = qw( Indent Pad Varname Purity Useqq Terse Freezer
-                   Toaster Deepcopy Quotekeys Bless Maxdepth );
+our $VERSION = 2.70;
+our $DEBUG   = 0 unless defined $DEBUG;
+our @DUMPER_ARGS = qw( Indent Pad Varname Purity Useqq Terse Freezer
+                       Toaster Deepcopy Quotekeys Bless Maxdepth );
+our $AUTOLOAD;
 
 #==============================================================================
 #                      -----  CLASS METHODS -----
@@ -161,7 +156,7 @@ Simon Matthews E<lt>sam@knowledgepool.comE<gt>
 
 =head1 VERSION
 
-2.68, distributed as part of the
+2.7, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 

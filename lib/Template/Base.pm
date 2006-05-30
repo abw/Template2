@@ -27,7 +27,7 @@ use strict;
 use warnings;
 use Template::Constants;
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.77;
 
 
 #------------------------------------------------------------------------
@@ -283,7 +283,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.75, distributed as part of the
+2.77, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

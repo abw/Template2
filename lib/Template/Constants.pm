@@ -6,7 +6,7 @@
 #   Definition of constants for the Template Toolkit.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
 #   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
@@ -31,7 +31,7 @@ use base 'Exporter';
 use vars qw( @EXPORT_OK %EXPORT_TAGS );
 use vars qw( $DEBUG_OPTIONS @STATUS @ERROR @CHOMP @DEBUG);
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.74;
 
 
 #========================================================================
@@ -265,7 +265,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.72, distributed as part of the
+2.74, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

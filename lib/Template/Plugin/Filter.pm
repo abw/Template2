@@ -8,10 +8,10 @@
 #   FILTER directive.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2001 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2001,2006 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -23,16 +23,12 @@
 
 package Template::Plugin::Filter;
 
-require 5.004;
-
 use strict;
-use Template::Plugin;
+use warnings;
+use base 'Template::Plugin';
 
-use base qw( Template::Plugin );
-use vars qw( $VERSION $DYNAMIC );
-
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DYNAMIC = 0 unless defined $DYNAMIC;
+our $VERSION = 1.36;
+our $DYNAMIC = 0 unless defined $DYNAMIC;
 
 
 sub new {
@@ -410,7 +406,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-1.34, distributed as part of the
+1.36, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

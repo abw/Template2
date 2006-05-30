@@ -7,7 +7,7 @@
 #
 # AUTHORS
 #   Michael Stevens <michael@etla.org>, with some mutilations from 
-#   Andy Wardley <abw@kfs.org>.
+#   Andy Wardley <abw@wardley.org>.
 #
 # COPYRIGHT
 #   This module is free software; you can redistribute it and/or
@@ -20,16 +20,14 @@
 
 package Template::Plugin::Directory;
 
-require 5.004;
-
 use strict;
+use warnings;
 use Cwd;
 use File::Spec;
 use Template::Plugin::File;
-use vars qw( $VERSION );
-use base qw( Template::Plugin::File );
+use base 'Template::Plugin::File';
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.70;
 
 
 #------------------------------------------------------------------------
@@ -394,7 +392,7 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-2.68, distributed as part of the
+2.7, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 

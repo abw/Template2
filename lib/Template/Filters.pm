@@ -273,13 +273,7 @@ sub uri_filter {
         map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
     };
 
-    if ($] < 5.008) {
-        $text =~ s/([^\0-\x7F])/do { 
-            my $o = ord($1); 
-            sprintf("%c%c", 0xc0 | ($o >> 6), 0x80 | ($o & 0x3f));
-        }/ge;
-    }
-    else {
+    if ($] >= 5.008) {
         utf8::encode($text);
     }
     

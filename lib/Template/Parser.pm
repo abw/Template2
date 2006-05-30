@@ -9,7 +9,7 @@
 #   on Francois Desarmenien's Parse::Yapp module.  Kudos to him.
 # 
 # AUTHOR
-#   Andy Wardley <abw@cpan.org>
+#   Andy Wardley <abw@wardley.org>
 #
 # COPYRIGHT
 #   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
@@ -50,7 +50,7 @@ use constant ACCEPT   => 1;
 use constant ERROR    => 2;
 use constant ABORT    => 3;
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.89;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 
@@ -1466,7 +1466,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.87, distributed as part of the
+2.89, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
  

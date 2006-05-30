@@ -6,7 +6,7 @@
 #   Template Toolkit configuration module.
 #
 # AUTHOR
-#   Andy Wardley   <abw@cpan.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
 #   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
@@ -23,13 +23,13 @@ package Template::Config;
 
 use strict;
 use warnings;
-use base qw( Template::Base );
+use base 'Template::Base';
 use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
              $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
              $LATEX_PATH $PDFLATEX_PATH $DVIPS_PATH
              $STASH $SERVICE $CONTEXT $CONSTANTS @PRELOAD );
 
-$VERSION   = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$VERSION   = 2.74;
 $DEBUG     = 0 unless defined $DEBUG;
 $ERROR     = '';
 $CONTEXT   = 'Template::Context';
@@ -421,7 +421,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.72, distributed as part of the
+2.74, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

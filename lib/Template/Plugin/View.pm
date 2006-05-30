@@ -7,10 +7,10 @@
 #   a "Skin".
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2000 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2000-2006 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -22,14 +22,11 @@
 
 package Template::Plugin::View;
 
-require 5.004;
-
 use strict;
-use Template::Plugin;
-use vars qw( $VERSION );
-use base qw( Template::Plugin );
+use warnings;
+use base 'Template::Plugin';
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.68;
 
 use Template::View;
 
@@ -101,7 +98,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.67, distributed as part of the
+2.68, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

@@ -8,7 +8,7 @@
 #   and adaptable parameters.
 #
 # AUTHOR
-#   Andy Wardley   <abw@cpan.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
 #   Copyright (C) 2000-2006 Andy Wardley.  All Rights Reserved.
@@ -27,7 +27,7 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.74;
 our $JOINT   = '&amp;';
 
 
@@ -207,7 +207,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.72, distributed as part of the
+2.74, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

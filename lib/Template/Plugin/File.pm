@@ -29,7 +29,7 @@ use File::Spec;
 use File::Basename;
 use base 'Template::Plugin';
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.71;
 
 our @STAT_KEYS = qw( dev ino mode nlink uid gid rdev size 
                      atime mtime ctime blksize blocks );
@@ -400,7 +400,7 @@ for VIEW support, and made a few other minor tweaks.
 
 =head1 VERSION
 
-2.69, distributed as part of the
+2.71, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 

@@ -22,13 +22,13 @@
 
 package Template::Plugin::Math;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION $AUTOLOAD );
-use base qw( Template::Plugin );
+use warnings;
+use base 'Template::Plugin';
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 1.16;
+our $AUTOLOAD;
+
 
 
 #------------------------------------------------------------------------
@@ -248,7 +248,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-1.14, distributed as part of the
+1.16, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

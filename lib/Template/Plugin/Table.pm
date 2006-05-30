@@ -8,7 +8,7 @@
 #   from which row and column permutations can be fetched.
 #
 # AUTHOR
-#   Andy Wardley   <abw@cpan.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
 #   Copyright (C) 2000-2006 Andy Wardley.  All Rights Reserved.
@@ -27,7 +27,7 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.71;
 our $AUTOLOAD;
 
 
@@ -435,7 +435,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.69, distributed as part of the
+2.71, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

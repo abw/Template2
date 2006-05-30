@@ -7,10 +7,10 @@
 #   on variables in a particular namespace.
 #
 # AUTHOR
-#   Andy Wardley   <abw@andywardley.com>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -24,16 +24,14 @@
 package Template::Namespace::Constants;
 
 use strict;
-use Template::Base;
+use warnings;
+use base 'Template::Base';
 use Template::Config;
 use Template::Directive;
 use Template::Exception;
 
-use base qw( Template::Base );
-use vars qw( $VERSION $DEBUG );
-
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG   = 0 unless defined $DEBUG;
+our $VERSION = 1.27;
+our $DEBUG   = 0 unless defined $DEBUG;
 
 
 sub _init {
@@ -179,7 +177,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-1.25, distributed as part of the
+1.27, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

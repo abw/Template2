@@ -24,7 +24,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.15b -                                 ## DEVELOPER RELEASE ##
+# Version 2.15b - 30th May 2006                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Changed the uri filter to escape all reserved characters as per 
@@ -48,7 +48,9 @@
 
 * Fixed the version number of Template::Stash which had rolled over
   to 2.102 making it appear to predate the 2.86 stash in TT v2.14.
-  Thanks to Randal Schwartz for reporting the problem.
+  Thanks to Randal Schwartz for reporting the problem.  Changed all 
+  version numbers in other modules to be a hard-coded numbers instead
+  of grokking it automagically from the CVS revision.
 
 * Changed the _recover() method of Template::Service to check if the 
   error thrown is a Template::Exception object rather than just a 

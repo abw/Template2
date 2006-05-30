@@ -7,10 +7,10 @@
 #   Toolkit.
 #
 # AUTHOR
-#   Andy Wardley   <abw@andywardley.com>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2002 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -304,7 +304,7 @@ of items instead of a hash array reference.  These are automatically
 folded into a hash array by the constructor.
 
     my $tt = Template->new(INCLUDE_PATH => '/tmp', POST_CHOMP => 1)
-    	|| die $Template::ERROR, "\n";
+	|| die $Template::ERROR, "\n";
 
 =head2 process($template, \%vars, $output, %options)
 
@@ -317,19 +317,19 @@ read.  A reference to a hash array may be passed as the second
 parameter, containing definitions of template variables.
 
     $text = "[% INCLUDE header %]\nHello world!\n[% INCLUDE footer %]";
-    
+
     # filename
     $tt->process('welcome.tt2')
         || die $tt->error(), "\n";
-    
+
     # text reference
     $tt->process(\$text)
         || die $tt->error(), "\n";
-    
+
     # GLOB
     $tt->process(\*DATA)
         || die $tt->error(), "\n";
-    
+
     __END__
     [% INCLUDE header %]
     This is a template defined in the __END__ section which is 
@@ -353,7 +353,7 @@ Examples:
     # output filename
     $tt->process('welcome.tt2', $vars, 'welcome.html')
         || die $tt->error(), "\n";
-    
+
     # reference to output subroutine
     sub myout {
     	my $output = shift;
@@ -361,7 +361,7 @@ Examples:
     }
     $tt->process('welcome.tt2', $vars, \&myout)
         || die $tt->error(), "\n";
-    
+
     # reference to output text string
     my $output = '';
     $tt->process('welcome.tt2', $vars, \$output)
@@ -372,16 +372,17 @@ Examples:
 In an Apache/mod_perl handler:
 
     sub handler {
-        my $req = shift;
-        
+	my $req = shift;
+
         ...
-        
-    	# direct output to Apache::Request via $req->print($output)
-        $tt->process($file, $vars, $req) || do {
-            $req->log_reason($tt->error());
-    	    return SERVER_ERROR;
-        };
-    	return OK;
+
+	# direct output to Apache::Request via $req->print($output)
+	$tt->process($file, $vars, $req) || do {
+	    $req->log_reason($tt->error());
+	    return SERVER_ERROR;
+	};
+
+	return OK;
     }
 
 After the optional third output argument can come an optional
@@ -412,7 +413,7 @@ which should be prefixed to all output locations specified as filenames.
     my $tt = Template->new({
     	OUTPUT      => sub { ... },       # default
 	    OUTPUT_PATH => '/tmp',
-    	...
+	...
     }) || die Template->error(), "\n";
 
     # use default OUTPUT (sub is called)

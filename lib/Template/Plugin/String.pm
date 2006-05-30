@@ -6,10 +6,10 @@
 #   Template Toolkit plugin to implement a basic String object.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2001 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2001-2006 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -21,19 +21,16 @@
 
 package Template::Plugin::String;
 
-require 5.004;
-
 use strict;
-use Template::Plugin;
+use warnings;
+use base 'Template::Plugin';
 use Template::Exception;
 
-use base qw( Template::Plugin );
-use vars qw( $VERSION $ERROR);
 use overload q|""| => "text",
              fallback => 1;
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$ERROR   = '';
+our $VERSION = 2.40;
+our $ERROR   = '';
 
 *centre  = \*center;
 *append  = \*push;
@@ -810,7 +807,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.38, distributed as part of the
+2.4, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

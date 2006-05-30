@@ -71,13 +71,12 @@
 
 package Template::Stash::Context;
 
-require 5.004;
-
 use strict;
+use warnings;
 use Template::Stash;
-use vars qw( $VERSION $DEBUG $ROOT_OPS $SCALAR_OPS $HASH_OPS $LIST_OPS );
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 1.63;
+our $DEBUG   = 0 unless defined $DEBUG;
 
 
 #========================================================================
@@ -88,24 +87,24 @@ $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 # copy virtual methods from those in the regular Template::Stash
 #------------------------------------------------------------------------
 
-$ROOT_OPS = { 
+our $ROOT_OPS = { 
     %$Template::Stash::ROOT_OPS,
     defined $ROOT_OPS ? %$ROOT_OPS : (),
 };
 
-$SCALAR_OPS = { 
+our $SCALAR_OPS = { 
     %$Template::Stash::SCALAR_OPS,
     'array' => sub { return [$_[0]] },
     defined $SCALAR_OPS ? %$SCALAR_OPS : (),
 };
 
-$LIST_OPS = { 
+our $LIST_OPS = { 
     %$Template::Stash::LIST_OPS,
     'array' => sub { return $_[0] },
     defined $LIST_OPS ? %$LIST_OPS : (),
 };
 		    
-$HASH_OPS = { 
+our $HASH_OPS = { 
     %$Template::Stash::HASH_OPS,
     defined $HASH_OPS ? %$HASH_OPS : (),
 };
@@ -765,7 +764,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-1.61, distributed as part of the
+1.63, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

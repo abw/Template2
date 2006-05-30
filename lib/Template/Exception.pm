@@ -16,27 +16,21 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #========================================================================
 
-
 package Template::Exception;
 
-require 5.005;
-
 use strict;
-use vars qw( $VERSION );
-
+use warnings;
 use constant TYPE  => 0;
 use constant INFO  => 1;
 use constant TEXT  => 2;
 use overload q|""| => "as_string", fallback => 1;
 
-
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.69;
 
 
 #------------------------------------------------------------------------
@@ -228,7 +222,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.67, distributed as part of the
+2.69, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

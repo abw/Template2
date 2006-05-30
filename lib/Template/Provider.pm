@@ -48,7 +48,7 @@ use constant LOAD   => 3;
 use constant NEXT   => 4;
 use constant STAT   => 5;
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.91;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 
@@ -1508,7 +1508,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.89, distributed as part of the
+2.91, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

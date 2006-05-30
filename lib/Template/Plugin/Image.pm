@@ -19,19 +19,14 @@
 
 package Template::Plugin::Image;
 
-require 5.004;
-
 use strict;
+use warnings;
+use base 'Template::Plugin';
 use Template::Exception;
-use Template::Plugin;
 use File::Spec;
-#use Image::Info;
-#use Image::Size;
 
-use base qw( Template::Plugin );
-use vars qw( $VERSION $AUTOLOAD );
-
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 1.21;
+our $AUTOLOAD;
 
 BEGIN {
     if (eval { require Image::Info; }) {
@@ -448,7 +443,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-1.19, distributed as part of the
+1.21, distributed as part of the
 Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT

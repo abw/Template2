@@ -27,21 +27,19 @@
 
 package Template::Map;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION $DEBUG $AUTOLOAD $MAP $METHOD );
-use base qw( Template::Base );
+use warnings;
+use base 'Template::Base';
 
-$VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG    = 0 unless defined $DEBUG;
-$MAP = {
+our $VERSION  = 2.30;
+our $DEBUG    = 0 unless defined $DEBUG;
+our $MAP = {
     HASH    => 'hash',
     ARRAY   => 'list',
     TEXT    => 'text',
     default => '',
 };
-$METHOD = 'TT_name';
+our $METHOD = 'TT_name';
 
 #$DEBUG = 1;    
 
