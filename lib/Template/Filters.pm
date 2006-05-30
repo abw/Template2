@@ -26,7 +26,7 @@ package Template::Filters;
 use strict;
 use warnings;
 use locale;
-use base 'Template::Base'
+use base 'Template::Base';
 use Template::Constants;
 
 our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -79,6 +79,7 @@ our $FILTERS = {
 
 # name of module implementing plugin filters
 our $PLUGIN_FILTER = 'Template::Plugin::Filter';
+
 
 
 #========================================================================
@@ -259,23 +260,20 @@ sub _dump {
 # uri_filter()                                           [% FILTER uri %]
 #
 # URI escape a string.  This code is borrowed from Gisle Aas' URI::Escape
-# module.  For something so simple, I can't see any validation in making
-# the user install the URI modules just for this, so we cut and paste.
-#
-# URI::Escape is Copyright 1995-2000 Gisle Aas.
+# module, copyright 1995-2004.  See RFC2396 for details.
 #------------------------------------------------------------------------
+
+# cache of escaped characters
+our $URI_ESCAPES;
 
 sub uri_filter {
     my $text = shift;
 
-    # construct and cache a lookup table for escapes (faster than
-    # doing a sprintf() for every character in every string each 
-    # time)
     $URI_ESCAPES ||= {
         map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
     };
     
-    $text =~ s/([^;\/?:@&=+\$,A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/g;
+    $text =~ s/([^A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/g;
     $text;
 }
 
@@ -1224,8 +1222,8 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.81, distributed as part of the
-Template Toolkit version 2.15, released on 26 May 2006.
+2.83, distributed as part of the
+Template Toolkit version 2.15a, released on 29 May 2006.
 
 =head1 COPYRIGHT
 
