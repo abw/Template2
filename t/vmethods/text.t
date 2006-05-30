@@ -93,7 +93,6 @@ The cat sat on the mat
 [% string.split.join('_') %]
 -- expect --
 The_cat_sat_on_the_mat
--- test --
 
 -- test --
 [% string.split(' ', 3).join('_') %]

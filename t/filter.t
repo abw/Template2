@@ -17,13 +17,13 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template::Filters;
 use Template qw( :status );
 use Template::Parser;
 use Template::Test;
 use Template::Constants qw( :debug );
-$^W = 1;
 
 my $DEBUG = grep(/^--?d(debug)?$/, @ARGV);
 
@@ -61,7 +61,7 @@ package main;
 
 # tie STDERR to a variable
 my $stderr = '';
-tie(*STDERR, "Tie::File2Str", \$stderr);
+#tie(*STDERR, "Tie::File2Str", \$stderr);
 
 my $dir  = -d 't' ? 't/test/tmp' : 'test/tmp';
 my $file = 'xyz';
@@ -76,7 +76,9 @@ my $params = {
     outfile  => $file,
     stderr   => sub { $stderr },
     despace  => bless(\&despace, 'anything'),
+    widetext => "wide:\x{65e5}\x{672c}\x{8a9e}",
 };
+
 my $filters = {
     'nonfilt'    => 'nonsense',
     'microjive'  => \&microjive,
@@ -100,9 +102,14 @@ my $config2 = {
 
 unlink "$dir/$file" if -f "$dir/$file";
 
-my $tt1 = Template->new($config1);
-my $tt2 = Template->new($config2);
+my $tt1 = Template->new($config1)
+    || die Template->error();
+my $tt2 = Template->new($config2) 
+    || die Template->error();
+
 $tt2->context->define_filter('another', \&another, 1);
+
+tie(*STDERR, "Tie::File2Str", \$stderr);
 
 test_expect(\*DATA, [ default => $tt1, evalperl => $tt2 ], $params);
 
@@ -901,6 +908,11 @@ foo%40bar
 [% "my<file & your>file.html" | uri | html %]
 -- expect --
 my%3Cfile%20%26%20your%3Efile.html
+
+-- test --
+[% widetext | uri %]
+-- expect --
+wide%3A%E6%97%A5%E6%9C%AC%E8%AA%9E
 
 -- test --
 [% 'foobar' | ucfirst %]

@@ -71,7 +71,6 @@ docs/src/Modules/Template/Plugin/Table.html
 docs/src/Modules/Template/Plugin/URL.html
 docs/src/Modules/Template/Plugin/View.html
 docs/src/Modules/Template/Plugin/Wrap.html
-docs/src/Modules/Template/Plugin/XML/Style.html
 docs/src/Modules/Template/Plugins.html
 docs/src/Modules/Template/Provider.html
 docs/src/Modules/Template/Service.html
@@ -407,6 +406,7 @@ lib/Template/Tutorial.pod
 lib/Template/Tutorial/Datafile.pod
 lib/Template/Tutorial/Web.pod
 lib/Template/View.pm
+lib/Template/VMethods.pm
 Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)

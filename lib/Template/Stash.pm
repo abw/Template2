@@ -16,345 +16,46 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
 package Template::Stash;
 
-require 5.004;
-
 use strict;
+use warnings;
+use Template::VMethods;
 
-our $VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+our $VERSION = 2.90;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $PRIVATE = qr/^[_.]/;
 
 
-#========================================================================
-#                    -- PACKAGE VARIABLES AND SUBS --
-#========================================================================
-
 #------------------------------------------------------------------------
-# Definitions of various pseudo-methods.  ROOT_OPS are merged into all
-# new Template::Stash objects, and are thus default global functions.
-# SCALAR_OPS are methods that can be called on a scalar, and ditto 
-# respectively for LIST_OPS and HASH_OPS
+# Virtual Methods
+#
+# If any of $ROOT_OPS, $SCALAR_OPS, $HASH_OPS or $LIST_OPS are already
+# defined then we merge their contents with the default virtual methods
+# define by Template::VMethods.  Otherwise we can directly alias the 
+# corresponding Template::VMethod package vars.
 #------------------------------------------------------------------------
 
-our $ROOT_OPS = {
-    'inc'  => sub { local $^W = 0; my $item = shift; ++$item }, 
-    'dec'  => sub { local $^W = 0; my $item = shift; --$item }, 
-#    import => \&hash_import,
-    defined $ROOT_OPS ? %$ROOT_OPS : (),
-};
+our $ROOT_OPS = defined $ROOT_OPS 
+    ? { %{$Template::VMethods::ROOT_VMETHODS}, %$ROOT_OPS }
+    : $Template::VMethods::ROOT_VMETHODS;
 
-our $SCALAR_OPS = {
-    'item'    => sub {   $_[0] },
-    'list'    => sub { [ $_[0] ] },
-    'hash'    => sub { { value => $_[0] } },
-    'length'  => sub { length $_[0] },
-    'size'    => sub { return 1 },
-    'defined' => sub { return 1 },
-    'match' => sub {
-        my ($str, $search, $global) = @_;
-        return $str unless defined $str and defined $search;
-        my @matches = $global ? ($str =~ /$search/g)
-                              : ($str =~ /$search/);
-        return @matches ? \@matches : '';
-    },
-    'search'  => sub { 
-        my ($str, $pattern) = @_;
-        return $str unless defined $str and defined $pattern;
-        return $str =~ /$pattern/;
-    },
-    'repeat'  => sub { 
-        my ($str, $count) = @_;
-        $str = '' unless defined $str;  
-        return '' unless $count;
-        $count ||= 1;
-        return $str x $count;
-    },
-    'replace' => sub {
-        my ($text, $pattern, $replace, $global) = @_;
-        $text    = '' unless defined $text;
-        $pattern = '' unless defined $pattern;
-        $replace = '' unless defined $replace;
-        $global  = 1  unless defined $global;
+our $SCALAR_OPS = defined $SCALAR_OPS 
+    ? { %{$Template::VMethods::TEXT_VMETHODS}, %$SCALAR_OPS }
+    : $Template::VMethods::TEXT_VMETHODS;
 
-        if ($replace =~ /\$\d+/) {
-            # replacement string may contain backrefs
-            my $expand = sub {
-                my ($chunk, $start, $end) = @_;
-                $chunk =~ s{ \\(\\|\$) | \$ (\d+) }{
-                    $1 ? $1
-                        : ($2 > $#$start || $2 == 0) ? '' 
-                        : substr($text, $start->[$2], $end->[$2] - $start->[$2]);
-                }exg;
-                $chunk;
-            };
-            if ($global) {
-                $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }eg;
-            } 
-            else {
-                $text =~ s{$pattern}{ &$expand($replace, [@-], [@+]) }e;
-            }
-        }
-        else {
-            if ($global) {
-                $text =~ s/$pattern/$replace/g;
-            } 
-            else {
-                $text =~ s/$pattern/$replace/;
-            }
-        }
-        return $text;
-    },
-    'remove'  => sub { 
-        my ($str, $search) = @_;
-        return $str unless defined $str and defined $search;
-        $str =~ s/$search//g;
-        return $str;
-    },
-    'split' => sub {
-        my ($str, $split, $limit) = @_;
-        $str = '' unless defined $str;
+our $HASH_OPS = defined $HASH_OPS 
+    ? { %{$Template::VMethods::HASH_VMETHODS}, %$HASH_OPS }
+    : $Template::VMethods::HASH_VMETHODS;
 
-        # we have to be very careful about spelling out each possible 
-        # combination of arguments because split() is very sensitive
-        # to them, for example C<split(' ', ...)> behaves differently 
-        # to C<$space=' '; split($space, ...)>
-
-        if (defined $limit) {
-            return [ defined $split 
-                     ? split($split, $str, $limit)
-                     : split(' ', $str, $limit) ];
-        }
-        else {
-            return [ defined $split 
-                     ? split($split, $str)
-                     : split(' ', $str) ];
-        }
-    },
-    'chunk' => sub {
-        my ($string, $size) = @_;
-        my @list;
-        $size ||= 1;
-        if ($size < 0) {
-            # sexeger!  It's faster to reverse the string, search
-            # it from the front and then reverse the output than to 
-            # search it from the end, believe it nor not!
-            $string = reverse $string;
-            $size = -$size;
-            unshift(@list, scalar reverse $1) 
-                while ($string =~ /((.{$size})|(.+))/g);
-        }
-        else {
-            push(@list, $1) while ($string =~ /((.{$size})|(.+))/g);
-        }
-        return \@list;
-    },
-    'substr' => sub {
-        my ($text, $offset, $length, $replacement) = @_;
-        $offset ||= 0;
-
-        if(defined $length) {
-            if (defined $replacement) {
-                substr( $text, $offset, $length, $replacement );
-                return $text;
-            }
-            else {
-                return substr( $text, $offset, $length );
-            }
-        }
-        else {
-            return substr( $text, $offset );
-        }
-    },
-
-    defined $SCALAR_OPS ? %$SCALAR_OPS : (),
-};
-
-our $HASH_OPS = {
-    'item'   => sub { 
-        my ($hash, $item) = @_; 
-        $item = '' unless defined $item;
-        return if $PRIVATE && $item =~ /$PRIVATE/;
-        $hash->{ $item };
-    },
-    'hash'   => sub { $_[0] },
-    'size'   => sub { scalar keys %{$_[0]} },
-    'each'   => sub { # this will be changed in TT3 to do what pairs does
-                      [        %{ $_[0] } ] },
-    'keys'   => sub { [ keys   %{ $_[0] } ] },
-    'values' => sub { [ values %{ $_[0] } ] },
-    'items'  => sub { [        %{ $_[0] } ] },
-    'pairs'  => sub { [ map   { { key => $_ , value => $_[0]->{ $_ } } }
-                        sort keys %{ $_[0] } ] },
-    'list'   => sub { 
-        my ($hash, $what) = @_;  
-        $what ||= '';
-        return ($what eq 'keys')   ? [   keys %$hash ]
-            :  ($what eq 'values') ? [ values %$hash ]
-            :  ($what eq 'each')   ? [        %$hash ]
-            :  # for now we do what pairs does but this will be changed 
-               # in TT3 to return [ $hash ] by default
-               [ map { { key => $_ , value => $hash->{ $_ } } }
-                 sort keys %$hash 
-               ];
-    },
-    'exists'  => sub { exists $_[0]->{ $_[1] } },
-    'defined' => sub { 
-        # return the item requested, or 1 if no argument 
-        # to indicate that the hash itself is defined
-        my $hash = shift;
-        return @_ ? defined $hash->{ $_[0] } : 1;
-    },
-    'delete'  => sub { 
-        my $hash = shift; 
-        delete $hash->{ $_ } for @_;
-    },
-    'import'  => \&hash_import,
-    'sort'    => sub {
-        my ($hash) = @_;
-        [ sort { lc $hash->{$a} cmp lc $hash->{$b} } (keys %$hash) ];
-    },
-    'nsort'    => sub {
-        my ($hash) = @_;
-        [ sort { $hash->{$a} <=> $hash->{$b} } (keys %$hash) ];
-    },
-    defined $HASH_OPS ? %$HASH_OPS : (),
-};
-
-our $LIST_OPS = {
-    'item'    => sub { $_[0]->[ $_[1] || 0 ] },
-    'list'    => sub { $_[0] },
-    'hash'    => sub { 
-        my $list = shift;
-        if (@_) {
-            my $n = shift || 0;
-            return { map { ($n++, $_) } @$list }; 
-        }
-        no warnings;
-        return { @$list };
-    },
-    'push'    => sub { my $list = shift; push(@$list, @_); return '' },
-    'pop'     => sub { my $list = shift; pop(@$list) },
-    'unshift' => sub { my $list = shift; unshift(@$list, @_); return '' },
-    'shift'   => sub { my $list = shift; shift(@$list) },
-    'max'     => sub { local $^W = 0; my $list = shift; $#$list; },
-    'size'    => sub { local $^W = 0; my $list = shift; $#$list + 1; },
-    'defined' => sub { 
-        # return the item requested, or 1 if no argument to 
-        # indicate that the hash itself is defined
-        my $list = shift;
-        return @_ ? defined $list->[$_[0]] : 1;
-    },
-    'first'   => sub {
-        my $list = shift;
-        return $list->[0] unless @_;
-        return [ @$list[0..$_[0]-1] ];
-    },
-    'last'    => sub {
-        my $list = shift;
-        return $list->[-1] unless @_;
-        return [ @$list[-$_[0]..-1] ];
-    },
-    'reverse' => sub { my $list = shift; [ reverse @$list ] },
-    'grep'    => sub { 
-        my ($list, $pattern) = @_;
-        $pattern ||= '';
-        return [ grep /$pattern/, @$list ];
-    },
-    'join'    => sub { 
-        my ($list, $joint) = @_; 
-        join(defined $joint ? $joint : ' ', 
-             map { defined $_ ? $_ : '' } @$list) 
-        },
-    'sort'    => sub {
-        $^W = 0;
-        my ($list, $field) = @_;
-        return $list unless @$list > 1;     # no need to sort 1 item lists
-        return [
-            $field                          # Schwartzian Transform 
-            ?  map  { $_->[0] }             # for case insensitivity
-               sort { $a->[1] cmp $b->[1] }
-               map  { [ $_, lc(ref($_) eq 'HASH' 
-                   ? $_->{ $field } : 
-                   UNIVERSAL::can($_, $field)
-                   ? $_->$field() : $_) ] } 
-               @$list 
-            :  map  { $_->[0] }
-               sort { $a->[1] cmp $b->[1] }
-               map  { [ $_, lc $_ ] } 
-               @$list,
-       ];
-   },
-   'nsort'    => sub {
-        my ($list, $field) = @_;
-        return $list unless @$list > 1;     # no need to sort 1 item lists
-        return [ 
-            $field                          # Schwartzian Transform 
-            ?  map  { $_->[0] }             # for case insensitivity
-               sort { $a->[1] <=> $b->[1] }
-               map  { [ $_, lc(ref($_) eq 'HASH' 
-                   ? $_->{ $field } : 
-                   UNIVERSAL::can($_, $field)
-                   ? $_->$field() : $_) ] } 
-               @$list 
-            :  map  { $_->[0] }
-               sort { $a->[1] <=> $b->[1] }
-               map  { [ $_, lc $_ ] } 
-               @$list,
-        ];
-    },
-    'unique'  => sub { my %u; [ grep { ++$u{$_} == 1 } @{$_[0]} ] },
-    'import'  => sub {
-        my $list = shift;
-        push(@$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_);
-        return $list;
-    },
-    'merge'   => sub {
-        my $list = shift;
-        return [ @$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_ ];
-    },
-    'slice' => sub {
-        my ($list, $from, $to) = @_;
-        $from ||= 0;
-        $to = $#$list unless defined $to;
-        return [ @$list[$from..$to] ];
-    },
-    'splice'  => sub {
-        my ($list, $offset, $length, @replace) = @_;
-        if (@replace) {
-            # @replace can contain a list of multiple replace items, or 
-            # be a single reference to a list
-            @replace = @{ $replace[0] }
-            if @replace == 1 && ref $replace[0] eq 'ARRAY';
-            return [ splice @$list, $offset, $length, @replace ];
-        }
-        elsif (defined $length) {
-            return [ splice @$list, $offset, $length ];
-        }
-        elsif (defined $offset) {
-            return [ splice @$list, $offset ];
-        }
-        else {
-            return [ splice(@$list) ];
-        }
-    },
-
-    defined $LIST_OPS ? %$LIST_OPS : (),
-};
-
-sub hash_import { 
-    my ($hash, $imp) = @_;
-    $imp = {} unless ref $imp eq 'HASH';
-    @$hash{ keys %$imp } = values %$imp;
-    return '';
-}
+our $LIST_OPS = defined $LIST_OPS 
+    ? { %{$Template::VMethods::LIST_VMETHODS}, %$LIST_OPS }
+    : $Template::VMethods::LIST_VMETHODS;
 
 
 #------------------------------------------------------------------------
@@ -460,7 +161,7 @@ sub clone {
     }, ref $self;
     
     # perform hash import if defined
-    &{ $HASH_OPS->{ import }}($clone, $import)
+    &{ $HASH_OPS->{ import } }($clone, $import)
         if defined $import;
 
     return $clone;
@@ -1093,8 +794,8 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.102, distributed as part of the
-Template Toolkit version 2.15, released on 26 May 2006.
+2.9, distributed as part of the
+Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT
 

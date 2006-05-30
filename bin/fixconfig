@@ -3,8 +3,8 @@
 # Fixes the lib/Template/Config.pm file to restore the correct
 # (default) values for a distribution release.  Because the 
 # Makefile.PL updates this file, it means that I could send out
-# a "standard" lib/Template/Config.pm with, for example, LaTeX
-# paths pre-defined and XS Stash enabled by default.
+# a "standard" lib/Template/Config.pm with XS Stash enabled by 
+# default, for example.
 #
 
 use strict;
@@ -18,9 +18,6 @@ die $! unless -f $CONFIG;
 my $fixes = {
     '$STASH'         => 'Template::Stash',
     '$INSTDIR'       => '',
-    '$LATEX_PATH'    => '',
-    '$PDFLATEX_PATH' => '',
-    '$DVIPS_PATH'    => '',
 };
 
 my $args = { };
@@ -82,10 +79,10 @@ sub ttprompt {
     local $|=1;
     print "$msg $dispdef";
     if (! $ISA_TTY) {
-	print "$def\n";
+        print "$def\n";
     }
     else {
-	chomp($ans = <STDIN>);
+        chomp($ans = <STDIN>);
     }
     return ($ans ne '') ? $ans : $def;
 }

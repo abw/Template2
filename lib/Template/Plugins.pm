@@ -46,11 +46,13 @@ our $STD_PLUGINS = {
     'html'       => 'Template::Plugin::HTML',
     'image'      => 'Template::Plugin::Image',
     'iterator'   => 'Template::Plugin::Iterator',
+    'latex'      => 'Template::Plugin::Latex',
     'pod'        => 'Template::Plugin::Pod',
     'table'      => 'Template::Plugin::Table',
     'url'        => 'Template::Plugin::URL',
     'view'       => 'Template::Plugin::View',
     'wrap'       => 'Template::Plugin::Wrap',
+    'xml'        => 'Template::Plugin::XML',
     'xmlstyle'   => 'Template::Plugin::XML::Style',
 };
 
@@ -864,8 +866,8 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.74, distributed as part of the
-Template Toolkit version 2.15, released on 26 May 2006.
+2.75, distributed as part of the
+Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT
 

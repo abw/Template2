@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.15, detailing
+#   Revision history for the Template Toolkit version 2.15b, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,60 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.15b -                                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Changed the uri filter to escape all reserved characters as per 
+  URI::Escape and RFC2396.  This now includes &amp;, @, /, ;, :, =, +, ?
+  and $ which were previously not escaped.  Thanks to islue@cpan.org
+  for reporting the problem.
+
+  http://rt.cpan.org/Ticket/Display.html?id=19593
+
+* Also changed the uri filter to encode all wide characters as the 
+  equivalent UTF escapes.  Thanks to Jonathan Rockway for reporting 
+  the problem.
+
+  http://rt.cpan.org/Ticket/Display.html?id=19354
+
+* Moved all the virtual methods out of Template::Stash and into 
+  a new Template::VMethods module.
+
+* Fixed the version number of Template::Stash which had rolled over
+  to 2.102 making it appear to predate the 2.86 stash in TT v2.14.
+  Thanks to Randal Schwartz for reporting the problem.
+
+* Changed the _recover() method of Template::Service to check if the 
+  error thrown is a Template::Exception object rather than just a 
+  reference.  Thanks to David Wheeler for reporting the problem.
+
+  http://rt.cpan.org/Ticket/Display.html?id=17630
+
+* Fixed the some tests in stash.t and stash-xs.t which were failing 
+  under Perl 5.6.2 due to a slightly different error message being 
+  generated.  Thanks to Anton Berezin for reporting the problem.
+
+* Fixed a bug in the Template::Provider _load() method to check that 
+  $data is a hash ref before trying to mess with its innards.  Thanks
+  
+
+#------------------------------------------------------------------------
+# Version 2.15a - 29th May 2006                   ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Removed the latex filter from Template::Filters and related config
+  variables from Template::Config
+
+* Changed the t/fileline.t test to remove the line number from what Perl
+  reports as &quot;(eval $line)&quot;.  It appears to get the $line wrong on 
+  FreeBSD, although the correct line number is reported following that
+  so the tests still do the right thing.  Thanks to Anton Berezin for 
+  reporting the problem.
+
+* Changed the t/compile3.t test to do something similar.
+
 
 #------------------------------------------------------------------------
 # Version 2.15 - 26th May 2006

@@ -38,24 +38,21 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-#----------------------------------------------------------------------------
-#
-# $Id$
+# REVISION
+#   $Id$
 #
 #============================================================================
 
 package Template::Iterator;
 
-require 5.004;
-
 use strict;
-use vars qw( $VERSION $DEBUG $AUTOLOAD );    # AUTO?
-use base qw( Template::Base );
+use base 'Template::Base';
 use Template::Constants;
 use Template::Exception;
 
-$VERSION = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-$DEBUG   = 0 unless defined $DEBUG;
+our $VERSION = 2.68;
+our $DEBUG   = 0 unless defined $DEBUG;
+our $AUTOLOAD;
 
 
 #========================================================================
@@ -76,22 +73,22 @@ sub new {
     my $params = shift || { };
 
     if (ref $data eq 'HASH') {
-	# map a hash into a list of { key => ???, value => ??? } hashes,
-	# one for each key, sorted by keys
-	$data = [ map { { key => $_, value => $data->{ $_ } } }
-		  sort keys %$data ];
+        # map a hash into a list of { key => ???, value => ??? } hashes,
+        # one for each key, sorted by keys
+        $data = [ map { { key => $_, value => $data->{ $_ } } }
+                  sort keys %$data ];
     }
     elsif (UNIVERSAL::can($data, 'as_list')) {
-	$data = $data->as_list();
+        $data = $data->as_list();
     }
     elsif (ref $data ne 'ARRAY') {
-	# coerce any non-list data into an array reference
-	$data  = [ $data ] ;
+        # coerce any non-list data into an array reference
+        $data  = [ $data ] ;
     }
 
     bless {
-	_DATA  => $data,
-	_ERROR => '',
+        _DATA  => $data,
+        _ERROR => '',
     }, $class;
 }
 
@@ -144,22 +141,22 @@ sub get_next {
 
     # warn about incorrect usage
     unless (defined $index) {
-	my ($pack, $file, $line) = caller();
-	warn("iterator get_next() called before get_first() at $file line $line\n");
-	return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
+        my ($pack, $file, $line) = caller();
+        warn("iterator get_next() called before get_first() at $file line $line\n");
+        return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
     }
 
     # if there's still some data to go...
     if ($index < $max) {
-	# update counters and flags
-	$index++;
-	@$self{ qw( INDEX COUNT FIRST LAST ) }
-	        = ( $index, $index + 1, 0, $index == $max ? 1 : 0 );
-	@$self{ qw( PREV NEXT ) } = @$data[ $index - 1, $index + 1 ];
-	return $data->[ $index ];			    ## RETURN ##
+        # update counters and flags
+        $index++;
+        @$self{ qw( INDEX COUNT FIRST LAST ) }
+        = ( $index, $index + 1, 0, $index == $max ? 1 : 0 );
+        @$self{ qw( PREV NEXT ) } = @$data[ $index - 1, $index + 1 ];
+        return $data->[ $index ];			    ## RETURN ##
     }
     else {
-	return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
+        return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
     }
 }
 
@@ -181,17 +178,17 @@ sub get_all {
 
     # if there's still some data to go...
     if ($index < $max) {
-	$index++;
-	@data = @{ $self->{ _DATASET } } [ $index..$max ];
+        $index++;
+        @data = @{ $self->{ _DATASET } } [ $index..$max ];
+        
+        # update counters and flags
+        @$self{ qw( INDEX COUNT FIRST LAST ) }
+        = ( $max, $max + 1, 0, 1 );
 
-	# update counters and flags
-	@$self{ qw( INDEX COUNT FIRST LAST ) }
-	        = ( $max, $max + 1, 0, 1 );
-
-	return \@data;					    ## RETURN ##
+        return \@data;					    ## RETURN ##
     }
     else {
-	return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
+        return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
     }
 }
     
@@ -229,14 +226,14 @@ sub AUTOLOAD {
 sub _dump {
     my $self = shift;
     join('',
-	 "  Data: ", $self->{ _DATA  }, "\n",
-	 " Index: ", $self->{ INDEX  }, "\n",
-	 "Number: ", $self->{ NUMBER }, "\n",
-	 "   Max: ", $self->{ MAX    }, "\n",
-	 "  Size: ", $self->{ SIZE   }, "\n",
-	 " First: ", $self->{ FIRST  }, "\n",
-	 "  Last: ", $self->{ LAST   }, "\n",
-	 "\n"
+         "  Data: ", $self->{ _DATA  }, "\n",
+         " Index: ", $self->{ INDEX  }, "\n",
+         "Number: ", $self->{ NUMBER }, "\n",
+         "   Max: ", $self->{ MAX    }, "\n",
+         "  Size: ", $self->{ SIZE   }, "\n",
+         " First: ", $self->{ FIRST  }, "\n",
+         "  Last: ", $self->{ LAST   }, "\n",
+         "\n"
      );
 }
 
@@ -430,8 +427,8 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-2.66, distributed as part of the
-Template Toolkit version 2.15, released on 26 May 2006.
+2.68, distributed as part of the
+Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT
 

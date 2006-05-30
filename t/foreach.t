@@ -58,20 +58,20 @@ my $params   = {
     'months' => sub { return \@months },
     'format' => \&format,
     'people' => [ 
-	{ id => 'abw', code => 'abw', name => 'Andy Wardley' },
-	{ id => 'aaz', code => 'zaz', name => 'Azbaz Azbaz Zazbazzer' },
-	{ id => 'bcd', code => 'dec', name => 'Binary Coded Decimal' },
-	{ id => 'efg', code => 'zzz', name => 'Extra Fine Grass' },
+    	{ id => 'abw', code => 'abw', name => 'Andy Wardley' },
+    	{ id => 'aaz', code => 'zaz', name => 'Azbaz Azbaz Zazbazzer' },
+    	{ id => 'bcd', code => 'dec', name => 'Binary Coded Decimal' },
+    	{ id => 'efg', code => 'zzz', name => 'Extra Fine Grass' },
     ],
     'sections' => {
-	one   => 'Section One',
-	two   => 'Section Two',
-	three => 'Section Three',
-	four  => 'Section Four',
+        one   => 'Section One',
+        two   => 'Section Two',
+        three => 'Section Three',
+        four  => 'Section Four',
     },
     nested => [
-	[ qw( a b c ) ],
-	[ qw( x y z ) ],
+               [ qw( a b c ) ],
+               [ qw( x y z ) ],
     ],
 };
 

@@ -20,15 +20,13 @@
 #   $Id$
 #
 #========================================================================
- 
-package Template;
-use base qw( Template::Base );
 
-require 5.005;
+package Template;
 
 use strict;
-use vars qw( $VERSION $AUTOLOAD $ERROR $DEBUG $BINMODE );
-use Template::Base;
+use warnings;
+use base 'Template::Base';
+
 use Template::Config;
 use Template::Constants;
 use Template::Provider;  
@@ -36,12 +34,11 @@ use Template::Service;
 use File::Basename;
 use File::Path;
 
-## This is the main version number for the Template Toolkit.
-## It is extracted by ExtUtils::MakeMaker and inserted in various places.
-$VERSION     = '2.15';
-$ERROR       = '';
-$DEBUG       = 0;
-$BINMODE     = 0 unless defined $BINMODE;
+our $VERSION = '2.15b';
+our $ERROR   = '';
+our $DEBUG   = 0;
+our $BINMODE = 0 unless defined $BINMODE;
+our $AUTOLOAD;
 
 # preload all modules if we're running under mod_perl
 Template::Config->preload() if $ENV{ MOD_PERL };
@@ -307,7 +304,7 @@ of items instead of a hash array reference.  These are automatically
 folded into a hash array by the constructor.
 
     my $tt = Template->new(INCLUDE_PATH => '/tmp', POST_CHOMP => 1)
-	|| die $Template::ERROR, "\n";
+    	|| die $Template::ERROR, "\n";
 
 =head2 process($template, \%vars, $output, %options)
 
@@ -320,19 +317,19 @@ read.  A reference to a hash array may be passed as the second
 parameter, containing definitions of template variables.
 
     $text = "[% INCLUDE header %]\nHello world!\n[% INCLUDE footer %]";
-
+    
     # filename
     $tt->process('welcome.tt2')
         || die $tt->error(), "\n";
-
+    
     # text reference
     $tt->process(\$text)
         || die $tt->error(), "\n";
-
+    
     # GLOB
     $tt->process(\*DATA)
         || die $tt->error(), "\n";
-
+    
     __END__
     [% INCLUDE header %]
     This is a template defined in the __END__ section which is 
@@ -356,7 +353,7 @@ Examples:
     # output filename
     $tt->process('welcome.tt2', $vars, 'welcome.html')
         || die $tt->error(), "\n";
-
+    
     # reference to output subroutine
     sub myout {
     	my $output = shift;
@@ -364,7 +361,7 @@ Examples:
     }
     $tt->process('welcome.tt2', $vars, \&myout)
         || die $tt->error(), "\n";
-
+    
     # reference to output text string
     my $output = '';
     $tt->process('welcome.tt2', $vars, \$output)
@@ -375,17 +372,16 @@ Examples:
 In an Apache/mod_perl handler:
 
     sub handler {
-	my $req = shift;
-
+        my $req = shift;
+        
         ...
-
-	# direct output to Apache::Request via $req->print($output)
-	$tt->process($file, $vars, $req) || do {
-	    $req->log_reason($tt->error());
-	    return SERVER_ERROR;
-	};
-
-	return OK;
+        
+    	# direct output to Apache::Request via $req->print($output)
+        $tt->process($file, $vars, $req) || do {
+            $req->log_reason($tt->error());
+    	    return SERVER_ERROR;
+        };
+    	return OK;
     }
 
 After the optional third output argument can come an optional
@@ -416,7 +412,7 @@ which should be prefixed to all output locations specified as filenames.
     my $tt = Template->new({
     	OUTPUT      => sub { ... },       # default
 	    OUTPUT_PATH => '/tmp',
-	...
+    	...
     }) || die Template->error(), "\n";
 
     # use default OUTPUT (sub is called)
@@ -946,7 +942,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-Template Toolkit version 2.15, released on 26 May 2006.
+Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT
 

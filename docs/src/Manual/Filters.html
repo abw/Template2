@@ -255,12 +255,12 @@ output:
 </p>
 <pre>    my%20file.html</pre>
 <p>
-Note that URI escaping isn't always enough when generating hyperlinks in
-an HTML document.  The <code>'&amp;'</code> character, for example, is valid in a URI and
-will not be escaped by the URI filter.  In this case you should also filter
-the text through the 'html' filter.
+Note that as of TT version 2.16, the uri filter now correctly encodes
+all reserved characters.  This includes <code>'&amp;'</code>, <code>'@'</code>, <code>'/'</code>, <code>';'</code>, <code>':'</code>,
+<code>'='</code>, <code>'+'</code>, <code>'?'</code> and <code>'$'</code> which were not escaped (incorrectly) by the
+uri filter in versions 2.15 and earlier.  See RFC 2396 for further
+details.
 </p>
-<pre>    &lt;a href=&quot;[% tt_start_tag %] filename | uri | html [% tt_end_tag %]&quot;&gt;click here&lt;/a&gt;</pre>
 [%- END %]
 [% WRAPPER subsection
    title = "indent(pad)"
@@ -510,7 +510,7 @@ Andy Wardley &lt;abw@wardley.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.15, released on 26 May 2006.
+Template Toolkit version 2.15b, released on 30 May 2006.
 </p>
 [%- END %]
 [% WRAPPER section

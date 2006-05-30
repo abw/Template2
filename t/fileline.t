@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( ./lib ../lib );
+use lib qw( ./lib ../lib ./blib/lib ../blib/lib ./blib/arch ../blib/arch );
 use Template::Test;
 use Template::Parser;
 use Template::Directive;
@@ -54,8 +54,10 @@ my $vars = {
     },
 };
 
-my $tt2err = Template->new({ INCLUDE_PATH => $dir });
-my $tt2not = Template->new({ INCLUDE_PATH => $dir, FILE_INFO => 0 });
+my $tt2err = Template->new({ INCLUDE_PATH => $dir })
+    || die Template->error();
+my $tt2not = Template->new({ INCLUDE_PATH => $dir, FILE_INFO => 0 })
+    || die Template->error();
 
 test_expect(\*DATA, [ err => $tt2err, not => $tt2not ], $vars);
 

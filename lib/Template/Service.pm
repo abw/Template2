@@ -26,7 +26,7 @@ package Template::Service;
 
 use strict;
 use warnings;
-use base 'Template::Base'
+use base 'Template::Base';
 use Template::Config;
 use Template::Exception;
 use Template::Constants;
@@ -125,7 +125,7 @@ sub process {
     delete $params->{ template };
 
     if ($error) {
-    #	$error = $error->as_string if ref $error;
+    #   $error = $error->as_string if ref $error;
         return $self->error($error);
     }
 
@@ -209,7 +209,7 @@ sub _recover {
         if $$error->type() eq 'stop';
 
     my $handlers = $self->{ ERROR }
-        || return undef;					## RETURN
+        || return undef;                    ## RETURN
 
     if (ref $handlers eq 'HASH') {
         if ($hkey = $$error->select_handler(keys %$handlers)) {
@@ -221,7 +221,7 @@ sub _recover {
             $self->debug("using default error handler") if $self->{ DEBUG };
         }
         else {
-            return undef;					## RETURN
+            return undef;                   ## RETURN
         }
     }
     else {
@@ -232,7 +232,7 @@ sub _recover {
     eval { $handler = $context->template($handler) };
     if ($@) {
         $$error = $@;
-        return undef;						## RETURN
+        return undef;                       ## RETURN
     };
     
     $context->stash->set('error', $$error);
@@ -241,7 +241,7 @@ sub _recover {
     };
     if ($@) {
         $$error = $@;
-        return undef;						## RETURN
+        return undef;                       ## RETURN
     }
 
     return $output;
@@ -263,11 +263,11 @@ sub _dump {
 
     my $error = $self->{ ERROR };
     $error = join('', 
-		  "{\n",
-		  (map { "    $_ => $error->{ $_ }\n" }
-		   keys %$error),
-		  "}\n")
-	if ref $error;
+          "{\n",
+          (map { "    $_ => $error->{ $_ }\n" }
+           keys %$error),
+          "}\n")
+    if ref $error;
     
     local $" = ', ';
     return <<EOF;
@@ -305,17 +305,17 @@ Template::Service - General purpose template processing service
     use Template::Service;
 
     my $service = Template::Service->new({
-	PRE_PROCESS  => [ 'config', 'header' ],
-	POST_PROCESS => 'footer',
-	ERROR        => {
-	    user     => 'user/index.html', 
-	    dbi      => 'error/database',
-	    default  => 'error/default',
-	},
+    PRE_PROCESS  => [ 'config', 'header' ],
+    POST_PROCESS => 'footer',
+    ERROR        => {
+        user     => 'user/index.html', 
+        dbi      => 'error/database',
+        default  => 'error/default',
+    },
     });
 
     my $output = $service->process($template_name, \%replace)
-	|| die $service->error(), "\n";
+    || die $service->error(), "\n";
 
 =head1 DESCRIPTION
 
@@ -339,8 +339,8 @@ constructor.
     use Template;
     
     my $template = Template->new({
-	PRE_PROCESS  => 'header',
-	POST_PROCESS => 'footer',
+    PRE_PROCESS  => 'header',
+    POST_PROCESS => 'footer',
     });
 
 Similarly, the Template::Service constructor will forward all configuration
@@ -355,12 +355,12 @@ the SERVICE item.
     use Template::Service;
 
     my $service = Template::Service->new({
-	PRE_PROCESS  => 'header',
-	POST_PROCESS => 'footer',
+    PRE_PROCESS  => 'header',
+    POST_PROCESS => 'footer',
     });
 
     my $template = Template->new({
-	SERVICE => $service,
+    SERVICE => $service,
     });
 
 The Template::Service module can be sub-classed to create custom service
@@ -370,13 +370,13 @@ handlers.
     use MyOrg::Template::Service;
 
     my $service = MyOrg::Template::Service->new({
-	PRE_PROCESS  => 'header',
-	POST_PROCESS => 'footer',
-	COOL_OPTION  => 'enabled in spades',
+    PRE_PROCESS  => 'header',
+    POST_PROCESS => 'footer',
+    COOL_OPTION  => 'enabled in spades',
     });
 
     my $template = Template->new({
-	SERVICE => $service,
+    SERVICE => $service,
     });
 
 The Template module uses the Template::Config service() factory method
@@ -392,9 +392,9 @@ be written as:
     $Template::Config::SERVICE = 'MyOrg::Template::Service';
 
     my $template = Template->new({
-	PRE_PROCESS  => 'header',
-	POST_PROCESS => 'footer',
-	COOL_OPTION  => 'enabled in spades',
+    PRE_PROCESS  => 'header',
+    POST_PROCESS => 'footer',
+    COOL_OPTION  => 'enabled in spades',
     });
 
 =head1 METHODS
@@ -406,8 +406,8 @@ object.  Configuration parameters may be specified as a HASH reference or
 as a list of (name =E<gt> value) pairs.
 
     my $service1 = Template::Service->new({
-	PRE_PROCESS  => 'header',
-	POST_PROCESS => 'footer',
+    PRE_PROCESS  => 'header',
+    POST_PROCESS => 'footer',
     });
 
     my $service2 = Template::Service->new( ERROR => 'error.html' );
@@ -418,10 +418,10 @@ retrieved by the error() class method or directly from the
 $Template::Service::ERROR package variable.
 
     my $service = Template::Service->new(\%config)
-	|| die Template::Service->error();
+    || die Template::Service->error();
 
     my $service = Template::Service->new(\%config)
-	|| die $Template::Service::ERROR;
+    || die $Template::Service::ERROR;
 
 The following configuration items may be specified:
 
@@ -439,16 +439,16 @@ templates processed into a document via directives such as INCLUDE,
 PROCESS, WRAPPER etc.
 
     my $service = Template::Service->new({
-	PRE_PROCESS  => 'header',
-	POST_PROCESS => 'footer',
+    PRE_PROCESS  => 'header',
+    POST_PROCESS => 'footer',
     };
 
 Multiple templates may be specified as a reference to a list.  Each is 
 processed in the order defined.
 
     my $service = Template::Service->new({
-	PRE_PROCESS  => [ 'config', 'header' ],
-	POST_PROCESS => 'footer',
+    PRE_PROCESS  => [ 'config', 'header' ],
+    POST_PROCESS => 'footer',
     };
 
 Alternately, multiple template may be specified as a single string, 
@@ -456,8 +456,8 @@ delimited by ':'.  This delimiter string can be changed via the
 DELIMITER option.
 
     my $service = Template::Service->new({
-	PRE_PROCESS  => 'config:header',
-	POST_PROCESS => 'footer',
+    PRE_PROCESS  => 'config:header',
+    POST_PROCESS => 'footer',
     };
 
 The PRE_PROCESS and POST_PROCESS templates are evaluated in the same
@@ -529,7 +529,7 @@ be used to apply consistent wrappers around all templates, similar to
 the use of PRE_PROCESS and POST_PROCESS templates.
 
     my $service = Template::Service->new({
-	PROCESS  => 'content',
+    PROCESS  => 'content',
     };
 
     # processes 'content' instead of 'foo.html'
@@ -597,7 +597,7 @@ If specified as a single value then that template will be processed
 for all uncaught exceptions. 
 
     my $service = Template::Service->new({
-	ERROR => 'error.html'
+    ERROR => 'error.html'
     });
 
 If the ERROR item is a hash reference the keys are assumed to be
@@ -607,11 +607,11 @@ case.  Note that 'ERROR' can be pluralised to 'ERRORS' if you find
 it more appropriate in this case.
 
     my $service = Template::Service->new({
-	ERRORS => {
-	    user     => 'user/index.html',
-	    dbi      => 'error/database',
-	    default  => 'error/default',
-	},
+    ERRORS => {
+        user     => 'user/index.html',
+        dbi      => 'error/database',
+        default  => 'error/default',
+    },
     });
 
 In this example, any 'user' exceptions thrown will cause the
@@ -627,12 +627,12 @@ that contain periods to prevent Perl concatenating them into a single
 string (i.e. C<user.passwd> is parsed as 'user'.'passwd').
 
     my $service = Template::Service->new({
-	ERROR => {
-	    'user.login'  => 'user/login.html',
-	    'user.passwd' => 'user/badpasswd.html',
-	    'user'        => 'user/index.html',
-	    'default'     => 'error/default',
-	},
+    ERROR => {
+        'user.login'  => 'user/login.html',
+        'user.passwd' => 'user/badpasswd.html',
+        'user'        => 'user/index.html',
+        'default'     => 'error/default',
+    },
     });
 
 In this example, any template processed by the $service object, or
@@ -699,7 +699,7 @@ value.
     use Template::Constants qw( :debug );
 
     my $template = Template->new({
-	DEBUG => DEBUG_SERVICE,
+    DEBUG => DEBUG_SERVICE,
     });
 
 
@@ -723,7 +723,7 @@ return undef to indicate failure.  The appropriate error message can be
 retrieved via the error() method.
 
     $service->process('myfile.html', { title => 'My Test File' })
-	|| die $service->error();
+    || die $service->error();
 
 
 =head2 context()
@@ -747,7 +747,7 @@ L<http://wardley.org/|http://wardley.org/>
 =head1 VERSION
 
 2.89, distributed as part of the
-Template Toolkit version 2.15a, released on 29 May 2006.
+Template Toolkit version 2.15b, released on 30 May 2006.
 
 =head1 COPYRIGHT
 
