@@ -182,12 +182,11 @@ output:
 
     my%20file.html
 
-Note that URI escaping isn't always enough when generating hyperlinks in
-an HTML document.  The C<&> character, for example, is valid in a URI and
-will not be escaped by the URI filter.  In this case you should also filter
-the text through the 'html' filter.
-
-    <a href="[% filename | uri | html %]">click here</a>
+Note that as of TT version 2.16, the uri filter now correctly encodes
+all reserved characters.  This includes C<&>, C<@>, C</>, C<;>, C<:>,
+C<=>, C<+>, C<?> and C<$> which were not escaped (incorrectly) by the
+uri filter in versions 2.15 and earlier.  See RFC 2396 for further
+details.
 
 =head2 indent(pad)
 
