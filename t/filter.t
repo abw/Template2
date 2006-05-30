@@ -890,22 +890,17 @@ my%20file.html
 -- test --
 [% "my<file & your>file.html" FILTER uri %]
 -- expect --
-my%3Cfile%20&%20your%3Efile.html
+my%3Cfile%20%26%20your%3Efile.html
+
+-- test --
+[% "foo@bar" FILTER uri %]
+-- expect --
+foo%40bar
 
 -- test --
 [% "my<file & your>file.html" | uri | html %]
 -- expect --
-my%3Cfile%20&amp;%20your%3Efile.html
-
--- test --
-[% "guitar&amp;file.html" | uri %]
--- expect --
-guitar&amp;file.html
-
--- test --
-[% "guitar&amp;file.html" | uri | html %]
--- expect --
-guitar&amp;amp;file.html
+my%3Cfile%20%26%20your%3Efile.html
 
 -- test --
 [% 'foobar' | ucfirst %]
