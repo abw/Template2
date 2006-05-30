@@ -70,7 +70,7 @@ my $data = {
     listobj => bless([10, 20, 30], 'ListObject'),
     clean   => sub {
         my $error = shift;
-        $error =~ s/\s+at.*$//;
+        $error =~ s/(\s*\(.*?\))?\s+at.*$//;
         return $error;
     },
 };
