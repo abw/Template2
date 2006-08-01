@@ -718,8 +718,15 @@ sub _refresh {
                                            $slot->[ DATA ]->{ name });
             ($data, $error) = $self->_compile($data)
                 unless $error;
-            
-            unless ($error) {
+                                           
+            if ($error) {
+                # if the template failed to load/compile then we wipe out the 
+                # STAT entry.  This forces the provider to try and reload it
+                # each time instead of using the previously cached version 
+                # until $STAT_TTL is next up
+                $slot->[ STAT ] = 0;
+            }
+            else {
                 $slot->[ DATA ] = $data->{ data };
                 $slot->[ LOAD ] = $data->{ time };
             }

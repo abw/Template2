@@ -244,6 +244,7 @@ sub parse {
     # store for blocks defined in the template (see define_block())
     my $defblock = $self->{ DEFBLOCK } = { };
     my $metadata = $self->{ METADATA } = [ ];
+    $self->{ DEFBLOCKS } = [ ];
 
     $self->{ _ERROR } = '';
 

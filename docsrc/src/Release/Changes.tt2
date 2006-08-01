@@ -24,6 +24,28 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.15c -                                 ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in Template::Parser which caused it to get confused about
+  block names if it encountered a syntax error inside a BLOCK.  Thanks
+  to Bill Moseley for reporting the problem.  
+  
+  http://tt2.org/pipermail/templates/2006-July/008815.html
+
+* Fixed a minor buglet in Template::Provider which came to light while
+  investigating the above problem. If a previously cached template is changed
+  on disk and then fails to compile, the provider now invalidates the cache
+  entry immediately. Without this fix, the provider would report the error
+  once, then reuse the cached good version of the template until $STAT_TTL
+  ticked over when it would try to load and compile the disk version again.
+  The problem was that error messages were only reported once every $STAT_TTL
+  second(s) and any requests for the same template in the interim time would
+  mysteriously work. This way errors get reported consistently and immediately
+  and no-one has to waste an afternoon trying to figure out where the errors
+  went!
+
+#------------------------------------------------------------------------
 # Version 2.15b - 30th May 2006                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
