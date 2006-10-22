@@ -38,9 +38,14 @@ my $vars = {
     file => sub {
         $warning =~ /at (.*?) line/;
         my $file = $1;
-        # Perl appears to report different (eval $line) line numbers 
-        # on FreeBSD, but it's not important to the success or failure
-        # of the test, so we delete the line number
+        # The error returned includes a reference to the eval string
+        # e.g. ' ...at (eval 1) line 1'.  On some platforms (notably
+        # FreeBSD and variants like OSX), the (eval $n) part contains
+        # a different number, presumably because it has previously 
+        # performed additional string evals.  It's not important to 
+        # the success or failure of the test, so we delete it.
+        # Thanks to Andreas Koenig for identifying the problem.
+        # http://rt.cpan.org/Public/Bug/Display.html?id=20807
         $file =~ s/eval\s+\d+/eval/;
         return $file;
     },
