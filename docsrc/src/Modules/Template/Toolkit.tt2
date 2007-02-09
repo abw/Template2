@@ -1,0 +1,59 @@
+[% TAGS [* *] -%]
+
+=head1 SYNOPSIS
+
+    $ perldoc Template              # docs for the Template Perl module
+
+    $ perldoc Template::Manual      # Template Toolkit manual
+
+=head1 DESCRIPTION
+
+The Template Toolkit is a collection of Perl modules which implement a
+fast, flexible, powerful and extensible template processing system.
+
+It was originally designed and remains primarily useful for generating
+dynamic web content.  Howver it can be used equally well for
+processing any other kind of text based documents including HTML, XML,
+POD, PostScript, LaTeX and plain old text.
+
+The Template::Manual documentation contains further information about
+the Template Toolkit and a full reference of all the features,
+directives, configuration options and so on.
+
+    $ perldoc Template::Manual
+
+The Template module is the front-end to the Template Toolkit for Perl
+programmers.  The documentation for that module relates specifically
+to using the module from Perl programs.  
+
+    $ perldoc Template
+
+Please note that there is no Template::Toolkit Perl module, just this
+documentation pointing people to the right place.  
+
+You're welcome to refer to TT as "Template Toolkit" or
+"Template::Toolkit" if you prefer.  The official line is that we talk
+about the "Template Toolkit" software and the "Template" Perl module.
+But we're not the kind of officials who would get all official on you.
+
+You don't need to be a Perl programmer to use the Template Toolkit.
+The F<tpage> and F<ttree> scripts allow you to process templates from
+the command line.  See the documentation for those scripts for further
+information.
+
+    $ perldoc tpage
+    $ perldoc ttree
+
+Finally, don't forget to check out the Template Toolkit web site.
+
+    http://template-toolkit.org/
+
+Yes, we know it doesn't look very pretty and should use CSS instead of
+tables for layout.  We'll have a shiny new web site when TT3 is
+released.  In case you're wondering, that'll be on Tuesday some time
+shortly after lunch...
+
+
+
+
+
