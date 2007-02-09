@@ -22,6 +22,8 @@ use Template::Test;
 use Template::Plugin::URL;
 $^W = 1;
 
+skip_all("We can't agree on the right joint for the URL plugin");
+
 $Template::Test::DEBUG = 0;
 
 my $urls = {
