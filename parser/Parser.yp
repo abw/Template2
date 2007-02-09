@@ -387,7 +387,7 @@ assign:	    ident ASSIGN expr	    { [ $_[1], $_[3] ]                    }
 # parameters.  Named parameters are stored in a list in element 0 
 # of the args list.  Remaining elements contain positional parameters
 
-args:	    args term		    { push(@{$_[1]}, $_[2]); $_[1]        }
+args:	    args expr		    { push(@{$_[1]}, $_[2]); $_[1]        }
 	|   args param              { push(@{$_[1]->[0]}, $_[2]); $_[1]   }
 	|   args ident ASSIGN expr  { push(@{$_[1]->[0]}, "'', " . 
 				      $factory->assign(@_[2,4])); $_[1]  }
