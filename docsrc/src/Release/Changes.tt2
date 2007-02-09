@@ -30,6 +30,15 @@
 * Merged in Adam's changes in 2.16 and 2.17 back into the developer CVS
   repository and pushed out a new release.
 
+* Changed the parser grammar to accept expressions as arguments to a 
+  subroutine, method or virtual method call.  I'm embarrassed to admit
+  that it was a one line change that could (and should) have been made
+  long ago, if only I had realised just how trivial it was.  Anyway,
+  you can now write nested expressions like this:
+
+     [% add(a+5, b < 10 ? c : d + e*5) %]
+
+
 #------------------------------------------------------------------------
 # Version 2.17 - 8th Feb 2007
 #------------------------------------------------------------------------
