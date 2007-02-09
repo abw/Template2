@@ -1,0 +1,13 @@
+# http://module-build.sourceforge.net/META-spec.html
+#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+name:         Template-Toolkit
+version:      2.15b
+version_from: lib/Template.pm
+installdirs:  site
+requires:
+    AppConfig:                     1.56
+    File::Spec:                    0.8
+    File::Temp:                    0.12
+
+distribution_type: module
+generated_by: ExtUtils::MakeMaker version 6.17
