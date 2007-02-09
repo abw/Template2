@@ -27,7 +27,7 @@ if ($^O eq 'MSWin32') {  # any others also?
     $FLAVOUR = 'Win32';
     $PREFIX  = 'C:/Program Files/Template Toolkit 2';
     $IMAGES  = '/tt2/images';
-    $MAKE    = 'nmake';
+    $MAKE    = 'dmake';
 }
 else {
     $WIN32   = 0;
@@ -259,9 +259,18 @@ my %opts = (
     },
 );
 
+# On mac, make sure we have an unbroken File::HomeDir
+if ( $^O eq 'darwin' ) {
+       $opts{PREREQ_PM}->{'File::HomeDir'} = '0.64';
+}
+
 push @{ $opts{'DIR'} }, 'xs' if $TT_XS_ENABLE;
 
-if ($ExtUtils::MakeMaker::VERSION >= 5.43) {
+# Handle dev versions in our check
+my $mmv = $ExtUtils::MakeMaker::VERSION;
+$mmv =~ s/\_.+//;
+
+if ($mmv >= 5.43) {
     $opts{ AUTHOR   } = 'Andy Wardley <abw@wardley.org>';
     $opts{ ABSTRACT } = 'comprehensive template processing system',
 }
