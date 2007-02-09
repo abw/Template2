@@ -497,9 +497,9 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
                 return fold_results(aTHX_ count);		
             }
         }
-        
+
         /* drop-through if not an object or method not found  */
-        switch SvTYPE(SvRV(root)) {
+        switch (SvTYPE(SvRV(root))) {        
             
         case SVt_PVHV:				    /* HASH */
             roothv = (HV *) SvRV(root);
@@ -991,7 +991,7 @@ static SV *list_dot_join(pTHX_ AV *list, AV *args) {
     STRLEN jlen;
     char *joint;
 
-    if ((svp = av_fetch(args, 0, FALSE)) != NULL) {
+    if (args && (svp = av_fetch(args, 0, FALSE)) != NULL) {
         joint = SvPV(*svp, jlen);
     } else {
         joint = " ";
