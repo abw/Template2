@@ -24,7 +24,42 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.15c -                                 ## DEVELOPER RELEASE ##
+# Version 2.18 - 9th February 2007
+#------------------------------------------------------------------------
+
+* Merged in Adam's changes in 2.16 and 2.17 back into the developer CVS
+  repository and pushed out a new release.
+
+#------------------------------------------------------------------------
+# Version 2.17 - 8th Feb 2007
+#------------------------------------------------------------------------
+
+Another interim release from Adam Kennedy.
+
+* Change in Makefile.PL to force an upgrade to File::HomeDir 0.64 on darwin. 
+  This is due to problems caused by changes made to Perl on the new Intel 
+  versions of Mac OS X.
+
+* skip_all filelines.t on darwin
+
+#------------------------------------------------------------------------
+# Version 2.16 - 23rd Jan 2007            
+#------------------------------------------------------------------------
+
+Interim release from Adam Kennedy.
+
+* Skip fileline.t on Win32, as it has some hard-coded path seperator
+  assumptions. This will be fixed more comprehensively later.
+
+* Handle spurious errors in Makefile.PL when a dev version of
+  ExtUtils::MakeMaker is installed.
+
+* Don't say "nmake" on Win32 when $Config{make} is 'dmake'.
+  This corrects the message on Strawberry Perl.
+
+
+#------------------------------------------------------------------------
+# Version 2.15c - Not released                    ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
 * Fixed a bug in Template::Parser which caused it to get confused about
