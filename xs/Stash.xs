@@ -518,14 +518,8 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
             
             /* avoid 'modification of read-only value' error */
             newsv = newSVsv(value); 
-            if (hv_store(roothv, key, key_len, newsv, 0)) {
-                /* invoke any tied magical STORE method */
-                debug(" - stored hash item\n");
-                SvSETMAGIC(newsv);
-            }
-            else {
-                printf(" - did not store hash item (hv_store() returned NULL)\n");
-            }
+            hv_store(roothv, key, key_len, newsv, 0);
+            SvSETMAGIC(newsv);
 
             return value;
             break;
