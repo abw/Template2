@@ -3,18 +3,13 @@
 # Template::Tutorial::Datafile
 #
 # DESCRIPTION
-#   This tutorial gives an overview of the Template Toolkit, showing in
-#   particular how to use it to read and write data files in various
-#   different formats and styles. It was written by Dave Cross and
-#   first appeared as a lead article at http://www.perl.com/ earlier in
-#   the year (2001).
+
 #
 # AUTHOR
 #   Dave Cross  <dave@dave.org.uk>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -42,11 +37,7 @@ Template::Tutorial::Datafile - Creating Data Output Files Using the Template Too
 
 =head1 DESCRIPTION
 
-This tutorial gives an overview of the Template Toolkit, showing in
-particular how to use it to read and write data files in various
-different formats and styles. It was written by Dave Cross and first
-appeared as a lead article at http://www.perl.com/ earlier in the year
-(2001).
+
 
 =head1 Introducing the Template Toolkit
 
@@ -438,7 +429,7 @@ Dave Cross E<lt>dave@dave.org.ukE<gt>
 
 =head1 VERSION
 
-Template Toolkit version 2.15b, released on 30 May 2006.
+Template Toolkit version 2.18, released on 09 February 2007.
 
 =head1 COPYRIGHT
 

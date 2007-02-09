@@ -36,6 +36,13 @@ other offline document systems.
 WHAT'S NEW?
 -----------
 
+Version 2.18 fixes a number of minor bugs. It also includes a modification to
+the parser grammar so that you can write expressions as arguments to
+subroutine, method or vmethod calls.
+
+Versions 2.17 and 2.16 were interim releases by Adam Kennedy who took care of
+some installation problems on Mac OSX while Andy was busy elsewhere.
+
 Version 2.15 is a major maintenance release.  It applies all outstanding
 patches and closes all open bugs listed on http://rt.cpan.org/  It
 includes:

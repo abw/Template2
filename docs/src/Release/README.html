@@ -5,12 +5,11 @@
 
                             Template Toolkit
 
-                              Version 2.15b
+                              Version 2.18
 
-                             30 May 2006
+                             09 February 2007
 
-        Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved
-        Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
+        Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -30,8 +29,8 @@ Available from CPAN in:
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.15b.tar.gz
-    cd Template-Toolkit-2.15b
+    tar zxf Template-Toolkit-2.18.tar.gz
+    cd Template-Toolkit-2.18
     perl Makefile.PL
     make
     make test
@@ -72,6 +71,13 @@ other offline document systems.
 
 WHAT'S NEW?
 -----------
+
+Version 2.18 fixes a number of minor bugs. It also includes a modification to
+the parser grammar so that you can write expressions as arguments to
+subroutine, method or vmethod calls.
+
+Versions 2.17 and 2.16 were interim releases by Adam Kennedy who took care of
+some installation problems on Mac OSX while Andy was busy elsewhere.
 
 Version 2.15 is a major maintenance release.  It applies all outstanding
 patches and closes all open bugs listed on http://rt.cpan.org/  It
@@ -312,8 +318,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
-Copyright (C) 1998-2002 Canon Research Centre Europe Ltd.
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

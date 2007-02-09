@@ -140,7 +140,7 @@ L<http://www.twoshortplanks.com|http://www.twoshortplanks.com>
 =head1 VERSION
 
 1.17, distributed as part of the
-Template Toolkit version 2.15b, released on 30 May 2006.
+Template Toolkit version 2.18, released on 09 February 2007.
 
 =head1 COPYRIGHT
 

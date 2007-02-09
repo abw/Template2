@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.15b, detailing
+#   Revision history for the Template Toolkit version 2.18, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,75 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.18 - 9th February 2007
+#------------------------------------------------------------------------
+
+* Merged in Adam's changes in 2.16 and 2.17 back into the developer CVS
+  repository and added his name to the credits.
+
+* Changed the parser grammar to accept expressions as arguments to a 
+  subroutine, method or virtual method call.  I'm embarrassed to admit
+  that it was a one line change that could (and should) have been made
+  long ago, if only I had realised just how trivial it was.  Anyway,
+  you can now write nested expressions like this:
+
+     [% tt_start_tag %] add(a+5, b &lt; 10 ? c : d + e*5) [% tt_end_tag %]
+
+* Put the t/fileline.t test back in as this was fixed in 2.15a
+
+* Added the Template::Toolkit documentation-only module.
+
+#------------------------------------------------------------------------
+# Version 2.17 - 8th Feb 2007
+#------------------------------------------------------------------------
+
+Another interim release from Adam Kennedy.
+
+* Change in Makefile.PL to force an upgrade to File::HomeDir 0.64 on darwin. 
+  This is due to problems caused by changes made to Perl on the new Intel 
+  versions of Mac OS X.
+
+* skip_all filelines.t on darwin
+
+#------------------------------------------------------------------------
+# Version 2.16 - 23rd Jan 2007            
+#------------------------------------------------------------------------
+
+Interim release from Adam Kennedy.
+
+* Skip fileline.t on Win32, as it has some hard-coded path seperator
+  assumptions. This will be fixed more comprehensively later.
+
+* Handle spurious errors in Makefile.PL when a dev version of
+  ExtUtils::MakeMaker is installed.
+
+* Don't say &quot;nmake&quot; on Win32 when $Config{make} is 'dmake'.
+  This corrects the message on Strawberry Perl.
+
+
+#------------------------------------------------------------------------
+# Version 2.15c - Not released                    ## DEVELOPER RELEASE ##
+#------------------------------------------------------------------------
+
+* Fixed a bug in Template::Parser which caused it to get confused about
+  block names if it encountered a syntax error inside a BLOCK.  Thanks
+  to Bill Moseley for reporting the problem.  
+  
+  http://tt2.org/pipermail/templates/2006-July/008815.html
+
+* Fixed a minor buglet in Template::Provider which came to light while
+  investigating the above problem. If a previously cached template is changed
+  on disk and then fails to compile, the provider now invalidates the cache
+  entry immediately. Without this fix, the provider would report the error
+  once, then reuse the cached good version of the template until $STAT_TTL
+  ticked over when it would try to load and compile the disk version again.
+  The problem was that error messages were only reported once every $STAT_TTL
+  second(s) and any requests for the same template in the interim time would
+  mysteriously work. This way errors get reported consistently and immediately
+  and no-one has to waste an afternoon trying to figure out where the errors
+  went!
 
 #------------------------------------------------------------------------
 # Version 2.15b - 30th May 2006                   ## DEVELOPER RELEASE ##
@@ -67,7 +136,10 @@
 
 * Fixed a bug in the Template::Provider _load() method to check that 
   $data is a hash ref before trying to mess with its innards.  Thanks
-  
+  to barbie@cpan.org for reporting the problem.
+
+  http://rt.cpan.org/Ticket/Display.html?id=18653
+
 
 #------------------------------------------------------------------------
 # Version 2.15a - 29th May 2006                   ## DEVELOPER RELEASE ##
