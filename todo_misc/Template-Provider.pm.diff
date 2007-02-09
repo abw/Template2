@@ -1,0 +1,35 @@
+--- /usr/lib/perl5/site_perl/5.8.4/i686-linux-thread-multi/Template/Provider.pm	2004-01-30 18:37:50.000000000 +0000
++++ Template/Provider.pm	2005-12-18 00:50:02.264515495 +0000
+@@ -418,7 +418,7 @@
+     if (defined $size && ! $size) {
+         # caching disabled so load and compile but don't cache
+         if ($compiled && -f $compiled 
+-            && (stat($name))[9] <= (stat($compiled))[9]) {
++            && $self->_mtime($name) <= (stat($compiled))[9]) {
+             $data = $self->_load_compiled($compiled);
+             $error = $self->error() unless $data;
+         }
+@@ -752,8 +752,8 @@
+     my ($slot, $head);
+ 
+     # extract the load time and compiled template from the data
+-#    my $load = $data->{ load };
+-    my $load = (stat($name))[9];
++    my $load = $self->_mtime($name);
++#    my $load = (stat($name))[9];
+     $data = $data->{ data };
+ 
+     $self->debug("_store($name, $data)") if $self->{ DEBUG };
+@@ -800,6 +800,12 @@
+     return $data;
+ }
+ 
++sub _mtime
++{
++    my ($self, $name) = @_;
++    my $load = (stat($name))[9];
++    return $load;
++}
+ 
+ #------------------------------------------------------------------------
+ # _compile($data)

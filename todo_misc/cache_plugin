@@ -1,0 +1,253 @@
+From: Perrin Harkins <perrin@elem.com>
+X-Mailer: Mozilla 4.7 [en] (X11; I; Linux 2.2.16-22 i686)
+X-Accept-Language: en
+MIME-Version: 1.0
+To: templates@template-toolkit.org
+Content-Type: multipart/mixed;
+ boundary="------------A76E8171DCE73B663B9DA377"
+Subject: [Templates] RFC: Template::Plugin::Cache
+Sender: templates-admin@template-toolkit.org
+Errors-To: templates-admin@template-toolkit.org
+X-BeenThere: templates@template-toolkit.org
+X-Mailman-Version: 2.0rc1
+Precedence: bulk
+List-Help: <mailto:templates-request@template-toolkit.org?subject=help>
+List-Post: <mailto:templates@template-toolkit.org>
+List-Subscribe: <http://www.template-toolkit.org/mailman/listinfo/templates>,
+	<mailto:templates-request@template-toolkit.org?subject=subscribe>
+List-Id: Template Toolkit mailing list <templates.template-toolkit.org>
+List-Unsubscribe: <http://www.template-toolkit.org/mailman/listinfo/templates>,
+	<mailto:templates-request@template-toolkit.org?subject=unsubscribe>
+List-Archive: <http://www.template-toolkit.org/pipermail/templates/>
+Date: Wed, 01 Aug 2001 01:56:12 -0700
+X-UIDL: 4b52ce5bbd5e4261cad4eafdc1bb408b
+Status: RO
+Content-Length: 5732
+Lines: 224
+
+This is a multi-part message in MIME format.
+--------------A76E8171DCE73B663B9DA377
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Here's my first draft.  I'm including the module and a test script.  Go
+wild.  If this turns into something legit, I'll put it on CPAN.
+- Perrin
+--------------A76E8171DCE73B663B9DA377
+Content-Type: application/x-perl;
+ name="test_plugin.pl"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="test_plugin.pl"
+
+#!/usr/bin/perl -w
+
+use strict;
+use Template;
+$| = 1;
+
+my $template = <<EOM;
+[% USE cache = Cache %]
+[% BLOCK cache_me %]
+-----------------------
+  About to do a lot of work...
+  [% PERL %]
+    sleep 5;
+  [% END %]
+  And now to demonstrate that the keys matter:
+                 Hello [% name %]
+-----------------------
+[% END %]
+[% cache.inc(
+             'template' => 'cache_me',
+             'keys' => {'name' => name},
+             'ttl' => 15
+             ) %]
+EOM
+
+my $t = Template->new(
+		      EVAL_PERL => 1,
+		      ANYCASE   => 1,
+		     );
+
+print "first run with name = Suzanne";
+$t->process(\$template, { name => 'Suzanne' }) || die $t->error();
+
+print "second run with name = Suzanne\n\n";
+$t->process(\$template, { name => 'Suzanne' }) || die $t->error();
+
+print "first run with name = World\n\n";
+$t->process(\$template, { name => 'World' }) || die $t->error();
+
+print "second run with name = World\n\n";
+$t->process(\$template, { name => 'World' }) || die $t->error();
+
+--------------A76E8171DCE73B663B9DA377
+Content-Type: text/plain; charset=us-ascii;
+ name="Cache.pm"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="Cache.pm"
+
+#============================================================= -*-Perl-*-
+#
+# Template::Plugin::Cache
+#
+# DESCRIPTION
+#
+#   Plugin to cache template output
+#
+# AUTHORS
+#   Perrin Harkins           <perrin@elem.com>
+#   (your name here)
+#
+# COPYRIGHT
+#   Copyright (C) 2000 Perrin Harkins.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#----------------------------------------------------------------------------
+#
+# $Id$
+#
+#============================================================================
+
+package Template::Plugin::Cache;
+
+use strict;
+use vars qw( $VERSION );
+use base qw( Template::Plugin );
+use Template::Plugin;
+
+use File::Cache;
+
+$VERSION = 0.1;
+
+#------------------------------------------------------------------------
+# new(\%options)
+#------------------------------------------------------------------------
+
+sub new {
+    my ($class, $context, $params) = @_;
+    my $cache = File::Cache->new($params);
+    my $self = bless {
+		      CACHE   => $cache,
+		      CONFIG  => $params,
+		      CONTEXT => $context,
+		     }, $class;
+    return $self;
+}
+
+#------------------------------------------------------------------------
+# $cache->inc({
+#              template => 'foo.html',
+#              keys     => {'user.name', user.name},
+#              ttl      => 60, #seconds
+#             });
+#------------------------------------------------------------------------
+
+sub inc {
+    my ($self, $params) = @_;
+    my $cache_keys = $params->{keys};
+    #warn %$cache_keys;
+    my $key = join(
+		   ':',
+		   (
+		    $params->{template},
+		    map { "$_=$cache_keys->{$_}" } keys %{$cache_keys}
+		   )
+		  );
+    my $result = $self->{CACHE}->get($key);
+    if (!$result) {
+      #warn "processing template";
+      $result = $self->{CONTEXT}->include($params->{template});
+      $self->{CACHE}->set($key, $result, $params->{ttl});
+    }
+    return $result;
+}
+
+1;
+
+__END__
+
+=head1 NAME
+
+Template::Plugin::Cache - cache output of templates
+
+=head1 SYNOPSIS
+
+  [% USE cache = Cache%]
+    
+
+  [% cache.inc(
+	       'template' => 'slow.html',
+	       'keys' => {'user.name' => user.name},
+	       'ttl' => 360
+	       ) %]
+
+=head1 DESCRIPTION
+
+The Cache plugin allows you to cache generated output from a template.
+You load the plugin with the standard syntax:
+
+    [% USE cache = Cache %]
+
+This creates a plugin object with the name 'cache'.  You may also
+specify parameters for the File::Cache module, which is used for
+storage.
+
+    [% USE mycache = Cache(namespace => 'MyCache') %]
+
+The only method currently available is an include, "cache.inc", which
+can work on blocks or files the same as the standard INCLUDE
+directive.
+
+  [% cache.inc(
+	       'template' => 'slow.html',
+	       'keys' => {'user.name' => user.name},
+	       'ttl' => 360
+	       ) %]
+
+The template parameter names the file or block to include.  The keys
+are variables used to identify the correct cache file.  Different
+values for the specified keys will result in different cache files.
+The ttl parameter specifies the "time to live" for this cache file, in
+seconds.
+
+Why the ugliness on the keys?  Well, the TT dot notation can only be
+resolved correctly by the TT parser at compile time.  It's easy to
+look up simple variable names in the stash, but compound names like
+"user.name" are hard to resolve at runtime.  I may attempt to fake
+this in a future version, but it would be hacky and might cause
+problems.
+
+=head1 AUTHORS
+
+Perrin Harkins (perrin@elem.com) wrote the first version of this
+plugin, with help and suggestions from various parties.
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Perrin Harkins.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template::Plugin|Template::Plugin>, L<File::Cache|File::Cache>
+
+=cut
+
+
+--------------A76E8171DCE73B663B9DA377--
+
+
+_______________________________________________
+templates mailing list
+templates@template-toolkit.org
+http://www.template-toolkit.org/mailman/listinfo/templates
+
+
+
