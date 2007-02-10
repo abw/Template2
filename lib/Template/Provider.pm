@@ -15,8 +15,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2003 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -48,7 +47,7 @@ use constant LOAD   => 3;
 use constant NEXT   => 4;
 use constant STAT   => 5;
 
-our $VERSION = 2.91;
+our $VERSION = 2.92;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 
@@ -123,35 +122,35 @@ sub fetch {
         ($data, $error) = $self->_compile($data)
             unless $error;
         $data = $data->{ data }
-	    unless $error;
+            unless $error;
     }
     elsif (File::Spec->file_name_is_absolute($name)) {
         # absolute paths (starting '/') allowed if ABSOLUTE set
         ($data, $error) = $self->{ ABSOLUTE } 
-	    ? $self->_fetch($name) 
+            ? $self->_fetch($name) 
             : $self->{ TOLERANT } 
-		? (undef, Template::Constants::STATUS_DECLINED)
+                ? (undef, Template::Constants::STATUS_DECLINED)
             : ("$name: absolute paths are not allowed (set ABSOLUTE option)",
                Template::Constants::STATUS_ERROR);
     }
     elsif ($name =~ m/$RELATIVE_PATH/o) {
         # anything starting "./" is relative to cwd, allowed if RELATIVE set
         ($data, $error) = $self->{ RELATIVE } 
-	    ? $self->_fetch($name) 
+            ? $self->_fetch($name) 
             : $self->{ TOLERANT } 
-		? (undef, Template::Constants::STATUS_DECLINED)
+                ? (undef, Template::Constants::STATUS_DECLINED)
             : ("$name: relative paths are not allowed (set RELATIVE option)",
                Template::Constants::STATUS_ERROR);
     }
     else {
         # otherwise, it's a file name relative to INCLUDE_PATH
         ($data, $error) = $self->{ INCLUDE_PATH } 
-	    ? $self->_fetch_path($name) 
+            ? $self->_fetch_path($name) 
             : (undef, Template::Constants::STATUS_DECLINED);
     }
     
 #    $self->_dump_cache() 
-#	if $DEBUG > 1;
+#       if $DEBUG > 1;
 
     return ($data, $error);
 }
@@ -206,7 +205,7 @@ sub load {
               last INCPATH
                   if -f $path;
           }
-          undef $path;	    # not found
+          undef $path;      # not found
       }
     }
 
@@ -293,7 +292,7 @@ sub paths {
         }
     }
     return $self->error("INCLUDE_PATH exceeds $MAX_DIRS directories")
-	if @ipaths;
+        if @ipaths;
 
     return \@opaths;
 }
@@ -485,7 +484,7 @@ sub _fetch {
 sub _fetch_path {
     my ($self, $name) = @_;
     my ($size, $compext, $compdir) = 
-	@$self{ qw( SIZE COMPILE_EXT COMPILE_DIR ) };
+        @$self{ qw( SIZE COMPILE_EXT COMPILE_DIR ) };
     my ($dir, $paths, $path, $compiled, $slot, $data, $error);
     local *FH;
 
@@ -493,7 +492,8 @@ sub _fetch_path {
 
     # caching is enabled if $size is defined and non-zero or undefined
     my $caching = (! defined $size || $size);
-
+    my $now = time;         # Now is the time!  -- MLK
+    
     INCLUDE: {
 
         # the template may have been stored using a non-filename name
@@ -524,6 +524,10 @@ sub _fetch_path {
                     unless $error;
                 last INCLUDE;
             }
+            elsif ($self->{ NOTFOUND }->{ $path } &&
+                  ($now - $self->{ NOTFOUND }->{$path} < $STAT_TTL)) {
+                $self->debug("$path was not found, skip.") if $self->{ DEBUG };
+            }
             elsif (-f $path) {
                 $compiled = $self->_compiled_filename($path)
                     if $compext || $compdir;
@@ -553,6 +557,9 @@ sub _fetch_path {
                 last INCLUDE if ! $error 
                     || $error == Template::Constants::STATUS_ERROR;
             }
+            else {
+                $self->{ NOTFOUND }->{ $path } = time;
+            }
         }
         # template not found, so look for a DEFAULT template
         my $default;
@@ -574,7 +581,7 @@ sub _compiled_filename {
     my ($path, $compiled);
 
     return undef
-	unless $compext || $compdir;
+        unless $compext || $compdir;
 
     $path = $file;
     $path =~ /^(.+)$/s or die "invalid filename: $path";
@@ -906,7 +913,7 @@ sub _compile {
         }
         
         unless ($error) {
-            return $data				        ## RETURN ##
+            return $data                                        ## RETURN ##
                 if $data->{ data } = $DOCUMENT->new($parsedoc);
             $error = $Template::Document::ERROR;
         }
@@ -1000,22 +1007,22 @@ sub _dump_cache {
 
     $count = 0;
     if ($node = $self->{ HEAD }) {
-	while ($node) {
-	    $lut->{ $node } = $count++;
-	    $node = $node->[ NEXT ];
-	}
-	$node = $self->{ HEAD };
-	print STDERR "CACHE STATE:\n";
-	print STDERR "  HEAD: ", $self->{ HEAD }->[ NAME ], "\n";
-	print STDERR "  TAIL: ", $self->{ TAIL }->[ NAME ], "\n";
-	while ($node) {
-	    my ($prev, $name, $data, $load, $next) = @$node;
-#	    $name = '...' . substr($name, -10) if length $name > 10;
-	    $prev = $prev ? "#$lut->{ $prev }<-": '<undef>';
-	    $next = $next ? "->#$lut->{ $next }": '<undef>';
-	    print STDERR "   #$lut->{ $node } : [ $prev, $name, $data, $load, $next ]\n";
-	    $node = $node->[ NEXT ];
-	}
+        while ($node) {
+            $lut->{ $node } = $count++;
+            $node = $node->[ NEXT ];
+        }
+        $node = $self->{ HEAD };
+        print STDERR "CACHE STATE:\n";
+        print STDERR "  HEAD: ", $self->{ HEAD }->[ NAME ], "\n";
+        print STDERR "  TAIL: ", $self->{ TAIL }->[ NAME ], "\n";
+        while ($node) {
+            my ($prev, $name, $data, $load, $next) = @$node;
+#           $name = '...' . substr($name, -10) if length $name > 10;
+            $prev = $prev ? "#$lut->{ $prev }<-": '<undef>';
+            $next = $next ? "->#$lut->{ $next }": '<undef>';
+            print STDERR "   #$lut->{ $node } : [ $prev, $name, $data, $load, $next ]\n";
+            $node = $node->[ NEXT ];
+        }
     }
 }
 
@@ -1149,7 +1156,7 @@ an object which implements a paths() method.
     my $provider = Template::Provider->new({
         INCLUDE_PATH => [ '/usr/local/templates', 
                           \&incpath_generator, 
-			  My::IncPath::Generator->new( ... ) ],
+                          My::IncPath::Generator->new( ... ) ],
     });
 
 Each time a template is requested and the INCLUDE_PATH examined, the
@@ -1162,14 +1169,14 @@ For example:
 
     sub incpath_generator {
 
-	# ...some code...
-	
-	if ($all_is_well) {
-	    return \@list_of_directories;
-	}
-	else {
-	    die "cannot generate INCLUDE_PATH...\n";
-	}
+        # ...some code...
+        
+        if ($all_is_well) {
+            return \@list_of_directories;
+        }
+        else {
+            die "cannot generate INCLUDE_PATH...\n";
+        }
     }
 
 or:
@@ -1181,16 +1188,16 @@ or:
     use base qw( Template::Base );
 
     sub paths {
-	my $self = shift;
+        my $self = shift;
 
-	# ...some code...
+        # ...some code...
 
         if ($all_is_well) {
-	    return \@list_of_directories;
-	}
-	else {
-	    return $self->error("cannot generate INCLUDE_PATH...\n");
-	}
+            return \@list_of_directories;
+        }
+        else {
+            return $self->error("cannot generate INCLUDE_PATH...\n");
+        }
     }
 
     1;
@@ -1207,7 +1214,7 @@ value for DELIMITER is ':'.
 
     # tolerate Silly Billy's file system conventions
     my $provider = Template::Provider->new({
-	DELIMITER    => '; ',
+        DELIMITER    => '; ',
         INCLUDE_PATH => 'C:/HERE/NOW; D:/THERE/THEN',
     });
 
@@ -1220,7 +1227,7 @@ INCLUDE_PATH into 2 separate directories, C:/foo and C:/bar.
 
     # on Win32 only
     my $provider = Template::Provider->new({
-	INCLUDE_PATH => 'C:/Foo:C:/Bar'
+        INCLUDE_PATH => 'C:/Foo:C:/Bar'
     });
 
 However, if you're using Win32 then it's recommended that you
@@ -1238,7 +1245,7 @@ disabled by default and any attempt to load a template by such a
 name will cause a 'file' exception to be raised.
 
     my $provider = Template::Provider->new({
-	ABSOLUTE => 1,
+        ABSOLUTE => 1,
     });
 
     # this is why it's disabled by default
@@ -1264,7 +1271,7 @@ default, and will raise a 'file' error if such template names are
 encountered.  
 
     my $provider = Template::Provider->new({
-	RELATIVE => 1,
+        RELATIVE => 1,
     });
 
     [% INCLUDE ../logs/error.log %]
@@ -1279,7 +1286,7 @@ The DEFAULT option can be used to specify a default template which should
 be used whenever a specified template can't be found in the INCLUDE_PATH.
 
     my $provider = Template::Provider->new({
-	DEFAULT => 'notfound.html',
+        DEFAULT => 'notfound.html',
     });
 
 If a non-existant template is requested through the Template process()
@@ -1310,11 +1317,11 @@ is discarded to make room for the new one.
 The CACHE_SIZE can be set to 0 to disable caching altogether.
 
     my $provider = Template::Provider->new({
-	CACHE_SIZE => 64,   # only cache 64 compiled templates
+        CACHE_SIZE => 64,   # only cache 64 compiled templates
     });
 
     my $provider = Template::Provider->new({
-	CACHE_SIZE => 0,   # don't cache any compiled templates
+        CACHE_SIZE => 0,   # don't cache any compiled templates
     });
 
 
@@ -1332,7 +1339,7 @@ It is undefined by default and no attempt will be made to read or write
 any compiled template files.
 
     my $provider = Template::Provider->new({
-	COMPILE_EXT => '.ttc',
+        COMPILE_EXT => '.ttc',
     });
 
 If COMPILE_EXT is defined (and COMPILE_DIR isn't, see below) then compiled
@@ -1357,20 +1364,20 @@ The COMPILE_DIR option is used to specify an alternate directory root
 under which compiled template files should be saved.  
 
     my $provider = Template::Provider->new({
-	COMPILE_DIR => '/tmp/ttc',
+        COMPILE_DIR => '/tmp/ttc',
     });
 
 The COMPILE_EXT option may also be specified to have a consistent file
 extension added to these files.  
 
     my $provider1 = Template::Provider->new({
-	COMPILE_DIR => '/tmp/ttc',
-	COMPILE_EXT => '.ttc1',
+        COMPILE_DIR => '/tmp/ttc',
+        COMPILE_EXT => '.ttc1',
     });
 
     my $provider2 = Template::Provider->new({
-	COMPILE_DIR => '/tmp/ttc',
-	COMPILE_EXT => '.ttc2',
+        COMPILE_DIR => '/tmp/ttc',
+        COMPILE_EXT => '.ttc2',
     });
 
 
@@ -1382,8 +1389,8 @@ Each directory in the INCLUDE_PATH is replicated in full beneath the
 COMPILE_DIR directory.  This example:
 
     my $provider = Template::Provider->new({
-	COMPILE_DIR  => '/tmp/ttc',
-	INCLUDE_PATH => '/home/abw/templates:/usr/share/templates',
+        COMPILE_DIR  => '/tmp/ttc',
+        INCLUDE_PATH => '/home/abw/templates:/usr/share/templates',
     });
 
 would create the following directory structure:
@@ -1405,9 +1412,9 @@ Any colon in COMPILE_DIR elements will be left intact.  For example:
 
     # Win32 only
     my $provider = Template::Provider->new({
-	DELIMITER    => ';',
-	COMPILE_DIR  => 'C:/TT2/Cache',
-	INCLUDE_PATH => 'C:/TT2/Templates;D:/My Templates',
+        DELIMITER    => ';',
+        COMPILE_DIR  => 'C:/TT2/Cache',
+        INCLUDE_PATH => 'C:/TT2/Templates;D:/My Templates',
     });
 
 This would create the following cache directories:
@@ -1448,7 +1455,7 @@ compilation.  The PARSER option can be used to provide a reference to
 an alternate parser object.
 
     my $provider = Template::Provider->new({
-	PARSER => MyOrg::Template::Parser->new({ ... }),
+        PARSER => MyOrg::Template::Parser->new({ ... }),
     });
 
 
@@ -1462,7 +1469,7 @@ value.
     use Template::Constants qw( :debug );
 
     my $template = Template->new({
-	DEBUG => DEBUG_PROVIDER,
+        DEBUG => DEBUG_PROVIDER,
     });
 
 

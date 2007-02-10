@@ -39,14 +39,14 @@ $PARSER    = 'Template::Parser';
 $PLUGINS   = 'Template::Plugins';
 $PROVIDER  = 'Template::Provider';
 $SERVICE   = 'Template::Service';
-$STASH     = 'Template::Stash';
+$STASH     = 'Template::Stash::XS';
 $CONSTANTS = 'Template::Namespace::Constants';
 
 @PRELOAD   = ( $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
                $PLUGINS, $PROVIDER, $SERVICE, $STASH );
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+$INSTDIR  = '/usr/local/tt2';
 
 
 #========================================================================
