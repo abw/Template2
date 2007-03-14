@@ -383,7 +383,7 @@ sub undefined {
 sub _dotop {
     my ($self, $root, $item, $args, $lvalue) = @_;
     my $rootref = ref $root;
-    my $atroot  = ($root eq $self);
+    my $atroot  = (ref $root && "$root" eq $self);   # stringify $root to prevent overload madness
     my ($value, @result);
 
     $args ||= [ ];
