@@ -48,7 +48,15 @@ extern "C" {
 #if 0
 #define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
 #else
+#ifdef WIN32
+#define debug(format)
+#else
 #define debug(format, ...)
+#endif
+#endif
+
+#ifdef WIN32
+#define snprintf _snprintf
 #endif
 
 #define TT_STASH_PKG	"Template::Stash::XS"
@@ -194,7 +202,9 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
     SV *result = &PL_sv_undef;
     I32 atroot;
 
+#ifndef WIN32
     debug("dotop(%s)\n", item);
+#endif
 
     /* ignore _private or .private members */
     if (!root || looks_private(aTHX_ item))
@@ -306,7 +316,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
             SV **svp;
             HV *stash = SvSTASH((SV *) SvRV(root));
             GV *gv;
-            char *error_string;
+            /* char *error_string; */
             result = NULL;
             
             if ((gv = gv_fetchmethod_autoload(stash, item, 1))) {
@@ -465,7 +475,9 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
     char *key = SvPV(key_sv, key_len);
     char *key2 = SvPV(key_sv, key_len);     /* TMP DEBUG HACK */
 
+#ifndef WIN32
     debug("assign(%s)\n", key2);
+#endif
 
     if (!root || !key_len || looks_private(aTHX_ key)) {
         /* ignore _private or .private members */
@@ -940,7 +952,7 @@ static int get_debug_flag (pTHX_ SV *sv) {
 
 
 static int looks_private(pTHX_ const char *name) {
-    SV *priv;
+    /* SV *priv; */
 
     /* For now we hard-code the regex to match _private or .hidden
      * variables, but we do check to see if $Template::Stash::PRIVATE

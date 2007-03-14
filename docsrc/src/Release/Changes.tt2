@@ -27,8 +27,13 @@
 # Version 2.19 - 14th February 2007
 #------------------------------------------------------------------------
 
-* Re-applied the skip_all() to t/fileline.t when running on Win32 as it 
-  still causes problems, apparently.
+* Re-applied the skip_all() to t/fileline.t when running on Win32 as it's
+  still causing problems.
+  
+* Applied a patch to the XS Stash from Randy Kobes which fixes some other
+  Win32 problems.
+  
+  http://tt2.org/pipermail/templates/2007-February/009247.html
   
 #------------------------------------------------------------------------
 # Version 2.18a - 9th February 2007
