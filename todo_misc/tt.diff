@@ -1,0 +1,57 @@
+--- xs/Stash.xs.orig	2007-02-25 17:47:07.500000000 -0600
++++ xs/Stash.xs	2007-02-25 17:44:13.750000000 -0600
+@@ -48,8 +48,16 @@
+ #if 0
+ #define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
+ #else
++#ifdef WIN32
++#define debug(format)
++#else
+ #define debug(format, ...)
+ #endif
++#endif
++
++#ifdef WIN32
++#define snprintf _snprintf
++#endif
+ 
+ #define TT_STASH_PKG	"Template::Stash::XS"
+ #define TT_LIST_OPS	    "Template::Stash::LIST_OPS"
+@@ -194,7 +202,9 @@
+     SV *result = &PL_sv_undef;
+     I32 atroot;
+ 
++#ifndef WIN32
+     debug("dotop(%s)\n", item);
++#endif
+ 
+     /* ignore _private or .private members */
+     if (!root || looks_private(aTHX_ item))
+@@ -306,7 +316,7 @@
+             SV **svp;
+             HV *stash = SvSTASH((SV *) SvRV(root));
+             GV *gv;
+-            char *error_string;
++            /* char *error_string; */
+             result = NULL;
+             
+             if ((gv = gv_fetchmethod_autoload(stash, item, 1))) {
+@@ -465,7 +475,9 @@
+     char *key = SvPV(key_sv, key_len);
+     char *key2 = SvPV(key_sv, key_len);     /* TMP DEBUG HACK */
+ 
++#ifndef WIN32
+     debug("assign(%s)\n", key2);
++#endif
+ 
+     if (!root || !key_len || looks_private(aTHX_ key)) {
+         /* ignore _private or .private members */
+@@ -946,7 +958,7 @@
+ 
+ 
+ static int looks_private(pTHX_ const char *name) {
+-    SV *priv;
++    /* SV *priv; */
+ 
+     /* For now we hard-code the regex to match _private or .hidden
+      * variables, but we do check to see if $Template::Stash::PRIVATE
