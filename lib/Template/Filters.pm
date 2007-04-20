@@ -10,14 +10,10 @@
 #   by Leslie Michael Orchard <deus_x@nijacode.com>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 #============================================================================
 
@@ -29,7 +25,7 @@ use locale;
 use base 'Template::Base';
 use Template::Constants;
 
-our $VERSION = 2.85;
+our $VERSION = 2.86;
 
 
 #------------------------------------------------------------------------
@@ -50,6 +46,7 @@ our $FILTERS = {
     'html_para_break' => \&html_para_break,
     'html_line_break' => \&html_line_break,
     'uri'             => \&uri_filter,
+    'url'             => \&url_filter,
     'upper'           => sub { uc $_[0] },
     'lower'           => sub { lc $_[0] },
     'ucfirst'         => sub { ucfirst $_[0] },
@@ -261,7 +258,7 @@ sub _dump {
 #
 # URI escape a string.  This code is borrowed from Gisle Aas' URI::Escape
 # module, copyright 1995-2004.  See RFC2396 for details.
-#------------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
 # cache of escaped characters
 our $URI_ESCAPES;
@@ -278,6 +275,31 @@ sub uri_filter {
     }
     
     $text =~ s/([^A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/eg;
+    $text;
+}
+
+#------------------------------------------------------------------------
+# url_filter()                                           [% FILTER uri %]
+#
+# NOTE: the difference: url vs uri. 
+# This implements the old-style, non-strict behaviour of the uri filter 
+# which allows any valid URL characters to pass through so that 
+# http://example.com/blah.html does not get the ':' and '/' characters 
+# munged. 
+#-----------------------------------------------------------------------
+
+sub url_filter {
+    my $text = shift;
+
+    $URI_ESCAPES ||= {
+        map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
+    };
+
+    if ($] >= 5.008) {
+        utf8::encode($text);
+    }
+    
+    $text =~ s/([^;\/?:@&=+\$,A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/eg;
     $text;
 }
 
@@ -490,7 +512,6 @@ sub truncate_filter_factory {
         return substr($text, 0, $len - length($char)) . $char;
     }
 }
-
 
 
 #------------------------------------------------------------------------
