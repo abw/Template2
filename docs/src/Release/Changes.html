@@ -7,7 +7,7 @@
 # Changes 
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.18, detailing
+#   Revision history for the Template Toolkit version 2.19, detailing
 #   significant changes between versions, most recent first.  Some 
 #   way down the file you'll find a section detailing major changes from 
 #   version 1.* to 2.* and a list of &quot;Gotchas!&quot; that you might have to 
@@ -25,6 +25,55 @@
 #------------------------------------------------------------------------
 # $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.19 - 27th April 2007
+#------------------------------------------------------------------------
+
+* Applied a patch to t/fileline.t from Steffen Müller which fixes the
+  problems running on Win32 with backslashes in paths.
+
+  https://rt.cpan.org/Ticket/Display.html?id=20488
+  
+* Applied a patch to the XS Stash from Randy Kobes which fixes some other
+  Win32 problems.
+  
+  http://tt2.org/pipermail/templates/2007-February/009247.html
+
+* Applied another patch to the XS Stash from Steve Peters which fixes
+  a problem with tied hashes under more recent version of Perl.
+
+  http://tt2.org/pipermail/templates/2007-January/009181.html
+
+* Fixed a problem in the Perl Stash when using objects that have 
+  overloaded comparison operators.  Thanks to Randal Schwartz, Tatsuhiko 
+  Miyagawa and Daisuke Maki for their contributions.
+
+  http://tt2.org/pipermail/templates/2007-March/009265.html
+
+* Applied a patch from Bill Moseley to Template::Provider which adds 
+  negative caching and moves some functionality into separate methods
+  to make subclassing easier.  Also added the STAT_TTL configuration
+  parameter.
+  
+  http://tt2.org/pipermail/templates/2007-January/009183.html
+
+* Added the url filter as a less aggressive form of the uri filter.
+  Whereas the uri filter now (from v2.16 onwards) encodes all the 
+  reserved characters (@, :, /, etc.) as per RFC2396, the url filter
+  leaves them intact and thus behaves just like the uri filter used
+  to.
+  
+  http://tt2.org/pipermail/templates/2007-March/009277.html
+
+#------------------------------------------------------------------------
+# Version 2.18a - 9th February 2007
+#------------------------------------------------------------------------
+
+* Applied a patch from Steve Peters to the Stash.xs to allow it to 
+  compile with bleadperl 5.9.x
+
+  https://rt.cpan.org/Public/Bug/Display.html?id=22506
 
 #------------------------------------------------------------------------
 # Version 2.18 - 9th February 2007

@@ -1349,11 +1349,20 @@ is discarded to make room for the new one.
 The CACHE_SIZE can be set to 0 to disable caching altogether.
 </p>
 <pre>    my $template = Template-&gt;new({
-	CACHE_SIZE =&gt; 64,   # only cache 64 compiled templates
+        CACHE_SIZE =&gt; 64,   # only cache 64 compiled templates
     });</pre>
 <pre>    my $template = Template-&gt;new({
-	CACHE_SIZE =&gt; 0,   # don't cache any compiled templates
+        CACHE_SIZE =&gt; 0,   # don't cache any compiled templates
     });</pre>
+<p>
+As well as caching templates as they are found, the Template::Provider
+also implements negative caching to keep track of templates that are 
+<i>not</i> found.  This allows the provider to quickly decline a request
+for a template that it has previously failed to locate, saving the effort
+of going to look for it again.  This is useful when an INCLUDE_PATH includes 
+multiple providers, ensuring that the request is passed down through the 
+providers as quickly as possible.
+</p>
 
 <li><b>COMPILE_EXT</b><br>
 <p>
@@ -2003,7 +2012,7 @@ Andy Wardley &lt;abw@wardley.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-Template Toolkit version 2.18, released on 09 February 2007.
+Template Toolkit version 2.19, released on 27 April 2007.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -28,6 +28,9 @@
 		    "paths()"
 		];
 	PROCESS tocitem 
+	        title ="SUBCLASSING"
+                subs  = [];
+	PROCESS tocitem 
 	        title ="AUTHOR"
                 subs  = [];
 	PROCESS tocitem 
@@ -58,12 +61,16 @@ facilities for loading, or otherwise providing access to templates.
 The Template::Context objects maintain a list of Template::Provider 
 objects which are polled in turn (via fetch()) to return a requested
 template.  Each may return a compiled template, raise an error, or 
-decline to serve the reqest, giving subsequent providers a chance to
+decline to serve the request, giving subsequent providers a chance to
 do so.
 </p>
 <p>
-This is the &quot;Chain of Responsiblity&quot; pattern.  See 'Design Patterns' for
+This is the &quot;Chain of Responsibility&quot; pattern.  See 'Design Patterns' for
 further information.
+</p>
+<p>
+The Template::Provider can also be subclassed to provide templates from
+a different source, e.g. a database. See [% ttlink('SUBCLASSING') -%] below.
 </p>
 <p>
 This documentation needs work.
@@ -251,11 +258,39 @@ is discarded to make room for the new one.
 The CACHE_SIZE can be set to 0 to disable caching altogether.
 </p>
 <pre>    my $provider = Template::Provider-&gt;new({
-	CACHE_SIZE =&gt; 64,   # only cache 64 compiled templates
+        CACHE_SIZE =&gt; 64,   # only cache 64 compiled templates
     });</pre>
 <pre>    my $provider = Template::Provider-&gt;new({
-	CACHE_SIZE =&gt; 0,   # don't cache any compiled templates
+        CACHE_SIZE =&gt; 0,   # don't cache any compiled templates
     });</pre>
+<p>
+As well as caching templates as they are found, the Template::Provider
+also implements negative caching to keep track of templates that are 
+<i>not</i> found.  This allows the provider to quickly decline a request
+for a template that it has previously failed to locate, saving the effort
+of going to look for it again.  This is useful when an INCLUDE_PATH includes 
+multiple providers, ensuring that the request is passed down through the 
+providers as quickly as possible.
+</p>
+
+<li><b>STAT_TTL</b><br>
+<p>
+This value can be set to control how long the Template::Provider will keep a
+template cached in memory before checking to see if the source template has
+changed. 
+</p>
+<pre>    my $provider = Template::Provider-&gt;new({
+        STAT_TTL =&gt; 60,  # one minute
+    });</pre>
+<p>
+The default value is 1 (second). You'll probably want to set this to a higher
+value if you're running the Template Toolkit inside a persistent web server
+application (e.g. mod_perl). For example, set it to 60 and the provider will
+only look for changes to templates once a minute at most. However, during
+development (or any time you're making frequent changes to templates) you'll
+probably want to keep it set to a low value so that you don't have to wait
+for the provider to notice that your templates have changed.
+</p>
 
 <li><b>COMPILE_EXT</b><br>
 <p>
@@ -441,6 +476,46 @@ reporting as much.
 [%- END %]
 [%- END %]
 [% WRAPPER section
+    title="SUBCLASSING"
+-%]<p>
+The Template::Provider module can be subclassed to provide templates from a 
+different source (e.g. a database).  In most cases you'll just need to provide
+custom implementations of the <code>'_template_modified()'</code> and <code>'_template_content()'</code>
+methods.  If your provider requires and custom initialisation then you'll also
+need to implement a new <code>'_init()'</code> method.
+</p>
+<p>
+Caching in memory and on disk will still be applied (if enabled)
+when overriding these methods.
+</p>
+<ul>
+<li><b>_template_modified($path)</b><br>
+<p>
+Returns a timestamp of the <code>'$path'</code> passed in by calling stat().
+This can be overridden, for example, to return a last modified value from
+a database.  The value returned should be a timestamp value (as returned by <code>'time()'</code>,
+although a sequence number should work as well.
+</p>
+
+<li><b>_template_content($path)</b><br>
+<p>
+This method returns the content of the template for all INCLUDE, PROCESS,
+and INSERT directives.
+</p>
+<p>
+When called in scalar context, the method returns the content of the template
+located at $path, or undef if <code>'$path'</code> is not found.
+</p>
+<p>
+When called in list context it returns <code>'($content, $error, $mtime)'</code>,
+where <code>'$content'</code> is the template content, <code>'$error'</code> is an error string
+(e.g. &quot;$path: File not found&quot;), and <code>'$mtime'</code> is the template modification
+time.
+</p>
+
+</ul>
+[%- END %]
+[% WRAPPER section
     title="AUTHOR"
 -%]<p>
 Andy Wardley &lt;abw@wardley.org&gt;
@@ -452,8 +527,8 @@ Andy Wardley &lt;abw@wardley.org&gt;
 [% WRAPPER section
     title="VERSION"
 -%]<p>
-2.91, distributed as part of the
-Template Toolkit version 2.18, released on 09 February 2007.
+2.93, distributed as part of the
+Template Toolkit version 2.19, released on 27 April 2007.
 </p>
 [%- END %]
 [% WRAPPER section

@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.18
+                              Version 2.19
 
-                             09 February 2007
+                             27 April 2007
 
         Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved
 
@@ -24,8 +24,8 @@ Available from CPAN in:
 
 To install the Template Toolkit:
 
-    tar zxf Template-Toolkit-2.18.tar.gz
-    cd Template-Toolkit-2.18
+    tar zxf Template-Toolkit-2.19.tar.gz
+    cd Template-Toolkit-2.19
     perl Makefile.PL
     make
     make test
@@ -87,19 +87,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.18.
+where <version> represents the current version number, e.g. 2.19.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    tar zxf Template-Toolkit-2.18.tar.gz
+    tar zxf Template-Toolkit-2.19.tar.gz
 or
-    gunzip Template-Toolkit-2.18.tar.gz
-    tar xf Template-Toolkit-2.18.tar
+    gunzip Template-Toolkit-2.19.tar.gz
+    tar xf Template-Toolkit-2.19.tar
 
 You can then 'cd' into the directory created,
 
-    cd Template-Toolkit-2.18
+    cd Template-Toolkit-2.19
 
 and perform the usual Perl installation procedure:
 

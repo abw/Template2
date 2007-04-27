@@ -225,11 +225,60 @@ output:
 
     my%20file.html
 
-Note that as of TT version 2.16, the uri filter now correctly encodes
-all reserved characters.  This includes C<&>, C<@>, C</>, C<;>, C<:>,
-C<=>, C<+>, C<?> and C<$> which were not escaped (incorrectly) by the
-uri filter in versions 2.15 and earlier.  See RFC 2396 for further
-details.
+The uri filter correctly encodes all reserved characters, including
+C<&>, C<@>, C</>, C<;>, C<:>, C<=>, C<+>, C<?> and C<$>.  This filter
+is typically used to encode parameters in a URL that could otherwise
+be interpreted as part of the URL.  Here's an example:
+
+    [% path  = 'http://tt2.org/example'
+       back  = '/other?foo=bar&baz=bam' 
+       title = 'Earth: "Mostly Harmless"'
+    %]
+    <a href="[% path %]?back=[% back | uri %]&title=[% title | uri %]">
+
+The output generated is rather long so we'll show it split across two
+lines:
+
+    <a href="http://tt2.org/example?back=%2Fother%3Ffoo%3Dbar%26
+    baz%3Dbam&title=Earth%3A%20%22Mostly%20Harmless%22">
+
+Without the uri filter the output would look like this (also split across
+two lines). 
+
+    <a href="http://tt2.org/example?back=/other?foo=bar
+    &baz=bam&title=Earth: "Mostly Harmless"">
+
+In this rather contrived example we've manage to generate both a broken URL
+(the repeated C<?> is not allowed) and a broken HTML element (the href
+attribute is terminated by the first C<"> after C<Earth: > leaving C<Mostly
+Harmless"> dangling on the end of the tag in precisely the way that harmless
+things shouldn't dangle). So don't do that. Always use the uri filter to
+encode your URL parameters.
+
+However, you should B<not> use the uri filter to encode an entire URL.
+
+   <a href="[% page_url | uri %]">   # WRONG!
+
+This will incorrectly encode any reserved characters like C<:> and C</>
+and that's almost certainly not what you want in this case.  Instead
+you should use the B<url> (note spelling) filter for this purpose.
+
+   <a href="[% page_url | url %]">   # CORRECT
+
+Please note that this behaviour was changed in version 2.16 of the 
+Template Toolkit.  Prior to that, the uri filter did not encode the
+reserved characters, making it technically incorrect according to the
+RFC 2396 specification.  So we fixed it in 2.16 and provided the url
+filter to implement the old behaviour of not encoding reserved 
+characters.
+
+=head2 url
+
+The url filter is a less aggressive version of the uri filter.  It encodes
+any characters outside of the permitted URI character set (as defined by RFC 2396)
+into C<%nn> hex escapes.  However, unlike the uri filter, the url filter does 
+B<not> encode the reserved characters C<&>, C<@>, C</>, C<;>, C<:>, C<=>, C<+>, 
+C<?> and C<$>.  
 
 =head2 indent(pad)
 
