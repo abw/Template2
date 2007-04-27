@@ -1,0 +1,62 @@
+#============================================================= -*-perl-*-
+#
+# Template::Tools
+#
+# DESCRIPTION
+#   Index page for documentation about the command line tools
+#   distributed with the Template Toolkit.
+#
+# AUTHOR
+#   Andy Wardley  <abw@wardley.org>
+#
+# COPYRIGHT
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#
+#   This module is free software; you can redistribute it and/or
+#   modify it under the same terms as Perl itself.
+#
+#========================================================================
+
+=head1 NAME
+
+Template::Tools - Template Toolkit command line tools
+
+=head1 DESCRIPTION
+
+The Template Toolkit includes the following command line tools
+for processing templates.
+
+=over 4
+
+=item L<Template::Tools::tpage|tpage>
+
+For processing a single template.
+
+=item L<Template::Tools::ttree|ttree>
+
+For processing entire directories of templates.
+
+=back
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@wardley.orgE<gt>
+
+L<http://wardley.org/>
+
+=head1 COPYRIGHT
+
+  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
+#
+# vim: expandtab shiftwidth=4:
