@@ -55,6 +55,14 @@
   
   http://tt2.org/pipermail/templates/2007-January/009183.html
 
+* Added the url filter as a less aggressive form of the uri filter.
+  Whereas the uri filter now (from v2.16 onwards) encodes all the 
+  reserved characters (@, :, /, etc.) as per RFC2396, the url filter
+  leaves them intact and thus behaves just like the uri filter used
+  to.
+  
+  http://tt2.org/pipermail/templates/2007-March/009277.html
+
 #------------------------------------------------------------------------
 # Version 2.18a - 9th February 2007
 #------------------------------------------------------------------------
