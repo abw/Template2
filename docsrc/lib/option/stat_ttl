@@ -1,0 +1,22 @@
+[% TAGS star -%]
+[* DEFAULT 
+   obj = '$template'
+   pkg = 'Template'
+-*]
+=item STAT_TTL
+
+This value can be set to control how long the Template::Provider will keep a
+template cached in memory before checking to see if the source template has
+changed. 
+
+    my [* obj *] = [* pkg *]->new({
+        STAT_TTL => 60,  # one minute
+    });
+
+The default value is 1 (second). You'll probably want to set this to a higher
+value if you're running the Template Toolkit inside a persistent web server
+application (e.g. mod_perl). For example, set it to 60 and the provider will
+only look for changes to templates once a minute at most. However, during
+development (or any time you're making frequent changes to templates) you'll
+probably want to keep it set to a low value so that you don't have to wait
+for the provider to notice that your templates have changed.

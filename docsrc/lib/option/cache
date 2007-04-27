@@ -21,11 +21,18 @@ is discarded to make room for the new one.
 The CACHE_SIZE can be set to 0 to disable caching altogether.
 
     my [* obj *] = [* pkg *]->new({
-	CACHE_SIZE => 64,   # only cache 64 compiled templates
+        CACHE_SIZE => 64,   # only cache 64 compiled templates
     });
 
     my [* obj *] = [* pkg *]->new({
-	CACHE_SIZE => 0,   # don't cache any compiled templates
+        CACHE_SIZE => 0,   # don't cache any compiled templates
     });
 
+As well as caching templates as they are found, the Template::Provider
+also implements negative caching to keep track of templates that are 
+I<not> found.  This allows the provider to quickly decline a request
+for a template that it has previously failed to locate, saving the effort
+of going to look for it again.  This is useful when an INCLUDE_PATH includes 
+multiple providers, ensuring that the request is passed down through the 
+providers as quickly as possible.
 
