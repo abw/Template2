@@ -13,12 +13,12 @@
 #
 #========================================================================
 
-BEGIN {
-    if ( $^O eq 'MSWin32' ) {
-        print "1..0 # Skip Temporarily skipping on Win32\n";
-        exit(0);
-    }
-}
+#BEGIN {
+#    if ( $^O eq 'MSWin32' ) {
+#        print "1..0 # Skip Temporarily skipping on Win32\n";
+#        exit(0);
+#    }
+#}
 
 use strict;
 use warnings;
@@ -51,6 +51,9 @@ my $vars = {
         # Thanks to Andreas Koenig for identifying the problem.
         # http://rt.cpan.org/Public/Bug/Display.html?id=20807
         $file =~ s/eval\s+\d+/eval/;
+
+        # handle backslashes on Win32 by converting them to forward slashes
+        $file =~ s!\\!/!g if $^O eq 'MSWin32';
         return $file;
     },
     line => sub {
