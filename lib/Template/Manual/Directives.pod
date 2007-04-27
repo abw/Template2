@@ -658,9 +658,6 @@ The following conditional and boolean operators may be used:
 
     == != < <= > >= && || ! and or not
 
-Note that C<and>, C<or> and C<not> are also provided as aliases for
-C<&&>, C<||> and C<!>, respectively.
-
 Conditions may be arbitrarily complex and are evaluated with the same
 precedence as in Perl.  Parenthesis may be used to explicitly
 determine evaluation order.
@@ -672,8 +669,12 @@ determine evaluation order.
        That's more or less correct.
     [% END %]
 
-
-
+The C<and>, C<or> and C<not> operator are provided as aliases for
+C<&&>, C<||> and C<!>, respectively.  Unlike Perl, which treats 
+C<and>, C<or> and C<not> as separate, lower-precedence versions of the 
+other operators, the Template Toolkit performs a straightforward substitution
+of C<and> for C<&&>, and so on.  That means that C<and>, C<or> and C<not>
+have the same operator precedence as C<&&>, C<||> and C<!>.
 
 
 
@@ -2187,7 +2188,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-Template Toolkit version 2.18, released on 09 February 2007.
+Template Toolkit version 2.19, released on 27 April 2007.
 
 =head1 COPYRIGHT
 

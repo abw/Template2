@@ -249,7 +249,7 @@ L<http://wardley.org/|http://wardley.org/>
 =head1 VERSION
 
 1.16, distributed as part of the
-Template Toolkit version 2.18, released on 09 February 2007.
+Template Toolkit version 2.19, released on 27 April 2007.
 
 =head1 COPYRIGHT
 
