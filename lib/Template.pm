@@ -34,7 +34,7 @@ use Template::Service;
 use File::Basename;
 use File::Path;
 
-our $VERSION = '2.18';
+our $VERSION = '2.19';
 our $ERROR   = '';
 our $DEBUG   = 0;
 our $BINMODE = 0 unless defined $BINMODE;
@@ -943,7 +943,7 @@ L<http://wardley.org/|http://wardley.org/>
 
 =head1 VERSION
 
-Template Toolkit version 2.18, released on 09 February 2007.
+Template Toolkit version 2.19, released on 27 April 2007.
 
 =head1 COPYRIGHT
 
