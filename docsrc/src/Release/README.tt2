@@ -36,6 +36,11 @@ other offline document systems.
 WHAT'S NEW?
 -----------
 
+Version 2.19 fixes some minor bugs in both Perl and XS versions of the Template
+Stash, and fixes a problem with a test in the test suite failing under Win32.
+It also adds the url filter as a version of what the uri filter used to do
+before we fixed it to do the right thing. 
+
 Version 2.18 fixes a number of minor bugs. It also includes a modification to
 the parser grammar so that you can write expressions as arguments to
 subroutine, method or vmethod calls.
