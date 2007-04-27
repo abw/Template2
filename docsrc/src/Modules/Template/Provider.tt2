@@ -15,11 +15,14 @@ facilities for loading, or otherwise providing access to templates.
 The Template::Context objects maintain a list of Template::Provider 
 objects which are polled in turn (via fetch()) to return a requested
 template.  Each may return a compiled template, raise an error, or 
-decline to serve the reqest, giving subsequent providers a chance to
+decline to serve the request, giving subsequent providers a chance to
 do so.
 
-This is the "Chain of Responsiblity" pattern.  See 'Design Patterns' for
+This is the "Chain of Responsibility" pattern.  See 'Design Patterns' for
 further information.
+
+The Template::Provider can also be subclassed to provide templates from
+a different source, e.g. a database. See L<SUBCLASSING> below.
 
 This documentation needs work.
 
@@ -45,6 +48,8 @@ the following items:
 [* INCLUDE option/default *]
 
 [* INCLUDE option/cache *]
+
+[* INCLUDE option/stat_ttl *]
 
 [* INCLUDE option/compile *]
 
@@ -91,3 +96,37 @@ number of paths that can be added to, or generated for the output list.  If
 this number is exceeded then the method will immediately return an error 
 reporting as much.
 
+=head1 SUBCLASSING
+
+The Template::Provider module can be subclassed to provide templates from a 
+different source (e.g. a database).  In most cases you'll just need to provide
+custom implementations of the C<_template_modified()> and C<_template_content()>
+methods.  If your provider requires and custom initialisation then you'll also
+need to implement a new C<_init()> method.
+
+Caching in memory and on disk will still be applied (if enabled)
+when overriding these methods.
+
+=over 4
+
+=item _template_modified($path)
+
+Returns a timestamp of the C<$path> passed in by calling stat().
+This can be overridden, for example, to return a last modified value from
+a database.  The value returned should be a timestamp value (as returned by C<time()>,
+although a sequence number should work as well.
+
+=item _template_content($path)
+
+This method returns the content of the template for all INCLUDE, PROCESS,
+and INSERT directives.
+
+When called in scalar context, the method returns the content of the template
+located at $path, or undef if C<$path> is not found.
+
+When called in list context it returns C<($content, $error, $mtime)>,
+where C<$content> is the template content, C<$error> is an error string
+(e.g. "$path: File not found"), and C<$mtime> is the template modification
+time.
+
+=back
