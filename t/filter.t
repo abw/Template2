@@ -905,6 +905,11 @@ my%3Cfile%20%26%20your%3Efile.html
 foo%40bar
 
 -- test --
+[% "foo@bar" FILTER url %]
+-- expect --
+foo@bar
+
+-- test --
 [% "my<file & your>file.html" | uri | html %]
 -- expect --
 my%3Cfile%20%26%20your%3Efile.html
