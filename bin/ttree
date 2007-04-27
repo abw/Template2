@@ -37,7 +37,7 @@ use File::Basename;
 use Text::ParseWords qw(quotewords);
 
 my $NAME     = "ttree";
-my $VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+my $VERSION  = 2.90;
 my $HOME     = $ENV{ HOME } || '';
 my $RCFILE   = $ENV{"\U${NAME}rc"} || "$HOME/.${NAME}rc";
 my $TTMODULE = 'Template';
@@ -1056,7 +1056,7 @@ Brocard who gets everywhere, it seems.
 =head1 VERSION
 
 2.68, distributed as part of the
-Template Toolkit version 2.18, released on 09 February 2007.
+Template Toolkit version 2.19, released on 27 April 2007.
 
 =head1 COPYRIGHT
 
