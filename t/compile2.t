@@ -30,8 +30,10 @@ my $ttcfg = {
     COMPILE_EXT => '.ttc',
 };
 
+my $compiled = "$dir/foo.ttc";
+
 # check compiled template files exist
-ok( -f "$dir/foo.ttc" );
+ok( -f $compiled );
 ok( -f "$dir/complex.ttc" );
 
 # ensure template metadata is saved in compiled file (bug fixed in v2.00)
@@ -44,15 +46,21 @@ ok( $out =~ /^name: baz/ );
 # this way we can tell that the template was loaded from the compiled
 # version and not the source.
 
-open(FOO, "$dir/foo.ttc") || die "$dir/foo.ttc: $!\n";
+
+my @current_times = (stat $compiled)[8,9];
+
+open(FOO, $compiled) || die "$compiled: $!\n";
 local $/ = undef;
 my $foo = <FOO>;
 close(FOO);
 
 $foo =~ s/the foo file/the hacked foo file/;
-open(FOO, "> $dir/foo.ttc") || die "$dir/foo.ttc: $!\n";
+open(FOO, "> $compiled") || die "$compiled: $!\n";
 print FOO $foo;
 close(FOO);
+
+# Set mtime back to what it was
+utime( @current_times, $compiled );
 
 test_expect(\*DATA, $ttcfg);
 

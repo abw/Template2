@@ -147,6 +147,35 @@ sub denied {
 }
 
 #------------------------------------------------------------------------
+# Test if can fetch from a file handle
+#------------------------------------------------------------------------
+
+my $ttglob = Template->new || die "$Template::ERROR\n";
+ok( $ttglob, 'Created template for glob test' );
+
+# Make sure we have a multi-line template file so $/ is tested.
+my $glob_file = abs_path($dir) . '/baz';
+
+open GLOBFILE, $glob_file or die "Failed to open '$absfile': $!";
+my $outstr = '';
+
+$ttglob->process( \*GLOBFILE, { a => 'globtest' }, \$outstr ) || die $ttglob->error;
+
+close GLOBFILE;
+
+my $glob_expect = "This is the baz file, a: globtest\n";
+
+my $ok = $glob_expect eq $outstr;
+
+ok( $ok, $ok ? 'Fetch template from file handle' : <<EOF );
+template text did not match template from file handle
+MATCH FAILED
+expect: $glob_expect
+output: $outstr
+EOF
+
+
+#------------------------------------------------------------------------
 # now we'll fold those providers up into some Template objects that
 # we can pass to text_expect() to do some template driven testing
 #------------------------------------------------------------------------
