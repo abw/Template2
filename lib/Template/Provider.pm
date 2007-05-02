@@ -479,7 +479,8 @@ sub _fetch {
     }
 
     # Template could not be fetched.  Add to the negative/notfound cache.
-    $self->{ NOTFOUND }->{ $name } = time;
+    $self->{ NOTFOUND }->{ $name } = time
+        unless $error;
 
     return ( $template, $error );
 }
