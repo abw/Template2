@@ -469,20 +469,26 @@ sub _fetch {
         warn($self->error(), "\n");
     }
 
-    # Now fetch template from source, compile, and cache.
+    # load template from source
     my ($template, $error) = $self->_load($name, $t_name);
-    unless ($error) {
-        ($template, $error) = $self->_compile($template, $self->_compiled_filename($name) );
 
-        # Store compiled template and return it
-        return $self->store( $name, $template->{data} ) unless $error;
+    if ($error) {
+        # Template could not be fetched.  Add to the negative/notfound cache.
+        $self->{ NOTFOUND }->{ $name } = time;
+        return ( $template, $error );
     }
 
-    # Template could not be fetched.  Add to the negative/notfound cache.
-    $self->{ NOTFOUND }->{ $name } = time
-        unless $error;
+    # compile template source
+    ($template, $error) = $self->_compile($template, $self->_compiled_filename($name) );
 
-    return ( $template, $error );
+    if ($error) {
+        # return any compile time error
+        return ($template, $error);
+    }
+    else {
+        # Store compiled template and return it
+        return $self->store($name, $template->{data}) ;
+    }
 }
 
 
