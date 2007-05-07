@@ -2,9 +2,6 @@
 #
 # Template::Manual::Refs
 #
-# DESCRIPTION
-
-#
 # AUTHOR
 #   Andy Wardley  <abw@wardley.org>
 #
@@ -14,30 +11,13 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-# REVISION
-#   
-#
 #========================================================================
-
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
 
 =head1 NAME
 
 Template::Manual::Refs - Related modules, projects and other resources
 
 =head1 DESCRIPTION
-
-
 
 =head2 Resources
 

@@ -2,9 +2,6 @@
 #
 # Template::Manual::Filters
 #
-# DESCRIPTION
-
-#
 # AUTHOR
 #   Andy Wardley  <abw@wardley.org>
 #
@@ -14,192 +11,169 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-# REVISION
-#   
-#
 #========================================================================
-
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
 
 =head1 NAME
 
 Template::Manual::Filters - Standard filters
 
-=head1 DESCRIPTION
+=head1 format(format)
 
-
-
-=head1 STANDARD FILTERS
-
-
-
-=head2 format(format)
-
-The 'format' filter takes a format string as a parameter (as per
-printf()) and formats each line of text accordingly.
+The C<format> filter takes a format string as a parameter (as per
+C<printf()>) and formats each line of text accordingly.
 
     [% FILTER format('<!-- %-40s -->') %]
     This is a block of text filtered 
     through the above format.
     [% END %]
 
-output:
+Output:
 
     <!-- This is a block of text filtered        -->
     <!-- through the above format.               -->
 
-=head2 upper
+=head1 upper
 
 Folds the input to UPPER CASE.
 
     [% "hello world" FILTER upper %]
 
-output:
+Output:
 
     HELLO WORLD
 
-=head2 lower
+=head1 lower
 
 Folds the input to lower case.
 
     [% "Hello World" FILTER lower %]
 
-output:
+Output:
 
     hello world
 
-=head2 ucfirst
+=head1 ucfirst
 
 Folds the first character of the input to UPPER CASE.
 
     [% "hello" FILTER ucfirst %]
 
-output:
+Output:
 
     Hello
 
-=head2 lcfirst
+=head1 lcfirst
 
 Folds the first character of the input to lower case.
 
     [% "HELLO" FILTER lcfirst %]
 
-output:
+Output:
 
     hELLO
 
-=head2 trim
+=head1 trim
 
 Trims any leading or trailing whitespace from the input text.  Particularly 
-useful in conjunction with INCLUDE, PROCESS, etc., having the same effect
-as the TRIM configuration option.
+useful in conjunction with C<INCLUDE>, C<PROCESS>, etc., having the same effect
+as the C<TRIM> configuration option.
 
     [% INCLUDE myfile | trim %]
 
-=head2 collapse
+=head1 collapse
 
 Collapse any whitespace sequences in the input text into a single space.
 Leading and trailing whitespace (which would be reduced to a single space)
 is removed, as per trim.
 
     [% FILTER collapse %]
-
+    
        The   cat
-
+       
        sat    on
-
+       
        the   mat
-
+       
     [% END %]
 
-output:
+Output:
 
     The cat sat on the mat
 
-=head2 html
+=head1 html
 
-Converts the characters 'E<lt>', 'E<gt>', '&' and '"' to '&lt;',
-'&gt;', '&amp;', and '&quot;' respectively, protecting them from being
+Converts the characters C<E<lt>>, C<E<gt>>, C<&> and C<"> to C<&lt;>,
+C<&gt;>, C<&amp;>, and C<&quot;> respectively, protecting them from being
 interpreted as representing HTML tags or entities.
 
     [% FILTER html %]
     Binary "<=>" returns -1, 0, or 1 depending on...
     [% END %]
 
-output:
+Output:
 
     Binary "&lt;=&gt;" returns -1, 0, or 1 depending on...
 
-=head2 html_entity
+=head1 html_entity
 
-The html filter is fast and simple but it doesn't encode the full
-range of HTML entities that your text may contain.  The html_entity
-filter uses either the Apache::Util module (which is written in C and
-is therefore faster) or the HTML::Entities module (written in Perl but
+The C<html> filter is fast and simple but it doesn't encode the full
+range of HTML entities that your text may contain.  The C<html_entity>
+filter uses either the C<Apache::Util> module (which is written in C and
+is therefore faster) or the C<HTML::Entities> module (written in Perl but
 equally as comprehensive) to perform the encoding.  If one or other of
 these modules are installed on your system then the text will be
-encoded (via the escape_html() or encode_entities() subroutines
+encoded (via the C<escape_html()> or C<encode_entities()> subroutines
 respectively) to convert all extended characters into their
-appropriate HTML entities (e.g. converting 'é' to '&eacute;').  If
-neither module is available on your system then an 'html_entity' exception
+appropriate HTML entities (e.g. converting 'C<é>' to 'C<&eacute;>').  If
+neither module is available on your system then an 'C<html_entity>' exception
 will be thrown reporting an appropriate message.   
 
 For further information on HTML entity encoding, see
-http://www.w3.org/TR/REC-html40/sgml/entities.html.
+L<http://www.w3.org/TR/REC-html40/sgml/entities.html>.
 
-=head2 html_para
+=head1 html_para
 
 This filter formats a block of text into HTML paragraphs.  A sequence of 
 two or more newlines is used as the delimiter for paragraphs which are 
-then wrapped in HTML E<lt>pE<gt>...E<lt>/pE<gt> tags.
+then wrapped in HTML C<E<lt>pE<gt>>...C<E<lt>/pE<gt>> tags.
 
     [% FILTER html_para %]
     The cat sat on the mat.
-
+    
     Mary had a little lamb.
     [% END %]
 
-output:
+Output:
 
     <p>
     The cat sat on the mat.
     </p>
-
+    
     <p>
     Mary had a little lamb.
     </p>
 
-=head2 html_break / html_para_break
+=head1 html_break / html_para_break
 
 Similar to the html_para filter described above, but uses the HTML tag
-sequence E<lt>brE<gt>E<lt>brE<gt> to join paragraphs.
+sequence C<E<lt>brE<gt>E<lt>brE<gt>> to join paragraphs.
 
     [% FILTER html_break %]
     The cat sat on the mat.
-
+    
     Mary had a little lamb.
     [% END %]
 
-output:
+Output:
 
     The cat sat on the mat.
     <br>
     <br>
     Mary had a little lamb.
 
-=head2 html_line_break
+=head1 html_line_break
 
-This filter replaces any newlines with E<lt>brE<gt> HTML tags,
+This filter replaces any newlines with C<E<lt>brE<gt>> HTML tags,
 thus preserving the line breaks of the original text in the 
 HTML output.
 
@@ -208,12 +182,12 @@ HTML output.
     Mary had a little lamb.
     [% END %]
 
-output:
+Output:
 
     The cat sat on the mat.<br>
     Mary had a little lamb.<br>
 
-=head2 uri
+=head1 uri
 
 This filter URI escapes the input text, converting any characters 
 outside of the permitted URI character set (as defined by RFC 2396)
@@ -221,7 +195,7 @@ into a C<%nn> hex escape.
 
     [% 'my file.html' | uri %]
 
-output:
+Output:
 
     my%20file.html
 
@@ -272,7 +246,7 @@ RFC 2396 specification.  So we fixed it in 2.16 and provided the url
 filter to implement the old behaviour of not encoding reserved 
 characters.
 
-=head2 url
+=head1 url
 
 The url filter is a less aggressive version of the uri filter.  It encodes
 any characters outside of the permitted URI character set (as defined by RFC 2396)
@@ -280,26 +254,26 @@ into C<%nn> hex escapes.  However, unlike the uri filter, the url filter does
 B<not> encode the reserved characters C<&>, C<@>, C</>, C<;>, C<:>, C<=>, C<+>, 
 C<?> and C<$>.  
 
-=head2 indent(pad)
+=head1 indent(pad)
 
-Indents the text block by a fixed pad string or width.  The 'pad' argument
+Indents the text block by a fixed pad string or width.  The 'C<pad>' argument
 can be specified as a string, or as a numerical value to indicate a pad
 width (spaces).  Defaults to 4 spaces if unspecified.
 
     [% FILTER indent('ME> ') %]
     blah blah blah
-    cabbages, rhubard, onions
+    cabbages, rhubard, onions 
     [% END %]
 
-output:
+Output:
 
     ME> blah blah blah
     ME> cabbages, rhubard, onions
 
-=head2 truncate(length,dots)
+=head1 truncate(length,dots)
 
 Truncates the text block to the length specified, or a default length
-of 32.  Truncated text will be terminated with '...' (i.e. the '...'
+of 32.  Truncated text will be terminated with 'C<...>' (i.e. the 'C<...>'
 falls inside the required length, rather than appending to it).
 
     [% FILTER truncate(21) %]
@@ -307,11 +281,11 @@ falls inside the required length, rather than appending to it).
     been said on more than one occasion.
     [% END %]
 
-output:
+Output:
 
     I have much to say...
 
-If you want to use something other than '...' you can pass that as a 
+If you want to use something other than 'C<...>' you can pass that as a 
 second argument.
 
     [% FILTER truncate(26, '&hellip;') %]
@@ -319,11 +293,11 @@ second argument.
     been said on more than one occasion.
     [% END %]
 
-output:
+Output:
 
     I have much to say&hellip;
 
-=head2 repeat(iterations)
+=head1 repeat(iterations)
 
 Repeats the text block for as many iterations as are specified (default: 1).
 
@@ -332,14 +306,14 @@ Repeats the text block for as many iterations as are specified (default: 1).
     [% END %]
     We are the more beer wanters!
 
-output:
+Output:
 
     We want more beer and we want more beer,
     We want more beer and we want more beer,
     We want more beer and we want more beer,
     We are the more beer wanters!
 
-=head2 remove(string) 
+=head1 remove(string) 
 
 Searches the input text for any occurrences of the specified string and 
 removes them.  A Perl regular expression may be specified as the search 
@@ -347,27 +321,27 @@ string.
 
     [% "The  cat  sat  on  the  mat" FILTER remove('\s+') %]
 
-output: 
+Output: 
 
     Thecatsatonthemat
 
-=head2 replace(search, replace) 
+=head1 replace(search, replace) 
 
 Similar to the remove filter described above, but taking a second parameter
 which is used as a replacement string for instances of the search string.
 
     [% "The  cat  sat  on  the  mat" | replace('\s+', '_') %]
 
-output: 
+Output: 
 
     The_cat_sat_on_the_mat
 
-=head2 redirect(file, options)
+=head1 redirect(file, options)
 
-The 'redirect' filter redirects the output of the block into a separate
-file, specified relative to the OUTPUT_PATH configuration item.
+The C<redirect> filter redirects the output of the block into a separate
+file, specified relative to the C<OUTPUT_PATH> configuration item.
 
-    [% FOREACH user = myorg.userlist %]
+    [% FOREACH user IN myorg.userlist %]
        [% FILTER redirect("users/${user.id}.html") %]
           [% INCLUDE userinfo %]
        [% END %]
@@ -375,14 +349,15 @@ file, specified relative to the OUTPUT_PATH configuration item.
 
 or more succinctly, using side-effect notation:
 
-    [% INCLUDE userinfo 
-         FILTER redirect("users/${user.id}.html")
-	   FOREACH user = myorg.userlist 
+    [%  FOREACH user IN myorg.userlist;
+          INCLUDE userinfo 
+            FILTER redirect("users/${user.id}.html");
+        END
     %]
 
-A 'file' exception will be thrown if the OUTPUT_PATH option is undefined.
+A C<file> exception will be thrown if the C<OUTPUT_PATH> option is undefined.
 
-An optional 'binmode' argument can follow the filename to explicitly set
+An optional C<binmode> argument can follow the filename to explicitly set
 the output file to binary mode.
 
     [% PROCESS my/png/generator 
@@ -395,19 +370,19 @@ value can be used to set binary mode.
          FILTER redirect("images/logo.png", 1) %]
 
 For the sake of future compatibility and clarity, if nothing else, we
-would strongly recommend you explicitly use the named 'binmode' option
+would strongly recommend you explicitly use the named C<binmode> option
 as shown in the first example.
 
-=head2 eval / evaltt
+=head1 eval / evaltt
 
-The 'eval' filter evaluates the block as template text, processing
+The C<eval> filter evaluates the block as template text, processing
 any directives embedded within it.  This allows template variables to
 contain template fragments, or for some method to be provided for
 returning template fragments from an external source such as a
 database, which can then be processed in the template as required.
 
     my $vars  = {
-	fragment => "The cat sat on the [% place %]",
+        fragment => "The cat sat on the [% place %]",
     };
     $template->process($file, $vars);
 
@@ -419,17 +394,17 @@ is therefore equivalent to
 
     The cat sat on the [% place %]
 
-The 'evaltt' filter is provided as an alias for 'eval'.
+The C<evaltt> filter is provided as an alias for C<eval>.
 
-=head2 perl / evalperl
+=head1 perl / evalperl
 
-The 'perl' filter evaluates the block as Perl code.  The EVAL_PERL
-option must be set to a true value or a 'perl' exception will be
+The C<perl> filter evaluates the block as Perl code.  The C<EVAL_PERL>
+option must be set to a true value or a C<perl> exception will be
 thrown.
 
     [% my_perl_code | perl %]
 
-In most cases, the [% PERL %] ... [% END %] block should suffice for 
+In most cases, the C<[% PERL %]> ... C<[% END %]> block should suffice for 
 evaluating Perl code, given that template directives are processed 
 before being evaluate as Perl.  Thus, the previous example could have
 been written in the more verbose form:
@@ -444,34 +419,34 @@ as well as
     [% my_perl_code %]
     [% END %]
 
-The 'evalperl' filter is provided as an alias for 'perl' for backwards
+The C<evalperl> filter is provided as an alias for C<perl> for backwards
 compatibility.
 
-=head2 stdout(options)
+=head1 stdout(options)
 
 The stdout filter prints the output generated by the enclosing block to
-STDOUT.  The 'binmode' option can be passed as either a named parameter
-or a single argument to set STDOUT to binary mode (see the
+C<STDOUT>.  The C<binmode> option can be passed as either a named parameter
+or a single argument to set C<STDOUT> to binary mode (see the
 binmode perl function).
 
     [% PROCESS something/cool
            FILTER stdout(binmode=1) # recommended %]
-
+    
     [% PROCESS something/cool
            FILTER stdout(1)         # alternate %]
 
-The stdout filter can be used to force binmode on STDOUT, or also inside
-redirect, null or stderr blocks to make sure that particular output goes
-to stdout. See the null filter below for an example.
+The C<stdout> filter can be used to force C<binmode> on C<STDOUT>, or also
+inside C<redirect>, C<null> or C<stderr> blocks to make sure that particular
+output goes to C<STDOUT>. See the C<null> filter below for an example.
 
-=head2 stderr
+=head1 stderr
 
 The stderr filter prints the output generated by the enclosing block to
-STDERR.
+C<STDERR>.
 
-=head2 null
+=head1 null
 
-The null filter prints nothing.  This is useful for plugins whose
+The C<null> filter prints nothing.  This is useful for plugins whose
 methods return values that you don't want to appear in the output.
 Rather than assigning every plugin method call to a dummy variable
 to silence it, you can wrap the block in a null filter:
@@ -487,37 +462,8 @@ to silence it, you can wrap the block in a null filter:
        END;
     -%]
 
-Notice the use of the stdout filter to ensure that a particular expression
-generates output to stdout (in this case in binary mode).
-
-=head2 latex(outputType)
-
-The latex() filter is no longer part of the core Template Toolkit
-distribution as of version 2.15.  You can download it as a 
-separate Template-Latex distribution from CPAN.
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-Template Toolkit version 2.19, released on 27 April 2007.
-
-=head1 COPYRIGHT
-
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-
+Notice the use of the C<stdout> filter to ensure that a particular expression
+generates output to C<STDOUT> (in this case in binary mode).
 
 =cut
 

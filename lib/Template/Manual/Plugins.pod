@@ -2,9 +2,6 @@
 #
 # Template::Manual::Plugins
 #
-# DESCRIPTION
-
-#
 # AUTHOR
 #   Andy Wardley  <abw@wardley.org>
 #
@@ -14,32 +11,11 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-# REVISION
-#   
-#
 #========================================================================
-
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
 
 =head1 NAME
 
 Template::Manual::Plugins - Standard plugins
-
-=head1 DESCRIPTION
-
-
-
-
 
 =head1 TEMPLATE TOOLKIT PLUGINS
 
@@ -50,26 +26,25 @@ before using the plugin.
 
 =head2 Autoformat
 
-The Autoformat plugin is an interface to Damian Conway's Text::Autoformat 
-Perl module which provides advanced text wrapping and formatting.  See
-L<Template::Plugin::Autoformat> and L<Text::Autoformat> for further 
-details.
+The L<Template::Plugin::Autoformat|Autoformat> plugin is an interface to
+Damian Conway's Text::Autoformat Perl module which provides advanced text
+wrapping and formatting. See L<Template::Plugin::Autoformat> and
+C<Text::Autoformat> for further details.
 
     [% USE autoformat(left=10, right=20) %]
     [% autoformat(mytext) %]	    # call autoformat sub
     [% mytext FILTER autoformat %]  # or use autoformat filter
 
-The Text::Autoformat module is available from CPAN:
+The C<Text::Autoformat> module is available from CPAN:
 
-    http://www.cpan.org/modules/by-module/Text/
+    L<http://www.cpan.org/modules/by-module/Text/>
 
 =head2 CGI
 
-The CGI plugin is a wrapper around Lincoln Stein's 
-E<lt>lstein@genome.wi.mit.eduE<gt> CGI.pm module.  The plugin is 
-distributed with the Template Toolkit (see L<Template::Plugin::CGI>)
-and the CGI module itself is distributed with recent versions Perl,
-or is available from CPAN.
+The L<Template::Plugin::CGI|CGI> plugin is a wrapper around Lincoln Stein's
+CGI.pm module. The plugin is distributed with the Template Toolkit (see
+L<Template::Plugin::CGI>) and the C<CGI> module itself is distributed with
+recent versions Perl, or is available from CPAN.
 
     [% USE CGI %]
     [% CGI.param('param_name') %]
@@ -98,27 +73,27 @@ L<Template::Plugin::Datafile> for further details.
 example:
 
     [% USE userlist = datafile('/tmp/mydata') %]
-
+    
     [% FOREACH user = userlist %]
        [% user.name %] ([% user.id %])
     [% END %]
 
 =head2 Date
 
-The Date plugin provides an easy way to generate formatted time and date
-strings by delegating to the POSIX strftime() routine.   See
-L<Template::Plugin::Date> and L<POSIX> for further details.
+The L<Template::Plugin::Date|Date> plugin provides an easy way to generate
+formatted time and date strings by delegating to the POSIX C<strftime()>
+routine. See L<Template::Plugin::Date> and L<POSIX> for further details.
 
     [% USE date %]
     [% date.format %]		# current time/date
-
+    
     File last modified: [% date.format(template.modtime) %]
 
 =head2 Directory
 
-The Directory plugin provides a simple interface to a directory and
-the files within it.  See L<Template::Plugin::Directory> for further
-details.
+The L<Template::Plugin::Directory|Directory> plugin provides a simple
+interface to a directory and the files within it. See
+L<Template::Plugin::Directory> for further details.
 
     [% USE dir = Directory('/tmp') %]
     [% FOREACH file = dir.files %]
@@ -130,23 +105,24 @@ details.
 
 =head2 DBI
 
-The DBI plugin is no longer distributed as part of the Template Toolkit
-(as of version 2.15).  It is now available as a separate Template-Plugin-DBI 
+The C<DBI> plugin is no longer distributed as part of the Template Toolkit
+(as of version 2.15).  It is now available as a separate C<Template-Plugin-DBI>
 distribution from CPAN.
 
 =head2 Dumper
 
-The Dumper plugin provides an interface to the Data::Dumper module.  See
-L<Template::Plugin::Dumper> and L<Data::Dumper> for futher details.
+The L<Template::Plugin::Dumper|Dumper> plugin provides an interface to the
+Data::Dumper module. See L<Template::Plugin::Dumper> and L<Data::Dumper> for
+futher details.
 
     [% USE dumper(indent=0, pad="<br>") %]
     [% dumper.dump(myvar, yourvar) %]
 
 =head2 File
 
-The File plugin provides a general abstraction for files and can be
-used to fetch information about specific files within a filesystem.
-See L<Template::Plugin::File> for further details.
+The L<Template::Plugin::File|File> plugin provides a general abstraction for
+files and can be used to fetch information about specific files within a
+filesystem. See L<Template::Plugin::File> for further details.
 
     [% USE File('/tmp/foo.html') %]
     [% File.name %]     # foo.html
@@ -159,21 +135,21 @@ This module implements a base class plugin which can be subclassed
 to easily create your own modules that define and install new filters.
 
     package MyOrg::Template::Plugin::MyFilter;
-
+    
     use Template::Plugin::Filter;
     use base qw( Template::Plugin::Filter );
-
+    
     sub filter {
-	my ($self, $text) = @_;
-
-	# ...mungify $text...
-
-	return $text;
+        my ($self, $text) = @_;
+        # ...mungify $text...
+        return $text;
     }
+
+Example of use:
 
     # now load it...
     [% USE MyFilter %]
-
+    
     # ...and use the returned object as a filter
     [% FILTER $MyFilter %]
       ...
@@ -183,24 +159,23 @@ See L<Template::Plugin::Filter> for further details.
 
 =head2 Format
 
-The Format plugin provides a simple way to format text according to a
-printf()-like format.   See L<Template::Plugin::Format> for further 
-details.
+The L<Template::Plugin::Format|Format> plugin provides a simple way to format
+text according to a C<printf()>-like format. See L<Template::Plugin::Format> for
+further details.
 
     [% USE bold = format('<b>%s</b>') %]
     [% bold('Hello') %]
 
 =head2 GD
 
-The GD plugins are no longer part of the core Template Toolkit distribution.
-They are now available in a separate Template-GD distribution.
+The C<GD> plugins are no longer part of the core Template Toolkit distribution.
+They are now available in a separate C<Template-GD> distribution.
 
 =head2 HTML
 
-The HTML plugin is very basic, implementing a few useful
-methods for generating HTML.  It is likely to be extended in the future
-or integrated with a larger project to generate HTML elements in a generic
-way (as discussed recently on the mod_perl mailing list).
+The L<Template::Plugin::HTML|HTML> plugin is very basic, implementing a few
+useful methods for generating HTML. It is likely to be extended in the future
+or integrated with a larger project to generate HTML elements in a generic way.
 
     [% USE HTML %]
     [% HTML.escape("if (a < b && c > d) ..." %]
@@ -211,15 +186,15 @@ See L<Template::Plugin::HTML> for further details.
 
 =head2 Iterator
 
-The Iterator plugin provides a way to create a Template::Iterator
-object to iterate over a data set.  An iterator is created
-automatically by the FOREACH directive and is aliased to the 'loop'
-variable.  This plugin allows an iterator to be explicitly created
-with a given name, or the default plugin name, 'iterator'.  See
+The L<Template::Plugin::Iterator|Iterator> plugin provides a way to create a
+L<Template::Iterator> object to iterate over a data set. An iterator is
+created automatically by the C<FOREACH> directive and is aliased to the C<loop>
+variable. This plugin allows an iterator to be explicitly created with a given
+name, or the default plugin name, C<iterator>. See
 L<Template::Plugin::Iterator> for further details.
 
     [% USE iterator(list, args) %]
-
+    
     [% FOREACH item = iterator %]
        [% '<ul>' IF iterator.first %]
        <li>[% item %]
@@ -233,124 +208,75 @@ which parses POD documents into an internal object model which can
 then be traversed and presented through the Template Toolkit.
 
     [% USE Pod(podfile) %]
-
+    
     [% FOREACH head1 = Pod.head1;
-	 FOREACH head2 = head1/head2;
-	   ...
+         FOREACH head2 = head1/head2;
+           ...
          END;
        END
     %]
 
 =head2 String
 
-The String plugin implements an object-oriented interface for 
-manipulating strings.  See L<Template::Plugin::String> for further 
-details.
+The L<Template::Plugin::String|String> plugin implements an object-oriented
+interface for manipulating strings. See L<Template::Plugin::String> for
+further details.
 
     [% USE String 'Hello' %]
     [% String.append(' World') %]
-
+    
     [% msg = String.new('Another string') %]
     [% msg.replace('string', 'text') %]
-
+    
     The string "[% msg %]" is [% msg.length %] characters long.
 
 =head2 Table
 
-The Table plugin allows you to format a list of data items into a 
-virtual table by specifying a fixed number of rows or columns, with 
-an optional overlap.  See L<Template::Plugin::Table> for further 
+The L<Template::Plugin::Table|Table> plugin allows you to format a list of
+data items into a virtual table by specifying a fixed number of rows or
+columns, with an optional overlap. See L<Template::Plugin::Table> for further
 details.
 
     [% USE table(list, rows=10, overlap=1) %]
-
+    
     [% FOREACH item = table.col(3) %]
        [% item %]
     [% END %]
 
 =head2 URL
 
-The URL plugin provides a simple way of contructing URLs from a base
-part and a variable set of parameters.  See L<Template::Plugin::URL>
-for further details.
+The L<Template::Plugin::URL|URL> plugin provides a simple way of contructing
+URLs from a base part and a variable set of parameters. See
+L<Template::Plugin::URL> for further details.
 
     [% USE mycgi = url('/cgi-bin/bar.pl', debug=1) %]
-
+    
     [% mycgi %]
        # ==> /cgi/bin/bar.pl?debug=1
-
+       
     [% mycgi(mode='submit') %]
        # ==> /cgi/bin/bar.pl?mode=submit&debug=1
 
 =head2 Wrap
 
-The Wrap plugin uses the Text::Wrap module by David Muir Sharnoff 
-E<lt>muir@idiom.comE<gt> (with help from Tim Pierce and many many others)
-to provide simple paragraph formatting.  See L<Template::Plugin::Wrap>
-and L<Text::Wrap> for further details.
+The L<Template::Plugin::Wrap|Wrap> plugin uses the C<Text::Wrap> module to
+provide simple paragraph formatting. See L<Template::Plugin::Wrap> and
+L<Text::Wrap> for further details.
 
     [% USE wrap %]
     [% wrap(mytext, 40, '* ', '  ') %]	# use wrap sub
     [% mytext FILTER wrap(40) -%]	# or wrap FILTER
 
-The Text::Wrap module is available from CPAN:
+The C<Text::Wrap> module is available from CPAN:
 
     http://www.cpan.org/modules/by-module/Text/
 
-=head2 XML::Style
-
-This plugin defines a filter for performing simple stylesheet based 
-transformations of XML text.  
-
-    [% USE xmlstyle 
-           table = { 
-               attributes = { 
-                   border      = 0
-                   cellpadding = 4
-                   cellspacing = 1
-               }
-           }
-    %]
-
-    [% FILTER xmlstyle %]
-    <table>
-    <tr>
-      <td>Foo</td> <td>Bar</td> <td>Baz</td>
-    </tr>
-    </table>
-    [% END %]
-
-See L<Template::Plugin::XML::Style> for further details.
-
 =head2 XML
 
-The XML::DOM, XML::RSS, XML::Simple and XML::XPath plugins are no
+The C<XML::DOM>, C<XML::RSS>, C<XML::Simple> and C<XML::XPath> plugins are no
 longer distributed with the Template Toolkit as of version 2.15
 
-They are now available in a separate Template-XML distribution.
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-Template Toolkit version 2.19, released on 27 April 2007.
-
-=head1 COPYRIGHT
-
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-
+They are now available in a separate C<Template-XML> distribution.
 
 =cut
 

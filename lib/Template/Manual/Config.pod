@@ -2,9 +2,6 @@
 #
 # Template::Manual::Config
 #
-# DESCRIPTION
-
-#
 # AUTHOR
 #   Andy Wardley  <abw@wardley.org>
 #
@@ -14,43 +11,20 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-# REVISION
-#   
-#
 #========================================================================
-
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
 
 =head1 NAME
 
 Template::Manual::Config - Configuration options
 
-=head1 DESCRIPTION
+=head1 Template Style and Parsing Options
 
+=head2 START_TAG, END_TAG
 
-
-=head2 Template Style and Parsing Options
-
-=over 4
-
-
-
-=item START_TAG, END_TAG
-
-The START_TAG and END_TAG options are used to specify character
+The C<START_TAG> and C<END_TAG> options are used to specify character
 sequences or regular expressions that mark the start and end of a
-template directive.  The default values for START_TAG and END_TAG are
-'[%' and '%]' respectively, giving us the familiar directive style:
+template directive.  The default values for C<START_TAG> and C<END_TAG> are
+'C<[%>' and 'C<%]>' respectively, giving us the familiar directive style:
 
     [% example %]
 
@@ -59,31 +33,26 @@ Any Perl regex characters can be used and therefore should be escaped
 represent literal characters.
 
     my $template = Template->new({ 
-  	START_TAG => quotemeta('<+'),
-  	END_TAG   => quotemeta('+>'),
+        START_TAG => quotemeta('<+'),
+        END_TAG   => quotemeta('+>'),
     });
 
-example:
+Example:
 
     <+ INCLUDE foobar +>
 
-The TAGS directive can also be used to set the START_TAG and END_TAG values
+The C<TAGS> directive can also be used to set the C<START_TAG> and C<END_TAG> values
 on a per-template file basis.
 
     [% TAGS <+ +> %]
 
+=head2 TAG_STYLE
 
-
-
-
-
-=item TAG_STYLE
-
-The TAG_STYLE option can be used to set both START_TAG and END_TAG
+The C<TAG_STYLE> option can be used to set both C<START_TAG> and C<END_TAG>
 according to pre-defined tag styles.  
 
     my $template = Template->new({ 
-  	TAG_STYLE => 'star',
+        TAG_STYLE => 'star',
     });
 
 Available styles are:
@@ -97,23 +66,18 @@ Available styles are:
     mason       <% ...  >               (HTML::Mason)
     html        <!-- ... -->            (HTML comments)
 
-Any values specified for START_TAG and/or END_TAG will over-ride
-those defined by a TAG_STYLE.  
+Any values specified for C<START_TAG> and/or C<END_TAG> will override
+those defined by a C<TAG_STYLE>.  
 
-The TAGS directive may also be used to set a TAG_STYLE
+The C<TAGS> directive may also be used to set a C<TAG_STYLE>
 
     [% TAGS html %]
     <!-- INCLUDE header -->
 
-
-
-
-
-
-=item PRE_CHOMP, POST_CHOMP
+=head2 PRE_CHOMP, POST_CHOMP
 
 Anything outside a directive tag is considered plain text and is
-generally passed through unaltered (but see the INTERPOLATE option).
+generally passed through unaltered (but see the L<INTERPOLATE> option).
 This includes all whitespace and newlines characters surrounding
 directive tags.  Directives that don't generate any output will leave
 gaps in the output document.
@@ -127,10 +91,10 @@ Example:
 Output:
 
     Foo
-
+    
     Bar
 
-The PRE_CHOMP and POST_CHOMP options can help to clean up some of this
+The C<PRE_CHOMP> and C<POST_CHOMP> options can help to clean up some of this
 extraneous whitespace.  Both are disabled by default.
 
     my $template = Template-E<gt>new({
@@ -138,12 +102,12 @@ extraneous whitespace.  Both are disabled by default.
         POST_CHOMP =E<gt> 1,
     });
 
-With PRE_CHOMP set to 1, the newline and whitespace preceding a directive
+With C<PRE_CHOMP> set to C<1>, the newline and whitespace preceding a directive
 at the start of a line will be deleted.  This has the effect of 
 concatenating a line that starts with a directive onto the end of the 
 previous line.
 
-        Foo E<lt>----------.
+        Foo <----------.
                        |
     ,---(PRE_CHOMP)----'
     |
@@ -151,47 +115,47 @@ previous line.
                        |
     ,---(POST_CHOMP)---'
     |
-    `-E<gt> Bar
+    `-> Bar
 
-With POST_CHOMP set to 1, any whitespace after a directive up to and
+With C<POST_CHOMP> set to C<1>, any whitespace after a directive up to and
 including the newline will be deleted.  This has the effect of joining
 a line that ends with a directive onto the start of the next line.
 
-If PRE_CHOMP or POST_CHOMP is set to 2, all whitespace including any
+If C<PRE_CHOMP> or C<POST_CHOMP> is set to C<2>, all whitespace including any
 number of newline will be removed and replaced with a single space.
 This is useful for HTML, where (usually) a contiguous block of
 whitespace is rendered the same as a single space.
 
-With PRE_CHOMP or POST_CHOMP set to 3, all adjacent whitespace
+With C<PRE_CHOMP> or C<POST_CHOMP> set to C<3>, all adjacent whitespace
 (including newlines) will be removed entirely.
 
-These values are defined as CHOMP_NONE, CHOMP_ONE, CHOMP_COLLAPSE and
-CHOMP_GREEDY constants in the Template::Constants module.  CHOMP_ALL
-is also defined as an alias for CHOMP_ONE to provide backwards
+These values are defined as C<CHOMP_NONE>, C<CHOMP_ONE>, C<CHOMP_COLLAPSE> and
+C<CHOMP_GREEDY> constants in the L<Template::Constants> module.  C<CHOMP_ALL>
+is also defined as an alias for C<CHOMP_ONE> to provide backwards
 compatability with earlier version of the Template Toolkit.  
 
 Additionally the chomp tag modifiers listed below may also be used for
-the PRE_CHOMP and POST_CHOMP configuration.
- 
-     my $template = Template-E<gt>new({
-        PRE_CHOMP  =E<lt> '~',
-        POST_CHOMP =E<gt> '-',
+the C<PRE_CHOMP> and C<POST_CHOMP> configuration.
+
+     my $template = Template->new({
+        PRE_CHOMP  => '~',
+        POST_CHOMP => '-',
      });
 
-PRE_CHOMP and POST_CHOMP can be activated for individual directives by
-placing a '-' immediately at the start and/or end of the directive.
+C<PRE_CHOMP> and C<POST_CHOMP> can be activated for individual directives by
+placing a 'C<->' immediately at the start and/or end of the directive.
 
     [% FOREACH user IN userlist %]
        [%- user -%]
     [% END %]
 
-This has the same effect as CHOMP_ONE in removing all whitespace
+This has the same effect as C<CHOMP_ONE> in removing all whitespace
 before or after the directive up to and including the newline.  The
 template will be processed as if written:
 
     [% FOREACH user IN userlist %][% user %][% END %]
 
-To remove all whitespace including any number of newlines, use the '~' 
+To remove all whitespace including any number of newlines, use the 'C<~>' 
 character instead.
 
     [% FOREACH user IN userlist %]
@@ -200,7 +164,7 @@ character instead.
     
     [% END %]
 
-To collapse all whitespace to a single space, use the '=' character.
+To collapse all whitespace to a single space, use the 'C<=>' character.
 
     [% FOREACH user IN userlist %]
  
@@ -212,21 +176,22 @@ Here the template is processed as if written:
 
     [% FOREACH user IN userlist %] [% user %] [% END %]
 
-If you have PRE_CHOMP or POST_CHOMP set as configuration options then
-you can use '+' to disable any chomping options (i.e.  leave the
+If you have C<PRE_CHOMP> or C<POST_CHOMP> set as configuration options then
+you can use 'C<+>' to disable any chomping options (i.e.  leave the
 whitespace intact) on a per-directive basis.
 
     [% FOREACH user = userlist %]
     User: [% user +%]
     [% END %]
 
-With POST_CHOMP set to CHOMP_ONE, the above example would be parsed as
+With C<POST_CHOMP> set to C<CHOMP_ONE>, the above example would be parsed as
 if written:
 
     [% FOREACH user = userlist %]User: [% user %]
     [% END %]
 
-For reference, the PRE_CHOMP and POST_CHOMP configuration options may be set to any of the following:
+For reference, the C<PRE_CHOMP> and C<POST_CHOMP> configuration options may be
+set to any of the following:
 
      Constant      Value   Tag Modifier
      ----------------------------------
@@ -235,60 +200,53 @@ For reference, the PRE_CHOMP and POST_CHOMP configuration options may be set to 
      CHOMP_COLLAPSE  2          =
      CHOMP_GREEDY    3          ~
 
+=head2 TRIM
 
+The C<TRIM> option can be set to have any leading and trailing whitespace 
+automatically removed from the output of all template files and C<BLOCK>s.
 
-
-
-=item TRIM
-
-The TRIM option can be set to have any leading and trailing whitespace 
-automatically removed from the output of all template files and BLOCKs.
-
-By example, the following BLOCK definition
+By example, the following C<BLOCK> definition
 
     [% BLOCK foo %]
     Line 1 of foo
     [% END %]
 
-will be processed is as "\nLine 1 of foo\n".  When INCLUDEd, the surrounding
+will be processed is as "C<\nLine 1 of foo\n>".  When C<INCLUDE>d, the surrounding
 newlines will also be introduced.
 
     before 
     [% INCLUDE foo %]
     after
 
-output:
+Generated output:
+
     before
-
+    
     Line 1 of foo
-
+    
     after
 
-With the TRIM option set to any true value, the leading and trailing
+With the C<TRIM> option set to any true value, the leading and trailing
 newlines (which count as whitespace) will be removed from the output 
-of the BLOCK.
+of the C<BLOCK>.
 
     before
     Line 1 of foo
     after
 
-The TRIM option is disabled (0) by default.
+The C<TRIM> option is disabled (C<0>) by default.
 
+=head2 INTERPOLATE
 
-
-
-
-=item INTERPOLATE
-
-The INTERPOLATE flag, when set to any true value will cause variable 
-references in plain text (i.e. not surrounded by START_TAG and END_TAG)
+The C<INTERPOLATE> flag, when set to any true value will cause variable 
+references in plain text (i.e. not surrounded by C<START_TAG> and C<END_TAG>)
 to be recognised and interpolated accordingly.  
 
     my $template = Template->new({ 
-  	INTERPOLATE => 1,
+        INTERPOLATE => 1,
     });
 
-Variables should be prefixed by a '$' to identify them.  Curly braces
+Variables should be prefixed by a 'C<$>' to identify them.  Curly braces
 can be used in the familiar Perl/shell style to explicitly scope the
 variable name where required.
 
@@ -296,12 +254,12 @@ variable name where required.
     <a href="http://[% server %]/[% help %]">
     <img src="[% images %]/help.gif"></a>
     [% myorg.name %]
-  
+
     # INTERPOLATE => 1
     <a href="http://$server/$help">
     <img src="$images/help.gif"></a>
     $myorg.name
-  
+    
     # explicit scoping with {  }
     <img src="$images/${icon.next}.gif">
 
@@ -309,187 +267,158 @@ Note that a limitation in Perl's regex engine restricts the maximum length
 of an interpolated template to around 32 kilobytes or possibly less.  Files
 that exceed this limit in size will typically cause Perl to dump core with
 a segmentation fault.  If you routinely process templates of this size 
-then you should disable INTERPOLATE or split the templates in several 
+then you should disable C<INTERPOLATE> or split the templates in several 
 smaller files or blocks which can then be joined backed together via 
-PROCESS or INCLUDE.
+C<PROCESS> or C<INCLUDE>.
 
-
-
-
-
-
-
-=item ANYCASE
+=head2 ANYCASE
 
 By default, directive keywords should be expressed in UPPER CASE.  The 
-ANYCASE option can be set to allow directive keywords to be specified
+C<ANYCASE> option can be set to allow directive keywords to be specified
 in any case.
 
     # ANYCASE => 0 (default)
-    [% INCLUDE foobar %]	# OK
+    [% INCLUDE foobar %]        # OK
     [% include foobar %]        # ERROR
     [% include = 10   %]        # OK, 'include' is a variable
 
     # ANYCASE => 1
-    [% INCLUDE foobar %]	# OK
-    [% include foobar %]	# OK
+    [% INCLUDE foobar %]        # OK
+    [% include foobar %]        # OK
     [% include = 10   %]        # ERROR, 'include' is reserved word
 
-One side-effect of enabling ANYCASE is that you cannot use a variable
+One side-effect of enabling C<ANYCASE> is that you cannot use a variable
 of the same name as a reserved word, regardless of case.  The reserved
 words are currently:
 
-        GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER 
+    GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER 
     IF UNLESS ELSE ELSIF FOR FOREACH WHILE SWITCH CASE
     USE PLUGIN FILTER MACRO PERL RAWPERL BLOCK META
     TRY THROW CATCH FINAL NEXT LAST BREAK RETURN STOP 
     CLEAR TO STEP AND OR NOT MOD DIV END
 
-
 The only lower case reserved words that cannot be used for variables,
-regardless of the ANYCASE option, are the operators:
+regardless of the C<ANYCASE> option, are the operators:
 
     and or not mod div
 
+=head1 Template Files and Blocks
 
+=head2 INCLUDE_PATH
 
-
-
-
-=back
-
-=head2 Template Files and Blocks
-
-=over 4
-
-
-
-=item INCLUDE_PATH
-
-The INCLUDE_PATH is used to specify one or more directories in which
+The C<INCLUDE_PATH> is used to specify one or more directories in which
 template files are located.  When a template is requested that isn't
-defined locally as a BLOCK, each of the INCLUDE_PATH directories is
+defined locally as a C<BLOCK>, each of the C<INCLUDE_PATH> directories is
 searched in turn to locate the template file.  Multiple directories
 can be specified as a reference to a list or as a single string where
-each directory is delimited by ':'.
+each directory is delimited by 'C<:>'.
 
     my $template = Template->new({
         INCLUDE_PATH => '/usr/local/templates',
     });
-  
+    
     my $template = Template->new({
         INCLUDE_PATH => '/usr/local/templates:/tmp/my/templates',
     });
-  
+    
     my $template = Template->new({
         INCLUDE_PATH => [ '/usr/local/templates', 
                           '/tmp/my/templates' ],
     });
 
 On Win32 systems, a little extra magic is invoked, ignoring delimiters
-that have ':' followed by a '/' or '\'.  This avoids confusion when using
-directory names like 'C:\Blah Blah'.
+that have 'C<:>' followed by a 'C</>' or 'C<\>'.  This avoids confusion when using
+directory names like 'C<C:\Blah Blah>'.
 
-When specified as a list, the INCLUDE_PATH path can contain elements 
-which dynamically generate a list of INCLUDE_PATH directories.  These 
+When specified as a list, the C<INCLUDE_PATH> path can contain elements 
+which dynamically generate a list of C<INCLUDE_PATH> directories.  These 
 generator elements can be specified as a reference to a subroutine or 
-an object which implements a paths() method.
+an object which implements a C<paths()> method.
 
     my $template = Template->new({
         INCLUDE_PATH => [ '/usr/local/templates', 
                           \&incpath_generator, 
-			  My::IncPath::Generator->new( ... ) ],
+                          My::IncPath::Generator->new( ... ) ],
     });
 
-Each time a template is requested and the INCLUDE_PATH examined, the
+Each time a template is requested and the C<INCLUDE_PATH> examined, the
 subroutine or object method will be called.  A reference to a list of
 directories should be returned.  Generator subroutines should report
-errors using die().  Generator objects should return undef and make an
-error available via its error() method.
+errors using C<die()>.  Generator objects should return undef and make an
+error available via its C<error()> method.
 
 For example:
 
     sub incpath_generator {
-
-	# ...some code...
-	
-	if ($all_is_well) {
-	    return \@list_of_directories;
-	}
-	else {
-	    die "cannot generate INCLUDE_PATH...\n";
-	}
+        # ...some code...
+        
+        if ($all_is_well) {
+            return \@list_of_directories;
+        }
+        else {
+            die "cannot generate INCLUDE_PATH...\n";
+        }
     }
 
 or:
 
     package My::IncPath::Generator;
-
+    
     # Template::Base (or Class::Base) provides error() method
     use Template::Base;
     use base qw( Template::Base );
-
+    
     sub paths {
-	my $self = shift;
-
-	# ...some code...
-
+        my $self = shift;
+        
+        # ...some code...
+        
         if ($all_is_well) {
-	    return \@list_of_directories;
-	}
-	else {
-	    return $self->error("cannot generate INCLUDE_PATH...\n");
-	}
+            return \@list_of_directories;
+        }
+        else {
+            return $self->error("cannot generate INCLUDE_PATH...\n");
+        }
     }
-
+    
     1;
 
-
-
-
-
-=item DELIMITER
+=head2 DELIMITER
 
 Used to provide an alternative delimiter character sequence for 
-separating paths specified in the INCLUDE_PATH.  The default
-value for DELIMITER is ':'.
+separating paths specified in the C<INCLUDE_PATH>.  The default
+value for C<DELIMITER> is 'C<:>'.
 
-    # tolerate Silly Billy's file system conventions
     my $template = Template->new({
-	DELIMITER    => '; ',
+        DELIMITER    => '; ',
         INCLUDE_PATH => 'C:/HERE/NOW; D:/THERE/THEN',
     });
 
-    # better solution: install Linux!  :-)
-
 On Win32 systems, the default delimiter is a little more intelligent,
-splitting paths only on ':' characters that aren't followed by a '/'.
+splitting paths only on 'C<:>' characters that aren't followed by a 'C</>'.
 This means that the following should work as planned, splitting the 
-INCLUDE_PATH into 2 separate directories, C:/foo and C:/bar.
+C<INCLUDE_PATH> into 2 separate directories, C<C:/foo> and C<C:/bar>.
 
     # on Win32 only
     my $template = Template->new({
-	INCLUDE_PATH => 'C:/Foo:C:/Bar'
+        INCLUDE_PATH => 'C:/Foo:C:/Bar'
     });
 
 However, if you're using Win32 then it's recommended that you
-explicitly set the DELIMITER character to something else (e.g. ';')
+explicitly set the C<DELIMITER> character to something else (e.g. 'C<;>')
 rather than rely on this subtle magic.
 
+=head2 ABSOLUTE
 
-
-
-=item ABSOLUTE
-
-The ABSOLUTE flag is used to indicate if templates specified with
-absolute filenames (e.g. '/foo/bar') should be processed.  It is
+The C<ABSOLUTE> flag is used to indicate if templates specified with
+absolute filenames (e.g. 'C</foo/bar>') should be processed.  It is
 disabled by default and any attempt to load a template by such a
-name will cause a 'file' exception to be raised.
+name will cause a 'C<file>' exception to be raised.
 
     my $template = Template->new({
-	ABSOLUTE => 1,
+        ABSOLUTE => 1,
     });
-
+    
     # this is why it's disabled by default
     [% INSERT /etc/passwd %]
 
@@ -499,135 +428,103 @@ with a driver letter and colon, such as:
 
     C:/Foo/Bar
 
+=head2 RELATIVE
 
-
-
-
-
-=item RELATIVE
-
-The RELATIVE flag is used to indicate if templates specified with
-filenames relative to the current directory (e.g. './foo/bar' or
-'../../some/where/else') should be loaded.  It is also disabled by
-default, and will raise a 'file' error if such template names are
+The C<RELATIVE> flag is used to indicate if templates specified with
+filenames relative to the current directory (e.g. 'C<./foo/bar>' or
+'C<../../some/where/else>') should be loaded.  It is also disabled by
+default, and will raise a 'C<file>' error if such template names are
 encountered.  
 
     my $template = Template->new({
-	RELATIVE => 1,
+        RELATIVE => 1,
     });
-
+    
     [% INCLUDE ../logs/error.log %]
 
+=head2 DEFAULT
 
-
-
-
-=item DEFAULT
-
-The DEFAULT option can be used to specify a default template which should 
-be used whenever a specified template can't be found in the INCLUDE_PATH.
+The C<DEFAULT> option can be used to specify a default template which should 
+be used whenever a specified template can't be found in the C<INCLUDE_PATH>.
 
     my $template = Template->new({
-	DEFAULT => 'notfound.html',
+        DEFAULT => 'notfound.html',
     });
 
-If a non-existant template is requested through the Template process()
-method, or by an INCLUDE, PROCESS or WRAPPER directive, then the
-DEFAULT template will instead be processed, if defined.  Note that the
-DEFAULT template is not used when templates are specified with
-absolute or relative filenames, or as a reference to a input file
-handle or text string.
+If a non-existant template is requested through the Template
+L<Template#process()|process()> method, or by an C<INCLUDE>, C<PROCESS> or
+C<WRAPPER> directive, then the C<DEFAULT> template will instead be processed, if
+defined. Note that the C<DEFAULT> template is not used when templates are
+specified with absolute or relative filenames, or as a reference to a input
+file handle or text string.
 
+=head2 BLOCKS
 
-
-
-
-=item BLOCKS
-
-The BLOCKS option can be used to pre-define a default set of template 
+The C<BLOCKS> option can be used to pre-define a default set of template 
 blocks.  These should be specified as a reference to a hash array 
-mapping template names to template text, subroutines or Template::Document
+mapping template names to template text, subroutines or L<Template::Document>
 objects.
 
     my $template = Template->new({
-	BLOCKS => {
-	    header  => 'The Header.  [% title %]',
-	    footer  => sub { return $some_output_text },
-	    another => Template::Document->new({ ... }),
-	},
+        BLOCKS => {
+            header  => 'The Header.  [% title %]',
+            footer  => sub { return $some_output_text },
+            another => Template::Document->new({ ... }),
+        },
     }); 
 
+=head2 AUTO_RESET
 
+The C<AUTO_RESET> option is set by default and causes the local C<BLOCKS>
+cache for the L<Template::Context> object to be reset on each call to the
+Template L<Template#process()|process()> method. This ensures that any C<BLOCK>s
+defined within a template will only persist until that template is finished
+processing. This prevents C<BLOCK>s defined in one processing request from
+interfering with other independent requests subsequently processed by the same
+context object.
 
+The C<BLOCKS> item may be used to specify a default set of block definitions
+for the L<Template::Context> object. Subsequent C<BLOCK> definitions in
+templates will over-ride these but they will be reinstated on each reset if
+C<AUTO_RESET> is enabled (default), or if the L<Template::Context>
+L<Template::Context#reset()|reset()> method is called.
 
-=item AUTO_RESET
-
-The AUTO_RESET option is set by default and causes the local BLOCKS
-cache for the Template::Context object to be reset on each call to the
-Template process() method.  This ensures that any BLOCKs defined
-within a template will only persist until that template is finished
-processing.  This prevents BLOCKs defined in one processing request
-from interfering with other independent requests subsequently
-processed by the same context object.
-
-The BLOCKS item may be used to specify a default set of block definitions
-for the Template::Context object.  Subsequent BLOCK definitions in templates
-will over-ride these but they will be reinstated on each reset if AUTO_RESET
-is enabled (default), or if the Template::Context reset() method is called.
-
-
-
-
-
-
-
-
-
-=item RECURSION
+=head2 RECURSION
 
 The template processor will raise a file exception if it detects
 direct or indirect recursion into a template.  Setting this option to 
 any true value will allow templates to include each other recursively.
 
+=head1 Template Variables
 
+=head2 VARIABLES, PRE_DEFINE
 
-=back
-
-=head2 Template Variables
-
-=over 4
-
-=item VARIABLES, PRE_DEFINE
-
-The VARIABLES option (or PRE_DEFINE - they're equivalent) can be used
+The C<VARIABLES> option (or C<PRE_DEFINE> - they're equivalent) can be used
 to specify a hash array of template variables that should be used to
 pre-initialise the stash when it is created.  These items are ignored
-if the STASH item is defined.
+if the C<STASH> item is defined.
 
     my $template = Template->new({
-	VARIABLES => {
-	    title   => 'A Demo Page',
-	    author  => 'Joe Random Hacker',
-	    version => 3.14,
-	},
+        VARIABLES => {
+            title   => 'A Demo Page',
+            author  => 'Joe Random Hacker',
+            version => 3.14,
+        },
     };
 
 or
 
     my $template = Template->new({
-	PRE_DEFINE => {
-	    title   => 'A Demo Page',
-	    author  => 'Joe Random Hacker',
-	    version => 3.14,
-	},
+        PRE_DEFINE => {
+            title   => 'A Demo Page',
+            author  => 'Joe Random Hacker',
+            version => 3.14,
+        },
     };
 
+=head2 CONSTANTS
 
-
-
-=item CONSTANTS
-
-The CONSTANTS option can be used to specify a hash array of template
+The C<CONSTANTS> option can be used to specify a hash array of template
 variables that are compile-time constants.  These variables are
 resolved once when the template is compiled, and thus don't require
 further resolution at runtime.  This results in significantly faster
@@ -635,81 +532,81 @@ processing of the compiled templates and can be used for variables that
 don't change from one request to the next.
 
     my $template = Template->new({
-	CONSTANTS => {
-	    title   => 'A Demo Page',
-	    author  => 'Joe Random Hacker',
-	    version => 3.14,
-	},
+        CONSTANTS => {
+            title   => 'A Demo Page',
+            author  => 'Joe Random Hacker',
+            version => 3.14,
+        },
     };
 
-=item CONSTANT_NAMESPACE
+=head2 CONSTANT_NAMESPACE
 
-Constant variables are accessed via the 'constants' namespace by
+Constant variables are accessed via the C<constants> namespace by
 default.
 
     [% constants.title %]
 
-The CONSTANTS_NAMESPACE option can be set to specify an alternate
+The C<CONSTANTS_NAMESPACE> option can be set to specify an alternate
 namespace.
 
     my $template = Template->new({
-	CONSTANTS => {
-	    title   => 'A Demo Page',
-	    # ...etc...
-	},
-	CONSTANTS_NAMESPACE => 'const',
+        CONSTANTS => {
+            title   => 'A Demo Page',
+            # ...etc...
+        },
+        CONSTANTS_NAMESPACE => 'const',
     };
 
 In this case the constants would then be accessed as:
 
     [% const.title %]
 
-=item NAMESPACE
+=head2 NAMESPACE
 
 The constant folding mechanism described above is an example of a
 namespace handler.  Namespace handlers can be defined to provide
 alternate parsing mechanisms for variables in different namespaces.
 
-Under the hood, the Template module converts a constructor configuration
+Under the hood, the L<Template> module converts a constructor configuration
 such as:
 
     my $template = Template->new({
-	CONSTANTS => {
-	    title   => 'A Demo Page',
-	    # ...etc...
-	},
-	CONSTANTS_NAMESPACE => 'const',
+        CONSTANTS => {
+            title   => 'A Demo Page',
+            # ...etc...
+        },
+        CONSTANTS_NAMESPACE => 'const',
     };
 
 into one like:
 
     my $template = Template->new({
-	NAMESPACE => {
-	    const => Template:::Namespace::Constants->new({
-		title   => 'A Demo Page',
-		# ...etc...
-	    }),
-	},
+        NAMESPACE => {
+            const => Template:::Namespace::Constants->new({
+                title   => 'A Demo Page',
+                # ...etc...
+            }),
+        },
     };
 
 You can use this mechanism to define multiple constant namespaces, or
 to install custom handlers of your own.  
 
     my $template = Template->new({
-	NAMESPACE => {
-	    site => Template:::Namespace::Constants->new({
-		title   => "Wardley's Widgets",
-		version => 2.718,
-	    }),
-	    author => Template:::Namespace::Constants->new({
-		name  => 'Andy Wardley',
-		email => 'abw@andywardley.com',
-	    }),
-	    voodoo => My::Namespace::Handler->new( ... ),
-	},
+        NAMESPACE => {
+            site => Template:::Namespace::Constants->new({
+                title   => "Wardley's Widgets",
+                version => 2.718,
+            }),
+            author => Template:::Namespace::Constants->new({
+                name  => 'Andy Wardley',
+                email => 'abw@andywardley.com',
+            }),
+            voodoo => My::Namespace::Handler->new( ... ),
+        },
     };
 
-Now you have 2 constant namespaces, for example:
+Now you have two constant namespaces, for example:
 
     [% site.title %]
     [% author.name %]
@@ -719,43 +616,36 @@ namespace.
 
     [% voodoo.magic %]
 
-See L<Template::Namespace::Constants|Template::Namespace::Constants>
+See L<Template::Namespace::Constants>
 for an example of what a namespace handler looks like on the inside.
 
+=head1 Template Processing Options
 
-
-
-
-=back
-
-=head2 Template Processing Options
-
-
-The following options are used to specify any additional templates
-that should be processed before, after, around or instead of the
-template passed as the first argument to the Template process()
-method.  These options can be perform various useful tasks such as
-adding standard headers or footers to all pages, wrapping page output
-in other templates, pre-defining variables or performing
-initialisation or cleanup tasks, automatically generating page summary
-information, navigation elements, and so on.
+The following options are used to specify any additional templates that should
+be processed before, after, around or instead of the template passed as the
+first argument to the L<Template> L<Template#process()|process()> method.
+These options can be perform various useful tasks such as adding standard
+headers or footers to all pages, wrapping page output in other templates,
+pre-defining variables or performing initialisation or cleanup tasks,
+automatically generating page summary information, navigation elements, and so
+on.
 
 The task of processing the template is delegated internally to the
-Template::Service module which, unsurprisingly, also has a process()
-method.  Any templates defined by the PRE_PROCESS option are processed
-first and any output generated is added to the output buffer.  Then
-the main template is processed, or if one or more PROCESS templates
-are defined then they are instead processed in turn.  In this case,
-one of the PROCESS templates is responsible for processing the main
+L<Template::Service> module which, unsurprisingly, also has a
+L<Template::Service#process()|process()> method. Any templates defined by the
+C<PRE_PROCESS> option are processed first and any output generated is added to
+the output buffer. Then the main template is processed, or if one or more
+C<PROCESS> templates are defined then they are instead processed in turn. In this
+case, one of the C<PROCESS> templates is responsible for processing the main
 template, by a directive such as:
 
     [% PROCESS $template %]
 
-The output of processing the main template or the PROCESS template(s)
-is then wrapped in any WRAPPER templates, if defined.  WRAPPER
+The output of processing the main template or the C<PROCESS> template(s)
+is then wrapped in any C<WRAPPER> templates, if defined.  C<WRAPPER>
 templates don't need to worry about explicitly processing the template
-because it will have been done for them already.  Instead WRAPPER
-templates access the content they are wrapping via the 'content'
+because it will have been done for them already.  Instead C<WRAPPER>
+templates access the content they are wrapping via the C<content>
 variable.
 
     wrapper before
@@ -763,57 +653,50 @@ variable.
     wrapper after
 
 This output generated from processing the main template, and/or any
-PROCESS or WRAPPER templates is added to the output buffer.  Finally,
-any POST_PROCESS templates are processed and their output is also
+C<PROCESS> or C<WRAPPER> templates is added to the output buffer.  Finally,
+any C<POST_PROCESS> templates are processed and their output is also
 added to the output buffer which is then returned.
 
-If the main template throws an exception during processing then any
-relevant template(s) defined via the ERROR option will be processed
-instead.  If defined and successfully processed, the output from the
-error template will be added to the output buffer in place of the
-template that generated the error and processing will continue,
-applying any WRAPPER and POST_PROCESS templates.  If no relevant ERROR
-option is defined, or if the error occurs in one of the PRE_PROCESS,
-WRAPPER or POST_PROCESS templates, then the process will terminate
-immediately and the error will be returned.
+If the main template throws an exception during processing then any relevant
+template(s) defined via the C<ERROR> option will be processed instead. If
+defined and successfully processed, the output from the error template will be
+added to the output buffer in place of the template that generated the error
+and processing will continue, applying any C<WRAPPER> and C<POST_PROCESS>
+templates. If no relevant C<ERROR> option is defined, or if the error occurs
+in one of the C<PRE_PROCESS>, C<WRAPPER> or C<POST_PROCESS> templates, then
+the process will terminate immediately and the error will be returned.
 
-
-
-=over 4
-
-
-
-=item PRE_PROCESS, POST_PROCESS
+=head2 PRE_PROCESS, POST_PROCESS
 
 These values may be set to contain the name(s) of template files
-(relative to INCLUDE_PATH) which should be processed immediately
+(relative to C<INCLUDE_PATH>) which should be processed immediately
 before and/or after each template.  These do not get added to 
-templates processed into a document via directives such as INCLUDE, 
-PROCESS, WRAPPER etc.
+templates processed into a document via directives such as C<INCLUDE>, 
+C<PROCESS>, C<WRAPPER> etc.
 
     my $template = Template->new({
-	PRE_PROCESS  => 'header',
-	POST_PROCESS => 'footer',
+        PRE_PROCESS  => 'header',
+        POST_PROCESS => 'footer',
     };
 
 Multiple templates may be specified as a reference to a list.  Each is 
 processed in the order defined.
 
     my $template = Template->new({
-	PRE_PROCESS  => [ 'config', 'header' ],
-	POST_PROCESS => 'footer',
+        PRE_PROCESS  => [ 'config', 'header' ],
+        POST_PROCESS => 'footer',
     };
 
 Alternately, multiple template may be specified as a single string, 
-delimited by ':'.  This delimiter string can be changed via the 
-DELIMITER option.
+delimited by 'C<:>'.  This delimiter string can be changed via the 
+C<DELIMITER> option.
 
     my $template = Template->new({
-	PRE_PROCESS  => 'config:header',
-	POST_PROCESS => 'footer',
+        PRE_PROCESS  => 'config:header',
+        POST_PROCESS => 'footer',
     };
 
-The PRE_PROCESS and POST_PROCESS templates are evaluated in the same
+The C<PRE_PROCESS> and C<POST_PROCESS> templates are evaluated in the same
 variable context as the main document and may define or update
 variables for subsequent use.
 
@@ -828,21 +711,21 @@ header:
 
     [% DEFAULT title = 'My Funky Web Site' %]
     <html>
-    <head>
-    <title>[% title %]</title>
-    </head>
-    <body bgcolor="[% bgcolor %]">
+      <head>
+        <title>[% title %]</title>
+      </head>
+      <body bgcolor="[% bgcolor %]">
 
 footer:
 
-    <hr>
-    Version [% version %]
-    </body>
+        <hr>
+        Version [% version %]
+      </body>
     </html>
 
-The Template::Document object representing the main template being processed
-is available within PRE_PROCESS and POST_PROCESS templates as the 'template'
-variable.  Metadata items defined via the META directive may be accessed 
+The L<Template::Document> object representing the main template being processed
+is available within C<PRE_PROCESS> and C<POST_PROCESS> templates as the C<template>
+variable.  Metadata items defined via the C<META> directive may be accessed 
 accordingly.
 
     $template->process('mydoc.html', $vars);
@@ -856,55 +739,44 @@ mydoc.html:
 header:
 
     <html>
-    <head>
-    <title>[% template.title %]</title></head>
-    <body bgcolor="[% bgcolor %]">
+      <head>
+        <title>[% template.title %]</title>
+      </head>
+      <body bgcolor="[% bgcolor %]">
 
+=head2 PROCESS
 
-
-
-
-
-
-
-
-
-
-
-
-
-=item PROCESS
-
-The PROCESS option may be set to contain the name(s) of template files
-(relative to INCLUDE_PATH) which should be processed instead of the 
-main template passed to the Template process() method.  This can 
-be used to apply consistent wrappers around all templates, similar to 
-the use of PRE_PROCESS and POST_PROCESS templates.
+The C<PROCESS> option may be set to contain the name(s) of template files
+(relative to C<INCLUDE_PATH>) which should be processed instead of the main
+template passed to the L<Template> L<Template#process()|process()> method.
+This can be used to apply consistent wrappers around all templates, similar to
+the use of C<PRE_PROCESS> and C<POST_PROCESS> templates.
 
     my $template = Template->new({
-	PROCESS  => 'content',
+        PROCESS  => 'content',
     };
-
+    
     # processes 'content' instead of 'foo.html'
     $template->process('foo.html');
 
-A reference to the original template is available in the 'template'
+A reference to the original template is available in the C<template>
 variable.  Metadata items can be inspected and the template can be
 processed by specifying it as a variable reference (i.e. prefixed by
-'$') to an INCLUDE, PROCESS or WRAPPER directive.
+C<$>) to an C<INCLUDE>, C<PROCESS> or C<WRAPPER> directive.
 
 content:
 
     <html>
-    <head>
-    <title>[% template.title %]</title>
-    </head>
-    
-    <body>
+      <head>
+        <title>[% template.title %]</title>
+      </head>
+      <body>
+    <!-- begin content -->
     [% PROCESS $template %]
-    <hr>
-    &copy; Copyright [% template.copyright %]
-    </body>
+    <!-- end content -->
+        <hr>
+        &copy; Copyright [% template.copyright %]
+      </body>
     </html>
 
 foo.html:
@@ -920,36 +792,31 @@ foo.html:
 output:    
 
     <html>
-    <head>
-    <title>The Foo Page</title>
-    </head>
-
-    <body>
+      <head>
+        <title>The Foo Page</title>
+      </head>
+      <body>
+    <!-- begin content -->
     <h1>The Foo Page</h1>
     Welcome to the Foo Page, blah blah blah
-    <hr>
-    &copy; Copyright 2000 Fred Foo
-    </body>
+    <!-- end content -->
+        <hr>
+        &copy; Copyright 2000 Fred Foo
+      </body>
     </html>
 
+=head2 WRAPPER
 
-
-
-
-
-
-=item WRAPPER
-
-The WRAPPER option can be used to specify one or more templates which
+The C<WRAPPER> option can be used to specify one or more templates which
 should be used to wrap around the output of the main page template.
-The main template is processed first (or any PROCESS template(s)) and
-the output generated is then passed as the 'content' variable to the
-WRAPPER template(s) as they are processed.
+The main template is processed first (or any C<PROCESS> template(s)) and
+the output generated is then passed as the C<content> variable to the
+C<WRAPPER> template(s) as they are processed.
 
     my $template = Template->new({
-	WRAPPER => 'wrapper',
+        WRAPPER => 'wrapper',
     };
-
+    
     # process 'foo' then wrap in 'wrapper'
     $template->process('foo', { message => 'Hello World!' });
 
@@ -971,8 +838,8 @@ The output generated from this example is:
     Message: Hello World!
     </wrapper>
 
-You can specify more than one WRAPPER template by setting the value to
-be a reference to a list of templates.  The WRAPPER templates will be
+You can specify more than one C<WRAPPER> template by setting the value to
+be a reference to a list of templates.  The C<WRAPPER> templates will be
 processed in reverse order with the output of each being passed to the
 next (or previous, depending on how you look at it) as the 'content'
 variable.  It sounds complicated, but the end result is that it just
@@ -980,9 +847,9 @@ variable.  It sounds complicated, but the end result is that it just
 specify.
 
     my $template = Template->new({
-	WRAPPER => [ 'outer', 'inner' ],
+        WRAPPER => [ 'outer', 'inner' ],
     };
-
+    
     # process 'foo' then wrap in 'inner', then in 'outer'
     $template->process('foo', { message => 'Hello World!' });
 
@@ -1007,8 +874,8 @@ The output generated is then:
     </inner>
     </outer>
 
-One side-effect of the "inside-out" processing of the WRAPPER
-configuration item (and also the WRAPPER directive) is that any
+One side-effect of the "inside-out" processing of the C<WRAPPER>
+configuration item (and also the C<WRAPPER> directive) is that any
 variables set in the template being wrapped will be visible to the
 template doing the wrapping, but not the other way around.
 
@@ -1024,14 +891,14 @@ foo:
            author   = 'Frank Oliver Octagon'
        }
     %]
-
+    
     <p>
     Welcome to the page that tells you everything about foo
     blah blah blah...
     </p>
 
-The 'foo' template is processed before the wrapper template meaning
-that the 'page' data structure will be defined for use in the wrapper
+The C<foo> template is processed before the wrapper template meaning
+that the C<page> data structure will be defined for use in the wrapper
 template.
 
 wrapper:
@@ -1044,23 +911,18 @@ wrapper:
         <h1>[% page.title %]</h1>
         <h2>[% page.subtitle %]</h1>
         <h3>by [% page.author %]</h3>
-
         [% content %]
       </body>
     </html>
 
-It achieves the same effect as defining META items which are then 
-accessed via the 'template' variable (which you are still free to 
-use within WRAPPER templates), but gives you more flexibility in 
+It achieves the same effect as defining C<META> items which are then 
+accessed via the C<template> variable (which you are still free to 
+use within C<WRAPPER> templates), but gives you more flexibility in 
 the type and complexity of data that you can define.
 
+=head2 ERROR
 
-
-
-
-=item ERROR
-
-The ERROR (or ERRORS if you prefer) configuration item can be used to
+The C<ERROR> (or C<ERRORS> if you prefer) configuration item can be used to
 name a single template or specify a hash array mapping exception types
 to templates which should be used for error handling.  If an uncaught
 exception is raised from within a template then the appropriate error
@@ -1070,154 +932,138 @@ If specified as a single value then that template will be processed
 for all uncaught exceptions. 
 
     my $template = Template->new({
-	ERROR => 'error.html'
+        ERROR => 'error.html'
     });
 
-If the ERROR item is a hash reference the keys are assumed to be
+If the C<ERROR> item is a hash reference the keys are assumed to be
 exception types and the relevant template for a given exception will
-be selected.  A 'default' template may be provided for the general
-case.  Note that 'ERROR' can be pluralised to 'ERRORS' if you find
+be selected.  A C<default> template may be provided for the general
+case.  Note that C<ERROR> can be pluralised to C<ERRORS> if you find
 it more appropriate in this case.
 
     my $template = Template->new({
-	ERRORS => {
-	    user     => 'user/index.html',
-	    dbi      => 'error/database',
-	    default  => 'error/default',
-	},
+        ERRORS => {
+            user     => 'user/index.html',
+            dbi      => 'error/database',
+            default  => 'error/default',
+        },
     });
 
-In this example, any 'user' exceptions thrown will cause the
-'user/index.html' template to be processed, 'dbi' errors are handled
-by 'error/database' and all others by the 'error/default' template.
-Any PRE_PROCESS and/or POST_PROCESS templates will also be applied
+In this example, any C<user> exceptions thrown will cause the
+F<user/index.html> template to be processed, C<dbi> errors are handled
+by F<error/database> and all others by the F<error/default> template.
+Any C<PRE_PROCESS> and/or C<POST_PROCESS> templates will also be applied
 to these error templates.
 
-Note that exception types are hierarchical and a 'foo' handler will
-catch all 'foo.*' errors (e.g. foo.bar, foo.bar.baz) if a more
+Note that exception types are hierarchical and a C<foo> handler will
+catch all C<foo.*> errors (e.g. C<foo.bar>, C<foo.bar.baz>) if a more
 specific handler isn't defined.  Be sure to quote any exception types
 that contain periods to prevent Perl concatenating them into a single
-string (i.e. C<user.passwd> is parsed as 'user'.'passwd').
+string (i.e. C<user.passwd> is parsed as C<'user'.'passwd'>).
 
     my $template = Template->new({
-	ERROR => {
-	    'user.login'  => 'user/login.html',
-	    'user.passwd' => 'user/badpasswd.html',
-	    'user'        => 'user/index.html',
-	    'default'     => 'error/default',
-	},
+        ERROR => {
+            'user.login'  => 'user/login.html',
+            'user.passwd' => 'user/badpasswd.html',
+            'user'        => 'user/index.html',
+            'default'     => 'error/default',
+        },
     });
 
-In this example, any template processed by the $template object, or
-other templates or code called from within, can raise a 'user.login'
-exception and have the service redirect to the 'user/login.html'
-template.  Similarly, a 'user.passwd' exception has a specific 
-handling template, 'user/badpasswd.html', while all other 'user' or
-'user.*' exceptions cause a redirection to the 'user/index.html' page.
-All other exception types are handled by 'error/default'.
+In this example, any template processed by the L<$template> object, or
+other templates or code called from within, can raise a C<user.login>
+exception and have the service redirect to the F<user/login.html>
+template.  Similarly, a C<user.passwd> exception has a specific 
+handling template, F<user/badpasswd.html>, while all other C<user> or
+C<user.*> exceptions cause a redirection to the F<user/index.html> page.
+All other exception types are handled by F<error/default>.
 
-
-Exceptions can be raised in a template using the THROW directive,
+Exceptions can be raised in a template using the C<THROW> directive,
 
     [% THROW user.login 'no user id: please login' %]
 
-or by calling the throw() method on the current Template::Context object,
+or by calling the L<Template::Context#throw()|throw()> method on the 
+current L<Template::Context> object,
 
     $context->throw('user.passwd', 'Incorrect Password');
     $context->throw('Incorrect Password');    # type 'undef'
 
-or from Perl code by calling die() with a Template::Exception object,
+or from Perl code by calling C<die()> with a L<Template::Exception> object,
 
     die (Template::Exception->new('user.denied', 'Invalid User ID'));
 
-or by simply calling die() with an error string.  This is
-automagically caught and converted to an  exception of 'undef'
+or by simply calling L<die()> with an error string.  This is
+automagically caught and converted to an  exception of 'C<undef>'
 type which can then be handled in the usual way.
 
     die "I'm sorry Dave, I can't do that";
 
+Note that the 'C<undef>' we're talking about here is a literal string
+rather than Perl's C<undef> used to represent undefined values.
 
+=head1 Template Runtime Options
 
+=head2 EVAL_PERL
 
-
-
-=back
-
-=head2 Template Runtime Options
-
-=over 4
-
-
-
-
-=item EVAL_PERL
-
-This flag is used to indicate if PERL and/or RAWPERL blocks should be
-evaluated.  By default, it is disabled and any PERL or RAWPERL blocks
-encountered will raise exceptions of type 'perl' with the message
-'EVAL_PERL not set'.  Note however that any RAWPERL blocks should
-always contain valid Perl code, regardless of the EVAL_PERL flag.  The
+This flag is used to indicate if C<PERL> and/or C<RAWPERL> blocks should be
+evaluated.  It is disabled by default and any C<PERL> or C<RAWPERL> blocks
+encountered will raise exceptions of type 'C<perl>' with the message
+'C<EVAL_PERL not set>'.  Note however that any C<RAWPERL> blocks should
+always contain valid Perl code, regardless of the C<EVAL_PERL> flag.  The
 parser will fail to compile templates that contain invalid Perl code
-in RAWPERL blocks and will throw a 'file' exception.
+in C<RAWPERL> blocks and will throw a 'C<file>' exception.
 
 When using compiled templates (see 
-L<COMPILE_EXT|Template::Manual::Config/Caching_and_Compiling_Options> and 
-L<COMPILE_DIR|Template::Manual::Config/Caching_and_Compiling_Options>),
-the EVAL_PERL has an affect when the template is compiled, and again
+L<Caching_and_Compiling_Options>),
+the C<EVAL_PERL> has an affect when the template is compiled, and again
 when the templates is subsequently processed, possibly in a different
 context to the one that compiled it.
 
-If the EVAL_PERL is set when a template is compiled, then all PERL and
-RAWPERL blocks will be included in the compiled template.  If the 
-EVAL_PERL option isn't set, then Perl code will be generated which 
-B<always> throws a 'perl' exception with the message 'EVAL_PERL not
-set' B<whenever> the compiled template code is run.
+If the C<EVAL_PERL> is set when a template is compiled, then all C<PERL> and
+C<RAWPERL> blocks will be included in the compiled template.  If the 
+C<EVAL_PERL> option isn't set, then Perl code will be generated which 
+B<always> throws a 'C<perl>' exception with the message 'C<EVAL_PERL not
+set>' B<whenever> the compiled template code is run.
 
-Thus, you must have EVAL_PERL set if you want your compiled templates
-to include PERL and RAWPERL blocks.
+Thus, you must have C<EVAL_PERL> set if you want your compiled templates
+to include C<PERL> and C<RAWPERL> blocks.
 
 At some point in the future, using a different invocation of the
 Template Toolkit, you may come to process such a pre-compiled
-template.  Assuming the EVAL_PERL option was set at the time the
-template was compiled, then the output of any RAWPERL blocks will be
+template.  Assuming the C<EVAL_PERL> option was set at the time the
+template was compiled, then the output of any C<RAWPERL> blocks will be
 included in the compiled template and will get executed when the
 template is processed.  This will happen regardless of the runtime
-EVAL_PERL status.
+C<EVAL_PERL> status.
 
-Regular PERL blocks are a little more cautious, however.  If the 
-EVAL_PERL flag isn't set for the I<current> context, that is, the 
-one which is trying to process it, then it will throw the familiar 'perl'
-exception with the message, 'EVAL_PERL not set'.
+Regular C<PERL> blocks are a little more cautious, however.  If the 
+C<EVAL_PERL> flag isn't set for the I<current> context, that is, the 
+one which is trying to process it, then it will throw the familiar 'C<perl>'
+exception with the message, 'C<EVAL_PERL not set>'.
 
-Thus you can compile templates to include PERL blocks, but optionally
+Thus you can compile templates to include C<PERL> blocks, but optionally
 disable them when you process them later.  Note however that it is 
-possible for a PERL block to contain a Perl "BEGIN { # some code }"
-block which will always get run regardless of the runtime EVAL_PERL
-status.  Thus, if you set EVAL_PERL when compiling templates, it is
+possible for a C<PERL> block to contain a Perl "C<BEGIN { # some code }>"
+block which will always get run regardless of the runtime C<EVAL_PERL>
+status.  Thus, if you set C<EVAL_PERL> when compiling templates, it is
 assumed that you trust the templates to Do The Right Thing.  Otherwise
 you must accept the fact that there's no bulletproof way to prevent 
 any included code from trampling around in the living room of the 
 runtime environment, making a real nuisance of itself if it really
 wants to.  If you don't like the idea of such uninvited guests causing
-a bother, then you can accept the default and keep EVAL_PERL disabled.
+a bother, then you can accept the default and keep C<EVAL_PERL> disabled.
 
-
-
-
-
-
-
-=item  OUTPUT
+=head2  OUTPUT
 
 Default output location or handler.  This may be specified as one of:
-a file name (relative to OUTPUT_PATH, if defined, or the current
+a file name (relative to C<OUTPUT_PATH>, if defined, or the current
 working directory if not specified absolutely); a file handle
-(e.g. GLOB or IO::Handle) opened for writing; a reference to a text
+(e.g. C<GLOB> or L<IO::Handle>) opened for writing; a reference to a text
 string to which the output is appended (the string isn't cleared); a
 reference to a subroutine which is called, passing the output text as
 an argument; as a reference to an array, onto which the content will be
-push()ed; or as a reference to any object that supports the print()
-method.  This latter option includes the Apache::Request object which
+C<push()>ed; or as a reference to any object that supports the C<print()>
+method.  This latter option includes the C<Apache::Request> object which
 is passed as the argument to Apache/mod_perl handlers.
 
 example 1 (file name):
@@ -1228,8 +1074,7 @@ example 1 (file name):
 
 example 2 (text string):
 
-    my $output = '';
-
+    my $output   = '';
     my $template = Template->new({
         OUTPUT => \$output,
     });
@@ -1237,7 +1082,6 @@ example 2 (text string):
 example 3 (file handle):
 
     open (TOUT, "> $file") || die "$file: $!\n";
-
     my $template = Template->new({
         OUTPUT => \*TOUT,
     });
@@ -1245,7 +1089,6 @@ example 3 (file handle):
 example 4 (subroutine):
 
     sub output { my $out = shift; print "OUTPUT: $out" }
-
     my $template = Template->new({
         OUTPUT => \&output,
     });
@@ -1259,17 +1102,16 @@ example 5 (array reference):
 example 6 (Apache/mod_perl handler):
 
     sub handler {
-    my $r = shift;
-
-    my $t = Template->new({
-        OUTPUT => $r,
-    });
-    ...
+        my $r = shift;
+        my $t = Template->new({
+            OUTPUT => $r,
+        });
+        ...
     }
 
-The default OUTPUT location be overridden by passing a third parameter
-to the Template process() method.  This can be specified as any of the 
-above argument types.
+The default C<OUTPUT> location be overridden by passing a third parameter to
+the L<Template> L<Template#process()|process()> method. This can be specified
+as any of the above argument types.
 
     $t->process($file, $vars, "/tmp/foo");
     $t->process($file, $vars, \$output);
@@ -1278,101 +1120,90 @@ above argument types.
     $t->process($file, $vars, $r);  # Apache::Request
     ...
 
+=head2  OUTPUT_PATH
 
-
-
-
-=item  OUTPUT_PATH
-
-The OUTPUT_PATH allows a directory to be specified into which output
+The C<OUTPUT_PATH> allows a directory to be specified into which output
 files should be written.  An output file can be specified by the 
-OUTPUT option, or passed by name as the third parameter to the 
-Template process() method.
+C<OUTPUT> option, or passed by name as the third parameter to the 
+L<Template> L<Template#process()|process()> method.
 
     my $template = Template->new({
-	INCLUDE_PATH => "/tmp/src",
-	OUTPUT_PATH  => "/tmp/dest",
+        INCLUDE_PATH => "/tmp/src",
+        OUTPUT_PATH  => "/tmp/dest",
     });
-
+    
     my $vars = {
-	...
+        ...
     };
-
+    
     foreach my $file ('foo.html', 'bar.html') {
-	$template->process($file, $vars, $file)
-	    || die $template->error();	
+        $template->process($file, $vars, $file)
+            || die $template->error();  
     }
 
-This example will read the input files '/tmp/src/foo.html' and 
-'/tmp/src/bar.html' and write the processed output to '/tmp/dest/foo.html'
-and '/tmp/dest/bar.html', respectively.
+This example will read the input files F</tmp/src/foo.html> and 
+F</tmp/src/bar.html> and write the processed output to F</tmp/dest/foo.html>
+and F</tmp/dest/bar.html>, respectively.
 
+=head2 DEBUG
 
-
-
-
-
-
-
-=item DEBUG
-
-The DEBUG option can be used to enable debugging within the various
+The C<DEBUG> option can be used to enable debugging within the various
 different modules that comprise the Template Toolkit.  The
-L<Template::Constants|Template::Constants> module defines a set of
-DEBUG_XXXX constants which can be combined using the logical OR
-operator, '|'.
+L<Template::Constants> module defines a set of
+C<DEBUG_XXXX> constants which can be combined using the logical OR
+operator, 'C<|>'.
 
     use Template::Constants qw( :debug );
-
+    
     my $template = Template->new({
-	DEBUG => DEBUG_PARSER | DEBUG_PROVIDER,
+        DEBUG => DEBUG_PARSER | DEBUG_PROVIDER,
     });
 
 For convenience, you can also provide a string containing a list
 of lower case debug options, separated by any non-word characters.
 
     my $template = Template->new({
-	DEBUG => 'parser, provider',
+        DEBUG => 'parser, provider',
     });
 
-The following DEBUG_XXXX flags can be used:
+The following C<DEBUG_XXXX> flags can be used:
 
 =over 4
 
 =item DEBUG_SERVICE
 
 Enables general debugging messages for the
-L<Template::Service|Template::Service> module.
+L<Template::Service> module.
 
 =item DEBUG_CONTEXT
 
 Enables general debugging messages for the
-L<Template::Context|Template::Context> module.
+L<Template::Context> module.
 
 =item DEBUG_PROVIDER
 
 Enables general debugging messages for the
-L<Template::Provider|Template::Provider> module.
+L<Template::Provider> module.
 
 =item DEBUG_PLUGINS
 
 Enables general debugging messages for the
-L<Template::Plugins|Template::Plugins> module.
+L<Template::Plugins> module.
 
 =item DEBUG_FILTERS
 
 Enables general debugging messages for the
-L<Template::Filters|Template::Filters> module.
+L<Template::Filters> module.
 
 =item DEBUG_PARSER
 
-This flag causes the L<Template::Parser|Template::Parser> to generate
+This flag causes the L<Template::Parser> to generate
 debugging messages that show the Perl code generated by parsing and
 compiling each template.
 
 =item DEBUG_UNDEF
 
-This option causes the Template Toolkit to throw an 'undef' error
+This option causes the Template Toolkit to throw an 'C<undef>' error
 whenever it encounters an undefined variable value.
 
 =item DEBUG_DIRS
@@ -1380,11 +1211,10 @@ whenever it encounters an undefined variable value.
 This option causes the Template Toolkit to generate comments
 indicating the source file, line and original text of each directive
 in the template.  These comments are embedded in the template output
-using the format defined in the DEBUG_FORMAT configuration item, or a
+using the format defined in the C<DEBUG_FORMAT> configuration item, or a
 simple default format if unspecified.
 
 For example, the following template fragment:
-
     
     Hello World
 
@@ -1404,21 +1234,20 @@ Enables all debugging messages.
 This option causes all debug messages that aren't newline terminated
 to have the file name and line number of the caller appended to them.
 
-
 =back
 
-=item DEBUG_FORMAT
+=head2 DEBUG_FORMAT
 
-The DEBUG_FORMAT option can be used to specify a format string for the
-debugging messages generated via the DEBUG_DIRS option described
+The C<DEBUG_FORMAT> option can be used to specify a format string for the
+debugging messages generated via the C<DEBUG_DIRS> option described
 above.  Any occurances of C<$file>, C<$line> or C<$text> will be
 replaced with the current file name, line or directive text,
 respectively.  Notice how the format is single quoted to prevent Perl
 from interpolating those tokens as variables.
 
     my $template = Template->new({
-	DEBUG => 'dirs',
-	DEBUG_FORMAT => '<!-- $file line $line : [% $text %] -->',
+        DEBUG => 'dirs',
+        DEBUG_FORMAT => '<!-- $file line $line : [% $text %] -->',
     });
 
 The following template fragment:
@@ -1436,30 +1265,23 @@ a template.
 
     [% DEBUG format '<!-- $file line $line : [% $text %] -->' %]
 
+=head1 Caching and Compiling Options
 
-=back
+=head2 CACHE_SIZE
 
-=head2 Caching and Compiling Options
-
-=over 4
-
-
-
-=item CACHE_SIZE
-
-The Template::Provider module caches compiled templates to avoid the need
-to re-parse template files or blocks each time they are used.  The CACHE_SIZE
+The L<Template::Provider> module caches compiled templates to avoid the need
+to re-parse template files or blocks each time they are used. The C<CACHE_SIZE>
 option is used to limit the number of compiled templates that the module
 should cache.
 
-By default, the CACHE_SIZE is undefined and all compiled templates are
+By default, the C<CACHE_SIZE> is undefined and all compiled templates are
 cached.  When set to any positive value, the cache will be limited to
 storing no more than that number of compiled templates.  When a new
 template is loaded and compiled and the cache is full (i.e. the number
-of entries == CACHE_SIZE), the least recently used compiled template
+of entries == C<CACHE_SIZE>), the least recently used compiled template
 is discarded to make room for the new one.
 
-The CACHE_SIZE can be set to 0 to disable caching altogether.
+The C<CACHE_SIZE> can be set to C<0> to disable caching altogether.
 
     my $template = Template->new({
         CACHE_SIZE => 64,   # only cache 64 compiled templates
@@ -1469,37 +1291,33 @@ The CACHE_SIZE can be set to 0 to disable caching altogether.
         CACHE_SIZE => 0,   # don't cache any compiled templates
     });
 
-As well as caching templates as they are found, the Template::Provider
+As well as caching templates as they are found, the L<Template::Provider>
 also implements negative caching to keep track of templates that are 
 I<not> found.  This allows the provider to quickly decline a request
 for a template that it has previously failed to locate, saving the effort
-of going to look for it again.  This is useful when an INCLUDE_PATH includes 
+of going to look for it again.  This is useful when an C<INCLUDE_PATH> includes 
 multiple providers, ensuring that the request is passed down through the 
 providers as quickly as possible.
 
-
-
-
-
-=item COMPILE_EXT
+=head2 COMPILE_EXT
 
 From version 2 onwards, the Template Toolkit has the ability to
 compile templates to Perl code and save them to disk for subsequent
-use (i.e. cache persistence).  The COMPILE_EXT option may be
+use (i.e. cache persistence).  The C<COMPILE_EXT> option may be
 provided to specify a filename extension for compiled template files.
 It is undefined by default and no attempt will be made to read or write 
 any compiled template files.
 
     my $template = Template->new({
-	COMPILE_EXT => '.ttc',
+        COMPILE_EXT => '.ttc',
     });
 
-If COMPILE_EXT is defined (and COMPILE_DIR isn't, see below) then compiled
-template files with the COMPILE_EXT extension will be written to the same
+If C<COMPILE_EXT> is defined (and C<COMPILE_DIR> isn't, see below) then compiled
+template files with the C<COMPILE_EXT> extension will be written to the same
 directory from which the source template files were loaded.
 
 Compiling and subsequent reuse of templates happens automatically
-whenever the COMPILE_EXT or COMPILE_DIR options are set.  The Template
+whenever the C<COMPILE_EXT> or C<COMPILE_DIR> options are set.  The Template
 Toolkit will automatically reload and reuse compiled files when it 
 finds them on disk.  If the corresponding source file has been modified
 since the compiled version as written, then it will load and re-compile
@@ -1507,42 +1325,41 @@ the source and write a new compiled version to disk.
 
 This form of cache persistence offers significant benefits in terms of 
 time and resources required to reload templates.  Compiled templates can
-be reloaded by a simple call to Perl's require(), leaving Perl to handle
+be reloaded by a simple call to Perl's C<require()>, leaving Perl to handle
 all the parsing and compilation.  This is a Good Thing.
 
-=item COMPILE_DIR
+=head2 COMPILE_DIR
 
-The COMPILE_DIR option is used to specify an alternate directory root
+The C<COMPILE_DIR> option is used to specify an alternate directory root
 under which compiled template files should be saved.  
 
     my $template = Template->new({
-	COMPILE_DIR => '/tmp/ttc',
+        COMPILE_DIR => '/tmp/ttc',
     });
 
-The COMPILE_EXT option may also be specified to have a consistent file
+The C<COMPILE_EXT> option may also be specified to have a consistent file
 extension added to these files.  
 
     my $template1 = Template->new({
-	COMPILE_DIR => '/tmp/ttc',
-	COMPILE_EXT => '.ttc1',
+        COMPILE_DIR => '/tmp/ttc',
+        COMPILE_EXT => '.ttc1',
     });
 
     my $template2 = Template->new({
-	COMPILE_DIR => '/tmp/ttc',
-	COMPILE_EXT => '.ttc2',
+        COMPILE_DIR => '/tmp/ttc',
+        COMPILE_EXT => '.ttc2',
     });
 
-
-When COMPILE_EXT is undefined, the compiled template files have the
+When C<COMPILE_EXT> is undefined, the compiled template files have the
 same name as the original template files, but reside in a different
 directory tree.
 
-Each directory in the INCLUDE_PATH is replicated in full beneath the 
-COMPILE_DIR directory.  This example:
+Each directory in the C<INCLUDE_PATH> is replicated in full beneath the 
+C<COMPILE_DIR> directory.  This example:
 
     my $template = Template->new({
-	COMPILE_DIR  => '/tmp/ttc',
-	INCLUDE_PATH => '/home/abw/templates:/usr/share/templates',
+        COMPILE_DIR  => '/tmp/ttc',
+        INCLUDE_PATH => '/home/abw/templates:/usr/share/templates',
     });
 
 would create the following directory structure:
@@ -1550,8 +1367,8 @@ would create the following directory structure:
     /tmp/ttc/home/abw/templates/
     /tmp/ttc/usr/share/templates/
 
-Files loaded from different INCLUDE_PATH directories will have their
-compiled forms save in the relevant COMPILE_DIR directory.
+Files loaded from different C<INCLUDE_PATH> directories will have their
+compiled forms save in the relevant C<COMPILE_DIR> directory.
 
 On Win32 platforms a filename may by prefixed by a drive letter and
 colon.  e.g.
@@ -1559,14 +1376,14 @@ colon.  e.g.
     C:/My Templates/header
 
 The colon will be silently stripped from the filename when it is added
-to the COMPILE_DIR value(s) to prevent illegal filename being generated.
-Any colon in COMPILE_DIR elements will be left intact.  For example:
+to the C<COMPILE_DIR> value(s) to prevent illegal filename being generated.
+Any colon in C<COMPILE_DIR> elements will be left intact.  For example:
 
     # Win32 only
     my $template = Template->new({
-	DELIMITER    => ';',
-	COMPILE_DIR  => 'C:/TT2/Cache',
-	INCLUDE_PATH => 'C:/TT2/Templates;D:/My Templates',
+        DELIMITER    => ';',
+        COMPILE_DIR  => 'C:/TT2/Cache',
+        INCLUDE_PATH => 'C:/TT2/Templates;D:/My Templates',
     });
 
 This would create the following cache directories:
@@ -1574,22 +1391,15 @@ This would create the following cache directories:
     C:/TT2/Cache/C/TT2/Templates
     C:/TT2/Cache/D/My Templates
 
+=head1 Plugins and Filters
 
-=back
+=head2 PLUGINS
 
-=head2 Plugins and Filters
-
-=over 4
-
-
-
-=item PLUGINS
-
-The PLUGINS options can be used to provide a reference to a hash array
+The C<PLUGINS> options can be used to provide a reference to a hash array
 that maps plugin names to Perl module names.  A number of standard
-plugins are defined (e.g. 'table', 'cgi', 'dbi', etc.) which map to
-their corresponding Template::Plugin::* counterparts.  These can be
-redefined by values in the PLUGINS hash.
+plugins are defined (e.g. C<table>, C<format>, C<cgi>, etc.) which map to
+their corresponding C<Template::Plugin::*> counterparts.  These can be
+redefined by values in the C<PLUGINS> hash.
 
     my $template = Template->new({
         PLUGINS => {
@@ -1605,36 +1415,33 @@ match and then tries the lower case conversion of the name specified.
 
     [% USE Foo %]      # look for 'Foo' then 'foo'
 
-If you define all your PLUGINS with lower case names then they will be
+If you define all your C<PLUGINS> with lower case names then they will be
 located regardless of how the user specifies the name in the USE
-directive.  If, on the other hand, you define your PLUGINS with upper
-or mixed case names then the name specified in the USE directive must
+directive.  If, on the other hand, you define your C<PLUGINS> with upper
+or mixed case names then the name specified in the C<USE> directive must
 match the case exactly.  
 
-The USE directive is used to create plugin objects and does so by
-calling the plugin() method on the current Template::Context object.
-If the plugin name is defined in the PLUGINS hash then the
-corresponding Perl module is loaded via require().  The context then
-calls the load() class method which should return the class name 
-(default and general case) or a prototype object against which the 
-new() method can be called to instantiate individual plugin objects.
+The C<USE> directive is used to create plugin objects and does so by calling
+the L<Template::Context#plugin()|plugin()> method on the current
+L<Template::Context> object. If the plugin name is defined in the C<PLUGINS>
+hash then the corresponding Perl module is loaded via C<require()>. The
+context then calls the L<Template::Plugin#load()|load()> class method which
+should return the class name (default and general case) or a prototype object
+against which the L<Template::Plugin#new()|new()> method can be called to
+instantiate individual plugin objects.
 
-If the plugin name is not defined in the PLUGINS hash then the
-PLUGIN_BASE and/or LOAD_PERL options come into effect.
+If the plugin name is not defined in the C<PLUGINS> hash then the
+C<PLUGIN_BASE> and/or C<LOAD_PERL> options come into effect.
 
+=head2 PLUGIN_BASE
 
-
-
-
-=item PLUGIN_BASE
-
-If a plugin is not defined in the PLUGINS hash then the PLUGIN_BASE is used
+If a plugin is not defined in the C<PLUGINS> hash then the C<PLUGIN_BASE> is used
 to attempt to construct a correct Perl module name which can be successfully 
 loaded.  
 
-The PLUGIN_BASE can be specified as a reference to an array of module
+The C<PLUGIN_BASE> can be specified as a reference to an array of module
 namespaces, or as a single value which is automatically converted to a
-list.  The default PLUGIN_BASE value ('Template::Plugin') is then added
+list.  The default C<PLUGIN_BASE> value (C<Template::Plugin>) is then added
 to the end of this list.
 
 example 1:
@@ -1642,7 +1449,7 @@ example 1:
     my $template = Template->new({
         PLUGIN_BASE => 'MyOrg::Template::Plugin',
     });
-
+    
     [% USE Foo %]    # => MyOrg::Template::Plugin::Foo
                        or        Template::Plugin::Foo 
 
@@ -1653,80 +1460,78 @@ example 2:
                            'YourOrg::Template::Plugin'  ],
     });
 
+template:
+
     [% USE Foo %]    # =>   MyOrg::Template::Plugin::Foo
                        or YourOrg::Template::Plugin::Foo 
                        or          Template::Plugin::Foo 
 
-If you don't want the default Template::Plugin namespace added to the
-end of the PLUGIN_BASE, then set the $Template::Plugins::PLUGIN_BASE
-variable to a false value before calling the Template new()
+If you don't want the default C<Template::Plugin> namespace added to the
+end of the C<PLUGIN_BASE>, then set the C<$Template::Plugins::PLUGIN_BASE>
+variable to a false value before calling the L<Template> L<Template#new()|new()>
 constructor method.  This is shown in the example below where the
-'Foo' is located as 'My::Plugin::Foo' or 'Your::Plugin::Foo' but not 
-as 'Template::Plugin::Foo'.
+C<Foo> plugin is located as C<My::Plugin::Foo> or C<Your::Plugin::Foo> but not 
+as C<Template::Plugin::Foo>.
 
 example 3:
 
     use Template::Plugins;
     $Template::Plugins::PLUGIN_BASE = '';
-
+    
     my $template = Template->new({
         PLUGIN_BASE => [   'My::Plugin',
                            'Your::Plugin'  ],
     });
 
+template:
+
     [% USE Foo %]    # =>   My::Plugin::Foo
                        or Your::Plugin::Foo 
 
+=head2 LOAD_PERL
 
-
-
-
-
-=item LOAD_PERL
-
-If a plugin cannot be loaded using the PLUGINS or PLUGIN_BASE
+If a plugin cannot be loaded using the C<PLUGINS> or C<PLUGIN_BASE>
 approaches then the provider can make a final attempt to load the
 module without prepending any prefix to the module path.  This allows
 regular Perl modules (i.e. those that don't reside in the
-Template::Plugin or some other such namespace) to be loaded and used
+L<Template::Plugin> or some other such namespace) to be loaded and used
 as plugins.
 
-By default, the LOAD_PERL option is set to 0 and no attempt will be made
-to load any Perl modules that aren't named explicitly in the PLUGINS
-hash or reside in a package as named by one of the PLUGIN_BASE
+By default, the C<LOAD_PERL> option is set to C<0> and no attempt will be made
+to load any Perl modules that aren't named explicitly in the C<PLUGINS>
+hash or reside in a package as named by one of the C<PLUGIN_BASE>
 components.  
 
-Plugins loaded using the PLUGINS or PLUGIN_BASE receive a reference to
-the current context object as the first argument to the new()
-constructor.  Modules loaded using LOAD_PERL are assumed to not
-conform to the plugin interface.  They must provide a new() class
-method for instantiating objects but it will not receive a reference
-to the context as the first argument.  Plugin modules should provide a
-load() class method (or inherit the default one from the
-Template::Plugin base class) which is called the first time the plugin
-is loaded.  Regular Perl modules need not.  In all other respects,
-regular Perl objects and Template Toolkit plugins are identical.
+Plugins loaded using the C<PLUGINS> or C<PLUGIN_BASE> receive a reference to
+the current context object as the first argument to the
+L<Template::Plugin#new()|new()> constructor. Modules loaded using C<LOAD_PERL>
+are assumed to not conform to the plugin interface. They must provide a C<new()>
+class method for instantiating objects but it will not receive a reference to
+the context as the first argument. 
+
+Plugin modules should provide a L<Template::Plugin#load()|load()> class method
+(or inherit the default one from the L<Template::Plugin> base class) which is
+called the first time the plugin is loaded. Regular Perl modules need not. In
+all other respects, regular Perl objects and Template Toolkit plugins are
+identical.
 
 If a particular Perl module does not conform to the common, but not
-unilateral, new() constructor convention then a simple plugin wrapper
+unilateral, C<new()> constructor convention then a simple plugin wrapper
 can be written to interface to it.
 
+=head2 FILTERS
 
-
-
-=item FILTERS
-
-The FILTERS option can be used to specify custom filters which can
-then be used with the FILTER directive like any other.  These are
+The C<FILTERS> option can be used to specify custom filters which can
+then be used with the C<FILTER> directive like any other.  These are
 added to the standard filters which are available by default.  Filters
 specified via this option will mask any standard filters of the same
 name.
 
-The FILTERS option should be specified as a reference to a hash array
+The C<FILTERS> option should be specified as a reference to a hash array
 in which each key represents the name of a filter.  The corresponding
 value should contain a reference to an array containing a subroutine
-reference and a flag which indicates if the filter is static (0) or
-dynamic (1).  A filter may also be specified as a solitary subroutine
+reference and a flag which indicates if the filter is static (C<0>) or
+dynamic (C<1>).  A filter may also be specified as a solitary subroutine
 reference and is assumed to be static.
 
     $template = Template->new({
@@ -1737,11 +1542,10 @@ reference and is assumed to be static.
         },
     });
 
-Additional filters can be specified at any time by calling the 
-define_filter() method on the current Template::Context object.
-The method accepts a filter name, a reference to a filter 
-subroutine and an optional flag to indicate if the filter is 
-dynamic.
+Additional filters can be specified at any time by calling the
+L<Template::Context#define_filter()|define_filter()> method on the current
+L<Template::Context> object. The method accepts a filter name, a reference to a
+filter subroutine and an optional flag to indicate if the filter is dynamic.
 
     my $context = $template->context();
     $context->define_filter('new_html', \&new_html);
@@ -1749,7 +1553,7 @@ dynamic.
 
 Static filters are those where a single subroutine reference is used
 for all invocations of a particular filter.  Filters that don't accept
-any configuration parameters (e.g. 'html') can be implemented
+any configuration parameters (e.g. C<html>) can be implemented
 statically.  The subroutine reference is simply returned when that
 particular filter is requested.  The subroutine is called to filter
 the output of a template block which is passed as the only argument.
@@ -1771,18 +1575,18 @@ is approximately equivalent to:
 
     &static_filter("\nBlah blah blah.\n");
 
-Filters that can accept parameters (e.g. 'truncate') should be
+Filters that can accept parameters (e.g. C<truncate>) should be
 implemented dynamically.  In this case, the subroutine is taken to be
 a filter 'factory' that is called to create a unique filter subroutine
 each time one is requested.  A reference to the current
-Template::Context object is passed as the first parameter, followed by
+L<Template::Context> object is passed as the first parameter, followed by
 any additional parameters specified.  The subroutine should return
 another subroutine reference (usually a closure) which implements the
 filter.
 
     sub dynamic_filter_factory {
         my ($context, @args) = @_;
-
+        
         return sub {
             my $text = shift;
             # do something to modify $text...
@@ -1801,381 +1605,207 @@ is approximately equivalent to:
     my $filter = &dynamic_filter_factory($context, 123, 456);
     &$filter("\nBlah blah blah.\n");
 
-See the FILTER directive for further examples.
+See the C<FILTER> directive for further examples.
 
+=head1 Customisation and Extension
 
-=back
+=head2 LOAD_TEMPLATES
 
-=head2 Compatibility, Customisation and Extension
-
-=over 4
-
-
-
-=item V1DOLLAR
-
-In version 1 of the Template Toolkit, an optional leading '$' could be placed
-on any template variable and would be silently ignored.
-
-    # VERSION 1
-    [% $foo %]       ===  [% foo %]
-    [% $hash.$key %] ===  [% hash.key %]
-
-To interpolate a variable value the '${' ... '}' construct was used.
-Typically, one would do this to index into a hash array when the key
-value was stored in a variable.
-
-example:
-
-    my $vars = {
-	users => {
-	    aba => { name => 'Alan Aardvark', ... },
-	    abw => { name => 'Andy Wardley', ... },
-            ...
-	},
-	uid => 'aba',
-        ...
-    };
-
-    $template->process('user/home.html', $vars)
-	|| die $template->error(), "\n";
-
-'user/home.html':
-
-    [% user = users.${uid} %]     # users.aba
-    Name: [% user.name %]         # Alan Aardvark
-
-This was inconsistent with double quoted strings and also the
-INTERPOLATE mode, where a leading '$' in text was enough to indicate a
-variable for interpolation, and the additional curly braces were used
-to delimit variable names where necessary.  Note that this use is
-consistent with UNIX and Perl conventions, among others.
-
-    # double quoted string interpolation
-    [% name = "$title ${user.name}" %]
-
-    # INTERPOLATE = 1
-    <img src="$images/help.gif"></a>
-    <img src="$images/${icon.next}.gif">
-
-For version 2, these inconsistencies have been removed and the syntax
-clarified.  A leading '$' on a variable is now used exclusively to
-indicate that the variable name should be interpolated
-(e.g. subsituted for its value) before being used.  The earlier example
-from version 1:
-
-    # VERSION 1
-    [% user = users.${uid} %]
-    Name: [% user.name %]
-
-can now be simplified in version 2 as:
-
-    # VERSION 2
-    [% user = users.$uid %]
-    Name: [% user.name %]
-
-The leading dollar is no longer ignored and has the same effect of
-interpolation as '${' ... '}' in version 1.  The curly braces may
-still be used to explicitly scope the interpolated variable name
-where necessary.
-
-e.g.
-
-    [% user = users.${me.id} %]
-    Name: [% user.name %]
-
-The rule applies for all variables, both within directives and in
-plain text if processed with the INTERPOLATE option.  This means that
-you should no longer (if you ever did) add a leading '$' to a variable
-inside a directive, unless you explicitly want it to be interpolated.
-
-One obvious side-effect is that any version 1 templates with variables
-using a leading '$' will no longer be processed as expected.  Given
-the following variable definitions,
-
-    [% foo = 'bar'
-       bar = 'baz'
-    %]
-
-version 1 would interpret the following as:
-
-    # VERSION 1
-    [% $foo %] => [% GET foo %] => bar
-
-whereas version 2 interprets it as:
-
-    # VERSION 2
-    [% $foo %] => [% GET $foo %] => [% GET bar %] => baz
-
-In version 1, the '$' is ignored and the value for the variable 'foo' is 
-retrieved and printed.  In version 2, the variable '$foo' is first interpolated
-to give the variable name 'bar' whose value is then retrieved and printed.
-
-The use of the optional '$' has never been strongly recommended, but
-to assist in backwards compatibility with any version 1 templates that
-may rely on this "feature", the V1DOLLAR option can be set to 1
-(default: 0) to revert the behaviour and have leading '$' characters
-ignored.
-
-    my $template = Template->new({
-	V1DOLLAR => 1,
-    });
-
-
-
-
-=item LOAD_TEMPLATES
-
-The LOAD_TEMPLATE option can be used to provide a reference to a list
-of Template::Provider objects or sub-classes thereof which will take
+The C<LOAD_TEMPLATES> option can be used to provide a reference to a list
+of L<Template::Provider> objects or sub-classes thereof which will take
 responsibility for loading and compiling templates.
 
     my $template = Template->new({
-	LOAD_TEMPLATES => [
-    	    MyOrg::Template::Provider->new({ ... }),
-    	    Template::Provider->new({ ... }),
-	],
+        LOAD_TEMPLATES => [
+            MyOrg::Template::Provider->new({ ... }),
+            Template::Provider->new({ ... }),
+        ],
     });
 
-When a PROCESS, INCLUDE or WRAPPER directive is encountered, the named
-template may refer to a locally defined BLOCK or a file relative to
-the INCLUDE_PATH (or an absolute or relative path if the appropriate
-ABSOLUTE or RELATIVE options are set).  If a BLOCK definition can't be
-found (see the Template::Context template() method for a discussion of
-BLOCK locality) then each of the LOAD_TEMPLATES provider objects is
-queried in turn via the fetch() method to see if it can supply the
-required template.  Each provider can return a compiled template, an
-error, or decline to service the request in which case the
-responsibility is passed to the next provider.  If none of the
-providers can service the request then a 'not found' error is
-returned.  The same basic provider mechanism is also used for the 
-INSERT directive but it bypasses any BLOCK definitions and doesn't
-attempt is to parse or process the contents of the template file.
+When a C<PROCESS>, C<INCLUDE> or C<WRAPPER> directive is encountered, the
+named template may refer to a locally defined C<BLOCK> or a file relative to
+the C<INCLUDE_PATH> (or an absolute or relative path if the appropriate
+C<ABSOLUTE> or C<RELATIVE> options are set). If a C<BLOCK> definition can't be
+found (see the L<Template::Context> L<Template::Context#template()|template()>
+method for a discussion of C<BLOCK> locality) then each of the
+C<LOAD_TEMPLATES> provider objects is queried in turn via the
+L<Template::Provider#fetch()|fetch()> method to see if it can supply the
+required template. 
 
-This is an implementation of the 'Chain of Responsibility'
-design pattern as described in 
-"Design Patterns", Erich Gamma, Richard Helm, Ralph Johnson, John 
-Vlissides), Addision-Wesley, ISBN 0-201-63361-2, page 223
-.
+Each provider can return a compiled template, an error, or decline to service
+the request in which case the responsibility is passed to the next provider.
+If none of the providers can service the request then a 'not found' error is
+returned. The same basic provider mechanism is also used for the C<INSERT>
+directive but it bypasses any C<BLOCK> definitions and doesn't attempt is to
+parse or process the contents of the template file.
 
-If LOAD_TEMPLATES is undefined, a single default provider will be
-instantiated using the current configuration parameters.  For example,
-the Template::Provider INCLUDE_PATH option can be specified in the Template configuration and will be correctly passed to the provider's
-constructor method.
+If C<LOAD_TEMPLATES> is undefined, a single default provider will be
+instantiated using the current configuration parameters. For example, the
+L<Template::Provider> C<INCLUDE_PATH> option can be specified in the L<Template>
+configuration and will be correctly passed to the provider's constructor
+method.
 
     my $template = Template->new({
-	INCLUDE_PATH => '/here:/there',
+        INCLUDE_PATH => '/here:/there',
     });
 
+=head2 LOAD_PLUGINS
 
-
-
-
-=item LOAD_PLUGINS
-
-The LOAD_PLUGINS options can be used to specify a list of provider
-objects (i.e. they implement the fetch() method) which are responsible
-for loading and instantiating template plugin objects.  The
-Template::Content plugin() method queries each provider in turn in a
-"Chain of Responsibility" as per the template() and filter() methods.
+The C<LOAD_PLUGINS> options can be used to specify a list of provider objects
+(i.e. they implement the L<Template::Plugins#fetch()|fetch()> method) which
+are responsible for loading and instantiating template plugin objects. The
+L<Template::Context> L<Template::Context#plugin()|plugin()> method queries
+each provider in turn in a "Chain of Responsibility" as per the
+L<Template::Context#template()|template()> and
+L<Template::Context#filter()|filter()> methods.
 
     my $template = Template->new({
-	LOAD_PLUGINS => [
-    	    MyOrg::Template::Plugins->new({ ... }),
-    	    Template::Plugins->new({ ... }),
-	],
+        LOAD_PLUGINS => [
+            MyOrg::Template::Plugins->new({ ... }),
+            Template::Plugins->new({ ... }),
+        ],
     });
 
-By default, a single Template::Plugins object is created using the 
+By default, a single L<Template::Plugins> object is created using the 
 current configuration hash.  Configuration items destined for the 
-Template::Plugins constructor may be added to the Template 
+L<Template::Plugins> constructor may be added to the Template 
 constructor.
 
     my $template = Template->new({
-	PLUGIN_BASE => 'MyOrg::Template::Plugins',
-	LOAD_PERL   => 1,
+        PLUGIN_BASE => 'MyOrg::Template::Plugins',
+        LOAD_PERL   => 1,
     });
 
+=head2 LOAD_FILTERS
 
-
-
-
-=item LOAD_FILTERS
-
-The LOAD_FILTERS option can be used to specify a list of provider
-objects (i.e. they implement the fetch() method) which are responsible
-for returning and/or creating filter subroutines.  The
-Template::Context filter() method queries each provider in turn in a
-"Chain of Responsibility" as per the template() and plugin() methods.
+The C<LOAD_FILTERS> option can be used to specify a list of provider objects
+(i.e. they implement the L<Template::Filters#fetch()|fetch()> method) which
+are responsible for returning and/or creating filter subroutines. The
+L<Template::Context> L<Template::Context#filter()|filter()> method queries
+each provider in turn in a "Chain of Responsibility" as per the 
+L<Template::Context#template()|template()> and
+L<Template::Context#plugin()|plugin()> methods.
 
     my $template = Template->new({
-	LOAD_FILTERS => [
-    	    MyTemplate::Filters->new(),
-    	    Template::Filters->new(),
-	],
+        LOAD_FILTERS => [
+            MyTemplate::Filters->new(),
+            Template::Filters->new(),
+        ],
     });
 
-By default, a single Template::Filters object is created for the
-LOAD_FILTERS list.
+By default, a single L<Template::Filters> object is created for the
+C<LOAD_FILTERS> list.
 
+=head2 TOLERANT
 
+The C<TOLERANT> flag is used by the various Template Toolkit provider modules
+(L<Template::Provider>, L<Template::Plugins>, L<Template::Filters>) to control
+their behaviour when errors are encountered. By default, any errors are
+reported as such, with the request for the particular resource (C<template>,
+C<plugin>, C<filter>) being denied and an exception raised. 
 
+When the C<TOLERANT> flag is set to any true values, errors will be silently
+ignored and the provider will instead return C<STATUS_DECLINED>. This allows a
+subsequent provider to take responsibility for providing the resource, rather
+than failing the request outright. If all providers decline to service the
+request, either through tolerated failure or a genuine disinclination to
+comply, then a 'C<E<lt>resourceE<gt> not found>' exception is raised.
 
+=head2 SERVICE
 
-=item TOLERANT
-
-The TOLERANT flag is used by the various Template Toolkit provider
-modules (Template::Provider, Template::Plugins, Template::Filters) to
-control their behaviour when errors are encountered.  By default, any
-errors are reported as such, with the request for the particular
-resource (template, plugin, filter) being denied and an exception
-raised.  When the TOLERANT flag is set to any true values, errors will
-be silently ignored and the provider will instead return
-STATUS_DECLINED.  This allows a subsequent provider to take
-responsibility for providing the resource, rather than failing the
-request outright.  If all providers decline to service the request,
-either through tolerated failure or a genuine disinclination to
-comply, then a 'E<lt>resourceE<gt> not found' exception is raised.
-
-
-
-
-
-
-=item SERVICE
-
-A reference to a Template::Service object, or sub-class thereof, to which
-the Template module should delegate.  If unspecified, a Template::Service
+A reference to a L<Template::Service> object, or sub-class thereof, to which
+the L<Template> module should delegate.  If unspecified, a L<Template::Service>
 object is automatically created using the current configuration hash.
 
     my $template = Template->new({
-	SERVICE => MyOrg::Template::Service->new({ ... }),
+        SERVICE => MyOrg::Template::Service->new({ ... }),
     });
 
+=head2 CONTEXT
 
-
-
-
-=item CONTEXT
-
-A reference to a Template::Context object which is used to define a 
-specific environment in which template are processed.  A Template::Context
-object is passed as the only parameter to the Perl subroutines that 
-represent "compiled" template documents.  Template subroutines make 
-callbacks into the context object to access Template Toolkit functionality,
-for example, to to INCLUDE or PROCESS another template (include() and 
-process() methods, respectively), to USE a plugin (plugin()) or 
-instantiate a filter (filter()) or to access the stash (stash()) which 
-manages variable definitions via the get() and set() methods.
+A reference to a L<Template::Context> object which is used to define a
+specific environment in which template are processed. A L<Template::Context>
+object is passed as the only parameter to the Perl subroutines that represent
+"compiled" template documents. Template subroutines make callbacks into the
+context object to access Template Toolkit functionality, for example, to to
+C<INCLUDE> or C<PROCESS> another template
+(L<L<Template::Context#include()|include()> and
+L<Template::Context#process()|process()> methods, respectively), to C<USE> a
+plugin (L<Template::Context#plugin()|plugin()>) or instantiate a filter
+(L<Template::Context#filter()|filter()>) or to access the stash
+(L<Template::Context#stash()|stash()>) which manages variable definitions via
+the L<Template::Stash#get()|get()> and L<Template::Stash#set()|set()> methods.
 
     my $template = Template->new({
-	CONTEXT => MyOrg::Template::Context->new({ ... }),
+        CONTEXT => MyOrg::Template::Context->new({ ... }),
     });
 
+=head2 STASH
 
-
-=item STASH
-
-A reference to a Template::Stash object or sub-class which will take
+A reference to a L<Template::Stash> object or sub-class which will take
 responsibility for managing template variables.  
 
     my $stash = MyOrg::Template::Stash->new({ ... });
     my $template = Template->new({
-	STASH => $stash,
+        STASH => $stash,
     });
 
-If unspecified, a default stash object is created using the VARIABLES
-configuration item to initialise the stash variables.  These may also
-be specified as the PRE_DEFINE option for backwards compatibility with 
-version 1.
+If unspecified, a default stash object is created using the C<VARIABLES>
+configuration item to initialise the stash variables.
 
     my $template = Template->new({
-	VARIABLES => {
-	    id    => 'abw',
-	    name  => 'Andy Wardley',
-	},
+        VARIABLES => {
+            id    => 'abw',
+            name  => 'Andy Wardley',
+        },
     };
 
+=head2 PARSER
 
-
-
-
-=item PARSER
-
-The Template::Parser module implements a parser object for compiling
+The L<Template::Parser> module implements a parser object for compiling
 templates into Perl code which can then be executed.  A default object
 of this class is created automatically and then used by the
-Template::Provider whenever a template is loaded and requires 
-compilation.  The PARSER option can be used to provide a reference to 
+L<Template::Provider> whenever a template is loaded and requires 
+compilation.  The C<PARSER> option can be used to provide a reference to 
 an alternate parser object.
 
     my $template = Template->new({
-	PARSER => MyOrg::Template::Parser->new({ ... }),
+        PARSER => MyOrg::Template::Parser->new({ ... }),
     });
 
+=head2 GRAMMAR
 
-
-
-
-=item GRAMMAR
-
-The GRAMMAR configuration item can be used to specify an alternate
+The C<GRAMMAR> configuration item can be used to specify an alternate
 grammar for the parser.  This allows a modified or entirely new
 template language to be constructed and used by the Template Toolkit.
 
-Source templates are compiled to Perl code by the Template::Parser
-using the Template::Grammar (by default) to define the language
+Source templates are compiled to Perl code by the L<Template::Parser>
+using the L<Template::Grammar> (by default) to define the language
 structure and semantics.  Compiled templates are thus inherently
 "compatible" with each other and there is nothing to prevent any
 number of different template languages being compiled and used within
 the same Template Toolkit processing environment (other than the usual
 time and memory constraints).
 
-The Template::Grammar file is constructed from a YACC like grammar
-(using Parse::YAPP) and a skeleton module template.  These files are
+The L<Template::Grammar> file is constructed from a YACC like grammar
+(using C<Parse::YAPP>) and a skeleton module template.  These files are
 provided, along with a small script to rebuild the grammar, in the
-'parser' sub-directory of the distribution.  You don't have to know or
-worry about these unless you want to hack on the template language or
-define your own variant.  There is a README file in the same directory
-which provides some small guidance but it is assumed that you know
-what you're doing if you venture herein.  If you grok LALR parsers,
-then you should find it comfortably familiar.
+F<parser> sub-directory of the distribution.  
 
-By default, an instance of the default Template::Grammar will be
-created and used automatically if a GRAMMAR item isn't specified.
+You don't have to know or worry about these unless you want to hack on the
+template language or define your own variant. There is a F<README> file in the
+same directory which provides some small guidance but it is assumed that you
+know what you're doing if you venture herein. If you grok LALR parsers, then
+you should find it comfortably familiar.
+
+By default, an instance of the default L<Template::Grammar> will be
+created and used automatically if a C<GRAMMAR> item isn't specified.
 
     use MyOrg::Template::Grammar;
-
+    
     my $template = Template->new({ 
-       	GRAMMAR = MyOrg::Template::Grammar->new();
+        GRAMMAR = MyOrg::Template::Grammar->new();
     });
-
-
-
-=back
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-Template Toolkit version 2.19, released on 27 April 2007.
-
-=head1 COPYRIGHT
-
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-
 
 =cut
 
