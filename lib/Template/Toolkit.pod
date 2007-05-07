@@ -3,7 +3,7 @@
 # Template::Toolkit
 #
 # DESCRIPTION
-
+#   Front-page for the Template Toolkit documentation
 #
 # AUTHOR
 #   Andy Wardley  <abw@wardley.org>
@@ -14,22 +14,7 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-# REVISION
-#   2.75
-#
 #========================================================================
-
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
 
 =head1 NAME
 
@@ -51,19 +36,19 @@ dynamic web content.  Howver it can be used equally well for
 processing any other kind of text based documents including HTML, XML,
 POD, PostScript, LaTeX and plain old text.
 
-The Template::Manual documentation contains further information about
+The L<Template::Manual> documentation contains further information about
 the Template Toolkit and a full reference of all the features,
 directives, configuration options and so on.
 
     $ perldoc Template::Manual
 
-The Template module is the front-end to the Template Toolkit for Perl
+The L<Template> module is the front-end to the Template Toolkit for Perl
 programmers.  The documentation for that module relates specifically
 to using the module from Perl programs.  
 
     $ perldoc Template
 
-Please note that there is no Template::Toolkit Perl module, just this
+Please note that there is no L<Template::Toolkit> Perl module, just this
 documentation pointing people to the right place.  
 
 You're welcome to refer to TT as "Template Toolkit" or
@@ -72,16 +57,16 @@ about the "Template Toolkit" software and the "Template" Perl module.
 But we're not the kind of officials who would get all official on you.
 
 You don't need to be a Perl programmer to use the Template Toolkit.
-The F<tpage> and F<ttree> scripts allow you to process templates from
-the command line.  See the documentation for those scripts for further
-information.
+The L<Template::Tools::tpage|tpage> and L<Template::Tools::ttree|ttree> 
+scripts allow you to process templates from the command line.  
+See the documentation for those scripts for further information.
 
     $ perldoc tpage
     $ perldoc ttree
 
 Finally, don't forget to check out the Template Toolkit web site.
 
-    http://template-toolkit.org/
+    L<http://template-toolkit.org/>
 
 Yes, we know it doesn't look very pretty and should use CSS instead of
 tables for layout.  We'll have a shiny new web site when TT3 is
@@ -92,27 +77,18 @@ shortly after lunch...
 
 Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-2.75, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
+L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template|Template>, L<Template::Manual|Template::Manual>
+L<Template>, L<Template::Manual>
 
 =cut
 
