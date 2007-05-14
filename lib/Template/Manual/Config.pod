@@ -497,7 +497,7 @@ any true value will allow templates to include each other recursively.
 
 =head1 Template Variables
 
-=head2 VARIABLES, PRE_DEFINE
+=head2 VARIABLES
 
 The C<VARIABLES> option (or C<PRE_DEFINE> - they're equivalent) can be used
 to specify a hash array of template variables that should be used to
@@ -1299,6 +1299,24 @@ of going to look for it again.  This is useful when an C<INCLUDE_PATH> includes
 multiple providers, ensuring that the request is passed down through the 
 providers as quickly as possible.
 
+=head2 STAT_TTL
+
+This value can be set to control how long the L<Template::Provider> will keep a
+template cached in memory before checking to see if the source template has
+changed. 
+
+    my $provider = Template::Provider->new({
+        STAT_TTL => 60,  # one minute
+    });
+
+The default value is 1 (second). You'll probably want to set this to a higher
+value if you're running the Template Toolkit inside a persistent web server
+application (e.g. mod_perl). For example, set it to 60 and the provider will
+only look for changes to templates once a minute at most. However, during
+development (or any time you're making frequent changes to templates) you'll
+probably want to keep it set to a low value so that you don't have to wait
+for the provider to notice that your templates have changed.
+
 =head2 COMPILE_EXT
 
 From version 2 onwards, the Template Toolkit has the ability to
@@ -1729,7 +1747,7 @@ object is passed as the only parameter to the Perl subroutines that represent
 "compiled" template documents. Template subroutines make callbacks into the
 context object to access Template Toolkit functionality, for example, to to
 C<INCLUDE> or C<PROCESS> another template
-(L<L<Template::Context#include()|include()> and
+(L<Template::Context#include()|include()> and
 L<Template::Context#process()|process()> methods, respectively), to C<USE> a
 plugin (L<Template::Context#plugin()|plugin()>) or instantiate a filter
 (L<Template::Context#filter()|filter()>) or to access the stash

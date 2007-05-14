@@ -6199,7 +6199,53 @@ sub
 
 1;
 
+__END__
 
+=head1 NAME
+
+Template::Grammar - Parser state/rule tables for the TT grammar
+
+=head1 SYNOPSIS
+
+    # no user serviceable parts inside
+
+=head1 DESCRIPTION
+
+This module defines the state and rule tables that the L<Template::Parser>
+module uses to parse templates.  It is generated from a YACC-like grammar
+using the C<Parse::Yapp> module.  The F<parser> sub-directory of the 
+Template Toolkit source distribution contains the grammar and other 
+files required to generate this module.
+
+But you don't need to worry about any of that unless you're planning to 
+modify the Template Toolkit language.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@wardley.orgE<gt>
+
+L<http://wardley.org/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template::Parser>
+
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
+#
+# vim: expandtab shiftwidth=4:
 
 
 

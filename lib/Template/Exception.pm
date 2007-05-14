@@ -7,17 +7,13 @@
 #   in the Template Toolkit.
 #
 # AUTHOR
-#   Andy Wardley   <abw@kfs.org>
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 #========================================================================
 
@@ -30,7 +26,7 @@ use constant INFO  => 1;
 use constant TEXT  => 2;
 use overload q|""| => "as_string", fallback => 1;
 
-our $VERSION = 2.69;
+our $VERSION = 2.70;
 
 
 #------------------------------------------------------------------------
@@ -146,18 +142,6 @@ sub select_handler {
 
 __END__
 
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
-
 =head1 NAME
 
 Template::Exception - Exception handling class module
@@ -165,77 +149,77 @@ Template::Exception - Exception handling class module
 =head1 SYNOPSIS
 
     use Template::Exception;
-
+    
     my $exception = Template::Exception->new($type, $info);
     $type = $exception->type;
     $info = $exception->info;
     ($type, $info) = $exception->type_info;
-
+    
     print $exception->as_string();
-
+    
     $handler = $exception->select_handler(\@candidates);
 
 =head1 DESCRIPTION
 
-The Template::Exception module defines an object class for
+The C<Template::Exception> module defines an object class for
 representing exceptions within the template processing life cycle.
 Exceptions can be raised by modules within the Template Toolkit, or
 can be generated and returned by user code bound to template
 variables.
 
-
-Exceptions can be raised in a template using the THROW directive,
+Exceptions can be raised in a template using the C<THROW> directive,
 
     [% THROW user.login 'no user id: please login' %]
 
-or by calling the throw() method on the current Template::Context object,
+or by calling the L<Template::Context#throw()|throw()> method on the current
+L<Template::Context> object,
 
     $context->throw('user.passwd', 'Incorrect Password');
     $context->throw('Incorrect Password');    # type 'undef'
 
-or from Perl code by calling die() with a Template::Exception object,
+or from Perl code by calling C<die()> with a C<Template::Exception> object,
 
     die (Template::Exception->new('user.denied', 'Invalid User ID'));
 
-or by simply calling die() with an error string.  This is
-automagically caught and converted to an  exception of 'undef'
-type which can then be handled in the usual way.
+or by simply calling C<die()> with an error string.  This is
+automagically caught and converted to an  exception of 'C<undef>'
+type (that's the literal string 'C<undef>' rather than Perl's 
+undefined value) which can then be handled in the usual way.
 
     die "I'm sorry Dave, I can't do that";
 
-
-
 Each exception is defined by its type and a information component
 (e.g. error message).  The type can be any identifying string and may
-contain dotted components (e.g. 'foo', 'foo.bar', 'foo.bar.baz').
-Exception types are considered to be hierarchical such that 'foo.bar'
-would be a specific type of the more general 'foo' type.
+contain dotted components (e.g. 'C<foo>', 'C<foo.bar>', 'C<foo.bar.baz>').
+Exception types are considered to be hierarchical such that 'C<foo.bar>'
+would be a specific type of the more general 'C<foo>' type.
+
+=head1 METHODS
+
+=head2 type()
+
+Returns the exception type.
+
+=head2 info()
+
+Returns the exception information.
 
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-2.69, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
+L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template|Template>, L<Template::Context|Template::Context>
+L<Template>, L<Template::Context>
 
 =cut
 

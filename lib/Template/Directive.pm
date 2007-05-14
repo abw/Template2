@@ -17,14 +17,10 @@
 #   debugging.
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 #============================================================================
 
@@ -996,4 +992,47 @@ sub debug {
 1;
 
 __END__
+
+=head1 NAME
+
+Template::Directive - Perl code generator for template directives
+
+=head1 SYNOPSIS
+
+    # no user serviceable parts inside
+
+=head1 DESCRIPTION
+
+The C<Template::Directive> module defines a number of methods that
+generate Perl code for the runtime representation of the various 
+Template Toolkit directives.
+
+It is used internally by the L<Template::Parser> module.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@wardley.orgE<gt>
+
+L<http://wardley.org/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template::Parser>
+
+=cut
+
+# Local Variables:
+# mode: perl
+# perl-indent-level: 4
+# indent-tabs-mode: nil
+# End:
+#
+# vim: expandtab shiftwidth=4:
 
