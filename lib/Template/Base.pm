@@ -56,7 +56,7 @@ sub new {
     $cfg  = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
 
     my $self = bless {
-        map { ($_ => shift @args) } @$argnames,
+        (map { ($_ => shift @args) } @$argnames),
         _ERROR  => '',
         DEBUG   => 0,
     }, $class;
