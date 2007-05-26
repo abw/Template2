@@ -1,15 +1,3 @@
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
-
 =head1 NAME
 
 Template::Tools::ttree - Process entire directory trees of templates
@@ -304,29 +292,23 @@ Run C<ttree -h> for a summary of the options available.
 
 =head1 AUTHORS
 
-Andy Wardley E<lt>abw@andywardley.comE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://www.andywardley.com/|http://www.andywardley.com/>
+L<http://www.wardley.org>
 
 With contributions from Dylan William Hardison (support for
 dependencies), Bryce Harrington (C<absolute> and C<relative> options),
 Mark Anderson (C<suffix> and C<debug> options), Harald Joerg and Leon
 Brocard who gets everywhere, it seems.
 
-=head1 VERSION
-
-2.68, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
-
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<tpage|Template::Tools::tpage>
+L<Template::Tools::tpage|tpage>
 

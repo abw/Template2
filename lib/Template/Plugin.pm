@@ -13,7 +13,7 @@
 # COPYRIGHT
 #   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
-#   This module is free software; you can redistribute it and/or
+#   This module is free software; you can redistribute it an/or
 #   modify it under the same terms as Perl itself.
 #
 #============================================================================
@@ -339,7 +339,7 @@ This pseudo-code example demonstrates the principle.
         $self->{ _SERVER }->add_to_cache(@_);
     }
 
-When the plugin is loaded, a L<MyServer> instance is created. The L<new()>
+When the plugin is loaded, a C<MyServer> instance is created. The L<new()>
 method is called against this object which instantiates and returns a C<MyClient>
 object, primed to communicate with the creating C<MyServer>.
 
