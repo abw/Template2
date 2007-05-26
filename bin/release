@@ -1,7 +1,5 @@
 PERL=/usr/bin/perl  
-   $PERL docsrc/bin/ttmkdocs \
-&& $PERL docsrc/bin/ttpodglu \
-&& $PERL Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n \
+$PERL Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n \
 && make                \
 && make test           \
 && bin/fixconfig -v -y \
