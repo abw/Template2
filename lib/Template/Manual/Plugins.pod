@@ -27,15 +27,15 @@ before using the plugin.
 =head2 Autoformat
 
 The L<Template::Plugin::Autoformat|Autoformat> plugin is an interface to
-Damian Conway's Text::Autoformat Perl module which provides advanced text
+Damian Conway's L<Text::Autoformat> Perl module which provides advanced text
 wrapping and formatting. See L<Template::Plugin::Autoformat> and
-C<Text::Autoformat> for further details.
+L<Text::Autoformat> for further details.
 
     [% USE autoformat(left=10, right=20) %]
     [% autoformat(mytext) %]	    # call autoformat sub
     [% mytext FILTER autoformat %]  # or use autoformat filter
 
-The C<Text::Autoformat> module is available from CPAN:
+The L<Text::Autoformat> module is available from CPAN:
 
     L<http://www.cpan.org/modules/by-module/Text/>
 
@@ -43,7 +43,7 @@ The C<Text::Autoformat> module is available from CPAN:
 
 The L<Template::Plugin::CGI|CGI> plugin is a wrapper around Lincoln Stein's
 CGI.pm module. The plugin is distributed with the Template Toolkit (see
-L<Template::Plugin::CGI>) and the C<CGI> module itself is distributed with
+L<Template::Plugin::CGI>) and the L<CGI> module itself is distributed with
 recent versions Perl, or is available from CPAN.
 
     [% USE CGI %]
@@ -81,7 +81,7 @@ example:
 =head2 Date
 
 The L<Template::Plugin::Date|Date> plugin provides an easy way to generate
-formatted time and date strings by delegating to the POSIX C<strftime()>
+formatted time and date strings by delegating to the L<POSIX> C<strftime()>
 routine. See L<Template::Plugin::Date> and L<POSIX> for further details.
 
     [% USE date %]
@@ -169,7 +169,7 @@ further details.
 =head2 GD
 
 The C<GD> plugins are no longer part of the core Template Toolkit distribution.
-They are now available in a separate C<Template-GD> distribution.
+They are now available in a separate L<Template-GD> distribution.
 
 =head2 HTML
 
@@ -259,7 +259,7 @@ L<Template::Plugin::URL> for further details.
 
 =head2 Wrap
 
-The L<Template::Plugin::Wrap|Wrap> plugin uses the C<Text::Wrap> module to
+The L<Template::Plugin::Wrap|Wrap> plugin uses the L<Text::Wrap> module to
 provide simple paragraph formatting. See L<Template::Plugin::Wrap> and
 L<Text::Wrap> for further details.
 
@@ -276,7 +276,7 @@ The C<Text::Wrap> module is available from CPAN:
 The C<XML::DOM>, C<XML::RSS>, C<XML::Simple> and C<XML::XPath> plugins are no
 longer distributed with the Template Toolkit as of version 2.15
 
-They are now available in a separate C<Template-XML> distribution.
+They are now available in a separate L<Template-XML> distribution.
 
 =cut
 

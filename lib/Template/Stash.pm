@@ -10,14 +10,10 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 #============================================================================
 
@@ -644,18 +640,6 @@ sub _dump_frame {
 
 __END__
 
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
-
 =head1 NAME
 
 Template::Stash - Magical storage for template variables
@@ -663,41 +647,41 @@ Template::Stash - Magical storage for template variables
 =head1 SYNOPSIS
 
     use Template::Stash;
-
+    
     my $stash = Template::Stash->new(\%vars);
-
+    
     # get variable values
     $value = $stash->get($variable);
     $value = $stash->get(\@compound);
-
+    
     # set variable value
     $stash->set($variable, $value);
     $stash->set(\@compound, $value);
-
+    
     # default variable value
     $stash->set($variable, $value, 1);
     $stash->set(\@compound, $value, 1);
-
+    
     # set variable values en masse
     $stash->update(\%new_vars)
-
+    
     # methods for (de-)localising variables
     $stash = $stash->clone(\%new_vars);
     $stash = $stash->declone();
 
 =head1 DESCRIPTION
 
-The Template::Stash module defines an object class which is used to store
+The C<Template::Stash> module defines an object class which is used to store
 variable values for the runtime use of the template processor.  Variable
 values are stored internally in a hash reference (which itself is blessed 
-to create the object) and are accessible via the get() and set() methods.
+to create the object) and are accessible via the L<get()> and L<set()> methods.
 
 Variables may reference hash arrays, lists, subroutines and objects
 as well as simple values.  The stash automatically performs the right
 magic when dealing with variables, calling code or object methods,
 indexing into lists, hashes, etc.
 
-The stash has clone() and declone() methods which are used by the
+The stash has L<clone()> and L<declone()> methods which are used by the
 template processor to make temporary copies of the stash for
 localising changes made to variables.
 
@@ -705,8 +689,8 @@ localising changes made to variables.
 
 =head2 new(\%params)
 
-The new() constructor method creates and returns a reference to a new
-Template::Stash object.  
+The C<new()> constructor method creates and returns a reference to a new
+C<Template::Stash> object.  
 
     my $stash = Template::Stash->new();
 
@@ -714,11 +698,11 @@ A hash reference may be passed to provide variables and values which
 should be used to initialise the stash.
 
     my $stash = Template::Stash->new({ var1 => 'value1', 
-				       var2 => 'value2' });
+                                       var2 => 'value2' });
 
 =head2 get($variable)
 
-The get() method retrieves the variable named by the first parameter.
+The C<get()> method retrieves the variable named by the first parameter.
 
     $value = $stash->get('var1');
 
@@ -726,15 +710,15 @@ Dotted compound variables can be retrieved by specifying the variable
 elements by reference to a list.  Each node in the variable occupies
 two entries in the list.  The first gives the name of the variable
 element, the second is a reference to a list of arguments for that 
-element, or 0 if none.
+element, or C<0> if none.
 
     [% foo.bar(10).baz(20) %]
-
+    
     $stash->get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ] ]);
 
 =head2 set($variable, $value, $default)
 
-The set() method sets the variable name in the first parameter to the 
+The C<set()> method sets the variable name in the first parameter to the 
 value specified in the second.
 
     $stash->set('var1', 'value1');
@@ -744,70 +728,59 @@ set only if it did not have a true value before.
 
     $stash->set('var2', 'default_value', 1);
 
-Dotted compound variables may be specified as per get() above.
+Dotted compound variables may be specified as per L<get()> above.
 
     [% foo.bar = 30 %]
-
+    
     $stash->set([ 'foo', 0, 'bar', 0 ], 30);
 
-The magical variable 'IMPORT' can be specified whose corresponding
+The magical variable 'C<IMPORT>' can be specified whose corresponding
 value should be a hash reference.  The contents of the hash array are
 copied (i.e. imported) into the current namespace.
 
     # foo.bar = baz, foo.wiz = waz
     $stash->set('foo', { 'bar' => 'baz', 'wiz' => 'waz' });
-
+    
     # import 'foo' into main namespace: bar = baz, wiz = waz
     $stash->set('IMPORT', $stash->get('foo'));
 
 =head2 clone(\%params)
 
-The clone() method creates and returns a new Template::Stash object which
-represents a localised copy of the parent stash.  Variables can be
-freely updated in the cloned stash and when declone() is called, the
-original stash is returned with all its members intact and in the
-same state as they were before clone() was called.
+The C<clone()> method creates and returns a new C<Template::Stash> object
+which represents a localised copy of the parent stash. Variables can be freely
+updated in the cloned stash and when L<declone()> is called, the original stash
+is returned with all its members intact and in the same state as they were
+before C<clone()> was called.
 
-For convenience, a hash of parameters may be passed into clone() which 
+For convenience, a hash of parameters may be passed into C<clone()> which 
 is used to update any simple variable (i.e. those that don't contain any 
-namespace elements like 'foo' and 'bar' but not 'foo.bar') variables while 
-cloning the stash.  For adding and updating complex variables, the set() 
-method should be used after calling clone().  This will correctly resolve
+namespace elements like C<foo> and C<bar> but not C<foo.bar>) variables while 
+cloning the stash.  For adding and updating complex variables, the L<set()> 
+method should be used after calling C<clone().>  This will correctly resolve
 and/or create any necessary namespace hashes.
 
 A cloned stash maintains a reference to the stash that it was copied 
-from in its '_PARENT' member.
+from in its C<_PARENT> member.
 
 =head2 declone()
 
-The declone() method returns the '_PARENT' reference and can be used to
+The C<declone()> method returns the C<_PARENT> reference and can be used to
 restore the state of a stash as described above.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-2.9, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template|Template>, L<Template::Context|Template::Context>
+L<Template>, L<Template::Context>
 
 =cut
 

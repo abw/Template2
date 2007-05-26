@@ -10,14 +10,10 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
-#   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 #============================================================================
 
@@ -33,8 +29,8 @@ our $VERSION = 2.70;
 sub new {
     my ($class, $context, $format) = @_;;
     return defined $format
-	? make_formatter($format)
-	: \&make_formatter;
+        ? make_formatter($format)
+        : \&make_formatter;
 }
 
 
@@ -42,9 +38,9 @@ sub make_formatter {
     my $format = shift;
     $format = '%s' unless defined $format;
     return sub { 
-	my @args = @_;
-	push(@args, '') unless @args;
-	return sprintf($format, @args); 
+        my @args = @_;
+        push(@args, '') unless @args;
+        return sprintf($format, @args); 
     }
 }
 
@@ -52,18 +48,6 @@ sub make_formatter {
 1;
 
 __END__
-
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
 
 =head1 NAME
 
@@ -81,33 +65,24 @@ Template::Plugin::Format - Plugin to create formatting functions
 =head1 DESCRIPTION
 
 The format plugin constructs sub-routines which format text according to
-a printf()-like format string.
+a C<printf()>-like format string.
 
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-2.7, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
+L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template::Plugin|Template::Plugin>
+L<Template::Plugin>
 
 =cut
 

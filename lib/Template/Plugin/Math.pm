@@ -6,17 +6,13 @@
 #   Plugin implementing numerous mathematical functions.
 #
 # AUTHORS
-#   Andy Wardley   <abw@kfs.org>
-#   ...your name here...
+#   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2002 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2002-2007 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 #============================================================================
 
@@ -28,7 +24,6 @@ use base 'Template::Plugin';
 
 our $VERSION = 1.16;
 our $AUTOLOAD;
-
 
 
 #------------------------------------------------------------------------
@@ -45,7 +40,7 @@ sub new {
     $config ||= { };
 
     bless {
-	%$config,
+        %$config,
     }, $class;
 }
 
@@ -87,22 +82,6 @@ sub AUTOLOAD { return; }
 
 __END__
 
-
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
-
-=head1 NAME
-
-Template::Plugin::Math - Plugin interface to mathematical functions
-
 =head1 NAME
 
 Template::Plugin::Math - Plugin providing mathematical functions
@@ -120,7 +99,7 @@ within templates.
 
 =head1 METHODS
 
-Template::Plugin::Math makes available the following functions from
+C<Template::Plugin::Math> makes available the following functions from
 the Perl core:
 
 =over 4
@@ -151,7 +130,7 @@ the Perl core:
 
 =back
 
-In addition, if the Math::Trig module can be loaded, the following
+In addition, if the L<Math::Trig> module can be loaded, the following
 functions are also available:
 
 =over 4
@@ -232,7 +211,7 @@ functions are also available:
 
 =back
 
-If the Math::TrulyRandom module is available, and you've got the time
+If the L<Math::TrulyRandom> module is available, and you've got the time
 to wait, the C<truly_random_number> method is available:
 
     [% Math.truly_random_number %]
@@ -241,27 +220,18 @@ to wait, the C<truly_random_number> method is available:
 
 Andy Wardley E<lt>abw@wardley.orgE<gt>
 
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-1.16, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
+L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Template::Plugin|Template::Plugin>
+L<Template::Plugin>
 
 =cut
 

@@ -3,7 +3,7 @@
 # Template::Tutorial
 #
 # DESCRIPTION
-
+#   Section index for the Template::Tutorial documentation.
 #
 # AUTHOR
 #   Andy Wardley  <abw@wardley.org>
@@ -14,71 +14,19 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-# REVISION
-#   
-#
 #========================================================================
 
+=head1 Template Toolkit Tutorials
 
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
+=head2 Template::Tutorial::Web
 
-=head1 NAME
+The L<Template::Tutorial::Web> tutorial shows how you can use the 
+Template Toolkit to generate static and dynamic web content.
 
-Template::Tutorial - Template Toolkit Tutorials
+=head2 Template::Tutorial::Datafile
 
-=head1 DESCRIPTION
-
-
-
-=over 4
-
-=item L<Template::Tutorial::Web|Template::Tutorial::Web>
-
-Generating Web Content Using the Template Toolkit
-
-
-
-=item L<Template::Tutorial::Datafile|Template::Tutorial::Datafile>
-
-Creating Data Output Files Using the Template Toolkit
-
-
-
-
-
-=back
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-Template Toolkit version 2.19, released on 27 April 2007.
-
-=head1 COPYRIGHT
-
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-
+The L<Template::Tutorial::Datafile> tutorial shows how you can
+use the Template Toolkit to generate other data formats like XML.
 
 =cut
 

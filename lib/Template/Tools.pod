@@ -17,39 +17,38 @@
 #
 #========================================================================
 
-=head1 NAME
-
-Template::Tools - Template Toolkit command line tools
-
-=head1 DESCRIPTION
+=head1 Template Tools
 
 The Template Toolkit includes the following command line tools
 for processing templates.
 
-=over 4
+=head2 tpage
 
-=item L<Template::Tools::tpage|tpage>
+The L<Template::Tools::tpage|tpage> script can be used to process
+a single template using the Template Toolkit.
 
-For processing a single template.
+    $ tpage --define msg="Hello World" greeting.tt2
 
-=item L<Template::Tools::ttree|ttree>
+Use the C<-h> option to get a summary of options:
 
-For processing entire directories of templates.
+    $ tpage -h
 
-=back
+See the L<Template::Tools::tpage> documentation for further information
+and examples of use.
 
-=head1 AUTHOR
+=head2 ttree
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
+The L<Template::Tools::ttree|ttree> script can be used to process
+an entire directory of templates.
 
-L<http://wardley.org/>
+    $ ttree --src /path/to/templates --dest /path/to/output
 
-=head1 COPYRIGHT
+Use the C<-h> option to get a summary of options:
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+    $ ttree -h
 
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+See the L<Template::Tools::ttree> documentation for further information
+and examples of use.
 
 =cut
 

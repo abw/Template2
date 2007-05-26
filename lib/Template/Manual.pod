@@ -3,7 +3,7 @@
 # Template::Manual
 #
 # DESCRIPTION
-
+#   Front-page for the TT manual.
 #
 # AUTHOR
 #   Andy Wardley  <abw@wardley.org>
@@ -14,131 +14,67 @@
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
-# REVISION
-#   
-#
 #========================================================================
 
+=head1 Template Toolkit Manual
 
-#------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
-#------------------------------------------------------------------------
+The Template Toolkit manual contains documentation on using and extending 
+the Template Toolkit.
 
-=head1 NAME
+=head2 Template::Manual::Intro
 
-Template::Manual - User guide and reference manual for the Template Toolkit
+The L<Template::Manual::Intro> page provides an introduction to the Template Toolkit
 
-=head1 DESCRIPTION
+=head2 Template::Manual::Syntax
 
+The L<Template::Manual::Syntax> desribes the syntax and structure of 
+templates and the directive tags embedded within them.
 
+=head2 Template::Manual::Directives
 
-=over 4
+The L<Template::Manual::Directives> page lists all the Template Toolkit
+directives and gives examples of their use.
 
-=item L<Template::Manual::Intro|Template::Manual::Intro>
+=head2 Template::Manual::Variables
 
-Introduction to the Template Toolkit
+The L<Template::Manual::Variables> page describes the use of variables
+in templates.
 
+=head2 Template::Manual::VMethods
 
+The L<Template::Manual::VMethods> page provides a full list of virtual 
+methods that can be used in conjunction with variables, and gives examples
+of their use. 
 
-=item L<Template::Manual::Syntax|Template::Manual::Syntax>
+=head2 Template::Manual::Config
 
-Directive syntax, structure and semantics
+The L<Template::Manual::Config> page describes all of the Template Toolkit
+configuration options.
 
+=head2 Template::Manual::Filters
 
+The L<Template::Manual::Filters> page lists all of the Template Toolkit
+filters and gives examples of their use.
 
-=item L<Template::Manual::Directives|Template::Manual::Directives>
+=head2 Template::Manual::Plugins
 
-Template directives
+The L<Template::Manual::Plugins> page lists all of the standard plugins
+distributed with Template Toolkit and gives examples of their use.
 
+=head2 Template::Manual::Internals
 
+The L<Template::Manual::Internals> page describes the internal workings of the
+Template Toolkit. It is aimed at developers who wish to extend or modify the
 
-=item L<Template::Manual::Variables|Template::Manual::Variables>
+=head2 Template::Manual::Views
 
-Template variables and code bindings
+The L<Template::Manual::Views> page describes the experimental C<VIEW>
+directive.
 
+=head2 Template::Manual::Credits
 
-
-=item L<Template::Manual::VMethods|Template::Manual::VMethods>
-
-Virtual Methods
-
-
-
-=item L<Template::Manual::Config|Template::Manual::Config>
-
-Configuration options
-
-
-
-=item L<Template::Manual::Filters|Template::Manual::Filters>
-
-Standard filters
-
-
-
-=item L<Template::Manual::Plugins|Template::Manual::Plugins>
-
-Standard plugins
-
-
-
-=item L<Template::Manual::Internals|Template::Manual::Internals>
-
-Template Toolkit internals
-
-
-
-=item L<Template::Manual::Views|Template::Manual::Views>
-
-Template Toolkit views (experimental)
-
-
-
-=item L<Template::Manual::Refs|Template::Manual::Refs>
-
-Related modules, projects and other resources
-
-
-
-=item L<Template::Manual::Credits|Template::Manual::Credits>
-
-Author and contributor credits
-
-
-
-
-
-=back
-
-=head1 AUTHOR
-
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-Template Toolkit version 2.19, released on 27 April 2007.
-
-=head1 COPYRIGHT
-
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-
+The L<Template::Manual::Credits> page lists the people who have contributed to 
+the Template Toolkit.
 
 =cut
 

@@ -1188,6 +1188,11 @@ reporting as much.
 
 =head1 CONFIGURATION OPTIONS
 
+The following list summarises the configuration options that can be provided
+to the C<Template::Provider> L<new()> constructor. Please consult
+L<Template::Manual::Config> for further details and examples of each
+configuration option in use.
+
 =head2 INCLUDE_PATH
 
 The L<Template::Manual::Config#INCLUDE_PATH|INCLUDE_PATH> option is used to
