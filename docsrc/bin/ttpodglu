@@ -8,6 +8,8 @@
 # modules (.pm files) in the lib directory.
 #
 
+die "The TT docsrc bundle is deprecated\n";
+
 use strict;
 use lib qw( ./lib ../lib ../../lib );
 use Getopt::Std;

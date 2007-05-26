@@ -16,6 +16,8 @@
 #
 #------------------------------------------------------------------------
 
+die "The TT docsrc bundle is deprecated\n";
+
 use strict;
 use lib qw( ./lib ../lib ../../lib );
 use Template;
