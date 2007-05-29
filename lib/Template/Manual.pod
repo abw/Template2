@@ -16,6 +16,10 @@
 #
 #========================================================================
 
+=head1 NAME
+
+Template::Manual - Template Toolkit User Manual
+
 =head1 Template Toolkit Manual
 
 The Template Toolkit manual contains documentation on using and extending 

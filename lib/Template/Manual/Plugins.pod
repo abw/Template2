@@ -169,7 +169,7 @@ further details.
 =head2 GD
 
 The C<GD> plugins are no longer part of the core Template Toolkit distribution.
-They are now available in a separate L<Template::GD|Template-GD> distribution.
+They are now available in a separate L<Template-GD|Template-GD> distribution.
 
 =head2 HTML
 
@@ -276,7 +276,7 @@ The C<Text::Wrap> module is available from CPAN:
 The C<XML::DOM>, C<XML::RSS>, C<XML::Simple> and C<XML::XPath> plugins are no
 longer distributed with the Template Toolkit as of version 2.15
 
-They are now available in a separate L<Template::XML|Template-XML> distribution.
+They are now available in a separate L<Template-XML|Template-XML> distribution.
 
 =cut
 

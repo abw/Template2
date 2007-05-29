@@ -21,7 +21,7 @@ Template::Manual::Intro - Introduction to the Template Toolkit
 
 The Template Toolkit is a collection of Perl modules which implement a
 fast, flexible, powerful and extensible template processing system.
-It is primarily used for generating dynamic web content, although it can 
+It is most often used for generating dynamic web content, although it can 
 be used equally well for processing any kind of text documents.  
 
 At the simplest level it provides an easy way to process template

@@ -16,6 +16,10 @@
 #
 #========================================================================
 
+=head1 NAME
+
+Template::Tutorial - Template Toolkit Tutorials
+
 =head1 Template Toolkit Tutorials
 
 =head2 Template::Tutorial::Web

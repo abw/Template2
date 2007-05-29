@@ -15,6 +15,10 @@
 #
 #========================================================================
 
+=head1 NAME
+
+Template::Modules - Template Toolkit Modules
+
 =head1 Template Toolkit Modules
 
 This documentation provides an overview of the different modules that
