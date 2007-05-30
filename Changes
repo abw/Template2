@@ -1,26 +1,38 @@
 #========================================================================
 #
-# Changes 
+# Changes
 #
 # DESCRIPTION
-#   Revision history for the Template Toolkit version 2.19, detailing
-#   significant changes between versions, most recent first.  Some 
-#   way down the file you'll find a section detailing major changes from 
-#   version 1.* to 2.* and a list of "Gotchas!" that you might have to 
-#   look out for when upgrading between major versions.
+#   Revision history for the Template Toolkit.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
-# NOTE
-#   This file is built from a source template distributed as part of 
-#   the docsrc bundle (docsrc/src/Release/Changes) which is available 
-#   from http://www.template-toolkit.org/download.html#docsrc.
-#   Any changes you make here may be lost!
-#
-#------------------------------------------------------------------------
-# $Id$
 #========================================================================
+
+#------------------------------------------------------------------------
+# Version 2.20 - 
+#------------------------------------------------------------------------
+
+* Applied a patch to Template::Stash from Jess Robinson which allows you
+  to call a list method on a single object and have it automatically
+  upgraded to a single item list.  Changed the XS Stash to do the same.
+
+  http://tt2.org/pipermail/templates/2006-November/009115.html
+
+* Fixed a minor bug in the Template::Provider code added in 2.19 that 
+  caused errors in templates to only be reported once.  Subsequent
+  fetches incorrectly returned 'not found' instead of repeating the 
+  error.
+
+* Restored the GIF images that got mangled in the switch from CVS to
+  Subversion.
+
+* Changed the --accept option in ttree to match against the full file
+  path (relative to --src dir) rather than just the file name.  This 
+  makes it behave the same way as the --ignore option.
+  
+* Updated all the documentation.
 
 #------------------------------------------------------------------------
 # Version 2.19 - 27th April 2007
