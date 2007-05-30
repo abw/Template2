@@ -78,6 +78,7 @@ my $data = {
     obj => bless({
         name => 'an object',
     }, 'AnObject'),
+    bop => sub { return ( bless ({ name => 'an object' }, 'AnObject') ) }, 
     listobj => bless([10, 20, 30], 'ListObject'),
     hashobj => bless({ planet => 'World' }, 'HashObject'),
     clean   => sub {
@@ -270,6 +271,11 @@ an object
 
 -- test --
 [% obj.name.list.first %]
+-- expect --
+an object
+
+-- test --
+[% bop.first.name %]
 -- expect --
 an object
 
