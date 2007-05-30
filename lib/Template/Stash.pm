@@ -466,6 +466,9 @@ sub _dotop {
                 elsif ($value = $HASH_OPS->{ $item }) {
                     @result = &$value($root, @$args);
                 }
+                elsif ($value = $LIST_OPS->{ $item }) {
+                    @result = &$value([$root], @$args);
+                }
             }
             elsif (UNIVERSAL::isa($root, 'ARRAY') ) {
                 if( $value = $LIST_OPS->{ $item }) {
