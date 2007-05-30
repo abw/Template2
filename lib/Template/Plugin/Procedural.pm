@@ -109,9 +109,7 @@ the class/object argument.
 
 =head1 AUTHOR
 
-Mark Fowler E<lt>mark@twoshortplanks.comE<gt>
-
-L<http://www.twoshortplanks.com>
+Mark Fowler E<lt>mark@twoshortplanks.comE<gt> L<http://www.twoshortplanks.com>
 
 =head1 COPYRIGHT
 

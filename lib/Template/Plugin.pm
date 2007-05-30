@@ -186,7 +186,7 @@ to avoid conflict with toolkit plugins.  e.g.
 
     package MyOrg::Template::Plugin::FooBar;
 
-Use the L<Template::Manual::Config#PLUGIN_BASE|PLUGIN_BASE> option to specify
+Use the L<PLUGIN_BASE|Template::Manual::Config#PLUGIN_BASE> option to specify
 the namespace that you use. e.g.
 
     use Template;

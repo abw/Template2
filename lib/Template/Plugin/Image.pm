@@ -269,7 +269,7 @@ element list containing the width and height.
     size: [% image.size.join(', ') %]
 
 The C<modtime> method returns the modification time of the file in question,
-suitable for use with the L<Template::Plugin::Date|Date> plugin, for example:
+suitable for use with the L<Date|Template::Plugin::Date> plugin, for example:
 
     [% USE image 'foo.gif' %]
     [% USE date %]
@@ -412,9 +412,7 @@ A number indicating the gamma curve of the image (e.g. 2.2)
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 

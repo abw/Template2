@@ -306,8 +306,8 @@ Template::Service - General purpose template processing service
 The C<Template::Service> module implements an object class for providing
 a consistent template processing service. 
 
-Standard header (L<PRE_PROCESS_POST_PROCESS|PRE_PROCESS>) and footer
-(L<PRE_PROCESS_POST_PROCESS|POST_PROCESS>) templates may be specified which
+Standard header (L<PRE_PROCESS|PRE_PROCESS_POST_PROCESS>) and footer
+(L<POST_PROCESS|PRE_PROCESS_POST_PROCESS>) templates may be specified which
 are prepended and appended to all templates processed by the service (but not
 any other templates or blocks C<INCLUDE>d or C<PROCESS>ed from within). An
 L<ERROR> hash may be specified which redirects the service to an alternate
@@ -317,7 +317,7 @@ response to be generated regardless of any processing problems encountered.
 
 A default C<Template::Service> object is created by the L<Template> module.
 Any C<Template::Service> options may be passed to the L<Template>
-L<Template#new()|new()> constructor method and will be forwarded to the
+L<new()|Template#new()> constructor method and will be forwarded to the
 L<Template::Service> constructor.
 
     use Template;
@@ -332,7 +332,7 @@ parameters onto other default objects (e.g. L<Template::Context>) that it may
 need to instantiate.
 
 A C<Template::Service> object (or subclass) can be explicitly instantiated and
-passed to the L<Template> L<Template#new()|new()> constructor method as the
+passed to the L<Template> L<new()|Template#new()> constructor method as the
 L<SERVICE> item.
 
     use Template;
@@ -364,11 +364,11 @@ handlers.
     });
 
 The L<Template> module uses the L<Template::Config>
-L<Template::Config#service()|service()> factory method to create a default
+L<service()|Template::Config#service()> factory method to create a default
 service object when required. The C<$Template::Config::SERVICE> package
 variable may be set to specify an alternate service module. This will be
 loaded automatically and its L<new()> constructor method called by the
-L<Template::Config#service()|service()> factory method when a default service
+L<service()|Template::Config#service()> factory method when a default service
 object is required. Thus the previous example could be written as:
 
     use Template;
@@ -398,7 +398,7 @@ as a list of C<name =E<gt> value> pairs.
 
 The C<new()> method returns a C<Template::Service> object or C<undef> on
 error. In the latter case, a relevant error message can be retrieved by the
-L<Template::Base#error()|error()> class method or directly from the
+L<error()|Template::Base#error()> class method or directly from the
 C<$Template::Service::ERROR> package variable.
 
     my $service = Template::Service->new(\%config)
@@ -416,15 +416,15 @@ additional hash reference may be passed containing template variable
 definitions.
 
 The method processes the template, adding any
-L<PRE_PROCESS_POST_PROCESS|PRE_PROCESS> or
-L<PRE_PROCESS_POST_PROCESS|POST_PROCESS> templates defined, and returns the
+L<PRE_PROCESS|PRE_PROCESS_POST_PROCESS> or
+L<POST_PROCESS|PRE_PROCESS_POST_PROCESS> templates defined, and returns the
 output text. An uncaught exception thrown by the template will be handled by a
 relevant L<ERROR> handler if defined. Errors that occur in the
-L<PRE_PROCESS_POST_PROCESS|PRE_PROCESS> or
-L<PRE_PROCESS_POST_PROCESS|POST_PROCESS> templates, or those that occur in the
+L<PRE_PROCESS|PRE_PROCESS_POST_PROCESS> or
+L<POST_PROCESS|PRE_PROCESS_POST_PROCESS> templates, or those that occur in the
 main input template and aren't handled, cause the method to return C<undef> to
 indicate failure. The appropriate error message can be retrieved via the
-L<Template::Base#error()|error()> method.
+L<error()|Template::Base#error()> method.
 
     $service->process('myfile.html', { title => 'My Test File' })
         || die $service->error();
@@ -443,8 +443,8 @@ configuration option in use.
 
 =head2 PRE_PROCESS, POST_PROCESS
 
-The L<Template::Manual::Config#PRE_PROCESS_POST_PROCESS|PRE_PROCESS> and
-L<Template::Manual::Config#PRE_PROCESS_POST_PROCESS|POST_PROCESS> options may
+The L<PRE_PROCESS|Template::Manual::Config#PRE_PROCESS_POST_PROCESS> and
+L<POST_PROCESS|Template::Manual::Config#PRE_PROCESS_POST_PROCESS> options may
 be set to contain the name(s) of template files which should be processed
 immediately before and/or after each template. These do not get added to
 templates processed into a document via directives such as C<INCLUDE>
@@ -465,12 +465,12 @@ processed in the order defined.
 
 =head2 PROCESS
 
-The L<Template::Manual::Config#PROCESS|PROCESS> option may be set to contain
+The L<PROCESS|Template::Manual::Config#PROCESS> option may be set to contain
 the name(s) of template files which should be processed instead of the main
 template passed to the C<Template::Service> L<process()> method. This can be used to
 apply consistent wrappers around all templates, similar to the use of
-L<PRE_PROCESS_POST_PROCESS|PRE_PROCESS> and 
-L<PRE_PROCESS_POST_PROCESS|POST_PROCESS> templates.
+L<PRE_PROCESS|PRE_PROCESS_POST_PROCESS> and 
+L<POST_PROCESS|PRE_PROCESS_POST_PROCESS> templates.
 
     my $service = Template::Service->new({
         PROCESS  => 'content',
@@ -497,7 +497,7 @@ Example C<PROCESS> template:
 
 =head2 ERROR
 
-The L<Template::Manual::Config#ERROR|ERROR> (or C<ERRORS> if you prefer)
+The L<ERROR|Template::Manual::Config#ERROR> (or C<ERRORS> if you prefer)
 configuration item can be used to name a single template or specify a hash
 array mapping exception types to templates which should be used for error
 handling. If an uncaught exception is raised from within a template then the
@@ -510,7 +510,7 @@ for all uncaught exceptions.
         ERROR => 'error.html'
     });
 
-If the L<Template::Manual::Config#ERROR|ERROR/ERRORS> item is a hash reference
+If the L<ERROR/ERRORS|Template::Manual::Config#ERROR> item is a hash reference
 the keys are assumed to be exception types and the relevant template for a
 given exception will be selected. A C<default> template may be provided for
 the general case.
@@ -525,15 +525,15 @@ the general case.
 
 =head2 AUTO_RESET
 
-The L<Template::Manual::Config#AUTO_RESET|AUTO_RESET> option is set by default
+The L<AUTO_RESET|Template::Manual::Config#AUTO_RESET> option is set by default
 and causes the local C<BLOCKS> cache for the L<Template::Context> object to be
-reset on each call to the L<Template> L<Template#process()|process()> method.
+reset on each call to the L<Template> L<process()|Template#process()> method.
 This ensures that any C<BLOCK>s defined within a template will only persist until
 that template is finished processing. 
 
 =head2 DEBUG
 
-The L<Template::Manual::Config#DEBUG|DEBUG> option can be used to enable
+The L<DEBUG|Template::Manual::Config#DEBUG> option can be used to enable
 debugging messages from the C<Template::Service> module by setting it to include
 the C<DEBUG_SERVICE> value.
 

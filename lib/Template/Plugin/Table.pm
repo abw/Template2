@@ -397,7 +397,7 @@ Output:
 
 In addition to a list reference, the C<Table> plugin constructor may be passed
 a reference to a L<Template::Iterator> object or subclass thereof. The
-L<Template::Iterator> L<Template::Iterator#get_all()|get_all()> method is
+L<Template::Iterator> L<get_all()|Template::Iterator#get_all()> method is
 first called on the iterator to return all remaining items. These are then
 available via the usual Table interface.
 
@@ -416,9 +416,7 @@ available via the usual Table interface.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 

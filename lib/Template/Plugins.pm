@@ -350,9 +350,9 @@ as well as the more explicit form of:
 
 Called to request that a plugin of a given name be provided. The relevant
 module is first loaded (if necessary) and the
-L<Template::Plugin#load()|load()> class method called to return the factory
+L<load()|Template::Plugin#load()> class method called to return the factory
 class name (usually the same package name) or a factory object (a prototype).
-The L<Template::Plugin#new()|new()> method is then called as a class or object
+The L<new()|Template::Plugin#new()> method is then called as a class or object
 method against the factory, passing all remaining parameters.
 
 Returns a reference to a new plugin object or C<($error, STATUS_ERROR)>
@@ -369,7 +369,7 @@ configuration option in use.
 
 =head2 PLUGINS
 
-The L<Template::Manual::Config#PLUGINS|PLUGINS> option can be used to provide
+The L<PLUGINS|Template::Manual::Config#PLUGINS> option can be used to provide
 a reference to a hash array that maps plugin names to Perl module names.
 
     my $plugins = Template::Plugins->new({
@@ -382,8 +382,8 @@ a reference to a hash array that maps plugin names to Perl module names.
 
 =head2 PLUGIN_BASE
 
-If a plugin is not defined in the L<Template::Manual::Config#PLUGINS|PLUGINS>
-hash then the L<Template::Manual::Config#PLUGIN_BASE|PLUGIN_BASE> is used to
+If a plugin is not defined in the L<PLUGINS|Template::Manual::Config#PLUGINS>
+hash then the L<PLUGIN_BASE|Template::Manual::Config#PLUGIN_BASE> is used to
 attempt to construct a correct Perl module name which can be successfully
 loaded.
 
@@ -400,30 +400,30 @@ loaded.
     
 =head2 LOAD_PERL
 
-The L<Template::Manual::Config#LOAD_PERL|LOAD_PERL> option can be set to allow
+The L<LOAD_PERL|Template::Manual::Config#LOAD_PERL> option can be set to allow
 you to load regular Perl modules (i.e. those that don't reside in the
 C<Template::Plugin> or another user-defined namespace) as plugins.
 
 If a plugin cannot be loaded using the
-L<Template::Manual::Config#PLUGINS|PLUGINS> or
-L<Template::Manual::Config#PLUGIN_BASE|PLUGIN_BASE> approaches then,
-if the L<Template::Manual::Config#LOAD_PERL|LOAD_PERL> is set, the
+L<PLUGINS|Template::Manual::Config#PLUGINS> or
+L<PLUGIN_BASE|Template::Manual::Config#PLUGIN_BASE> approaches then,
+if the L<LOAD_PERL|Template::Manual::Config#LOAD_PERL> is set, the
 provider will make a final attempt to load the module without prepending any
 prefix to the module path. 
 
-Unlike regular plugins, modules loaded using L<Template::Manual::Config#LOAD_PERL|LOAD_PERL>
+Unlike regular plugins, modules loaded using L<LOAD_PERL|Template::Manual::Config#LOAD_PERL>
 do not receive a L<Template::Context> reference as the first argument to the 
 C<new()> constructor method.
 
 =head2 TOLERANT
 
-The L<Template::Manual::Config#TOLERANT|TOLERANT> flag can be set to indicate
+The L<TOLERANT|Template::Manual::Config#TOLERANT> flag can be set to indicate
 that the C<Template::Plugins> module should ignore any errors encountered while
 loading a plugin and instead return C<STATUS_DECLINED>.
 
 =head2 DEBUG
 
-The L<Template::Manual::Config#DEBUG|DEBUG> option can be used to enable
+The L<DEBUG|Template::Manual::Config#DEBUG> option can be used to enable
 debugging messages for the C<Template::Plugins> module by setting it to
 include the C<DEBUG_PLUGINS> value.
 

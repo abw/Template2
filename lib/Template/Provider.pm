@@ -1132,7 +1132,7 @@ documents. This object may be sub-classed to provide more specific facilities
 for loading, or otherwise providing access to templates.
 
 The L<Template::Context> objects maintain a list of L<Template::Provider>
-objects which are polled in turn (via L<Template::Context#fetch()|fetch()>) to
+objects which are polled in turn (via L<fetch()|Template::Context#fetch()>) to
 return a requested template. Each may return a compiled template, raise an
 error, or decline to serve the request, giving subsequent providers a chance
 to do so.
@@ -1195,7 +1195,7 @@ configuration option in use.
 
 =head2 INCLUDE_PATH
 
-The L<Template::Manual::Config#INCLUDE_PATH|INCLUDE_PATH> option is used to
+The L<INCLUDE_PATH|Template::Manual::Config#INCLUDE_PATH> option is used to
 specify one or more directories in which template files are located.
 
     # single path
@@ -1211,7 +1211,7 @@ specify one or more directories in which template files are located.
 
 =head2 ABSOLUTE
 
-The L<Template::Manual::Config#ABSOLUTE|ABSOLUTE> flag is used to indicate if
+The L<ABSOLUTE|Template::Manual::Config#ABSOLUTE> flag is used to indicate if
 templates specified with absolute filenames (e.g. 'C</foo/bar>') should be
 processed. It is disabled by default and any attempt to load a template by
 such a name will cause a 'C<file>' exception to be raised.
@@ -1222,7 +1222,7 @@ such a name will cause a 'C<file>' exception to be raised.
 
 =head2 RELATIVE
 
-The L<Template::Manual::Config#RELATIVE|RELATIVE> flag is used to indicate if
+The L<RELATIVE|Template::Manual::Config#RELATIVE> flag is used to indicate if
 templates specified with filenames relative to the current directory (e.g.
 C<./foo/bar> or C<../../some/where/else>) should be loaded. It is also disabled
 by default, and will raise a C<file> error if such template names are
@@ -1234,7 +1234,7 @@ encountered.
 
 =head2 DEFAULT
 
-The L<Template::Manual::Config#DEFAULT|DEFAULT> option can be used to specify
+The L<DEFAULT|Template::Manual::Config#DEFAULT> option can be used to specify
 a default template which should be used whenever a specified template can't be
 found in the L<INCLUDE_PATH>.
 
@@ -1243,7 +1243,7 @@ found in the L<INCLUDE_PATH>.
     });
 
 If a non-existant template is requested through the L<Template>
-L<Template#process()|process()> method, or by an C<INCLUDE>, C<PROCESS> or
+L<process()|Template#process()> method, or by an C<INCLUDE>, C<PROCESS> or
 C<WRAPPER> directive, then the C<DEFAULT> template will instead be processed, if
 defined. Note that the C<DEFAULT> template is not used when templates are
 specified with absolute or relative filenames, or as a reference to a input
@@ -1251,9 +1251,9 @@ file handle or text string.
 
 =head2 CACHE_SIZE
 
-The L<Template::Manual::Config#CACHE_SIZE|CACHE_SIZE> option can be used to
+The L<CACHE_SIZE|Template::Manual::Config#CACHE_SIZE> option can be used to
 limit the number of compiled templates that the module should cache. By
-default, the L<Template::Manual::Config#CACHE_SIZE|CACHE_SIZE> is undefined
+default, the L<CACHE_SIZE|Template::Manual::Config#CACHE_SIZE> is undefined
 and all compiled templates are cached.
 
     my $provider = Template::Provider->new({
@@ -1263,7 +1263,7 @@ and all compiled templates are cached.
 
 =head2 STAT_TTL
 
-The L<Template::Manual::Config#STAT_TTL|STAT_TTL> value can be set to control
+The L<STAT_TTL|Template::Manual::Config#STAT_TTL> value can be set to control
 how long the C<Template::Provider> will keep a template cached in memory
 before checking to see if the source template has changed.
 
@@ -1273,7 +1273,7 @@ before checking to see if the source template has changed.
 
 =head2 COMPILE_EXT
 
-The L<Template::Manual::Config#COMPILE_EXT|COMPILE_EXT> option can be
+The L<COMPILE_EXT|Template::Manual::Config#COMPILE_EXT> option can be
 provided to specify a filename extension for compiled template files.
 It is undefined by default and no attempt will be made to read or write 
 any compiled template files.
@@ -1284,7 +1284,7 @@ any compiled template files.
 
 =head2 COMPILE_DIR
 
-The L<Template::Manual::Config#COMPILE_DIR|COMPILE_DIR> option is used to
+The L<COMPILE_DIR|Template::Manual::Config#COMPILE_DIR> option is used to
 specify an alternate directory root under which compiled template files should
 be saved.
 
@@ -1294,13 +1294,13 @@ be saved.
 
 =head2 TOLERANT
 
-The L<Template::Manual::Config#TOLERANT|TOLERANT> flag can be set to indicate
+The L<TOLERANT|Template::Manual::Config#TOLERANT> flag can be set to indicate
 that the C<Template::Provider> module should ignore any errors encountered while
 loading a template and instead return C<STATUS_DECLINED>.
 
 =head2 PARSER
 
-The L<Template::Manual::Config#PARSER|PARSER> option can be used to define
+The L<PARSER|Template::Manual::Config#PARSER> option can be used to define
 a parser module other than the default of L<Template::Parser>.
 
     my $provider = Template::Provider->new({
@@ -1309,7 +1309,7 @@ a parser module other than the default of L<Template::Parser>.
 
 =head2 DEBUG
 
-The L<Template::Manual::Config#DEBUG|DEBUG> option can be used to enable
+The L<DEBUG|Template::Manual::Config#DEBUG> option can be used to enable
 debugging messages from the L<Template::Provider> module by setting it to include
 the C<DEBUG_PROVIDER> value.
 

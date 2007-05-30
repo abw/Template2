@@ -13,22 +13,12 @@
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   2.68
-#
 #========================================================================
 
 
 #------------------------------------------------------------------------
-# IMPORTANT NOTE
-#   This documentation is generated automatically from source
-#   templates.  Any changes you make here may be lost.
-# 
-#   The 'docsrc' documentation source bundle is available for download
-#   from http://www.template-toolkit.org/docs.html and contains all
-#   the source templates, XML files, scripts, etc., from which the
-#   documentation for the Template Toolkit is built.
+# WARNING
+#   This documentation hasn't been updated in ages...
 #------------------------------------------------------------------------
 
 =head1 NAME
@@ -36,9 +26,6 @@
 Template::FAQ - Frequently Asked Questions about the Template Toolkit
 
 =head1 DESCRIPTION
-
-
-
 
 =head1 Template Toolkit Language
 
@@ -353,22 +340,11 @@ pretty much any kind of per-document initialisation that you require.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/|http://wardley.org/>
-
-
-
-
-=head1 VERSION
-
-2.68, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-  Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
-
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

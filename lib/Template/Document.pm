@@ -369,11 +369,11 @@ The L<process()> method can then be called on the instantiated
 C<Template::Document> object, passing a reference to a L<Template::Context>
 object as the first parameter. This will install any locally defined blocks
 (C<DEFBLOCKS>) in the C<BLOCKS> cache in the context (via a call to
-L<Template::Context#visit()|visit()>) so that they may be subsequently
+L<visit()|Template::Context#visit()>) so that they may be subsequently
 resolved by the context. The main C<BLOCK> subroutine is then executed,
 passing the context reference on as a parameter. The text returned from the
 template subroutine is then returned by the L<process()> method, after calling
-the context L<Template::Context#leave()|leave()> method to permit cleanup and
+the context L<leave()|Template::Context#leave()> method to permit cleanup and
 de-registration of named C<BLOCKS> previously installed.
 
 An C<AUTOLOAD> method provides access to the C<METADATA> items for the
@@ -419,7 +419,7 @@ by the L<Template::Parser> module.  These are evaluated into subroutine referenc
 using C<eval()>.
 
 Returns a new C<Template::Document> object or C<undef> on error. The
-L<Template::Base#error()|error()> class method can be called, or the C<$ERROR>
+L<error()|Template::Base#error()> class method can be called, or the C<$ERROR>
 package variable inspected to retrieve the relevant error message.
 
 =head2 process($context)
@@ -427,9 +427,9 @@ package variable inspected to retrieve the relevant error message.
 Main processing routine for the compiled template document. A reference to a
 L<Template::Context> object should be passed as the first parameter. The
 method installs any locally defined blocks via a call to the context
-L<Template::Context#visit()|visit()> method, processes its own template,
+L<visit()|Template::Context#visit()> method, processes its own template,
 (passing the context reference as a parameter) and then calls
-L<Template::Context#leave()|leave()> in the context to allow cleanup.
+L<leave()|Template::Context#leave()> in the context to allow cleanup.
 
     print $doc->process($context);
 
@@ -466,9 +466,7 @@ have persistence of compiled templates.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 

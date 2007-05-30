@@ -954,7 +954,7 @@ L<Template::Manual::Config> for full details.
 The C<parse()> method parses the text passed in the first parameter and
 returns a reference to a hash array of data defining the compiled
 representation of the template text, suitable for passing to the
-L<Template::Document> L<Template::Document#new()|new()> constructor method. On
+L<Template::Document> L<new()|Template::Document#new()> constructor method. On
 error, undef is returned.
 
     $data = $parser->parse($text)
@@ -974,8 +974,8 @@ on each option.
 
 =head2 START_TAG, END_TAG
 
-The L<Template::Manual::Config#START_TAG_END_TAG|START_TAG> and
-L<Template::Manual::Config#START_TAG_END_TAG|END_TAG> options are used to
+The L<START_TAG|Template::Manual::Config#START_TAG_END_TAG> and
+L<END_TAG|Template::Manual::Config#START_TAG_END_TAG> options are used to
 specify character sequences or regular expressions that mark the start and end
 of a template directive.
 
@@ -986,7 +986,7 @@ of a template directive.
 
 =head2 TAG_STYLE
 
-The L<Template::Manual::Config#TAG_STYLE|TAG_STYLE> option can be used to set
+The L<TAG_STYLE|Template::Manual::Config#TAG_STYLE> option can be used to set
 both L<START_TAG> and L<END_TAG> according to pre-defined tag styles.
 
     my $parser = Template::Parser->new({ 
@@ -995,8 +995,8 @@ both L<START_TAG> and L<END_TAG> according to pre-defined tag styles.
 
 =head2 PRE_CHOMP, POST_CHOMP
 
-The L<Template::Manual::Config#PRE_CHOMP_POST_CHOMP|PRE_CHOMP> and
-L<Template::Manual::Config#PRE_CHOMP_POST_CHOMP|POST_CHOMP> can be set to remove
+The L<PRE_CHOMP|Template::Manual::Config#PRE_CHOMP_POST_CHOMP> and
+L<POST_CHOMP|Template::Manual::Config#PRE_CHOMP_POST_CHOMP> can be set to remove
 any whitespace before or after a directive tag, respectively.
 
     my $parser = Template::Parser-E<gt>new({
@@ -1006,7 +1006,7 @@ any whitespace before or after a directive tag, respectively.
 
 =head2 INTERPOLATE
 
-The L<Template::Manual::Config#INTERPOLATE|INTERPOLATE> flag can be set
+The L<INTERPOLATE|Template::Manual::Config#INTERPOLATE> flag can be set
 to allow variables to be embedded in plain text blocks.
 
     my $parser = Template::Parser->new({ 
@@ -1022,7 +1022,7 @@ to explicitly scope the variable name where necessary.
 
 =head2 ANYCASE
 
-The L<Template::Manual::Config#ANYCASE|ANYCASE> option can be set
+The L<ANYCASE|Template::Manual::Config#ANYCASE> option can be set
 to allow directive keywords to be specified in any case.
 
     # with ANYCASE set to 1
@@ -1032,7 +1032,7 @@ to allow directive keywords to be specified in any case.
 
 =head2 GRAMMAR
 
-The L<Template::Manual::Config#GRAMMAR|GRAMMAR> configuration item can be used
+The L<GRAMMAR|Template::Manual::Config#GRAMMAR> configuration item can be used
 to specify an alternate grammar for the parser. This allows a modified or
 entirely new template language to be constructed and used by the Template
 Toolkit.
@@ -1048,7 +1048,7 @@ created and used automatically if a C<GRAMMAR> item isn't specified.
 
 =head2 DEBUG
 
-The L<Template::Manual::Config#DEBUG|DEBUG> option can be used to enable
+The L<DEBUG|Template::Manual::Config#DEBUG> option can be used to enable
 various debugging features of the C<Template::Parser> module.
 
     use Template::Constants qw( :debug );

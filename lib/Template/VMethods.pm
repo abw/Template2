@@ -535,6 +535,34 @@ sub list_splice {
 
 __END__
 
+=head1 NAME
+
+Template::VMethods - Virtual methods for variables
+
+=head1 DESCRIPTION
+
+The C<Template::VMethods> module implements the virtual methods
+that can be applied to variables.
+
+Please see L<Template::Manual::VMethods> for further information.
+
+=head1 AUTHOR
+
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Template::Stash>, L<Template::Manual::VMethods>
+
+=cut
+
 # Local Variables:
 # mode: perl
 # perl-indent-level: 4

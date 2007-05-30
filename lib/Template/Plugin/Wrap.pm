@@ -124,7 +124,7 @@ Output:
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 The L<Text::Wrap> module was written by David Muir Sharnoff
 with help from Tim Pierce and many others.

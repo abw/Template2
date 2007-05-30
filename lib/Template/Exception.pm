@@ -171,7 +171,7 @@ Exceptions can be raised in a template using the C<THROW> directive,
 
     [% THROW user.login 'no user id: please login' %]
 
-or by calling the L<Template::Context#throw()|throw()> method on the current
+or by calling the L<throw()|Template::Context#throw()> method on the current
 L<Template::Context> object,
 
     $context->throw('user.passwd', 'Incorrect Password');
@@ -206,9 +206,7 @@ Returns the exception information.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 

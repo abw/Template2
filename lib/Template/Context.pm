@@ -951,7 +951,7 @@ plugins and filters, raise exceptions and so on.
 
 A default C<Template::Context> object is created by the L<Template> module.
 Any C<Template::Context> options may be passed to the L<Template>
-L<Template#new()|new()> constructor method and will be forwarded to the
+L<new()|Template#new()> constructor method and will be forwarded to the
 C<Template::Context> constructor.
 
     use Template;
@@ -976,7 +976,7 @@ instantiate.
     });
 
 A C<Template::Context> object (or subclass) can be explicitly instantiated and
-passed to the L<Template> L<Template#new()|new()> constructor method as the
+passed to the L<Template> L<new()|Template#new()> constructor method as the
 C<CONTEXT> configuration item.
 
     use Template;
@@ -986,11 +986,11 @@ C<CONTEXT> configuration item.
     my $template = Template->new({ CONTEXT => $context });
 
 The L<Template> module uses the L<Template::Config>
-L<Template::Config#context()|context()> factory method to create a default
+L<context()|Template::Config#context()> factory method to create a default
 context object when required. The C<$Template::Config::CONTEXT> package
 variable may be set to specify an alternate context module. This will be
 loaded automatically and its L<new()> constructor method called by the
-L<Template::Config#context()|context()> factory method when a default context
+L<context()|Template::Config#context()> factory method when a default context
 object is required.
 
     use Template;
@@ -1020,7 +1020,7 @@ HASH reference or as a list of C<name =E<gt> value> pairs.
 
 The C<new()> method returns a C<Template::Context> object or C<undef> on
 error. In the latter case, a relevant error message can be retrieved by the
-L<Template::Base#error()|error()> class method or directly from the
+L<error()|Template::Base#error()> class method or directly from the
 C<$Template::Context::ERROR> package variable.
 
     my $context = Template::Context->new(\%config)
@@ -1034,7 +1034,7 @@ L<Template::Manual::Config> for further details.
 
 =head3 VARIABLES
 
-The L<Template::Manual::Config#VARIABLES|VARIABLES> option can be used to
+The L<VARIABLES|Template::Manual::Config#VARIABLES> option can be used to
 specify a hash array of template variables.
 
     my $context = Template::Context->new({
@@ -1047,7 +1047,7 @@ specify a hash array of template variables.
 
 =head3 BLOCKS
 
-The L<Template::Manual::Config#BLOCKS|BLOCKS> option can be used to pre-define
+The L<BLOCKS|Template::Manual::Config#BLOCKS> option can be used to pre-define
 a default set of template blocks.
 
     my $context = Template::Context->new({
@@ -1060,7 +1060,7 @@ a default set of template blocks.
 
 =head3 TRIM
 
-The L<Template::Manual::Config#TRIM|TRIM> option can be set to have any
+The L<TRIM|Template::Manual::Config#TRIM> option can be set to have any
 leading and trailing whitespace automatically removed from the output of all
 template files and C<BLOCK>s.
 
@@ -1084,20 +1084,20 @@ output:
 
 =head3 EVAL_PERL
 
-The L<Template::Manual::Config#EVAL_PERL|EVAL_PERL> is used to indicate if
+The L<EVAL_PERL|Template::Manual::Config#EVAL_PERL> is used to indicate if
 C<PERL> and/or C<RAWPERL> blocks should be evaluated. It is disabled by
 default.
 
 =head3 RECURSION
 
-The L<Template::Manual::Config#RECURSION|RECURSION> can be set to 
+The L<RECURSION|Template::Manual::Config#RECURSION> can be set to 
 allow templates to recursively process themselves, either directly
 (e.g. template C<foo> calls C<INCLUDE foo>) or indirectly (e.g. 
 C<foo> calls C<INCLUDE bar> which calls C<INCLUDE foo>).
 
 =head3 LOAD_TEMPLATES
 
-The L<Template::Manual::Config#LOAD_TEMPLATES|LOAD_TEMPLATES> option can be
+The L<LOAD_TEMPLATES|Template::Manual::Config#LOAD_TEMPLATES> option can be
 used to provide a reference to a list of L<Template::Provider> objects or
 sub-classes thereof which will take responsibility for loading and compiling
 templates.
@@ -1111,7 +1111,7 @@ templates.
 
 =head3 LOAD_PLUGINS
 
-The L<Template::Manual::Config#LOAD_PLUGINS|LOAD_PLUGINS> options can be used
+The L<LOAD_PLUGINS|Template::Manual::Config#LOAD_PLUGINS> options can be used
 to specify a list of provider objects responsible for loading and
 instantiating template plugin objects.
 
@@ -1124,7 +1124,7 @@ instantiating template plugin objects.
 
 =head3 LOAD_FILTERS
 
-The L<Template::Manual::Config#LOAD_FILTERS|LOAD_FILTERS> option can be used
+The L<LOAD_FILTERS|Template::Manual::Config#LOAD_FILTERS> option can be used
 to specify a list of provider objects for returning and/or creating filter
 subroutines.
 
@@ -1137,7 +1137,7 @@ subroutines.
 
 =head3 STASH
 
-The L<Template::Manual::Config#STASH|STASH> option can be used to 
+The L<STASH|Template::Manual::Config#STASH> option can be used to 
 specify a L<Template::Stash> object or sub-class which will take
 responsibility for managing template variables.  
 
@@ -1148,7 +1148,7 @@ responsibility for managing template variables.
 
 =head3 DEBUG
 
-The L<Template::Manual::Config#DEBUG|DEBUG> option can be used to enable
+The L<DEBUG|Template::Manual::Config#DEBUG> option can be used to enable
 various debugging features of the L<Template::Context> module.
 
     use Template::Constants qw( :debug );
@@ -1178,9 +1178,9 @@ C<eval> block and examining C<$@>.
 Instantiates a plugin object by querying each of the L<LOAD_PLUGINS>
 providers. The default L<LOAD_PLUGINS> provider is a L<Template::Plugins>
 object which attempts to load plugin modules, according the various
-configuration items such as L<Template::Plugins#PLUGIN_BASE|PLUGIN_BASE>,
-L<Template::Plugins#LOAD_PERL|LOAD_PERL>, etc., and then instantiate an object
-via L<Template::Plugin#new()|new()>. A reference to a list of constructor
+configuration items such as L<PLUGIN_BASE|Template::Plugins#PLUGIN_BASE>,
+L<LOAD_PERL|Template::Plugins#LOAD_PERL>, etc., and then instantiate an object
+via L<new()|Template::Plugin#new()>. A reference to a list of constructor
 arguments may be passed as the second parameter. These are forwarded to the
 plugin constructor.
 
@@ -1271,12 +1271,12 @@ which is automatically compiled into a template sub-routine.
 
 Returns a true value (the sub-routine or L<Template::Document> reference) on
 success or undef on failure. The relevant error message can be retrieved by
-calling the L<Template::Base#error()|error()> method.
+calling the L<error()|Template::Base#error()> method.
 
 =head2 define_filter($name, \&filter, $is_dynamic)
 
 Adds a new filter definition by calling the
-L<Template::Filters#store()|store()> method on each of the L<LOAD_FILTERS>
+L<store()|Template::Filters#store()> method on each of the L<LOAD_FILTERS>
 providers until accepted (in the usual case, this is accepted straight away by
 the one and only L<Template::Filters> provider). The first argument should
 contain the name of the filter and the second a reference to a filter
@@ -1327,9 +1327,7 @@ An C<AUTOLOAD> method provides access to context configuration items.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 

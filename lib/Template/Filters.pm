@@ -693,9 +693,9 @@ L<Template::Manual::Config> for further information about each option.
 
 =head2 FILTERS
 
-The L<Template::Manual::Config#FILTERS|FILTERS> option can be used to specify
+The L<FILTERS|Template::Manual::Config#FILTERS> option can be used to specify
 custom filters which can then be used with the
-L<Template::Manual::Directives#FILTER|FILTER> directive like any other. These
+L<FILTER|Template::Manual::Directives#FILTER> directive like any other. These
 are added to the standard filters which are available by default.
 
     $filters = Template::Filters->new({
@@ -707,13 +707,13 @@ are added to the standard filters which are available by default.
 
 =head2 TOLERANT
 
-The L<Template::Manual::Config#TOLERANT|TOLERANT> flag can be set to indicate
+The L<TOLERANT|Template::Manual::Config#TOLERANT> flag can be set to indicate
 that the C<Template::Filters> module should ignore any errors and instead
 return C<STATUS_DECLINED>.
 
 =head2 DEBUG
 
-The L<Template::Manual::Config#DEBUG|DEBUG> option can be used to enable
+The L<DEBUG|Template::Manual::Config#DEBUG> option can be used to enable
 debugging messages for the Template::Filters module by setting it to include
 the C<DEBUG_FILTERS> value.
 

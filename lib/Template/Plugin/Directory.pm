@@ -367,8 +367,8 @@ block should explicitly call a C<scan()> on each directory.
 =head1 AUTHORS
 
 Michael Stevens wrote the original Directory plugin on which this is based.
-Andy Wardley split it into separate L<Template::Plugin::File|File> and
-L<Template::Plugin::Directory|Directory> plugins, added some extra code and
+Andy Wardley split it into separate L<File|Template::Plugin::File> and
+L<Directory|Template::Plugin::Directory> plugins, added some extra code and
 documentation for C<VIEW> support, and made a few other minor tweaks.
 
 =head1 COPYRIGHT

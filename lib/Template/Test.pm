@@ -497,7 +497,7 @@ object.
 
 The third parameter may be used to reference a hash array of template
 variable which should be defined when processing the tests.  This is
-passed to the L<Template> L<Template#process()|process()> method.
+passed to the L<Template> L<process()|Template#process()> method.
 
     my $replace = {
         a => 'alpha',
