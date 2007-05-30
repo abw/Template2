@@ -59,19 +59,19 @@ extern "C" {
 #define snprintf _snprintf
 #endif
 
-#define TT_STASH_PKG	"Template::Stash::XS"
-#define TT_LIST_OPS	    "Template::Stash::LIST_OPS"
-#define TT_HASH_OPS	    "Template::Stash::HASH_OPS"
-#define TT_SCALAR_OPS	"Template::Stash::SCALAR_OPS"
-#define TT_PRIVATE  	"Template::Stash::PRIVATE"
+#define TT_STASH_PKG    "Template::Stash::XS"
+#define TT_LIST_OPS         "Template::Stash::LIST_OPS"
+#define TT_HASH_OPS         "Template::Stash::HASH_OPS"
+#define TT_SCALAR_OPS   "Template::Stash::SCALAR_OPS"
+#define TT_PRIVATE      "Template::Stash::PRIVATE"
 
-#define TT_LVALUE_FLAG	1
-#define TT_DEBUG_FLAG	2
-#define TT_DEFAULT_FLAG	4
+#define TT_LVALUE_FLAG  1
+#define TT_DEBUG_FLAG   2
+#define TT_DEFAULT_FLAG 4
 
 typedef enum tt_ret { TT_RET_UNDEF, TT_RET_OK, TT_RET_CODEREF } TT_RET;
 
-static TT_RET   hash_op(pTHX_ SV*, char*, AV*, SV**);
+static TT_RET   hash_op(pTHX_ SV*, char*, AV*, SV**, int);
 static TT_RET   list_op(pTHX_ SV*, char*, AV*, SV**);
 static TT_RET   scalar_op(pTHX_ SV*, char*, AV*, SV**, int);
 static TT_RET   tt_fetch_item(pTHX_ SV*, SV*, AV*, SV**);
@@ -105,27 +105,27 @@ static char rcsid[]  = "$Id$";
 static char throw_fmt[] = "Can't locate object method \"%s\" via package \"%s\"";
 
 /* dispatch table for XS versions of special "virtual methods",
- * names must be in alphabetical order 		
+ * names must be in alphabetical order          
  */
 static const struct xs_arg {
-	const char *name;
- 	SV* (*list_f)   (pTHX_ AV*, AV*);
- 	SV* (*hash_f)   (pTHX_ HV*, AV*);
- 	SV* (*scalar_f) (pTHX_ SV*, AV*);
+        const char *name;
+        SV* (*list_f)   (pTHX_ AV*, AV*);
+        SV* (*hash_f)   (pTHX_ HV*, AV*);
+        SV* (*scalar_f) (pTHX_ SV*, AV*);
 } xs_args[] = {
-    /* name	 list (AV) ops.	   hash (HV) ops.   scalar (SV) ops.
-       --------	 ----------------  ---------------  ------------------  */
-    { "defined", NULL,		   NULL,	    scalar_dot_defined	},
-    { "each",	 NULL,		   hash_dot_each,   NULL		},
-/*  { "first",	 list_dot_first,   NULL,	    NULL		}, */
-    { "join",	 list_dot_join,    NULL,	    NULL		}, 
-    { "keys",	 NULL,		   hash_dot_keys,   NULL		},
-/*  { "last",	 list_dot_last,	   NULL,	    NULL		}, */
-    { "length",	 NULL,		   NULL,	    scalar_dot_length	},
-    { "max",	 list_dot_max,	   NULL,	    NULL		},
-    { "reverse", list_dot_reverse, NULL,	    NULL		},
-    { "size",	 list_dot_size,	   NULL,	    NULL		},
-    { "values",	 NULL,		   hash_dot_values, NULL		},
+    /* name      list (AV) ops.    hash (HV) ops.   scalar (SV) ops.
+       --------  ----------------  ---------------  ------------------  */
+    { "defined", NULL,             NULL,            scalar_dot_defined  },
+    { "each",    NULL,             hash_dot_each,   NULL                },
+/*  { "first",   list_dot_first,   NULL,            NULL                }, */
+    { "join",    list_dot_join,    NULL,            NULL                }, 
+    { "keys",    NULL,             hash_dot_keys,   NULL                },
+/*  { "last",    list_dot_last,    NULL,            NULL                }, */
+    { "length",  NULL,             NULL,            scalar_dot_length   },
+    { "max",     list_dot_max,     NULL,            NULL                },
+    { "reverse", list_dot_reverse, NULL,            NULL                },
+    { "size",    list_dot_size,    NULL,            NULL                },
+    { "values",  NULL,             hash_dot_values, NULL                },
 };
 
 
@@ -160,8 +160,8 @@ static TT_RET tt_fetch_item(pTHX_ SV *root, SV *key_sv, AV *args, SV **result) {
 
     if (value) {
         /* trigger any tied magic to FETCH value */
-      	SvGETMAGIC(*value);
-	
+        SvGETMAGIC(*value);
+        
         /* call if a coderef */
         if (SvROK(*value) 
             && (SvTYPE(SvRV(*value)) == SVt_PVCV) 
@@ -246,7 +246,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
 
                 /* try hash virtual method (not at stash root, except import) */
                 if ((! atroot || (strcmp(item, "import") == 0))
-                    && hash_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF) {
+                    && hash_op(aTHX_ root, item, args, &result, flags) == TT_RET_UNDEF) {
                     /* try hash slice */ 
                     if (SvROK(key_sv) && SvTYPE(SvRV(key_sv)) == SVt_PVAV) {
                         AV *a_av = newAV();
@@ -333,7 +333,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                 
                 if (SvTRUE(ERRSV)) {
                     char throw_str[THROW_SIZE+1];
-                    (void) POPs;		/* remove undef from stack */
+                    (void) POPs;                /* remove undef from stack */
                     PUTBACK;
                     result = NULL;
                     
@@ -342,19 +342,18 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                      * method "blah"" then it's a real error that need
                      * to be re-thrown.
                      */
-
-                            
+                    
                     if (SvROK(ERRSV)) {
                         die_object(aTHX_ ERRSV);
                     }
                     else {
-                        /* We use throw_str to construct the error
-                         * message that indicates a missing method.
-                         * We use snprintf() to avoid overflowing 
-                         * throw_str, and always ensure the last character
-                         * is NULL (if the item name is too long to fit
-                         * into throw_str then snprintf() doesn't add the 
-                         * terminating NULL
+
+                        /* We use throw_str to construct the error message
+                         * that indicates a missing method. We use snprintf() to
+                         * avoid overflowing throw_str, and always ensure the
+                         * last character is NULL (if the item name is too long
+                         * to fit into throw_str then snprintf() doesn't add the
+                         * terminating NULL 
                          */
                         snprintf(throw_str, THROW_SIZE, throw_fmt, item, HvNAME(stash));
                         throw_str[THROW_SIZE] = '\0';
@@ -383,8 +382,9 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                 
                     default:
                         /* then try hash vmethod if that failed */
-                        if (hash_op(aTHX_ root, item, args, &result) == TT_RET_OK) 
+                        if (hash_op(aTHX_ root, item, args, &result, flags) == TT_RET_OK) 
                             return result;
+                        /* hash_op() will also try list_op([$hash]) */
                     }
                 }
                 else if (SvTYPE(SvRV(root)) == SVt_PVAV) {
@@ -406,6 +406,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                     }
                 }
                 else if (scalar_op(aTHX_ root, item, args, &result, flags) == TT_RET_OK) {
+                    /* scalar_op() will also try list_op([$scalar]) */
                     return result;
                 }
                 else if (flags & TT_DEBUG_FLAG) {
@@ -506,14 +507,14 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
                 debug(" - calling object method\n");
                 count = perl_call_method(key, G_ARRAY);
                 SPAGAIN;
-                return fold_results(aTHX_ count);		
+                return fold_results(aTHX_ count);               
             }
         }
 
         /* drop-through if not an object or method not found  */
         switch (SvTYPE(SvRV(root))) {        
             
-        case SVt_PVHV:				    /* HASH */
+        case SVt_PVHV:                              /* HASH */
             roothv = (HV *) SvRV(root);
 
             debug(" - hash assign\n");
@@ -536,13 +537,12 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
             return value;
             break;
 
-        case SVt_PVAV:				    /* ARRAY */
+        case SVt_PVAV:                              /* ARRAY */
             rootav = (AV *) SvRV(root);
 
             debug(" - list assign\n");
 
             if (looks_like_number(key_sv)) {
-
                 /* if the TT_DEFAULT_FLAG is set then first look to see if the 
                  * target is already set to some true value;  if it is then 
                  * we return that value (after invoking any SvGETMAGIC required
@@ -568,7 +568,6 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
                  * we decrement the reference counter because that's
                  * what perlguts tells us to do...
                  */
-
                 newsv = newSVsv(value);
                 svp = av_store(rootav, SvIV(key_sv), newsv);
                 SvSETMAGIC(newsv);
@@ -580,20 +579,20 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
             
             break;
 
-        default:				    /* BARF */
+        default:                                    /* BARF */
             /* TODO: fix [ %s ] */
             croak("don't know how to assign to [ %s ].%s", 
                   SvPV(SvRV(root), PL_na), key);
         }
     }
-    else {					    /* SCALAR */
+    else {                                          /* SCALAR */
         /* TODO: fix [ %s ] */
         croak("don't know how to assign to [ %s ].%s", 
               SvPV(SvRV(root), PL_na), key);
     }
     
     /* not reached */
-    return &PL_sv_undef;			    /* just in case */
+    return &PL_sv_undef;                            /* just in case */
 }
 
 
@@ -712,7 +711,7 @@ static SV* do_getset(pTHX_ SV *root, AV *ident_av, SV *value, int flags) {
             key_args = (AV *) SvRV(*svp);
         else
             key_args = Nullav;
-		
+                
         root = dotop(aTHX_ root, key, key_args, flags);
     
         if (!root || !SvOK(root))
@@ -778,9 +777,10 @@ static AV *convert_dotted_string(pTHX_ const char *str, I32 len) {
  * (e.g. keys, * values, each) on 'hash'.
  * returns TT_RET_CODEREF if successful, TT_RET_UNDEF otherwise.
  */
-static TT_RET hash_op(pTHX_ SV *root, char *key, AV *args, SV **result) {
+static TT_RET hash_op(pTHX_ SV *root, char *key, AV *args, SV **result, int flags) {
     struct xs_arg *a;
     SV *code;
+    TT_RET retval;
 
     /* look for XS version first */
     if ((a = find_xs_op(key)) && a->hash_f) {
@@ -793,7 +793,21 @@ static TT_RET hash_op(pTHX_ SV *root, char *key, AV *args, SV **result) {
         *result = call_coderef(aTHX_ code, mk_mortal_av(aTHX_ root, args, NULL)); 
         return TT_RET_CODEREF;
     }
-
+    
+    /* try upgrading item to a list and look for a list op */
+    if (!(flags & TT_LVALUE_FLAG)) {
+        AV *newlist;
+        SV *listref;
+        newlist = newAV();
+        av_push(newlist, root);
+        SvREFCNT_inc(root);
+        listref = (SV *) newRV_noinc((SV *) newlist);
+        if ((retval = list_op(aTHX_ listref, key, args, result)) == TT_RET_UNDEF) {
+            av_undef(newlist);
+        }
+        return retval;
+    }
+    
     /* not found */
     *result = &PL_sv_undef;
     return TT_RET_UNDEF;
@@ -870,7 +884,7 @@ static TT_RET scalar_op(pTHX_ SV *sv, char *key, AV *args, SV **result, int flag
 /* xs_arg comparison function */
 static int cmp_arg(const void *a, const void *b) {
     return (strcmp(((const struct xs_arg *)a)->name,
-		   ((const struct xs_arg *)b)->name));
+                   ((const struct xs_arg *)b)->name));
 }
 
 
@@ -1050,7 +1064,7 @@ static SV *list_dot_reverse(pTHX_ AV *list, AV *args) {
     SV **svp;
     AV *result = newAV();
     I32 size, i;
-	    
+            
     if ((size = av_len(list)) >= 0) {
         av_extend(result, size + 1);
         for (i = 0; i <= size; i++) {
@@ -1127,7 +1141,7 @@ static SV *scalar_dot_length(pTHX_ SV *sv, AV *args) {
  * XS SECTION                                                     
  *====================================================================*/
 
-MODULE = Template::Stash::XS		PACKAGE = Template::Stash::XS
+MODULE = Template::Stash::XS            PACKAGE = Template::Stash::XS
 
 PROTOTYPES: DISABLED
 
@@ -1147,7 +1161,7 @@ get(root, ident, ...)
 
     /* look for a list ref of arguments, passed as third argument */
     args = 
-	(items > 2 && SvROK(ST(2)) && SvTYPE(SvRV(ST(2))) == SVt_PVAV) 
+        (items > 2 && SvROK(ST(2)) && SvTYPE(SvRV(ST(2))) == SVt_PVAV) 
         ? (AV *) SvRV(ST(2)) : Nullav;
      
     if (SvROK(ident) && (SvTYPE(SvRV(ident)) == SVt_PVAV)) {
@@ -1169,7 +1183,7 @@ get(root, ident, ...)
     }
 
     if (!SvOK(RETVAL))
-        RETVAL = newSVpvn("", 0);	/* new empty string */
+        RETVAL = newSVpvn("", 0);       /* new empty string */
     else
         RETVAL = SvREFCNT_inc(RETVAL);
 
@@ -1199,7 +1213,7 @@ set(root, ident, value, ...)
 
     } 
     else if (SvROK(ident)) {
-    	croak(TT_STASH_PKG ": set (arg 2) must be a scalar or listref");
+        croak(TT_STASH_PKG ": set (arg 2) must be a scalar or listref");
 
     }
     else if ((str = SvPV(ident, len)) && memchr(str, '.', len)) {
@@ -1214,10 +1228,10 @@ set(root, ident, value, ...)
     }
 
     if (!SvOK(RETVAL))
-        RETVAL = newSVpvn("", 0);	/* new empty string */
+        RETVAL = newSVpvn("", 0);       /* new empty string */
     else
         RETVAL = SvREFCNT_inc(RETVAL);
-	
+        
     OUTPUT:
     RETVAL
 
