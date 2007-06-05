@@ -22,6 +22,7 @@ use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Stash;
 use Template::Constants qw( :status );
+use Template::Directive2;
 
 use Template::Parser;
 $Template::Test::DEBUG = 0;
@@ -91,7 +92,7 @@ my $params = {
 };
 
 my $tt = [ default => Template->new({ INTERPOLATE => 1, ANYCASE => 1 }),
-       notcase => Template->new({ INTERPOLATE => 1, ANYCASE => 0 }) ];
+           notcase => Template->new({ INTERPOLATE => 1, ANYCASE => 0 }) ];
 
 test_expect(\*DATA, $tt, $params);
 
