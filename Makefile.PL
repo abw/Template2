@@ -259,11 +259,6 @@ my %opts = (
     },
 );
 
-# On mac, make sure we have an unbroken File::HomeDir
-if ( $^O eq 'darwin' ) {
-       $opts{PREREQ_PM}->{'File::HomeDir'} = '0.64';
-}
-
 push @{ $opts{'DIR'} }, 'xs' if $TT_XS_ENABLE;
 
 # Handle dev versions in our check
