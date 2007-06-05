@@ -1083,6 +1083,7 @@ sub _dump_cache {
 sub _decode_unicode {
     my $self   = shift;
     my $string = shift;
+    return undef unless defined $string;
 
     use bytes;
     require Encode;
