@@ -119,7 +119,7 @@ sub new {
         FILE_INFO   => 1,
         GRAMMAR     => undef,
         _ERROR      => '',
-        FACTORY     => 'Template::Directive',
+        FACTORY     => $config->{ FACTORY } || 'Template::Directive',
     }, $class;
 
     # update self with any relevant keys in config
