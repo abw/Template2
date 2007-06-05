@@ -25,7 +25,7 @@ Template::Tutorial::Web - Generating Web Content Using the Template Toolkit
 This tutorial document provides a introduction to the Template Toolkit and
 demonstrates some of the typical ways it may be used for generating web
 content. It covers the generation of static pages from templates using the
-L<Template::Tools::tpage|tpage> and L<Template::Tools::ttree|ttree> scripts
+L<tpage|Template::Tools::tpage> and L<ttree|Template::Tools::ttree> scripts
 and then goes on to show dynamic content generation using CGI scripts and
 Apache/mod_perl handlers.
 
@@ -152,7 +152,7 @@ document.
 
 Having created a template file we can now process it to generate some real
 output. The quickest and easiest way to do this is to use the
-L<Template::Tools::tpage|tpage> script. This is provided as part of the
+L<tpage|Template::Tools::tpage> script. This is provided as part of the
 Template Toolkit and should be installed in your usual Perl bin directory.
 
 Assuming you saved your template file as F<example.html>, you would run
@@ -196,9 +196,9 @@ has been built into an HTML list.
 
 =head2 Using ttree
 
-The L<Template::Tools::tpage|tpage> script gives you a simple and easy way to
+The L<tpage|Template::Tools::tpage> script gives you a simple and easy way to
 process a single template without having to write any Perl code. The
-L<Template::Tools::ttree|ttree> script, also distributed as part of the
+L<ttree:Template::Tools::ttree> script, also distributed as part of the
 Template Toolkit, provides a more flexible way to process a number of template
 documents in one go.
 
@@ -206,7 +206,7 @@ The first time you run the script, it will ask you if it should create a
 configuration file (F<.ttreerc>) in your home directory. Answer C<y> to have
 it create the file.
 
-The L<Template::Tools::ttree|ttree> documentation describes how you can change
+The L<ttree:Template::Tools::ttree> documentation describes how you can change
 the location of this file and also explains the syntax and meaning of the
 various options in the file. Comments are written to the sample configuration
 file which should also help.
@@ -256,7 +256,7 @@ such as header, footers, etc., that aren't complete documents in their own
 right.
 
 You can also specify various Template Toolkit options from the configuration
-file. Consult the L<Template::Tools::ttree|ttree> documentation and help
+file. Consult the L<ttree|Template::Tools::ttree> documentation and help
 summary (C<ttree -h>) for full details. e.g.
 
 $HOME/.ttreerc:
@@ -485,7 +485,7 @@ presentation (HTML). This not only makes them easier to maintain in isolation,
 but also allows the re-use of existing template elements such as headers and
 footers, etc. By using template to create the output of your CGI scripts, you
 can give them the same consistency as your static pages built via
-L<Template::Tools::ttree|ttree> or other means.
+L<ttree|Template::Tools::ttree> or other means.
 
 Furthermore, we can modify our script so that it processes any one of a
 number of different templates based on some condition.  A CGI script to
@@ -731,9 +731,7 @@ about the underlying implementation.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
