@@ -263,7 +263,7 @@ as an introductory guide to using the Template Toolkit.
 =head2 new(\%config)
 
 The C<new()> constructor method (implemented by the
-L<Template::Base#new()|Template::Base> base class) instantiates a new
+L<Template::Base|Template::Base#new()> base class) instantiates a new
 C<Template> object. A reference to a hash array of configuration items may be
 passed as a parameter.
 
@@ -431,10 +431,10 @@ process().
 Errors are represented in the Template Toolkit by objects of the
 L<Template::Exception> class. If the L<process()> method returns a false value
 then the C<error()> method can be called to return an object of this class.
-The L<Template::Exception#type()|type()> and
-L<Template::Exception#info()|info()> methods can called on the object to
+The L<type()|Template::Exception#type()> and
+L<info()|Template::Exception#info()> methods can called on the object to
 retrieve the error type and information string, respectively. The 
-L<Template::Exception#as_string()|as_string()>
+L<as_string()|Template::Exception#as_string()>
 method can be called to return a string of the form C<$type - $info>. This
 method is also overloaded onto the stringification operator allowing the
 object reference itself to be printed to return the formatted error string.
@@ -892,13 +892,11 @@ Ignored and deleted.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 VERSION
 
-Template Toolkit version 2.20, released May 2007.
+Template Toolkit version 2.20, released June 2007.
 
 =head1 COPYRIGHT
 
