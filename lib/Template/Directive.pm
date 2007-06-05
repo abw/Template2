@@ -180,13 +180,13 @@ sub ident {
     # does the first element of the identifier have a NAMESPACE
     # handler defined?
     if (ref $class && @$ident > 2 && ($ns = $class->{ NAMESPACE })) {
-	my $key = $ident->[0];
-	$key =~ s/^'(.+)'$/$1/s;
-	if ($ns = $ns->{ $key }) {
-	    return $ns->ident($ident);
-	}
+        my $key = $ident->[0];
+        $key =~ s/^'(.+)'$/$1/s;
+        if ($ns = $ns->{ $key }) {
+            return $ns->ident($ident);
+        }
     }
-	
+        
     if (scalar @$ident <= 2 && ! $ident->[1]) {
         $ident = $ident->[0];
     }
