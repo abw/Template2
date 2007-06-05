@@ -17,6 +17,15 @@
 
 Template::Manual::Internals - Template Toolkit internals
 
+=head1 Introduction
+
+This section of the documentation is aimed at developers wishing to 
+know more about how the Template Toolkit works on the inside in order
+to extend or adapt it to their own needs.
+
+If that doesn't sound like you then you probably don't need to read this.
+There is no test afterwards.
+
 =head1 Outside Looking In
 
 The L<Template> module is simply a front end module which creates and
@@ -53,11 +62,11 @@ on.
 
 For the most part, the job of a service is really just one of scheduling and
 dispatching. It receives a request in the form of a call to its
-L<Template::Service#process()|process()> method and schedules the named
+L<process()|Template::Service#process()> method and schedules the named
 template specified as an argument, and possibly several other templates
 (C<PRE_PROCESS>, etc) to be processed in order. It doesn't actually process
 the templates itself, but instead makes a
-L<Template::Context#process()|process()> call against a L<Template::Context>
+L<process()|Template::Context#process()> call against a L<Template::Context>
 object.
 
 L<Template::Context> is the runtime engine for the Template Toolkit -
@@ -74,24 +83,24 @@ might get involved with a L<Template::Parser> to help turn source
 templates into executable Perl code (but more on that later).  
 
 Thankfully, all of this complexity is hidden away behind a simple
-L<Template::Context#template()|template()> method. You call it passing a
+L<template()|Template::Context#template()> method. You call it passing a
 template name as an argument, and it returns a compiled template in the form
 of a L<Template::Document> object, or otherwise raises an exception.
 
 A L<Template::Document> is a thin object wrapper around a compiled template
-subroutine. The object implements a L<Template::Document#process()|process()>
+subroutine. The object implements a L<process()|Template::Document#process()>
 method which performs a little bit of housekeeping and then calls the template
 subroutine. The object also defines template metadata (defined in C<[% META
-... %]> directives) and has a L<Template::Document#block()|block()> method
+... %]> directives) and has a L<block()|Template::Document#block()> method
 which returns a hash of any additional C<[% BLOCK xxxx %]> definitions found
 in the template source.
 
 So the context fetches a compiled document via its own
-L<Template::Context#template()|template()> method and then gets ready to
+L<template()|Template::Context#template()> method and then gets ready to
 process it. It first updates the stash (the place where template variables get
 defined - more on that shortly) to set any template variable definitions
 specified as the second argument by reference to hash array. Then, it calls
-the document L<Template::Document#process()|process()> method, passing a
+the document L<process()|Template::Document#process()> method, passing a
 reference to itself, the context object, as an argument. In doing this, it
 provides itself as an object against which template code can make callbacks to
 access runtime resources and Template Toolkit functionality.
@@ -190,7 +199,7 @@ object. It is through this context object that template code can access the
 features of the Template Toolkit.
 
 We described earlier how the L<Template::Service> object calls on
-L<Template::Context> to handle a L<Template::Context#process()|process()>
+L<Template::Context> to handle a L<process()|Template::Context#process()>
 request from the I<outside>. We can make a similar request on a context to
 process a template, but from within the code of another template. This is a
 call from the I<inside>.
@@ -213,12 +222,12 @@ like this:
 
 Template variables are stored in, and managed by a L<Template::Stash> object.
 This is a blessed hash array in which template variables are defined. The
-object wrapper provides L<Template::Stash#get()|get()> and
-L<Template::Stash#set()|set()> method which implement all the
+object wrapper provides L<get()|Template::Stash#get()> and
+L<set()|Template::Stash#set()> method which implement all the
 I<magical.variable.features> of the Template Toolkit.
 
 Each context object has its own stash, a reference to which can be returned by
-the appropriately named L<Template::Context#stash()|stash()> method. So to
+the appropriately named L<stash()|Template::Context#stash()> method. So to
 print the value of some template variable, or for example, to represent the
 following source template:
 
@@ -232,7 +241,7 @@ we might have a subroutine definition something like this:
         return '<title>' . $stash->get('title') . '</title>';
     }
 
-The stash L<Template::Stash#get()|get()> method hides the details of the
+The stash L<get()|Template::Stash#get()> method hides the details of the
 underlying variable types, automatically calling code references, checking
 return values, and performing other such tricks. If 'C<title>' happens to be
 bound to a subroutine then we can specify additional parameters as a list
@@ -262,7 +271,7 @@ empty, zero or null argument list.
     [% foo.bar %]
     $stash->get([ 'foo', 0, 'bar', 0 ]);
 
-The L<Template::Stash#set()|set()> method works in a similar way. It takes a
+The L<set()|Template::Stash#set()> method works in a similar way. It takes a
 variable name and a variable value which should be assigned to it.
 
     [% x = 10 %]         
@@ -274,8 +283,8 @@ variable name and a variable value which should be assigned to it.
 So the stash gives us access to template variables and the context provides
 the higher level functionality. 
 
-Alongside the L<Template::Context#process()|process()> method lies the
-L<Template::Context#include()|include()> method. Just as with the C<PROCESS> /
+Alongside the L<process()|Template::Context#process()> method lies the
+L<include()|Template::Context#include()> method. Just as with the C<PROCESS> /
 C<INCLUDE> directives, the key difference is in variable localisation. Before
 processing a template, the C<process()> method simply updates the stash to set
 any new variable definitions, overwriting any existing values. In contrast,
@@ -288,7 +297,7 @@ shallow copy, so it's not foolproof). When the template has been processed,
 the C<include()> method restores the previous variable state by I<decloning> the
 stash.
 
-The context also provides an L<Template::Context#insert()|insert()> method to
+The context also provides an L<insert()|Template::Context#insert()> method to
 implement the C<INSERT> directive, but no C<wrapper()> method. This functionality
 can be implemented by rewriting the Perl code and calling C<include()>.
 
@@ -302,8 +311,8 @@ can be implemented by rewriting the Perl code and calling C<include()>.
 
 Other than the template processing methods C<process()>, C<include()> and
 C<insert()>, the context defines methods for fetching plugin objects,
-L<Template::Context#plugin()|plugin()>, and filters,
-L<Template::Context#filter()|filter()>.
+L<plugin()|Template::Context#plugin()>, and filters,
+L<filter()|Template::Context#filter()>.
 
     # TT USE directive
     [% USE foo = Bar(10) %]

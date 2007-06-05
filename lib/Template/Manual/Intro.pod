@@ -58,7 +58,7 @@ programmers, providing access to the full range of functionality through a
 single module with a simple interface. It loads the other modules as required
 and instantiates a default set of objects to handle subsequent template
 processing requests. Configuration parameters may be passed to the L<Template>
-constructor method, L<Template#new()|new()>, which are then used to
+constructor method, L<new()|Template#new()>, which are then used to
 configure the generate object.
 
     use Template;
@@ -68,7 +68,7 @@ configure the generate object.
         INTERPOLATE  => 1,
     }) || die "$Template::ERROR\n";
 
-The L<Template> object implements a L<Template#process()|process()> method for
+The L<Template> object implements a L<process()|Template#process()> method for
 processing template files or text. The name of the input template (or various
 other sources) is passed as the first argument, followed by a reference to a
 hash array of variable definitions for substitution in the template.
@@ -82,10 +82,10 @@ hash array of variable definitions for substitution in the template.
     $tt->process('letters/overdrawn', $vars)
         || die $tt->error(), "\n";
 
-The L<Template#process()|process()> method returns a true value (C<1>) on success
+The L<process()|Template#process()> method returns a true value (C<1>) on success
 and prints the template output to C<STDOUT>, by default. On error, the
-L<Template#process()|process()> method returns a false value (C<undef>).
-The L<Template#error()|error()> method can then be called to retrieve
+L<process()|Template#process()> method returns a false value (C<undef>).
+The L<error()|Template#error()> method can then be called to retrieve
 details of the error.
 
 =head1 Component Based Content Construction

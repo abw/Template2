@@ -26,7 +26,7 @@ before using the plugin.
 
 =head2 Autoformat
 
-The L<Template::Plugin::Autoformat|Autoformat> plugin is an interface to
+The L<Autoformat|Template::Plugin::Autoformat> plugin is an interface to
 Damian Conway's L<Text::Autoformat> Perl module which provides advanced text
 wrapping and formatting. See L<Template::Plugin::Autoformat> and
 L<Text::Autoformat> for further details.
@@ -41,7 +41,7 @@ The L<Text::Autoformat> module is available from CPAN:
 
 =head2 CGI
 
-The L<Template::Plugin::CGI|CGI> plugin is a wrapper around Lincoln Stein's
+The L<CGI|Template::Plugin::CGI> plugin is a wrapper around Lincoln Stein's
 CGI.pm module. The plugin is distributed with the Template Toolkit (see
 L<Template::Plugin::CGI>) and the L<CGI> module itself is distributed with
 recent versions Perl, or is available from CPAN.
@@ -80,7 +80,7 @@ example:
 
 =head2 Date
 
-The L<Template::Plugin::Date|Date> plugin provides an easy way to generate
+The L<Date|Template::Plugin::Date> plugin provides an easy way to generate
 formatted time and date strings by delegating to the L<POSIX> C<strftime()>
 routine. See L<Template::Plugin::Date> and L<POSIX> for further details.
 
@@ -91,7 +91,7 @@ routine. See L<Template::Plugin::Date> and L<POSIX> for further details.
 
 =head2 Directory
 
-The L<Template::Plugin::Directory|Directory> plugin provides a simple
+The L<Directory|Template::Plugin::Directory> plugin provides a simple
 interface to a directory and the files within it. See
 L<Template::Plugin::Directory> for further details.
 
@@ -106,12 +106,12 @@ L<Template::Plugin::Directory> for further details.
 =head2 DBI
 
 The C<DBI> plugin is no longer distributed as part of the Template Toolkit
-(as of version 2.15).  It is now available as a separate C<Template-Plugin-DBI>
+(as of version 2.15).  It is now available as a separate L<Template::DBI>
 distribution from CPAN.
 
 =head2 Dumper
 
-The L<Template::Plugin::Dumper|Dumper> plugin provides an interface to the
+The L<Dumper|Template::Plugin::Dumper> plugin provides an interface to the
 Data::Dumper module. See L<Template::Plugin::Dumper> and L<Data::Dumper> for
 futher details.
 
@@ -120,7 +120,7 @@ futher details.
 
 =head2 File
 
-The L<Template::Plugin::File|File> plugin provides a general abstraction for
+The L<File|Template::Plugin::File> plugin provides a general abstraction for
 files and can be used to fetch information about specific files within a
 filesystem. See L<Template::Plugin::File> for further details.
 
@@ -159,7 +159,7 @@ See L<Template::Plugin::Filter> for further details.
 
 =head2 Format
 
-The L<Template::Plugin::Format|Format> plugin provides a simple way to format
+The L<Format|Template::Plugin::Format> plugin provides a simple way to format
 text according to a C<printf()>-like format. See L<Template::Plugin::Format> for
 further details.
 
@@ -169,11 +169,11 @@ further details.
 =head2 GD
 
 The C<GD> plugins are no longer part of the core Template Toolkit distribution.
-They are now available in a separate L<Template-GD|Template-GD> distribution.
+They are now available from CPAN in a separate L<Template::GD> distribution.
 
 =head2 HTML
 
-The L<Template::Plugin::HTML|HTML> plugin is very basic, implementing a few
+The L<HTML|Template::Plugin::HTML> plugin is very basic, implementing a few
 useful methods for generating HTML. It is likely to be extended in the future
 or integrated with a larger project to generate HTML elements in a generic way.
 
@@ -186,7 +186,7 @@ See L<Template::Plugin::HTML> for further details.
 
 =head2 Iterator
 
-The L<Template::Plugin::Iterator|Iterator> plugin provides a way to create a
+The L<Iterator|Template::Plugin::Iterator> plugin provides a way to create a
 L<Template::Iterator> object to iterate over a data set. An iterator is
 created automatically by the C<FOREACH> directive and is aliased to the C<loop>
 variable. This plugin allows an iterator to be explicitly created with a given
@@ -218,7 +218,7 @@ then be traversed and presented through the Template Toolkit.
 
 =head2 String
 
-The L<Template::Plugin::String|String> plugin implements an object-oriented
+The L<String|Template::Plugin::String> plugin implements an object-oriented
 interface for manipulating strings. See L<Template::Plugin::String> for
 further details.
 
@@ -232,7 +232,7 @@ further details.
 
 =head2 Table
 
-The L<Template::Plugin::Table|Table> plugin allows you to format a list of
+The L<Table|Template::Plugin::Table> plugin allows you to format a list of
 data items into a virtual table by specifying a fixed number of rows or
 columns, with an optional overlap. See L<Template::Plugin::Table> for further
 details.
@@ -245,7 +245,7 @@ details.
 
 =head2 URL
 
-The L<Template::Plugin::URL|URL> plugin provides a simple way of contructing
+The L<URL|Template::Plugin::URL> plugin provides a simple way of contructing
 URLs from a base part and a variable set of parameters. See
 L<Template::Plugin::URL> for further details.
 
@@ -259,7 +259,7 @@ L<Template::Plugin::URL> for further details.
 
 =head2 Wrap
 
-The L<Template::Plugin::Wrap|Wrap> plugin uses the L<Text::Wrap> module to
+The L<Wrap|Template::Plugin::Wrap> plugin uses the L<Text::Wrap> module to
 provide simple paragraph formatting. See L<Template::Plugin::Wrap> and
 L<Text::Wrap> for further details.
 
@@ -276,7 +276,7 @@ The C<Text::Wrap> module is available from CPAN:
 The C<XML::DOM>, C<XML::RSS>, C<XML::Simple> and C<XML::XPath> plugins are no
 longer distributed with the Template Toolkit as of version 2.15
 
-They are now available in a separate L<Template-XML|Template-XML> distribution.
+They are now available in a separate L<Template::XML> distribution.
 
 =cut
 

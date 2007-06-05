@@ -28,7 +28,7 @@ for processing templates.
 
 =head2 tpage
 
-The L<Template::Tools::tpage|tpage> script can be used to process
+The L<tpage|Template::Tools::tpage> script can be used to process
 a single template using the Template Toolkit.
 
     $ tpage --define msg="Hello World" greeting.tt2
@@ -42,7 +42,7 @@ and examples of use.
 
 =head2 ttree
 
-The L<Template::Tools::ttree|ttree> script can be used to process
+The L<ttree|Template::Tools::ttree> script can be used to process
 an entire directory of templates.
 
     $ ttree --src /path/to/templates --dest /path/to/output

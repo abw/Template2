@@ -20,7 +20,7 @@ Template::Manual::Variables - Template variables and code bindings
 =head1 Template Variables
 
 A reference to a hash array may be passed as the second argument to the
-L<Template#process()|process()> method, containing definitions of template
+L<process()|Template#process()> method, containing definitions of template
 variables. The C<VARIABLES> (a.k.a. C<PRE_DEFINE>) option can also be used to
 pre-define variables for all templates processed by the object.
 

@@ -58,9 +58,7 @@ Version 3 has been in development ever since.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt>
-
-L<http://wardley.org/>
+Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
@@ -69,7 +67,7 @@ Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
 The Template Toolkit is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
-=head1 CONTRIBUTORS 
+=head1 CONTRIBUTORS
 
 Many people have contributed ideas, inspiration, fixes and features to
 the Template Toolkit.  Their efforts continue to be very much appreciated.  
@@ -86,12 +84,12 @@ Khera, Rafael Kitover, Ivan Kurmanov, Hans von Lengerke, Jonas Liljegren,
 Simon Luff, Andy Maas, Paul Makepeace, Gervase Markham, Sergey Martynoff,
 Simon Matthews, Robert McArthur, Craig McLane, Myk Melez, Eugene Miretskiy,
 Tatsuhiko Miyagawa, Bill Moseley, Keith G. Murphy, Chris Nandor, Leslie
-Michael Orchard, Paul Orrock, Steve Peters, Briac Pilpré, Yuri Pimenov, Martin
-Portman, Slaven Rezic, Jess Robinson, Josh Rosenbaum, Christian Schaffner,
-Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul Sharpe, Ville Skyttä,
-Barrie Slaymaker, Doug Steinwand, Michael Stevens, Autrijus Tang, Drew Taylor,
-Swen Thuemmler, Richard Tietjen, Stathy G. Touloumis, Jim Vaughan, Simon
-Wilcox, Chris Winters
+Michael Orchard, Paul Orrock, Steve Peters, Briac PilprE<eacute>, Yuri
+Pimenov, Martin Portman, Slaven Rezic, Jess Robinson, Josh Rosenbaum,
+Christian Schaffner, Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul
+Sharpe, Ville SkyttE<auml>, Barrie Slaymaker, Doug Steinwand, Michael Stevens,
+Autrijus Tang, Drew Taylor, Swen Thuemmler, Richard Tietjen, Stathy G.
+Touloumis, Jim Vaughan, Simon Wilcox, Chris Winters
 
 =cut
 

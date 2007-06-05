@@ -98,8 +98,8 @@ The C<PRE_CHOMP> and C<POST_CHOMP> options can help to clean up some of this
 extraneous whitespace.  Both are disabled by default.
 
     my $template = Template-E<gt>new({
-        PRE_CHOMP  =E<gt> 1,
-        POST_CHOMP =E<gt> 1,
+        PRE_CHOMP  => 1,
+        POST_CHOMP => 1,
     });
 
 With C<PRE_CHOMP> set to C<1>, the newline and whitespace preceding a directive
@@ -180,14 +180,14 @@ If you have C<PRE_CHOMP> or C<POST_CHOMP> set as configuration options then
 you can use 'C<+>' to disable any chomping options (i.e.  leave the
 whitespace intact) on a per-directive basis.
 
-    [% FOREACH user = userlist %]
+    [% FOREACH user IN userlist %]
     User: [% user +%]
     [% END %]
 
 With C<POST_CHOMP> set to C<CHOMP_ONE>, the above example would be parsed as
 if written:
 
-    [% FOREACH user = userlist %]User: [% user %]
+    [% FOREACH user IN userlist %]User: [% user %]
     [% END %]
 
 For reference, the C<PRE_CHOMP> and C<POST_CHOMP> configuration options may be
@@ -452,7 +452,7 @@ be used whenever a specified template can't be found in the C<INCLUDE_PATH>.
     });
 
 If a non-existant template is requested through the Template
-L<Template#process()|process()> method, or by an C<INCLUDE>, C<PROCESS> or
+L<process()|Template#process()> method, or by an C<INCLUDE>, C<PROCESS> or
 C<WRAPPER> directive, then the C<DEFAULT> template will instead be processed, if
 defined. Note that the C<DEFAULT> template is not used when templates are
 specified with absolute or relative filenames, or as a reference to a input
@@ -477,7 +477,7 @@ objects.
 
 The C<AUTO_RESET> option is set by default and causes the local C<BLOCKS>
 cache for the L<Template::Context> object to be reset on each call to the
-Template L<Template#process()|process()> method. This ensures that any C<BLOCK>s
+Template L<process()|Template#process()> method. This ensures that any C<BLOCK>s
 defined within a template will only persist until that template is finished
 processing. This prevents C<BLOCK>s defined in one processing request from
 interfering with other independent requests subsequently processed by the same
@@ -487,7 +487,7 @@ The C<BLOCKS> item may be used to specify a default set of block definitions
 for the L<Template::Context> object. Subsequent C<BLOCK> definitions in
 templates will over-ride these but they will be reinstated on each reset if
 C<AUTO_RESET> is enabled (default), or if the L<Template::Context>
-L<Template::Context#reset()|reset()> method is called.
+L<reset()|Template::Context#reset()> method is called.
 
 =head2 RECURSION
 
@@ -623,7 +623,7 @@ for an example of what a namespace handler looks like on the inside.
 
 The following options are used to specify any additional templates that should
 be processed before, after, around or instead of the template passed as the
-first argument to the L<Template> L<Template#process()|process()> method.
+first argument to the L<Template> L<process()|Template#process()> method.
 These options can be perform various useful tasks such as adding standard
 headers or footers to all pages, wrapping page output in other templates,
 pre-defining variables or performing initialisation or cleanup tasks,
@@ -632,7 +632,7 @@ on.
 
 The task of processing the template is delegated internally to the
 L<Template::Service> module which, unsurprisingly, also has a
-L<Template::Service#process()|process()> method. Any templates defined by the
+L<process()|Template::Service#process()> method. Any templates defined by the
 C<PRE_PROCESS> option are processed first and any output generated is added to
 the output buffer. Then the main template is processed, or if one or more
 C<PROCESS> templates are defined then they are instead processed in turn. In this
@@ -748,7 +748,7 @@ header:
 
 The C<PROCESS> option may be set to contain the name(s) of template files
 (relative to C<INCLUDE_PATH>) which should be processed instead of the main
-template passed to the L<Template> L<Template#process()|process()> method.
+template passed to the L<Template> L<process()|Template#process()> method.
 This can be used to apply consistent wrappers around all templates, similar to
 the use of C<PRE_PROCESS> and C<POST_PROCESS> templates.
 
@@ -970,7 +970,7 @@ string (i.e. C<user.passwd> is parsed as C<'user'.'passwd'>).
         },
     });
 
-In this example, any template processed by the L<$template> object, or
+In this example, any template processed by the C<$template> object, or
 other templates or code called from within, can raise a C<user.login>
 exception and have the service redirect to the F<user/login.html>
 template.  Similarly, a C<user.passwd> exception has a specific 
@@ -982,7 +982,7 @@ Exceptions can be raised in a template using the C<THROW> directive,
 
     [% THROW user.login 'no user id: please login' %]
 
-or by calling the L<Template::Context#throw()|throw()> method on the 
+or by calling the L<throw()|Template::Context#throw()> method on the 
 current L<Template::Context> object,
 
     $context->throw('user.passwd', 'Incorrect Password');
@@ -1014,7 +1014,7 @@ parser will fail to compile templates that contain invalid Perl code
 in C<RAWPERL> blocks and will throw a 'C<file>' exception.
 
 When using compiled templates (see 
-L<Caching_and_Compiling_Options>),
+L<Caching and Compiling Options>),
 the C<EVAL_PERL> has an affect when the template is compiled, and again
 when the templates is subsequently processed, possibly in a different
 context to the one that compiled it.
@@ -1110,7 +1110,7 @@ example 6 (Apache/mod_perl handler):
     }
 
 The default C<OUTPUT> location be overridden by passing a third parameter to
-the L<Template> L<Template#process()|process()> method. This can be specified
+the L<Template> L<process()|Template#process()> method. This can be specified
 as any of the above argument types.
 
     $t->process($file, $vars, "/tmp/foo");
@@ -1125,7 +1125,7 @@ as any of the above argument types.
 The C<OUTPUT_PATH> allows a directory to be specified into which output
 files should be written.  An output file can be specified by the 
 C<OUTPUT> option, or passed by name as the third parameter to the 
-L<Template> L<Template#process()|process()> method.
+L<Template> L<process()|Template#process()> method.
 
     my $template = Template->new({
         INCLUDE_PATH => "/tmp/src",
@@ -1440,12 +1440,12 @@ or mixed case names then the name specified in the C<USE> directive must
 match the case exactly.  
 
 The C<USE> directive is used to create plugin objects and does so by calling
-the L<Template::Context#plugin()|plugin()> method on the current
+the L<plugin()|Template::Context#plugin()> method on the current
 L<Template::Context> object. If the plugin name is defined in the C<PLUGINS>
 hash then the corresponding Perl module is loaded via C<require()>. The
-context then calls the L<Template::Plugin#load()|load()> class method which
+context then calls the L<load()|Template::Plugin#load()> class method which
 should return the class name (default and general case) or a prototype object
-against which the L<Template::Plugin#new()|new()> method can be called to
+against which the L<new()|Template::Plugin#new()> method can be called to
 instantiate individual plugin objects.
 
 If the plugin name is not defined in the C<PLUGINS> hash then the
@@ -1486,7 +1486,7 @@ template:
 
 If you don't want the default C<Template::Plugin> namespace added to the
 end of the C<PLUGIN_BASE>, then set the C<$Template::Plugins::PLUGIN_BASE>
-variable to a false value before calling the L<Template> L<Template#new()|new()>
+variable to a false value before calling the L<new()|Template> L<Template#new()>
 constructor method.  This is shown in the example below where the
 C<Foo> plugin is located as C<My::Plugin::Foo> or C<Your::Plugin::Foo> but not 
 as C<Template::Plugin::Foo>.
@@ -1522,12 +1522,12 @@ components.
 
 Plugins loaded using the C<PLUGINS> or C<PLUGIN_BASE> receive a reference to
 the current context object as the first argument to the
-L<Template::Plugin#new()|new()> constructor. Modules loaded using C<LOAD_PERL>
+L<new()|Template::Plugin#new()> constructor. Modules loaded using C<LOAD_PERL>
 are assumed to not conform to the plugin interface. They must provide a C<new()>
 class method for instantiating objects but it will not receive a reference to
 the context as the first argument. 
 
-Plugin modules should provide a L<Template::Plugin#load()|load()> class method
+Plugin modules should provide a L<load()|Template::Plugin#load()> class method
 (or inherit the default one from the L<Template::Plugin> base class) which is
 called the first time the plugin is loaded. Regular Perl modules need not. In
 all other respects, regular Perl objects and Template Toolkit plugins are
@@ -1561,7 +1561,7 @@ reference and is assumed to be static.
     });
 
 Additional filters can be specified at any time by calling the
-L<Template::Context#define_filter()|define_filter()> method on the current
+L<define_filter()|Template::Context#define_filter()> method on the current
 L<Template::Context> object. The method accepts a filter name, a reference to a
 filter subroutine and an optional flag to indicate if the filter is dynamic.
 
@@ -1644,10 +1644,10 @@ When a C<PROCESS>, C<INCLUDE> or C<WRAPPER> directive is encountered, the
 named template may refer to a locally defined C<BLOCK> or a file relative to
 the C<INCLUDE_PATH> (or an absolute or relative path if the appropriate
 C<ABSOLUTE> or C<RELATIVE> options are set). If a C<BLOCK> definition can't be
-found (see the L<Template::Context> L<Template::Context#template()|template()>
+found (see the L<Template::Context> L<template()|Template::Context#template()>
 method for a discussion of C<BLOCK> locality) then each of the
 C<LOAD_TEMPLATES> provider objects is queried in turn via the
-L<Template::Provider#fetch()|fetch()> method to see if it can supply the
+L<fetch()|Template::Provider#fetch()> method to see if it can supply the
 required template. 
 
 Each provider can return a compiled template, an error, or decline to service
@@ -1670,12 +1670,12 @@ method.
 =head2 LOAD_PLUGINS
 
 The C<LOAD_PLUGINS> options can be used to specify a list of provider objects
-(i.e. they implement the L<Template::Plugins#fetch()|fetch()> method) which
+(i.e. they implement the L<fetch()|Template::Plugins#fetch()> method) which
 are responsible for loading and instantiating template plugin objects. The
-L<Template::Context> L<Template::Context#plugin()|plugin()> method queries
+L<Template::Context> L<plugin()|Template::Context#plugin()> method queries
 each provider in turn in a "Chain of Responsibility" as per the
-L<Template::Context#template()|template()> and
-L<Template::Context#filter()|filter()> methods.
+L<template()|Template::Context#template()> and
+L<filter()|Template::Context#filter()> methods.
 
     my $template = Template->new({
         LOAD_PLUGINS => [
@@ -1697,12 +1697,12 @@ constructor.
 =head2 LOAD_FILTERS
 
 The C<LOAD_FILTERS> option can be used to specify a list of provider objects
-(i.e. they implement the L<Template::Filters#fetch()|fetch()> method) which
+(i.e. they implement the L<fetch()|Template::Filters#fetch()> method) which
 are responsible for returning and/or creating filter subroutines. The
-L<Template::Context> L<Template::Context#filter()|filter()> method queries
+L<Template::Context> L<filter()|Template::Context#filter()> method queries
 each provider in turn in a "Chain of Responsibility" as per the 
-L<Template::Context#template()|template()> and
-L<Template::Context#plugin()|plugin()> methods.
+L<template()|Template::Context#template()> and
+L<plugin()|Template::Context#plugin()> methods.
 
     my $template = Template->new({
         LOAD_FILTERS => [
@@ -1747,12 +1747,12 @@ object is passed as the only parameter to the Perl subroutines that represent
 "compiled" template documents. Template subroutines make callbacks into the
 context object to access Template Toolkit functionality, for example, to to
 C<INCLUDE> or C<PROCESS> another template
-(L<Template::Context#include()|include()> and
-L<Template::Context#process()|process()> methods, respectively), to C<USE> a
-plugin (L<Template::Context#plugin()|plugin()>) or instantiate a filter
-(L<Template::Context#filter()|filter()>) or to access the stash
-(L<Template::Context#stash()|stash()>) which manages variable definitions via
-the L<Template::Stash#get()|get()> and L<Template::Stash#set()|set()> methods.
+(L<include()|Template::Context#include()> and
+L<process()|Template::Context#process()> methods, respectively), to C<USE> a
+plugin (L<plugin()|Template::Context#plugin()>) or instantiate a filter
+(L<filter()|Template::Context#filter()>) or to access the stash
+(L<stash()|Template::Context#stash()>) which manages variable definitions via
+the L<get()|Template::Stash#get()> and L<set()|Template::Stash#set()> methods.
 
     my $template = Template->new({
         CONTEXT => MyOrg::Template::Context->new({ ... }),

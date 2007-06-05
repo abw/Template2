@@ -619,15 +619,12 @@ there is no drop-through between C<CASE> statements.
 The C<FOREACH> directive will iterate through the items in a list, processing
 the enclosed block for each one.
 
-    my $vars = {
-        foo   => 'Foo',
-        items => [ 'one', 'two', 'three' ],
-    };
-  
-template:
-
+    [% foo   = 'Foo'
+       items = [ 'one', 'two', 'three' ]
+    %]
+    
     Things:
-    [% FOREACH thing = [ foo 'Bar' "$foo Baz" ] %]
+    [% FOREACH thing IN [ foo 'Bar' "$foo Baz" ] %]
        * [% thing %]
     [% END %]
     
@@ -658,9 +655,9 @@ output:
       * Foo
       * Foo Bar
 
-You can use also use C<IN> instead of C<=> if you prefer.
+You can use also use C<=> instead of C<IN> if you prefer.
 
-    [% FOREACH crook IN government %]
+    [% FOREACH i = items %]
 
 When the C<FOREACH> directive is used without specifying a target variable, 
 any iterated values which are hash references will be automatically 
@@ -911,7 +908,7 @@ The C<repeat> filter factory is implemented like this:
 
 The C<FILTERS> option, described in L<Template::Manual::Config>, allows custom
 filters to be defined when a Template object is instantiated. The
-L<Template::Context#define_filter()|define_filter()> method allows further
+L<define_filter()|Template::Context#define_filter()> method allows further
 filters to be defined at any time.
 
 When using a filter, it is possible to assign an alias to it for 
@@ -1003,7 +1000,7 @@ will only exist until the end of that template when the stash is delocalised,
 restoring the previous variable state. If you want to define a filter which
 persists for the lifetime of the processor, or define additional dynamic
 filter factories, then you can call the
-L<Template::Context#define_filter()|define_filter()> method on the current
+L<define_filter()|Template::Context#define_filter()> method on the current
 L<Template::Context> object.
 
 See L<Template::Manual::Filters> for a complete list of available filters,
@@ -1134,7 +1131,7 @@ referenced:
 
 You can use this approach to create multiple plugin objects with
 different configurations.  This example shows how the 
-L<Template::Plugin::Format|format> plugin is used to create 
+L<format|Template::Plugin::Format> plugin is used to create 
 sub-routines bound to variables for formatting text as per C<printf()>.
 
     [% USE bold = format('<b>%s</b>') %]
@@ -1147,7 +1144,7 @@ Output:
     <b>This is bold</b>
     <i>This is italic</i>
 
-This next example shows how the L<Template::Plugin::URL|URL> plugin can be
+This next example shows how the L<URL|Template::Plugin::URL> plugin can be
 used to build dynamic URLs from a base part and optional query parameters.
 
     [% USE mycgi = URL('/cgi-bin/foo.pl', debug=1) %]
@@ -1159,7 +1156,7 @@ Output:
     <a href="/cgi-bin/foo.pl?debug=1">...
     <a href="/cgi-bin/foo.pl?mode=submit&debug=1">...
 
-The L<Template::Plugin::CGI|CGI> plugin is an example of one which delegates
+The L<CGI|Template::Plugin::CGI> plugin is an example of one which delegates
 to another Perl module. In this this case, to Lincoln Stein's C<CGI> module.
 All of the methods provided by the C<CGI> module are available via the plugin.
 
@@ -1415,8 +1412,8 @@ then look something like:
     } };
     ...
 
-As with C<PERL> blocks, the L<Template::Context|$context> and
-L<Template::Stash|$stash> references are pre-defined and available for use
+As with C<PERL> blocks, the L<$context|Template::Context> and
+L<$stash|Template::Stash> references are pre-defined and available for use
 within C<RAWPERL> code.
 
 =head1 Exception Handling and Flow Control
@@ -1537,9 +1534,9 @@ Uncaught exceptions (i.e. if the C<TRY> block doesn't have a type specific or
 default C<CATCH> handler) may be caught by enclosing C<TRY> blocks which can
 be nested indefinitely across multiple templates. If the error isn't caught at
 any level then processing will stop and the Template
-L<Template#process()|process()> method will return a false value to the
+L<process()|Template#process()> method will return a false value to the
 caller. The relevant L<Template::Exception> object can be retrieved by calling
-the L<Template#error()|error()> method.
+the L<error()|Template#error()> method.
 
     [% TRY %]
        ...
@@ -1745,7 +1742,7 @@ message.
 If you're writing a plugin, or some extension code that has the current
 L<Template::Context> in scope (you can safely skip this section if this means
 nothing to you) then you can also raise an exception by calling the context
-L<Template::Context#throw()|throw()> method. You can pass it an
+L<throw()|Template::Context#throw()> method. You can pass it an
 L<Template::Exception> object reference, a pair of C<($type, $info)>
 parameters or just an C<$info> string to create an exception of 'C<undef>' type.
 
@@ -1781,7 +1778,7 @@ The C<RETURN> directive can be used to stop processing the current template
 and return to the template from which it was called, resuming processing at
 the point immediately after the C<INCLUDE>, C<PROCESS> or C<WRAPPER>
 directive. If there is no enclosing template then the Template
-L<Template#process()|process()> method will return to the calling code with a
+L<process()|Template#process()> method will return to the calling code with a
 true value.
 
     Before
@@ -1804,7 +1801,7 @@ Output:
 
 The C<STOP> directive can be used to indicate that the processor should stop
 gracefully without processing any more of the template document. This is a
-planned stop and the Template L<Template#process()|process()> method will
+planned stop and the Template L<process()|Template#process()> method will
 return a B<true> value to the caller. This indicates that the template was
 processed successfully according to the directives within it.
 
@@ -1935,7 +1932,7 @@ The TAGS directive may also be used to set a named C<TAG_STYLE>
     [% TAGS html %]
     <!-- INCLUDE header -->
 
-See the L<Template::Manual::Config#TAGS|TAGS> and L<Template::Manual::Config#TAG_STYLE|TAG_STYLE> 
+See the L<TAGS|Template::Manual::Config#TAGS> and L<TAG_STYLE|Template::Manual::Config#TAG_STYLE> 
 configuration options for further details.
 
 =head2 DEBUG

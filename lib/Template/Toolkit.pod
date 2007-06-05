@@ -56,7 +56,7 @@ way.  And that's what the Template Toolkit is all about.
 
 =head1 Documentation
 
-The documentation for the Template Toolkit is organised into four sections.
+The documentation for the Template Toolkit is organised into five sections.
 
 The L<Template::Manual> contains detailed information about using the Template
 Toolkit. It gives examples of its use and includes a full reference of the
@@ -101,6 +101,9 @@ The L<Template::Tutorial> section contains two introductory tutorials on using
 the Template Toolkit. The first is L<Template::Tutorial::Web> on generating
 web content. The second is L<Template::Tutorial::Datafile> on using the
 Template Toolkit to generate other data formats including XML.
+
+The final section of the manual is L<Template::FAQ> which contains answers
+to some of the Frequently Asked Questions about the Template Toolkit.
 
 All of the documentation is also provided in HTML format in the 
 F<docs> sub-directory of the Template Toolkit distribution.  You can 
