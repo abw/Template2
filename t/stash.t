@@ -270,6 +270,23 @@ an object
 -- expect --
 ==
 
+-- test --
+[% foo = { "one" = "bar" "" = "empty" } -%]
+foo is { [% FOREACH k IN foo.keys.sort %]"[% k %]" = "[% foo.$k %]" [% END %]}
+setting foo.one to baz
+[% fookey = "one" foo.$fookey = "baz" -%]
+foo is { [% FOREACH k IN foo.keys.sort %]"[% k %]" = "[% foo.$k %]" [% END %]}
+setting foo."" to quux
+[% fookey = "" foo.$fookey = "full" -%]
+foo is { [% FOREACH k IN foo.keys.sort %]"[% k %]" = "[% foo.$k %]" [% END %]}
+--expect --
+foo is { "" = "empty" "one" = "bar" }
+setting foo.one to baz
+foo is { "" = "empty" "one" = "baz" }
+setting foo."" to quux
+foo is { "" = "full" "one" = "baz" }
+
+
 # test Dave Howorth's patch (v2.15) which makes the stash more strict
 # about what it considers to be a missing method error
 

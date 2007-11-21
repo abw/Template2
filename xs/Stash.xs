@@ -480,7 +480,7 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
     debug("assign(%s)\n", key2);
 #endif
 
-    if (!root || !key_len || looks_private(aTHX_ key)) {
+    if (!root || !SvOK(key_sv) || key_sv == &PL_sv_undef || looks_private(aTHX_ key)) {
         /* ignore _private or .private members */
         return &PL_sv_undef;
     } 

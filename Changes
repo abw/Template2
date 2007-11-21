@@ -25,6 +25,12 @@
   fetches incorrectly returned 'not found' instead of repeating the 
   error.
 
+* Fixed a minor bug in the XS Stash which prevented it from updating
+  hash entries with empty, but defined keys.  Thanks to Yitzchak 
+  Scott-Thoennes for reporting the problem.
+  
+  http://lists.tt2.org/pipermail/templates/2007-November/009819.html
+  
 * Restored the GIF images that got mangled in the switch from CVS to
   Subversion.
 

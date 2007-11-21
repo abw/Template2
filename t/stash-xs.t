@@ -350,3 +350,19 @@ ERROR: undef error - Can't locate object method "no_such_method" via package "Ha
 -- expect --
 ERROR: undef error - Can't locate object method "this_method_does_not_exist" via package "HashObject"
 
+-- test --
+[% foo = { "one" = "bar" "" = "empty" } -%]
+foo is { [% FOREACH k IN foo.keys.sort %]"[% k %]" = "[% foo.$k %]" [% END %]}
+setting foo.one to baz
+[% fookey = "one" foo.$fookey = "baz" -%]
+foo is { [% FOREACH k IN foo.keys.sort %]"[% k %]" = "[% foo.$k %]" [% END %]}
+setting foo."" to quux
+[% fookey = "" foo.$fookey = "full" -%]
+foo is { [% FOREACH k IN foo.keys.sort %]"[% k %]" = "[% foo.$k %]" [% END %]}
+--expect --
+foo is { "" = "empty" "one" = "bar" }
+setting foo.one to baz
+foo is { "" = "empty" "one" = "baz" }
+setting foo."" to quux
+foo is { "" = "full" "one" = "baz" }
+
