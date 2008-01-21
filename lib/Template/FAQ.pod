@@ -37,7 +37,7 @@ If you want to set C<a = b> only if C<c> is true, then do this instead:
 
     [% SET a = b IF c %]
 
-The explcit C<SET> keyword gives the parser the clue it needs to do the
+The explicit C<SET> keyword gives the parser the clue it needs to do the
 right thing.
 
 NOTE: this will be fixed in TT3
@@ -157,7 +157,7 @@ HTTP providers but as yet no-one has stepped forward to take up the
 challenge...
 
 In the mean time, Craig Barrat's post from the mailing list has some useful
-pointers on how to acheive this using existing modules.  See
+pointers on how to achieve this using existing modules.  See
 L<http://tt2.org/pipermail/templates/2001-May/000954.html>
 
 =head1 Miscellaneous
@@ -225,7 +225,7 @@ human consumption.
 
 =head2 How can I configure variables on a per-request basis?
 
-One easy way to acheive this is to define a single C<PRE_PROCESS> template
+One easy way to achieve this is to define a single C<PRE_PROCESS> template
 which loads in other configuration files based on variables defined or other
 conditions.
 
