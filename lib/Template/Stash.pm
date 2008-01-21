@@ -27,6 +27,10 @@ our $VERSION = 2.90;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $PRIVATE = qr/^[_.]/;
 
+# alias _dotop() to dotop() so that we have a consistent method name
+# between the Perl and XS stash implementations
+*dotop = \&_dotop;
+
 
 #------------------------------------------------------------------------
 # Virtual Methods

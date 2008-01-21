@@ -104,6 +104,9 @@ match( $stash->get('baz(50).biz'), '<undef>' );   # args are ignored
 $stash->set( 'bar.buz' => 100 );
 match( $stash->get('bar.buz'), 100 );
 
+# test the dotop() method
+match( $stash->dotop({ foo => 10 }, 'foo'), 10 );
+
 my $stash_dbg = Template::Stash::XS->new({ %$data, _DEBUG => 1 });
 
 my $ttlist = [
