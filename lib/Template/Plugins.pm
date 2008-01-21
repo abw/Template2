@@ -47,6 +47,7 @@ our $STD_PLUGINS = {
     'iterator'   => 'Template::Plugin::Iterator',
     'latex'      => 'Template::Plugin::Latex',
     'pod'        => 'Template::Plugin::Pod',
+    'scalar'     => 'Template::Plugin::Scalar',
     'table'      => 'Template::Plugin::Table',
     'url'        => 'Template::Plugin::URL',
     'view'       => 'Template::Plugin::View',
