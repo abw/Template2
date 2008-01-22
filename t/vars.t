@@ -22,7 +22,7 @@ use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Stash;
 use Template::Constants qw( :status );
-use Template::Directive2;
+use Template::Directive;
 
 use Template::Parser;
 $Template::Test::DEBUG = 0;
