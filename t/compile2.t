@@ -40,7 +40,7 @@ ok( -f "$dir/complex.ttc" );
 my $out = '';
 my $tt = Template->new($ttcfg);
 ok( $tt->process('baz', { showname => 1 }, \$out) );
-ok( $out =~ /^name: baz/ );
+ok( scalar $out =~ /^name: baz/ );
 
 # we're going to hack on the foo.ttc file to change some key text.
 # this way we can tell that the template was loaded from the compiled
