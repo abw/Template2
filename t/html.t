@@ -36,7 +36,7 @@ use constant HAS_Apache_Util   => eval { require Apache::Util;
 
 
 my $html = -d 'templates' ? 'templates/html' : '../templates/html';
-die "cannot grok templates/html directory\n" unless $html;
+die "cannot grok templates/html directory\n" unless -d $html;
 
 my $h = Template::Plugin::HTML->new('foo');
 ok( $h );
