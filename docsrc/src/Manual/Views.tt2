@@ -471,8 +471,8 @@ view.
     sub present {
 	my ($self, $view) = @_;
 	return "a Foo::Bar object:\n"
-	     . "thingies: " . $view.print($self->{ _THINGIES }) . "\n"
-             . "doodahs: " . $view.print($self->{ _DOODAHS }) . "\n";
+	     . "thingies: " . $view->print($self->{ _THINGIES }) . "\n"
+             . "doodahs: " . $view->print($self->{ _DOODAHS }) . "\n";
     }
 
 The object is free to delve deeply into its innards and mess around with
