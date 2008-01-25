@@ -45,7 +45,7 @@ sub new {
 }
 
 sub abs   { shift; CORE::abs($_[0]);          }
-sub atan2 { shift; CORE::atan2($_[0], $_[0]); } # prototyped (ugg)
+sub atan2 { shift; CORE::atan2($_[0], $_[1]); } # prototyped (ugg)
 sub cos   { shift; CORE::cos($_[0]);          }
 sub exp   { shift; CORE::exp($_[0]);          }
 sub hex   { shift; CORE::hex($_[0]);          }
