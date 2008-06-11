@@ -1250,6 +1250,19 @@ defined. Note that the C<DEFAULT> template is not used when templates are
 specified with absolute or relative filenames, or as a reference to a input
 file handle or text string.
 
+=head2 ENCODING
+
+The Template Toolkit will automatically decode Unicode templates that
+have a Byte Order Marker (BOM) at the start of the file.  This option
+can be used to set the default encoding for templates that don't define
+a BOM.
+
+    my $provider = Template::Provider->new({
+        ENCODING => 'utf8',
+    });
+
+See L<Encode> for further information.
+
 =head2 CACHE_SIZE
 
 The L<CACHE_SIZE|Template::Manual::Config#CACHE_SIZE> option can be used to
