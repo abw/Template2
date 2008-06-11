@@ -69,6 +69,7 @@ sub process {
     # localise the variable stash with any parameters passed
     # and set the 'template' variable
     $params ||= { };
+    # TODO: change this to C<||=> so we can use a template parameter
     $params->{ template } = $template 
         unless ref $template eq 'CODE';
     $context->localise($params);
