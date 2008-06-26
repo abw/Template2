@@ -1,3 +1,7 @@
+IMPORTANT: The whole of the docsrc tree is now deprecated.  We don't use
+it any more.  Documentation should be added straight into the .pm and .pod
+files in lib.
+
 This is the docsrc bundle for the Template Toolkit, containing all the
 templates, XML, scripts and other bits and pieces required to build the 
 Template Toolkit documentation in both POD and HTML formats.
