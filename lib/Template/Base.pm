@@ -41,7 +41,8 @@ sub new {
     my ($argnames, @args, $arg, $cfg);
 #    $class->error('');         # always clear package $ERROR var?
 
-    {   no strict qw( refs );
+    {   no strict 'refs';
+        no warnings 'once';
         $argnames = \@{"$class\::BASEARGS"} || [ ];
     }
 
