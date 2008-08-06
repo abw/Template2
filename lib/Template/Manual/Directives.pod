@@ -602,13 +602,13 @@ C<[% CASE DEFAULT %]> to specify a default match.  Only one C<CASE> matches,
 there is no drop-through between C<CASE> statements.
 
     [% SWITCH myvar %]
-    [%   CASE value1 %]
+    [%   CASE 'value1' %]
            ...
-    [%   CASE [ value2 value3 ] %]   # multiple values
+    [%   CASE ['value2', 'value3'] %]   # multiple values
            ...
-    [%   CASE myhash.keys %]         # ditto
+    [%   CASE myhash.keys %]            # ditto
            ...
-    [%   CASE %]                     # default
+    [%   CASE %]                        # default
            ...
     [% END %]
 
