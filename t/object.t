@@ -130,12 +130,80 @@ sub stringify {
     return "stringified '$$self'";
 }
 
+#-----------------------------------------------------------------------
+# another object without overloaded comparison.
+# http://rt.cpan.org/Ticket/Display.html?id=24044
+#-----------------------------------------------------------------------
+
+package CmpOverloadObject;
+
+use overload ('cmp' => 'compare_overload', '<=>', 'compare_overload');
+
+sub new { bless {}, shift };
+
+sub hello {
+    return "Hello";
+}
+
+sub compare_overload {
+    die "Mayhem!";
+}
+
+#------------------------------------------------------------------------
+# Another object for tracking down a bug with DBIx::Class where TT is 
+# causing the numification operator to be called.  Matt S Trout suggests
+# we've got a truth test somewhere that should be a defined but that 
+# doesn't appear to be the case...
+# http://rt.cpan.org/Ticket/Display.html?id=23763
+#------------------------------------------------------------------------
+
+package Numbersome;
+
+use overload 
+    '""' => 'stringify',
+    '0+' => 'numify', 
+    fallback => 1;
+
+sub new {
+    my ($class, $text) = @_;
+    bless \$text, $class;
+}
+
+sub numify {
+    my $self = shift;
+    return "FAIL: numified $$self";
+}
+
+sub stringify {
+    my $self = shift;
+    return "PASS: stringified $$self";
+}
+
+sub things {
+    return [qw( foo bar baz )];
+}
+
+package GetNumbersome;
+
+sub new {
+    my ($class, $text) = @_;
+    bless { }, $class;
+}
+
+sub num {
+    Numbersome->new("from GetNumbersome");
+}
 
 #------------------------------------------------------------------------
 # main 
 #------------------------------------------------------------------------
 
 package main;
+
+sub new {
+    my ($class, $text) = @_;
+    bless \$text, $class;
+}
 
 my $objconf = { 
     'a' => 'alpha',
@@ -146,7 +214,10 @@ my $objconf = {
 my $replace = {
     thing  => TestObject->new($objconf),
     string => Stringy->new('Test String'),
-    t1 => T1->new(a => 10),
+    t1     => T1->new(a => 10),
+    num    => Numbersome->new("Numbersome"),
+    getnum => GetNumbersome->new,
+    cmp_ol => CmpOverloadObject->new(),
     %{ callsign() },
 };
 
@@ -293,3 +364,35 @@ foo stringified 'Test String' bar
 -- expect --
 .undef error - barfed up
 .
+
+
+# Exercise the object with the funky overloaded comparison
+
+-- test --
+[% cmp_ol.hello %]
+-- expect --
+Hello
+
+#-----------------------------------------------------------------------
+# try and pin down the numification bug
+#-----------------------------------------------------------------------
+
+-- test --
+[% FOREACH item IN num.things -%]
+* [% item %]
+[% END -%]
+-- expect --
+* foo
+* bar
+* baz
+
+-- test --
+[% num %]
+-- expect --
+PASS: stringified Numbersome
+
+-- test --
+[% getnum.num %]
+-- expect --
+PASS: stringified from GetNumbersome
+
