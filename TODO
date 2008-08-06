@@ -15,11 +15,15 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Miscellaneous
+# For v2.20 
 #------------------------------------------------------------------------
 
-* The ENCODING options needs testing and documenting.  Bill Moseley said
-  he may be able to do this.
+* Update docs on web site
+
+
+#------------------------------------------------------------------------
+# Miscellaneous
+#------------------------------------------------------------------------
 
 * The 'eval' filter leaks memory, as reported by Colin Johnson.  The
   filter subroutine created contains a reference to the context and then

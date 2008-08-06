@@ -27,15 +27,16 @@ if ($^O eq 'MSWin32') {  # any others also?
     $FLAVOUR = 'Win32';
     $PREFIX  = 'C:/Program Files/Template Toolkit 2';
     $IMAGES  = '/tt2/images';
-    $MAKE    = 'dmake';
+#    $MAKE    = 'dmake';
 }
 else {
     $WIN32   = 0;
     $FLAVOUR = 'Unix';
     $PREFIX  = '/usr/local/tt2';
     $IMAGES  = '/tt2/images';
-    $MAKE    = 'make';
+#    $MAKE    = 'make';
 }
+$MAKE=$Config{'make'}; 
 
 
 # read command line args putting TT_* into $ttconfig and
@@ -245,7 +246,7 @@ my %opts = (
         'SUFFIX'   => 'gz',
     },
     'test'         => {
-        TESTS      => 't/*.t t/vmethods/*.t',
+        'TESTS'    => join(' ', map { glob } qw( t/*.t t/vmethods/*.t )),
     },
     'clean'        => {
         'FILES'        => join(' ', qw( docs/ttree.cfg 
@@ -270,6 +271,9 @@ if ($mmv >= 5.43) {
     $opts{ ABSTRACT } = 'comprehensive template processing system',
 }
 
+if ($ExtUtils::MakeMaker::VERSION ge '6.30_00') {
+    $opts{'LICENSE' } = 'perl';
+} 
 
 WriteMakefile( %opts );
 

@@ -14,31 +14,118 @@
 # Version 2.20 - 
 #------------------------------------------------------------------------
 
+* Updated all the documentation.
+
+* Restored the GIF images that got mangled in the switch from CVS to
+  Subversion.
+
+* Fixed the Makefile.PL to pre-glob the tests to keep things working 
+  smoothly in Win32.
+  http://rt.cpan.org/Ticket/Display.html?id=25573
+  
+* Applied a patch to Template::Directives from Ben Morrow to fix the 
+  SWITCH/CASE directive when matching strings containing regex metacharacters.
+  http://rt.cpan.org/Ticket/Display.html?id=24183
+
+* Applied a patch to Template::Parser from Koichi Taniguchi to make it
+  treat TAGS with case sensitivity.
+  http://rt.cpan.org/Ticket/Display.html?id=19975
+
+* Changed html_entity_filter_factory() in Template::Filters to only look for 
+  Apache::Utils and HTML::Entities once.
+  http://rt.cpan.org/Ticket/Display.html?id=19837
+
+
+Template::Stash
+---------------
+
 * Applied a patch to Template::Stash from Jess Robinson which allows you
   to call a list method on a single object and have it automatically
   upgraded to a single item list.  Changed the XS Stash to do the same.
+  http://lists.tt2.org/pipermail/templates/2006-November/009115.html
 
-  http://tt2.org/pipermail/templates/2006-November/009115.html
+* Fixed a minor bug in the XS Stash which prevented it from updating
+  hash entries with empty, but defined keys.  Thanks to Yitzchak 
+  Scott-Thoennes for reporting the problem.
+  http://lists.tt2.org/pipermail/templates/2007-November/009819.html
+  
+* Applied a patch from Alexandr Ciornii  to make the XS Stash compile 
+  cleanly under VC++ 6.0 and with Sun's C compiler.
+  http://rt.cpan.org/Ticket/Display.html?id=20291
+
+
+Template::Provider
+------------------
 
 * Fixed a minor bug in the Template::Provider code added in 2.19 that 
   caused errors in templates to only be reported once.  Subsequent
   fetches incorrectly returned 'not found' instead of repeating the 
   error.
 
-* Fixed a minor bug in the XS Stash which prevented it from updating
-  hash entries with empty, but defined keys.  Thanks to Yitzchak 
-  Scott-Thoennes for reporting the problem.
-  
-  http://lists.tt2.org/pipermail/templates/2007-November/009819.html
-  
-* Restored the GIF images that got mangled in the switch from CVS to
-  Subversion.
+* Made Template::Provider use File::Spec->catfile instead of using '/'
+  and letting Perl worry about Doing The Right Thing.
+  http://rt.cpan.org/Ticket/Display.html?id=34489
+
+* Applied patch from Lyle Brooks to add binmode to the _template_content() 
+  method in Template::Provider.
+  http://rt.cpan.org/Ticket/Display.html?id=38075
+
+* Applied patch from Ted Carnahan to silence UNIVERSAL::isa warnings in
+  Template::Provider.  
+  http://rt.cpan.org/Ticket/Display.html?id=25468
+
+* Applied patch to Template::Provider from Andrew Hamlin which works around 
+  a bug in Strawberry Perl on Win32.  
+  http://rt.cpan.org/Ticket/Display.html?id=34578
+
+
+Template::VMethods
+------------------
+
+* Applied a patch from Paul "LeoNerd" Evans to make the list.slice vmethod
+  work properly with negative indices.
+  http://lists.tt2.org/pipermail/templates/2008-March/010105.html
+
+
+Plugins
+-------
+
+* Added the Math plugin and related files to the MANIFEST so they 
+  actually get shipped out as part of the distribution.  D'Oh!  
+  http://rt.cpan.org/Ticket/Display.html?id=27375
+
+* Added the Scalar plugin which adds the .scalar vmethod for calling
+  object methods and subroutines in scalar context.
+
+* Added Template::Plugin::Assert which allows you to assert that values
+  are defined.
+
+* Changed Template::Plugin::Filter to weaken the $self reference to avoid
+  circular references and memory leaks.  Thanks to Masahiro Honma for
+  reporting the problem and suggesting the fix.
+
+* Applied patch from Ronald J Kimball to make Template::Plugin::Date accept 
+  dates with the year coming first.
+  http://lists.tt2.org/pipermail/templates/2007-July/009540.html
+
+* Added C<1;> to the end of a few plugin modules that were missing it.
+
+ttree
+-----
 
 * Changed the --accept option in ttree to match against the full file
   path (relative to --src dir) rather than just the file name.  This 
   makes it behave the same way as the --ignore option.
   
-* Updated all the documentation.
+* Applied patch from Lyle Brooks to add binmode to the process() 
+  call in ttree.   
+  http://rt.cpan.org/Ticket/Display.html?id=38076
+  
+* Added a patch from Nigel Metheringham also to set binmode in ttree
+  but via a configuration option.
+  https://rt.cpan.org/Ticket/Display.html?id=30760
+
+
 
 #------------------------------------------------------------------------
 # Version 2.19 - 27th April 2007
@@ -52,25 +139,25 @@
 * Applied a patch to the XS Stash from Randy Kobes which fixes some other
   Win32 problems.
   
-  http://tt2.org/pipermail/templates/2007-February/009247.html
+  http://lists.tt2.org/pipermail/templates/2007-February/009247.html
 
 * Applied another patch to the XS Stash from Steve Peters which fixes
   a problem with tied hashes under more recent version of Perl.
 
-  http://tt2.org/pipermail/templates/2007-January/009181.html
+  http://lists.tt2.org/pipermail/templates/2007-January/009181.html
 
 * Fixed a problem in the Perl Stash when using objects that have 
   overloaded comparison operators.  Thanks to Randal Schwartz, Tatsuhiko 
   Miyagawa and Daisuke Maki for their contributions.
 
-  http://tt2.org/pipermail/templates/2007-March/009265.html
+  http://lists.tt2.org/pipermail/templates/2007-March/009265.html
 
 * Applied a patch from Bill Moseley to Template::Provider which adds 
   negative caching and moves some functionality into separate methods
   to make subclassing easier.  Also added the STAT_TTL configuration
   parameter.
   
-  http://tt2.org/pipermail/templates/2007-January/009183.html
+  http://lists.tt2.org/pipermail/templates/2007-January/009183.html
 
 * Added the url filter as a less aggressive form of the uri filter.
   Whereas the uri filter now (from v2.16 onwards) encodes all the 
@@ -78,7 +165,7 @@
   leaves them intact and thus behaves just like the uri filter used
   to.
   
-  http://tt2.org/pipermail/templates/2007-March/009277.html
+  http://lists.tt2.org/pipermail/templates/2007-March/009277.html
 
 #------------------------------------------------------------------------
 # Version 2.18a - 9th February 2007
@@ -144,7 +231,7 @@ Interim release from Adam Kennedy.
   block names if it encountered a syntax error inside a BLOCK.  Thanks
   to Bill Moseley for reporting the problem.  
   
-  http://tt2.org/pipermail/templates/2006-July/008815.html
+  http://lists.tt2.org/pipermail/templates/2006-July/008815.html
 
 * Fixed a minor buglet in Template::Provider which came to light while
   investigating the above problem. If a previously cached template is changed
@@ -235,14 +322,14 @@ Chomping Options
   CHOMP_ONE for backwards compatibility.  Thanks to Paul Seamons for
   doing all the hard work on this.
 
-  http://tt2.org/pipermail/templates/2006-February/thread.html#8354
+  http://lists.tt2.org/pipermail/templates/2006-February/thread.html#8354
 
 * Added code to the replace text virtual method to use a faster and 
   simpler implementation if the replacement text doesn't contain any
   back references.  Thanks to Josh Rosenbaum for all his efforts on 
   this.
 
-  http://tt2.org/pipermail/templates/2006-February/008344.html
+  http://lists.tt2.org/pipermail/templates/2006-February/008344.html
 
 Stash
 -----
@@ -261,11 +348,11 @@ Plugins
   subclasses to provide an alternate name.  Thanks to Cees Hek for 
   his patch.
 
-  http://tt2.org/pipermail/templates/2006-February/008423.html
+  http://lists.tt2.org/pipermail/templates/2006-February/008423.html
 
 * Change the AUTOLOAD regex in the Table plugin to be more robust.
 
-  http://tt2.org/pipermail/templates/2006-May/008602.html
+  http://lists.tt2.org/pipermail/templates/2006-May/008602.html
 
 Documentation
 -------------
@@ -296,7 +383,7 @@ Stash
 * Added full support for tied hashes and tied lists in the XS Stash.
   Added some further tests to make sure it's all working as expected.
 
-  http://tt2.org/pipermail/templates/2006-January/008266.html
+  http://lists.tt2.org/pipermail/templates/2006-January/008266.html
 
 * Applied path from Slaven Rezic to Template::Stash::XS to check
   return code in tt_fetch_item() in a way which plays nicely with tied
@@ -307,7 +394,7 @@ Stash
 * Changed Template::Stash and Template::Stash::XS to evaluate list
   vmethods in lvalues.
 
-  http://tt2.org/pipermail/templates/2006-January/008198.html
+  http://lists.tt2.org/pipermail/templates/2006-January/008198.html
 
 * Changed Template::Stash to be a little more strict about what it
   considers a failed method call.  This allows exception thrown within
@@ -315,8 +402,8 @@ Stash
   as undefined method.  Thanks to Dave Howorth, Tom Insam and Stig 
   Brautaset for reporting the problem and providing fixes.
 
-  http://tt2.org/pipermail/templates/2005-April/007375.html
-  http://tt2.org/pipermail/templates/2006-February/008367.html
+  http://lists.tt2.org/pipermail/templates/2005-April/007375.html
+  http://lists.tt2.org/pipermail/templates/2006-February/008367.html
 
 * Removed redundant performance profiling code from
   Template::Stash::XS.  Must check with Doug that this is OK and he's
@@ -334,25 +421,25 @@ Virtual Methods
   Nik Clayton, Paul Seamon, Sergey Martynoff, Josh Rosenbaum and
   others.
 
-  http://tt2.org/pipermail/templates/2006-February/008306.html
-  http://tt2.org/pipermail/templates/2006-February/008326.html
+  http://lists.tt2.org/pipermail/templates/2006-February/008306.html
+  http://lists.tt2.org/pipermail/templates/2006-February/008326.html
 
 * Changed list.push and list.unshift to accept multiple arguments,
   thanks to Bill Moseley.
 
-  http://tt2.org/pipermail/templates/2006-January/008294.html
+  http://lists.tt2.org/pipermail/templates/2006-January/008294.html
 
 * Fixed the split scalar virtual method which wasn't accepting the
   second argument (limit) correctly.  Thanks to Josh Rosenbaum for
   pointing out the problem.
 
-  http://tt2.org/pipermail/templates/2005-October/007982.html
+  http://lists.tt2.org/pipermail/templates/2005-October/007982.html
 
 * Documented the fact that hash.list is going to change in the future,
   recommending people switch to hash.pairs.
 
-  http://tt2.org/pipermail/templates/2006-January/008256.html
-  http://tt2.org/pipermail/templates/2006-February/008312.html
+  http://lists.tt2.org/pipermail/templates/2006-January/008256.html
+  http://lists.tt2.org/pipermail/templates/2006-February/008312.html
 
 * Added the global option to the 'match' scalar virtual method.
 
@@ -360,7 +447,7 @@ Virtual Methods
   bug, thanks to Andy Maas who identified the problem and found the
   solution:
 
-  http://tt2.org/pipermail/templates/2004-December/007020.html
+  http://lists.tt2.org/pipermail/templates/2004-December/007020.html
 
 * Changed the sort and nsort list virtual methods to always return
   references to lists, avoiding any ambiguity in return results.
@@ -385,7 +472,7 @@ Plugins
   name as well as case-specific name.  Thanks yet again Josh for
   addressing this issue.
 
-  http://tt2.org/pipermail/templates/2006-January/008225.html
+  http://lists.tt2.org/pipermail/templates/2006-January/008225.html
 
 * Applied a single character patch from Lubomir Host which fixes the 
   user attribute in Template::Plugin::File.
@@ -399,15 +486,15 @@ Plugins
   attributes in the tag() method and to provide the 'file' options.
   Also adds proper documentation for the 'root' option.
 
-  http://tt2.org/pipermail/templates/2005-November/008086.html
-  http://tt2.org/pipermail/templates/2005-December/008189.html
+  http://lists.tt2.org/pipermail/templates/2005-November/008086.html
+  http://lists.tt2.org/pipermail/templates/2005-December/008189.html
 
 * Added the $JOINT package variable to Template::Plugin::URL to 
   provide a work-around for the URL plugin which incorrectly (as
   we now know) encodes '&' as '&amp;'
 
   http://rt.cpan.org//Ticket/Display.html?id=11551
-  http://tt2.org/pipermail/templates/2005-December/008158.html
+  http://lists.tt2.org/pipermail/templates/2005-December/008158.html
 
 * Added substr() method to the String plugin, as suggested here:
 
@@ -427,7 +514,7 @@ Filters
 * Applied a patch to the truncate() filter from "Ashley" which 
   adds a second argument.
 
-  http://tt2.org/pipermail/templates/2005-December/008145.html
+  http://lists.tt2.org/pipermail/templates/2005-December/008145.html
 
 * Fixed a bug in the same truncate() filter to stop it from truncating
   strings that are exactly as long as the limit (change '<' to '<='),
@@ -453,7 +540,7 @@ ttree
 * Applied patch from Yuri Pimenov to prevent ttree from raising a 
   warning when the --depend_debug option is used.
 
-  http://tt2.org/pipermail/templates/2005-May/007400.html
+  http://lists.tt2.org/pipermail/templates/2005-May/007400.html
 
 * Applied a patch to ttree from Slaven Rezic which fixes the arguments
   passed to mkpath.
@@ -488,23 +575,23 @@ Miscellaneous
 * Removed vStrings from Template::Document.  Thanks to Dave Cross for
   reporting the problem.
 
-  http://tt2.org/pipermail/templates/2005-April/007357.html
+  http://lists.tt2.org/pipermail/templates/2005-April/007357.html
 
 * Applied a patch from Barrie Slaymaker which corrects a bug in the
   Template::Parser line counting when using chomp flags.
 
-  http://tt2.org/pipermail/templates/2005-December/008157.html
+  http://lists.tt2.org/pipermail/templates/2005-December/008157.html
 
 * Applied a patch from Jess Robinson to move the Template::Provider
   check for file freshness into a separate method, in order to 
   play nicely with his Template::Provider::DBI module.
 
-  http://tt2.org/pipermail/templates/2005-December/008143.html
+  http://lists.tt2.org/pipermail/templates/2005-December/008143.html
 
 * Fixed the regex matching relative paths in Template::Provider, thanks
   to Josh Rosenbaum 
 
-  http://tt2.org/pipermail/templates/2005-January/007141.html
+  http://lists.tt2.org/pipermail/templates/2005-January/007141.html
 
 * Applied a patch to Template::Provider to prevent a misleading error
   message, thanks to Slaven Rezic.
@@ -560,11 +647,11 @@ Miscellaneous
 
 * Applied patch from Dave Cash to add 'caller' and 'callers' to 
   'component', see 
-  http://tt2.org/pipermail/templates/2004-January/005581.html
+  http://lists.tt2.org/pipermail/templates/2004-January/005581.html
 
 * Applied patch from Dylan William Hardison to ttree which prevents
   dependencies from interfering with files that are copied.  See
-  http://tt2.org/pipermail/templates/2003-December/005458.html
+  http://lists.tt2.org/pipermail/templates/2003-December/005458.html
 
 
 #------------------------------------------------------------------------
@@ -641,44 +728,44 @@ Miscellaneous
 
 * Applied two patches from Axel Gerstmair to fix bugs in Makefile.PL 
   and t/date.t.  See.
-  http://tt2.org/pipermail/templates/2003-April/004553.html
-  http://tt2.org/pipermail/templates/2003-May/004572.html
+  http://lists.tt2.org/pipermail/templates/2003-April/004553.html
+  http://lists.tt2.org/pipermail/templates/2003-May/004572.html
 
 * Applied patch from Jim Cromie to t/autoform.t to skip tests on all
   versions of Perl from 5.8.0 onwards.
 
 * Changed $OUTPUT in Template::Directive to be a package variable, 
   allowing it to be re-defined to permit a flushed output hack.
-  http://tt2.org/pipermail/templates/2003-October/005136.html
+  http://lists.tt2.org/pipermail/templates/2003-October/005136.html
 
 * Applied a patch from Darren to the 'item' hash vmethod to protect
   against accessing private variables (prefixed '.' or '_')
-  http://tt2.org/pipermail/templates/2003-June/004761.html
+  http://lists.tt2.org/pipermail/templates/2003-June/004761.html
 
 * Applied a patch from Ivan Adzhubey to template/splash/frame.
-  http://tt2.org/pipermail/templates/2003-August/004953.html
+  http://lists.tt2.org/pipermail/templates/2003-August/004953.html
 
 * Applied a patch from Bryce Harrington to add the absolute and 
   relative options to ttree.  Also applied a patch from Mark Anderson 
   to add the 'template_debug'.  Removed the old debug option which was 
   as good as useless.  
-  http://tt2.org/pipermail/templates/2003-October/005110.html
-  http://tt2.org/pipermail/templates/2003-October/005126.html
+  http://lists.tt2.org/pipermail/templates/2003-October/005110.html
+  http://lists.tt2.org/pipermail/templates/2003-October/005126.html
 
 * Applied another patch from Mark to push files named on the command 
   line through the process_file() sub to ensure that various options 
   like accept checking, pemission preserving and copy processing (but 
   not modification time) are applied.
-  http://tt2.org/pipermail/templates/2003-October/005132.html
+  http://lists.tt2.org/pipermail/templates/2003-October/005132.html
 
 * Applied a variation of yet another ttree patch from Mark to add the 
   'suffix' option for changing the suffix of output files created.
-  http://tt2.org/pipermail/templates/2003-October/005121.html
+  http://lists.tt2.org/pipermail/templates/2003-October/005121.html
 
 * Applied a variation of a patch from Dylan William Hardison which 
   adds the 'depend' and 'depend_file' options to ttree.
-  http://tt2.org/pipermail/templates/2003-July/004783.html
-  http://tt2.org/pipermail/templates/2003-October/005147.html
+  http://lists.tt2.org/pipermail/templates/2003-July/004783.html
+  http://lists.tt2.org/pipermail/templates/2003-October/005147.html
 
 
 #------------------------------------------------------------------------
@@ -773,11 +860,11 @@ Miscellaneous
   exceptions (e.g. [ file => [ parse => 'blah blah' ] ]) to allow the 
   caller to accurately differentiate between parse errors and missing
   file or other errors.
-  http://tt2.org/pipermail/templates/2003-March/004359.html
+  http://lists.tt2.org/pipermail/templates/2003-March/004359.html
 
 * applied a patch from Gervase Markham to add set_legend() to the
   various GD::Graph modules that works with a list of arguments.
-  http://tt2.org/pipermail/templates/2003-March/004316.html
+  http://lists.tt2.org/pipermail/templates/2003-March/004316.html
 
 
 #------------------------------------------------------------------------
@@ -788,10 +875,10 @@ Miscellaneous
 
 * Applied a patch from Jonas Liljegren to lower the chunking limit of
   the parser regex to prevent a segfault.  See
-  http://tt2.org/pipermail/templates/2003-February/004290.html
+  http://lists.tt2.org/pipermail/templates/2003-February/004290.html
 
 * Applied Pudge's patch for the XS Stash bug.  See
-  http://tt2.org/pipermail/templates/2003-February/004289.html
+  http://lists.tt2.org/pipermail/templates/2003-February/004289.html
 
 
 #------------------------------------------------------------------------
@@ -803,7 +890,7 @@ Miscellaneous
 
 * Added the Image plugin interfacing to the Image::Size module, based
   on examples posted to the mailing list by Darren and Mark.  See
-  http://tt2.org/pipermail/templates/2002-November/003876.html
+  http://lists.tt2.org/pipermail/templates/2002-November/003876.html
 
 
 #------------------------------------------------------------------------
@@ -1069,11 +1156,11 @@ Miscellaneous
 * Applied another patch from Simon to fix a bug with compiled templates
   which were never being loaded due to a '<' comparison of timestamps
   rather than '<='.  See
-  http://tt2.org/pipermail/templates/2002-January/002361.html
+  http://lists.tt2.org/pipermail/templates/2002-January/002361.html
 
 * Applied a patch from Doug Steinwand which fixes a minor bug in the 
   XS Stash as reported by Andrey Brindeew:
-  http://tt2.org/pipermail/templates/2002-January/002475.html
+  http://lists.tt2.org/pipermail/templates/2002-January/002475.html
 
 * Changed URL plugin to accept multiple values for CGI parameters, e.g.
   [% USE URL('/cgi-bin/foo', items=[10,20]) %] generates a URL like:
@@ -1082,7 +1169,7 @@ Miscellaneous
 * Applied a patch from David D. Kilzer to Makefile.PL to add -I flags
   to the various invocations of perl that we missed, and also to add
   a clean/FILES target for WriteMakefile().  See.
-  http://tt2.org/pipermail/templates/2002-January/002431.html
+  http://lists.tt2.org/pipermail/templates/2002-January/002431.html
 
 * Fixed Makefile.PL to warn, not die, about mandatory modules, leaving
   it to the definitions in the PREREQ_PM which the CPAN module can 
@@ -1106,7 +1193,7 @@ Miscellaneous
 * Changed both Perl and XS Stash modules to try to apply a SCALAR_OPS
   virtual method to a blessed object as a last-ditch chance if all else
   fails.  Thanks to Tony Bowden for reporting the problem.  See
-  http://tt2.org/pipermail/templates/2001-December/002263.html
+  http://lists.tt2.org/pipermail/templates/2001-December/002263.html
 
 * Added tie() method to DBI plugin which interfaces to the Tie::DBI 
   module, based on some plugin code sent to me courtesy of Dave 
@@ -1136,7 +1223,7 @@ Miscellaneous
 
 * Applied Craig's suggested fixes to the parser to correct potential
   precendence problems and added tests to the test suite.  See:
-  http://tt2.org/pipermail/templates/2001-November/002138.html
+  http://lists.tt2.org/pipermail/templates/2001-November/002138.html
 
 * Applied Leon's patch to Template::Service to delete the 'template'
   entry added to the variable hash at the end of processing.
@@ -1166,7 +1253,7 @@ Miscellaneous
   query to overwrite the _STH of the outer query causing the outer loop
   to end prematurely.  Thanks to Dave Hodgkinson, Craig Barratt and Simon
   Matthews for working on the problem and solution.  For more info, see
-  http://tt2.org/pipermail/templates/2001-November/002067.html
+  http://lists.tt2.org/pipermail/templates/2001-November/002067.html
 
 * Applied a patch from Aleksey Nogin to Makefile.PL to call bin/gifsplash
   with the '-i' option.  This fixes the problem reported by Kenny Flegal:
@@ -1192,7 +1279,7 @@ Miscellaneous
 * Fixed a bug in the parser which was missing a '^' anchor on the regex
   matching the TAGS directive, causing it to match anywhere.  Thanks to
   Dominic Mitchell and Adrian Howard for reporting and fixing the problem.
-  See http://tt2.org/pipermail/templates/2001-October/001760.html
+  See http://lists.tt2.org/pipermail/templates/2001-October/001760.html
 
 * Modified Template::Parser to correctly handle "\t" and "\r" in double
   quoted strings as well as "\n".  Added test to t/parser.t
