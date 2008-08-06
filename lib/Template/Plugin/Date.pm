@@ -95,11 +95,27 @@ sub format {
     }
     else {
         # if $time is numeric, then we assume it's seconds since the epoch
-        # otherwise, we try to parse it as a 'H:M:S D:M:Y' string
-        @date = (split(/(?:\/| |:|-)/, $time))[2,1,0,3..5];
-        return (undef, Template::Exception->new('date',
-               "bad time/date string:  expects 'h:m:s d:m:y'  got: '$time'"))
-            unless @date >= 6 && defined $date[5];
+        # otherwise, we try to parse it as either a 'Y:M:D H:M:S' or a
+        # 'H:M:S D:M:Y' string
+
+        my @parts = (split(/(?:\/| |:|-)/, $time));
+
+        if (@parts >= 6) {
+            if (length($parts[0]) == 4) {
+                # year is first; assume 'Y:M:D H:M:S'
+                @date = @parts[reverse 0..5];
+            }
+            else {
+                # year is last; assume 'H:M:S D:M:Y'
+                @date = @parts[2,1,0,3..5];
+            }
+        }
+
+        if (!@date) {
+            return (undef, Template::Exception->new('date',
+                   "bad time/date string:  " .
+                   "expects 'h:m:s d:m:y'  got: '$time'"));
+        }
         $date[4] -= 1;     # correct month number 1-12 to range 0-11
         $date[5] -= 1900;  # convert absolute year to years since 1900
         $time = &POSIX::mktime(@date);
@@ -204,9 +220,11 @@ Template::Plugin::Date - Plugin to generate formatted date strings
     # use current time and default format
     [% date.format %]
     
-    # specify time as seconds since epoch or 'h:m:s d-m-y' string
+    # specify time as seconds since epoch
+    # or as a 'h:m:s d-m-y' or 'y-m-d h:m:s' string
     [% date.format(960973980) %]
     [% date.format('4:20:36 21/12/2000') %]
+    [% date.format('2000/12/21 4:20:36') %]
     
     # specify format
     [% date.format(mytime, '%H:%M:%S') %]
@@ -262,8 +280,9 @@ as is returned by C<time()>.
 
     File last modified: [% date.format(filemod_time) %]
 
-The time/date can also be specified as a string of the form 'C<h:m:s d/m/y>'.
-Any of the characters C<: / -> or space may be used to delimit fields.
+The time/date can also be specified as a string of the form C<h:m:s d/m/y>
+or C<y/m/d h:m:s>.  Any of the characters : / - or space may be used to
+delimit fields.
 
     [% USE day = date(format => '%A', locale => 'en_GB') %]
     [% day.format('4:20:00 9-13-2000') %]  
