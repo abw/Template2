@@ -24,6 +24,26 @@ Toolkit.  Some of the plugins interface to external modules (detailed
 below) which should be downloaded from any CPAN site and installed
 before using the plugin.
 
+=head2 Assert
+
+New in 2.20!  The L<Assert|Template::Plugin::Assert> plugin adds an 
+C<assert> virtual method that you can use to catch undefined values.
+
+For example, consider this dotop:
+
+    [% user.name %]
+
+If C<user.name> is an undefined value then TT will silently ignore the 
+fact and print nothing.  If you C<USE> the C<assert> plugin then you
+can add the C<assert> vmethod between the C<user> and C<name> elements,
+like so:
+
+    [% user.assert.name %]
+
+Now, if C<user.name> is an undefined value, an exception will be thrown:
+
+    assert error - undefined value for name
+
 =head2 Autoformat
 
 The L<Autoformat|Template::Plugin::Autoformat> plugin is an interface to
@@ -215,6 +235,25 @@ then be traversed and presented through the Template Toolkit.
          END;
        END
     %]
+
+=head Scalar
+
+The Template Toolkit calls user-defined subroutines and object methods
+using Perl's array context by default.  
+
+    # TT2 calls object methods in array context by default
+    [% object.method %]
+
+This plugin module provides a way for you to call subroutines and methods 
+in scalar context.
+
+    [% USE scalar %]
+    
+    # force it to use scalar context
+    [% object.scalar.method %]
+    
+    # also works with subroutine references
+    [% scalar.my_sub_ref %]
 
 =head2 String
 
