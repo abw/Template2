@@ -54,7 +54,7 @@ use constant LOAD   => 3;   # mtime of template
 use constant NEXT   => 4;   # link to next item in cache linked list
 use constant STAT   => 5;   # Time last stat()ed
 
-our $VERSION = 2.93;
+our $VERSION = 2.94;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 
@@ -282,7 +282,7 @@ sub paths {
             unshift(@ipaths, @$dpaths);
             next;
         }
-        elsif (UNIVERSAL::can($dir, 'paths')) {
+        elsif (ref($dir) && UNIVERSAL::can($dir, 'paths')) {
             $dpaths = $dir->paths()
                 || return $self->error($dir->error());
             unshift(@ipaths, @$dpaths);
