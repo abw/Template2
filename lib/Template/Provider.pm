@@ -963,6 +963,7 @@ sub _template_content {
     local *FH;
     if (open(FH, "< $path")) {
         local $/;
+        binmode(FH);
         $data = <FH>;
         $mod_date = (stat($path))[9];
         close(FH);
