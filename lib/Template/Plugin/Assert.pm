@@ -119,7 +119,7 @@ For example, consider this dotop:
     [% user.name %]
 
 If C<user.name> is an undefined value then TT will silently ignore the 
-fact and print nothing.  If yoou C<USE> the C<assert> plugin then you
+fact and print nothing.  If you C<USE> the C<assert> plugin then you
 can add the C<assert> vmethod between the C<user> and C<name> elements,
 like so:
 
