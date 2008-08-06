@@ -383,8 +383,8 @@ sub _init {
             my $wdir = $dir;
             $wdir =~ s[:][]g if $^O eq 'MSWin32';
             $wdir =~ /(.*)/;  # untaint
-            $wdir = $1;
-            $wdir = File::Spec->catfile($cdir, $1);
+            $wdir = "$1";     # quotes work around bug in Strawberry Perl
+            $wdir = File::Spec->catfile($cdir, $wdir);
             File::Path::mkpath($wdir) unless -d $wdir;
         }
     }
