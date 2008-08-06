@@ -25,7 +25,8 @@ use locale;
 use base 'Template::Base';
 use Template::Constants;
 
-our $VERSION = 2.86;
+our $VERSION   = 2.86;
+our $AVAILABLE = { };
 
 
 #------------------------------------------------------------------------
@@ -378,25 +379,26 @@ sub html_line_break  {
 
 sub html_entity_filter_factory {
     my $context = shift;
+    my $haz;
+    
+    # if Apache::Util is installed then we use escape_html
+    $haz = $AVAILABLE->{ HTML_ENTITY } 
+       ||= eval { 
+             require Apache::Util;  
+             Apache::Utils::escape_html(''); 
+             \&Apache::Util::escape_html 
+           }
+       ||  eval { 
+             require HTML::Entities;
+             \&HTML::Entities::encode_entities 
+           }
+       ||  -1;      # we use -1 for "not available" because it's a true value
 
-    # if Apache::Util is installed then we use it
-    eval { 
-        require Apache::Util;
-        Apache::Util::escape_html('');
-    };
-    return \&Apache::Util::escape_html
-        unless $@;
-
-    # otherwise if HTML::Entities is installed then we use that
-    eval {
-        require HTML::Entities;
-    };
-    return \&HTML::Entities::encode_entities
-        unless $@;
-
-    return (undef, Template::Exception->new( html_entity => 
-                    'cannot locate Apache::Util or HTML::Entities' ));
-
+    return ref $haz eq 'CODE'
+        ? $haz
+        : (undef, Template::Exception->new( 
+            html_entity => 'cannot locate Apache::Util or HTML::Entities' )
+          );
 }
 
 
