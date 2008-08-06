@@ -385,7 +385,7 @@ sub process_file {
 
     # process file
     unless ($dryrun) {
-        $template->process($file, $replace, $destfile)
+        $template->process($file, $replace, $destfile, { binmode => 1 } )
             || print("  ! ", $template->error(), "\n");
 
         if ($preserve) {
