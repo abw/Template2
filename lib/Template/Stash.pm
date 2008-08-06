@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use Template::VMethods;
 
-our $VERSION = 2.90;
+our $VERSION = 2.91;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $PRIVATE = qr/^[_.]/;
 
