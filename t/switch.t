@@ -275,3 +275,22 @@ before
 matched
 after
 
+
+#-----------------------------------------------------------------------
+# regex metacharacter quoting
+# http://rt.cpan.org/Ticket/Display.html?id=24183
+#-----------------------------------------------------------------------
+
+-- test --
+[% foo = 'a(b)'
+   bar = 'a(b)';
+
+   SWITCH foo;
+     CASE bar;
+       'ok';
+     CASE;
+       'not ok';
+   END 
+%]
+-- expect --
+ok

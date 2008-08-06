@@ -197,8 +197,13 @@ In French, today's day is: [% time_locale(time, '%A', 'fr_FR') +%]
 
 -- test --
 [% USE date %]
-[% date.format('4:20:00 6-13-2000', '%H') %]
+[% date.format('4:20:00 13-6-2000', '%H') %]
+-- expect --
+04
 
+-- test --
+[% USE date %]
+[% date.format('2000-6-13 4:20:00', '%H') %]
 -- expect --
 04
 
@@ -250,4 +255,9 @@ not testing
 -- expect --
 12:59
 
-
+-- test --
+[% USE date;
+   date.format('2001/09/30 12:59:00', '%H:%M')
+-%]
+-- expect --
+12:59

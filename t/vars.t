@@ -23,7 +23,6 @@ use Template::Test;
 use Template::Stash;
 use Template::Constants qw( :status );
 use Template::Directive;
-
 use Template::Parser;
 $Template::Test::DEBUG = 0;
 $Template::Parser::DEBUG = 0;
@@ -620,3 +619,4 @@ e: 3
 -%]
 -- expect --
 55
+

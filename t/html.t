@@ -16,11 +16,11 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template;
 use Template::Test;
 use Template::Plugin::HTML;
-$^W = 1;
 
 my $DEBUG = grep(/-d/, @ARGV);
 $Template::Test::DEBUG =  $DEBUG;
