@@ -507,7 +507,9 @@ sub list_merge {
 sub list_slice {
     my ($list, $from, $to) = @_;
     $from ||= 0;
-    $to = $#$list unless defined $to;
+    $to    = $#$list unless defined $to;
+    $from += @$list if $from < 0;
+    $to   += @$list if $to   < 0;
     return [ @$list[$from..$to] ];
 }
 
