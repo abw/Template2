@@ -46,7 +46,15 @@ Outputs the string with all instances of the first argument (specified
 as a Perl regular expression) with the second.
 
     [% name = 'foo, bar & baz' %]
-    [% name.replace('\W+', '_') %]    # foo_bar_baz
+    [% name.replace('\W+', '_') %]        # foo_bar_baz
+
+You can use C<$1>, C<$2>, etc., to reference captured parts (in parentheses)
+in the regular expression.  Just be careful to I<single> quote the replacement
+string.  If you use I<double> quotes then TT will try and interpolate the
+variables before passing the string to the C<replace> vmethod.
+
+    [% name = 'FooBarBaz' %]
+    [% name.replace('([A-Z])', ' $1') %]  # Foo Bar Baz
 
 =head2 remove(pattern)
 
