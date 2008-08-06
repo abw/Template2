@@ -281,6 +281,7 @@ sub split_text {
     my $style = $self->{ STYLE }->[-1];
     my ($start, $end, $prechomp, $postchomp, $interp ) = 
         @$style{ qw( START_TAG END_TAG PRE_CHOMP POST_CHOMP INTERPOLATE ) };
+    my $tags_dir = $self->{ANYCASE} ? qr<TAGS>i : qr<TAGS>;
 
     my @tokens = ();
     my $line = 1;
@@ -362,7 +363,7 @@ sub split_text {
         # and now the directive, along with line number information
         if (length $dir) {
             # the TAGS directive is a compile-time switch
-            if ($dir =~ /^TAGS\s+(.*)/i) {
+            if ($dir =~ /^$tags_dir\s+(.*)/) {
                 my @tags = split(/\s+/, $1);
                 if (scalar @tags > 1) {
                     ($start, $end) = map { quotemeta($_) } @tags;

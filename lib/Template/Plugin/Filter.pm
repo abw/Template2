@@ -23,8 +23,10 @@ package Template::Plugin::Filter;
 use strict;
 use warnings;
 use base 'Template::Plugin';
+use Scalar::Util 'weaken';
 
-our $VERSION = 1.36;
+
+our $VERSION = 1.37;
 our $DYNAMIC = 0 unless defined $DYNAMIC;
 
 
@@ -60,6 +62,8 @@ sub init {
 
 sub factory {
     my $self = shift;
+    my $this = $self;
+    weaken($this);
 
     if ($self->{ _DYNAMIC }) {
         return $self->{ _DYNAMIC_FILTER } ||= [ sub {
@@ -67,17 +71,16 @@ sub factory {
             my $config = ref $args[-1] eq 'HASH' ? pop(@args) : { };
         
             return sub {
-                $self->filter(shift, \@args, $config);
+                $this->filter(shift, \@args, $config);
             };
         }, 1 ];
     }
     else {
         return $self->{ _STATIC_FILTER } ||= sub {
-            $self->filter(shift);
+            $this->filter(shift);
         };
     }
 }
-
 
 sub filter {
     my ($self, $text, $args, $config) = @_;

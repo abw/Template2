@@ -564,7 +564,7 @@ sub switch {
         $caseblock .= <<EOF;
 \$_tt_match = $match;
 \$_tt_match = [ \$_tt_match ] unless ref \$_tt_match eq 'ARRAY';
-if (grep(/^\$_tt_result\$/, \@\$_tt_match)) {
+if (grep(/^\\Q\$_tt_result\\E\$/, \@\$_tt_match)) {
 $block
     last SWITCH;
 }
