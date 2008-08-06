@@ -73,6 +73,7 @@ my $accept   = $config->accept;
 my $absolute = $config->absolute;
 my $relative = $config->relative;
 my $suffix   = $config->suffix;
+my $binmode  = $config->binmode;
 my $depends  = $config->depend;
 my $depsfile = $config->depend_file;
 my $srcdir   = $config->src
@@ -385,7 +386,8 @@ sub process_file {
 
     # process file
     unless ($dryrun) {
-        $template->process($file, $replace, $destfile, { binmode => 1 } )
+        $template->process($file, $replace, $destfile,
+            $binmode ? {binmode => $binmode} : undef)
             || print("  ! ", $template->error(), "\n");
 
         if ($preserve) {
@@ -521,6 +523,7 @@ sub read_config {
         'all|a'       => { DEFAULT => 0 },
         'define=s%',
         'suffix=s%',
+        'binmode=s',
         'ignore=s@',
         'copy=s@',
         'accept=s@',
@@ -698,9 +701,11 @@ File Dependencies Options:
    --depend_file FILE       Read file dependancies from FILE.
    --depend_debug           Enable debugging for dependencies
 
-
 File suffix rewriting (may appear multiple times)
    --suffix old=new         Change any '.old' suffix to '.new'
+
+File encoding options
+   --binmode=value          Set binary mode of output files
 
 Additional options to set Template Toolkit configuration items:
    --define var=value       Define template variable
@@ -957,6 +962,9 @@ Or on the command line,
 
 You can provide any number of different suffix mappings by repeating 
 this option.
+
+The C<binmode> option is used to set the encoding of the output file.
+For example use C<--binmode=:utf8> to set the output format to unicode.
 
 =head2 Template Dependencies
 
