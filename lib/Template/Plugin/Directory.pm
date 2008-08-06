@@ -160,6 +160,8 @@ sub throw {
     die (Template::Exception->new('Directory', $error));
 }
 
+1;
+
 __END__
 
 =head1 NAME
@@ -184,7 +186,7 @@ Template::Plugin::Directory - Plugin for generating directory listings
     [% FOREACH item = dir.list %]
        [% IF item.isdir %]
           Directory: [% item.name %]
-       [% ELSE 
+       [% ELSE %]
           File: [% item.name %]
        [% END %]
     [% END %]
