@@ -210,7 +210,7 @@ sub load {
               || return ($self->error(), Template::Constants::STATUS_ERROR);
 
           foreach my $dir (@$paths) {
-              $path = "$dir/$name";
+              $path = File::Spec->catfile($dir, $name);
               last INCPATH
                   if $self->_template_modified($path);
           }
