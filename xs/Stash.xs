@@ -45,8 +45,8 @@ extern "C" {
 }
 #endif
 
-#if 0
-#define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
+#if defined(_MSC_VER) || defined(__SUNPRO_C)
+#define debug()
 #else
 #ifdef WIN32
 #define debug(format)
