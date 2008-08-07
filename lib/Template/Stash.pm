@@ -22,6 +22,7 @@ package Template::Stash;
 use strict;
 use warnings;
 use Template::VMethods;
+use Scalar::Util 'blessed';
 
 our $VERSION = 2.91;
 our $DEBUG   = 0 unless defined $DEBUG;
@@ -383,7 +384,7 @@ sub undefined {
 sub _dotop {
     my ($self, $root, $item, $args, $lvalue) = @_;
     my $rootref = ref $root;
-    my $atroot  = (ref $root && "$root" eq $self);   # stringify $root to prevent overload madness
+    my $atroot  = (blessed $root && $root->isa(ref $self));
     my ($value, @result);
 
     $args ||= [ ];
