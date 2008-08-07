@@ -30,7 +30,7 @@ use Template::Service;
 use File::Basename;
 use File::Path;
 
-our $VERSION = '2.20';
+our $VERSION = '2.19_01';
 our $ERROR   = '';
 our $DEBUG   = 0;
 our $BINMODE = 0 unless defined $BINMODE;
