@@ -21,10 +21,6 @@ docs/README
 docs/src/FAQ/FAQ.html
 docs/src/FAQ/index.html
 docs/src/index.html
-docs/src/Library/HTML.html
-docs/src/Library/index.html
-docs/src/Library/PostScript.html
-docs/src/Library/Splash.html
 docs/src/Manual/Config.html
 docs/src/Manual/Credits.html
 docs/src/Manual/Directives.html
@@ -33,7 +29,6 @@ docs/src/Manual/index.html
 docs/src/Manual/Internals.html
 docs/src/Manual/Intro.html
 docs/src/Manual/Plugins.html
-docs/src/Manual/Refs.html
 docs/src/Manual/Syntax.html
 docs/src/Manual/Variables.html
 docs/src/Manual/Views.html
@@ -352,9 +347,6 @@ lib/Template/FAQ.pod
 lib/Template/Filters.pm
 lib/Template/Grammar.pm
 lib/Template/Iterator.pm
-lib/Template/Library/HTML.pod
-lib/Template/Library/PostScript.pod
-lib/Template/Library/Splash.pod
 lib/Template/Manual.pod
 lib/Template/Manual/Config.pod
 lib/Template/Manual/Credits.pod
@@ -363,7 +355,6 @@ lib/Template/Manual/Filters.pod
 lib/Template/Manual/Internals.pod
 lib/Template/Manual/Intro.pod
 lib/Template/Manual/Plugins.pod
-lib/Template/Manual/Refs.pod
 lib/Template/Manual/Syntax.pod
 lib/Template/Manual/Variables.pod
 lib/Template/Manual/Views.pod

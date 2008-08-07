@@ -1,4 +1,4 @@
-PERL=/usr/bin/perl  
+PERL=/usr/local/bin/perl  
 $PERL Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n \
 && make                \
 && make test           \
