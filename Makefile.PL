@@ -82,7 +82,7 @@ EOF
 # in this script, here defaulted to sensible values
 
 $TT_VERSION       = $Template::VERSION;
-$TT_PREFIX        = $PREFIX;
+$TT_PREFIX        = '';     # $PREFIX;
 $TT_IMAGES        = $IMAGES;
 $TT_BUILD_DOCS    = 'n';
 $TT_SPLASH_DOCS   = 'n';
@@ -274,20 +274,6 @@ Configuration complete.  You should now run '$MAKE', '$MAKE test' and
 then '$MAKE install'.   See the README file for further information.
 EOF
 
-message(<<EOF) if $TT_PREFIX;
-
-
-Installation Notes
-------------------
-
-Please note that the installation of the optional components and
-building of the HTML documentation is performed at the "make install"
-stage as the effective user at that time.  This implies that this user
-must have sufficient permission to install into the specified
-directory and that all created directories and files will be owned by
-them.
-
-EOF
 
 #========================================================================
 
