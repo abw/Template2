@@ -22,6 +22,7 @@
 package Template::Iterator;
 
 use strict;
+use warnings;
 use base 'Template::Base';
 use Template::Constants;
 use Template::Exception;

@@ -110,11 +110,6 @@ sub _init {
 }
 
 
-sub DEBUG {
-    my $self = shift;
-    print STDERR "DEBUG: ", @_;
-}
-
 sub debug {
     my $self = shift;
     my $msg  = join('', @_);
@@ -256,6 +251,11 @@ the caller will be appened to the message.
 This generates an error message such as:
 
     [My::Module] called foobar() at My/Module.pm line 6
+
+=head2 module_version()
+
+Returns the version number for a module, as defined by the C<$VERSION>
+package variable.
 
 =head1 AUTHOR
 

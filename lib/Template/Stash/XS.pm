@@ -11,8 +11,12 @@
 
 package Template::Stash::XS;
 
+use strict;
+use warnings;
 use Template;
 use Template::Stash;
+
+our $AUTOLOAD;
 
 BEGIN {
     require DynaLoader;
@@ -26,7 +30,6 @@ BEGIN {
     }
 }
 
-
 sub DESTROY {
     # no op
     1;
@@ -35,6 +38,7 @@ sub DESTROY {
 
 # catch missing method calls here so perl doesn't barf 
 # trying to load *.al files 
+
 sub AUTOLOAD {
     my ($self, @args) = @_;
     my @c             = caller(0);
@@ -123,7 +127,7 @@ Doug Steinwand E<lt>dsteinwand@citysearch.comE<gt>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2008 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

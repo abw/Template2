@@ -374,6 +374,17 @@ Returns an object reference or undef on error, as above.
 Instantiate a new template service object (default: L<Template::Service>).
 Returns an object reference or undef on error, as above.
 
+=head2 iterator(\%config)
+
+Instantiate a new template iterator object (default: L<Template::Iterator>).
+Returns an object reference or undef on error, as above.
+
+=head2 constants(\%config)
+
+Instantiate a new namespace handler for compile time constant folding
+(default: L<Template::Namespace::Constants>). Returns an object reference or
+undef on error, as above.
+
 =head2 instdir($dir)
 
 Returns the root directory of the Template Toolkit installation under
