@@ -25,15 +25,15 @@ my ($WIN32, $FLAVOUR, $PREFIX, $IMAGES, $MAKE);
 if ($^O eq 'MSWin32') {  # any others also?
     $WIN32   = 1;
     $FLAVOUR = 'Win32';
-    $PREFIX  = 'C:/Program Files/Template Toolkit 2';
-    $IMAGES  = '/tt2/images';
+#    $PREFIX  = 'C:/Program Files/Template Toolkit 2';
+#    $IMAGES  = '/tt2/images';
 #    $MAKE    = 'dmake';
 }
 else {
     $WIN32   = 0;
     $FLAVOUR = 'Unix';
-    $PREFIX  = '/usr/local/tt2';
-    $IMAGES  = '/tt2/images';
+#    $PREFIX  = '/usr/local/tt2';
+#    $IMAGES  = '/tt2/images';
 #    $MAKE    = 'make';
 }
 $MAKE=$Config{'make'}; 
@@ -65,12 +65,6 @@ arguments to 'perl Makefile.PL'.  e.g.
   perl Makefile.PL TT_PREFIX=/my/tt2/dir TT_ACCEPT=y
 
   TT_PREFIX      installation prefix     ($PREFIX)
-  TT_IMAGES      images URL              (/tt2/images)
-  TT_DOCS        build HTML docs         (y)
-  TT_SPLASH      use Splash! for docs    (y)
-  TT_THEME       Splash! theme           (default)
-  TT_EXAMPLES    build HTML examples     (y)
-  TT_EXTRAS      install optional extras (y)
   TT_XS_ENABLE   Enable XS Stash         (y)
   TT_XS_DEFAULT  Use XS Stash by default (y)
   TT_QUIET       no messages	         (n)
@@ -93,10 +87,10 @@ EOF
 $TT_VERSION       = $Template::VERSION;
 $TT_PREFIX        = $PREFIX;
 $TT_IMAGES        = $IMAGES;
-$TT_BUILD_DOCS    = 'y';
-$TT_SPLASH_DOCS   = 'y';
-$TT_EXAMPLES      = 'y';
-$TT_EXTRAS        = 'y';
+$TT_BUILD_DOCS    = 'n';
+$TT_SPLASH_DOCS   = 'n';
+$TT_EXAMPLES      = 'n';
+$TT_EXTRAS        = 'n';
 $TT_SPLASH_THEME  = 'default';
 $TT_XS_ENABLE     = 'y';
 $TT_XS_DEFAULT    = 'y';
@@ -168,11 +162,11 @@ welcome_message();
 version_check();
 mandatory_modules();
 optional_stash_xs();
-optional_extras();
-splash_images();
-html_docs();
-html_docstyle();
-html_examples();
+#optional_extras();
+#splash_images();
+#html_docs();
+#html_docstyle();
+#html_examples();
 write_defaults();
 
 print "\n";

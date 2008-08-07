@@ -69,7 +69,13 @@ WHAT'S NEW?
 -----------
 
 Version 2.20 fixes all known bugs.  It also adds the Scalar and Assert
-plugins.
+plugins.  The HTML documentation, examples, libraries and other bits
+and pieces are still provided with the distribution, but are no longer
+installed by the Makefile.PL.  If you want them (and very few people do,
+it seems), then you'll need to dig them out of the distribution by yourself
+(or uncomment the commented-out lines in Makefile.PL that handle the 
+installation).  This has been done in an effort to simplify the installation
+process.  All of the HTML documentation is available online at http://tt2.org/
 
 Version 2.19 fixed some minor bugs in both Perl and XS versions of the Template
 Stash, and fixed a problem with a test in the test suite failing under Win32.
