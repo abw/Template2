@@ -25,16 +25,14 @@ my ($WIN32, $FLAVOUR, $PREFIX, $IMAGES, $MAKE);
 if ($^O eq 'MSWin32') {  # any others also?
     $WIN32   = 1;
     $FLAVOUR = 'Win32';
-#    $PREFIX  = 'C:/Program Files/Template Toolkit 2';
-#    $IMAGES  = '/tt2/images';
-#    $MAKE    = 'dmake';
+    $PREFIX  = 'C:/Program Files/Template Toolkit 2';
+    $IMAGES  = '/tt2/images';
 }
 else {
     $WIN32   = 0;
     $FLAVOUR = 'Unix';
-#    $PREFIX  = '/usr/local/tt2';
-#    $IMAGES  = '/tt2/images';
-#    $MAKE    = 'make';
+    $PREFIX  = '/usr/local/tt2';
+    $IMAGES  = '/tt2/images';
 }
 $MAKE=$Config{'make'}; 
 
@@ -62,9 +60,8 @@ if (exists $ttconfig{ TT_HELP }) {
 The following options can be specified as command line 
 arguments to 'perl Makefile.PL'.  e.g.
 
-  perl Makefile.PL TT_PREFIX=/my/tt2/dir TT_ACCEPT=y
+  perl Makefile.PL TT_XS_DEFAULT=y TT_ACCEPT=y
 
-  TT_PREFIX      installation prefix     ($PREFIX)
   TT_XS_ENABLE   Enable XS Stash         (y)
   TT_XS_DEFAULT  Use XS Stash by default (y)
   TT_QUIET       no messages	         (n)
