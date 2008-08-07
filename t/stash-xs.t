@@ -59,6 +59,26 @@ sub now_is_the_time_to_test_a_very_long_method_to_see_what_happens {
     return $self->this_method_does_not_exist();
 }
 
+#-----------------------------------------------------------------------
+# another object without overloaded comparison.
+# http://rt.cpan.org/Ticket/Display.html?id=24044
+#-----------------------------------------------------------------------
+
+package CmpOverloadObject;
+
+use overload ('cmp' => 'compare_overload', '<=>', 'compare_overload');
+
+sub new { bless {}, shift };
+
+sub hello {
+    return "Hello";
+}
+
+sub compare_overload {
+    die "Mayhem!";
+}
+
+
 
 package main;
 
@@ -81,6 +101,7 @@ my $data = {
     bop => sub { return ( bless ({ name => 'an object' }, 'AnObject') ) }, 
     listobj => bless([10, 20, 30], 'ListObject'),
     hashobj => bless({ planet => 'World' }, 'HashObject'),
+    cmp_ol  => CmpOverloadObject->new(),
     clean   => sub {
         my $error = shift;
         $error =~ s/(\s*\(.*?\))?\s+at.*$//;
@@ -369,3 +390,10 @@ foo is { "" = "empty" "one" = "baz" }
 setting foo."" to quux
 foo is { "" = "full" "one" = "baz" }
 
+
+# Exercise the object with the funky overloaded comparison
+
+-- test --
+[% cmp_ol.hello %]
+-- expect --
+Hello

@@ -130,25 +130,6 @@ sub stringify {
     return "stringified '$$self'";
 }
 
-#-----------------------------------------------------------------------
-# another object without overloaded comparison.
-# http://rt.cpan.org/Ticket/Display.html?id=24044
-#-----------------------------------------------------------------------
-
-package CmpOverloadObject;
-
-use overload ('cmp' => 'compare_overload', '<=>', 'compare_overload');
-
-sub new { bless {}, shift };
-
-sub hello {
-    return "Hello";
-}
-
-sub compare_overload {
-    die "Mayhem!";
-}
-
 #------------------------------------------------------------------------
 # Another object for tracking down a bug with DBIx::Class where TT is 
 # causing the numification operator to be called.  Matt S Trout suggests
@@ -217,7 +198,6 @@ my $replace = {
     t1     => T1->new(a => 10),
     num    => Numbersome->new("Numbersome"),
     getnum => GetNumbersome->new,
-    cmp_ol => CmpOverloadObject->new(),
     %{ callsign() },
 };
 
@@ -365,13 +345,6 @@ foo stringified 'Test String' bar
 .undef error - barfed up
 .
 
-
-# Exercise the object with the funky overloaded comparison
-
--- test --
-[% cmp_ol.hello %]
--- expect --
-Hello
 
 #-----------------------------------------------------------------------
 # try and pin down the numification bug
