@@ -331,7 +331,7 @@ sub test_expect {
         
         # strip any trailing blank lines from expected and real output
         foreach ($expect, $output) {
-            s/\n*\Z//mg;
+            s/[\n\r]*\Z//mg;
         }
         
         $match = ($expect eq $output) ? 1 : 0;
