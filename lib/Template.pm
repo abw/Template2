@@ -888,8 +888,6 @@ Ignored and deleted.
         tag comments out the entire directive
     %]
 
-=back
-
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>

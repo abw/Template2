@@ -236,7 +236,7 @@ then be traversed and presented through the Template Toolkit.
        END
     %]
 
-=head Scalar
+=head2 Scalar
 
 The Template Toolkit calls user-defined subroutines and object methods
 using Perl's array context by default.  
