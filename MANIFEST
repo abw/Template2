@@ -460,6 +460,8 @@ t/parser.t
 t/plugins.t
 t/plusfile.t
 t/pod.t
+t/pod_coverage.t
+t/pod_kwalitee.t
 t/prefix.t
 t/proc.t
 t/process.t
