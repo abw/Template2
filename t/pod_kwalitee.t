@@ -1,6 +1,6 @@
 #============================================================= -*-perl-*-
 #
-# t/test_pod.t
+# t/pod_kwalitee.t
 #
 # Use Test::Pod (if available) to test the POD documentation.
 #
