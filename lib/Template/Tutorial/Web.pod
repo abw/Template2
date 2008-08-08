@@ -9,7 +9,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2008 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -37,12 +37,10 @@ L<Template::Manual> and the various sections within it. e.g
     perldoc Template::Manual            # index to manual
     perldoc Template::Manual::Config    # e.g. configuration options
 
-The documentation is now also distributed in HTML format in the 
-F<docs> sub-directory of the Template Toolkit distribution.
+The documentation is also available in HTML format to read online, or download
+from the Template Toolkit web site:
 
-You can also read it online at the Template Toolkit web site:
-
-    http://template-toolkit.org/docs/tutorial/Web.html
+    http://template-toolkit.org/docs/
 
 =head1 Introduction
 

@@ -105,10 +105,11 @@ Template Toolkit to generate other data formats including XML.
 The final section of the manual is L<Template::FAQ> which contains answers
 to some of the Frequently Asked Questions about the Template Toolkit.
 
-All of the documentation is also provided in HTML format in the 
-F<docs> sub-directory of the Template Toolkit distribution.  You can 
-also read it online at the Template Toolkit web site: 
-L<http://template-toolkit.org/>
+You can read the documentation in HTML format either online at the Template 
+Toolkit web site, L<http://template-toolkit.org/>, or by downloading the 
+HTML version of the documentation from 
+L<http://template-toolkit.org/download/index.html#html_docs> and unpacking
+it on your local machine.
 
 =head1 Author
 
