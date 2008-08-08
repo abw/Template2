@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use 5.006;
 use lib qw( ./lib );
 use Config;
 use File::Spec::Functions qw( catfile );
