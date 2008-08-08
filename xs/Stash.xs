@@ -24,10 +24,6 @@
 *   Be very familiar with the perlguts, perlxs, perlxstut and 
 *   perlapi manpages before digging through this code.
 *
-*---------------------------------------------------------------------
-*
-* $Id$
-*
 *=====================================================================*/
 
 
@@ -98,8 +94,6 @@ static SV*      hash_dot_keys(pTHX_ HV*, AV*);
 static SV*      hash_dot_values(pTHX_ HV*, AV*);
 static SV*      scalar_dot_defined(pTHX_ SV*, AV*);
 static SV*      scalar_dot_length(pTHX_ SV*, AV*);
-
-static char rcsid[]  = "$Id$";
 
 #define THROW_SIZE 64
 static char throw_fmt[] = "Can't locate object method \"%s\" via package \"%s\"";
@@ -1235,14 +1229,4 @@ set(root, ident, value, ...)
     OUTPUT:
     RETVAL
 
-
-#-----------------------------------------------------------------------
-# cvsid() - returns cvs id tag for this file
-#-----------------------------------------------------------------------
-SV *
-cvsid()
-    CODE:
-    RETVAL = newSVpvn(rcsid, strlen(rcsid));
-    OUTPUT:
-    RETVAL
 
