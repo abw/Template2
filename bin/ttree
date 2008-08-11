@@ -532,6 +532,7 @@ sub read_config {
         'depend_file|depfile=s' => { EXPAND => EXPAND_ALL },
         'template_module|module=s',
         'template_anycase|anycase',
+        'template_encoding|encoding=s',
         'template_eval_perl|eval_perl',
         'template_load_perl|load_perl',
         'template_interpolate|interpolate',
@@ -706,6 +707,7 @@ File suffix rewriting (may appear multiple times)
 
 File encoding options
    --binmode=value          Set binary mode of output files
+   --encoding=value         Set encoding of input files
 
 Additional options to set Template Toolkit configuration items:
    --define var=value       Define template variable
