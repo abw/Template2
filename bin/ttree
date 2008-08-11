@@ -388,7 +388,7 @@ sub process_file {
     unless ($dryrun) {
         $template->process($file, $replace, $destfile,
             $binmode ? {binmode => $binmode} : {})
-             || print("  ! ", $template->error(), "\n");
+            || print("  ! ", $template->error(), "\n");
 
         if ($preserve) {
             chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
