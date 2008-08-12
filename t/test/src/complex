@@ -15,3 +15,4 @@ This is the footer, author: [% template.author %], version: [% template.version+
 [% "- $x " FOREACH x = [3 2 1] %]
 [% END %]
 
+
