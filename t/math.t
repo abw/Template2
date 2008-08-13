@@ -34,7 +34,7 @@ __DATA__
 1
 
 -- test --
-[% USE Math; Math.atan2(42, 42).substr(0,19) %]
+[% USE Math; Math.atan2(42, 42).substr(0,17) %]
 -- expect --
 0.785398163397448
 
