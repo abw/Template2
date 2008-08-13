@@ -107,9 +107,10 @@
 # Parser
 #------------------------------------------------------------------------
 
-* Lists don't accept arbitrary expressions as elements.  In other words
-  you can't do this:   [% foo(bar + 1) %].  This has been fixed in the v3
-  parser.  
+* Lists don't accept arbitrary expressions as elements, although 
+  function arguments now do.  So you can do this: [% foo(bar + 1) %],
+  but you can't do this: [% foo = [bar + 1] %].  This has been fixed in 
+  the v3 parser.  
 
 * The parser isn't as intelligent as it could be about blocks of template
   code commented out en masse.  The pre-scanner find the first terminating 
