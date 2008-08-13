@@ -37,10 +37,7 @@ To install the Template Toolkit from the command line:
     $ make test
     $ make install    
 
-The Makefile.PL will prompt for additional configuration options,
-including the installation of optional template libraries, HTML
-documentation and examples.  You can safely answer 'n' to all of these
-questions for a quick and basic installation.  
+The Makefile.PL will prompt for any additional configuration options.
 
 For further details, see the sections below on CONFIGURATION, BUILDING
 AND TESTING, and INSTALLATION.  The Template Toolkit web site also has
@@ -82,7 +79,7 @@ Interim and development versions may also be available, along with
 other useful information, news, publications, mailing list archives,
 etc., from the Template Toolkit web site:
 
-    http://www.template-toolkit.org/
+    http://template-toolkit.org/
 
 The Template Toolkit is distributed as a gzipped tar archive file:
 

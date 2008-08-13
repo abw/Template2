@@ -28,25 +28,6 @@ The internals document also contains information about preparing and
 applying patches, updating the documentation and various other 
 useful tips.
 
-The documentation is all built from source templates in the 'docsrc'
-directory.  This includes the 'README', 'INSTALL', 'HACKING' and
-'Changes' files which can be found in the 'docsrc/src/Release'
-directory.  The 'docsrc' bundle is a separate distribution available
-from the TT web site.  The 'docsrc/bin' directory contains scripts for
-rebuilding the documentation.  See the 'docsrc/README' file for info.
-
-If you're in the business of building a distribution (that usually
-means me, but hey, you never know) then you'll need to have the latest
-CVS sources which includes the 'bin/release' script.  This rebuilds
-the documentation, runs the tests, fixes up the Template/Config.pm
-file to a sane state and builds the distribution archive.  The
-'bin/docsrc' script builds the docsrc.tar.gz distribution for the
-latest release.
-
-This document will be integrated with Template::Manual::Internals
-at some point, probably as a separate hacking tutorial or something
-similar.
-
 
 AUTHOR
 ------
