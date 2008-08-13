@@ -3,22 +3,16 @@
 # TODO
 #
 # DESCRIPTION
-#   TODO list for the Template Toolkit version 2.19, containing
+#   TODO list for the Template Toolkit version 2.20, containing
 #   known bugs, limitations, planned enhancements, long term visions 
-#   and a few whacky ideas.
+#   and a few whacky ideas.  Development on TT2 has effectively 
+#   ceased for everything but bug fixes.  All new features and general
+#   enhancements are being saved for TT3.
 #
 # AUTHOR
-#   Andy Wardley   <abw@cpan.org>
+#   Andy Wardley   <abw@wardley.org>
 #
-#------------------------------------------------------------------------
-# $Id$
 #========================================================================
-
-#------------------------------------------------------------------------
-# For v2.20 
-#------------------------------------------------------------------------
-
-* Update docs on web site
 
 
 #------------------------------------------------------------------------
@@ -30,7 +24,7 @@
   gets cached in the FILTER_CACHE item of the context.  Hey presto -
   circular references.  The reset() method should probably clear the
   FILTER_CACHE.  Also need to check the plugins cache for similar
-  problems.
+  problems.  UPDATE: this may now have been fixed.
 
 * The handling of the DELIMITER parameter could be improved.  At the 
   moments it's hardcoded and hacked to Do The Right Thing for Win32
@@ -78,12 +72,6 @@
 
 * Extend the FAQ.
 
-* Document the Splash! library properly, once the interface is a little
-  more settled.
-
-* Examples for libraries (HTML, Splash & PostScript) should be integrated
-  into the documentation.
-
 
 #------------------------------------------------------------------------
 # Directives
@@ -121,7 +109,7 @@
 
 * Lists don't accept arbitrary expressions as elements.  In other words
   you can't do this:   [% foo(bar + 1) %].  This has been fixed in the v3
-  parser.  See http://www.tt2.org/v3/
+  parser.  
 
 * The parser isn't as intelligent as it could be about blocks of template
   code commented out en masse.  The pre-scanner find the first terminating 
@@ -297,64 +285,4 @@ General thoughts:
   to anything data related (stash) or application logic related
   (plugins, runtime code, etc).  It is the user interface facility
   within the engine.
-
-
-#------------------------------------------------------------------------
-# Splash!
-#------------------------------------------------------------------------
-
-The Splash! library will be extracted into a separate distribution at
-some point (probably when TT3 is released, possibly before).  At that
-point it will deprecated (read: not supported by me any more) in favour
-of something better.
-
-The current implementation is a fairly ugly hack to get something up
-and running that's good enough to use.  It's mainly template driven
-and doesn't scale very well, particularly with global variables
-clashing all over the place.  My plan is that this will become a
-view-based system and will no doubt be a test-bed for the
-implementation of the view facility.
-
-To include:
-
-* Variable management for storing metadata relating to an
-  interface/view, protected from the rest of template space.
-
-* Also, style management for defining different styles (e.g. plain,
-  fancy,  icecold, whitehot) for different interface elements (e.g.
-  bars, borders, menu text) in different modes (e.g. selected, unselected),
-  or under different, possibly custom conditions (e.g. user preferences,
-  guest or logged in, etc.).
-
-* Clearly define API for different elements, allowing people to write
-  apps to the API which run across different conformant widget sets.
-
-* support themes which define a set of styles
-
-* May be wise to move Splash out to a separate distribution.
-
-Randal Schwartz highlighted some problems with non-compliant HTML
-being generated.  These include:
-
-* no DOCTYPE declaration (added to html/header)
-
-* ALT attribute missing from many <img> tags
-
-* <font ...><table>...</table></font> is illegal (not sure where this
-  gets done)
-
-* <tr> shouldn't have HEIGHT attribute
-
-* <H3> block element inside inline element
-
-* <A> not allowed here (not sure)
-
-
-#------------------------------------------------------------------------
-# Test Suite
-#------------------------------------------------------------------------
-
-* t/file.t and t/directry.t are currently disable on Win32 until I get
-  a chance to fix a couple of minor bugs relating to '/' vs '\' file
-  separators.
 

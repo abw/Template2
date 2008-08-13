@@ -42,14 +42,6 @@ including the installation of optional template libraries, HTML
 documentation and examples.  You can safely answer 'n' to all of these
 questions for a quick and basic installation.  
 
-If you're running ActivePerl on a Win32 platform then you can use the
-Perl Package Manager (PPM) to install the Template Toolkit.  Chris
-Winters maintains a repository of pre-compiled PPM packages which contains
-the Template Toolkit, AppConfig and others.  For further information, see:
-
-    http://openinteract.sourceforge.net/
-
-
 For further details, see the sections below on CONFIGURATION, BUILDING
 AND TESTING, and INSTALLATION.  The Template Toolkit web site also has
 further information about installation.
@@ -132,7 +124,7 @@ INSTALLING ON MICROSOFT WIN32 PLATFORMS
 
 For advice on using Perl under Microsoft Windows, have a look here:
 
-    http://win32.perl.org/wiki/index.php?title=Main_Page
+    http://win32.perl.org/
 
 If you're using Strawberry Perl then you can install the Template 
 Toolkit using the CPAN module as described above.
@@ -240,7 +232,7 @@ Don't forget to update your PERL5LIB environment variable if you do
 this, or add a line to your script to tell Perl where to find the files,
 e.g.
 
-    use lib qw( /home/abw/lib/perl5/site_perl/5.6.0 );
+    use lib qw( /home/abw/lib/perl5/site_perl/5.10.0 );
 
 
 AUTHOR
