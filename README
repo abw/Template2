@@ -3,7 +3,7 @@
 
                               Version 2.20
 
-                             7th August 2008
+                            13th August 2008
 
         Copyright (C) 1996-2008 Andy Wardley.  All Rights Reserved
 
@@ -14,7 +14,13 @@
 QUICK START (see INSTALL for further details)
 -----------
 
-The latest version of the Template Toolkit can be retrieved from:
+If you have the CPAN module installed then you can install the Template
+Toolkit like this from the command line:
+
+    $ cpan Template
+
+Otherwise you can install from source code. The latest version of the Template
+Toolkit can be retrieved from:
 
     http://www.cpan.org/modules/by-module/Template/
 
@@ -23,14 +29,14 @@ Available from CPAN in:
 
     http://www.cpan.org/authors/Andy_Wardley/
 
-To install the Template Toolkit:
+To install the Template Toolkit from the command line:
 
-    tar zxf Template-Toolkit-2.20.tar.gz
-    cd Template-Toolkit-2.20
-    perl Makefile.PL
-    make
-    make test
-    make install    
+    $ tar zxf Template-Toolkit-2.20.tar.gz
+    $ cd Template-Toolkit-2.20
+    $ perl Makefile.PL
+    $ make
+    $ make test
+    $ make install    
 
 The Makefile.PL will prompt for additional configuration options,
 including the installation of optional template libraries, HTML
@@ -44,8 +50,8 @@ the Template Toolkit, AppConfig and others.  For further information, see:
 
     http://openinteract.sourceforge.net/
 
-
-For further details on installation, see the separate INSTALL file.
+For further details on installation, see the separate INSTALL file
+and http://template-toolkit.org/download/index.html
 
 
 DESCRIPTION
@@ -300,7 +306,7 @@ To subscribe to the mailing list, send an email to:
 with the message 'subscribe' in the body.  You can also use the web 
 interface to subscribe or browse the archives:
 
-    http://www.template-toolkit.org/mailman/listinfo/templates
+    http://mail.template-toolkit.org/mailman/listinfo/templates
 
 A low-volume, moderated mailing list exists for announcements about new
 releases of the Template Toolkit and related products.  To subscribe, send
@@ -311,7 +317,7 @@ an email to:
 with the message 'subscribe' in the body.  A web interface also exists
 for subscription and browsing the archives:
 
-    http://www.template-toolkit.org/mailman/listinfo/templates-announce
+    http://mail.template-toolkit.org/mailman/listinfo/templates-announce
 
 For information about commercial support and consultancy for the Template 
 Toolkit, please contact the author.
