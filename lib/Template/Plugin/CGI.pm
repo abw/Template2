@@ -31,9 +31,9 @@ sub new {
     CGI->new(@_);
 }
 
-package CGI;
+# monkeypatch CGI::params() method to Do The Right Thing in TT land
 
-sub params {
+sub CGI::params {
     my $self = shift;
     local $" = ', ';
 
