@@ -11,6 +11,17 @@
 #========================================================================
 
 #------------------------------------------------------------------------
+# Version 2.21 - Not yet released
+#------------------------------------------------------------------------
+
+* Tweaked Template::Parser to work better with the ANYCASE option.  It
+  now knows that anything following a dotop cannot be a keyword so that
+  you can write data.last without the 'last' bit being interpreted as the 
+  LAST keyword.  Thanks to Sean McAfee for the post that inspired it.
+  http://lists.tt2.org/pipermail/templates/2008-September/010462.html
+
+
+#------------------------------------------------------------------------
 # Version 2.20 - 13th August 2008
 #------------------------------------------------------------------------
 

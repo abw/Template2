@@ -75,8 +75,9 @@ my $tt = [
 ];
 
 my $replace = &callsign;
-$replace->{ alist } = [ 'foo', 0, 'bar', 0 ];
+$replace->{ alist  } = [ 'foo', 0, 'bar', 0 ];
 $replace->{ wintxt } = "foo\r\n\r\nbar\r\n\r\nbaz";
+$replace->{ data   } = { first => 11, last => 42 };
 
 test_expect(\*DATA, $tt, $replace);
 
@@ -102,6 +103,12 @@ this is a
 this is a
 =
 end
+
+-- test --
+[% data.first; ' to '; data.last %]
+-- expect --
+11 to 42
+
 
 #------------------------------------------------------------------------
 # tt2
