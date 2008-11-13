@@ -252,10 +252,10 @@ sub process_tree {
                 next FILE;
             }
         }
-        
+
         # check against acceptance list
         if (@$accept) {
-            unless (grep { $path =~ /$_/ } @$accept) {
+            unless ((-d $abspath && $recurse) || grep { $path =~ /$_/ } @$accept) {
                 printf "  - %-32s (not accepted)\n", $path
                     if $verbose;
                 next FILE;
