@@ -86,16 +86,15 @@ sub text {
     my $textref = $self->[ TEXT ];
     
     if ($newtextref) {
-	$$newtextref .= $$textref if $textref && $textref ne $newtextref;
-	$self->[ TEXT ] = $newtextref;
-	return '';
-	
+        $$newtextref .= $$textref if $textref && $textref ne $newtextref;
+        $self->[ TEXT ] = $newtextref;
+        return '';
     }
     elsif ($textref) {
-	return $$textref;
+        return $$textref;
     }
     else {
-	return '';
+        return '';
     }
 }
 
@@ -129,11 +128,11 @@ sub select_handler {
     @hlut{ @options } = (1) x @options;
 
     while ($type) {
-	return $type if $hlut{ $type };
+        return $type if $hlut{ $type };
 
-	# strip .element from the end of the exception type to find a 
-	# more generic handler
-	$type =~ s/\.?[^\.]*$//;
+        # strip .element from the end of the exception type to find a 
+        # more generic handler
+        $type =~ s/\.?[^\.]*$//;
     }
     return undef;
 }
