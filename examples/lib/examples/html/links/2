@@ -1,4 +1,0 @@
-[% PROCESS html/link 
-    link = 'http://www.tt2.org/'
-    text = 'Template Toolkit Web Site'
-%]

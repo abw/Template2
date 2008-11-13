@@ -1,3 +1,0 @@
-[% INCLUDE html/button 
-     text = "Hello World"
-%]

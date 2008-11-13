@@ -1,3 +1,0 @@
-<a href="http://www.template-toolkit.org/"><img
-src="[% splash.images.replace('splash$', 'tt2power.gif') # ugly hack %]"
-width="78" height="47" border="0" alt="Powered by Template Toolkit"></a>

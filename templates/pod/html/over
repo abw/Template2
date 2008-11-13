@@ -1,4 +1,0 @@
-[% INCLUDE html/list 
-     indent  = item.indent
-     content = view.print(item.content)
--%]

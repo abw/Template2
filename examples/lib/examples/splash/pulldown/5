@@ -1,7 +1,0 @@
-<div align="right">
-[% WRAPPER splash/box bgcol='grey50' pad=10 width='20%';
-       PROCESS splash/pulldown select=2 width='100%' bgcol='grey50';
-   END;
-%]
-</div>
-	

@@ -1,7 +1,0 @@
-[% TAGS star %]
-
-=head1 DESCRIPTION
-
-The PostScript library contains a number of templates for generating
-PostScript pages.  It's very new, very incomplete, very ad-hoc and
-isn't yet documented.

@@ -1,3 +1,0 @@
-[% INCLUDE splash/text
-           content = "Hello World" 
-%]

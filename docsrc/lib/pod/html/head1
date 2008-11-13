@@ -1,9 +1,0 @@
-[% t = vq.print(item.title);
-   RETURN IF t == 'NAME';
--%]
-[% TAGS star -%]
-[% WRAPPER section
-    title="[* t *]"
--%]
-[*- view.print(item.content) -*]
-[%- END %]

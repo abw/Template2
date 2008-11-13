@@ -1,3 +1,0 @@
-[% WRAPPER html/row + html/cell %]
-   <hr>
-[% END %]

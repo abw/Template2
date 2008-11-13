@@ -1,4 +1,0 @@
-[% INCLUDE html/button 
-    text = "Index Page"
-    link = "index.html"
-%]

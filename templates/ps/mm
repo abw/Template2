@@ -1,4 +1,0 @@
-[% global.ps.loaded.mm = 1 -%]
-/mm { 
-    72 mul 25.4 div 
-} bind def

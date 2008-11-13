@@ -1,4 +1,0 @@
-[%  WRAPPER html/cell + source;
-	INSERT $file;
-    END
--%]

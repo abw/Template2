@@ -1,8 +1,0 @@
-id     => '[% book.id %]',
-name   => '[% book.name %]',
-title  => '[% book.title %]',
-url    => '[% book.html %]',
-uplink  => '[% elems = book.html.split('/'); 
-		 dud = elems.shift;  elems.join('/').replace('[^\/]+', '..') %]',
-author => '[% book.author or 'abw' %]',
-about  => '[% book.about %]',

@@ -1,4 +1,0 @@
-[% INCLUDE html/item 
-     title   = view.print(item.title)
-     content = view.print(item.content)
--%]

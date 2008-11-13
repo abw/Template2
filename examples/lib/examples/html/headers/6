@@ -1,9 +1,0 @@
-[% WRAPPER html/page 
-     title = 'Template Toolkit'
-     bgcol = '#ffffff'
-     headers = '<META name="keywords" content="...">'
-%]
-
-...page content goes here...
-
-[% END %]

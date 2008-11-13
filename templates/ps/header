@@ -1,6 +1,0 @@
-[% PROCESS ps/reset UNLESS no_ps_reset -%]
-%!PS-Adobe-3.0
-[%- IF title +%]
-%%Title: [% title +%]
-[%  END -%]
-%%EndComments

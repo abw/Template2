@@ -1,1 +1,0 @@
-[% item.text IF item.format.search('html') -%]

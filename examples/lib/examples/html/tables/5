@@ -1,6 +1,0 @@
-[% WRAPPER html/table + html/row + html/cell
-     col = rgb.red.mid
-     pad = 6
-%]
-<font color="[% rgb.white %]">Hello World!</font>
-[% END %]

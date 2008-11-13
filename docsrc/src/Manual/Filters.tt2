@@ -1,7 +1,0 @@
-=head1 DESCRIPTION
-
-[% USE wrap; page.intro | wrap(72) %]
-
-=head1 STANDARD FILTERS
-
-[% PROCESS misc/filters %]

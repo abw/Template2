@@ -1,8 +1,0 @@
-[%  USE date;
-
-    tt = {
-    	version => ttversion, 
-        release => date.format(format = '%d %B %Y')
-    };
-
--%]

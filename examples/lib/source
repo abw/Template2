@@ -1,8 +1,0 @@
-[% IF n %]<b>Source #[% n %]:</b>[% END %]
-<ul>
-<pre>[% content
-        | html			    # escape HTML
-        | replace("\\[\%", "<b>[\%")    # make TT bold
-        | replace("%\]", "%\]</b>")	    # end bold
-%]</pre>
-</ul>

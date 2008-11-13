@@ -1,6 +1,0 @@
-The splash/tabset template generates a set of tabs from the 
-splash/tab template.  If there are more tabs in the set than 
-denoted by the 'tab.limit' style value (currently set to
-[% splash.style.default.tab.limit %]) then a scrolling tabset is created
-showing the current selected tab along with the previous and next 
-tabs in the set.

@@ -1,9 +1,0 @@
-[% WRAPPER html/table %]
-<tr>
-  [%- FOREACH item = [ 'Foo', 'Bar', 'Baz' ] %]
-  <td>
-    [% item %]
-  </td>
-  [%- END %]
-</tr>
-[% END %]

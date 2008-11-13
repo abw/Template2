@@ -1,7 +1,0 @@
-[%  INCLUDE splash/menu 
-	buttons = navigate 
-#	left    = navleft 
-#        right   = navright 
-        select  = 0
-    IF navigate.size 
--%]

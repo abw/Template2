@@ -1,7 +1,0 @@
-<li><a href="#[% title.replace('\W+', '_') %]">[% title %]</a>
-[% IF subs -%]
-[% FOREACH item = subs -%]
-<br>- <a href="#[% item.replace('\W+', '_') %]">[% item %]</a>
-[% END -%]
-[% END -%]
-

@@ -1,4 +1,0 @@
-The splash/bar template is a variation on splash/button, having
-rounded corners at the top and square corners at the bottom (or
-vice-versa when the 'invert' flag is set true).  It can be used to
-create rounded header/footer bars for panels, simple tabs, and so on.

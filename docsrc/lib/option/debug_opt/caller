@@ -1,3 +1,0 @@
-This option causes all debug messages that aren't newline terminated
-to have the file name and line number of the caller appended to them.
-

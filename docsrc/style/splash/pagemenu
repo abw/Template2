@@ -1,3 +1,0 @@
-[%  FOREACH button = pagemenu -%]
-[&nbsp;[% INCLUDE splash/text content=button.text select=0 col='white' link=button.link %]&nbsp;]
-[% END %]

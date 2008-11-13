@@ -1,3 +1,0 @@
-<div align="center">
-[% INCLUDE html/menu select=2 left=1 right=1 %]
-</div>

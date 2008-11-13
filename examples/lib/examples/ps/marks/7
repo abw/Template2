@@ -1,5 +1,0 @@
-[%  # ps/cross loads ps/mm anyway
-    PROCESS ps/cross radius='10 mm'
--%]
-
-20 mm 20 mm cross

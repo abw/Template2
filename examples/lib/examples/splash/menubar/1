@@ -1,1 +1,0 @@
-[% INCLUDE splash/menubar select=2 content='Template Toolkit' %]

@@ -1,4 +1,0 @@
-The splash/panel template generates a panel which can be positioned
-within a splash/frame.  A frame can support multiple panels.  In 
-implementation terms, a frame is an HTML table and a panel is a 
-tr/td combination.

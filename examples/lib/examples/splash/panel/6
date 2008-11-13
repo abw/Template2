@@ -1,9 +1,0 @@
-[%  WRAPPER splash/frame 
-            width  = "100%"
-	    style  = splash.style.select
-    ;
-	"First  Panel" WRAPPER splash/panel
-	               style = splash.style.select;
-	"Second Panel" WRAPPER splash/panel;
-    END;
-%]

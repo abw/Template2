@@ -1,6 +1,0 @@
-[% INCLUDE html/edgebox 
-     border  = 1
-     pad     = 4
-     width   = '50%'
-     content = "The Cat Sat on the Mat"
-%]

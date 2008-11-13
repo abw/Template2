@@ -1,9 +1,0 @@
-[%# html/body: <body>...</body> element for HTML pages
-  #
-  # ARGS:
-  #   - html.body.*	    # any body attributes
-  #   - content         # body content
--%]
-[% USE HTML; HTML.element( body => html.body ) +%]
-[% content -%]
-</body>

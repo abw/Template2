@@ -1,5 +1,0 @@
-These directories contain the individual tests for each of the various
-components in the different libraries.  They are built into pages by 
-the templates in the ../../src directory.  If you add any tests in here
-then you'll also need to update the main template to tell it that there
-are additional tests (i.e. bump up the test 'count' number).

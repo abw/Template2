@@ -1,5 +1,0 @@
-[%  PROCESS ps/mm;
-    PROCESS ps/ring;
-%]
-
-20 mm 20 mm ring

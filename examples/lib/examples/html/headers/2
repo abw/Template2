@@ -1,4 +1,0 @@
-[% INCLUDE html/header 
-     title = 'Template Toolkit'
-     bgcol = '#ffffff'
-%]

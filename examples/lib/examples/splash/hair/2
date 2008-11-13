@@ -1,9 +1,0 @@
-[% WRAPPER splash/hair
-           col   = 'grey75'
-           bgcol = 'marine'
-           pad = 10
-%]
-This is the content
-<br>
-More content
-[% END %]

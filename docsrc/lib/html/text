@@ -1,7 +1,0 @@
-[% TAGS star -%]
-[% META book = '[* book.name *]'
-        page = '[* page.name *]'
-%]
-<pre>
-[* content | html | tt_tags *]
-</pre>

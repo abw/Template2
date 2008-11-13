@@ -1,1 +1,0 @@
-[% item | html | tt_quote_tags -%]

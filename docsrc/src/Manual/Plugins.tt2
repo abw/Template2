@@ -1,7 +1,0 @@
-[% TAGS star -%]
-
-=head1 DESCRIPTION
-
-[* USE wrap; page.intro | wrap(72) *]
-
-[* INCLUDE misc/plugins *]

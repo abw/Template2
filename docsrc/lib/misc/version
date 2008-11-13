@@ -1,7 +1,0 @@
-=head1 VERSION
-
-[% IF page.version -%]
-[% page.version %], distributed as part of the
-[% END -%]
-Template Toolkit version [% tt.version %], released on [% tt.release %].
-

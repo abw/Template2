@@ -1,3 +1,0 @@
-[% WRAPPER splash/bar invert=1 -%]
-Hello World
-[% END %]

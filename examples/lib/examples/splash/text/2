@@ -1,7 +1,0 @@
-[% # set default font face
-   splash.style.default.font.face = 'Helvetica, Arial, Sans-Serif' 
-%]
-
-[% WRAPPER splash/text %]
-The Meaning of it All
-[% END %]

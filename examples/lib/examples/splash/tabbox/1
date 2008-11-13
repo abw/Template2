@@ -1,4 +1,0 @@
-[% INCLUDE splash/tabbox
-	   title   = "Design Patterns"
-           content = "ISBN: 0-201-63361-2"
-%]

@@ -1,8 +1,0 @@
-[%  WRAPPER splash/button + splash/text
-	style   = splash.style.default
-	bold    = 1
-	link    = splash.homepage
-    ;
-	splash.name;
-    END;
--%]

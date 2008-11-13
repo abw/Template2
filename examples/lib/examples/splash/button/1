@@ -1,3 +1,0 @@
-[% INCLUDE splash/button 
-    content="Hello World" 
-%]

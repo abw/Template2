@@ -1,9 +1,0 @@
-=head1 AUTHOR
-
-[% author.name %] E<lt>[% author.email %]E<gt>
-[% IF author.home %]
-L<[% author.home %]|[% author.home %]>
-[% END %]
-[% "\n${page.authadd}" IF page.authadd %]
-
-

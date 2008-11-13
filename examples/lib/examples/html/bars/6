@@ -1,8 +1,0 @@
-[% INCLUDE html/edgebox 
-     edge    = rgb.blue.dark
-     fill    = rgb.grey.light
-     pad     = 4
-     width   = '50%'
-     align   = 'right'
-     content = "The Dog Sat on the Log"
-%]

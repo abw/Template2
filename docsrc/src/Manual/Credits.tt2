@@ -1,8 +1,0 @@
-=head1 DESCRIPTION
-
-[% USE wrap; page.intro | wrap(72) %]
-
-[% PROCESS misc/history %]
-
-[% PROCESS misc/contribs %]
-

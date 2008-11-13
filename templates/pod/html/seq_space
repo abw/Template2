@@ -1,1 +1,0 @@
-[% item.replace('\s', '&nbsp;') %]

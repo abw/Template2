@@ -1,8 +1,0 @@
-[% INCLUDE html/header 
-     title = 'Template Toolkit'
-     bgcol = '#ffffff'
-%]
-
-...page content goes here...
-
-[% PROCESS html/footer %]

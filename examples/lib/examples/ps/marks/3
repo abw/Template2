@@ -1,5 +1,0 @@
-[% # ps/ring loads ps/mm if necessary
-   PROCESS ps/ring 
-%]
-
-20 mm 20 mm ring

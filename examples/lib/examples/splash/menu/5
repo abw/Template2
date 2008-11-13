@@ -1,3 +1,0 @@
-<div align="right">
-[% PROCESS splash/menu select=2 width='60%' %]
-</div>

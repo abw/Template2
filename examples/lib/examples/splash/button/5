@@ -1,6 +1,0 @@
-[% WRAPPER splash/button + splash/text 
-     style = splash.style.select
-     link  = 'http://www.tt2.org/'
--%]
-Hello World
-[% END %]

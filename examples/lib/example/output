@@ -1,6 +1,0 @@
-[% WRAPPER html/cell %]
-    <b>Output #[% n %]:</b>
-    [% indent ? '<ul>' : '<p>' %]
-    [% INCLUDE $file %]
-    [% indent ? '</ul>' : '</p>' %]
-[% END %]

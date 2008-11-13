@@ -1,7 +1,0 @@
-[%  WRAPPER splash/box bgcol='grey75' border=1 pad=8;
-	INCLUDE splash/icon
-	    col = 'marine'
-	FOREACH img = [ 'ring', 'ringdot', 'dot' ];
-    END;
-%]
-	   	   

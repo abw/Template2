@@ -1,7 +1,0 @@
-[% IF navigate.size %]
-<div align="center">
-<br>
-[% PROCESS navigate %]
-</div>
-[% END %]
-[% PROCESS html/footer %]

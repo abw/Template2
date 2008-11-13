@@ -1,4 +1,0 @@
-[%# ARGS
-  #	link	    # link URL
-  #	text        # link text, defaults to link URL
--%]<a href="[% link %]">[% text or link %]</a>

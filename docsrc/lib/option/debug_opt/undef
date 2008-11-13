@@ -1,4 +1,0 @@
-This option causes the Template Toolkit to throw an 'undef' error
-whenever it encounters an undefined variable value.
-
-

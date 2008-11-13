@@ -1,5 +1,0 @@
-[% page.id %] => {
-[% PROCESS page/meta | indent(4) %]
-    prev    => '[% loop.prev.id %]',
-    next    => '[% loop.next.id %]',
-},
