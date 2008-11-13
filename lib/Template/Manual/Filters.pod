@@ -120,13 +120,22 @@ The C<html> filter is fast and simple but it doesn't encode the full
 range of HTML entities that your text may contain.  The C<html_entity>
 filter uses either the C<Apache::Util> module (which is written in C and
 is therefore faster) or the C<HTML::Entities> module (written in Perl but
-equally as comprehensive) to perform the encoding.  If one or other of
-these modules are installed on your system then the text will be
-encoded (via the C<escape_html()> or C<encode_entities()> subroutines
-respectively) to convert all extended characters into their
-appropriate HTML entities (e.g. converting 'C<é>' to 'C<&eacute;>').  If
-neither module is available on your system then an 'C<html_entity>' exception
-will be thrown reporting an appropriate message.   
+equally as comprehensive) to perform the encoding.  
+
+If one or other of these modules are installed on your system then the text
+will be encoded (via the C<escape_html()> or C<encode_entities()> subroutines
+respectively) to convert all extended characters into their appropriate HTML
+entities (e.g. converting 'C<é>' to 'C<&eacute;>'). If neither module is
+available on your system then an 'C<html_entity>' exception will be thrown
+reporting an appropriate message.
+
+If you want to force TT to use one of the above modules in preference to 
+the other, then call either of the L<Template::Filters> class methods:
+L<use_html_entities()|Template::Filters/use_html_entities()> or
+L<use_apache_util()|Template::Filters/use_apache_util()>.
+
+    use Template::Filters;
+    Template::Filters->use_html_entities;
 
 For further information on HTML entity encoding, see
 L<http://www.w3.org/TR/REC-html40/sgml/entities.html>.

@@ -30,16 +30,24 @@ $Template::Test::PRESERVE = $DEBUG;
 # behaviour of html filter depends on these being available
 #------------------------------------------------------------------------
 
-use constant HAS_HTML_Entities => eval { require HTML::Entities };
-use constant HAS_Apache_Util   => eval { require Apache::Util;
-				         Apache::Utils::escape_html(''); };
+use constant HAS_HTML_Entities => eval { 
+    require HTML::Entities;
+    1;
+};
+use constant HAS_Apache_Util   => eval { 
+    require Apache::Util;
+    Apache::Utils::escape_html('');
+    1;
+};
 
+#print "Has HTML::Entities: ", HAS_HTML_Entities ? 'yes' : 'no', "\n";
+#print "Has Apache::Util: ", HAS_Apache_Util ? 'yes' : 'no', "\n";
 
 my $html = -d 'templates' ? 'templates/html' : '../templates/html';
 die "cannot grok templates/html directory\n" unless -d $html;
 
 my $h = Template::Plugin::HTML->new('foo');
-ok( $h );
+ok( $h, 'created HTML plugin' );
 
 my $cfg = {
     INCLUDE_PATH => $html,
@@ -69,14 +77,19 @@ OK
 
 -- test --
 -- name html entity --
-[% TRY; 
-     text =
-      "Léon Brocard" | html_entity;
-   CATCH;
-     error;
-   END;
- "passed" IF text == "L&eacute;on Brocard";
- "passed" IF text == "L&#233;on Brocard";
+[%  TRY; 
+        text = "Léon Brocard" | html_entity;
+
+        IF text == "L&eacute;on Brocard";
+            'passed';
+        ELSIF text == "L&#233;on Brocard";
+            'passed';
+        ELSE;
+            "failed: $text";
+        END;
+    CATCH;
+        error;
+    END;
 %]
 -- expect --
 -- process --

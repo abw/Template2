@@ -377,21 +377,25 @@ sub html_line_break  {
 # modules can't be located.
 #------------------------------------------------------------------------
 
+sub use_html_entities {
+    require HTML::Entities;
+    return ($AVAILABLE->{ HTML_ENTITY } = \&HTML::Entities::encode_entities);
+}
+
+sub use_apache_util {
+    require Apache::Util;
+    Apache::Util::escape_html('');      # TODO: explain this
+    return ($AVAILABLE->{ HTML_ENTITY } = \&Apache::Util::escape_html);
+}
+
 sub html_entity_filter_factory {
     my $context = shift;
     my $haz;
     
     # if Apache::Util is installed then we use escape_html
     $haz = $AVAILABLE->{ HTML_ENTITY } 
-       ||= eval { 
-             require Apache::Util;  
-             Apache::Utils::escape_html(''); 
-             \&Apache::Util::escape_html 
-           }
-       ||  eval { 
-             require HTML::Entities;
-             \&HTML::Entities::encode_entities 
-           }
+       ||  eval { use_apache_util()   }
+       ||  eval { use_html_entities() }
        ||  -1;      # we use -1 for "not available" because it's a true value
 
     return ref $haz eq 'CODE'
@@ -686,6 +690,24 @@ that occurred.
 
 When the C<TOLERANT> option is set, errors are automatically downgraded to
 a C<STATUS_DECLINE> response.
+
+=head2 use_html_entities()
+
+This class method can be called to configure the C<html_entity> filter to use
+the L<HTML::Entities> module. An error will be raised if it is not installed
+on your system.
+
+    use Template::Filters;
+    Template::Filters->use_html_entities();
+
+=head2 use_apache_util()
+
+This class method can be called to configure the C<html_entity> filter to use
+the L<Apache::Util> module. An error will be raised if it is not installed on
+your system.
+
+    use Template::Filters;
+    Template::Filters->use_apache_util();
 
 =head1 CONFIGURATION OPTIONS
 

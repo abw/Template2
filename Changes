@@ -11,7 +11,7 @@
 #========================================================================
 
 #------------------------------------------------------------------------
-# Version 2.21 - Not yet released
+# Version 2.21 - Not yet officially released - currently at 2.20_01
 #------------------------------------------------------------------------
 
 * Tweaked Template::Parser to work better with the ANYCASE option.  It
@@ -19,6 +19,12 @@
   you can write data.last without the 'last' bit being interpreted as the 
   LAST keyword.  Thanks to Sean McAfee for the post that inspired it.
   http://lists.tt2.org/pipermail/templates/2008-September/010462.html
+
+* Fixed a broken test for Apache::Util in the html_entity filter.  Added
+  the use_html_entities() and use_apache_util() class methods to 
+  Template::Filters to allow end-user selection of one or the other.
+  http://rt.cpan.org/Public/Bug/Display.html?id=40870
+  http://template-toolkit.org/svnweb/Template2/revision/?rev=1177
 
 
 #------------------------------------------------------------------------
