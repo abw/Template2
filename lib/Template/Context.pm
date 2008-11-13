@@ -421,38 +421,38 @@ sub insert {
 
 
     FILE: foreach $file (@$files) {
-    my $name = $file;
+        my $name = $file;
 
-    if ($^O eq 'MSWin32') {
-        # let C:/foo through
-        $prefix = $1 if $name =~ s/^(\w{2,})://o;
-    }
-    else {
-        $prefix = $1 if $name =~ s/^(\w+)://;
-    }
-
-    if (defined $prefix) {
-        $providers = $self->{ PREFIX_MAP }->{ $prefix } 
-        || return $self->throw(Template::Constants::ERROR_FILE,
-                   "no providers for file prefix '$prefix'");
-    }
-    else {
-        $providers = $self->{ PREFIX_MAP }->{ default }
-        || $self->{ LOAD_TEMPLATES };
-    }
-
-    foreach my $provider (@$providers) {
-        ($text, $error) = $provider->load($name, $prefix);
-        next FILE unless $error;
-        if ($error == Template::Constants::STATUS_ERROR) {
-        $self->throw($text) if ref $text;
-        $self->throw(Template::Constants::ERROR_FILE, $text);
+        if ($^O eq 'MSWin32') {
+            # let C:/foo through
+            $prefix = $1 if $name =~ s/^(\w{2,})://o;
         }
-    }
-    $self->throw(Template::Constants::ERROR_FILE, "$file: not found");
+        else {
+            $prefix = $1 if $name =~ s/^(\w+)://;
+        }
+
+        if (defined $prefix) {
+            $providers = $self->{ PREFIX_MAP }->{ $prefix } 
+                || return $self->throw(Template::Constants::ERROR_FILE,
+                    "no providers for file prefix '$prefix'");
+        }
+        else {
+            $providers = $self->{ PREFIX_MAP }->{ default }
+                || $self->{ LOAD_TEMPLATES };
+        }
+
+        foreach my $provider (@$providers) {
+            ($text, $error) = $provider->load($name, $prefix);
+            next FILE unless $error;
+            if ($error == Template::Constants::STATUS_ERROR) {
+                $self->throw($text) if ref $text;
+                $self->throw(Template::Constants::ERROR_FILE, $text);
+            }
+        }
+        $self->throw(Template::Constants::ERROR_FILE, "$file: not found");
     }
     continue {
-    $output .= $text;
+        $output .= $text;
     }
     return $output;
 }
@@ -491,14 +491,14 @@ sub throw {
 
     # die! die! die!
     if (UNIVERSAL::isa($error, 'Template::Exception')) {
-    die $error;
+        die $error;
     }
     elsif (defined $info) {
-    die (Template::Exception->new($error, $info, $output));
+        die (Template::Exception->new($error, $info, $output));
     }
     else {
-    $error ||= '';
-    die (Template::Exception->new('undef', $error, $output));
+        $error ||= '';
+        die (Template::Exception->new('undef', $error, $output));
     }
 
     # not reached
@@ -528,11 +528,11 @@ sub catch {
     my ($self, $error, $output) = @_;
 
     if (UNIVERSAL::isa($error, 'Template::Exception')) {
-    $error->text($output) if $output;
-    return $error;
+        $error->text($output) if $output;
+        return $error;
     }
     else {
-    return Template::Exception->new('undef', $error, $output);
+        return Template::Exception->new('undef', $error, $output);
     }
 }
 
