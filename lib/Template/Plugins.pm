@@ -399,7 +399,7 @@ loaded.
         PLUGIN_BASE => [   'MyOrg::Template::Plugin',
                            'YourOrg::Template::Plugin'  ],
     });
-    
+
 =head2 LOAD_PERL
 
 The L<LOAD_PERL|Template::Manual::Config#LOAD_PERL> option can be set to allow
