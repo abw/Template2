@@ -43,16 +43,10 @@ use constant HAS_Apache_Util   => eval {
 #print "Has HTML::Entities: ", HAS_HTML_Entities ? 'yes' : 'no', "\n";
 #print "Has Apache::Util: ", HAS_Apache_Util ? 'yes' : 'no', "\n";
 
-my $html = -d 'templates' ? 'templates/html' : '../templates/html';
-die "cannot grok templates/html directory\n" unless -d $html;
-
 my $h = Template::Plugin::HTML->new('foo');
 ok( $h, 'created HTML plugin' );
 
-my $cfg = {
-    INCLUDE_PATH => $html,
-};
-
+my $cfg  = { };
 my $vars = {
     entities => HAS_HTML_Entities || HAS_Apache_Util || 0,
 };
@@ -124,24 +118,4 @@ if (a &lt; b &amp;&amp; c &gt; d) ...
 [% HTML.attributes(border => 1, cellpadding => 2).split.sort.join %]
 -- expect --
 border="1" cellpadding="2"
-
--- stop --
-# These are tests for the now defunct 'entity' option.
-# At some point this functionality should return elsewhere
-# so we'll keep the tests lying around in case we need them
-# again later.
-
--- test --
-[% FILTER html(entity = 1) -%]
-< &amp; >
-[%- END %]
--- expect --
-&lt; &amp; &gt;
-
--- test --
-[% FILTER html(entity = 1) -%]
-<foo> &lt;bar> <baz&gt; &lt;boz&gt;
-[%- END %]
--- expect --
-&lt;foo&gt; &lt;bar&gt; &lt;baz&gt; &lt;boz&gt;
 
