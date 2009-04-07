@@ -16,7 +16,7 @@
 
 * Deleted all the old HTML documentation (now available separately from
   http://tt2.org/download/index.html#html_docs), examples, libraries and
-  other cruft that was waaaay out of date and badly unloved.
+  other cruft that was way out of date and badly unloved.
 
 * Tweaked Template::Parser to work better with the ANYCASE option.  It
   now knows that anything following a dotop cannot be a keyword so that

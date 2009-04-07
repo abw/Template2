@@ -1,11 +1,11 @@
 
                             Template Toolkit
 
-                              Version 2.20
+                              Version 2.20_1
 
-                            13th August 2008
+                              7th April 2009
 
-        Copyright (C) 1996-2008 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -44,7 +44,19 @@ other offline document systems.
 WHAT'S NEW?
 -----------
 
-Version 2.20 fixes all known bugs.  It also adds the Scalar and Assert
+Version 2.21 (of which 2.20_1 is a developer pre-release) features a 
+complete clean-out of all the old HTML documentation, examples, libraries
+and other cruft that was way out of date and badly unloved.  A new 
+version of the HTML documentation is available for download from 
+http://tt2.org/download/index.html#html_docs.
+
+Version 2.21 also adds the STRICT option which reports the use of undefined
+variable values. The ANYCASE option has been improved so that you can write
+things like 'data.last' without the 'last' bit being interpreted as the LAST
+keyword. The xml filter is also new, providing a slightly more rigourous
+version of the html filter for use in XML documents.
+
+Version 2.20 fixed all known bugs.  It also added the Scalar and Assert
 plugins.  The HTML documentation, examples, libraries and other bits
 and pieces are still provided with the distribution, but are no longer
 installed by the Makefile.PL.  If you want them (and very few people do,
