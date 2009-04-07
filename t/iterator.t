@@ -56,6 +56,30 @@ ok( $i1->get_next()  eq 'bar' );
 $rest = $i1->get_all();
 ok( scalar @$rest == 5 );
 
+# get_all with a few values in the iterator
+my $i2 = Template::Iterator->new($data);
+($rest, $err) = $i2->get_all();
+is( scalar @$rest, 7 );
+ok( ! $err);
+($val, $err) = $i2->get_all();
+ok( ! $val);
+is( $err, Template::Constants::STATUS_DONE );
+
+# get_all with a single value.
+my $i3 = Template::Iterator->new(['foo']);
+($rest, $err) = $i3->get_all();
+is( scalar @$rest, 1 );
+is( pop @$rest, 'foo' );
+ok( ! $err);
+($val, $err) = $i3->get_all();
+ok( ! $val);
+is( $err, Template::Constants::STATUS_DONE );
+
+# get_all with an empty array
+my $i4 = Template::Iterator->new([]);
+($val, $err) = $i4->get_all();
+ok( ! $val);
+is( $err, Template::Constants::STATUS_DONE );
 
 test_expect(\*DATA, { POST_CHOMP => 1 }, $vars);
 

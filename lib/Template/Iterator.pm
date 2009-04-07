@@ -152,10 +152,30 @@ sub get_all {
     my ($max, $index) = @$self{ qw( MAX INDEX ) };
     my @data;
 
+    # handle cases where get_first() has yet to be called.
+    unless (defined $index) {
+        my ($first, $status) = $self->get_first;
+
+        # refresh $max and $index, after get_first updates MAX and INDEX
+        ($max, $index) = @$self{ qw( MAX INDEX ) };
+
+        # empty lists are handled here.
+        if ($status && $status == Template::Constants::STATUS_DONE) {
+            return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
+        }
+
+        push @data, $first;
+
+        ## if there's nothing left in the iterator, return the single value.
+        unless ($index < $max) {
+            return \@data;
+        }
+    }
+
     # if there's still some data to go...
     if ($index < $max) {
         $index++;
-        @data = @{ $self->{ _DATASET } } [ $index..$max ];
+        push @data, @{ $self->{ _DATASET } } [ $index..$max ];
         
         # update counters and flags
         @$self{ qw( INDEX COUNT FIRST LAST ) }
