@@ -31,6 +31,10 @@
 * Applied a ttree patch from Lyle Brooks to allow ttree to accept a 
   directory name as a command line argument.
 
+* Added the define_view() and define_views() method to Template::Context
+  and added the VIEWS option to pre-define views when the Template object
+  is created.  Thanks to Timmy Chan for providing the groundwork on this.
+  http://lists.tt2.org/pipermail/templates/2009-April/010689.html
 
 #------------------------------------------------------------------------
 # Version 2.20_1 (2.21 candidate) - 7th April 2009

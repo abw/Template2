@@ -76,9 +76,9 @@ Please let me know if you think anyone is missing from this list.
 Chuck Adams, Stephen Adkins, Ivan Adzhubey, Mark Anderson, Bradley Baetz,
 Thierry-Michel Barral, Craig Barratt, Stas Bekman, Robin Berjon, Tony Bowden,
 Neil Bowers, Leon Brocard, Lyle Brooks, Dave Cash, Piers Cawley, Darren
-Chamberlain, Eric Cholet, Nik Clayton, Tosh Cooey, Dave Cross, Chris Dean,
-Francois Desarmenien, Horst Dumcke, Mark Fowler, Michael Fowler, Kenny
-Gatdula, Axel Gerstmair, Dylan William Hardison, Perrin Harkins, Bryce
+Chamberlain, Timmy Chan, Eric Cholet, Nik Clayton, Tosh Cooey, Dave Cross,
+Chris Dean, Francois Desarmenien, Horst Dumcke, Mark Fowler, Michael Fowler,
+Kenny Gatdula, Axel Gerstmair, Dylan William Hardison, Perrin Harkins, Bryce
 Harrington, Dave Hodgkinson, Lubomir Host, Dave Howorth, Harald Joerg, Colin
 Johnson, Adam Kennedy, Vivek Khera, Rafael Kitover, Ivan Kurmanov, Hans von
 Lengerke, Jonas Liljegren, Simon Luff, Andy Maas, Paul Makepeace, Gervase
