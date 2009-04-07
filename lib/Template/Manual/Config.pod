@@ -1145,6 +1145,20 @@ This example will read the input files F</tmp/src/foo.html> and
 F</tmp/src/bar.html> and write the processed output to F</tmp/dest/foo.html>
 and F</tmp/dest/bar.html>, respectively.
 
+=head2 STRICT
+
+By default the Template Toolkit will silently ignore the use of undefined
+variables (a bad design decision that I regret).
+
+When the C<STRICT> option is set, the use of any undefined variables or 
+values will cause an exception to be throw.  The exception will have a 
+C<type> of C<var.undefined> and a message of the form 
+"undefined variable: xxx".
+
+    my $template = Template->new(
+        STRICT => 1
+    );
+
 =head2 DEBUG
 
 The C<DEBUG> option can be used to enable debugging within the various
