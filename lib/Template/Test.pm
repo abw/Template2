@@ -73,7 +73,7 @@ sub ntests {
     # the grand total of tests
     $ntests += $EXTRA + scalar @results;     
     $ok_count = 1;
-    print $ntests ? "1..$ntests\n" : "1..$ntests # skipped: $REASON\n";
+    print $ntests ? "1..$ntests\n" : "1..$ntests # skip $REASON\n";
     # flush cached results
     foreach my $pre_test (@results) {
         ok(@$pre_test);
