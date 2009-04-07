@@ -36,7 +36,16 @@
   modules.
 
 * Added the STRICT option which will cause the stash to throw an 
-  exception on encountering an undefined value.
+  exception on encountering an undefined value.  Thanks to Ben Tilly 
+  for the prod.
+
+* Applied a patch to Template::Iterator from Jonathon Padfield to make
+  get_all() do the right thing if get_first() hasn't been called.
+
+* Applied a patch to Template::Stash::Context from Ben Tilly to make
+  it easier to subclass.
+
+* Applied a patch from Robin Berjon to add the xml filter.
 
 
 #------------------------------------------------------------------------
