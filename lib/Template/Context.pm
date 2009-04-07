@@ -29,6 +29,13 @@ use Template::Config;
 use Template::Constants;
 use Template::Exception;
 
+# TODO: remove hard-coded references to Template::Exception and look also
+# for Badger::Exception
+use constant {
+    EXCEPTION        => 'Template::Exception',
+    BADGER_EXCEPTION => 'Badger::Exception',
+};
+
 our $VERSION = 2.98;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $DEBUG_FORMAT = "\n## \$file line \$line : [% \$text %] ##\n";
@@ -135,7 +142,7 @@ sub template {
             if ($error) {
                 if ($error == Template::Constants::STATUS_ERROR) {
                     # $template contains exception object
-                    if (UNIVERSAL::isa($template, 'Template::Exception')
+                    if (UNIVERSAL::isa($template, EXCEPTION)
                         && $template->type() eq Template::Constants::ERROR_FILE) {
                         $self->throw($template);
                     }
@@ -490,15 +497,20 @@ sub throw {
     local $" = ', ';
 
     # die! die! die!
-    if (UNIVERSAL::isa($error, 'Template::Exception')) {
+    if (UNIVERSAL::isa($error, EXCEPTION)) {
         die $error;
     }
+    elsif (UNIVERSAL::isa($error, BADGER_EXCEPTION)) {
+        # convert a Badger::Exception to a Template::Exception so that
+        # things continue to work during the transition to Badger
+        die EXCEPTION->new($error->type, $error->info);
+    }
     elsif (defined $info) {
-        die (Template::Exception->new($error, $info, $output));
+        die (EXCEPTION->new($error, $info, $output));
     }
     else {
         $error ||= '';
-        die (Template::Exception->new('undef', $error, $output));
+        die (EXCEPTION->new('undef', $error, $output));
     }
 
     # not reached
@@ -803,6 +815,7 @@ sub _init {
         $predefs->{ _DEBUG } = ( ($config->{ DEBUG } || 0)
                                  & &Template::Constants::DEBUG_UNDEF ) ? 1 : 0
                                  unless defined $predefs->{ _DEBUG };
+        $predefs->{ _STRICT } = $config->{ STRICT };
         
         Template::Config->stash($predefs)
             || return $self->error($Template::Config::ERROR);

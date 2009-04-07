@@ -30,6 +30,14 @@
   http://rt.cpan.org/Public/Bug/Display.html?id=40870
   http://template-toolkit.org/svnweb/Template2/revision/?rev=1177
 
+* Tweaked Template::Context to recognise Badger::Exception objects and
+  convert them to Template::Exception objects.  This is a temporary
+  measure to keep things working during the transition to Badger-based
+  modules.
+
+* Added the STRICT option which will cause the stash to throw an 
+  exception on encountering an undefined value.
+
 
 #------------------------------------------------------------------------
 # Version 2.20 - 13th August 2008
