@@ -46,6 +46,7 @@ our $FILTERS = {
     'html_break'      => \&html_para_break,
     'html_para_break' => \&html_para_break,
     'html_line_break' => \&html_line_break,
+    'xml'             => \&xml_filter,
     'uri'             => \&uri_filter,
     'url'             => \&url_filter,
     'upper'           => sub { uc $_[0] },
@@ -319,6 +320,26 @@ sub html_filter {
         s/</&lt;/g;
         s/>/&gt;/g;
         s/"/&quot;/g;
+    }
+    return $text;
+}
+
+
+#------------------------------------------------------------------------
+# xml_filter()                                           [% FILTER xml %]
+#
+# Same as the html filter, but adds the conversion of ' to &apos; which
+# is native to XML.
+#------------------------------------------------------------------------
+
+sub xml_filter {
+    my $text = shift;
+    for ($text) {
+        s/&/&amp;/g;
+        s/</&lt;/g;
+        s/>/&gt;/g;
+        s/"/&quot;/g;
+        s/'/&apos;/g;
     }
     return $text;
 }

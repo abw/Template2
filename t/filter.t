@@ -290,6 +290,13 @@ The &lt;cat&gt; sat on the &lt;mat&gt;
 &quot;It isn't what I expected&quot;, he replied.
 
 -- test --
+[% FILTER xml %]
+"It isn't what I expected", he replied.
+[% END %]
+-- expect --
+&quot;It isn&apos;t what I expected&quot;, he replied.
+
+-- test --
 [% FILTER format %]
 Hello World!
 [% END %]

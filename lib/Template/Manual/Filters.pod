@@ -140,6 +140,11 @@ L<use_apache_util()|Template::Filters/use_apache_util()>.
 For further information on HTML entity encoding, see
 L<http://www.w3.org/TR/REC-html40/sgml/entities.html>.
 
+=head1 xml
+
+Same as the C<html> filter, but adds C<&apos;> which is the fifth XML
+built-in entity.
+
 =head1 html_para
 
 This filter formats a block of text into HTML paragraphs.  A sequence of 
