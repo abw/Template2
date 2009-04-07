@@ -18,6 +18,16 @@
   properly.
   http://lists.tt2.org/pipermail/templates/2009-March/010678.html
 
+* Changed the ttree -v/--verbose option so be less verbose and only 
+  report on things that have changed.  To make it more verbose (like
+  previous versions), add a second -v/--verbose flag, e.g.
+
+    $ ttree -v -v
+
+* Also added the --summary option to tree to print a summary of what it
+  did, and the --color/--colour option to make it print its verbose 
+  messages in colour (on ANSI terminals).
+
 
 #------------------------------------------------------------------------
 # Version 2.20_1 (2.21 candidate) - 7th April 2009

@@ -63,6 +63,8 @@ unless (-f $RCFILE or grep(/^(-f|-h|--help)$/, @ARGV) ) {
 my $config   = read_config($RCFILE);
 my $dryrun   = $config->nothing;
 my $verbose  = $config->verbose || $dryrun;
+my $colour   = $config->colour;
+my $summary  = $config->summary;
 my $recurse  = $config->recurse;
 my $preserve = $config->preserve;
 my $all      = $config->all;
@@ -76,6 +78,8 @@ my $suffix   = $config->suffix;
 my $binmode  = $config->binmode;
 my $depends  = $config->depend;
 my $depsfile = $config->depend_file;
+my ($n_proc, $n_unmod, $n_skip, $n_copy, $n_mkdir) = (0) x 5;
+
 my $srcdir   = $config->src
     || die "Source directory not set (-s)\n";
 my $destdir  = $config->dest
@@ -161,6 +165,21 @@ my $DEP_DEBUG = $config->depend_debug();
 # pre-amble
 #------------------------------------------------------------------------
 
+if ($colour) {
+    no strict 'refs';
+    *red    = \&_red;
+    *green  = \&_green;
+    *yellow = \&_yellow;
+    *blue   = \&_blue;
+}
+else {
+    no strict 'refs';
+    *red    = \&_white;
+    *green  = \&_white;
+    *yellow = \&_white;
+    *blue   = \&_white;
+}
+
 if ($verbose) {
     local $" = ', ';
 
@@ -188,8 +207,8 @@ if ($verbose) {
 
         }
     }
-    print "\n";
-    print "NOTE: dry run, doing nothing...\n"
+    print "\n" if $verbose > 1;
+    print red("NOTE: dry run, doing nothing...\n")
         if $dryrun;
 }
 
@@ -209,6 +228,20 @@ if (@ARGV) {
 else {
     # implicitly process all file in source directory
     process_tree();
+}
+
+if ($summary || $verbose) {
+    my $format  = "%13d %s %s\n";
+    print "\n" if $verbose > 1;
+    print(
+        "     Summary: ",
+        $dryrun ? red("This was a dry run.  Nothing was actually done\n") : "\n",
+        green(sprintf($format, $n_proc,  $n_proc  == 1 ? 'file' : 'files', 'processed')),
+        green(sprintf($format, $n_copy,  $n_copy  == 1 ? 'file' : 'files', 'copied')),
+        green(sprintf($format, $n_mkdir, $n_mkdir == 1 ? 'directory' : 'directories', 'created')),
+        yellow(sprintf($format, $n_unmod, $n_unmod == 1 ? 'file' : 'files', 'skipped (not modified)')),
+        yellow(sprintf($format, $n_skip,  $n_skip  == 1 ? 'file' : 'files', 'skipped (ignored)'))
+    );
 }
 
 exit(0);
@@ -247,8 +280,9 @@ sub process_tree {
         # check against ignore list
         foreach $check (@$ignore) {
             if ($path =~ /$check/) {
-                printf "  - %-32s (ignored, matches /$check/)\n", $path
-                    if $verbose;
+                printf yellow("  - %-32s (ignored, matches /$check/)\n"), $path
+                    if $verbose > 1;
+                $n_skip++;
                 next FILE;
             }
         }
@@ -256,8 +290,9 @@ sub process_tree {
         # check against acceptance list
         if (@$accept) {
             unless ((-d $abspath && $recurse) || grep { $path =~ /$_/ } @$accept) {
-                printf "  - %-32s (not accepted)\n", $path
-                    if $verbose;
+                printf yellow("  - %-32s (not accepted)\n"), $path
+                    if $verbose > 1;
+                $n_skip++;
                 next FILE;
             }
         }
@@ -273,20 +308,22 @@ sub process_tree {
                 $target = "$destdir/$path";
                 unless (-d $target || $dryrun) {
                     mkpath($target, $verbose, $mode) or 
-                        die "Could not mkpath ($target): $!\n";
+                        die red("Could not mkpath ($target): $!\n");
 
                     # commented out by abw on 2000/12/04 - seems to raise a warning?
                     # chown($uid, $gid, $target) || warn "chown($target): $!\n";
 
-                    printf "  + %-32s (created target directory)\n", $path
+                    $n_mkdir++;
+                    printf green("  + %-32s (created target directory)\n"), $path
                         if $verbose;
                 }
                 # recurse into directory
                 process_tree($path);
             }
             else {
-                printf "  - %-32s (directory, not recursing)\n", $path
-                    if $verbose;
+                $n_skip++;
+                printf yellow("  - %-32s (directory, not recursing)\n"), $path
+                    if $verbose > 1;
             }
         }
         else {
@@ -355,32 +392,36 @@ sub process_file {
         }
     
         if ($desttime >= $srctime) {
-            printf "  - %-32s (not modified)\n", $file
-                if $verbose;
+            printf yellow("  - %-32s (not modified)\n"), $file
+                if $verbose > 1;
+            $n_unmod++;
             return;
         }
     }
     
     # check against copy list
     if ($copy_file) {
+        $n_copy++;
         unless ($dryrun) {
-            copy($absfile, $dest) or die "Could not copy ($absfile to $dest) : $!\n";
+            copy($absfile, $dest) or die red("Could not copy ($absfile to $dest) : $!\n");
 
             if ($preserve) {
-                chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
-                chmod($mode, $dest) || warn "chmod($dest): $!\n";
+                chown($uid, $gid, $dest) || warn red("chown($dest): $!\n");
+                chmod($mode, $dest) || warn red("chmod($dest): $!\n");
             }
         }
 
-        printf "  > %-32s (copied, matches /$check/)\n", $file
+        printf green("  > %-32s (copied, matches /$check/)\n"), $file
             if $verbose;
 
         return;
     }
 
+    $n_proc++;
+    
     if ($verbose) {
-        printf("  + %-32s", $file);
-        print " (changed suffix to $new_suffix)" if $new_suffix;
+        printf(green("  + %-32s"), $file);
+        print(green(" (changed suffix to $new_suffix)")) if $new_suffix;
         print "\n";
     }
 
@@ -388,11 +429,11 @@ sub process_file {
     unless ($dryrun) {
         $template->process($file, $replace, $destfile,
             $binmode ? {binmode => $binmode} : {})
-            || print("  ! ", $template->error(), "\n");
+            || print(red("  ! "), $template->error(), "\n");
 
         if ($preserve) {
-            chown($uid, $gid, $dest) || warn "chown($dest): $!\n";
-            chmod($mode, $dest) || warn "chmod($dest): $!\n";
+            chown($uid, $gid, $dest) || warn red("chown($dest): $!\n");
+            chmod($mode, $dest) || warn red("chmod($dest): $!\n");
         }
     }
 }
@@ -503,9 +544,13 @@ sub depend_time {
 #------------------------------------------------------------------------
 
 sub read_config {
-    my $file = shift;
-
-    my $config = AppConfig->new(
+    my $file    = shift;
+    my $verbose = 0;
+    my $verbinc = sub {
+        my ($state, $var, $value) = @_;
+        $state->{ VARIABLE }->{ verbose } = $value ? ++$verbose : --$verbose;
+    };
+    my $config  = AppConfig->new(
         { 
             ERROR  => sub { die(@_, "\ntry `$NAME --help'\n") }
         }, 
@@ -514,12 +559,14 @@ sub read_config {
         'dest|d=s'    => { EXPAND => EXPAND_ALL },
         'lib|l=s@'    => { EXPAND => EXPAND_ALL },
         'cfg|c=s'     => { EXPAND => EXPAND_ALL, DEFAULT => '.' },
-        'verbose|v'   => { DEFAULT => 0 },
+        'verbose|v'   => { DEFAULT => 0, ACTION => $verbinc },
         'recurse|r'   => { DEFAULT => 0 },
         'nothing|n'   => { DEFAULT => 0 },
         'preserve|p'  => { DEFAULT => 0 },
         'absolute'    => { DEFAULT => 0 },
         'relative'    => { DEFAULT => 0 },
+        'colour|color'=> { DEFAULT => 0 },
+        'summary'     => { DEFAULT => 0 },
         'all|a'       => { DEFAULT => 0 },
         'define=s%',
         'suffix=s%',
@@ -576,6 +623,28 @@ sub read_config {
 
     $config;
 }
+
+
+sub ANSI_escape {
+    my $attr = shift;
+    my $text = join('', @_);
+    return join("\n",
+        map {
+            # look for an existing escape start sequence and add new
+            # attribute to it, otherwise add escape start/end sequences
+            s/ \e \[ ([1-9][\d;]*) m/\e[$1;${attr}m/gx
+                ? $_
+                : "\e[${attr}m" . $_ . "\e[0m";
+        }
+        split(/\n/, $text, -1)   # -1 prevents it from ignoring trailing fields
+    );
+}
+
+sub _red(@)    { ANSI_escape(31, @_) }
+sub _green(@)  { ANSI_escape(32, @_) }
+sub _yellow(@) { ANSI_escape(33, @_) }
+sub _blue(@)   { ANSI_escape(34, @_) }
+sub _white(@)  { @_ }                   # nullop
 
 
 #------------------------------------------------------------------------
@@ -684,13 +753,17 @@ Options:
    -r      (--recurse)      Recurse into sub-directories
    -p      (--preserve)     Preserve file ownership and permission
    -n      (--nothing)      Do nothing, just print summary (enables -v)
-   -v      (--verbose)      Verbose mode
+   -v      (--verbose)      Verbose mode. Use twice for more verbosity: -v -v
    -h      (--help)         This help
    -s DIR  (--src=DIR)      Source directory
    -d DIR  (--dest=DIR)     Destination directory
    -c DIR  (--cfg=DIR)      Location of configuration files
    -l DIR  (--lib=DIR)      Library directory (INCLUDE_PATH)  (multiple)
    -f FILE (--file=FILE)    Read named configuration file     (multiple)
+
+Display options:
+   --colour / --color       Enable colo(u)rful verbose output.
+   --summary                Show processing summary.
 
 File search specifications (all may appear multiple times):
    --ignore=REGEX           Ignore files matching REGEX
