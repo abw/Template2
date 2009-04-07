@@ -28,6 +28,9 @@
   did, and the --color/--colour option to make it print its verbose 
   messages in colour (on ANSI terminals).
 
+* Applied a ttree patch from Lyle Brooks to allow ttree to accept a 
+  directory name as a command line argument.
+
 
 #------------------------------------------------------------------------
 # Version 2.20_1 (2.21 candidate) - 7th April 2009

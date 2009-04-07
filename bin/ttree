@@ -222,7 +222,13 @@ my $template = $ttmodule->new($ttopts)
 if (@ARGV) {
     # explicitly process files specified on command lines 
     foreach my $file (@ARGV) {
-        process_file($file, $srcdir ? "$srcdir/$file" : $file, force => 1);
+        my $path = $srcdir ? File::Spec->catfile($srcdir, $file) : $file;
+        if ( -d $path ) {
+            process_tree($file);
+        }
+        else {
+            process_file($file, $path, force => 1);
+        }
     }
 }
 else {
