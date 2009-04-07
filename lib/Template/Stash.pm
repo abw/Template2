@@ -22,11 +22,14 @@ package Template::Stash;
 use strict;
 use warnings;
 use Template::VMethods;
+use Template::Exception;
 use Scalar::Util 'blessed';
 
-our $VERSION = 2.91;
-our $DEBUG   = 0 unless defined $DEBUG;
-our $PRIVATE = qr/^[_.]/;
+our $VERSION    = 2.91;
+our $DEBUG      = 0 unless defined $DEBUG;
+our $PRIVATE    = qr/^[_.]/;
+our $UNDEF_TYPE = 'var.undef';
+our $UNDEF_INFO = 'undefined variable: %s';
 
 # alias _dotop() to dotop() so that we have a consistent method name
 # between the Perl and XS stash implementations
@@ -225,7 +228,9 @@ sub get {
         $result = $self->_dotop($root, $ident, $args);
     }
 
-    return defined $result ? $result : $self->undefined($ident, $args);
+    return defined $result 
+        ? $result 
+        : $self->undefined($ident, $args);
 }
 
 
@@ -349,8 +354,39 @@ sub update {
 #------------------------------------------------------------------------
 
 sub undefined {
-    my ($self, $ident, $args);
-    return '';
+    my ($self, $ident, $args) = @_;
+
+    if ($self->{ _STRICT }) {
+        # Sorry, but we can't provide a sensible source file and line without
+        # re-designing the whole architecure of TT (see TT3)
+        die Template::Exception->new(
+            $UNDEF_TYPE, 
+            sprintf(
+                $UNDEF_INFO, 
+                $self->_reconstruct_ident($ident)
+            )
+        ) if $self->{ _STRICT };
+    }
+    else {
+        # There was a time when I thought this was a good idea. But it's not.
+        return '';
+    }
+}
+
+sub _reconstruct_ident {
+    my ($self, $ident) = @_;
+    my ($name, $args, @output);
+    my @input = ref $ident eq 'ARRAY' ? @$ident : ($ident);
+
+    while (@input) {
+        $name = shift @input;
+        $args = shift @input || 0;
+        $name .= '(' . join(', ', map { /^\d+$/ ? $_ : "'$_'" } @$args) . ')'
+            if $args && ref $args eq 'ARRAY';
+        push(@output, $name);
+    }
+    
+    return join('.', @output);
 }
 
 

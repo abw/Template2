@@ -14,7 +14,7 @@
 *   Doug Steinwand <dsteinwand@citysearch.com>
 *
 * COPYRIGHT
-*   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
+*   Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
 *   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 *
 *   This module is free software; you can redistribute it and/or
@@ -269,7 +269,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
             
         }
         else if ((SvTYPE(SvRV(root)) == SVt_PVAV) && !sv_isobject(root)) {
-            /* root is an ARRAY, try list vmethods */
+            /* root is an ARRAY, try list virtuals */
             if (list_op(aTHX_ root, item, args, &result) == TT_RET_UNDEF) {
                 switch (tt_fetch_item(aTHX_ root, key_sv, args, &result)) {
                   case TT_RET_OK:
@@ -1150,6 +1150,7 @@ get(root, ident, ...)
     CODE:
     AV *args;
     int flags = get_debug_flag(aTHX_ root);
+    int n;
     STRLEN len;
     char *str;
 
@@ -1176,8 +1177,23 @@ get(root, ident, ...)
         RETVAL = dotop(aTHX_ root, ident, args, flags);
     }
 
-    if (!SvOK(RETVAL))
-        RETVAL = newSVpvn("", 0);       /* new empty string */
+    if (!SvOK(RETVAL)) {
+        dSP;
+        ENTER;
+        SAVETMPS;
+        PUSHMARK(SP);
+        XPUSHs(root);
+        XPUSHs(ident);
+        PUTBACK;
+        n = call_method("undefined", G_SCALAR);
+        SPAGAIN;
+        if (n != 1)
+            croak("undefined() did not return a single value\n");
+        RETVAL = SvREFCNT_inc(POPs);
+        PUTBACK;
+        FREETMPS;
+        LEAVE;
+    }
     else
         RETVAL = SvREFCNT_inc(RETVAL);
 
