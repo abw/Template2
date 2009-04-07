@@ -1120,7 +1120,7 @@ a default set of template blocks.
         },
     }); 
 
-=head2 VIEWS
+=head3 VIEWS
 
 The L<VIEWS|Template::Manual::Config#VIEWS> option can be used to pre-define 
 one or more L<Template::View> objects.
