@@ -473,6 +473,30 @@ objects.
         },
     }); 
 
+=head2 VIEWS
+
+The VIEWS option can be used to define one or more L<Template::View>
+objects.  They can be specified as a reference to a hash array or list 
+reference.
+
+    my $template = Template->new({
+        VIEWS => {
+            my_view => { prefix => 'my_templates/' },
+        },
+    });
+
+Be aware of the fact that Perl's hash array are unordered, so if you want to 
+specify multiple views of which one or more are based on other views, then
+you should use a list reference to preserve the order of definition.
+
+    my $template = Template->new({
+        VIEWS => [
+            bottom => { prefix => 'bottom/' },
+            middle => { prefix => 'middle/', base => 'bottom' },
+            top    => { prefix => 'top/',    base => 'middle' },
+        ],
+    });
+
 =head2 AUTO_RESET
 
 The C<AUTO_RESET> option is set by default and causes the local C<BLOCKS>

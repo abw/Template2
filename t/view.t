@@ -64,7 +64,7 @@ my $vars = {
     blessed_list => bless([ "Hello", "World" ], 'Blessed::List'),
 };
 
-my $template = Template->new();
+my $template = Template->new() || die Template->error;
 my $context  = $template->context();
 my $view     = $context->view( );
 ok( $view );
@@ -73,9 +73,38 @@ $view = $context->view( prefix => 'my' );
 ok( $view );
 match( $view->prefix(), 'my' );
 
-test_expect(\*DATA, undef, $vars);
+my $config = {
+    VIEWS => [
+        bottom => { prefix => 'bottom/' },
+        middle => { prefix => 'middle/', base => 'bottom' },
+    ],
+};
+        
+test_expect(\*DATA, $config, $vars);
 
 __DATA__
+-- test --
+-- name pre-defined bottom view --
+[% BLOCK bottom/list; "BOTTOM LIST: "; item.join(', '); END;
+   list = [10, 20 30];
+   bottom.print(list)
+%]
+-- expect --
+BOTTOM LIST: 10, 20, 30
+
+-- test --
+-- name pre-defined middle view --
+[% BLOCK bottom/list; "BOTTOM LIST: "; item.join(', '); END;
+   BLOCK middle/hash; "MIDDLE HASH: "; item.values.nsort.join(', '); END;
+   list = [10, 20 30];
+   hash = { pi => 3.142, e => 2.718 };
+   middle.print(list); "\n";
+   middle.print(hash); "\n";
+%]
+-- expect --
+BOTTOM LIST: 10, 20, 30
+MIDDLE HASH: 2.718, 3.142
+
 -- test --
 [% USE v = View -%]
 [[% v.prefix %]]

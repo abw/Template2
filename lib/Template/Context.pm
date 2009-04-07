@@ -28,6 +28,7 @@ use Template::Base;
 use Template::Config;
 use Template::Constants;
 use Template::Exception;
+use Scalar::Util 'blessed';
 
 # TODO: remove hard-coded references to Template::Exception and look also
 # for Badger::Exception
@@ -39,6 +40,7 @@ use constant {
 our $VERSION = 2.98;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $DEBUG_FORMAT = "\n## \$file line \$line : [% \$text %] ##\n";
+our $VIEW_CLASS   = 'Template::View';
 our $AUTOLOAD;
 
 #========================================================================
@@ -268,9 +270,9 @@ sub filter {
 sub view {
     my $self = shift;
     require Template::View;
-    return Template::View->new($self, @_)
+    return $VIEW_CLASS->new($self, @_)
         || $self->throw(&Template::Constants::ERROR_VIEW, 
-                        $Template::View::ERROR);
+                        $VIEW_CLASS->error);
 }
 
 
@@ -647,6 +649,49 @@ sub define_filter {
          "FILTER providers declined to store filter $name");
 }
 
+sub define_view {
+    my ($self, $name, $params) = @_;
+    my $base;
+
+    if (defined $params->{ base }) {
+        my $base = $self->{ STASH }->get($params->{ base });
+
+        return $self->throw(
+            &Template::Constants::ERROR_VIEW, 
+            "view base is not defined: $params->{ base }"
+        ) unless $base;
+
+        return $self->throw(
+            &Template::Constants::ERROR_VIEW, 
+            "view base is not a $VIEW_CLASS object: $params->{ base } => $base"
+        ) unless blessed($base) && $base->isa($VIEW_CLASS);
+        
+        $params->{ base } = $base;
+    }
+    my $view = $self->view($params);
+    $view->seal();
+    $self->{ STASH }->set($name, $view);
+}
+
+sub define_views {
+    my ($self, $views) = @_;
+    
+    # a list reference is better because the order is deterministic (and so
+    # allows an earlier VIEW to be the base for a later VIEW), but we'll 
+    # accept a hash reference and assume that the user knows the order of
+    # processing is undefined
+    $views = [ %$views ] 
+        if ref $views eq 'HASH';
+    
+    # make of copy so we don't destroy the original list reference
+    my @items = @$views;
+    my ($name, $view);
+    
+    while (@items) {
+        $self->define_view(splice(@items, 0, 2));
+    }
+}
+
 
 #------------------------------------------------------------------------
 # reset()
@@ -833,6 +878,10 @@ sub _init {
         } 
         keys %$blocks
     };
+
+    # define any VIEWS
+    $self->define_views( $config->{ VIEWS } )
+        if $config->{ VIEWS };
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # RECURSION - flag indicating is recursion into templates is supported
@@ -1071,6 +1120,19 @@ a default set of template blocks.
         },
     }); 
 
+=head2 VIEWS
+
+The L<VIEWS|Template::Manual::Config#VIEWS> option can be used to pre-define 
+one or more L<Template::View> objects.
+
+    my $context = Template::Context->new({
+        VIEWS => [
+            bottom => { prefix => 'bottom/' },
+            middle => { prefix => 'middle/', base => 'bottom' },
+            top    => { prefix => 'top/',    base => 'middle' },
+        ],
+    });
+
 =head3 TRIM
 
 The L<TRIM|Template::Manual::Config#TRIM> option can be set to have any
@@ -1297,6 +1359,57 @@ subroutine. The optional third argument can be set to any true value to
 indicate that the subroutine is a dynamic filter factory. 
 
 Returns a true value or throws a 'C<filter>' exception on error.
+
+=head2 define_view($name, \%params)
+
+This method allows you to define a named L<view|Template::View>.
+
+    $context->define_view( 
+        my_view => { 
+            prefix => 'my_templates/' 
+        } 
+    );
+
+The view is then accessible as a template variable.
+
+    [% my_view.print(some_data) %]
+
+=head2 define_views($views)
+
+This method allows you to define multiple named L<views|Template::View>.
+A reference to a hash array or list reference should be passed as an argument.
+
+    $context->define_view({     # hash reference
+        my_view_one => { 
+            prefix => 'my_templates_one/' 
+        },
+        my_view_two => { 
+            prefix => 'my_templates_two/' 
+        } 
+    });
+
+If you're defining multiple views of which one or more are based on other 
+views in the same definition then you should pass them as a list reference.
+This ensures that they get created in the right order (Perl does not preserve
+the order of items defined in a hash reference so you can't guarantee that
+your base class view will be defined before your subclass view).
+
+    $context->define_view([     # list referenence
+        my_view_one => {
+            prefix => 'my_templates_one/' 
+        },
+        my_view_two => { 
+            prefix => 'my_templates_two/' ,
+            base   => 'my_view_one',
+        } 
+    ]);
+
+The views are then accessible as template variables.
+
+    [% my_view_one.print(some_data) %]
+    [% my_view_two.print(some_data) %]
+
+See also the L<VIEWS> option.
 
 =head2 localise(\%vars)
 
