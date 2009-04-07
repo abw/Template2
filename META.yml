@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Template-Toolkit
-version:      2.18
+version:      2.20_1
 version_from: lib/Template.pm
 installdirs:  site
 requires:

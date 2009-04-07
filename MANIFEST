@@ -3,6 +3,8 @@ bin/tpage
 bin/tt-bench.pl
 bin/tt2inst
 bin/ttree
+images/tt2power.gif
+images/ttdotorg.gif
 Changes
 HACKING
 INSTALL

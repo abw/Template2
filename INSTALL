@@ -1,11 +1,11 @@
 
                             Template Toolkit
 
-                              Version 2.20
+                              Version 2.20_1
 
-                            13th August 2008
+                             7th April 2009
 
-        Copyright (C) 1996-2008 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -172,23 +172,6 @@ the XS Stash module by default:
     Do you want to build the XS Stash module? [y] 
     Do you want to use the XS Stash for all Templates? [n] 
 
-In additional to the Perl modules and POD documentation installed in
-the usual way, the Template Toolkit distribution also contains a
-number of optional components.  These are mostly obsolete now and 
-are no longer installed by the Makefile.PL.  They're still in the 
-distribution if you want to go poking around for them.
-
-  * Template libaries for basic HTML, Pod -> HTML, and PostScript
-
-  * Splash! - a stylish HTML user interface template library / widget set
-
-  * HTML documentation - distributed in template form for customisation
-
-  * Stylesheet templates to generate docs as vanilla HTML or using Splash!
-
-  * Examples - numerous examples of using the template libraries
-
-
 BUILDING AND TESTING
 --------------------
 
@@ -243,7 +226,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2008 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
