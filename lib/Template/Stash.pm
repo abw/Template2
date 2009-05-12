@@ -481,7 +481,7 @@ sub _dotop {
     # doesn't appear to work with CGI, returning true for the first call
     # and false for all subsequent calls. 
     
-    elsif (ref($root) && UNIVERSAL::can($root, 'can')) {
+    elsif (blessed($root) && $root->can('can')) {
 
         # if $root is a blessed reference (i.e. inherits from the 
         # UNIVERSAL object base class) then we call the item as a method.

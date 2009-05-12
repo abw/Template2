@@ -26,6 +26,7 @@ use warnings;
 use base 'Template::Base';
 use Template::Constants;
 use Template::Exception;
+use Scalar::Util qw(blessed);
 
 our $VERSION = 2.68;
 our $DEBUG   = 0 unless defined $DEBUG;
@@ -54,7 +55,7 @@ sub new {
         $data = [ map { { key => $_, value => $data->{ $_ } } }
                   sort keys %$data ];
     }
-    elsif (UNIVERSAL::can($data, 'as_list')) {
+    elsif (blessed($data) && $data->can('as_list')) {
         $data = $data->as_list();
     }
     elsif (ref $data ne 'ARRAY') {

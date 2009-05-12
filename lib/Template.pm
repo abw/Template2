@@ -29,6 +29,7 @@ use Template::Provider;
 use Template::Service;
 use File::Basename;
 use File::Path;
+use Scalar::Util qw(blessed);
 
 our $VERSION = '2.20_1';
 our $ERROR   = '';
@@ -170,7 +171,7 @@ sub _output {
     }
     # call the print() method on an object that implements the method
     # (e.g. IO::Handle, Apache::Request, etc)
-    elsif (UNIVERSAL::can($where, 'print')) {
+    elsif (blessed($where) && $where->can('print')) {
         $where->print($$textref);
     }
     # a simple string is taken as a filename

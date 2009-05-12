@@ -22,6 +22,7 @@ use base 'Template::Plugin';
 use strict;
 use warnings;
 use Template::Exception;
+use Scalar::Util qw();
 
 our $VERSION   = 1.00;
 our $MONAD     = 'Template::Monad::Scalar';
@@ -93,10 +94,15 @@ sub AUTOLOAD {
     my $item = $AUTOLOAD;
     $item =~ s/.*:://;
     return if $item eq 'DESTROY';
-    
-    # lookup the method...
-    my $method = UNIVERSAL::can($this, $item)
-        || die $EXCEPTION->new( scalar => "invalid object method: $item" );
+
+    my $method;
+    if (Scalar::Util::blessed($this)) {
+        # lookup the method...
+        $method = $this->can($item);
+    }
+    else {
+        die $EXCEPTION->new( scalar => "invalid object method: $item" );
+    }
 
     # ...and call it in scalar context
     my $result = $method->($this, @_);

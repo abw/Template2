@@ -39,6 +39,10 @@
 * Retrospectively fixed the Changes for 2.20 to mention the ttree 
   --encoding option.
 
+* Applied a patch from Chisel Wright, changing uses of UNIVERSAL::can() 
+  to use blessed() and ->can().  
+  http://lists.tt2.org/pipermail/templates/2009-May/010790.html
+
 
 #------------------------------------------------------------------------
 # Version 2.20_1 (2.21 candidate) - 7th April 2009
