@@ -799,8 +799,10 @@ static TT_RET hash_op(pTHX_ SV *root, char *key, AV *args, SV **result, int flag
         if ((retval = list_op(aTHX_ listref, key, args, result)) == TT_RET_UNDEF) {
             av_undef(newlist);
         }
+        SvREFCNT_dec(root);
         return retval;
     }
+
     
     /* not found */
     *result = &PL_sv_undef;
