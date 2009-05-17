@@ -1,28 +1,25 @@
 #============================================================= -*-perl-*-
 #
-# t/stash.t
+# t/stash-xs.t
 #
 # Template script testing (some elements of) the XS version of
 # Template::Stash
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+# Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 #
-# $Id$
-#
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib ../blib/lib ../blib/arch ./blib/lib ./blib/arch );
 use Template::Constants qw( :status );
 use Template;
 use Template::Test;
-$^W = 1;
 
 eval {
     require Template::Stash::XS;
@@ -98,7 +95,7 @@ my $data = {
     obj => bless({
         name => 'an object',
     }, 'AnObject'),
-    bop => sub { return ( bless ({ name => 'an object' }, 'AnObject') ) }, 
+    bop     => sub { return ( bless ({ name => 'an object' }, 'AnObject') ) }, 
     listobj => bless([10, 20, 30], 'ListObject'),
     hashobj => bless({ planet => 'World' }, 'HashObject'),
     cmp_ol  => CmpOverloadObject->new(),
@@ -108,7 +105,7 @@ my $data = {
         return $error;
     },
     correct => sub { die @_ },
-    buggy => Buggy->new(),
+    buggy   => Buggy->new(),
 };
 
 my $stash = Template::Stash::XS->new($data);
@@ -138,6 +135,12 @@ my $ttlist = [
 test_expect(\*DATA, $ttlist, $data);
 
 __DATA__
+-- test --
+-- name scalar list method --
+[% foo = 'bar'; foo.join %]
+-- expect --
+bar
+
 -- test --
 a: [% a %]
 -- expect --
@@ -240,6 +243,7 @@ keys: a, msg
 foo, baz
 
 -- test --
+-- name slice of lemon --
 [% items = {
     foo = 'one',
     bar = 'two',
@@ -253,6 +257,7 @@ foo, baz
 one, three
 
 -- test --
+-- name slice of toast --
 [% items = {
     foo = 'one',
     bar = 'two',
@@ -299,6 +304,7 @@ an object
 an object
 
 -- test --
+-- name bop --
 [% bop.first.name %]
 -- expect --
 an object
