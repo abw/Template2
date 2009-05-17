@@ -47,7 +47,8 @@ extern "C" {
 #ifdef WIN32
 #define debug(format)
 #else
-#define debug(format, ...)
+#define debug(...) 
+/* #define debug(...) fprintf(stderr, __VA_ARGS__) */
 #endif
 #endif
 
@@ -56,8 +57,8 @@ extern "C" {
 #endif
 
 #define TT_STASH_PKG    "Template::Stash::XS"
-#define TT_LIST_OPS         "Template::Stash::LIST_OPS"
-#define TT_HASH_OPS         "Template::Stash::HASH_OPS"
+#define TT_LIST_OPS     "Template::Stash::LIST_OPS"
+#define TT_HASH_OPS     "Template::Stash::HASH_OPS"
 #define TT_SCALAR_OPS   "Template::Stash::SCALAR_OPS"
 #define TT_PRIVATE      "Template::Stash::PRIVATE"
 
@@ -71,6 +72,7 @@ static TT_RET   hash_op(pTHX_ SV*, char*, AV*, SV**, int);
 static TT_RET   list_op(pTHX_ SV*, char*, AV*, SV**);
 static TT_RET   scalar_op(pTHX_ SV*, char*, AV*, SV**, int);
 static TT_RET   tt_fetch_item(pTHX_ SV*, SV*, AV*, SV**);
+static TT_RET   autobox_list_op(pTHX_ SV*, char*, AV*, SV**, int);
 static SV*      dotop(pTHX_ SV*, SV*, AV*, int);
 static SV*      call_coderef(pTHX_ SV*, AV*);
 static SV*      fold_results(pTHX_ I32);
@@ -112,7 +114,7 @@ static const struct xs_arg {
     { "defined", NULL,             NULL,            scalar_dot_defined  },
     { "each",    NULL,             hash_dot_each,   NULL                },
 /*  { "first",   list_dot_first,   NULL,            NULL                }, */
-    { "join",    list_dot_join,    NULL,            NULL                }, 
+    { "join",    list_dot_join,    NULL,            NULL                },
     { "keys",    NULL,             hash_dot_keys,   NULL                },
 /*  { "last",    list_dot_last,    NULL,            NULL                }, */
     { "length",  NULL,             NULL,            scalar_dot_length   },
@@ -790,19 +792,9 @@ static TT_RET hash_op(pTHX_ SV *root, char *key, AV *args, SV **result, int flag
     
     /* try upgrading item to a list and look for a list op */
     if (!(flags & TT_LVALUE_FLAG)) {
-        AV *newlist;
-        SV *listref;
-        newlist = newAV();
-        av_push(newlist, root);
-        SvREFCNT_inc(root);
-        listref = (SV *) newRV_noinc((SV *) newlist);
-        if ((retval = list_op(aTHX_ listref, key, args, result)) == TT_RET_UNDEF) {
-            av_undef(newlist);
-        }
-        SvREFCNT_dec(root);
-        return retval;
+        /* hash.method  ==>  [hash].method */
+        return autobox_list_op(root, key, args, result, flags);
     }
-
     
     /* not found */
     *result = &PL_sv_undef;
@@ -820,15 +812,19 @@ static TT_RET list_op(pTHX_ SV *root, char *key, AV *args, SV **result) {
 
     /* look for and execute XS version first */
     if ((a = find_xs_op(key)) && a->list_f) {
+        debug("calling internal list vmethod: %s\n", key);
         *result = a->list_f(aTHX_ (AV *) SvRV(root), args);
         return TT_RET_CODEREF;
     }
 
     /* look for and execute perl version in Template::Stash module */
     if ((code = find_perl_op(aTHX_ key, TT_LIST_OPS))) {
+        debug("calling perl list vmethod: %s\n", key);
         *result = call_coderef(aTHX_ code, mk_mortal_av(aTHX_ root, args, NULL));
         return TT_RET_CODEREF;
     }
+
+    debug("list vmethod not found: %s\n", key);
 
     /* not found */
     *result = &PL_sv_undef;
@@ -859,22 +855,26 @@ static TT_RET scalar_op(pTHX_ SV *sv, char *key, AV *args, SV **result, int flag
 
     /* try upgrading item to a list and look for a list op */
     if (!(flags & TT_LVALUE_FLAG)) {
-        AV *newlist;
-        SV *listref;
-        newlist = newAV();
-        av_push(newlist, sv);
-        SvREFCNT_inc(sv);
-        listref = (SV *) newRV_noinc((SV *) newlist);
-        if ((retval = list_op(aTHX_ listref, key, args, result)) == TT_RET_UNDEF) {
-            av_undef(newlist);
-        }
-        return retval;
+        /* scalar.method  ==>  [scalar].method */
+        return autobox_list_op(sv, key, args, result, flags);
     }
-    
+
     /* not found */
     *result = &PL_sv_undef;
     return TT_RET_UNDEF;
 }
+
+static TT_RET autobox_list_op(pTHX_ SV *sv, char *key, AV *args, SV **result, int flags) {
+    AV *av    = newAV();
+    SV *avref = (SV *) newRV((SV *) av);
+    TT_RET retval;
+    av_push(av, SvREFCNT_inc(sv)); 
+    retval = list_op(aTHX_ avref, key, args, result);
+    SvREFCNT_dec(av);
+    SvREFCNT_dec(avref);
+    return retval;
+}
+
 
 
 /* xs_arg comparison function */
@@ -942,7 +942,6 @@ static AV *mk_mortal_av(pTHX_ SV *sv, AV *av, SV *more) {
     
     return (AV *) sv_2mortal((SV *) a);
 }
-
 
 /* Returns TT_DEBUG_FLAG if _DEBUG key is true in hashref ''sv''. */
 static int get_debug_flag (pTHX_ SV *sv) {
