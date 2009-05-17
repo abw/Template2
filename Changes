@@ -10,8 +10,8 @@
 #
 #========================================================================
 
-#------------------------------------------------------------------------
-# Version 2.20_2 (2.21 candidate) - not yet released
+#-----------------------------------------------------------------------
+# Version 2.20_2 (2.21 candidate) - 17th May 2009
 #------------------------------------------------------------------------
 
 * Applied a patch to Template::Test from Andrew Ford to make it skip
@@ -42,6 +42,11 @@
 * Applied a patch from Chisel Wright, changing uses of UNIVERSAL::can() 
   to use blessed() and ->can().  
   http://lists.tt2.org/pipermail/templates/2009-May/010790.html
+
+* Fixed a memory leak in the XS Stash introduced in 2.20.
+  Thanks to Breno G. de Oliveira for reporting the problem and helping to 
+  narrow it down.
+  https://rt.cpan.org/Public/Bug/Display.html?id=46058
 
 
 #------------------------------------------------------------------------
