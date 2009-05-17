@@ -34,6 +34,8 @@ extern "C" {
 #define PERL_NO_GET_CONTEXT
 #include "EXTERN.h"
 #include "perl.h"
+#define NEED_sv_2pv_flags
+#define NEED_newRV_noinc
 #include "ppport.h"
 #include "XSUB.h"
 
@@ -324,7 +326,7 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                 for (i = 0; i <= n; i++)
                     if ((svp = av_fetch(args, i, 0))) XPUSHs(*svp);
                 PUTBACK;
-                n = perl_call_method(item, G_ARRAY | G_EVAL);
+                n = call_method(item, G_ARRAY | G_EVAL);
                 SPAGAIN;
                 
                 if (SvTRUE(ERRSV)) {
@@ -501,7 +503,7 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
                 XPUSHs(value);
                 PUTBACK;
                 debug(" - calling object method\n");
-                count = perl_call_method(key, G_ARRAY);
+                count = call_method(key, G_ARRAY);
                 SPAGAIN;
                 return fold_results(aTHX_ count);               
             }
@@ -600,7 +602,7 @@ static void die_object (pTHX_ SV *err) {
 
     if (sv_isobject(err) || SvROK(err)) {
         /* throw object via ERRSV ($@) */
-        SV *errsv = perl_get_sv("@", TRUE);
+        SV *errsv = get_sv("@", TRUE);
         sv_setsv(errsv, err);
         (void) die(Nullch);
     }
@@ -624,7 +626,7 @@ static SV *call_coderef(pTHX_ SV *code, AV *args) {
         if ((svp = av_fetch(args, i, FALSE))) 
             XPUSHs(*svp);
     PUTBACK;
-    count = perl_call_sv(code, G_ARRAY);
+    count = call_sv(code, G_ARRAY);
     SPAGAIN;
     
     return fold_results(aTHX_ count);
@@ -866,7 +868,7 @@ static TT_RET scalar_op(pTHX_ SV *sv, char *key, AV *args, SV **result, int flag
 
 static TT_RET autobox_list_op(pTHX_ SV *sv, char *key, AV *args, SV **result, int flags) {
     AV *av    = newAV();
-    SV *avref = (SV *) newRV((SV *) av);
+    SV *avref = (SV *) newRV_inc((SV *) av);
     TT_RET retval;
     av_push(av, SvREFCNT_inc(sv)); 
     retval = list_op(aTHX_ avref, key, args, result);
@@ -908,7 +910,7 @@ static SV *find_perl_op(pTHX_ char *key, char *perl_var) {
     SV *tt_ops;
     SV **svp;
 
-    if ((tt_ops = perl_get_sv(perl_var, FALSE)) 
+    if ((tt_ops = get_sv(perl_var, FALSE)) 
         && SvROK(tt_ops) 
         && (svp = hv_fetch((HV *) SvRV(tt_ops), key, strlen(key), FALSE)) 
         && SvROK(*svp) 
@@ -973,7 +975,7 @@ static int looks_private(pTHX_ const char *name) {
      * regex from XS.  The Perl internals docs really suck in places.
      */
     
-    if (SvTRUE(perl_get_sv(TT_PRIVATE, FALSE))) {
+    if (SvTRUE(get_sv(TT_PRIVATE, FALSE))) {
         return (*name == '_' || *name == '.');
     }  
     return 0;
