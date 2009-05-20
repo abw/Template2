@@ -795,7 +795,7 @@ static TT_RET hash_op(pTHX_ SV *root, char *key, AV *args, SV **result, int flag
     /* try upgrading item to a list and look for a list op */
     if (!(flags & TT_LVALUE_FLAG)) {
         /* hash.method  ==>  [hash].method */
-        return autobox_list_op(root, key, args, result, flags);
+        return autobox_list_op(aTHX_ root, key, args, result, flags);
     }
     
     /* not found */
@@ -858,7 +858,7 @@ static TT_RET scalar_op(pTHX_ SV *sv, char *key, AV *args, SV **result, int flag
     /* try upgrading item to a list and look for a list op */
     if (!(flags & TT_LVALUE_FLAG)) {
         /* scalar.method  ==>  [scalar].method */
-        return autobox_list_op(sv, key, args, result, flags);
+        return autobox_list_op(aTHX_ sv, key, args, result, flags);
     }
 
     /* not found */
@@ -876,8 +876,6 @@ static TT_RET autobox_list_op(pTHX_ SV *sv, char *key, AV *args, SV **result, in
     SvREFCNT_dec(avref);
     return retval;
 }
-
-
 
 /* xs_arg comparison function */
 static int cmp_arg(const void *a, const void *b) {
@@ -1127,10 +1125,7 @@ static SV *scalar_dot_defined(pTHX_ SV *sv, AV *args) {
 
 /* scalar.length */
 static SV *scalar_dot_length(pTHX_ SV *sv, AV *args) {
-    STRLEN length;
-    SvPV(sv, length);
-
-    return sv_2mortal(newSViv((IV) length));
+    return sv_2mortal(newSViv((IV) SvUTF8(sv) ? sv_len_utf8(sv): sv_len(sv)));
 }
 
 
