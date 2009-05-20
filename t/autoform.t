@@ -17,11 +17,11 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ../lib );
 use Template qw( :status );
 use Template::Test;
 use POSIX qw( localeconv );
-$^W = 1;
 
 $Template::Test::DEBUG = 0;
 $Template::Test::PRESERVE = 1;
