@@ -11,6 +11,18 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
+# Version 2.20_3 (2.21 candidate) - 20th May 2009
+#------------------------------------------------------------------------
+
+* Fixed the XS Stash to compile properly in threaded Perls.
+  https://rt.cpan.org/Public/Bug/Display.html?id=46240
+
+* Applied a patch to the XS Stash from Alexey A. Kiritchun to make the 
+  scalar.length vmethod work correctly with utf8 strings.
+  http://lists.tt2.org/pipermail/templates/2009-May/010803.html
+
+
+#-----------------------------------------------------------------------
 # Version 2.20_2 (2.21 candidate) - 17th May 2009
 #------------------------------------------------------------------------
 
