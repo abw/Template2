@@ -38,6 +38,9 @@ my $ttcfg = {
     COMPILE_DIR  => $cdir,
     COMPILE_EXT  => '.ttc',
     ABSOLUTE     => 1,
+    CONSTANTS    => {
+      dir => $dir,
+    },
 };
 
 # delete any existing cache files
@@ -80,3 +83,9 @@ The word is 'wibble'
 [% INCLUDE "$root/src/blam" %]
 -- expect --
 This is the blam file
+-- test --
+[%- # first pass, writes the compiled code to cache -%]
+[% INCLUDE divisionbyzero -%]
+-- expect --
+-- process --
+undef error - Illegal division by zero at [% constants.dir %]/src/divisionbyzero line 1.

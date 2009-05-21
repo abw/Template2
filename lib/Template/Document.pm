@@ -231,7 +231,7 @@ sub as_perl {
     my ($class, $content) = @_;
     my ($block, $defblocks, $metadata) = @$content{ qw( BLOCK DEFBLOCKS METADATA ) };
 
-    $block =~ s/\n/\n    /g;
+    $block =~ s/\n(?!#line)/\n    /g;
     $block =~ s/\s+$//;
 
     $defblocks = join('', map {

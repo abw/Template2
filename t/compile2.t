@@ -90,3 +90,8 @@ This is the footer, author: billg, version: 6.66
 - 3 - 2 - 1 
 
 
+-- test --
+[%- # second pass, reads the compiled code from cache -%]
+[% INCLUDE divisionbyzero -%]
+-- expect --
+undef error - Illegal division by zero at t/test/src/divisionbyzero line 1, <DATA> chunk 1.

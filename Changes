@@ -11,7 +11,7 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 2.20_4 (2.21 candidate) - 20th May 2009
+# Version 2.20_4 (2.21 candidate) - 21st May 2009
 #------------------------------------------------------------------------
 
 * Added the even(), odd() and parity() methods to Template::Iterator to
@@ -21,6 +21,10 @@
   https://rt.cpan.org/Ticket/Display.html?id=46250
 
 * Replaced a whle bunch of UNIVERSAL::isa() calls with blessed/isa
+
+* Applied a patch from Norbert Buchmüller to prevent the #line markers
+  from being whitespaced away from the first column.
+  https://rt.cpan.org/Ticket/Display.html?id=46269
 
 
 #-----------------------------------------------------------------------
