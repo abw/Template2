@@ -228,7 +228,7 @@ sub print {
                 $output .= $present;
                 next;                                   ## NEXT
             }   
-            elsif ( UNIVERSAL::isa($item, 'HASH' ) 
+            elsif ( ref($item) eq 'HASH' 
                     && defined($newtype = $item->{$method})
                     && defined($template = $map->{"$method=>$newtype"})) {
             }

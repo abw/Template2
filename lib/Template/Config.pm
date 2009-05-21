@@ -36,7 +36,7 @@ $PARSER    = 'Template::Parser';
 $PLUGINS   = 'Template::Plugins';
 $PROVIDER  = 'Template::Provider';
 $SERVICE   = 'Template::Service';
-$STASH     = 'Template::Stash';
+$STASH     = 'Template::Stash::XS';
 $CONSTANTS = 'Template::Namespace::Constants';
 
 @PRELOAD   = ( $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
@@ -96,7 +96,7 @@ sub load {
 
 sub parser {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH')
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
                ? shift : { @_ };
 
     return undef unless $class->load($PARSER);
@@ -114,7 +114,7 @@ sub parser {
 
 sub provider {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
                ? shift : { @_ };
 
     return undef unless $class->load($PROVIDER);
@@ -133,7 +133,7 @@ sub provider {
 
 sub plugins {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
                ? shift : { @_ };
 
     return undef unless $class->load($PLUGINS);
@@ -152,7 +152,7 @@ sub plugins {
 
 sub filters {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
                ? shift : { @_ };
 
     return undef unless $class->load($FILTERS);
@@ -188,7 +188,7 @@ sub iterator {
 
 sub stash {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
                ? shift : { @_ };
 
     return undef unless $class->load($STASH);
@@ -206,7 +206,7 @@ sub stash {
 
 sub context {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
                ? shift : { @_ };
 
     return undef unless $class->load($CONTEXT);
@@ -224,7 +224,7 @@ sub context {
 
 sub service {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
                ? shift : { @_ };
 
     return undef unless $class->load($SERVICE);
@@ -243,7 +243,7 @@ sub service {
 
 sub constants {
     my $class  = shift;
-    my $params = defined($_[0]) && UNIVERSAL::isa($_[0], 'HASH') 
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
                ? shift : { @_ };
 
     return undef unless $class->load($CONSTANTS);

@@ -26,6 +26,9 @@ use base 'Template::Base';
 use Template::Config;
 use Template::Exception;
 use Template::Constants;
+use Scalar::Util 'blessed';
+
+use constant EXCEPTION => 'Template::Exception';
 
 our $VERSION = 2.80;
 our $DEBUG   = 0 unless defined $DEBUG;
@@ -198,7 +201,7 @@ sub _recover {
     # point... unless a module like CGI::Carp messes around with the 
     # DIE handler. 
     return undef
-        unless UNIVERSAL::isa($$error, 'Template::Exception');
+        unless blessed($$error) && $$error->isa(EXCEPTION);
 
     # a 'stop' exception is thrown by [% STOP %] - we return the output
     # buffer stored in the exception object

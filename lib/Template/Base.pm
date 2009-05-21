@@ -54,7 +54,7 @@ sub new {
     }
 
     # fold all remaining args into a hash, or use provided hash ref
-    $cfg  = defined $_[0] && UNIVERSAL::isa($_[0], 'HASH') ? shift : { @_ };
+    $cfg  = defined $_[0] && ref($_[0]) eq 'HASH' ? shift : { @_ };
 
     my $self = bless {
         (map { ($_ => shift @args) } @$argnames),

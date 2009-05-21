@@ -44,7 +44,7 @@ sub element {
 
 sub attributes {
     my ($self, $hash) = @_;
-    return '' unless UNIVERSAL::isa($hash, 'HASH');
+    return '' unless ref $hash eq 'HASH';
 
     my @keys = keys %$hash;
     @keys = sort @keys if $self->{ _SORTED };

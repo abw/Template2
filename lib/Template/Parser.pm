@@ -103,7 +103,7 @@ our $CHOMP_FLAGS  = qr/[-=~+]/;
 
 sub new {
     my $class  = shift;
-    my $config = $_[0] && UNIVERSAL::isa($_[0], 'HASH') ? shift(@_) : { @_ };
+    my $config = $_[0] && ref($_[0]) eq 'HASH' ? shift(@_) : { @_ };
     my ($tagstyle, $debug, $start, $end, $defaults, $grammar, $hash, $key, $udef);
 
     my $self = bless { 

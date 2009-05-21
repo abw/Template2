@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use Template::VMethods;
 use Template::Exception;
-use Scalar::Util 'blessed';
+use Scalar::Util qw( blessed reftype );
 
 our $VERSION    = 2.91;
 our $DEBUG      = 0 unless defined $DEBUG;
@@ -151,7 +151,7 @@ sub clone {
 
     # look out for magical 'import' argument which imports another hash
     my $import = $params->{ import };
-    if (defined $import && UNIVERSAL::isa($import, 'HASH')) {
+    if (defined $import && ref $import eq 'HASH') {
         delete $params->{ import };
     }
     else {
@@ -337,7 +337,7 @@ sub update {
 
     # look out for magical 'import' argument to import another hash
     my $import = $params->{ import };
-    if (defined $import && UNIVERSAL::isa($import, 'HASH')) {
+    if (defined $import && ref $import eq 'HASH') {
         @$self{ keys %$import } = values %$import;
         delete $params->{ import };
     }
@@ -481,6 +481,8 @@ sub _dotop {
     # doesn't appear to work with CGI, returning true for the first call
     # and false for all subsequent calls. 
     
+    # UPDATE: that doesn't appear to be the case any more
+    
     elsif (blessed($root) && $root->can('can')) {
 
         # if $root is a blessed reference (i.e. inherits from the 
@@ -499,7 +501,7 @@ sub _dotop {
             die $@ if ref($@) || ($@ !~ /Can't locate object method "\Q$item\E" via package "\Q$class\E"/);
 
             # failed to call object method, so try some fallbacks
-            if (UNIVERSAL::isa($root, 'HASH') ) {
+            if (reftype $root eq 'HASH') {
                 if( defined($value = $root->{ $item })) {
                     return $value unless ref $value eq 'CODE';      ## RETURN
                     @result = &$value(@$args);
@@ -511,7 +513,7 @@ sub _dotop {
                     @result = &$value([$root], @$args);
                 }
             }
-            elsif (UNIVERSAL::isa($root, 'ARRAY') ) {
+            elsif (reftype $root eq 'ARRAY') {
                 if( $value = $LIST_OPS->{ $item }) {
                    @result = &$value($root, @$args);
                 }
@@ -605,7 +607,7 @@ sub _assign {
         return ($root->[$item] = $value)            ## RETURN
             unless $default && $root->{ $item };
     }
-    elsif (UNIVERSAL::isa($root, 'UNIVERSAL')) {
+    elsif (blessed($root)) {
         # try to call the item as a method of an object
         
         return $root->$item(@$args, $value)         ## RETURN

@@ -30,12 +30,9 @@ use Template::Constants;
 use Template::Exception;
 use Scalar::Util 'blessed';
 
-# TODO: remove hard-coded references to Template::Exception and look also
-# for Badger::Exception
-use constant {
-    EXCEPTION        => 'Template::Exception',
-    BADGER_EXCEPTION => 'Badger::Exception',
-};
+use constant DOCUMENT         => 'Template::Document';
+use constant EXCEPTION        => 'Template::Exception';
+use constant BADGER_EXCEPTION => 'Badger::Exception';
 
 our $VERSION = 2.98;
 our $DEBUG   = 0 unless defined $DEBUG;
@@ -88,8 +85,8 @@ sub template {
     # CODE references are assumed to be pre-compiled templates and are
     # returned intact
     return $name
-        if UNIVERSAL::isa($name, 'Template::Document')
-            || ref($name) eq 'CODE';
+        if (blessed($name) && $name->isa(DOCUMENT))
+        || ref($name) eq 'CODE';
 
     $shortname = $name;
 
@@ -144,8 +141,8 @@ sub template {
             if ($error) {
                 if ($error == Template::Constants::STATUS_ERROR) {
                     # $template contains exception object
-                    if (UNIVERSAL::isa($template, EXCEPTION)
-                        && $template->type() eq Template::Constants::ERROR_FILE) {
+                    if (blessed($template) && $template->isa(EXCEPTION)
+                        && $template->type eq Template::Constants::ERROR_FILE) {
                         $self->throw($template);
                     }
                     else {
@@ -331,7 +328,7 @@ sub process {
                 ? { (name => (ref $name ? '' : $name), modtime => time()) }
                 : $compiled;
 
-            if (UNIVERSAL::isa($component, 'Template::Document')) {
+            if (blessed($component) && $component->isa(DOCUMENT)) {
                 $element->{ caller } = $component->{ name };
                 $element->{ callers } = $component->{ callers } || [];
                 push(@{$element->{ callers }}, $element->{ caller });
@@ -343,8 +340,8 @@ sub process {
                 # merge any local blocks defined in the Template::Document
                 # into our local BLOCKS cache
                 @$blocks{ keys %$tblocks } = values %$tblocks
-                    if UNIVERSAL::isa($compiled, 'Template::Document')
-                    && ($tblocks = $compiled->blocks());
+                    if (blessed($compiled) && $compiled->isa(DOCUMENT))
+                    && ($tblocks = $compiled->blocks);
             }
             
             if (ref $compiled eq 'CODE') {
@@ -374,7 +371,7 @@ sub process {
             # instead?
 
             pop(@{$element->{ callers }})
-                if (UNIVERSAL::isa($component, 'Template::Document'));
+                if (blessed($component) && $component->isa(DOCUMENT));
         }
         $stash->set('component', $component);
     };
@@ -499,10 +496,10 @@ sub throw {
     local $" = ', ';
 
     # die! die! die!
-    if (UNIVERSAL::isa($error, EXCEPTION)) {
+    if (blessed($error) && $error->isa(EXCEPTION)) {
         die $error;
     }
-    elsif (UNIVERSAL::isa($error, BADGER_EXCEPTION)) {
+    elsif (blessed($error) && $error->isa(BADGER_EXCEPTION)) {
         # convert a Badger::Exception to a Template::Exception so that
         # things continue to work during the transition to Badger
         die EXCEPTION->new($error->type, $error->info);
@@ -541,12 +538,13 @@ sub throw {
 sub catch {
     my ($self, $error, $output) = @_;
 
-    if (UNIVERSAL::isa($error, 'Template::Exception')) {
+    if ( blessed($error) 
+      && ( $error->isa(EXCEPTION) || $error->isa(BADGER_EXCEPTION) ) ) {
         $error->text($output) if $output;
         return $error;
     }
     else {
-        return Template::Exception->new('undef', $error, $output);
+        return EXCEPTION->new('undef', $error, $output);
     }
 }
 

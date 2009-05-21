@@ -24,6 +24,7 @@ use warnings;
 use locale;
 use base 'Template::Base';
 use Template::Constants;
+use Scalar::Util 'blessed';
 
 our $VERSION   = 2.86;
 our $AVAILABLE = { };
@@ -114,7 +115,7 @@ sub fetch {
     # non-refs are assumed to be regular name lookups
 
     if (ref $name) {
-        if (UNIVERSAL::isa($name, $PLUGIN_FILTER)) {
+        if (blessed($name) && $name->isa($PLUGIN_FILTER)) {
             $factory = $name->factory()
                 || return $self->error($name->error());
         }

@@ -22,6 +22,7 @@ package Template::Plugin::Table;
 use strict;
 use warnings;
 use base 'Template::Plugin';
+use Scalar::Util 'blessed';
 
 our $VERSION = 2.71;
 our $AUTOLOAD;
@@ -45,7 +46,7 @@ sub new {
     # if the data item is a reference to a Template::Iterator object,
     # or subclass thereof, we call its get_all() method to extract all
     # the data it contains
-    if (UNIVERSAL::isa($data, 'Template::Iterator')) {
+    if (blessed($data) && $data->isa('Template::Iterator')) {
         ($data, $error) = $data->get_all();
         return $class->error("iterator failed to provide data for table: ",
                              $error)
