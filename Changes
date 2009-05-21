@@ -26,6 +26,10 @@
   from being whitespaced away from the first column.
   https://rt.cpan.org/Ticket/Display.html?id=46269
 
+* Applied a patch from Denis F. Latypoff to fix uri/url filters with 
+  utf8 text
+  https://rt.cpan.org/Ticket/Display.html?id=41173
+
 
 #-----------------------------------------------------------------------
 # Version 2.20_3 (2.21 candidate) - 20th May 2009
