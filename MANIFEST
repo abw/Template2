@@ -3,10 +3,10 @@ bin/tpage
 bin/tt-bench.pl
 bin/tt2inst
 bin/ttree
-images/tt2power.gif
-images/ttdotorg.gif
 Changes
 HACKING
+images/tt2power.gif
+images/ttdotorg.gif
 INSTALL
 lib/Template.pm
 lib/Template/Base.pm
@@ -144,11 +144,14 @@ t/ref.t
 t/scalar.t
 t/service.t
 t/skel.t
+t/stash-xs-leak.t
+# t/stash-xs-unicode.t     - this demonstrates a bug that we haven't been able to fix yet
 t/stash-xs.t
 t/stash.t
 t/stashc.t
 t/stop.t
 t/strcat.t
+t/strict.t
 t/string.t
 t/switch.t
 t/table.t
@@ -197,6 +200,7 @@ t/test/src/baz
 t/test/src/benchmark
 t/test/src/blam
 t/test/src/complex
+t/test/src/divisionbyzero
 t/test/src/evalperl
 t/test/src/foo
 t/test/src/foobar
