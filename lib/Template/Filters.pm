@@ -273,7 +273,7 @@ sub uri_filter {
         map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
     };
 
-    if ($] >= 5.008) {
+    if ($] >= 5.008 && utf8::is_utf8($text)) {
         utf8::encode($text);
     }
     
@@ -298,7 +298,7 @@ sub url_filter {
         map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
     };
 
-    if ($] >= 5.008) {
+    if ($] >= 5.008 && utf8::is_utf8($text)) {
         utf8::encode($text);
     }
     

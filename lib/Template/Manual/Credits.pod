@@ -81,16 +81,17 @@ Dave Cross, Chris Dean, Francois Desarmenien, Horst Dumcke, Mark Fowler,
 Michael Fowler, Kenny Gatdula, Axel Gerstmair, Dylan William Hardison, Perrin
 Harkins, Bryce Harrington, Dave Hodgkinson, Lubomir Host, Dave Howorth, Harald
 Joerg, Colin Johnson, Adam Kennedy, Vivek Khera, Alexey A. Kiritchun, Rafael
-Kitover, Ivan Kurmanov, Hans von Lengerke, Jonas Liljegren, Simon Luff, Andy
-Maas, Paul Makepeace, Gervase Markham, Sergey Martynoff, Simon Matthews,
-Robert McArthur, Craig McLane, Myk Melez, Eugene Miretskiy, Tatsuhiko
-Miyagawa, Bill Moseley, Keith G. Murphy, Chris Nandor, Breno G. de Oliveira,
-Leslie Michael Orchard, Paul Orrock, Jonathon Padfield, Steve Peters, Briac
-PilprE<eacute>, Yuri Pimenov, Martin Portman, Slaven Rezic, Jess Robinson,
-Josh Rosenbaum, Christian Schaffner, Mike Schilli, Randal L. Schwartz, Paul
-Seamons, Paul Sharpe, Ville SkyttE<auml>, Barrie Slaymaker, Doug Steinwand,
-Michael Stevens, Autrijus Tang, Drew Taylor, Swen Thuemmler, Richard Tietjen,
-Ben Tilly, Stathy G. Touloumis, Jim Vaughan, Simon Wilcox, Chris Winters
+Kitover, Ivan Kurmanov, Denis F. Latypoff, Hans von Lengerke, Jonas Liljegren,
+Simon Luff, Andy Maas, Paul Makepeace, Gervase Markham, Sergey Martynoff,
+Simon Matthews, Robert McArthur, Craig McLane, Myk Melez, Eugene Miretskiy,
+Tatsuhiko Miyagawa, Bill Moseley, Keith G. Murphy, Chris Nandor, Breno G. de
+Oliveira, Leslie Michael Orchard, Paul Orrock, Jonathon Padfield, Steve
+Peters, Briac PilprE<eacute>, Yuri Pimenov, Martin Portman, Slaven Rezic, Jess
+Robinson, Josh Rosenbaum, Christian Schaffner, Mike Schilli, Randal L.
+Schwartz, Paul Seamons, Paul Sharpe, Ville SkyttE<auml>, Barrie Slaymaker,
+Doug Steinwand, Michael Stevens, Autrijus Tang, Drew Taylor, Swen Thuemmler,
+Richard Tietjen, Ben Tilly, Stathy G. Touloumis, Jim Vaughan, Simon Wilcox,
+Chris Winters
 
 =cut
 
