@@ -49,7 +49,7 @@ extern "C" {
 #ifdef WIN32
 #define debug(format)
 #else
-#define debug(...) 
+#define debug(...)
 /* #define debug(...) fprintf(stderr, __VA_ARGS__) */
 #endif
 #endif

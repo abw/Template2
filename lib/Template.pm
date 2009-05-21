@@ -31,7 +31,7 @@ use File::Basename;
 use File::Path;
 use Scalar::Util qw(blessed);
 
-our $VERSION = '2.20_3';
+our $VERSION = '2.20_4';
 our $ERROR   = '';
 our $DEBUG   = 0;
 our $BINMODE = 0 unless defined $BINMODE;
@@ -52,7 +52,7 @@ Template::Config->preload() if $ENV{ MOD_PERL };
 sub process {
     my ($self, $template, $vars, $outstream, @opts) = @_;
     my ($output, $error);
-    my $options = (@opts == 1) && UNIVERSAL::isa($opts[0], 'HASH')
+    my $options = (@opts == 1) && ref($opts[0]) eq 'HASH'
         ? shift(@opts) : { @opts };
 
     $options->{ binmode } = $BINMODE
