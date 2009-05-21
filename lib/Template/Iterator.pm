@@ -28,6 +28,9 @@ use Template::Constants;
 use Template::Exception;
 use Scalar::Util qw(blessed);
 
+use constant ODD  => 'odd';
+use constant EVEN => 'even';
+
 our $VERSION = 2.68;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $AUTOLOAD;
@@ -188,7 +191,19 @@ sub get_all {
         return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
     }
 }
-    
+
+sub odd {
+    shift->{ COUNT } % 2 ? 1 : 0
+}
+
+sub even {
+    shift->{ COUNT } % 2 ? 0 : 1
+}
+
+sub parity {
+    shift->{ COUNT } % 2 ? ODD : EVEN;
+}
+
 
 #------------------------------------------------------------------------
 # AUTOLOAD
@@ -399,6 +414,58 @@ on the first item.
 
 Returns the next item in the data set or C<undef> if the iterator is on the 
 last item.
+
+=head2 parity()
+
+Returns the text string C<even> or C<odd> to indicate the parity of the 
+current iteration count (starting at 1).  This is typically used to create
+striped I<zebra tables>.
+
+    <table>
+    [% FOREACH name IN ['Arthur', 'Ford', 'Trillian'] -%]
+      <tr class="[% loop.parity %]">
+        <td>[% name %]</td>
+      </tr>
+    [% END %]
+    </table>
+
+This will produce the following output:
+
+    <table>
+      <tr class="odd">
+        <td>Arthur</td>
+      </tr>
+      <tr class="even">
+        <td>Ford</td>
+      </tr>
+      <tr class="odd">
+        <td>Trillian</td>
+      </tr>
+    </table>
+
+You can then style the C<tr.odd> and C<tr.even> elements using CSS:
+
+    tr.odd td {
+        background-color: black;
+        color: white;
+    }
+    
+    tr.even td {
+        background-color: white;
+        color: black;
+    }
+
+=head2 odd()
+
+Returns a boolean (0/1) value to indicate if the current iterator count
+(starting at 1) is an odd number. In other words, this will return a true
+value for the first iterator, the third, fifth, and so on.
+
+=head2 even()
+
+Returns a boolean (0/1) value to indicate if the current iterator count
+(starting at 1) is an even number. In other words, this will return a true
+value for the second iteration, the fourth, sixth, and so on.
 
 =head1 AUTHOR
 
