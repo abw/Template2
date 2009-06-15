@@ -149,6 +149,7 @@ my %opts = (
         'AppConfig'    => $TT_APPCONFIG_VERSION,
         'File::Spec'   => $TT_FILE_SPEC_VERSION,
         'File::Temp'   => $TT_FILE_TEMP_VERSION,
+        'Scalar::Util' => 0,
     },
     'dist'         => {
         'COMPRESS' => 'gzip',
