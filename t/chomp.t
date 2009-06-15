@@ -49,13 +49,17 @@ my $blocks = {
     winsux2 => $winsux2,
 };
 
+# script may be being run in distribution root or 't' directory
+my $dir   = -d 't' ? 't/test/lib' : 'test/lib';
+
 
 #------------------------------------------------------------------------
 # tests without any CHOMP options set
 #------------------------------------------------------------------------
 
 my $tt2 = Template->new({
-    BLOCKS => $blocks,
+    BLOCKS       => $blocks,
+    INCLUDE_PATH => $dir,
 });
 my $vars = {
     foo  => 3.14,
@@ -95,7 +99,6 @@ match( $out, "HelloWorld", 'winsux1 out' );
 
 $out = '';
 ok( $tt2->process('winsux2', $vars, \$out), 'winsux2' );
-#match( $out, "Hello\nWorld", 'winsux2 out' );
 
 $out = join(
     '', 
@@ -109,6 +112,11 @@ $out = join(
 );
 
 match( $out, 'Hello\015\012World', 'winsux2 out' );
+
+$out = '';
+ok( $tt2->process('dos_newlines', $vars, \$out), 'dos_newlines' );
+match( $out, "HelloWorld", 'dos_newlines out' );
+
 
 #------------------------------------------------------------------------
 # tests with the PRE_CHOMP option set
