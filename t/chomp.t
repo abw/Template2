@@ -4,25 +4,22 @@
 #
 # Test the PRE_CHOMP and POST_CHOMP options.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
-# Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
+# Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 #
-# $Id$
-# 
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Constants qw( :chomp );
 
-$^W = 1;
-
+# uncomment these lines for debugging the generated Perl code
 #$Template::Directive::PRETTY = 1;
 #$Template::Parser::DEBUG = 1;
 
@@ -32,20 +29,24 @@ match( CHOMP_ALL, 1 );
 match( CHOMP_COLLAPSE, 2 );
 match( CHOMP_GREEDY, 3 );
 
-my $foo  = "\n[% foo %]\n";
-my $bar  = "\n[%- bar -%]\n";
-my $baz  = "\n[%+ baz +%]\n";
-my $ding = "!\n\n[%~ ding ~%]\n\n!";
-my $dong = "!\n\n[%= dong =%]\n\n!";
-my $dang = "Hello[%# blah blah blah -%]\n!";
+my $foo     = "\n[% foo %]\n";
+my $bar     = "\n[%- bar -%]\n";
+my $baz     = "\n[%+ baz +%]\n";
+my $ding    = "!\n\n[%~ ding ~%]\n\n!";
+my $dong    = "!\n\n[%= dong =%]\n\n!";
+my $dang    = "Hello[%# blah blah blah -%]\n!";
+my $winsux1 = "[% ding -%]\015\012[% dong %]";
+my $winsux2 = "[% ding -%]\015\012\015\012[% dong %]";
 
 my $blocks = {
-    foo  => $foo,
-    bar  => $bar,
-    baz  => $baz,
-    ding => $ding,
-    dong => $dong,
-    dang => $dang,
+    foo     => $foo,
+    bar     => $bar,
+    baz     => $baz,
+    ding    => $ding,
+    dong    => $dong,
+    dang    => $dang,
+    winsux1 => $winsux1,
+    winsux2 => $winsux2,
 };
 
 
@@ -61,33 +62,53 @@ my $vars = {
     bar  => 2.718,
     baz  => 1.618,
     ding => 'Hello',
-    dong => 'World'  
+    dong => 'World'
 };
 
 my $out;
-ok( $tt2->process('foo', $vars, \$out), $tt2->error() );
-match( $out, "\n3.14\n" );
+ok( $tt2->process('foo', $vars, \$out), 'foo' );
+match( $out, "\n3.14\n", 'foo out' );
 
 $out = '';
-ok( $tt2->process('bar', $vars, \$out), $tt2->error() );
-match( $out, "2.718" );
+ok( $tt2->process('bar', $vars, \$out), 'bar' );
+match( $out, "2.718", 'bar out' );
 
 $out = '';
-ok( $tt2->process('baz', $vars, \$out), $tt2->error() );
-match( $out, "\n1.618\n" );
+ok( $tt2->process('baz', $vars, \$out), 'baz' );
+match( $out, "\n1.618\n", 'baz out' );
 
 $out = '';
-ok( $tt2->process('ding', $vars, \$out), $tt2->error() );
-match( $out, "!Hello!" );
+ok( $tt2->process('ding', $vars, \$out), 'ding' );
+match( $out, "!Hello!", 'ding out' );
 
 $out = '';
-ok( $tt2->process('dong', $vars, \$out), $tt2->error() );
-match( $out, "! World !" );
+ok( $tt2->process('dong', $vars, \$out), 'dong' );
+match( $out, "! World !", 'dong out' );
 
 $out = '';
-ok( $tt2->process('dang', $vars, \$out), $tt2->error() );
-match( $out, "Hello!" );
+ok( $tt2->process('dang', $vars, \$out), 'dang' );
+match( $out, "Hello!", 'dang out' );
 
+$out = '';
+ok( $tt2->process('winsux1', $vars, \$out), 'winsux1' );
+match( $out, "HelloWorld", 'winsux1 out' );
+
+$out = '';
+ok( $tt2->process('winsux2', $vars, \$out), 'winsux2' );
+#match( $out, "Hello\nWorld", 'winsux2 out' );
+
+$out = join(
+    '', 
+    map {
+        my $ord = ord($_);
+        ($ord > 127 || $ord < 32 )
+            ? sprintf '\0%lo', $ord
+            : $_
+    } 
+    split //, $out
+);
+
+match( $out, 'Hello\015\012World', 'winsux2 out' );
 
 #------------------------------------------------------------------------
 # tests with the PRE_CHOMP option set
