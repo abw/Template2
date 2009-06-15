@@ -20,7 +20,7 @@
 * Removed a post-5.6 perlism in Template::Context that broke on 5.6.2
   https://rt.cpan.org/Ticket/Display.html?id=46250
 
-* Replaced a whle bunch of UNIVERSAL::isa() calls with blessed/isa
+* Replaced a whole bunch of UNIVERSAL::isa() calls with blessed/isa
 
 * Applied a patch from Norbert Buchmüller to prevent the #line markers
   from being whitespaced away from the first column.
