@@ -320,7 +320,7 @@ sub split_text {
                 if ($chomp && $pre) {
                     # chomp off whitespace and newline preceding directive
                     if ($chomp == CHOMP_ALL) { 
-                        $pre =~ s{ (\n|^) [^\S\n]* \z }{}mx;
+                        $pre =~ s{ (\r?\n|^) [^\S\n]* \z }{}mx;
                     }
                     elsif ($chomp == CHOMP_COLLAPSE) { 
                         $pre =~ s{ (\s+) \z }{ }x;

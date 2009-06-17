@@ -37,6 +37,8 @@ my $dong    = "!\n\n[%= dong =%]\n\n!";
 my $dang    = "Hello[%# blah blah blah -%]\n!";
 my $winsux1 = "[% ding -%]\015\012[% dong %]";
 my $winsux2 = "[% ding -%]\015\012\015\012[% dong %]";
+my $winsux3 = "[% ding %]\015\012[%- dong %]";
+my $winsux4 = "[% ding %]\015\012\015\012[%- dong %]";
 
 my $blocks = {
     foo     => $foo,
@@ -47,6 +49,8 @@ my $blocks = {
     dang    => $dang,
     winsux1 => $winsux1,
     winsux2 => $winsux2,
+    winsux3 => $winsux3,
+    winsux4 => $winsux4,
 };
 
 # script may be being run in distribution root or 't' directory
@@ -95,28 +99,36 @@ match( $out, "Hello!", 'dang out' );
 
 $out = '';
 ok( $tt2->process('winsux1', $vars, \$out), 'winsux1' );
-match( $out, "HelloWorld", 'winsux1 out' );
+match( od($out), "HelloWorld", 'winsux1 out' );
 
 $out = '';
 ok( $tt2->process('winsux2', $vars, \$out), 'winsux2' );
+match( od($out), 'Hello\015\012World', 'winsux2 out' );
 
-$out = join(
-    '', 
-    map {
-        my $ord = ord($_);
-        ($ord > 127 || $ord < 32 )
-            ? sprintf '\0%lo', $ord
-            : $_
-    } 
-    split //, $out
-);
+$out = '';
+ok( $tt2->process('winsux3', $vars, \$out), 'winsux3' );
+match( od($out), "HelloWorld", 'winsux3 out' );
 
-match( $out, 'Hello\015\012World', 'winsux2 out' );
+$out = '';
+ok( $tt2->process('winsux4', $vars, \$out), 'winsux4' );
+match( od($out), 'Hello\015\012World', 'winsux4 out' );
 
 $out = '';
 ok( $tt2->process('dos_newlines', $vars, \$out), 'dos_newlines' );
 match( $out, "HelloWorld", 'dos_newlines out' );
 
+sub od{
+    join(
+        '', 
+        map {
+            my $ord = ord($_);
+            ($ord > 127 || $ord < 32 )
+                ? sprintf '\0%lo', $ord
+                : $_
+        } 
+        split //, shift()
+    );
+}
 
 #------------------------------------------------------------------------
 # tests with the PRE_CHOMP option set
@@ -128,24 +140,24 @@ $tt2 = Template->new({
 });
 
 $out = '';
-ok( $tt2->process('foo', $vars, \$out), $tt2->error() );
-match( $out, "3.14\n" );
+ok( $tt2->process('foo', $vars, \$out), 'pre pi' );
+match( $out, "3.14\n", 'pre pi match' );
 
 $out = '';
-ok( $tt2->process('bar', $vars, \$out), $tt2->error() );
-match( $out, "2.718" );
+ok( $tt2->process('bar', $vars, \$out), 'pre e' );
+match( $out, "2.718", 'pre e match' );
 
 $out = '';
-ok( $tt2->process('baz', $vars, \$out), $tt2->error() );
-match( $out, "\n1.618\n" );
+ok( $tt2->process('baz', $vars, \$out), 'pre phi' );
+match( $out, "\n1.618\n", 'pre phi match' );
 
 $out = '';
-ok( $tt2->process('ding', $vars, \$out), $tt2->error() );
-match( $out, "!Hello!" );
+ok( $tt2->process('ding', $vars, \$out), 'pre hello' );
+match( $out, "!Hello!", 'pre hello match' );
 
 $out = '';
-ok( $tt2->process('dong', $vars, \$out), $tt2->error() );
-match( $out, "! World !" );
+ok( $tt2->process('dong', $vars, \$out), 'pre world' );
+match( $out, "! World !", 'pre world match' );
 
 
 #------------------------------------------------------------------------
@@ -158,24 +170,24 @@ $tt2 = Template->new({
 });
 
 $out = '';
-ok( $tt2->process('foo', $vars, \$out), $tt2->error() );
-match( $out, "\n3.14" );
+ok( $tt2->process('foo', $vars, \$out), 'post pi' );
+match( $out, "\n3.14", 'post pi match' );
 
 $out = '';
-ok( $tt2->process('bar', $vars, \$out), $tt2->error() );
-match( $out, "2.718" );
+ok( $tt2->process('bar', $vars, \$out), 'post e' );
+match( $out, "2.718", 'post e match' );
 
 $out = '';
-ok( $tt2->process('baz', $vars, \$out), $tt2->error() );
-match( $out, "\n1.618\n" );
+ok( $tt2->process('baz', $vars, \$out), 'post phi' );
+match( $out, "\n1.618\n", 'post phi match' );
 
 $out = '';
-ok( $tt2->process('ding', $vars, \$out), $tt2->error() );
-match( $out, "!Hello!" );
+ok( $tt2->process('ding', $vars, \$out), 'post hello' );
+match( $out, "!Hello!", 'post hello match' );
 
 $out = '';
-ok( $tt2->process('dong', $vars, \$out), $tt2->error() );
-match( $out, "! World !" );
+ok( $tt2->process('dong', $vars, \$out), 'post world' );
+match( $out, "! World !", 'post world match' );
 
 
 my $tt = [
