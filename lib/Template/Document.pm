@@ -236,7 +236,7 @@ sub as_perl {
 
     $defblocks = join('', map {
         my $code = $defblocks->{ $_ };
-        $code =~ s/\n/\n        /g;
+        $code =~ s/\n(?!#line)/\n        /g;
         $code =~ s/\s*$//;
         "        '$_' => $code,\n";
     } keys %$defblocks);
