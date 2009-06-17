@@ -11,6 +11,18 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
+# Version 2.20_5 (2.21 candidate) - 
+#------------------------------------------------------------------------
+
+* Fixed a PRE_CHOMP bug that left \r characters lying around when 
+  confronted with templates with DOS \r\n line endings.
+  https://rt.cpan.org/Ticket/Display.html?id=43345
+
+* Applied patch from Bradley Baetz to fix defblock #line numbers
+  http://rt.cpan.org/Public/Bug/Display.html?id=47024
+
+
+#-----------------------------------------------------------------------
 # Version 2.20_4 (2.21 candidate) - 21st May 2009
 #------------------------------------------------------------------------
 
