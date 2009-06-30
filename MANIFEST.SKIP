@@ -35,6 +35,7 @@
 ^bin/tskel
 ^bin/fixconfig
 ^bin/tt2prep
+^bin/gifsplash
 ^parser/Parser\.output
 ^templates/skeleton
 ^docs/\w+\.cfg
@@ -44,6 +45,7 @@
 ^examples/dist.cfg
 ^examples/old
 ^examples/html/(?!README)
+^images/splash
 ^t/dbi_test.cfg
 ^t/shout.t
 ^t/map.t
