@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.20_4
+                              Version 2.21
 
-                              21st May 2009
+                             30th June 2009
 
         Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved
 
@@ -44,12 +44,11 @@ other offline document systems.
 WHAT'S NEW?
 -----------
 
-Version 2.21 (of which 2.20_1 and 2.20_2 are developer pre-releases) features 
-a complete clean-out of all the old HTML documentation, examples, libraries
-and other cruft that was way out of date and badly unloved.  A new version of 
-the HTML documentation is available for download from 
-http://tt2.org/download/index.html#html_docs.  v2.21 also fixes a memory leak
-in the XS Stash.
+Version 2.21 features a complete clean-out of all the old HTML documentation,
+examples, libraries and other cruft that was way out of date and badly
+unloved. A new version of the HTML documentation is available for download
+from http://tt2.org/download/index.html#html_docs. v2.21 also fixes a memory
+leak in the XS Stash.
 
 Version 2.21 also adds the STRICT option which reports the use of undefined
 variable values. The ANYCASE option has been improved so that you can write
@@ -225,15 +224,6 @@ creating and using data files.
     perldoc Template::Tutorial::Web
     perldoc Template::Tutorial::Datafile
 
-The new template libraries distributed with the Template Toolkit have
-some documentation, but be warned that it is rather spartan at
-present.  If you're interested in using these libraries then the
-examples (in the 'examples' sub-directory) are likely to be much more
-useful until the documentation catches up.
-
-    perldoc Template::Library::HTML
-    perldoc Template::Library::Splash
-
 Each of the various modules that comprise the Template Toolkit has its
 own associated documention.  The 'Template::Modules' manpage lists
 these modules along with a brief description of their functions.
@@ -265,8 +255,8 @@ Further contributions welcome.
 
 Most of the documentation is stable and reliable.  Where it's not then
 it's usually marked as such.  In particular, the documentation for the
-template libraries (Template::Library::*), the FAQ (Template::FAQ) and
-internals (Template::Internals) are all under construction.
+internals (Template::Manual::Internals) and FAQ (Template::FAQ) are 
+perpetually under construction.
 
 
 SUPPORT
@@ -315,7 +305,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2008 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
