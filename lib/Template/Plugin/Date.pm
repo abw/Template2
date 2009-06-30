@@ -26,7 +26,7 @@ use base 'Template::Plugin';
 
 use POSIX ();
 
-our $VERSION = 2.77;
+our $VERSION = 2.78;
 our $FORMAT  = '%H:%M:%S %d-%b-%Y';    # default strftime() format
 our @LOCALE_SUFFIX = qw( .ISO8859-1 .ISO_8859-15 .US-ASCII .UTF-8 );
 
