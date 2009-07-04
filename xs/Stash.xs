@@ -142,6 +142,14 @@ static TT_RET tt_fetch_item(pTHX_ SV *root, SV *key_sv, AV *args, SV **result) {
     char *key = SvPV(key_sv, key_len);
     SV **value = NULL;
 
+#ifndef WIN32
+    debug("fetch item: %s\n", key);
+#endif
+
+    /* negative key_len is used to indicate UTF8 string */
+    if (SvUTF8(key_sv))
+        key_len = -key_len;
+    
     if (!SvROK(root)) 
         return TT_RET_UNDEF;
     
@@ -477,6 +485,10 @@ static SV *assign(pTHX_ SV *root, SV *key_sv, AV *args, SV *value, int flags) {
 #ifndef WIN32
     debug("assign(%s)\n", key2);
 #endif
+
+    /* negative key_len is used to indicate UTF8 string */
+    if (SvUTF8(key_sv))
+        key_len = -key_len;
 
     if (!root || !SvOK(key_sv) || key_sv == &PL_sv_undef || looks_private(aTHX_ key)) {
         /* ignore _private or .private members */

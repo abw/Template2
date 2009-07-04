@@ -21,31 +21,42 @@ use utf8;
 use Template;
 use Template::Test;
 
+BEGIN {
+    unless ($] > 5.007) {
+        skip_all("perl < 5.8 can't do unicode well enough\n");
+    }
+}
+
 eval {
     require Template::Stash::XS;
 };
 if ($@) {
     warn $@;
-    skip_all('cannot load Template::Stash::XS');
 }
 
 binmode STDOUT, ':utf8';
 
+$Template::Config::STASH = 'Template::Stash::XS';
+
 # XXX: uncomment this to make Template work properly
 #$Template::Config::STASH = 'Template::Stash';
+
+my $config = {
+    ENCODING => 'utf8',
+};
 
 my $data = {
     ascii => 'key',
     utf8  => 'ключ',
     hash  => {
-        key => 'value',
+        key  => 'value',
         ключ => 'значение'
     },
     str => 'щука'
 };
 
 
-test_expect(\*DATA, undef, $data);
+test_expect(\*DATA, $config, $data);
 
 __DATA__
 -- test --
@@ -62,14 +73,22 @@ str.length = [% str.length %]
 -- expect --
 str.length = 4
 
--- stop --
-This test fails.  A trivial attempt at fixing the XS Stash didn't work.  Needs a proper look.
+#-- stop --
+#This test fails.  A trivial attempt at fixing the XS Stash didn't work.  Needs a proper look.
 
 -- test --
--- name UTF8 key --
+-- name UTF8 key fetch --
 utf8 = [% utf8 %]
-hash.$utf8 = [% hash.$utf8 %]
+hash.$utf8 = hash.[% utf8 %] = [% hash.$utf8 %]
 -- expect --
 utf8 = ключ
-hash.$utf8 = значение
+hash.$utf8 = hash.ключ = значение
 
+-- test --
+-- name UTF8 key assign --
+[% value = hash.$utf8; hash.$value = utf8 -%]
+value = [% value %]
+hash.$value = hash.[% value %] = [% hash.$value %]
+-- expect --
+value = значение
+hash.$value = hash.значение = ключ
