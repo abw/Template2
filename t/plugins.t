@@ -17,7 +17,7 @@
 #========================================================================
 
 use strict;
-use lib qw( ./lib ../lib ../blib/arch );
+use lib qw( t/lib ./lib ../lib ../blib/arch );
 use Template::Test;
 use Template::Plugins;
 use Template::Constants qw( :debug );
@@ -30,11 +30,13 @@ my $DEBUG = grep(/^--?d(debug)?$/, @ARGV);
 #$Template::Plugins::DEBUG = 0;
 
 my $dir = abs_path( -d 't' ? 't/test/plugin' : 'test/plugin' );
+my $src = abs_path( -d 't' ? 't/test/lib' : 'test/lib' );
 unshift(@INC, $dir);
 
 my $tt1 = Template->new({      
-    PLUGIN_BASE => 'MyPlugs',
-    DEBUG => $DEBUG ? DEBUG_PLUGINS : 0,
+    PLUGIN_BASE  => ['MyPlugs','Template::Plugin'],
+    INCLUDE_PATH => $src,
+    DEBUG        => $DEBUG ? DEBUG_PLUGINS : 0,
 }) || die Template->error();
 
 require "MyPlugs/Bar.pm";
@@ -248,5 +250,17 @@ ERROR: Date: plugin not found
 [% USE mycgi = url('/cgi-bin/bar.pl', debug=1); %][% mycgi %]
 -- expect --
 /cgi-bin/bar.pl?debug=1
+
+-- test --
+-- use tt1 --
+-- name Simple plugin filter --
+[% USE Simple -%]
+test 1: [% 'hello' | simple %]
+[% INCLUDE simple2 %]
+test 3: [% 'world' | simple %]
+-- expect --
+test 1: **hello**
+test 2: **badger**
+test 3: **world**
 
 
