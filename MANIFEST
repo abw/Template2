@@ -37,7 +37,6 @@ lib/Template/Namespace/Constants.pm
 lib/Template/Parser.pm
 lib/Template/Plugin.pm
 lib/Template/Plugin/Assert.pm
-lib/Template/Plugin/Autoformat.pm
 lib/Template/Plugin/CGI.pm
 lib/Template/Plugin/Datafile.pm
 lib/Template/Plugin/Date.pm
@@ -84,7 +83,6 @@ parser/yc
 README
 t/args.t
 t/assert.t
-t/autoform.t
 t/base.t
 t/binop.t
 t/block.t
