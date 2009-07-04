@@ -11,11 +11,13 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 2.21_01 - Not yet released
+# Version 2.21_01 - 4th July 2009
 #------------------------------------------------------------------------
 
 * Removed Template::Plugin::Autoformat and t/autoform.t.  They're now
   available as a separate distribution.
+
+* Fixed some Win32 test failures and XS Stash compilation problems.
 
 
 #-----------------------------------------------------------------------
