@@ -38,13 +38,6 @@ binmode STDOUT, ':utf8';
 
 $Template::Config::STASH = 'Template::Stash::XS';
 
-# XXX: uncomment this to make Template work properly
-#$Template::Config::STASH = 'Template::Stash';
-
-my $config = {
-    ENCODING => 'utf8',
-};
-
 my $data = {
     ascii => 'key',
     utf8  => 'ключ',
@@ -56,7 +49,7 @@ my $data = {
 };
 
 
-test_expect(\*DATA, $config, $data);
+test_expect(\*DATA, undef, $data);
 
 __DATA__
 -- test --
@@ -72,9 +65,6 @@ hash.$ascii = value
 str.length = [% str.length %]
 -- expect --
 str.length = 4
-
-#-- stop --
-#This test fails.  A trivial attempt at fixing the XS Stash didn't work.  Needs a proper look.
 
 -- test --
 -- name UTF8 key fetch --
