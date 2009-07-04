@@ -30,8 +30,11 @@ $^W = 1;
 #$Template::Test::EXTRA = 2;
 
 # script may be being run in distribution root or 't' directory
-my $dir   = abs_path( -d 't' ? 't/test' : 'test' );
-my $cdir  = abs_path("$dir/tmp") . "/cache";
+my @dir   = -d 't' ? qw(t test) : qw(test);
+my $dir   = abs_path( File::Spec->catfile(@dir) );
+my $tdir  = abs_path( File::Spec->catfile(@dir, 'tmp'));
+my $cdir  = File::Spec->catfile($tdir, 'cache');
+my $zero  = File::Spec->catfile($dir, qw(src divisionbyzero));
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => "$dir/src",
@@ -39,7 +42,8 @@ my $ttcfg = {
     COMPILE_EXT  => '.ttc',
     ABSOLUTE     => 1,
     CONSTANTS    => {
-      dir => $dir,
+      dir  => $dir,
+      zero => $zero,
     },
 };
 
@@ -88,4 +92,4 @@ This is the blam file
 [% INCLUDE divisionbyzero -%]
 -- expect --
 -- process --
-undef error - Illegal division by zero at [% constants.dir %]/src/divisionbyzero line 1.
+undef error - Illegal division by zero at [% constants.zero %] line 1.

@@ -20,14 +20,20 @@
 use strict;
 use lib qw( ./lib ../lib );
 use Template::Test;
+use File::Spec;
 $^W = 1;
 
 # script may be being run in distribution root or 't' directory
-my $dir   = -d 't' ? 't/test/src' : 'test/src';
+my @dir   = -d 't' ? qw(t test src) : qw(test src);
+my $dir   = File::Spec->catfile(@dir);
+my $zero  = File::Spec->catfile(@dir, 'divisionbyzero');
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => $dir,
-    COMPILE_EXT => '.ttc',
+    COMPILE_EXT  => '.ttc',
+    CONSTANTS    => {
+        zero => $zero,
+    },
 };
 
 my $compiled = "$dir/foo.ttc";
@@ -94,4 +100,5 @@ This is the footer, author: billg, version: 6.66
 [%- # second pass, reads the compiled code from cache -%]
 [% INCLUDE divisionbyzero -%]
 -- expect --
-undef error - Illegal division by zero at t/test/src/divisionbyzero line 1, <DATA> chunk 1.
+-- process --
+undef error - Illegal division by zero at [% constants.zero %] line 1, <DATA> chunk 1.

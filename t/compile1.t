@@ -18,20 +18,26 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template::Test;
-$^W = 1;
+use File::Spec;
 
 # declare extra tests to follow test_expect();
 $Template::Test::EXTRA = 2;
 
 # script may be being run in distribution root or 't' directory
-my $dir   = -d 't' ? 't/test/src' : 'test/src';
+my @dir   = -d 't' ? qw(t test src) : qw(test src);
+my $dir   = File::Spec->catfile(@dir);
+my $zero  = File::Spec->catfile(@dir, 'divisionbyzero');
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => $dir,
-    COMPILE_EXT => '.ttc',
-    EVAL_PERL   => 1,
+    COMPILE_EXT  => '.ttc',
+    EVAL_PERL    => 1,
+    CONSTANTS    => {
+        zero     => $zero,
+    },
 };
 
 # delete any existing files
@@ -80,4 +86,5 @@ This is the baz file, a:
 [%- # first pass, writes the compiled code to cache -%]
 [% INCLUDE divisionbyzero -%]
 -- expect --
-undef error - Illegal division by zero at t/test/src/divisionbyzero line 1.
+-- process --
+undef error - Illegal division by zero at [% constants.zero %] line 1.

@@ -15,6 +15,10 @@ my @MODULES = (
 
 # Don't run tests for installs
 use Test::More;
+unless (grep(/--abw/, @ARGV)) {
+    plan( skip_all => 'Internal test for abw, add the --abw flag to run' );
+}
+
 unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} ) {
     plan( skip_all => "Author tests not required for installation" );
 }
@@ -29,4 +33,4 @@ foreach my $MODULE ( @MODULES ) {
     }
 }
 
-all_minimum_version_from_metayml_ok();
+all_minimum_version_ok(5.006);

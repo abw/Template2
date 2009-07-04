@@ -19,15 +19,22 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use Cwd qw( abs_path );
 use File::Path;
 
-$^W = 1;
+my @dir   = -d 't' ? qw(t test) : qw(test);
+my $dir   = abs_path( File::Spec->catfile(@dir) );
+my $tdir  = abs_path( File::Spec->catfile(@dir, 'tmp'));
+my $cdir  = File::Spec->catfile($tdir, 'cache');
+my $zero  = File::Spec->catfile($dir, qw(src divisionbyzero));
+print "zero: $zero\n";
 
-my $dir   = abs_path( -d 't' ? 't/test' : 'test' );
-my $cdir  = abs_path("$dir/tmp") . "/cache";
+#my $dir   = abs_path( -d 't' ? 't/test' : 'test' );
+#my $cdir  = abs_path("$dir/tmp") . "/cache";
+#my $zero  = "$cdir/src/divisionbyzero";
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => "$dir/src",
@@ -35,9 +42,12 @@ my $ttcfg = {
     COMPILE_EXT  => '.ttc',
     ABSOLUTE     => 1,
     CONSTANTS    => {
-      dir => $dir,
+      dir  => $dir,
+      zero => $zero,
     },
 };
+
+#print "
 
 # check compiled template files exist
 my $fixdir = $dir;
@@ -46,9 +56,9 @@ my ($foo, $bar, $blam) = map { "$cdir/$fixdir/src/$_.ttc" }
                            qw( foo complex blam );
 $blam =~ s[/+][/]g;
 
-ok( -f $foo );
-ok( -f $bar );
-ok( -f $blam );
+ok( -f $foo, 'cached foo' );
+ok( -f $bar, 'cached bar' );
+ok( -f $blam, 'cached blam' );
 
 # we're going to hack on the compiled 'foo' file to change some key text.
 # this way we can tell that the template was loaded from the compiled
@@ -88,6 +98,8 @@ utime( @blam_times, $blam );
 
 test_expect(\*DATA, $ttcfg, { root => abs_path($dir) } );
 
+exit;
+
 # cleanup cache directory
 rmtree($cdir) if -d $cdir;
 
@@ -116,4 +128,4 @@ This is the wam-bam file
 [% INCLUDE divisionbyzero -%]
 -- expect --
 -- process --
-undef error - Illegal division by zero at [% constants.dir %]/src/divisionbyzero line 1, <DATA> chunk 1.
+undef error - Illegal division by zero at [% constants.zero %] line 1, <DATA> chunk 1.

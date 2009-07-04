@@ -18,10 +18,11 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use File::Copy;
-$^W = 1;
+use File::Spec;
 
 #ntests(13);
 
@@ -30,7 +31,8 @@ $Template::Test::EXTRA = 1;
 #$Template::Parser::DEBUG = 1;
 
 # script may be being run in distribution root or 't' directory
-my $dir   = -d 't' ? 't/test/src' : 'test/src';
+my @dir   = -d 't' ? qw(t test src) : qw(test src);
+my $dir   = File::Spec->catfile(@dir);
 my $ttcfg = {
     POST_CHOMP   => 1,
     INCLUDE_PATH => $dir,
