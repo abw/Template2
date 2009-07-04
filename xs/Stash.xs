@@ -814,19 +814,25 @@ static TT_RET list_op(pTHX_ SV *root, char *key, AV *args, SV **result) {
 
     /* look for and execute XS version first */
     if ((a = find_xs_op(key)) && a->list_f) {
+#ifndef WIN32
         debug("calling internal list vmethod: %s\n", key);
+#endif
         *result = a->list_f(aTHX_ (AV *) SvRV(root), args);
         return TT_RET_CODEREF;
     }
 
     /* look for and execute perl version in Template::Stash module */
     if ((code = find_perl_op(aTHX_ key, TT_LIST_OPS))) {
+#ifndef WIN32
         debug("calling perl list vmethod: %s\n", key);
+#endif
         *result = call_coderef(aTHX_ code, mk_mortal_av(aTHX_ root, args, NULL));
         return TT_RET_CODEREF;
     }
 
+#ifndef WIN32
     debug("list vmethod not found: %s\n", key);
+#endif
 
     /* not found */
     *result = &PL_sv_undef;
