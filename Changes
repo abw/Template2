@@ -11,6 +11,18 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
+# Version 2.21_02 - 4th July 2009
+#------------------------------------------------------------------------
+
+* Added UTF8 support to the XS Stash.
+  https://rt.cpan.org/Ticket/Display.html?id=45842
+
+* Fixed the truncate filter to handle lengths shorter than the '...' 
+  string being appended on the end.
+  https://rt.cpan.org/Ticket/Display.html?id=45617
+
+
+#-----------------------------------------------------------------------
 # Version 2.21_01 - 4th July 2009
 #------------------------------------------------------------------------
 

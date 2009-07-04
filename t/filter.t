@@ -479,11 +479,13 @@ The cat sat on the mat
 Mary ...
 
 -- test --
+[% 'Hello World' | truncate(2) +%]
 [% 'Hello World' | truncate(8) +%]
 [% 'Hello World' | truncate(10) +%]
-[% 'Hello World' | truncate(20) +%]
 [% 'Hello World' | truncate(11) +%]
+[% 'Hello World' | truncate(20) +%]
 -- expect --
+..
 Hello...
 Hello W...
 Hello World
