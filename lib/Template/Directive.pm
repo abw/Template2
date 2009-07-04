@@ -394,9 +394,10 @@ sub if {
 #------------------------------------------------------------------------
 
 sub foreach {
-    my ($class, $target, $list, $args, $block) = @_;
+    my ($class, $target, $list, $args, $block, $label) = @_;
     $args  = shift @$args;
     $args  = @$args ? ', { ' . join(', ', @$args) . ' }' : '';
+    $label ||= 'LOOP';
 
     my ($loop_save, $loop_set, $loop_restore, $setiter);
     if ($target) {
@@ -430,7 +431,7 @@ do {
     $loop_save;
     \$stash->set('loop', \$_tt_list);
     eval {
-LOOP:   while (! \$_tt_error) {
+$label:   while (! \$_tt_error) {
             $loop_set;
 $block;
             (\$_tt_value, \$_tt_error) = \$_tt_list->get_next();
@@ -451,9 +452,11 @@ EOF
 #------------------------------------------------------------------------
 
 sub next {
+    my ($class, $label) = @_;
+    $label ||= 'LOOP';
     return <<EOF;
 (\$_tt_value, \$_tt_error) = \$_tt_list->get_next();
-next LOOP;
+next $label;
 EOF
 }
 
@@ -523,15 +526,16 @@ EOF
 #------------------------------------------------------------------------
 
 sub while {
-    my ($class, $expr, $block) = @_;
+    my ($class, $expr, $block, $label) = @_;
     $block = pad($block, 2) if $PRETTY;
+    $label ||= 'LOOP';
 
     return <<EOF;
 
 # WHILE
 do {
     my \$_tt_failsafe = $WHILE_MAX;
-LOOP:
+$label:
     while (--\$_tt_failsafe && ($expr)) {
 $block
     }
@@ -712,7 +716,7 @@ sub clear {
 # NOTE: this is redundant, being hard-coded (for now) into Parser.yp
 #------------------------------------------------------------------------
 
-sub break {
+sub OLD_break {
     return 'last LOOP;';
 }
 

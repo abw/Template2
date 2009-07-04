@@ -6,22 +6,19 @@
 #
 # Written by Andy Wardley <abw@kfs.org>
 #
-# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
-# Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
+# Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 #
-# $Id$
-#
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template::Test;
 use Template::Parser;
 use Template::Directive;
-$^W = 1;
 
 $Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 1;
@@ -177,7 +174,7 @@ Reset list
             k = 1;
             SWITCH j;
             CASE 2;
-                LAST WHILE k == 1;
+                WHILE k == 1; LAST; END;
             CASE 3;
                 IF j == 3; j = j + 1; NEXT; END;
             END;

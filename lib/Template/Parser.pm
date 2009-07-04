@@ -51,6 +51,9 @@ our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 
 
+# TODO: remove this
+use Badger::Debug 'debug :dump';
+
 #========================================================================
 #                        -- COMMON TAG STYLES --
 #========================================================================
@@ -119,6 +122,7 @@ sub new {
         FILE_INFO   => 1,
         GRAMMAR     => undef,
         _ERROR      => '',
+        IN_BLOCK    => [ ],
         FACTORY     => $config->{ FACTORY } || 'Template::Directive',
     }, $class;
 
@@ -168,6 +172,42 @@ sub new {
         
     return $self;
 }
+
+#-----------------------------------------------------------------------
+# These methods are used to track nested IF and WHILE blocks.  Each 
+# generated if/while block is given a label indicating the directive 
+# type and nesting depth, e.g. FOR0, WHILE1, FOR2, WHILE3, etc.  The
+# NEXT and LAST directives use the innermost label, e.g. last WHILE3;
+#-----------------------------------------------------------------------
+
+sub enter_block {
+    my ($self, $name) = @_;
+    my $blocks = $self->{ IN_BLOCK };
+    push(@{ $self->{ IN_BLOCK } }, $name);
+}
+
+sub leave_block {
+    my $self = shift;
+    my $label = $self->block_label;
+    pop(@{ $self->{ IN_BLOCK } });
+    return $label;
+}
+
+sub in_block {
+    my ($self, $name) = @_;
+    my $blocks = $self->{ IN_BLOCK };
+    return @$blocks && $blocks->[-1] eq $name;
+}
+
+sub block_label {
+    my ($self, $prefix, $suffix) = @_;
+    my $blocks = $self->{ IN_BLOCK };
+    my $name   = @$blocks 
+        ? $blocks->[-1] . scalar @$blocks 
+        : undef;
+    return join('', grep { defined $_ } $prefix, $name, $suffix);
+}
+
 
 
 #------------------------------------------------------------------------
@@ -673,6 +713,7 @@ sub location {
     my $file = $info->{ path } || $info->{ name } 
         || '(unknown template)';
     $line =~ s/\-.*$//; # might be 'n-n'
+    $line ||= 1;
     return "#line $line \"$file\"\n";
 }
 

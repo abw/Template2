@@ -17,14 +17,15 @@
 #========================================================================
 
 use strict;
+use warnings;
 use lib qw( ./lib ../lib );
 use Template qw( :status );
 use Template::Test;
-$^W = 1;
 
 #$Template::Test::DEBUG = 0;
 #$Template::Parser::DEBUG = 1;
 #$Template::Directive::PRETTY = 1;
+
 
 my ($a, $b, $c, $d, $l, $o, $r, $u, $w ) = 
 	qw( alpha bravo charlie delta lima oscar romeo uncle whisky );
@@ -572,14 +573,15 @@ last outer
 4
 6
 7
+
 -- test --
 [%
     FOREACH i = [1 .. 4];
         FOREACH j = [1 .. 4];
             k = 1;
             SWITCH j;
-            CASE 2;
-                LAST FOREACH k = [ 1 .. 2 ];
+                CASE 2;
+                FOREACH k IN [ 1 .. 2 ]; LAST; END;
             CASE 3;
                 NEXT IF j == 3;
             END;
@@ -624,3 +626,24 @@ last outer
 7
 11
 13
+
+-- test --
+-- name FOR/WHILE/NEXT --
+[%  FOREACH i IN [ 1..6 ];
+        "${i}: ";
+        j = 0;
+        WHILE j < i;
+            j = j + 1;
+            NEXT IF j > 3;
+            "${j} ";
+        END;
+        "\n";
+    END;
+%]
+-- expect --
+1: 1 
+2: 1 2 
+3: 1 2 3 
+4: 1 2 3 
+5: 1 2 3 
+6: 1 2 3 

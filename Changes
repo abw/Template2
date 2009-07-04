@@ -21,6 +21,10 @@
   string being appended on the end.
   https://rt.cpan.org/Ticket/Display.html?id=45617
 
+* Fixed a bug in the parser/grammar to make NEXT/LAST work correctly
+  inside nested loops.
+  https://rt.cpan.org/Ticket/Display.html?id=40887
+
 
 #-----------------------------------------------------------------------
 # Version 2.21_01 - 4th July 2009
