@@ -51,9 +51,6 @@ our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 
 
-# TODO: remove this
-use Badger::Debug 'debug :dump';
-
 #========================================================================
 #                        -- COMMON TAG STYLES --
 #========================================================================
