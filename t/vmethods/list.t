@@ -39,14 +39,21 @@ $Template::Config::STASH = 'Template::Stash';
 package My::Object;
 
 sub new { 
-    my ($class, $name) = @_;
+    my ($class, $name, $extra) = @_;
     bless {
-        _NAME => $name,
+        _NAME  => $name,
+        _EXTRA => $extra,
     }, $class;
 }
+
 sub name { 
     my $self = shift;
     return $self->{ _NAME };
+}
+
+sub extra { 
+    my $self = shift;
+    return $self->{ _EXTRA };
 }
 
 #------------------------------------------------------------------------
@@ -86,6 +93,12 @@ my $params = {
     groceries => { 'Flour' => 3, 'Milk' => 1, 'Peanut Butter' => 21 },
     names     => [ map { My::Object->new($_) }
                    qw( Tom Dick Larry ) ],
+    more_names => [ 
+        My::Object->new('Smith', 'William'),
+        My::Object->new('Smith', 'Andrew'),
+        My::Object->new('Jones', 'Peter'),
+        My::Object->new('Jones', 'Mark'),
+    ],
     numbers   => [ map { My::Object->new($_) }
                    qw( 1 02 10 12 021 ) ],
     duplicates => [ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
@@ -166,6 +179,7 @@ Richard
 Larry
 Tom
 
+-- start --
 -- test --
 [% FOREACH obj = names.sort('name') -%]
 [% obj.name +%]
@@ -174,6 +188,17 @@ Tom
 Dick
 Larry
 Tom
+
+-- test --
+[% FOREACH obj IN more_names.sort('name', 'extra') -%]
+[% obj.extra %] [% obj.name %]
+[% END %]
+-- expect --
+Mark Jones
+Peter Jones
+Andrew Smith
+William Smith
+-- stop --
 
 -- test --
 [% FOREACH obj = numbers.sort('name') -%]

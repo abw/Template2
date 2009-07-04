@@ -420,6 +420,13 @@ method will be called to return a comparison value.
 In the example, the C<books> list can contains hash references with 
 an C<author> key or objects with an C<author> method.
 
+You can also specify multiple sort keys.
+
+    [% library = books.sort('author', 'title') %]
+
+In this case the books will be sorted primarily by author.  If two or more
+books have authors with the same name then they will be sorted by title.
+
 =head2 unshift(item), push(item)
 
 The C<push()> method adds an item or items to the end of list.

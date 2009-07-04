@@ -23,6 +23,7 @@ package Template::VMethods;
 
 use strict;
 use warnings;
+use Scalar::Util 'blessed';
 require Template::Stash;
 
 our $VERSION = 2.16;
@@ -449,19 +450,34 @@ sub list_join {
          map { defined $_ ? $_ : '' } @$list);
 }
 
+sub _list_sort_make_key {
+   my ($item, $fields) = @_;
+   my @keys;
+
+   if (ref($item) eq 'HASH') {
+       @keys = map { $item->{ $_ } } @$fields;
+   }
+   elsif (blessed $item) {
+       @keys = map { $item->can($_) ? $item->$_() : $item } @$fields;
+   }
+   else {
+       @keys = $item;
+   }
+   
+   # ugly hack to generate a single string using a delimiter that is
+   # unlikely (but not impossible) to be found in the wild.
+   return lc join('/*^UNLIKELY^*/', map { defined $_ ? $_ : '' } @keys);
+}
+
 sub list_sort {
-    no warnings;
-    my ($list, $field) = @_;
-    return $list unless @$list > 1;     # no need to sort 1 item lists
-    return [
-        $field                          # Schwartzian Transform 
-        ?  map  { $_->[0] }             # for case insensitivity
-           sort { $a->[1] cmp $b->[1] }
-           map  { [ $_, lc(ref($_) eq 'HASH' 
-                           ? $_->{ $field } : 
-                           UNIVERSAL::can($_, $field)
-                           ? $_->$field() : $_) ] } 
-           @$list 
+    my ($list, @fields) = @_;
+    return $list unless @$list > 1;         # no need to sort 1 item lists
+    return [ 
+        @fields                          # Schwartzian Transform 
+        ?   map  { $_->[0] }                # for case insensitivity
+            sort { $a->[1] cmp $b->[1] }
+            map  { [ $_, _list_sort_make_key($_, \@fields) ] }
+            @$list
         :  map  { $_->[0] }
            sort { $a->[1] cmp $b->[1] }
            map  { [ $_, lc $_ ] } 
@@ -470,21 +486,18 @@ sub list_sort {
 }
 
 sub list_nsort {
-    my ($list, $field) = @_;
+    my ($list, @fields) = @_;
     return $list unless @$list > 1;     # no need to sort 1 item lists
     return [ 
-        $field                          # Schwartzian Transform 
+        @fields                         # Schwartzian Transform 
         ?  map  { $_->[0] }             # for case insensitivity
            sort { $a->[1] <=> $b->[1] }
-           map  { [ $_, lc(ref($_) eq 'HASH' 
-                           ? $_->{ $field } : 
-                           UNIVERSAL::can($_, $field)
-                           ? $_->$field() : $_) ] } 
-               @$list 
-            :  map  { $_->[0] }
-               sort { $a->[1] <=> $b->[1] }
-               map  { [ $_, lc $_ ] } 
-               @$list,
+           map  { [ $_, _list_sort_make_key($_, \@fields) ] }
+           @$list 
+        :  map  { $_->[0] }
+           sort { $a->[1] <=> $b->[1] }
+           map  { [ $_, lc $_ ] } 
+           @$list,
     ];
 }
 
