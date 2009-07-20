@@ -298,7 +298,7 @@ pretty much any kind of per-document initialisation that you require.
 =head2 Why do I get rubbish for my utf-8 templates?
 
 First of all, make sure that your template files define a Byte Order
-Mark (L<BOM|http://en.wikipedia.org/wiki/Byte_Order_Mark>).
+Mark L<http://en.wikipedia.org/wiki/Byte_Order_Mark>
 
 If you for some reason don't want to add BOM to your templates, you can
 force Template to use a particular encoding (e.g. C<utf8>) for your 

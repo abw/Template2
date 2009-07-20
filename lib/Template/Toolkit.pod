@@ -113,8 +113,8 @@ it on your local machine.
 
 =head1 Author
 
-The Template Toolkit was written by L<Andy Wardley|http://wardley.org/>
-E<lt>abw@wardley.orgE<gt> with assistance and contributions from a great 
+The Template Toolkit was written by Andy Wardley (L<http://wardley.org/>
+L<mailto:abw@wardley.org>) with assistance and contributions from a great 
 number of people.  Please see L<Template::Manual::Credits> for a full list.
 
 =head1 Copyright
