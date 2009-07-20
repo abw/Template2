@@ -25,6 +25,10 @@ $Template::Test::DEBUG = 0;
 $Template::Test::PRESERVE = 1;
 #$Template::View::DEBUG = 1;
 
+unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} ) {
+     skip_all("Author tests not required for installation");
+}
+
 eval "use Pod::POM";
 if ($@) {
     skip_all('Pod::POM not installed');
