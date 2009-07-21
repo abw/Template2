@@ -132,8 +132,6 @@ t/parser.t
 t/plugins.t
 t/plusfile.t
 t/pod.t
-t/pod_coverage.t
-t/pod_kwalitee.t
 t/prefix.t
 t/proc.t
 t/process.t
@@ -143,7 +141,6 @@ t/ref.t
 t/scalar.t
 t/service.t
 t/skel.t
-t/stash-xs-leak.t
 t/stash-xs-unicode.t
 t/stash-xs.t
 t/stash.t
@@ -231,6 +228,9 @@ t/while.t
 t/wrap.t
 t/wrapper.t
 t/zz-pmv.t
+t/zz-pod-coverage.t
+t/zz-pod-kwalitee.t
+t/zz-stash-xs-leak.t
 TODO
 xs/Makefile.PL
 xs/MANIFEST

@@ -18,11 +18,15 @@ use warnings;
 use lib qw( ./lib ../lib ../blib/lib ../blib/arch ./blib/lib ./blib/arch );
 use Template::Constants qw( :status );
 use Template;
-use Template::Test;
+use Test::More;
 
+# belt and braces
 unless (grep(/--abw/, @ARGV)) {
-    skip_all('Internal test for abw, add the --abw flag to run');
-    exit;
+    plan( skip_all => 'Internal test for abw, add the --abw flag to run' );
+}
+
+unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} ) {
+    plan( skip_all => "Author tests not required for installation" );
 }
 
 require Template::Stash::XS;

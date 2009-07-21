@@ -640,7 +640,7 @@ static SV *call_coderef(pTHX_ SV *code, AV *args) {
     PUTBACK;
     count = call_sv(code, G_ARRAY);
     SPAGAIN;
-    
+
     return fold_results(aTHX_ count);
 }
 

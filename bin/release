@@ -1,8 +1,13 @@
-PERL=/usr/local/bin/perl  
-$PERL Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n \
-&& make                \
-&& make test           \
-&& bin/fixconfig -v -y \
-&& make dist           \
-&& echo "Let's get it on!"
+set -e
+(
+  PERL=/usr/local/bin/perl  
+  export RELEASE_TESTING=1
+
+  $PERL Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n
+  make 
+  make test 
+  bin/fixconfig -v -y
+  make dist 
+  echo "Happy days are here again"
+)
 

@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                            Version 2.21_02
+                              Version 2.22
 
-                             4th July 2009
+                             21st July 2009
 
         Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved
 
@@ -44,7 +44,12 @@ other offline document systems.
 WHAT'S NEW?
 -----------
 
-Version 2.21 features a complete clean-out of all the old HTML documentation,
+Version 2.22 is mostly a bug fixing release.  The XS Stash now works with 
+utf8 data.  Tests that were failing on Win32 platforms have been fixed.  Pod 
+coverage and quality tests have been disabled except for release testing.  
+The Autoformat plugin has been moved into a separate distribution.
+
+Version 2.21 featured a complete clean-out of all the old HTML documentation,
 examples, libraries and other cruft that was way out of date and badly
 unloved. A new version of the HTML documentation is available for download
 from http://tt2.org/download/index.html#html_docs. v2.21 also fixes a memory

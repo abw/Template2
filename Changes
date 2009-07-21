@@ -10,6 +10,15 @@
 #
 #========================================================================
 
+
+#-----------------------------------------------------------------------
+# Version 2.22 - 21st July 2009
+#------------------------------------------------------------------------
+
+* Changed pod coverage and kwalitee tests to only run when release 
+  testing.
+
+
 #-----------------------------------------------------------------------
 # Version 2.21_02 - 4th July 2009
 #------------------------------------------------------------------------
@@ -27,7 +36,7 @@
 
 * Fixed a bug in Template::Plugin::Filter that was causing the weakened
   $self reference in a dynamic filter closure to be garbage collected
-  too soon.
+  too soon.  (NOTE: this has probably un-fixed a previous bug)
   https://rt.cpan.org/Ticket/Display.html?id=46691
 
 * Applied patch to allow list.sort to sort on multiple fields.
