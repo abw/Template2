@@ -3,6 +3,7 @@
 \.DS_Store
 \bdiffs?\b
 ^MANIFEST\.
+^RELEASE
 ^Makefile$
 ^Template-Toolkit-\d\.\d+\.tar\.gz$
 ~$

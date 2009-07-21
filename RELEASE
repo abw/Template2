@@ -1,0 +1,8 @@
+How to make a release:
+
+* Update $VERSION in lib/Template.pm
+
+* Edit Changes, README, HACKING and INSTALL to update version number.
+
+* run bin/release
+
