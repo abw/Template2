@@ -46,7 +46,7 @@ Now, if C<user.name> is an undefined value, an exception will be thrown:
 
 =head2 Autoformat
 
-The L<Autoformat|Template::Plugin::Autoformat> plugin is an interface to
+The L<Template::Plugin::Autoformat> plugin is an interface to
 Damian Conway's L<Text::Autoformat> Perl module which provides advanced text
 wrapping and formatting. See L<Template::Plugin::Autoformat> and
 L<Text::Autoformat> for further details.
