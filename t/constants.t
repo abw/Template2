@@ -35,8 +35,8 @@ my $constants = {
     double => "foo'bar",
     joint  => ', ',
     col => {
-	back => '#ffffff',
-	text => '#000000',
+        back => '#ffffff',
+        text => '#000000',
     },
     counter => sub { $n++ },
 };
@@ -57,7 +57,7 @@ is( $namespace->ident([ 'constants', 0, "'col'", 0, "'text'", 0 ]), "'#000000'",
 
 my $factory = Template::Directive->new({
     NAMESPACE => {
-	const => $namespace,
+        const => $namespace,
     }
 });
 ok( $factory, 'created Template::Directive factory' );
@@ -83,7 +83,7 @@ ok( scalar $text =~ /stash->get\(\['col', 0, 'user', 0\]\)/, 'col.user unfolded'
 
 $parser = Template::Parser->new({
     NAMESPACE => {
-	const => $namespace,
+        const => $namespace,
     }
 });
 
@@ -108,7 +108,7 @@ ok( scalar $text =~ /stash->get\(\['col', 0, 'user', 0\]\)/, 'col.user unfolded'
 
 my $tt1 = Template->new({
     NAMESPACE => {
-	const => $namespace,
+        const => $namespace,
     },
 });
 ok( $tt1, 'created tt1' );
@@ -117,8 +117,8 @@ my $const2 = {
     author => 'abw',
     joint  => ' is the new ',
     col => {
-	back => 'orange',
-	text => 'black',
+        back => 'orange',
+        text => 'black',
     },
     fave => 'back',
 };
@@ -138,8 +138,8 @@ my $engines = [ tt1 => $tt1, tt2 => $tt2, tt3 => $tt3 ];
 
 my $vars = {
     col => {
-	user => 'red',
-	luza => 'blue',
+        user => 'red',
+        luza => 'blue',
     },
     constants => $constants,
 };
@@ -191,6 +191,7 @@ abw thinks orange is the new black
 abw thinks orange is the new black
 
 -- test --
+-- name no const.foo --
 no [% const.foo %]?
 -- expect --
 no ?
