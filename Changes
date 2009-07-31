@@ -10,6 +10,14 @@
 #
 #========================================================================
 
+#-----------------------------------------------------------------------
+# Version 2.22_01 - not released yet
+#------------------------------------------------------------------------
+
+* Added the TRACE_VARS option to keep track of what variables are used
+  in a template.  It's not documented yet.  See t/trace_vars.t for an
+  example of use.
+
 
 #-----------------------------------------------------------------------
 # Version 2.22 - 21st July 2009

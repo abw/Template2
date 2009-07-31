@@ -32,7 +32,7 @@ use File::Basename;
 use File::Path;
 use Scalar::Util qw(blessed);
 
-our $VERSION = '2.22';
+our $VERSION = '2.22_1';
 our $ERROR   = '';
 our $DEBUG   = 0;
 our $BINMODE = 0 unless defined $BINMODE;
@@ -107,6 +107,10 @@ sub service {
 sub context {
     my $self = shift;
     return $self->{ SERVICE }->{ CONTEXT };
+}
+
+sub template {
+    shift->context->template(@_);
 }
 
 

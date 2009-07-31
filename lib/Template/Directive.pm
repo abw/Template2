@@ -37,6 +37,7 @@ our $DEBUG     = 0 unless defined $DEBUG;
 our $WHILE_MAX = 1000 unless defined $WHILE_MAX;
 our $PRETTY    = 0 unless defined $PRETTY;
 our $OUTPUT    = '$output .= ';
+our $OBSERVER;
 
 
 sub _init {
@@ -45,6 +46,12 @@ sub _init {
     return $self;
 }
 
+sub trace_vars {
+    my $self = shift;
+    return @_
+        ? ($self->{ TRACE_VARS } = shift)
+        :  $self->{ TRACE_VARS };
+}
 
 sub pad {
     my ($text, $pad) = @_;
@@ -64,7 +71,7 @@ sub pad {
 #------------------------------------------------------------------------
 
 sub template {
-    my ($class, $block) = @_;
+    my ($self, $block) = @_;
     $block = pad($block, 2) if $PRETTY;
 
     return "sub { return '' }" unless $block =~ /\S/;
@@ -95,7 +102,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub anon_block {
-    my ($class, $block) = @_;
+    my ($self, $block) = @_;
     $block = pad($block, 2) if $PRETTY;
 
     return <<EOF;
@@ -124,7 +131,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub block {
-    my ($class, $block) = @_;
+    my ($self, $block) = @_;
     return join("\n", @{ $block || [] });
 }
 
@@ -134,8 +141,8 @@ sub block {
 #------------------------------------------------------------------------
 
 sub textblock {
-    my ($class, $text) = @_;
-    return "$OUTPUT " . &text($class, $text) . ';';
+    my ($self, $text) = @_;
+    return "$OUTPUT " . &text($self, $text) . ';';
 }
 
 
@@ -144,7 +151,7 @@ sub textblock {
 #------------------------------------------------------------------------
 
 sub text {
-    my ($class, $text) = @_;
+    my ($self, $text) = @_;
     for ($text) {
         s/(["\$\@\\])/\\$1/g;
         s/\n/\\n/g;
@@ -158,7 +165,7 @@ sub text {
 #------------------------------------------------------------------------
 
 sub quoted {
-    my ($class, $items) = @_;
+    my ($self, $items) = @_;
     return '' unless @$items;
     return ("('' . " . $items->[0] . ')') if scalar @$items == 1;
     return '(' . join(' . ', @$items) . ')';
@@ -173,17 +180,40 @@ sub quoted {
 #------------------------------------------------------------------------
 
 sub ident {
-    my ($class, $ident) = @_;
+    my ($self, $ident) = @_;
     return "''" unless @$ident;
     my $ns;
 
-    # does the first element of the identifier have a NAMESPACE
-    # handler defined?
-    if (ref $class && @$ident > 2 && ($ns = $class->{ NAMESPACE })) {
-        my $key = $ident->[0];
-        $key =~ s/^'(.+)'$/$1/s;
-        if ($ns = $ns->{ $key }) {
-            return $ns->ident($ident);
+    # Careful!  Template::Parser always creates a Template::Directive object
+    # (as of v2.22_1) so $self is usually an object.  However, we used to 
+    # allow Template::Directive methods to be called as class methods and 
+    # Template::Namespace::Constants module takes advantage of this fact
+    # by calling Template::Directive->ident() when it needs to generate an
+    # identifier.  This hack guards against Mr Fuckup from coming to town
+    # when that happens.
+    
+    if (ref $self) {
+        # trace variable usage
+        if ($self->{ TRACE_VARS }) {
+            my $root = $self->{ TRACE_VARS };
+            my $n    = 0;
+            my $v;
+            while ($n < @$ident) {
+                $v = $ident->[$n];
+                for ($v) { s/^'//; s/'$// };
+                $root = $root->{ $v } ||= { };
+                $n += 2;
+            }
+        }
+
+        # does the first element of the identifier have a NAMESPACE
+        # handler defined?
+        if (@$ident > 2 && ($ns = $self->{ NAMESPACE })) {
+            my $key = $ident->[0];
+            $key =~ s/^'(.+)'$/$1/s;
+            if ($ns = $ns->{ $key }) {
+                return $ns->ident($ident);
+            }
         }
     }
         
@@ -201,7 +231,7 @@ sub ident {
 #------------------------------------------------------------------------
 
 sub identref {
-    my ($class, $ident) = @_;
+    my ($self, $ident) = @_;
     return "''" unless @$ident;
     if (scalar @$ident <= 2 && ! $ident->[1]) {
         $ident = $ident->[0];
@@ -218,7 +248,7 @@ sub identref {
 #------------------------------------------------------------------------
 
 sub assign {
-    my ($class, $var, $val, $default) = @_;
+    my ($self, $var, $val, $default) = @_;
 
     if (ref $var) {
         if (scalar @$var == 2 && ! $var->[1]) {
@@ -238,7 +268,7 @@ sub assign {
 #------------------------------------------------------------------------
 
 sub args {
-    my ($class, $args) = @_;
+    my ($self, $args) = @_;
     my $hash = shift @$args;
     push(@$args, '{ ' . join(', ', @$hash) . ' }')
         if @$hash;
@@ -252,7 +282,7 @@ sub args {
 #------------------------------------------------------------------------
 
 sub filenames {
-    my ($class, $names) = @_;
+    my ($self, $names) = @_;
     if (@$names > 1) {
         $names = '[ ' . join(', ', @$names) . ' ]';
     }
@@ -268,7 +298,7 @@ sub filenames {
 #------------------------------------------------------------------------
 
 sub get {
-    my ($class, $expr) = @_;  
+    my ($self, $expr) = @_;  
     return "$OUTPUT $expr;";
 }
 
@@ -278,7 +308,7 @@ sub get {
 #------------------------------------------------------------------------
 
 sub call {
-    my ($class, $expr) = @_;  
+    my ($self, $expr) = @_;  
     $expr .= ';';
     return $expr;
 }
@@ -289,10 +319,10 @@ sub call {
 #------------------------------------------------------------------------
 
 sub set {
-    my ($class, $setlist) = @_;
+    my ($self, $setlist) = @_;
     my $output;
     while (my ($var, $val) = splice(@$setlist, 0, 2)) {
-        $output .= &assign($class, $var, $val) . ";\n";
+        $output .= &assign($self, $var, $val) . ";\n";
     }
     chomp $output;
     return $output;
@@ -304,10 +334,10 @@ sub set {
 #------------------------------------------------------------------------
 
 sub default {
-    my ($class, $setlist) = @_;  
+    my ($self, $setlist) = @_;  
     my $output;
     while (my ($var, $val) = splice(@$setlist, 0, 2)) {
-        $output .= &assign($class, $var, $val, 1) . ";\n";
+        $output .= &assign($self, $var, $val, 1) . ";\n";
     }
     chomp $output;
     return $output;
@@ -320,9 +350,9 @@ sub default {
 #------------------------------------------------------------------------
 
 sub insert {
-    my ($class, $nameargs) = @_;
+    my ($self, $nameargs) = @_;
     my ($file, $args) = @$nameargs;
-    $file = $class->filenames($file);
+    $file = $self->filenames($file);
     return "$OUTPUT \$context->insert($file);"; 
 }
 
@@ -333,10 +363,10 @@ sub insert {
 #------------------------------------------------------------------------
 
 sub include {
-    my ($class, $nameargs) = @_;
+    my ($self, $nameargs) = @_;
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
-    $file = $class->filenames($file);
+    $file = $self->filenames($file);
     $file .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
     return "$OUTPUT \$context->include($file);"; 
 }
@@ -348,10 +378,10 @@ sub include {
 #------------------------------------------------------------------------
 
 sub process {
-    my ($class, $nameargs) = @_;
+    my ($self, $nameargs) = @_;
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
-    $file = $class->filenames($file);
+    $file = $self->filenames($file);
     $file .= @$hash ? ', { ' . join(', ', @$hash) . ' }' : '';
     return "$OUTPUT \$context->process($file);"; 
 }
@@ -366,7 +396,7 @@ sub process {
 #------------------------------------------------------------------------
 
 sub if {
-    my ($class, $expr, $block, $else) = @_;
+    my ($self, $expr, $block, $else) = @_;
     my @else = $else ? @$else : ();
     $else = pop @else;
     $block = pad($block, 1) if $PRETTY;
@@ -394,14 +424,14 @@ sub if {
 #------------------------------------------------------------------------
 
 sub foreach {
-    my ($class, $target, $list, $args, $block, $label) = @_;
+    my ($self, $target, $list, $args, $block, $label) = @_;
     $args  = shift @$args;
     $args  = @$args ? ', { ' . join(', ', @$args) . ' }' : '';
     $label ||= 'LOOP';
 
     my ($loop_save, $loop_set, $loop_restore, $setiter);
     if ($target) {
-        $loop_save    = 'eval { $_tt_oldloop = ' . &ident($class, ["'loop'"]) . ' }';
+        $loop_save    = 'eval { $_tt_oldloop = ' . &ident($self, ["'loop'"]) . ' }';
         $loop_set     = "\$stash->{'$target'} = \$_tt_value";
         $loop_restore = "\$stash->set('loop', \$_tt_oldloop)";
     }
@@ -452,7 +482,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub next {
-    my ($class, $label) = @_;
+    my ($self, $label) = @_;
     $label ||= 'LOOP';
     return <<EOF;
 (\$_tt_value, \$_tt_error) = \$_tt_list->get_next();
@@ -467,14 +497,14 @@ EOF
 #------------------------------------------------------------------------
 
 sub wrapper {
-    my ($class, $nameargs, $block) = @_;
+    my ($self, $nameargs, $block) = @_;
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
 
     local $" = ', ';
 #    print STDERR "wrapper([@$file], { @$hash })\n";
 
-    return $class->multi_wrapper($file, $hash, $block)
+    return $self->multi_wrapper($file, $hash, $block)
         if @$file > 1;
     $file = shift @$file;
 
@@ -495,7 +525,7 @@ EOF
 
 
 sub multi_wrapper {
-    my ($class, $file, $hash, $block) = @_;
+    my ($self, $file, $hash, $block) = @_;
     $block = pad($block, 1) if $PRETTY;
 
     push(@$hash, "'content'", '$output');
@@ -526,7 +556,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub while {
-    my ($class, $expr, $block, $label) = @_;
+    my ($self, $expr, $block, $label) = @_;
     $block = pad($block, 2) if $PRETTY;
     $label ||= 'LOOP';
 
@@ -554,7 +584,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub switch {
-    my ($class, $expr, $case) = @_;
+    my ($self, $expr, $case) = @_;
     my @case = @$case;
     my ($match, $block, $default);
     my $caseblock = '';
@@ -602,7 +632,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub try {
-    my ($class, $block, $catch) = @_;
+    my ($self, $block, $catch) = @_;
     my @catch = @$catch;
     my ($match, $mblock, $default, $final, $n);
     my $catchblock = '';
@@ -670,7 +700,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub throw {
-    my ($class, $nameargs) = @_;
+    my ($self, $nameargs) = @_;
     my ($type, $args) = @$nameargs;
     my $hash = shift(@$args);
     my $info = shift(@$args);
@@ -743,13 +773,13 @@ sub stop {
 #------------------------------------------------------------------------
 
 sub use {
-    my ($class, $lnameargs) = @_;
+    my ($self, $lnameargs) = @_;
     my ($file, $args, $alias) = @$lnameargs;
     $file = shift @$file;       # same production rule as INCLUDE
     $alias ||= $file;
-    $args = &args($class, $args);
+    $args = &args($self, $args);
     $file .= ", $args" if $args;
-#    my $set = &assign($class, $alias, '$plugin'); 
+#    my $set = &assign($self, $alias, '$plugin'); 
     return "# USE\n"
          . "\$stash->set($alias,\n"
          . "            \$context->plugin($file));";
@@ -761,7 +791,7 @@ sub use {
 #------------------------------------------------------------------------
 
 sub view {
-    my ($class, $nameargs, $block, $defblocks) = @_;
+    my ($self, $nameargs, $block, $defblocks) = @_;
     my ($name, $args) = @$nameargs;
     my $hash = shift @$args;
     $name = shift @$name;       # same production rule as INCLUDE
@@ -800,7 +830,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub perl {
-    my ($class, $block) = @_;
+    my ($self, $block) = @_;
     $block = pad($block, 1) if $PRETTY;
 
     return <<EOF;
@@ -835,7 +865,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub no_perl {
-    my $class = shift;
+    my $self = shift;
     return "\$context->throw('perl', 'EVAL_PERL not set');";
 }
 
@@ -848,7 +878,7 @@ sub no_perl {
 #------------------------------------------------------------------------
 
 sub rawperl {
-    my ($class, $block, $line) = @_;
+    my ($self, $block, $line) = @_;
     for ($block) {
         s/^\n+//;
         s/\n+$//;
@@ -870,10 +900,10 @@ EOF
 #------------------------------------------------------------------------
 
 sub filter {
-    my ($class, $lnameargs, $block) = @_;
+    my ($self, $lnameargs, $block) = @_;
     my ($name, $args, $alias) = @$lnameargs;
     $name = shift @$name;
-    $args = &args($class, $args);
+    $args = &args($self, $args);
     $args = $args ? "$args, $alias" : ", undef, $alias"
         if $alias;
     $name .= ", $args" if $args;
@@ -900,7 +930,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub capture {
-    my ($class, $name, $block) = @_;
+    my ($self, $name, $block) = @_;
 
     if (ref $name) {
         if (scalar @$name == 2 && ! $name->[1]) {
@@ -930,7 +960,7 @@ EOF
 #------------------------------------------------------------------------
 
 sub macro {
-    my ($class, $ident, $block, $args) = @_;
+    my ($self, $ident, $block, $args) = @_;
     $block = pad($block, 2) if $PRETTY;
 
     if ($args) {
@@ -984,7 +1014,7 @@ EOF
 
 
 sub debug {
-    my ($class, $nameargs) = @_;
+    my ($self, $nameargs) = @_;
     my ($file, $args) = @$nameargs;
     my $hash = shift @$args;
     $args  = join(', ', @$file, @$args);

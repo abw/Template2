@@ -62,7 +62,7 @@ BEGIN {
 
 sub new {
     my ($class, $doc) = @_;
-    my ($block, $defblocks, $metadata) = @$doc{ qw( BLOCK DEFBLOCKS METADATA ) };
+    my ($block, $defblocks, $variables, $metadata) = @$doc{ qw( BLOCK DEFBLOCKS VARIABLES METADATA ) };
     $defblocks ||= { };
     $metadata  ||= { };
 
@@ -93,6 +93,7 @@ sub new {
         %$metadata,
         _BLOCK     => $block,
         _DEFBLOCKS => $defblocks,
+        _VARIABLES => $variables,
         _HOT       => 0,
     }, $class;
 }
@@ -123,6 +124,17 @@ sub blocks {
     return $_[0]->{ _DEFBLOCKS };
 }
 
+
+#-----------------------------------------------------------------------
+# variables()
+#
+# Returns a reference to a hash of variables used in the template.  
+# This requires the TRACE_VARS option to be enabled.
+#-----------------------------------------------------------------------
+
+sub variables {
+    return $_[0]->{ _VARIABLES };
+}
 
 #------------------------------------------------------------------------
 # process($context)
