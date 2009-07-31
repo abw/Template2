@@ -21,10 +21,13 @@ package Template::Constants;
 require Exporter;
 use strict;
 use warnings;
-use base 'Exporter';
-
+use Exporter;
+# Perl::MinimumVersion seems to think this is a Perl 5.008ism...
+# use base qw( Exporter );
 use vars qw( @EXPORT_OK %EXPORT_TAGS );
-use vars qw( $DEBUG_OPTIONS @STATUS @ERROR @CHOMP @DEBUG);
+use vars qw( $DEBUG_OPTIONS @STATUS @ERROR @CHOMP @DEBUG @ISA );
+# ... so we'll do it the Old Skool way just to keep it quiet
+@ISA = qw( Exporter );
 
 our $VERSION = 2.75;
 
