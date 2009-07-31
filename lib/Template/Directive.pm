@@ -37,7 +37,6 @@ our $DEBUG     = 0 unless defined $DEBUG;
 our $WHILE_MAX = 1000 unless defined $WHILE_MAX;
 our $PRETTY    = 0 unless defined $PRETTY;
 our $OUTPUT    = '$output .= ';
-our $OBSERVER;
 
 
 sub _init {

@@ -44,8 +44,3 @@ Hello World
 [% wig(10).wam(a,b,c).bam(f = d, g = e) -%]
 [% x = 10; y.z = 20 -%]
 Goodbye
-
-use Template::Test;
-$^W = 1;
-
-$Template::Test::DEBUG = 0;
