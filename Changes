@@ -18,6 +18,9 @@
   in a template.  It's not documented yet.  See t/trace_vars.t for an
   example of use.
 
+* Applied patch from RT#48989 to avoid Template::Plugin::Procedural
+  from adding target class' methods AUTOLOAD and new methods multiple
+  times (Jens Rehsack)
 
 #-----------------------------------------------------------------------
 # Version 2.22 - 21st July 2009
