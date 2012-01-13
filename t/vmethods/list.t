@@ -17,7 +17,7 @@
 
 use strict;
 use warnings;
-use lib qw( ./lib ../lib ../../lib );
+use lib qw( ./lib ../lib ../../lib ../../../lib );
 use Template::Test;
 
 # make sure we're using the Perl stash
@@ -171,6 +171,13 @@ list two ok
 list seven ok
 
 -- test --
+[%  list = [1]; 
+    list.defined('asdf') ? 'asdf is defined' : 'asdf is not defined' 
+%]
+-- expect --
+asdf is not defined
+
+-- test --
 [% FOREACH person = people.sort('id') -%]
 [% person.name +%]
 [% END %]
@@ -179,7 +186,6 @@ Richard
 Larry
 Tom
 
--- start --
 -- test --
 [% FOREACH obj = names.sort('name') -%]
 [% obj.name +%]
@@ -198,7 +204,6 @@ Mark Jones
 Peter Jones
 Andrew Smith
 William Smith
--- stop --
 
 -- test --
 [% FOREACH obj = numbers.sort('name') -%]

@@ -23,7 +23,7 @@ package Template::VMethods;
 
 use strict;
 use warnings;
-use Scalar::Util 'blessed';
+use Scalar::Util qw( blessed looks_like_number );
 require Template::Stash;
 
 our $VERSION = 2.16;
@@ -418,7 +418,9 @@ sub list_defined {
     # return the item requested, or 1 if no argument to 
     # indicate that the hash itself is defined
     my $list = shift;
-    return @_ ? defined $list->[$_[0]] : 1;
+    return 1 unless @_;                     # list.defined is always true
+    return unless looks_like_number $_[0];  # list.defined('bah') is always false
+    return defined $list->[$_[0]];          # list.defined(n)
 }
 
 sub list_first {
