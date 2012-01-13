@@ -28,8 +28,10 @@
   times (Jens Rehsack)
 
 * Applied patch from RT#53451 to accept negative epoch times in 
-  Template::Plugin::Date
+  Template::Plugin::Date.
 
+* Applied patch from Marc Remy to add $Template::Directive::WHILE_MAX 
+  option to tpage.
 
 #-----------------------------------------------------------------------
 # Version 2.22 - 21st July 2009
