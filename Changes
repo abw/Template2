@@ -11,7 +11,7 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 2.22_01 - not released yet
+# Version 2.23 - not released yet
 #------------------------------------------------------------------------
 
 * Added the TRACE_VARS option to keep track of what variables are used
@@ -21,6 +21,10 @@
 * Applied patch from RT#48989 to avoid Template::Plugin::Procedural
   from adding target class' methods AUTOLOAD and new methods multiple
   times (Jens Rehsack)
+
+* Applied patch from RT#53451 to accept negative epoch times in 
+  Template::Plugin::Date
+
 
 #-----------------------------------------------------------------------
 # Version 2.22 - 21st July 2009
