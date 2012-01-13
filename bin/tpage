@@ -25,6 +25,7 @@
 
 use strict;
 use Template;
+use Template::Directive;
 use AppConfig;
 
 my $NAME     = "tpage";
@@ -39,8 +40,11 @@ my $config   = read_config($RCFILE);
 # unshift any perl5lib directories onto front of INC
 unshift(@INC, @{ $config->perl5lib });
 
-# get all template_* options from the config and fold keys to UPPER CASE
-my %ttopts   = $config->varlist('^template_', 1);
+# get all template_directive_* options from the config
+my %ttdirectiveopts = $config->varlist('^template_directive_', 1);
+
+# get all template_* (except template_directive_*) options from the config and fold keys to UPPER CASE
+my %ttopts   = $config->varlist('^template_(?!directive_)', 1);
 my $ttmodule = delete($ttopts{ module });
 my $ucttopts = {
     map { my $v = $ttopts{ $_ }; defined $v ? (uc $_, $v) : () }
@@ -57,6 +61,14 @@ if ($ttmodule) {
 else {
     $ttmodule = $TTMODULE;
 }
+
+# load custom Template::Directive configuration
+map {
+  my $v = $ttdirectiveopts{ $_ };
+  if( defined $v ) {
+    ${ $Template::Directive::{ uc $_ } } = $ttdirectiveopts{ $_ }
+  }
+} keys %ttdirectiveopts;
 
 # add current directory to INCLUDE_PATH
 unshift(@{ $ucttopts->{ INCLUDE_PATH } }, '.');
@@ -110,7 +122,10 @@ sub read_config {
         'template_compile_ext|compile_ext=s',
         'template_compile_dir|compile_dir=s',
         'template_plugin_base|plugin_base|pluginbase=s@',
-        'perl5lib|perllib=s@'
+        'perl5lib|perllib=s@',
+        'template_directive_debug',
+        'template_directive_pretty',
+        'template_directive_while_max|while_max=i'
     );
 
     # add the 'file' option now that we have a $config object that we 
@@ -166,6 +181,7 @@ Options:
    --compile_dir=DIR        Directory for compiled template files
    --perl5lib=DIR           Specify additional Perl library directories
    --template_module=MODULE Specify alternate Template module
+   --while_max=INTEGER      Change '\$Template::Directive::WHILE_MAX' default
 
 See 'perldoc tpage' for further information.  
 
