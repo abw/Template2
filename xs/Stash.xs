@@ -14,7 +14,7 @@
 *   Doug Steinwand <dsteinwand@citysearch.com>
 *
 * COPYRIGHT
-*   Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
+*   Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 *   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 *
 *   This module is free software; you can redistribute it and/or
@@ -638,8 +638,12 @@ static SV *call_coderef(pTHX_ SV *code, AV *args) {
         if ((svp = av_fetch(args, i, FALSE))) 
             XPUSHs(*svp);
     PUTBACK;
-    count = call_sv(code, G_ARRAY);
+    count = call_sv(code, G_ARRAY|G_EVAL);
     SPAGAIN;
+
+    if (SvTRUE(ERRSV)) {
+        die_object(aTHX_ ERRSV);
+    }
 
     return fold_results(aTHX_ count);
 }
