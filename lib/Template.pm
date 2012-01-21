@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -32,7 +32,7 @@ use File::Basename;
 use File::Path;
 use Scalar::Util qw(blessed);
 
-our $VERSION = '2.22_1';
+our $VERSION = '2.23';
 our $ERROR   = '';
 our $DEBUG   = 0;
 our $BINMODE = 0 unless defined $BINMODE;
@@ -894,17 +894,22 @@ Ignored and deleted.
         tag comments out the entire directive
     %]
 
+=head1 SOURCE CODE REPOSITORY
+
+The source code for the Template Toolkit is held in a public git repository
+on Github: L<https://github.com/abw/Template2>
+
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 VERSION
 
-Template Toolkit version 2.20_1, released April 2009.
+Template Toolkit version 2.23, released January 2012.
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
