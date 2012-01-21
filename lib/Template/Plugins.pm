@@ -33,7 +33,6 @@ our $DEBUG   = 0 unless defined $DEBUG;
 our $PLUGIN_BASE = 'Template::Plugin';
 our $STD_PLUGINS = {
     'assert'     => 'Template::Plugin::Assert',
-    'autoformat' => 'Template::Plugin::Autoformat',
     'cgi'        => 'Template::Plugin::CGI',
     'datafile'   => 'Template::Plugin::Datafile',
     'date'       => 'Template::Plugin::Date',
