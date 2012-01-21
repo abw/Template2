@@ -1,11 +1,11 @@
 
                             Template Toolkit
 
-                              Version 2.22
+                              Version 2.23
 
-                             21st July 2009
+                              January 2012
 
-        Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -29,6 +29,14 @@ applying patches, updating the documentation and various other
 useful tips.
 
 
+SOURCE CODE
+-----------
+
+The source code repository for the Template Toolkit is hosted at Github.
+
+    https://github.com/abw/Template2
+
+
 AUTHOR
 ------
 
@@ -40,7 +48,7 @@ people.  See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

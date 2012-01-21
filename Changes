@@ -11,7 +11,7 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 2.23 - not released yet
+# Version 2.23 - 21st January 2012
 #------------------------------------------------------------------------
 
 * Fixed bug RT#47929 which caused the XS Stash to die mysteriously when
@@ -32,6 +32,7 @@
 
 * Applied patch from Marc Remy to add $Template::Directive::WHILE_MAX 
   option to tpage.
+
 
 #-----------------------------------------------------------------------
 # Version 2.22 - 21st July 2009

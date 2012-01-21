@@ -1,11 +1,11 @@
 
                             Template Toolkit
 
-                              Version 2.22
+                              Version 2.23
 
-                             21st July 2009
+                              January 2012
 
-        Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -43,6 +43,10 @@ other offline document systems.
 
 WHAT'S NEW?
 -----------
+
+Version 2.23 is a maintenance release which fixes a few bugs, including one
+in the XS Stash which caused problems when using third party modules (e.g.
+DateTime) which use the string-based form of eval.
 
 Version 2.22 is mostly a bug fixing release.  The XS Stash now works with 
 utf8 data.  Tests that were failing on Win32 platforms have been fixed.  Pod 
@@ -264,6 +268,25 @@ internals (Template::Manual::Internals) and FAQ (Template::FAQ) are
 perpetually under construction.
 
 
+SOURCE CODE
+-----------
+
+The source code for the Template Toolkit is maintained in a public git 
+repository at github:
+
+    https://github.com/abw/Template2
+
+If you want to hack on the source code, either to fix a bug or add a feature
+then you should fork the repository, make the changes, commit them, and then
+send me a pull request.  See this guide for further information.
+
+    http://help.github.com/send-pull-requests/
+
+Any non-trivial new features should be discussed on the Template Toolkit
+mailing list first (see below). Don't forget to update the documentation and
+tests where relevant
+
+
 SUPPORT
 -------
 
@@ -310,7 +333,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

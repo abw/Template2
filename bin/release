@@ -1,6 +1,6 @@
 set -e
 (
-  PERL=/usr/local/bin/perl  
+  PERL=/usr/bin/perl  
   export RELEASE_TESTING=1
 
   $PERL Makefile.PL TT_ACCEPT=y TT_XS_ENABLE=y TT_XS_DEFAULT=n
