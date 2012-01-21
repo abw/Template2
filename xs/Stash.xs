@@ -714,12 +714,12 @@ static SV* do_getset(pTHX_ SV *root, AV *ident_av, SV *value, int flags) {
 
     for(i = 0; i < end_loop; i += 2) {
         if (!(svp = av_fetch(ident_av, i, FALSE)))
-            croak(TT_STASH_PKG " %cet: bad element %d", value ? 's' : 'g', i);
+            croak(TT_STASH_PKG " %cet: bad element %i", value ? 's' : 'g', i);
 
         key = *svp;
 
         if (!(svp = av_fetch(ident_av, i + 1, FALSE)))
-            croak(TT_STASH_PKG " %cet: bad arg. %d", value ? 's' : 'g', i + 1);
+            croak(TT_STASH_PKG " %cet: bad arg. %i", value ? 's' : 'g', i + 1);
 
         if (SvROK(*svp) && SvTYPE(SvRV(*svp)) == SVt_PVAV)
             key_args = (AV *) SvRV(*svp);
@@ -736,12 +736,12 @@ static SV* do_getset(pTHX_ SV *root, AV *ident_av, SV *value, int flags) {
 
         /* call assign() to resolve the last item */
         if (!(svp = av_fetch(ident_av, size - 1, FALSE)))
-            croak(TT_STASH_PKG ": set bad ident element at %d", i);
+            croak(TT_STASH_PKG ": set bad ident element at %i", i);
 
         key = *svp;
 
         if (!(svp = av_fetch(ident_av, size, FALSE)))
-            croak(TT_STASH_PKG ": set bad ident argument at %d", i + 1);
+            croak(TT_STASH_PKG ": set bad ident argument at %i", i + 1);
         
         if (SvROK(*svp) && SvTYPE(SvRV(*svp)) == SVt_PVAV)
             key_args = (AV *) SvRV(*svp);
