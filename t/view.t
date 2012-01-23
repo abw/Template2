@@ -811,3 +811,14 @@ c: 10
 d: 10
 e: 10
 
+-- test --
+-- name bad base --
+[%  TRY; 
+        VIEW wiz base=no_such_base_at_all; 
+        END;
+    CATCH;
+        error;
+    END
+-%]
+-- expect --
+view error - Invalid base specified for view

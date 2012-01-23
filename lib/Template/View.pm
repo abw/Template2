@@ -84,6 +84,10 @@ sub _init {
         $self->{ $arg } = $config->{ $arg } || '';
     }
 
+    # check that any base specified is defined
+    return $self->error('Invalid base specified for view')
+        if exists $config->{ base } && ! $self->{ base };
+
     # name of data item used by view()
     $self->{ item } = $config->{ item } || 'item';
 
