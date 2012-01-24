@@ -42,8 +42,8 @@ $MAKE=$Config{'make'};
 # goes into $config
 
 my (%config, %ttconfig);
-while ($_ = shift) {
-    my ($k, $v) = split(/=/);
+while (shift @ARGV) {
+    my ($k, $v) = split(/=/, $_, 2);
     if ($k =~ /^TT/) {
         $ttconfig{ $k } = $v || 0;
     }
