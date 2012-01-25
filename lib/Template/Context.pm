@@ -647,6 +647,25 @@ sub define_filter {
          "FILTER providers declined to store filter $name");
 }
 
+
+#------------------------------------------------------------------------
+# define_vmethod($type, $name, \&sub)
+#
+# Passes $type, $name, and &sub on to stash->define_vmethod().
+#------------------------------------------------------------------------
+
+sub define_vmethod {
+    my $self = shift;
+    $self->stash->define_vmethod(@_);
+}
+
+
+#------------------------------------------------------------------------
+# define_view($name, $params)
+#
+# Defines a new view.
+#------------------------------------------------------------------------
+
 sub define_view {
     my ($self, $name, $params) = @_;
     my $base;
@@ -670,6 +689,13 @@ sub define_view {
     $view->seal();
     $self->{ STASH }->set($name, $view);
 }
+
+
+#------------------------------------------------------------------------
+# define_views($views)
+#
+# Defines multiple new views.
+#------------------------------------------------------------------------
 
 sub define_views {
     my ($self, $views) = @_;
@@ -720,17 +746,6 @@ sub stash {
 
 
 #------------------------------------------------------------------------
-# define_vmethod($type, $name, \&sub)
-#
-# Passes $type, $name, and &sub on to stash->define_vmethod().
-#------------------------------------------------------------------------
-sub define_vmethod {
-    my $self = shift;
-    $self->stash->define_vmethod(@_);
-}
-
-
-#------------------------------------------------------------------------
 # debugging($command, @args, \%params)
 #
 # Method for controlling the debugging status of the context.  The first
@@ -745,30 +760,29 @@ sub debugging {
     my $hash = ref $_[-1] eq 'HASH' ? pop : { };
     my @args = @_;
 
-#    print "*** debug(@args)\n";
     if (@args) {
-    if ($args[0] =~ /^on|1$/i) {
-        $self->{ DEBUG_DIRS } = 1;
-        shift(@args);
-    }
-    elsif ($args[0] =~ /^off|0$/i) {
-        $self->{ DEBUG_DIRS } = 0;
-        shift(@args);
-    }
+        if ($args[0] =~ /^on|1$/i) {
+            $self->{ DEBUG_DIRS } = 1;
+            shift(@args);
+        }
+        elsif ($args[0] =~ /^off|0$/i) {
+            $self->{ DEBUG_DIRS } = 0;
+            shift(@args);
+        }
     }
 
     if (@args) {
-    if ($args[0] =~ /^msg$/i) {
+        if ($args[0] =~ /^msg$/i) {
             return unless $self->{ DEBUG_DIRS };
-        my $format = $self->{ DEBUG_FORMAT };
-        $format = $DEBUG_FORMAT unless defined $format;
-        $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
-        return $format;
-    }
-    elsif ($args[0] =~ /^format$/i) {
-        $self->{ DEBUG_FORMAT } = $args[1];
-    }
-    # else ignore
+            my $format = $self->{ DEBUG_FORMAT };
+            $format = $DEBUG_FORMAT unless defined $format;
+            $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
+            return $format;
+        }
+        elsif ($args[0] =~ /^format$/i) {
+            $self->{ DEBUG_FORMAT } = $args[1];
+        }
+        # else ignore
     }
 
     return '';
@@ -1302,6 +1316,11 @@ any variables will only persist until the C<include()> method completes.
 
     $output = $context->include('header', { title => 'Hello World' });
 
+=head2 insert($template)
+
+This method returns the source content of a template file without performing
+any evaluation.  It is used to implement the C<INSERT> directive.
+
 =head2 throw($error_type, $error_message, \$output)
 
 Raises an exception in the form of a L<Template::Exception> object by calling
@@ -1358,6 +1377,20 @@ indicate that the subroutine is a dynamic filter factory.
 
 Returns a true value or throws a 'C<filter>' exception on error.
 
+=head2 define_vmethod($type, $name, $code)
+
+This method is a wrapper around the L<Template::Stash> 
+L<define_vmethod()|Template::Stash#define_vmethod()> method.  It can be used
+to define new virtual methods.
+
+    # define a new scalar (item) virtual method
+    $context->define_vmethod(
+        item => ucfirst => sub {
+            my $text = shift;
+            return ucfirst $text;
+        }
+    )
+
 =head2 define_view($name, \%params)
 
 This method allows you to define a named L<view|Template::View>.
@@ -1409,6 +1442,11 @@ The views are then accessible as template variables.
 
 See also the L<VIEWS> option.
 
+=head2 stash()
+
+This method returns the L<Template::Stash> object used internally to manage
+template variables.
+
 =head2 localise(\%vars)
 
 Clones the stash to create a context with localised variables.  Returns a 
@@ -1435,10 +1473,45 @@ delivered on request.
 Compliment to the L<visit()> method. Called by L<Template::Document> objects
 immediately after they process their content.
 
+=head2 view()
+
+This method creates a L<Template::View> object bound to the context.
+
 =head2 reset()
 
 Clears the local L<BLOCKS> cache of any C<BLOCK> definitions.  Any initial set of
 L<BLOCKS> specified as a configuration item to the constructor will be reinstated.
+
+=head2 debugging($flag, @args)
+
+This method is used to control debugging output.  It is used to implement
+the L<DEBUG|Template::Manual::Directives#DEBUG> directive.  
+
+The first argument can be C<on> or C<off> to enable or disable debugging
+respectively.  The numerical values C<0> and C<1> can also be used if you
+prefer.
+
+    $context->debugging('on');
+
+Alternately, the first argument can be C<format> to define a new debug message
+format.  The second argument should be the format string which can contain
+any of the C<$file>, C<$line> or C<$text> symbols to indicate where the 
+relevant values should be inserted.
+
+    # note single quotes to prevent interpolated of variables
+    $context->debugging( format => '## $file line $line: $text' );
+
+The final use of this method is to generate debugging messages themselves.
+The first argument should be C<msg>, followed by a reference to a hash array
+of value to insert into the debugging format string.
+
+    $context->debugging( 
+        msg => {
+            line => 20,
+            file => 'example.tt',
+            text => 'Trampoline! Trampoline!',
+        }
+    );
 
 =head2 AUTOLOAD
 
@@ -1455,7 +1528,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

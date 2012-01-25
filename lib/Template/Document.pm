@@ -456,25 +456,62 @@ Returns a reference to the main C<BLOCK> subroutine.
 
 Returns a reference to the hash array of named C<DEFBLOCKS> subroutines.
 
+=head2 variables()
+
+Returns a reference to a hash of variables used in the template.  
+This requires the L<TRACE_VARS|Template::Manual::Config#TRACE_VARS> 
+option to be enabled.
+
 =head2 AUTOLOAD
 
 An autoload method returns C<METADATA> items.
 
     print $doc->author();
 
-=head1 PACKAGE SUB-ROUTINES
+=head1 CLASS METHODS
+
+These methods are used internally.
+
+=head2 as_perl($content)
+
+This method generate a Perl representation of the template.
+
+    my $perl = Template::Document->as_perl({
+        BLOCK     => $main_block,
+        DEFBLOCKS => {
+            foo   => $foo_block,
+            bar   => $bar_block,
+        },
+        METADATA  => {
+            name  => 'my_template',
+        }
+    });
 
 =head2 write_perl_file(\%config)
 
-This package subroutine is provided to effect persistence of compiled
-templates.  If the C<COMPILE_EXT> option (to indicate a file extension
-for saving compiled templates) then the L<Template::Parser> module calls
-this subroutine before calling the L<new()> constructor.  At this stage,
-the parser has a representation of the template as text strings
-containing Perl code.  We can write that to a file, enclosed in a
-small wrapper which will allow us to susequently C<require()> the file
-and have Perl parse and compile it into a C<Template::Document>.  Thus we
-have persistence of compiled templates.
+This method is used to write compiled Perl templates to disk.  If the
+C<COMPILE_EXT> option (to indicate a file extension for saving compiled
+templates) then the L<Template::Parser> module calls this subroutine before
+calling the L<new()> constructor.  At this stage, the parser has a
+representation of the template as text strings containing Perl code.  We can
+write that to a file, enclosed in a small wrapper which will allow us to
+susequently C<require()> the file and have Perl parse and compile it into a
+C<Template::Document>.  Thus we have persistence of compiled templates.
+
+=head1 INTERNAL FUNCTIONS
+
+=head2 catch_warnings()
+
+This is a simple handler used to catch any errors that arise when the
+compiled Perl template is first evaluated (that is, evaluated by Perl to
+create a template subroutine at compile, rather than the template being
+processed at runtime).
+
+=head2 is_utf8()
+
+This is mapped to C<utf8::is_utf8> for versions of Perl that have it (> 5.008)
+or to C<Encode::is_utf8> for Perl 5.008.  Earlier versions of Perl are not 
+supported.
 
 =head1 AUTHOR
 
@@ -482,7 +519,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

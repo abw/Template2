@@ -6,7 +6,7 @@
 #
 # Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 2008 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 2008-2012 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -18,9 +18,9 @@ use warnings;
 use lib qw( ./lib ../lib );
 use Test::More;
 
-unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} ) {
-    plan( skip_all => "Author tests not required for installation" );
-}
+plan( skip_all => "Author tests not required for installation" )
+    unless $ENV{ RELEASE_TESTING   }
+        or $ENV{ AUTOMATED_TESTING };
 
 eval "use Test::Pod 1.00";
 plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;

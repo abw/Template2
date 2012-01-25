@@ -290,7 +290,6 @@ sub set {
 # 
 # Returns a "reference" to a particular item.  This is represented as a 
 # closure which will return the actual stash item when called.  
-# WARNING: still experimental!
 #------------------------------------------------------------------------
 
 sub getref {
@@ -790,6 +789,24 @@ copied (i.e. imported) into the current namespace.
     # import 'foo' into main namespace: bar = baz, wiz = waz
     $stash->set('IMPORT', $stash->get('foo'));
 
+=head2 update($variables)
+
+This method can be used to set or update several variables in one go.
+
+    $stash->update({
+        foo => 10,
+        bar => 20,
+    });
+
+=head2 getref($variable)
+
+This undocumented feature returns a closure which can be called to get the
+value of a variable.  It is used to implement variable references which are
+evlauted lazily.
+
+    [% x = \foo.bar.baz %]          # x is a reference to foo.bar.baz
+    [% x %]                         # evalautes foo.bar.baz
+
 =head2 clone(\%params)
 
 The C<clone()> method creates and returns a new C<Template::Stash> object
@@ -813,13 +830,47 @@ from in its C<_PARENT> member.
 The C<declone()> method returns the C<_PARENT> reference and can be used to
 restore the state of a stash as described above.
 
+=head2 define_vmethod($type, $name, $code)
+
+This method can be used to define new virtual methods.  The first argument
+should be either C<scalar> or C<item> to define scalar virtual method, C<hash>
+to define hash virtual methods, or either C<array> or C<list> for list virtual
+methods.  The second argument should be the name of the new method.  The third
+argument should be a reference to a subroutine implementing the method.  The
+data item on which the virtual method is called is passed to the subroutine as
+the first argument.
+
+    $stash->define_vmethod(
+        item => ucfirst => sub {
+            my $text = shift;
+            return ucfirst $text
+        }
+    );
+
+=head1 INTERNAL METHODS
+
+=head2 dotop($root, $item, \@args, $lvalue)
+
+This is the core C<dot> operation method which evaluates elements of 
+variables against their root.
+
+=head2 undefined($ident, $args)
+
+This method is called when L<get()> encounters an undefined value.  If the 
+C<STRICT|Template::Manual::Config#STRICT> option is in effect then it will
+throw an exception indicating the use of an undefined value.  Otherwise it
+will silently return an empty string.
+
+The method can be redefined in a subclass to implement alternate handling
+of undefined values.
+
 =head1 AUTHOR
 
 Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

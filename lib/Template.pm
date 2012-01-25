@@ -464,6 +464,12 @@ The L<Template::Service> module uses a core L<Template::Context> object for
 runtime processing of templates.  This method returns a reference to 
 that object and is equivalent to C<< $template-E<gt>service-E<gt>context() >>.
 
+=head2 template($name)
+
+This method is a simple wrapper around the L<Template::Context> method of the
+same name.  It returns a compiled template for the source provided as an 
+argument.
+
 =head1 CONFIGURATION SUMMARY
 
 The following list gives a short summary of each Template Toolkit 

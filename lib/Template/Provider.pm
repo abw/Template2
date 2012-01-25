@@ -1162,6 +1162,11 @@ read error, parse error) then C<($error, STATUS_ERROR)> is returned, where
 C<$error> is the error message generated. If the L<TOLERANT> option is set the
 the method returns C<(undef, STATUS_DECLINED)> instead of returning an error.
 
+=head2 load($name)
+
+Loads a template without parsing or compiling it.  This is used by the 
+the L<INSERT|Template::Manual::Directives#INSERT> directive.
+
 =head2 store($name, $template)
 
 Stores the compiled template, C<$template>, in the cache under the name, 
