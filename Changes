@@ -17,6 +17,10 @@
 * Fixed bug RT#67918 - Bug in Makefile.PL command line parsing when 2 =
   signs were in an arguement.
 
+* Fixed bug RT#74335 - Added documentation for some methods that were 
+  lacking it to keep Pod::Coverage happy.
+
+
 #-----------------------------------------------------------------------
 # Version 2.23 - 21st January 2012
 #------------------------------------------------------------------------
