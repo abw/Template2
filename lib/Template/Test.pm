@@ -279,7 +279,8 @@ sub test_expect {
         # Configure a test as TODO
         my $todo = '';
         if ($input =~ s/^\s*-- todo:? (.*?) --\s*\n//im) {
-            $todo = $1;
+            my $reason = ( $1 eq '' ) ? 'No reason given' : $1;
+            $todo = "# TODO - $reason - ";
         }
         
         # split input by a line like "-- expect --"
@@ -355,11 +356,7 @@ sub test_expect {
                    $copyi, $copye, $copyo);
         }
         
-        TODO: {
-            local $TODO = $todo if $todo;
-            
-            ok($match, $match ? "$name matched expected" : "$name did not match expected");
-        }
+        ok($match, $match ? "$todo$name matched expected" : "$todo$name did not match expected");
     };
 }
 
