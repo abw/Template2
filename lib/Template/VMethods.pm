@@ -24,6 +24,7 @@ package Template::VMethods;
 use strict;
 use warnings;
 use Scalar::Util qw( blessed looks_like_number );
+use Template::Filters;
 require Template::Stash;
 
 our $VERSION = 2.16;
@@ -58,6 +59,8 @@ our $TEXT_VMETHODS = {
     collapse    => \&text_collapse,
     squote      => \&text_squote,
     dquote      => \&text_dquote,
+    html        => \&Template::Filters::html_filter,
+    xml         => \&Template::Filters::xml_filter,
 };
 
 our $HASH_VMETHODS = {

@@ -53,6 +53,7 @@ my $params = {
     WORD     => 'BIRD',
     the_bird => "\n  The  bird\n  is  the  word  \n  ",
     quotable => "Tim O'Reilly said \"Oh really?\"",
+    markup   => 'a < b > & c "d" \'e\'',
 };
 
 test_expect(\*DATA, undef, $params);
@@ -195,6 +196,19 @@ Tim O\'Reilly said "Oh really?"
 -- expect --
 Tim O'Reilly said "Oh really?"
 Tim O'Reilly said \"Oh really?\"
+
+-- test --
+-- name text.html --
+[% markup.html %]
+-- expect --
+a &lt; b &gt; &amp; c &quot;d&quot; 'e'
+
+-- test --
+-- name text.xml --
+[% markup.xml %]
+-- expect --
+a &lt; b &gt; &amp; c &quot;d&quot; &apos;e&apos;
+
 
 -- test --
 -- name text.repeat --

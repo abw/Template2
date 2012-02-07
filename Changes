@@ -14,6 +14,9 @@
 # Version 2.24 - ??
 #------------------------------------------------------------------------
 
+* Added text virtual methods: upper, lower, ucfirst, lcfirst, squote,
+  dquote, trim, collapse, html and xml.
+
 * Fixed bug RT#67918 - Bug in Makefile.PL command line parsing when 2 =
   signs were in an arguement.
 
