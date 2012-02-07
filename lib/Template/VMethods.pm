@@ -56,7 +56,8 @@ our $TEXT_VMETHODS = {
     substr      => \&text_substr,
     trim        => \&text_trim,
     collapse    => \&text_collapse,
-
+    squote      => \&text_squote,
+    dquote      => \&text_dquote,
 };
 
 our $HASH_VMETHODS = {
@@ -304,6 +305,22 @@ sub text_substr {
     }
 }
 
+sub text_squote {
+    my $text = shift;
+    for ($text) {
+        s/(['\\])/\\$1/g;
+    }
+    return $text;
+}
+
+sub text_dquote {
+    my $text = shift;
+    for ($text) {
+        s/(["\\])/\\$1/g;
+        s/\n/\\n/g;
+    }
+    return $text;
+}
 
 #========================================================================
 # hash virtual methods

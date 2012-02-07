@@ -52,15 +52,12 @@ my $params = {
     word     => 'bird',                       # The bird is the word
     WORD     => 'BIRD',
     the_bird => "\n  The  bird\n  is  the  word  \n  ",
+    quotable => "Tim O'Reilly said \"Oh really?\"",
 };
 
 test_expect(\*DATA, undef, $params);
 
 __DATA__
-
-#------------------------------------------------------------------------
-# defined
-#------------------------------------------------------------------------
 
 -- test --
 -- name text.defined implicit undef --
@@ -182,6 +179,22 @@ The cat sat on the mat
 [% string.size %]
 -- expect --
 1
+
+-- test --
+-- name text.squote --
+[% quotable %]
+[% quotable.squote %]
+-- expect --
+Tim O'Reilly said "Oh really?"
+Tim O\'Reilly said "Oh really?"
+
+-- test --
+-- name text.dquote --
+[% quotable %]
+[% quotable.dquote %]
+-- expect --
+Tim O'Reilly said "Oh really?"
+Tim O'Reilly said \"Oh really?\"
 
 -- test --
 -- name text.repeat --

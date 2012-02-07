@@ -57,6 +57,14 @@ Returns true if the value is defined.
 
     [% user = get_user(uid) IF uid.defined %]
 
+=head2 dquote
+
+Returns the text with any double quote characters escaped with a backslash
+prefix.  Any newline characters in the text will be replaced with "\n".
+
+    [% quote = 'He said "Oh really?"' %]
+    [% quote.dquote %]        # He said \"Oh really?\"
+
 =head2 hash
 
 Return the value as a hash reference containing a single entry with
@@ -214,6 +222,14 @@ C<$replacement>.  The substring removed from the string is then returned.
 
     [% str.substr(0, 11, 'FOO') %]   # foo bar baz
     [% str %]                        # FOO wiz waz woz
+
+=head2 squote
+
+Returns the text with any single quote characters escaped with a backslash
+prefix.
+
+    [% tim = "Tim O'Reilly" %]
+    [% tim.squote %]          # Tim O\'Reilly
 
 =head2 trim
 
