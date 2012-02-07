@@ -11,7 +11,7 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 2.24 - ??
+# Version 2.24 - 8th February 2012
 #------------------------------------------------------------------------
 
 * Added text virtual methods: upper, lower, ucfirst, lcfirst, squote,
@@ -114,7 +114,7 @@
 
 * Replaced a whole bunch of UNIVERSAL::isa() calls with blessed/isa
 
-* Applied a patch from Norbert Buchmüller to prevent the #line markers
+* Applied a patch from Norbert BuchmÃ¼ller to prevent the #line markers
   from being whitespaced away from the first column.
   https://rt.cpan.org/Ticket/Display.html?id=46269
 
@@ -327,7 +327,7 @@ ttree
   but via a configuration option.
   https://rt.cpan.org/Ticket/Display.html?id=30760
 
-* Applied a patch from Éric Cholet to add the --encoding option to ttree.
+* Applied a patch from Ã‰ric Cholet to add the --encoding option to ttree.
   http://lists.tt2.org/pipermail/templates/2008-August/010369.html
 
 
@@ -335,7 +335,7 @@ ttree
 # Version 2.19 - 27th April 2007
 #------------------------------------------------------------------------
 
-* Applied a patch to t/fileline.t from Steffen Müller which fixes the
+* Applied a patch to t/fileline.t from Steffen MÃ¼ller which fixes the
   problems running on Win32 with backslashes in paths.
 
   https://rt.cpan.org/Ticket/Display.html?id=20488
@@ -1329,7 +1329,7 @@ Miscellaneous
 * Applied a patch from Simon Wilcox to strip MS-DOS \r characters from 
   end of lines read by the Datafile plugin.
 
-* Applied a patch from Ville Skyttä which fixes numerous minor bugs 
+* Applied a patch from Ville SkyttÃ¤ which fixes numerous minor bugs 
   in various splash templates.
 
 * Added the 'defined' and 'exists' virtual hash methods for testing if
@@ -1387,7 +1387,7 @@ Miscellaneous
 
 * Fixed truncate method of String plugin to not append suffix if the 
   string is already shorter than the required length.  Thanks to 
-  Yann Kerhervé for the patch.
+  Yann KerhervÃ© for the patch.
 
 
 #------------------------------------------------------------------------

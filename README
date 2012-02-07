@@ -1,9 +1,9 @@
 
                             Template Toolkit
 
-                              Version 2.23
+                              Version 2.24
 
-                              January 2012
+                              February 2012
 
         Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved
 
@@ -20,7 +20,7 @@ Toolkit from the command line like so:
     $ cpan Template
 
 Please see the separate INSTALL file for further information on installing
-the Template Toolkit, including what to do if you don't have the CPAN 
+the Template Toolkit, including what to do if you don't have the CPAN
 module installed, and/or installation on MS Windows.
 
 
@@ -37,20 +37,23 @@ LaTeX, and so on.
 It can be used as a stand-alone Perl module or embedded within an
 Apache/mod_perl server for generating highly configurable dynamic web
 content.  A number of Perl scripts are also provided which can greatly
-simplify the process of creating and managing static web content and 
+simplify the process of creating and managing static web content and
 other offline document systems.
 
 
 WHAT'S NEW?
 -----------
 
+Version 2.24 adds some new text virtual methods and fixes a silly bug in the
+Makefile.PL.
+
 Version 2.23 is a maintenance release which fixes a few bugs, including one
 in the XS Stash which caused problems when using third party modules (e.g.
 DateTime) which use the string-based form of eval.
 
-Version 2.22 is mostly a bug fixing release.  The XS Stash now works with 
-utf8 data.  Tests that were failing on Win32 platforms have been fixed.  Pod 
-coverage and quality tests have been disabled except for release testing.  
+Version 2.22 is mostly a bug fixing release.  The XS Stash now works with
+utf8 data.  Tests that were failing on Win32 platforms have been fixed.  Pod
+coverage and quality tests have been disabled except for release testing.
 The Autoformat plugin has been moved into a separate distribution.
 
 Version 2.21 featured a complete clean-out of all the old HTML documentation,
@@ -70,14 +73,14 @@ plugins.  The HTML documentation, examples, libraries and other bits
 and pieces are still provided with the distribution, but are no longer
 installed by the Makefile.PL.  If you want them (and very few people do,
 it seems), then you'll need to dig them out of the distribution by yourself
-(or uncomment the commented-out lines in Makefile.PL that handle the 
+(or uncomment the commented-out lines in Makefile.PL that handle the
 installation).  This has been done in an effort to simplify the installation
 process.  All of the HTML documentation is available online at http://tt2.org/
 
 Version 2.19 fixed some minor bugs in both Perl and XS versions of the Template
 Stash, and fixed a problem with a test in the test suite failing under Win32.
 It also added the url filter as a version of what the uri filter used to do
-before we fixed it to do the right thing. 
+before we fixed it to do the right thing.
 
 Version 2.18 fixes a number of minor bugs. It also includes a modification to
 the parser grammar so that you can write expressions as arguments to
@@ -91,7 +94,7 @@ patches and closes all open bugs listed on http://rt.cpan.org/  It
 includes:
 
  * XS Stash: enhancements include support for tied hashes/arrays
-   and "fallback" methods on objects (e.g. accessing hash and 
+   and "fallback" methods on objects (e.g. accessing hash and
    list items and calling virtual methods)
 
  * Virtual Methods: added the scalar.remove, scalar.substr,
@@ -101,7 +104,7 @@ includes:
    list.hash, hash.list
 
  * Plugins: Added Math plugin, Bug fixes and enhancements to File,
-   Image, URL and String plugins.  Moved DBI, XML and GD plugins 
+   Image, URL and String plugins.  Moved DBI, XML and GD plugins
    into separate distributions.
 
  * Numerous other bug fixes, enhancements, documentation updates, all
@@ -152,7 +155,7 @@ See the documentation for further detail.
   * embedded Perl can be optionally enabled (PERL/RAWPERL)
 
   * full exception handling (TRY/THROW/CATCH/FINAL)
-  
+
   * user-defined macros (MACRO)
 
   * definition of template metadata (META)
@@ -184,7 +187,7 @@ The Template Toolkit is provided with enough documentation to keep all
 but the most voracious reader happy for quite some time.
 
 The 'Changes' file in the distribution directory documents all visible
-changes between versions of the Template Toolkit.  See the section 
+changes between versions of the Template Toolkit.  See the section
 'VERSION COMPATABILITY' below for further details.
 
 The 'TODO' file, also in the distribution directory, lists known bugs,
@@ -192,8 +195,8 @@ planned enhancements and possible new features for future versions.
 
 The 'INSTALL' file covers the configuration and installation process.
 
-The rest of the documentation is distributed in Pod format. The Pod pages 
-are installed when you 'make install' and can be viewed using 'perldoc', 
+The rest of the documentation is distributed in Pod format. The Pod pages
+are installed when you 'make install' and can be viewed using 'perldoc',
 e.g.
 
     perldoc Template
@@ -241,12 +244,12 @@ these modules along with a brief description of their functions.
 
 See the individual pages for further detail:
 
-    perldoc Template::Context 
-    perldoc Template::Parser 
+    perldoc Template::Context
+    perldoc Template::Parser
     perldoc Template::Provider
 
 If you're interested in the internals of the Template Toolkit and want
-to know more about how it all works, then you might like to have a look 
+to know more about how it all works, then you might like to have a look
 at the following:
 
     perldoc Template::Manual::Internals
@@ -264,14 +267,14 @@ Further contributions welcome.
 
 Most of the documentation is stable and reliable.  Where it's not then
 it's usually marked as such.  In particular, the documentation for the
-internals (Template::Manual::Internals) and FAQ (Template::FAQ) are 
+internals (Template::Manual::Internals) and FAQ (Template::FAQ) are
 perpetually under construction.
 
 
 SOURCE CODE
 -----------
 
-The source code for the Template Toolkit is maintained in a public git 
+The source code for the Template Toolkit is maintained in a public git
 repository at github:
 
     https://github.com/abw/Template2
@@ -296,13 +299,13 @@ are a number of knowledgeable and helpful individuals who frequent the
 list (including the author) who can often offer help or suggestions.
 Please respect their time and patience by checking the documentation
 and/or mailing list archives before asking questions that may already
-have been answered.   
+have been answered.
 
 To subscribe to the mailing list, send an email to:
 
     templates-request@template-toolkit.org
 
-with the message 'subscribe' in the body.  You can also use the web 
+with the message 'subscribe' in the body.  You can also use the web
 interface to subscribe or browse the archives:
 
     http://mail.template-toolkit.org/mailman/listinfo/templates
@@ -318,7 +321,7 @@ for subscription and browsing the archives:
 
     http://mail.template-toolkit.org/mailman/listinfo/templates-announce
 
-For information about commercial support and consultancy for the Template 
+For information about commercial support and consultancy for the Template
 Toolkit, please contact the author.
 
 

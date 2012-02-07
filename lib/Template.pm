@@ -3,7 +3,7 @@
 # Template
 #
 # DESCRIPTION
-#   Module implementing a simple, user-oriented front-end to the Template 
+#   Module implementing a simple, user-oriented front-end to the Template
 #   Toolkit.
 #
 # AUTHOR
@@ -26,13 +26,13 @@ use base 'Template::Base';
 
 use Template::Config;
 use Template::Constants;
-use Template::Provider;  
+use Template::Provider;
 use Template::Service;
 use File::Basename;
 use File::Path;
 use Scalar::Util qw(blessed);
 
-our $VERSION = '2.23';
+our $VERSION = '2.24';
 our $ERROR   = '';
 our $DEBUG   = 0;
 our $BINMODE = 0 unless defined $BINMODE;
@@ -45,9 +45,9 @@ Template::Config->preload() if $ENV{ MOD_PERL };
 #------------------------------------------------------------------------
 # process($input, \%replace, $output)
 #
-# Main entry point for the Template Toolkit.  The Template module 
+# Main entry point for the Template Toolkit.  The Template module
 # delegates most of the processing effort to the underlying SERVICE
-# object, an instance of the Template::Service class.  
+# object, an instance of the Template::Service class.
 #------------------------------------------------------------------------
 
 sub process {
@@ -58,24 +58,24 @@ sub process {
 
     $options->{ binmode } = $BINMODE
         unless defined $options->{ binmode };
-    
-    # we're using this for testing in t/output.t and t/filter.t so 
+
+    # we're using this for testing in t/output.t and t/filter.t so
     # don't remove it if you don't want tests to fail...
     $self->DEBUG("set binmode\n") if $DEBUG && $options->{ binmode };
 
     $output = $self->{ SERVICE }->process($template, $vars);
-    
+
     if (defined $output) {
         $outstream ||= $self->{ OUTPUT };
         unless (ref $outstream) {
             my $outpath = $self->{ OUTPUT_PATH };
             $outstream = "$outpath/$outstream" if $outpath;
-        }   
+        }
 
         # send processed template to output stream, checking for error
         return ($self->error($error))
             if ($error = &_output($outstream, \$output, $options));
-        
+
         return 1;
     }
     else {
@@ -100,7 +100,7 @@ sub service {
 #------------------------------------------------------------------------
 # context()
 #
-# Returns a reference to the the CONTEXT object withint the SERVICE 
+# Returns a reference to the the CONTEXT object withint the SERVICE
 # object.
 #------------------------------------------------------------------------
 
@@ -128,7 +128,7 @@ sub _init {
     my $debug = $config->{ DEBUG };
     $config->{ DEBUG } = Template::Constants::debug_flags($self, $debug)
         || return if defined $debug && $debug !~ /^\d+$/;
-    
+
     # prepare a namespace handler for any CONSTANTS definition
     if (my $constants = $config->{ CONSTANTS }) {
         my $ns  = $config->{ NAMESPACE } ||= { };
@@ -137,11 +137,11 @@ sub _init {
             || return $self->error(Template::Config->error);
         $ns->{ $cns } = $constants;
     }
-    
+
     $self->{ SERVICE } = $config->{ SERVICE }
         || Template::Config->service($config)
         || return $self->error(Template::Config->error);
-    
+
     $self->{ OUTPUT      } = $config->{ OUTPUT } || \*STDOUT;
     $self->{ OUTPUT_PATH } = $config->{ OUTPUT_PATH };
 
@@ -157,7 +157,7 @@ sub _output {
     my ($where, $textref, $options) = @_;
     my $reftype;
     my $error = 0;
-    
+
     # call a CODE reference
     if (($reftype = ref($where)) eq 'CODE') {
         &$where($$textref);
@@ -165,7 +165,7 @@ sub _output {
     # print to a glob (such as \*STDOUT)
     elsif ($reftype eq 'GLOB') {
         print $where $$textref;
-    }   
+    }
     # append output to a SCALAR ref
     elsif ($reftype eq 'SCALAR') {
         $$where .= $$textref;
@@ -189,13 +189,13 @@ sub _output {
             # strip file name and line number from error raised by die()
             ($error = $@) =~ s/ at \S+ line \d+\n?$//;
         }
-        elsif (open(FP, ">$where")) { 
+        elsif (open(FP, ">$where")) {
             # binmode option can be 1 or a specific layer, e.g. :utf8
             my $bm = $options->{ binmode  };
-            if ($bm && $bm eq 1) { 
+            if ($bm && $bm eq 1) {
                 binmode FP;
             }
-            elsif ($bm){ 
+            elsif ($bm){
                 binmode FP, $bm;
             }
             print FP $$textref;
@@ -222,22 +222,22 @@ __END__
 
 Template - Front-end module to the Template Toolkit
 
-=head1 SYNOPSIS 
+=head1 SYNOPSIS
 
     use Template;
-    
+
     # some useful options (see below for full list)
     my $config = {
         INCLUDE_PATH => '/search/path',  # or list ref
         INTERPOLATE  => 1,               # expand "$var" in plain text
-        POST_CHOMP   => 1,               # cleanup whitespace 
+        POST_CHOMP   => 1,               # cleanup whitespace
         PRE_PROCESS  => 'header',        # prefix each template
         EVAL_PERL    => 1,               # evaluate Perl code blocks
     };
-    
+
     # create Template object
     my $template = Template->new($config);
-    
+
     # define template variables for replacement
     my $vars = {
         var1  => $value,
@@ -246,10 +246,10 @@ Template - Front-end module to the Template Toolkit
         var4  => \&code,
         var5  => $object,
     };
-    
+
     # specify input filename, or file handle, text reference, etc.
     my $input = 'myfile.html';
-    
+
     # process input template, substituting variables
     $template->process($input, $vars)
         || die $template->error();
@@ -318,10 +318,10 @@ template variables.
     # file handle (GLOB)
     $tt->process(\*DATA)
         || die $tt->error(), "\n";
-    
+
     __END__
     [% INCLUDE header %]
-    This is a template defined in the __END__ section which is 
+    This is a template defined in the __END__ section which is
     accessible via the DATA "file handle".
     [% INCLUDE footer %]
 
@@ -354,16 +354,16 @@ Examples:
     my $output = '';
     $tt->process('welcome.tt2', $vars, \$output)
         || die $tt->error(), "\n";
-    
+
     print "output: $output\n";
 
 In an Apache/mod_perl handler:
 
     sub handler {
         my $req = shift;
-        
+
         # ...your code here...
-        
+
         # direct output to Apache::Request via $req->print($output)
         $tt->process($file, $vars, $req) || do {
             $req->log_reason($tt->error());
@@ -382,18 +382,18 @@ binary mode.
     # either: hash reference of options
     $tt->process($infile, $vars, $outfile, { binmode => 1 })
         || die $tt->error(), "\n";
-    
+
     # or: list of name, value pairs
     $tt->process($infile, $vars, $outfile, binmode => 1)
         || die $tt->error(), "\n";
 
-Alternately, the C<binmode> argument can specify a particular IO layer such 
+Alternately, the C<binmode> argument can specify a particular IO layer such
 as C<:utf8>.
 
     $tt->process($infile, $vars, $outfile, binmode => ':utf8')
         || die $tt->error(), "\n";
 
-The C<OUTPUT> configuration item can be used to specify a default output 
+The C<OUTPUT> configuration item can be used to specify a default output
 location other than C<\*STDOUT>.  The C<OUTPUT_PATH> specifies a directory
 which should be prefixed to all output locations specified as filenames.
 
@@ -402,11 +402,11 @@ which should be prefixed to all output locations specified as filenames.
         OUTPUT_PATH => '/tmp',
     ...
     }) || die Template->error(), "\n";
-    
+
     # use default OUTPUT (sub is called)
     $tt->process('welcome.tt2', $vars)
         || die $tt->error(), "\n";
-        
+
     # write file to '/tmp/welcome.html'
     $tt->process('welcome.tt2', $vars, 'welcome.html')
         || die $tt->error(), "\n";
@@ -439,7 +439,7 @@ L<Template::Exception> class. If the L<process()> method returns a false value
 then the C<error()> method can be called to return an object of this class.
 The L<type()|Template::Exception#type()> and
 L<info()|Template::Exception#info()> methods can called on the object to
-retrieve the error type and information string, respectively. The 
+retrieve the error type and information string, respectively. The
 L<as_string()|Template::Exception#as_string()>
 method can be called to return a string of the form C<$type - $info>. This
 method is also overloaded onto the stringification operator allowing the
@@ -461,25 +461,25 @@ to that object.
 =head2 context()
 
 The L<Template::Service> module uses a core L<Template::Context> object for
-runtime processing of templates.  This method returns a reference to 
+runtime processing of templates.  This method returns a reference to
 that object and is equivalent to C<< $template-E<gt>service-E<gt>context() >>.
 
 =head2 template($name)
 
 This method is a simple wrapper around the L<Template::Context> method of the
-same name.  It returns a compiled template for the source provided as an 
+same name.  It returns a compiled template for the source provided as an
 argument.
 
 =head1 CONFIGURATION SUMMARY
 
-The following list gives a short summary of each Template Toolkit 
+The following list gives a short summary of each Template Toolkit
 configuration option.  See L<Template::Manual::Config> for full details.
 
 =head2 Template Style and Parsing Options
 
 =head3 START_TAG, END_TAG
 
-Define tokens that indicate start and end of directives 
+Define tokens that indicate start and end of directives
 (default: 'C<[%>' and 'C<%]>').
 
 =head3 TAG_STYLE
@@ -531,7 +531,7 @@ Hash array pre-defining template blocks.
 
 =head3 AUTO_RESET
 
-Enabled by default causing C<BLOCK> definitions to be reset each time a 
+Enabled by default causing C<BLOCK> definitions to be reset each time a
 template is processed.  Disable to allow C<BLOCK> definitions to persist.
 
 =head3 RECURSION
@@ -604,7 +604,7 @@ One or more base classes under which plugins may be found.
 
 =head3 LOAD_PERL
 
-Flag to indicate regular Perl modules should be loaded if a named plugin 
+Flag to indicate regular Perl modules should be loaded if a named plugin
 can't be found  (default: 0).
 
 =head3 FILTERS
@@ -740,7 +740,7 @@ to use.
     [% BLOCK hello %]
        Hello World
     [% END %]
-    
+
     [% INCLUDE hello %]
 
 =head2 FOREACH
@@ -754,7 +754,7 @@ Repeat the enclosed C<FOREACH> ... C<END> block for each value in the list.
 
 =head2 WHILE
 
-The block enclosed between C<WHILE> and C<END> block is processed while 
+The block enclosed between C<WHILE> and C<END> block is processed while
 the specified condition is true.
 
     [% WHILE condition %]
