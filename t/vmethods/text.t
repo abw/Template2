@@ -38,8 +38,8 @@ my $tt = Template->new();
 my $tc = $tt->context();
 
 # define vmethods using define_vmethod() interface.
-$tc->define_vmethod( item => 
-                     commas => 
+$tc->define_vmethod( item =>
+                     commas =>
                      $Template::Stash::SCALAR_OPS->{ commify } );
 
 my $params = {
@@ -49,6 +49,9 @@ my $params = {
     animal   => 'cat',
     string   => 'The cat sat on the mat',
     spaced   => '  The dog sat on the log',
+    word     => 'bird',                       # The bird is the word
+    WORD     => 'BIRD',
+    the_bird => "\n  The  bird\n  is  the  word  \n  ",
 };
 
 test_expect(\*DATA, undef, $params);
@@ -60,93 +63,146 @@ __DATA__
 #------------------------------------------------------------------------
 
 -- test --
+-- name text.defined implicit undef --
 [% notdef.defined ? 'def' : 'undef' %]
 -- expect --
 undef
 
 -- test --
+-- name text.defined explicit undef --
 [% undef.defined ? 'def' : 'undef' %]
 -- expect --
 undef
 
 -- test --
+-- name text.defined zero --
 [% zero.defined ? 'def' : 'undef' %]
 -- expect --
 def
 
 -- test --
+-- name text.defined one --
 [% one.defined ? 'def' : 'undef' %]
 -- expect --
 def
 
 -- test --
+-- name string.length --
 [% string.length %]
 -- expect --
 22
 
 -- test --
+-- name text.upper --
+[% string.upper %]
+-- expect --
+THE CAT SAT ON THE MAT
+
+-- test --
+-- name text.lower --
+[% string.lower %]
+-- expect --
+the cat sat on the mat
+
+-- test --
+-- name text.ucfirst --
+[% word.ucfirst %]
+[% WORD.ucfirst %]
+[% WORD.lower.ucfirst %]
+-- expect --
+Bird
+BIRD
+Bird
+
+-- test --
+-- name text.lcfirst --
+[% word.lcfirst %]
+[% WORD.lcfirst %]
+-- expect --
+bird
+bIRD
+
+-- test --
+-- name text.trim --
+>[% the_bird.trim %]<
+-- expect --
+>The  bird
+  is  the  word<
+
+-- test --
+-- name text.collapse --
+>[% the_bird.collapse %]<
+-- expect --
+>The bird is the word<
+
+-- test --
+-- name text.sort.join --
 [% string.sort.join %]
 -- expect --
 The cat sat on the mat
 
 -- test --
+-- name text.split.join a --
 [% string.split.join('_') %]
 -- expect --
 The_cat_sat_on_the_mat
 
 -- test --
+-- name text.split.join b --
 [% string.split(' ', 3).join('_') %]
 -- expect --
 The_cat_sat on the mat
 
 -- test --
+-- name text.split.join c --
 [% spaced.split.join('_') %]
 -- expect --
 The_dog_sat_on_the_log
 
 -- test --
+-- name text.split.join d --
 [% spaced.split(' ').join('_') %]
 -- expect --
 __The_dog_sat_on_the_log
 
 -- test --
--- name: text.list --
+-- name text.list --
 [% string.list.join %]
 -- expect --
 The cat sat on the mat
 
 -- test --
--- name: text.hash --
+-- name text.hash --
 [% string.hash.value %]
 -- expect --
 The cat sat on the mat
 
 -- test --
--- name: text.size --
+-- name text.size --
 [% string.size %]
 -- expect --
 1
 
 -- test --
--- name: text.repeat --
+-- name text.repeat --
 [% animal.repeat(3) %]
 -- expect --
 catcatcat
 
 -- test --
--- name: text.search --
+-- name text.search --
 [% animal.search('at$') ? "found 'at\$'" : "didn't find 'at\$'" %]
 -- expect --
 found 'at$'
 
 -- test --
--- name: text.search --
+-- name text.search --
 [% animal.search('^at') ? "found '^at'" : "didn't find '^at'" %]
 -- expect --
 didn't find '^at'
 
 -- test --
--- name: text.match an --
+-- name text.match an --
 [% text = 'bandanna';
    text.match('an') ? 'match' : 'no match'
 %]
@@ -154,7 +210,7 @@ didn't find '^at'
 match
 
 -- test --
--- name: text.match on --
+-- name text.match on --
 [% text = 'bandanna';
    text.match('on') ? 'match' : 'no match'
 %]
@@ -162,21 +218,21 @@ match
 no match
 
 -- test --
--- name: text.match global an --
+-- name text.match global an --
 [% text = 'bandanna';
    text.match('an', 1).size %] matches
 -- expect --
 2 matches
 
 -- test --
--- name: text.match global an --
+-- name text.match global an --
 [% text = 'bandanna' -%]
 matches are [% text.match('an+', 1).join(', ') %]
 -- expect --
 matches are an, ann
 
 -- test --
--- name: text.match global on --
+-- name text.match global on --
 [% text = 'bandanna';
    text.match('on+', 1) ? 'match' : 'no match'
 %]
