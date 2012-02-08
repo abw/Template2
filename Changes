@@ -18,7 +18,7 @@
   dquote, trim, collapse, html and xml.
 
 * Fixed bug RT#67918 - Bug in Makefile.PL command line parsing when 2 =
-  signs were in an arguement.
+  signs were in an argument.
 
 * Fixed bug RT#74335 - Added documentation for some methods that were 
   lacking it to keep Pod::Coverage happy.
