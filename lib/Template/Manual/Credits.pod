@@ -87,8 +87,8 @@ Simon Matthews, Robert McArthur, Craig McLane, Myk Melez, Eugene Miretskiy,
 Tatsuhiko Miyagawa, Bill Moseley, Keith G. Murphy, Chris Nandor, John
 Napiorkowski, Breno G. de Oliveira, Leslie Michael Orchard, Paul Orrock,
 Jonathon Padfield, Steve Peters, Briac PilprE<eacute>, Yuri Pimenov, Martin
-Portman, Slaven Rezic, Jess Robinson, Josh Rosenbaum, Christian Schaffner,
-Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul Sharpe, Ville
+Portman, Marc Remy, Slaven Rezic, Jess Robinson, Josh Rosenbaum, Christian
+Schaffner, Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul Sharpe, Ville
 SkyttE<auml>, Barrie Slaymaker, Doug Steinwand, Michael Stevens, Autrijus
 Tang, Drew Taylor, Rod Taylor, Swen Thuemmler, Richard Tietjen, Ben Tilly,
 Stathy G. Touloumis, Jim Vaughan, Simon Wilcox, Chris Winters
