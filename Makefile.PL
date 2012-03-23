@@ -170,7 +170,7 @@ my %opts = (
     },
 );
 
-push @{ $opts{'DIR'} }, 'xs' if $TT_XS_ENABLE;
+push @{ $opts{'DIR'} }, './xs' if $TT_XS_ENABLE;
 
 # Handle dev versions in our check
 my $mmv = $ExtUtils::MakeMaker::VERSION;
