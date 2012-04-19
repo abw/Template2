@@ -14,8 +14,10 @@
 # Version 2.25 - Not yet released
 #------------------------------------------------------------------------
 
-* Applied a patch from Johan Vromans to add the --link option to trree.
+* Applied a patch from Johan Vromans to add the --link option to ttree.
 
+* Applied a patch from Slaven Rezic to silence warnings in the replace
+  vmethod.  https://rt.cpan.org/Ticket/Display.html?id=76694
 
 #-----------------------------------------------------------------------
 # Version 2.24 - 8th February 2012
