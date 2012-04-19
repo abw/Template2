@@ -200,4 +200,10 @@ oo\$1 bar
 -- expect --
 f!! ba!r! f!!ba!r!
 
-
+-- test --
+-- name: no warnings --
+[% text = 'foo';
+   text.replace('(optional)?(foo)', '$1$2');
+%]
+-- expect --
+foo

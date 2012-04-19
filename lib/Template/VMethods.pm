@@ -220,7 +220,7 @@ sub text_replace {
             my ($chunk, $start, $end) = @_;
             $chunk =~ s{ \\(\\|\$) | \$ (\d+) }{
                 $1 ? $1
-                    : ($2 > $#$start || $2 == 0) ? ''
+                    : ($2 > $#$start || $2 == 0 || !defined $start->[$2]) ? ''
                     : substr($text, $start->[$2], $end->[$2] - $start->[$2]);
             }exg;
             $chunk;
