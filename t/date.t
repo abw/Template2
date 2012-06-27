@@ -261,3 +261,10 @@ not testing
 -%]
 -- expect --
 12:59
+
+-- test --
+[% USE date;
+   date.format('2001/09/30T12:59:00', '%H:%M')
+-%]
+-- expect --
+12:59
