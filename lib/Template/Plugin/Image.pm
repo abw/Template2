@@ -157,7 +157,7 @@ sub tag {
     my $options = ref $_[0] eq 'HASH' ? shift : { @_ };
 
     my $tag = '<img src="' . $self->name() . '" ' . $self->attr();
- 
+
     # XHTML spec says that the alt attribute is mandatory, so who
     # are we to argue?
 
@@ -165,8 +165,8 @@ sub tag {
         unless defined $options->{ alt };
 
     if (%$options) {
-        while (my ($key, $val) = each %$options) {
-            my $escaped = escape( $val );
+        for my $key (sort keys %$options) {
+            my $escaped = escape( $options->{$key} );
             $tag .= qq[ $key="$escaped"];
         }
     }
