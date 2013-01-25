@@ -640,7 +640,7 @@ sub _load {
             };
         }
 
-        return ( "$alias: $!", Template::Constants::STATUS_ERROR )
+        return ( $error, Template::Constants::STATUS_ERROR )
             unless $tolerant;
     }
 
@@ -961,7 +961,10 @@ sub _template_content {
     my $error;
 
     local *FH;
-    if (open(FH, "< $path")) {
+    if(-d $path) {
+        $error = "$path: not a file";
+    }
+    elsif (open(FH, "< $path")) {
         local $/;
         binmode(FH);
         $data = <FH>;
