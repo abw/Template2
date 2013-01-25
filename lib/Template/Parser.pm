@@ -354,7 +354,14 @@ sub split_text {
                 $dir = ($dir =~ /($CHOMP_FLAGS)$/o) ? $1 : '';
             }
             else {
-                s/^($CHOMP_FLAGS)?\s*//so;
+
+                if(s/^($CHOMP_FLAGS)?(\s*)//so && $2) {
+                  my $chomped = $2;
+                  my $linecount = ($chomped =~ tr/\n//); # newlines in chomped whitespace
+                  $linecount ||= 0;
+                  $prelines += $linecount;
+                  $dirlines -= $linecount;
+                }
                 # PRE_CHOMP: process whitespace before tag
                 $chomp = $1 ? $1 : $prechomp;
                 $chomp =~ tr/-=~+/1230/;
