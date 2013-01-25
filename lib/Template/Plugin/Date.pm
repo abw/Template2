@@ -98,7 +98,7 @@ sub format {
         # otherwise, we try to parse it as either a 'Y:M:D H:M:S' or a
         # 'H:M:S D:M:Y' string
 
-        my @parts = (split(/(?:\/| |:|-)/, $time));
+        my @parts = (split(/\D/, $time));
 
         if (@parts >= 6) {
             if (length($parts[0]) == 4) {
