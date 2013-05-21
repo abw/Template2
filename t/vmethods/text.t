@@ -161,7 +161,7 @@ The_dog_sat_on_the_log
 -- name text.split.join d --
 [% spaced.split(' ').join('_') %]
 -- expect --
-__The_dog_sat_on_the_log
+The_dog_sat_on_the_log
 
 -- test --
 -- name text.list --
