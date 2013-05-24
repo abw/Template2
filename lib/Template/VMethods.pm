@@ -254,21 +254,21 @@ sub text_split {
     my ($str, $split, $limit) = @_;
     $str = '' unless defined $str;
 
-    # we have to be very careful about spelling out each possible
-    # combination of arguments because split() is very sensitive
-    # to them, for example C<split(' ', ...)> behaves differently
-    # to C<$space=' '; split($space, ...)>
+    # split's behavior changed in Perl 5.18.0 making this:
+    # C<$space=' '; split($space, ...)>
+    # behave the same as this:
+    # C<split(' ', ...)>
+    # qr// behaves the same, so use that for user-defined split.
 
-    if (defined $limit) {
-        return [ defined $split
-                 ? split($split, $str, $limit)
-                 : split(' ', $str, $limit) ];
+    my $split_re;
+    if (defined $split) {
+        eval {
+            $split_re = qr/$split/;
+        };
     }
-    else {
-        return [ defined $split
-                 ? split($split, $str)
-                 : split(' ', $str) ];
-    }
+    $split_re = ' ' unless defined $split_re;
+    $limit ||= 0;
+    return split($split_re, $str, $limit);
 }
 
 sub text_chunk {
