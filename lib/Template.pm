@@ -477,6 +477,10 @@ configuration option.  See L<Template::Manual::Config> for full details.
 
 =head2 Template Style and Parsing Options
 
+=head3 ENCODING
+
+Specifies the character encoding.
+
 =head3 START_TAG, END_TAG
 
 Define tokens that indicate start and end of directives
