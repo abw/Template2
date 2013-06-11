@@ -19,6 +19,9 @@
 * Applied a patch from Slaven Rezic to silence warnings in the replace
   vmethod.  https://rt.cpan.org/Ticket/Display.html?id=76694
 
+* Applied a patch from Smylers to document the ENCODING option.
+  https://rt.cpan.org/Public/Bug/Display.html?id=64694
+
 #-----------------------------------------------------------------------
 # Version 2.24 - 8th February 2012
 #------------------------------------------------------------------------
