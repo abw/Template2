@@ -13,6 +13,8 @@
 #
 #========================================================================
 
+=encoding latin1
+
 =head1 NAME
 
 Template::Manual::Filters - Standard filters

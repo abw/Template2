@@ -13,6 +13,8 @@
 #
 #========================================================================
 
+=encoding utf8
+
 =head1 NAME
 
 Template::Manual::Credits - Author and contributor credits
