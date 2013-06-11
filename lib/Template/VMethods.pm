@@ -268,7 +268,7 @@ sub text_split {
     }
     $split_re = ' ' unless defined $split_re;
     $limit ||= 0;
-    return split($split_re, $str, $limit);
+    return [split($split_re, $str, $limit)];
 }
 
 sub text_chunk {
