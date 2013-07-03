@@ -151,6 +151,11 @@ my %opts = (
         'File::Temp'   => $TT_FILE_TEMP_VERSION,
         'Scalar::Util' => 0,
     },
+    'META_MERGE' => {
+        'resources' => {
+            'repository' => 'https://github.com/abw/Template2',
+        },
+    },
     'dist'         => {
         'COMPRESS' => 'gzip',
         'SUFFIX'   => 'gz',
