@@ -87,7 +87,7 @@ sub process {
 #------------------------------------------------------------------------
 # service()
 #
-# Returns a reference to the the internal SERVICE object which handles
+# Returns a reference to the internal SERVICE object which handles
 # all requests for this Template object
 #------------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ sub service {
 #------------------------------------------------------------------------
 # context()
 #
-# Returns a reference to the the CONTEXT object withint the SERVICE
+# Returns a reference to the CONTEXT object within the SERVICE
 # object.
 #------------------------------------------------------------------------
 
@@ -722,7 +722,7 @@ remain local to it.
 
 =head2 WRAPPER
 
-The content between the C<WRAPPER> and correspondng C<END> directives is first
+The content between the C<WRAPPER> and corresponding C<END> directives is first
 evaluated, with the output generated being stored in the C<content> variable.
 The named template is then process as per C<INCLUDE>.
 

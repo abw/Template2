@@ -115,7 +115,7 @@ sub block {
 # blocks()
 #
 # Returns a reference to a hash array containing any BLOCK definitions 
-# from the template.  The hash keys are the BLOCK nameand the values
+# from the template.  The hash keys are the BLOCK name and the values
 # are references to Template::Document objects.  Returns 0 (# an empty hash)
 # if no blocks are defined.
 #------------------------------------------------------------------------
@@ -495,7 +495,7 @@ templates) then the L<Template::Parser> module calls this subroutine before
 calling the L<new()> constructor.  At this stage, the parser has a
 representation of the template as text strings containing Perl code.  We can
 write that to a file, enclosed in a small wrapper which will allow us to
-susequently C<require()> the file and have Perl parse and compile it into a
+subsequently C<require()> the file and have Perl parse and compile it into a
 C<Template::Document>.  Thus we have persistence of compiled templates.
 
 =head1 INTERNAL FUNCTIONS

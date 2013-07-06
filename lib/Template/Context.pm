@@ -81,7 +81,7 @@ sub template {
 
     $self->debug("template($name)") if $self->{ DEBUG };
 
-    # references to Template::Document (or sub-class) objects objects, or
+    # references to Template::Document (or sub-class) objects, or
     # CODE references are assumed to be pre-compiled templates and are
     # returned intact
     return $name
@@ -520,7 +520,7 @@ sub throw {
 # catch($error, \$output)
 #
 # Called by various directives after catching an error thrown via die()
-# from within an eval { } block.  The first parameter contains the errror
+# from within an eval { } block.  The first parameter contains the error
 # which may be a sanitized reference to a Template::Exception object
 # (such as that raised by the throw() method above, a plugin object, 
 # and so on) or an error message thrown via die from somewhere in user
@@ -614,7 +614,7 @@ sub leave {
 # object or as text which is compiled into a template.  Returns a true
 # value (the $block reference or compiled block reference) if
 # successful or undef on failure.  Call error() to retrieve the
-# relevent error message (i.e. compilation failure).
+# relevant error message (i.e. compilation failure).
 #------------------------------------------------------------------------
 
 sub define_block {

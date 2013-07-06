@@ -357,7 +357,7 @@ sub undefined {
 
     if ($self->{ _STRICT }) {
         # Sorry, but we can't provide a sensible source file and line without
-        # re-designing the whole architecure of TT (see TT3)
+        # re-designing the whole architecture of TT (see TT3)
         die Template::Exception->new(
             $UNDEF_TYPE, 
             sprintf(
@@ -491,7 +491,7 @@ sub _dotop {
         eval { @result = $root->$item(@$args); };       
         
         if ($@) {
-            # temporary hack - required to propogate errors thrown
+            # temporary hack - required to propagate errors thrown
             # by views; if $@ is a ref (e.g. Template::Exception
             # object then we assume it's a real error that needs
             # real throwing
@@ -802,7 +802,7 @@ This method can be used to set or update several variables in one go.
 
 This undocumented feature returns a closure which can be called to get the
 value of a variable.  It is used to implement variable references which are
-evlauted lazily.
+evaluated lazily.
 
     [% x = \foo.bar.baz %]          # x is a reference to foo.bar.baz
     [% x %]                         # evalautes foo.bar.baz

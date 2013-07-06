@@ -143,7 +143,7 @@ With C<PRE_CHOMP> or C<POST_CHOMP> set to C<3>, all adjacent whitespace
 These values are defined as C<CHOMP_NONE>, C<CHOMP_ONE>, C<CHOMP_COLLAPSE> and
 C<CHOMP_GREEDY> constants in the L<Template::Constants> module.  C<CHOMP_ALL>
 is also defined as an alias for C<CHOMP_ONE> to provide backwards
-compatability with earlier version of the Template Toolkit.  
+compatibility with earlier version of the Template Toolkit.  
 
 Additionally the chomp tag modifiers listed below may also be used for
 the C<PRE_CHOMP> and C<POST_CHOMP> configuration.
@@ -462,7 +462,7 @@ be used whenever a specified template can't be found in the C<INCLUDE_PATH>.
         DEFAULT => 'notfound.html',
     });
 
-If a non-existant template is requested through the Template
+If a non-existent template is requested through the Template
 L<process()|Template#process()> method, or by an C<INCLUDE>, C<PROCESS> or
 C<WRAPPER> directive, then the C<DEFAULT> template will instead be processed, if
 defined. Note that the C<DEFAULT> template is not used when templates are
@@ -1289,7 +1289,7 @@ to have the file name and line number of the caller appended to them.
 
 The C<DEBUG_FORMAT> option can be used to specify a format string for the
 debugging messages generated via the C<DEBUG_DIRS> option described
-above.  Any occurances of C<$file>, C<$line> or C<$text> will be
+above.  Any occurrences of C<$file>, C<$line> or C<$text> will be
 replaced with the current file name, line or directive text,
 respectively.  Notice how the format is single quoted to prevent Perl
 from interpolating those tokens as variables.
@@ -1794,7 +1794,7 @@ A reference to a L<Template::Context> object which is used to define a
 specific environment in which template are processed. A L<Template::Context>
 object is passed as the only parameter to the Perl subroutines that represent
 "compiled" template documents. Template subroutines make callbacks into the
-context object to access Template Toolkit functionality, for example, to to
+context object to access Template Toolkit functionality, for example, to
 C<INCLUDE> or C<PROCESS> another template
 (L<include()|Template::Context#include()> and
 L<process()|Template::Context#process()> methods, respectively), to C<USE> a
