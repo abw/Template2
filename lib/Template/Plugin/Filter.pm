@@ -268,7 +268,7 @@ method which gets called by the C<new()> constructor.
 
 When this is set to a true value, the plugin will automatically
 create a dynamic filter.  The outcome is that the C<filter()> method
-will now also get passed a reference to an array of postional
+will now also get passed a reference to an array of positional
 arguments and a reference to a hash array of named parameters.
 
 So, using a plugin filter like this:

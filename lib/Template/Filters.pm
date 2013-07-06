@@ -95,7 +95,7 @@ our $PLUGIN_FILTER = 'Template::Plugin::Filter';
 # named by the first parameter, $name, with additional constructor 
 # arguments passed by reference to a list as the second parameter, 
 # $args.  A reference to the calling Template::Context object is 
-# passed as the third paramter.
+# passed as the third parameter.
 #
 # Returns a reference to a filter sub-routine or a pair of values
 # (undef, STATUS_DECLINED) or ($error, STATUS_ERROR) to decline to

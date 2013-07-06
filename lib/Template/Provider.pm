@@ -655,7 +655,7 @@ sub _load {
 # Private method called to mark a cache slot as most recently used.
 # A reference to the slot array should be passed by parameter.  The
 # slot is relocated to the head of the linked list.  If the file from
-# which the data was loaded has been upated since it was compiled, then
+# which the data was loaded has been updated since it was compiled, then
 # it is re-loaded from disk and re-compiled.
 #------------------------------------------------------------------------
 
@@ -754,7 +754,7 @@ sub _store {
     my $size = $self->{ SIZE };
     my ($slot, $head);
 
-    # Return if memory cache disabled.  (overridding code should also check)
+    # Return if memory cache disabled.  (overriding code should also check)
     # $$$ What's the expected behaviour of store()?  Can't tell from the
     # docs if you can call store() when SIZE = 0.
     return $data->{data} if defined $size and !$size;
