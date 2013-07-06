@@ -168,6 +168,11 @@ my %opts = (
                                         t/test/src/evalperl.ttc
                                         t/test/src/foo.ttc )),
     },
+    'META_MERGE'        => {
+        'resources' => {
+            'repository'  =>  'https://github.com/abw/Template2',
+        },
+    },
 );
 
 push @{ $opts{'DIR'} }, 'xs' if $TT_XS_ENABLE;
