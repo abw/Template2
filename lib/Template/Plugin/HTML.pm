@@ -155,7 +155,7 @@ methods for generating HTML.
 =head2 escape(text)
 
 Returns the source text with any HTML reserved characters such as 
-C<E<lt>>, C<E<gt>>, etc., correctly esacped to their entity equivalents.
+C<E<lt>>, C<E<gt>>, etc., correctly escaped to their entity equivalents.
 
 =head2 attributes(hash)
 
