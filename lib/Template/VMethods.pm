@@ -254,6 +254,25 @@ sub text_split {
     my ($str, $split, $limit) = @_;
     $str = '' unless defined $str;
 
+    # For versions of Perl prior to 5.18 we have to be very careful about
+    # spelling out each possible combination of arguments because split()
+    # is very sensitive to them, for example C<split(' ', ...)> behaves
+    # differently to C<$space=' '; split($space, ...)>.  Test 33 of 
+    # vmethods/text.t depends on this behaviour.
+
+    if ($] <= 5.018) {
+        if (defined $limit) {
+            return [ defined $split
+                     ? split($split, $str, $limit)
+                     : split(' ', $str, $limit) ];
+        }
+        else {
+            return [ defined $split
+                     ? split($split, $str)
+                     : split(' ', $str) ];
+        }
+    }
+
     # split's behavior changed in Perl 5.18.0 making this:
     # C<$space=' '; split($space, ...)>
     # behave the same as this:
