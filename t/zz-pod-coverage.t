@@ -6,7 +6,7 @@
 #
 # Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 2008-2012 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 2008-2013 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
