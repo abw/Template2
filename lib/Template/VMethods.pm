@@ -260,7 +260,7 @@ sub text_split {
     # differently to C<$space=' '; split($space, ...)>.  Test 33 of 
     # vmethods/text.t depends on this behaviour.
 
-    if ($] <= 5.018) {
+    if ($] < 5.018) {
         if (defined $limit) {
             return [ defined $split
                      ? split($split, $str, $limit)
