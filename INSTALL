@@ -85,19 +85,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 1.25.
+where <version> represents the current version number, e.g. 2.25.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    $ tar zxf Template-Toolkit-1.25.tar.gz
+    $ tar zxf Template-Toolkit-2.25.tar.gz
 or
-    $ gunzip Template-Toolkit-1.25.tar.gz
-    $ tar xf Template-Toolkit-1.25.tar
+    $ gunzip Template-Toolkit-2.25.tar.gz
+    $ tar xf Template-Toolkit-2.25.tar
 
 You can then 'cd' into the directory created,
 
-    $ cd Template-Toolkit-1.25
+    $ cd Template-Toolkit-2.25
 
 and perform the usual Perl installation procedure:
 
