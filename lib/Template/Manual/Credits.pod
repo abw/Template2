@@ -80,20 +80,22 @@ Thierry-Michel Barral, Craig Barratt, Stas Bekman, Robin Berjon, Tony Bowden,
 Neil Bowers, Leon Brocard, Lyle Brooks, Norbert Buchmüller, Dave Cash, Piers
 Cawley, Darren Chamberlain, Timmy Chan, Eric Cholet, Nik Clayton, Tosh Cooey,
 Dave Cross, Chris Dean, Francois Desarmenien, Horst Dumcke, Mark Fowler,
-Michael Fowler, Kenny Gatdula, Axel Gerstmair, Dylan William Hardison, Perrin
-Harkins, Bryce Harrington, Dave Hodgkinson, Lubomir Host, Dave Howorth, Harald
-Joerg, Colin Johnson, Adam Kennedy, Vivek Khera, Alexey A. Kiritchun, Rafael
-Kitover, Ivan Kurmanov, Denis F. Latypoff, Hans von Lengerke, Jonas Liljegren,
-Simon Luff, Andy Maas, Paul Makepeace, Gervase Markham, Sergey Martynoff,
-Simon Matthews, Robert McArthur, Craig McLane, Myk Melez, Eugene Miretskiy,
+Michael Fowler, Kenny Gatdula, Axel Gerstmair, Jay Hannah, Dylan William
+Hardison, Perrin Harkins, Bryce Harrington, Dave Hodgkinson, Lubomir Host,
+Dave Howorth, Jon Jensen, Harald Joerg, Colin Johnson, Colin Keith, Adam
+Kennedy, Vivek Khera, Alexey A. Kiritchun, Rafael Kitover, Andreas Koenig,
+Ivan Kurmanov, Denis F. Latypoff, Hans von Lengerke, Jonas Liljegren, Simon
+Luff, Andy Maas, Paul Makepeace, Gervase Markham, Sergey Martynoff, Simon
+Matthews, Robert McArthur, Craig McLane, Myk Melez, Eugene Miretskiy,
 Tatsuhiko Miyagawa, Bill Moseley, Keith G. Murphy, Chris Nandor, John
 Napiorkowski, Breno G. de Oliveira, Leslie Michael Orchard, Paul Orrock,
 Jonathon Padfield, Steve Peters, Briac PilprE<eacute>, Yuri Pimenov, Martin
 Portman, Marc Remy, Slaven Rezic, Jess Robinson, Josh Rosenbaum, Christian
-Schaffner, Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul Sharpe, Ville
-SkyttE<auml>, Barrie Slaymaker, Doug Steinwand, Michael Stevens, Autrijus
-Tang, Drew Taylor, Rod Taylor, Swen Thuemmler, Richard Tietjen, Ben Tilly,
-Stathy G. Touloumis, Jim Vaughan, Simon Wilcox, Chris Winters
+Schaffner, Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul Sharpe,
+Ricardo Signes, Ville SkyttE<auml>, Barrie Slaymaker, David Steinbrunner, Doug
+Steinwand, Michael Stevens, Autrijus Tang, Drew Taylor, Rod Taylor, Swen
+Thuemmler, Richard Tietjen, Ben Tilly, Stathy G. Touloumis, Jim Vaughan, Simon
+Wilcox, Chris Winters.
 
 =cut
 

@@ -11,16 +11,31 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 2.25 - Not yet released
+# Version 2.25 - 24th July 2013
 #------------------------------------------------------------------------
 
-* Applied a patch from Johan Vromans to add the --link option to ttree.
+* Jon Jensen fixed the behaviour of split() which changed in Perl 5.18.0
 
-* Applied a patch from Slaven Rezic to silence warnings in the replace
-  vmethod.  https://rt.cpan.org/Ticket/Display.html?id=76694
+* Jay Hannah added repository information for metacpan.org et. al. 
 
-* Applied a patch from Smylers to document the ENCODING option.
-  https://rt.cpan.org/Public/Bug/Display.html?id=64694
+* Colin Keith fixed Template::Provider's handling of directories
+
+* Kevin Goess made the date plugin accept the ISO8601 "T" separator
+
+* David Steinbrunner fixed various typos.
+
+* Andreas Koenig silenced recent Pod::Simple warnings
+
+* Slaven Rezic silenced warnings in the replace vmethod.
+
+* Ricardo Signes made the Image plugin emit extra tags in a predictable order
+
+* Johan Vromans added the --link option to ttree.
+
+* Smylers added documentation for the ENCODING option.
+
+* Andy Wardley made some minor documentation changes relating to github.
+
 
 #-----------------------------------------------------------------------
 # Version 2.24 - 8th February 2012
