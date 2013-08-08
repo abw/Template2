@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 
+use utf8;
 our $VERSION = 2.74;
 our $JOINT   = '&amp;';
 
@@ -76,6 +77,7 @@ sub args {
 sub escape {
     my $toencode = shift;
     return undef unless defined($toencode);
+    utf8::encode($toencode);
     $toencode=~s/([^a-zA-Z0-9_.-])/uc sprintf("%%%02x",ord($1))/eg;
     return $toencode;
 }

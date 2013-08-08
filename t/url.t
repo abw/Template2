@@ -15,6 +15,7 @@
 #
 #========================================================================
 
+use utf8;
 use strict;
 use lib qw( ../lib );
 use Template qw( :status );
@@ -178,3 +179,10 @@ there?age=42&amp;name=frank
 -- expect --
 /product?action=edit&style=editor
 /product?action=edit&style=compact
+
+-- test --
+[% USE url('/cgi-bin/woz.pl') -%]
+[% url(utf8="Naïve Unicode") %]
+
+-- expect --
+/cgi-bin/woz.pl?utf8=Na%C3%AFve%20Unicode
