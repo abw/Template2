@@ -24,7 +24,7 @@ Template::Manual::Config - Configuration options
 The C<ENCODING> option specifies the template files' character encoding:
 
     my $template = Template->new({ 
-        END_TAG => 'utf8',
+        ENCODING => 'utf8',
     });
 
 A template which starts with a Unicode byte order mark (BOM) will have its
