@@ -243,12 +243,10 @@ sub as_perl {
     my ($class, $content) = @_;
     my ($block, $defblocks, $metadata) = @$content{ qw( BLOCK DEFBLOCKS METADATA ) };
 
-    $block =~ s/\n(?!#line)/\n    /g;
     $block =~ s/\s+$//;
 
     $defblocks = join('', map {
         my $code = $defblocks->{ $_ };
-        $code =~ s/\n(?!#line)/\n        /g;
         $code =~ s/\s*$//;
         "        '$_' => $code,\n";
     } keys %$defblocks);
