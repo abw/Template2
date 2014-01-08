@@ -4,15 +4,13 @@
 #
 # Template script testing FILTER directive.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
-#
-# $Id$
 #
 #========================================================================
 
@@ -77,6 +75,12 @@ my $params = {
     stderr   => sub { $stderr },
     despace  => bless(\&despace, 'anything'),
     widetext => "wide:\x{65e5}\x{672c}\x{8a9e}",
+    use_rfc2732 => sub {
+        Template::Filters->use_rfc2732;
+    },
+    use_rfc3986  => sub { 
+        Template::Filters->use_rfc3986;
+    }
 };
 
 my $filters = {
@@ -938,4 +942,37 @@ Foobar
 -- expect --
 fOOBAR
 
+-- test --
+[% "foo(bar)" | uri %]
+-- expect --
+foo(bar)
+
+-- test --
+[% "foo(bar)" | url %]
+-- expect --
+foo(bar)
+
+-- test --
+[% use_rfc3986;
+   "foo(bar)" | url;
+%]
+-- expect --
+foo%28bar%29
+
+-- test --
+[% "foo(bar)" | uri %]
+-- expect --
+foo%28bar%29
+
+-- test --
+[% use_rfc2732;
+   "foo(bar)" | url;
+%]
+-- expect --
+foo(bar)
+
+-- test --
+[% "foo(bar)" | uri %]
+-- expect --
+foo(bar)
 

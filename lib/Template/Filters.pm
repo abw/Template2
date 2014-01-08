@@ -10,7 +10,7 @@
 #   by Leslie Michael Orchard <deus_x@nijacode.com>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -259,29 +259,58 @@ sub _dump {
 #========================================================================
 
 #------------------------------------------------------------------------
+# uri_filter() and url_filter() below can match using either RFC3986 or 
+# RFC2732.  See https://github.com/abw/Template2/issues/13
+#-----------------------------------------------------------------------
+
+our $UNSAFE_SPEC = {
+    RFC2732 => q{A-Za-z0-9\-_.!~*'()},
+    RFC3986 => q{A-Za-z0-9\-\._~"},
+};
+our $UNSAFE_CHARS = $UNSAFE_SPEC->{ RFC2732 };
+our $URI_REGEX;
+our $URL_REGEX;
+our $URI_ESCAPES;
+
+sub use_rfc2732 {
+    $UNSAFE_CHARS = $UNSAFE_SPEC->{ RFC2732 };
+    $URI_REGEX = $URL_REGEX = undef;
+}
+
+sub use_rfc3986 {
+    $UNSAFE_CHARS = $UNSAFE_SPEC->{ RFC3986 };
+    $URI_REGEX = $URL_REGEX = undef;
+}
+
+sub uri_escapes {
+    return {
+        map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
+    };
+}
+
+#------------------------------------------------------------------------
 # uri_filter()                                           [% FILTER uri %]
 #
 # URI escape a string.  This code is borrowed from Gisle Aas' URI::Escape
-# module, copyright 1995-2004.  See RFC2396 for details.
+# module, copyright 1995-2004.  See RFC2396, RFC2732 and RFC3986 for 
+# details.
 #-----------------------------------------------------------------------
-
-# cache of escaped characters
-our $URI_ESCAPES;
 
 sub uri_filter {
     my $text = shift;
 
-    $URI_ESCAPES ||= {
-        map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
-    };
+    $URI_REGEX   ||= qr/([^$UNSAFE_CHARS])/;
+    $URI_ESCAPES ||= uri_escapes();
 
     if ($] >= 5.008 && utf8::is_utf8($text)) {
         utf8::encode($text);
     }
-    
-    $text =~ s/([^A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/eg;
+
+    $text =~ s/$URI_REGEX/$URI_ESCAPES->{$1}/eg;
     $text;
 }
+
+
 
 #------------------------------------------------------------------------
 # url_filter()                                           [% FILTER uri %]
@@ -296,15 +325,14 @@ sub uri_filter {
 sub url_filter {
     my $text = shift;
 
-    $URI_ESCAPES ||= {
-        map { ( chr($_), sprintf("%%%02X", $_) ) } (0..255),
-    };
+    $URL_REGEX   ||= qr/([^;\/?:@&=+\$,$UNSAFE_CHARS])/;
+    $URI_ESCAPES ||= uri_escapes();
 
     if ($] >= 5.008 && utf8::is_utf8($text)) {
         utf8::encode($text);
     }
     
-    $text =~ s/([^;\/?:@&=+\$,A-Za-z0-9\-_.!~*'()])/$URI_ESCAPES->{$1}/eg;
+    $text =~ s/$URL_REGEX/$URI_ESCAPES->{$1}/eg;
     $text;
 }
 
@@ -742,6 +770,16 @@ your system.
     use Template::Filters;
     Template::Filters->use_apache_util();
 
+=head2 use_rfc2732()
+
+This class method can be called to configure the C<uri> and C<url> filters to 
+use the older RFC2732 standard for matching unsafe characters.
+
+=head2 use_rfc3986()
+
+This class method can be called to configure the C<uri> and C<url> filters to 
+use the newer RFC3986 standard for matching unsafe characters.
+
 =head1 CONFIGURATION OPTIONS
 
 The following list summarises the configuration options that can be provided
@@ -791,7 +829,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
