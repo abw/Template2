@@ -156,7 +156,7 @@ C<ELSIF>, C<ELSE>, C<SWITCH>, C<CASE>, etc.
        <a href="[% root %]/[% section %]/index.html">[% section %]</a>
     [% END %]
     
-    <b>Client</a>: [% client.name %] (id: [% client.id %])
+    <b>Client</b>: [% client.name %] (id: [% client.id %])
     
     [% IF shopcart.nitems %]
        Your shopping cart contains the following items:
