@@ -26,6 +26,10 @@ use base 'Template::Plugin';
 
 use POSIX ();
 
+use Config ();
+
+use constant HAS_SETLOCALE => $Config::Config{d_setlocale};
+
 our $VERSION = 2.78;
 our $FORMAT  = '%H:%M:%S %d-%b-%Y';    # default strftime() format
 our @LOCALE_SUFFIX = qw( .ISO8859-1 .ISO_8859-15 .US-ASCII .UTF-8 );
@@ -124,19 +128,23 @@ sub format {
     if ($locale) {
         # format the date in a specific locale, saving and subsequently
         # restoring the current locale.
-        my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
+        my $old_locale = HAS_SETLOCALE
+                       ? &POSIX::setlocale(&POSIX::LC_ALL)
+                       : undef;
 
         # some systems expect locales to have a particular suffix
         for my $suffix ('', @LOCALE_SUFFIX) {
             my $try_locale = $locale.$suffix;
-            my $setlocale = &POSIX::setlocale(&POSIX::LC_ALL, $try_locale);
+            my $setlocale = HAS_SETLOCALE
+                       ? &POSIX::setlocale(&POSIX::LC_ALL, $try_locale)
+                       : undef;
             if (defined $setlocale && $try_locale eq $setlocale) {
                 $locale = $try_locale;
                 last;
             }
         }
         $datestr = &POSIX::strftime($format, @date);
-        &POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
+        &POSIX::setlocale(&POSIX::LC_ALL, $old_locale) if HAS_SETLOCALE;
     }
     else {
         $datestr = &POSIX::strftime($format, @date);
