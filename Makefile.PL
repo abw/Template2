@@ -146,10 +146,11 @@ my %opts = (
     'PMLIBDIRS'    => [ 'lib' ],
     'DIR'          => [ ],
     'PREREQ_PM'    => {
-        'AppConfig'    => $TT_APPCONFIG_VERSION,
-        'File::Spec'   => $TT_FILE_SPEC_VERSION,
-        'File::Temp'   => $TT_FILE_TEMP_VERSION,
-        'Scalar::Util' => 0,
+        'AppConfig'       => $TT_APPCONFIG_VERSION,
+        'File::Spec'      => $TT_FILE_SPEC_VERSION,
+        'File::Temp'      => $TT_FILE_TEMP_VERSION,
+        'Scalar::Util'    => 0,
+        'Test::LeakTrace' => 0,
     },
     'META_MERGE' => {
         'resources' => {
