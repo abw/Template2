@@ -56,6 +56,7 @@ our $ERROR   = '';
 #========================================================================
 
 our $TAG_STYLE   = {
+    'outline'   => [ '\[%',    '%\]', '%%' ],  # NEW!  Outline tag
     'default'   => [ '\[%',    '%\]'    ],
     'template1' => [ '[\[%]%', '%[\]%]' ],
     'metatext'  => [ '%%',     '%%'     ],
@@ -71,6 +72,7 @@ $TAG_STYLE->{ template } = $TAG_STYLE->{ tt2 } = $TAG_STYLE->{ default };
 our $DEFAULT_STYLE = {
     START_TAG   => $TAG_STYLE->{ default }->[0],
     END_TAG     => $TAG_STYLE->{ default }->[1],
+    OUTLINE_TAG => $TAG_STYLE->{ default }->[2],
 #    TAG_STYLE   => 'default',
     ANYCASE     => 0,
     INTERPOLATE => 0,
@@ -109,6 +111,7 @@ sub new {
     my $self = bless {
         START_TAG   => undef,
         END_TAG     => undef,
+        OUTLINE_TAG => undef,
         TAG_STYLE   => 'default',
         ANYCASE     => 0,
         INTERPOLATE => 0,
@@ -220,7 +223,7 @@ sub block_label {
 sub new_style {
     my ($self, $config) = @_;
     my $styles = $self->{ STYLE } ||= [ ];
-    my ($tagstyle, $tags, $start, $end, $key);
+    my ($tagstyle, $tags, $start, $end, $out, $key);
 
     # clone new style from previous or default style
     my $style  = { %{ $styles->[-1] || $DEFAULT_STYLE } };
@@ -229,18 +232,57 @@ sub new_style {
     if ($tagstyle = $config->{ TAG_STYLE }) {
         return $self->error("Invalid tag style: $tagstyle")
             unless defined ($tags = $TAG_STYLE->{ $tagstyle });
-        ($start, $end) = @$tags;
-        $config->{ START_TAG } ||= $start;
-        $config->{   END_TAG } ||= $end;
+        ($start, $end, $out) = @$tags;
+        $config->{ START_TAG   } ||= $start;
+        $config->{ END_TAG     } ||= $end;
+        $config->{ OUTLINE_TAG } ||= $out;
     }
 
     foreach $key (keys %$DEFAULT_STYLE) {
         $style->{ $key } = $config->{ $key } if defined $config->{ $key };
     }
+
+    $start = $style->{ START_TAG   };
+    $end   = $style->{ END_TAG     };
+    $out   = $style->{ OUTLINE_TAG };
+    $style->{ TEXT_SPLIT } = $self->text_splitter($start, $end, $out);
+
     push(@$styles, $style);
     return $style;
 }
 
+sub text_splitter {
+    my ($self, $start, $end, $out) = @_;
+
+    if (defined $out) {
+        return qr/
+          \A(.*?)             # $1 - start of line up to directive
+            (?:
+              (?:
+              ^$out           # outline tag at start of line
+              (.*?)           # $2 - content of that line
+              (?:\n|$)        # end of that line or file
+              )
+              |
+              (?:
+              $start          # start of tag
+              (.*?)           # $3 - tag contents
+              $end            # end of tag
+              )
+            )
+        /msx;
+    }
+    else {
+        return qr/
+          ^(.*?)              # $1 - start of line up to directive
+            (?:
+              $start          # start of tag
+              (.*?)           # $2 - tag contents
+              $end            # end of tag
+            )
+        /sx;
+    }
+}
 
 #------------------------------------------------------------------------
 # old_style()
@@ -320,9 +362,11 @@ sub split_text {
     my ($self, $text) = @_;
     my ($pre, $dir, $prelines, $dirlines, $postlines, $chomp, $tags, @tags);
     my $style = $self->{ STYLE }->[-1];
-    my ($start, $end, $prechomp, $postchomp, $interp ) =
-        @$style{ qw( START_TAG END_TAG PRE_CHOMP POST_CHOMP INTERPOLATE ) };
+    my ($start, $end, $out, $prechomp, $postchomp, $interp ) =
+        @$style{ qw( START_TAG END_TAG OUTLINE_TAG PRE_CHOMP POST_CHOMP INTERPOLATE ) };
     my $tags_dir = $self->{ANYCASE} ? qr<TAGS>i : qr<TAGS>;
+    my $split    = $style->{ TEXT_SPLIT };
+    my $has_out  = defined $out;
 
     my @tokens = ();
     my $line = 1;
@@ -331,16 +375,10 @@ sub split_text {
         unless defined $text && length $text;
 
     # extract all directives from the text
-    while ($text =~ s/
-           ^(.*?)               # $1 - start of line up to directive
-           (?:
-            $start          # start of tag
-            (.*?)           # $2 - tag contents
-            $end            # end of tag
-            )
-           //sx) {
-
-        ($pre, $dir) = ($1, $2);
+    while ($text =~ s/$split//) {
+        $pre = $1;
+        $dir = defined($2) ? $2 : $3;
+        #($pre, $dir) = ($1, $2);
         $pre = '' unless defined $pre;
         $dir = '' unless defined $dir;
 
@@ -378,7 +416,7 @@ sub split_text {
                     }
                 }
             }
-            
+
             # POST_CHOMP: process whitespace after tag
             s/\s*($CHOMP_FLAGS)?\s*$//so;
             $chomp = $1 ? $1 : $postchomp;
@@ -414,10 +452,12 @@ sub split_text {
             if ($dir =~ /^$tags_dir\s+(.*)/) {
                 my @tags = split(/\s+/, $1);
                 if (scalar @tags > 1) {
-                    ($start, $end) = map { quotemeta($_) } @tags;
+                    ($start, $end, $out) = map { quotemeta($_) } @tags;
+                    $split = $self->text_splitter($start, $end, $out);
                 }
                 elsif ($tags = $TAG_STYLE->{ $tags[0] }) {
-                    ($start, $end) = @$tags;
+                    ($start, $end, $out) = @$tags;
+                    $split = $self->text_splitter($start, $end, $out);
                 }
                 else {
                     warn "invalid TAGS style: $tags[0]\n";
@@ -985,7 +1025,7 @@ Template::Parser - LALR(1) parser for compiling template documents
 =head1 SYNOPSIS
 
     use Template::Parser;
-
+    
     $parser   = Template::Parser->new(\%config);
     $template = $parser->parse($text)
         || die $parser->error(), "\n";
