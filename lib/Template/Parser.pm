@@ -378,7 +378,6 @@ sub split_text {
     while ($text =~ s/$split//) {
         $pre = $1;
         $dir = defined($2) ? $2 : $3;
-        #($pre, $dir) = ($1, $2);
         $pre = '' unless defined $pre;
         $dir = '' unless defined $dir;
 
