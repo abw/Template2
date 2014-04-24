@@ -37,7 +37,7 @@ my $src = abs_path(-d 't' ? 't/test/lib'    : 'test/lib');
 unshift(@INC, $dir);
 
 my ($input, $output);
-my $output = '';
+$output = '';
 
 # Copy input parsing from Template::Test::test_expect
 eval {
