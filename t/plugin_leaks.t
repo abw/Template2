@@ -21,11 +21,15 @@ use lib qw( t/lib ./lib ../lib ../blib/arch );
 use Template::Test;
 use Template::Plugins;
 use Template::Constants qw( :debug );
-use Test::LeakTrace;
 use Cwd qw( abs_path );
 $^W                    = 1;
 my $DEBUG = grep(/^--?d(debug)?$/, @ARGV);
 
+eval "use Test::LeakTrace";
+
+if ($@) {
+    skip_all('Test::LeakTrace not installed');
+}
 ntests(2);
 
 my $dir = abs_path(-d 't' ? 't/test/plugin' : 'test/plugin');
