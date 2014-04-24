@@ -23,23 +23,51 @@ $Template::Test::DEBUG = 0;
 
 ok(1);
 
-my $config = {
+my $tt_vanilla = Template->new;
+my $tt_outline = Template->new({
+    TAG_STYLE => 'outline',
+});
+my $tt_outtag = Template->new({
     OUTLINE_TAG => '%%',
-};
+});
+my $tt_shell = Template->new({
+    OUTLINE_TAG => quotemeta '$ ',
+});
 
-test_expect(\*DATA, $config, callsign() );
+my $engines = [
+    default => $tt_vanilla,
+    outline => $tt_outline,
+    outtag  => $tt_outtag,
+    shell   => $tt_shell,
+];
+
+
+test_expect(\*DATA, $engines, callsign);
 
 __DATA__
 -- test --
-%% IF a
+-- name TAGS outline --
+# Outline tags are not enabled by default
+%% [% r %] and [% j %]
+# Turn them on like so
+[% TAGS outline -%]
+%% IF a     # outline tags can contain comments
 a is set to [% a %]
 %% ELSE
-alpha is not set
+a is not set
 %% END
+# Turn them off again
+[% TAGS default -%]
+%% [% f %] and [% t %]
 -- expect --
+%% romeo and juliet
 a is set to alpha
+%% foxtrot and tango
 
 -- test --
+-- name TAGS <start> <end> <outline> --
+%% [% r %] and [% j %]
+# You can also use TAGS to specify your own <start_tag> <end_tag> <outline_tag>
 [% TAGS {{ }} >> -%]
 >> IF b
 b is set to {{b}}
@@ -47,4 +75,45 @@ b is set to {{b}}
 b is not set
 >> END
 -- expect --
+%% romeo and juliet
 b is set to bravo
+
+-- test --
+-- name TAG_STYLE outline --
+-- use outline --
+# This engine should already have TAG_STYLE set to 'outline'
+%% IF c
+c is set to [% c %]
+%% ELSE
+c is not set
+%% END
+# Turn them off again
+[% TAGS default -%]
+%% [% f %] and [% t %]
+-- expect --
+c is set to charlie
+%% foxtrot and tango
+
+-- test --
+-- name OUTLINE_TAG --
+-- use outtag --
+# This engine should already have OUTLINE_TAG set to '%%'
+%% IF d
+d is set to [% d %]
+%% ELSE
+d is not set
+%% END
+-- expect --
+d is set to delta
+
+-- test --
+-- name OUTLINE_TAG shell --
+-- use shell --
+# This engine should already have OUTLINE_TAG set to '$ '
+$ IF e
+e is set to [% e %]
+$ ELSE
+e is not set
+$ END
+-- expect --
+e is set to echo
