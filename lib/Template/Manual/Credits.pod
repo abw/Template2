@@ -76,11 +76,11 @@ the Template Toolkit.  Their efforts continue to be very much appreciated.
 Please let me know if you think anyone is missing from this list.
 
 Chuck Adams, Stephen Adkins, Ivan Adzhubey, Mark Anderson, Bradley Baetz,
-Thierry-Michel Barral, Craig Barratt, Stas Bekman, Robin Berjon, Tony Bowden,
-Neil Bowers, Leon Brocard, Lyle Brooks, Norbert Buchmüller, Dave Cash, Piers
-Cawley, Darren Chamberlain, Timmy Chan, Eric Cholet, Chromatic, Nik Clayton,
-Tosh Cooey, Dave Cross, Chris Dean, Francois Desarmenien,  Horst Dumcke, Mark
-Fowler, Michael Fowler, Kenny Gatdula, Axel Gerstmair, Jay Hannah,  Dylan
+Amiri Barksdale, Thierry-Michel Barral, Craig Barratt, Stas Bekman, Robin Berjon,
+Tony Bowden, Neil Bowers, Leon Brocard, Lyle Brooks, Norbert Buchmüller,
+Dave Cash, Piers Cawley, Darren Chamberlain, Timmy Chan, Eric Cholet, Chromatic,
+Nik Clayton, Tosh Cooey, Dave Cross, Chris Dean, Francois Desarmenien, Horst Dumcke,
+Mark Fowler, Michael Fowler, Kenny Gatdula, Axel Gerstmair, Jay Hannah,  Dylan
 William Hardison, Perrin Harkins, Bryce Harrington, Dave Hodgkinson,  Lubomir
 Host, Dave Howorth, Jon Jensen, Harald Joerg, Colin Johnson,  Colin Keith,
 Adam Kennedy, Vivek Khera, Alexey A. Kiritchun, Rafael Kitover,  Andreas
