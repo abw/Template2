@@ -4,7 +4,7 @@
 #
 # Tests the File plugin.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 2000 Andy Wardley. All Rights Reserved.
 #

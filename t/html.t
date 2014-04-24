@@ -4,7 +4,7 @@
 #
 # Tests the 'HTML' plugin.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 2001 Andy Wardley. All Rights Reserved.
 #

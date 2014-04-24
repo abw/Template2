@@ -4,7 +4,7 @@
 #
 # Tests the 'Table' plugin.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 2000-2006 Andy Wardley. All Rights Reserved.
 #

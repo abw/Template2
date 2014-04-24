@@ -4,7 +4,7 @@
 #
 # Template script testing variable via a tied hash.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2001 Canon Research Centre Europe Ltd.
