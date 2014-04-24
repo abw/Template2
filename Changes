@@ -11,12 +11,32 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
+# Version 2.26 -
+#------------------------------------------------------------------------
+
+* Andy Wardley added outline directives
+
+* Chromatic fixed UTF-8 encoding in URLs in URL plugin.
+  https://github.com/abw/Template2/pull/31
+
+* Brian Fraser added support for platforms without LC_ALL/setlocale.
+  https://github.com/abw/Template2/pull/34
+
+* Amiri Barksdale fixed RT46691 to plug filter memory leaks
+  https://github.com/abw/Template2/pull/36
+
+* John Lightsey fixed RT59208 to improve SET
+  https://github.com/abw/Template2/pull/38
+
+
+
+#-----------------------------------------------------------------------
 # Version 2.25 - 24th July 2013
 #------------------------------------------------------------------------
 
 * Jon Jensen fixed the behaviour of split() which changed in Perl 5.18.0
 
-* Jay Hannah added repository information for metacpan.org et. al. 
+* Jay Hannah added repository information for metacpan.org et. al.
 
 * Colin Keith fixed Template::Provider's handling of directories
 
@@ -47,7 +67,7 @@
 * Fixed bug RT#67918 - Bug in Makefile.PL command line parsing when 2 =
   signs were in an argument.
 
-* Fixed bug RT#74335 - Added documentation for some methods that were 
+* Fixed bug RT#74335 - Added documentation for some methods that were
   lacking it to keep Pod::Coverage happy.
 
 
@@ -68,10 +88,10 @@
   from adding target class' methods AUTOLOAD and new methods multiple
   times (Jens Rehsack)
 
-* Applied patch from RT#53451 to accept negative epoch times in 
+* Applied patch from RT#53451 to accept negative epoch times in
   Template::Plugin::Date.
 
-* Applied patch from Marc Remy to add $Template::Directive::WHILE_MAX 
+* Applied patch from Marc Remy to add $Template::Directive::WHILE_MAX
   option to tpage.
 
 
@@ -79,7 +99,7 @@
 # Version 2.22 - 21st July 2009
 #------------------------------------------------------------------------
 
-* Changed pod coverage and kwalitee tests to only run when release 
+* Changed pod coverage and kwalitee tests to only run when release
   testing.
 
 
@@ -90,7 +110,7 @@
 * Added UTF8 support to the XS Stash.
   https://rt.cpan.org/Ticket/Display.html?id=45842
 
-* Fixed the truncate filter to handle lengths shorter than the '...' 
+* Fixed the truncate filter to handle lengths shorter than the '...'
   string being appended on the end.
   https://rt.cpan.org/Ticket/Display.html?id=45617
 
@@ -121,7 +141,7 @@
 # Version 2.21 - 30th June 2009
 #------------------------------------------------------------------------
 
-* Fixed a PRE_CHOMP bug that left \r characters lying around when 
+* Fixed a PRE_CHOMP bug that left \r characters lying around when
   confronted with templates with DOS \r\n line endings.
   https://rt.cpan.org/Ticket/Display.html?id=43345
 
@@ -145,7 +165,7 @@
   from being whitespaced away from the first column.
   https://rt.cpan.org/Ticket/Display.html?id=46269
 
-* Applied a patch from Denis F. Latypoff to fix uri/url filters with 
+* Applied a patch from Denis F. Latypoff to fix uri/url filters with
   utf8 text
   https://rt.cpan.org/Ticket/Display.html?id=41173
 
@@ -157,7 +177,7 @@
 * Fixed the XS Stash to compile properly in threaded Perls.
   https://rt.cpan.org/Public/Bug/Display.html?id=46240
 
-* Applied a patch to the XS Stash from Alexey A. Kiritchun to make the 
+* Applied a patch to the XS Stash from Alexey A. Kiritchun to make the
   scalar.length vmethod work correctly with utf8 strings.
   http://lists.tt2.org/pipermail/templates/2009-May/010803.html
 
@@ -170,17 +190,17 @@
   properly.
   http://lists.tt2.org/pipermail/templates/2009-March/010678.html
 
-* Changed the ttree -v/--verbose option so be less verbose and only 
+* Changed the ttree -v/--verbose option so be less verbose and only
   report on things that have changed.  To make it more verbose (like
   previous versions), add a second -v/--verbose flag, e.g.
 
     $ ttree -v -v
 
 * Also added the --summary option to tree to print a summary of what it
-  did, and the --color/--colour option to make it print its verbose 
+  did, and the --color/--colour option to make it print its verbose
   messages in colour (on ANSI terminals).
 
-* Applied a ttree patch from Lyle Brooks to allow ttree to accept a 
+* Applied a ttree patch from Lyle Brooks to allow ttree to accept a
   directory name as a command line argument.
 
 * Added the define_view() and define_views() method to Template::Context
@@ -188,15 +208,15 @@
   is created.  Thanks to Timmy Chan for providing the groundwork on this.
   http://lists.tt2.org/pipermail/templates/2009-April/010689.html
 
-* Retrospectively fixed the Changes for 2.20 to mention the ttree 
+* Retrospectively fixed the Changes for 2.20 to mention the ttree
   --encoding option.
 
-* Applied a patch from Chisel Wright, changing uses of UNIVERSAL::can() 
-  to use blessed() and ->can().  
+* Applied a patch from Chisel Wright, changing uses of UNIVERSAL::can()
+  to use blessed() and ->can().
   http://lists.tt2.org/pipermail/templates/2009-May/010790.html
 
 * Fixed a memory leak in the XS Stash introduced in 2.20.
-  Thanks to Breno G. de Oliveira for reporting the problem and helping to 
+  Thanks to Breno G. de Oliveira for reporting the problem and helping to
   narrow it down.
   https://rt.cpan.org/Public/Bug/Display.html?id=46058
 
@@ -211,12 +231,12 @@
 
 * Tweaked Template::Parser to work better with the ANYCASE option.  It
   now knows that anything following a dotop cannot be a keyword so that
-  you can write data.last without the 'last' bit being interpreted as the 
+  you can write data.last without the 'last' bit being interpreted as the
   LAST keyword.  Thanks to Sean McAfee for the post that inspired it.
   http://lists.tt2.org/pipermail/templates/2008-September/010462.html
 
 * Fixed a broken test for Apache::Util in the html_entity filter.  Added
-  the use_html_entities() and use_apache_util() class methods to 
+  the use_html_entities() and use_apache_util() class methods to
   Template::Filters to allow end-user selection of one or the other.
   http://rt.cpan.org/Public/Bug/Display.html?id=40870
   http://template-toolkit.org/svnweb/Template2/revision/?rev=1177
@@ -226,8 +246,8 @@
   measure to keep things working during the transition to Badger-based
   modules.
 
-* Added the STRICT option which will cause the stash to throw an 
-  exception on encountering an undefined value.  Thanks to Ben Tilly 
+* Added the STRICT option which will cause the stash to throw an
+  exception on encountering an undefined value.  Thanks to Ben Tilly
   for the prod.
 
 * Applied a patch to Template::Iterator from Jonathon Padfield to make
@@ -248,11 +268,11 @@
 * Restored the GIF images that got mangled in the switch from CVS to
   Subversion.
 
-* Fixed the Makefile.PL to pre-glob the tests to keep things working 
+* Fixed the Makefile.PL to pre-glob the tests to keep things working
   smoothly in Win32.
   http://rt.cpan.org/Ticket/Display.html?id=25573
-  
-* Applied a patch to Template::Directives from Ben Morrow to fix the 
+
+* Applied a patch to Template::Directives from Ben Morrow to fix the
   SWITCH/CASE directive when matching strings containing regex metacharacters.
   http://rt.cpan.org/Ticket/Display.html?id=24183
 
@@ -260,7 +280,7 @@
   treat TAGS with case sensitivity.
   http://rt.cpan.org/Ticket/Display.html?id=19975
 
-* Changed html_entity_filter_factory() in Template::Filters to only look for 
+* Changed html_entity_filter_factory() in Template::Filters to only look for
   Apache::Utils and HTML::Entities once.
   http://rt.cpan.org/Ticket/Display.html?id=19837
 
@@ -274,11 +294,11 @@ Template::Stash
   http://lists.tt2.org/pipermail/templates/2006-November/009115.html
 
 * Fixed a minor bug in the XS Stash which prevented it from updating
-  hash entries with empty, but defined keys.  Thanks to Yitzchak 
+  hash entries with empty, but defined keys.  Thanks to Yitzchak
   Scott-Thoennes for reporting the problem.
   http://lists.tt2.org/pipermail/templates/2007-November/009819.html
-  
-* Applied a patch from Alexandr Ciornii  to make the XS Stash compile 
+
+* Applied a patch from Alexandr Ciornii  to make the XS Stash compile
   cleanly under VC++ 6.0 and with Sun's C compiler.
   http://rt.cpan.org/Ticket/Display.html?id=20291
 
@@ -286,25 +306,25 @@ Template::Stash
 Template::Provider
 ------------------
 
-* Fixed a minor bug in the Template::Provider code added in 2.19 that 
+* Fixed a minor bug in the Template::Provider code added in 2.19 that
   caused errors in templates to only be reported once.  Subsequent
-  fetches incorrectly returned 'not found' instead of repeating the 
+  fetches incorrectly returned 'not found' instead of repeating the
   error.
 
 * Made Template::Provider use File::Spec->catfile instead of using '/'
   and letting Perl worry about Doing The Right Thing.
   http://rt.cpan.org/Ticket/Display.html?id=34489
 
-* Applied patch from Lyle Brooks to add binmode to the _template_content() 
+* Applied patch from Lyle Brooks to add binmode to the _template_content()
   method in Template::Provider.
   http://rt.cpan.org/Ticket/Display.html?id=38075
 
 * Applied patch from Ted Carnahan to silence UNIVERSAL::isa warnings in
-  Template::Provider.  
+  Template::Provider.
   http://rt.cpan.org/Ticket/Display.html?id=25468
 
-* Applied patch to Template::Provider from Andrew Hamlin which works around 
-  a bug in Strawberry Perl on Win32.  
+* Applied patch to Template::Provider from Andrew Hamlin which works around
+  a bug in Strawberry Perl on Win32.
   http://rt.cpan.org/Ticket/Display.html?id=34578
 
 
@@ -319,8 +339,8 @@ Template::VMethods
 Plugins
 -------
 
-* Added the Math plugin and related files to the MANIFEST so they 
-  actually get shipped out as part of the distribution.  D'Oh!  
+* Added the Math plugin and related files to the MANIFEST so they
+  actually get shipped out as part of the distribution.  D'Oh!
   http://rt.cpan.org/Ticket/Display.html?id=27375
 
 * Added the Scalar plugin which adds the .scalar vmethod for calling
@@ -333,7 +353,7 @@ Plugins
   circular references and memory leaks.  Thanks to Masahiro Honma for
   reporting the problem and suggesting the fix.
 
-* Applied patch from Ronald J Kimball to make Template::Plugin::Date accept 
+* Applied patch from Ronald J Kimball to make Template::Plugin::Date accept
   dates with the year coming first.
   http://lists.tt2.org/pipermail/templates/2007-July/009540.html
 
@@ -343,13 +363,13 @@ ttree
 -----
 
 * Changed the --accept option in ttree to match against the full file
-  path (relative to --src dir) rather than just the file name.  This 
+  path (relative to --src dir) rather than just the file name.  This
   makes it behave the same way as the --ignore option.
-  
-* Applied patch from Lyle Brooks to add binmode to the process() 
-  call in ttree.   
+
+* Applied patch from Lyle Brooks to add binmode to the process()
+  call in ttree.
   http://rt.cpan.org/Ticket/Display.html?id=38076
-  
+
 * Added a patch from Nigel Metheringham also to set binmode in ttree
   but via a configuration option.
   https://rt.cpan.org/Ticket/Display.html?id=30760
@@ -366,10 +386,10 @@ ttree
   problems running on Win32 with backslashes in paths.
 
   https://rt.cpan.org/Ticket/Display.html?id=20488
-  
+
 * Applied a patch to the XS Stash from Randy Kobes which fixes some other
   Win32 problems.
-  
+
   http://lists.tt2.org/pipermail/templates/2007-February/009247.html
 
 * Applied another patch to the XS Stash from Steve Peters which fixes
@@ -377,32 +397,32 @@ ttree
 
   http://lists.tt2.org/pipermail/templates/2007-January/009181.html
 
-* Fixed a problem in the Perl Stash when using objects that have 
-  overloaded comparison operators.  Thanks to Randal Schwartz, Tatsuhiko 
+* Fixed a problem in the Perl Stash when using objects that have
+  overloaded comparison operators.  Thanks to Randal Schwartz, Tatsuhiko
   Miyagawa and Daisuke Maki for their contributions.
 
   http://lists.tt2.org/pipermail/templates/2007-March/009265.html
 
-* Applied a patch from Bill Moseley to Template::Provider which adds 
+* Applied a patch from Bill Moseley to Template::Provider which adds
   negative caching and moves some functionality into separate methods
   to make subclassing easier.  Also added the STAT_TTL configuration
   parameter.
-  
+
   http://lists.tt2.org/pipermail/templates/2007-January/009183.html
 
 * Added the url filter as a less aggressive form of the uri filter.
-  Whereas the uri filter now (from v2.16 onwards) encodes all the 
+  Whereas the uri filter now (from v2.16 onwards) encodes all the
   reserved characters (@, :, /, etc.) as per RFC2396, the url filter
   leaves them intact and thus behaves just like the uri filter used
   to.
-  
+
   http://lists.tt2.org/pipermail/templates/2007-March/009277.html
 
 #------------------------------------------------------------------------
 # Version 2.18a - 9th February 2007
 #------------------------------------------------------------------------
 
-* Applied a patch from Steve Peters to the Stash.xs to allow it to 
+* Applied a patch from Steve Peters to the Stash.xs to allow it to
   compile with bleadperl 5.9.x
 
   https://rt.cpan.org/Public/Bug/Display.html?id=22506
@@ -414,7 +434,7 @@ ttree
 * Merged in Adam's changes in 2.16 and 2.17 back into the developer CVS
   repository and added his name to the credits.
 
-* Changed the parser grammar to accept expressions as arguments to a 
+* Changed the parser grammar to accept expressions as arguments to a
   subroutine, method or virtual method call.  I'm embarrassed to admit
   that it was a one line change that could (and should) have been made
   long ago, if only I had realised just how trivial it was.  Anyway,
@@ -432,14 +452,14 @@ ttree
 
 Another interim release from Adam Kennedy.
 
-* Change in Makefile.PL to force an upgrade to File::HomeDir 0.64 on darwin. 
-  This is due to problems caused by changes made to Perl on the new Intel 
+* Change in Makefile.PL to force an upgrade to File::HomeDir 0.64 on darwin.
+  This is due to problems caused by changes made to Perl on the new Intel
   versions of Mac OS X.
 
 * skip_all filelines.t on darwin
 
 #------------------------------------------------------------------------
-# Version 2.16 - 23rd Jan 2007            
+# Version 2.16 - 23rd Jan 2007
 #------------------------------------------------------------------------
 
 Interim release from Adam Kennedy.
@@ -460,8 +480,8 @@ Interim release from Adam Kennedy.
 
 * Fixed a bug in Template::Parser which caused it to get confused about
   block names if it encountered a syntax error inside a BLOCK.  Thanks
-  to Bill Moseley for reporting the problem.  
-  
+  to Bill Moseley for reporting the problem.
+
   http://lists.tt2.org/pipermail/templates/2006-July/008815.html
 
 * Fixed a minor buglet in Template::Provider which came to light while
@@ -480,15 +500,15 @@ Interim release from Adam Kennedy.
 # Version 2.15b - 30th May 2006                   ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Changed the uri filter to escape all reserved characters as per 
+* Changed the uri filter to escape all reserved characters as per
   URI::Escape and RFC2396.  This now includes &, @, /, ;, :, =, +, ?
   and $ which were previously not escaped.  Thanks to islue@cpan.org
   for reporting the problem.
 
   http://rt.cpan.org/Ticket/Display.html?id=19593
 
-* Also changed the uri filter to encode all wide characters as the 
-  equivalent UTF escapes.  Thanks to Jonathan Rockway for reporting 
+* Also changed the uri filter to encode all wide characters as the
+  equivalent UTF escapes.  Thanks to Jonathan Rockway for reporting
   the problem.
 
   http://rt.cpan.org/Ticket/Display.html?id=19354
@@ -496,26 +516,26 @@ Interim release from Adam Kennedy.
 * Fixed the redirect filter to not support relative paths.  Thanks to
   Paul Seamons for spotting the problem and providing a solution.
 
-* Moved all the virtual methods out of Template::Stash and into 
+* Moved all the virtual methods out of Template::Stash and into
   a new Template::VMethods module.
 
 * Fixed the version number of Template::Stash which had rolled over
   to 2.102 making it appear to predate the 2.86 stash in TT v2.14.
-  Thanks to Randal Schwartz for reporting the problem.  Changed all 
+  Thanks to Randal Schwartz for reporting the problem.  Changed all
   version numbers in other modules to be a hard-coded numbers instead
   of grokking it automagically from the CVS revision.
 
-* Changed the _recover() method of Template::Service to check if the 
-  error thrown is a Template::Exception object rather than just a 
+* Changed the _recover() method of Template::Service to check if the
+  error thrown is a Template::Exception object rather than just a
   reference.  Thanks to David Wheeler for reporting the problem.
 
   http://rt.cpan.org/Ticket/Display.html?id=17630
 
-* Fixed the some tests in stash.t and stash-xs.t which were failing 
-  under Perl 5.6.2 due to a slightly different error message being 
+* Fixed the some tests in stash.t and stash-xs.t which were failing
+  under Perl 5.6.2 due to a slightly different error message being
   generated.  Thanks to Anton Berezin for reporting the problem.
 
-* Fixed a bug in the Template::Provider _load() method to check that 
+* Fixed a bug in the Template::Provider _load() method to check that
   $data is a hash ref before trying to mess with its innards.  Thanks
   to barbie@cpan.org for reporting the problem.
 
@@ -530,9 +550,9 @@ Interim release from Adam Kennedy.
   variables from Template::Config
 
 * Changed the t/fileline.t test to remove the line number from what Perl
-  reports as "(eval $line)".  It appears to get the $line wrong on 
+  reports as "(eval $line)".  It appears to get the $line wrong on
   FreeBSD, although the correct line number is reported following that
-  so the tests still do the right thing.  Thanks to Anton Berezin for 
+  so the tests still do the right thing.  Thanks to Anton Berezin for
   reporting the problem.
 
 * Changed the t/compile3.t test to do something similar.
@@ -545,19 +565,19 @@ Interim release from Adam Kennedy.
 Chomping Options
 ----------------
 
-* Added the CHOMP_GREEDY option and '~' chomping flag.  Changed 
+* Added the CHOMP_GREEDY option and '~' chomping flag.  Changed
   CHOMP_COLLAPSE to greedily chomp all whitespace (including multiple
   newlines) and replace it with a single space.  Previously it only
   chomped one line.  Renamed the CHOMP_ALL option to CHOMP_ONE which
-  makes more sense.  CHOMP_ALL is still provided as an alias for 
+  makes more sense.  CHOMP_ALL is still provided as an alias for
   CHOMP_ONE for backwards compatibility.  Thanks to Paul Seamons for
   doing all the hard work on this.
 
   http://lists.tt2.org/pipermail/templates/2006-February/thread.html#8354
 
-* Added code to the replace text virtual method to use a faster and 
+* Added code to the replace text virtual method to use a faster and
   simpler implementation if the replacement text doesn't contain any
-  back references.  Thanks to Josh Rosenbaum for all his efforts on 
+  back references.  Thanks to Josh Rosenbaum for all his efforts on
   this.
 
   http://lists.tt2.org/pipermail/templates/2006-February/008344.html
@@ -565,18 +585,18 @@ Chomping Options
 Stash
 -----
 
-* Changed various tests for private/hidden variables (starting '_' 
-  or '.') to use a regex defined in the $PRIVATE package variable in 
-  Template::Stash.  This can be redefined or undefined.  Note that 
+* Changed various tests for private/hidden variables (starting '_'
+  or '.') to use a regex defined in the $PRIVATE package variable in
+  Template::Stash.  This can be redefined or undefined.  Note that
   the XS Stash only looks to see if $PRIVATE is defined or not, and
   currently hard-codes the regex.
 
 Plugins
 -------
 
-* Changed the Image plugin tag() method to call the name() method 
+* Changed the Image plugin tag() method to call the name() method
   instead of accessing the name directly, making it easier for
-  subclasses to provide an alternate name.  Thanks to Cees Hek for 
+  subclasses to provide an alternate name.  Thanks to Cees Hek for
   his patch.
 
   http://lists.tt2.org/pipermail/templates/2006-February/008423.html
@@ -588,11 +608,11 @@ Plugins
 Documentation
 -------------
 
-* Added the Template::Toolkit documentation pointing people to 
+* Added the Template::Toolkit documentation pointing people to
   the right place.
 
-* Updated the Template::Stash::XS documentation to remove the 
-  "experimental" description and tidy things up a bit. 
+* Updated the Template::Stash::XS documentation to remove the
+  "experimental" description and tidy things up a bit.
 
 
 #------------------------------------------------------------------------
@@ -604,9 +624,9 @@ Stash
 
 * Activated a patch in Template::Stash from Stephen Howard which adds
   code for the full set of fallbacks for dot ops called against
-  objects which don't implement the specific method.  For example 
-  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now 
-  all work with the Perl Template::Stash.  Added code to the XS Stash 
+  objects which don't implement the specific method.  For example
+  [% hashobj.vmethod %] [% listobj.2 %] and [% listobj.vmethod %] now
+  all work with the Perl Template::Stash.  Added code to the XS Stash
   to do the same and updated tests.
 
   http://template-toolkit.org/pipermail/templates/2003-December/005417.html
@@ -630,7 +650,7 @@ Stash
 * Changed Template::Stash to be a little more strict about what it
   considers a failed method call.  This allows exception thrown within
   called methods to be propagated correctly rather than being ignored
-  as undefined method.  Thanks to Dave Howorth, Tom Insam and Stig 
+  as undefined method.  Thanks to Dave Howorth, Tom Insam and Stig
   Brautaset for reporting the problem and providing fixes.
 
   http://lists.tt2.org/pipermail/templates/2005-April/007375.html
@@ -705,12 +725,12 @@ Plugins
 
   http://lists.tt2.org/pipermail/templates/2006-January/008225.html
 
-* Applied a single character patch from Lubomir Host which fixes the 
+* Applied a single character patch from Lubomir Host which fixes the
   user attribute in Template::Plugin::File.
 
 * Added the Math Plugin to MANIFEST.
 
-* Changed the URL plugin to ignore parameters that are unset (e.g. 
+* Changed the URL plugin to ignore parameters that are unset (e.g.
   defined but zero length)
 
 * Applied two patches to the Image plugin from Bill Moseley to escape
@@ -720,7 +740,7 @@ Plugins
   http://lists.tt2.org/pipermail/templates/2005-November/008086.html
   http://lists.tt2.org/pipermail/templates/2005-December/008189.html
 
-* Added the $JOINT package variable to Template::Plugin::URL to 
+* Added the $JOINT package variable to Template::Plugin::URL to
   provide a work-around for the URL plugin which incorrectly (as
   we now know) encodes '&' as '&amp;'
 
@@ -742,7 +762,7 @@ Plugins
 Filters
 -------
 
-* Applied a patch to the truncate() filter from "Ashley" which 
+* Applied a patch to the truncate() filter from "Ashley" which
   adds a second argument.
 
   http://lists.tt2.org/pipermail/templates/2005-December/008145.html
@@ -768,7 +788,7 @@ Filters
 ttree
 -----
 
-* Applied patch from Yuri Pimenov to prevent ttree from raising a 
+* Applied patch from Yuri Pimenov to prevent ttree from raising a
   warning when the --depend_debug option is used.
 
   http://lists.tt2.org/pipermail/templates/2005-May/007400.html
@@ -784,12 +804,12 @@ ttree
   https://rt.cpan.org/Ticket/Display.html?id=14905
 
 * Fixed configuration section to not prompt "Do you want me to create
-  a sample .ttreerc file?" if the -h/--help options are specified, 
+  a sample .ttreerc file?" if the -h/--help options are specified,
   thanks to Slaven Rezic for reporting the problem.
 
   http://rt.cpan.org/Ticket/Display.html?id=4180
 
-* added AppConfig EXPAND => EXPAND_ALL option to perl5lib, 
+* added AppConfig EXPAND => EXPAND_ALL option to perl5lib,
   template_plugin_base, template_compile_dir and depend_file
   configuration options to allow them to contain ~ to indicate
   the user's home directory, or $WHATEVER for environment variables,
@@ -798,7 +818,7 @@ ttree
 Miscellaneous
 -------------
 
-* Added code to Makefile.PL to detect $ENV{PERL_MM_USE_DEFAULT} to 
+* Added code to Makefile.PL to detect $ENV{PERL_MM_USE_DEFAULT} to
   accept all defaults.  Thanks to KANE.
 
   http://rt.cpan.org/Ticket/Display.html?id=14613
@@ -814,13 +834,13 @@ Miscellaneous
   http://lists.tt2.org/pipermail/templates/2005-December/008157.html
 
 * Applied a patch from Jess Robinson to move the Template::Provider
-  check for file freshness into a separate method, in order to 
+  check for file freshness into a separate method, in order to
   play nicely with his Template::Provider::DBI module.
 
   http://lists.tt2.org/pipermail/templates/2005-December/008143.html
 
 * Fixed the regex matching relative paths in Template::Provider, thanks
-  to Josh Rosenbaum 
+  to Josh Rosenbaum
 
   http://lists.tt2.org/pipermail/templates/2005-January/007141.html
 
@@ -840,15 +860,15 @@ Miscellaneous
 # Version 2.14 - 4th October 2004
 #------------------------------------------------------------------------
 
-* Applied patch from Harald Joerg to prevent ttree from spewing warnings 
+* Applied patch from Harald Joerg to prevent ttree from spewing warnings
   when copying files.
   http://template-toolkit.org/pipermail/templates/2004-March/005897.html
 
-* Applied a patch from Paul Orrock to fix a couple of missing errors in 
+* Applied a patch from Paul Orrock to fix a couple of missing errors in
   ttree.
   http://template-toolkit.org/pipermail/templates/2004-September/006605.html
 
-* Commented out line 797 of Template::Directive.pm which serves no 
+* Commented out line 797 of Template::Directive.pm which serves no
   purpose and generates a warning.
 
 * Applied a patch from Mark Fowler to add support for Unicode to TT.
@@ -876,8 +896,8 @@ Miscellaneous
 # Version 2.13 - 30th January 2004
 #------------------------------------------------------------------------
 
-* Applied patch from Dave Cash to add 'caller' and 'callers' to 
-  'component', see 
+* Applied patch from Dave Cash to add 'caller' and 'callers' to
+  'component', see
   http://lists.tt2.org/pipermail/templates/2004-January/005581.html
 
 * Applied patch from Dylan William Hardison to ttree which prevents
@@ -889,11 +909,11 @@ Miscellaneous
 # Version 2.12a - 13th January 2004               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Fixed the bug in test 25 of t/date.t, hopefully for good this time, 
+* Fixed the bug in test 25 of t/date.t, hopefully for good this time,
   thanks to the efforts of Steve Peters.  See:
   http://template-toolkit.org/pipermail/templates/2004-January/005560.html
 
-* Added the FILE_INFO option to Template::Parser.  Enabled by default, 
+* Added the FILE_INFO option to Template::Parser.  Enabled by default,
   this can be set to 0 to prevent the parser from adding file and line
   info to the generated Perl file.  Don't ask me why - Autrijus wanted
   it (which probably means he's up to something twisted again :-).  See:
@@ -904,10 +924,10 @@ Miscellaneous
 # Version 2.12 - 12th January 2004
 #------------------------------------------------------------------------
 
-* Added the module_version() method to Template::Base to report the 
+* Added the module_version() method to Template::Base to report the
   version number of a module.  Added some tests to t/base.t.
 
-* Added the --template_module option to ttree, to allow the user to 
+* Added the --template_module option to ttree, to allow the user to
   specify a template processing module other than the default 'Template'
   to be used.  Also changed various print statements to send all
   verbose output to stdout, whereas previously it was split across stdout
@@ -918,7 +938,7 @@ Miscellaneous
 # Version 2.11b - 7th January 2004                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Applied patch from Myk Melez to ensure the 'component' variable 
+* Applied patch from Myk Melez to ensure the 'component' variable
   remains correctly set to the current templates.  See
   http://template-toolkit.org/pipermail/templates/2004-January/005483.html
 
@@ -927,12 +947,12 @@ Miscellaneous
 # Version 2.11a - 6th January 2004                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Fixed bug in t/date.t and corrected version number of 
+* Fixed bug in t/date.t and corrected version number of
   Template::Grammar.
 
 
 #------------------------------------------------------------------------
-# Version 2.11 - 6th January 2004           
+# Version 2.11 - 6th January 2004
 #------------------------------------------------------------------------
 
 * Bumped version number and updated documentation for release.
@@ -944,7 +964,7 @@ Miscellaneous
 
 * Changed the Template::Document process() method to pass itself
   to the context visit() method when it calls it.  Similarly, changed
-  the context visit() method to expect it.  This is useful when 
+  the context visit() method to expect it.  This is useful when
   subclassing the context but shouldn't have any other effect.
 
 * Modified parser to add the file name and line number of the source
@@ -957,7 +977,7 @@ Miscellaneous
 # Version 2.10a - 9th October 2003                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Applied two patches from Axel Gerstmair to fix bugs in Makefile.PL 
+* Applied two patches from Axel Gerstmair to fix bugs in Makefile.PL
   and t/date.t.  See.
   http://lists.tt2.org/pipermail/templates/2003-April/004553.html
   http://lists.tt2.org/pipermail/templates/2003-May/004572.html
@@ -965,7 +985,7 @@ Miscellaneous
 * Applied patch from Jim Cromie to t/autoform.t to skip tests on all
   versions of Perl from 5.8.0 onwards.
 
-* Changed $OUTPUT in Template::Directive to be a package variable, 
+* Changed $OUTPUT in Template::Directive to be a package variable,
   allowing it to be re-defined to permit a flushed output hack.
   http://lists.tt2.org/pipermail/templates/2003-October/005136.html
 
@@ -976,24 +996,24 @@ Miscellaneous
 * Applied a patch from Ivan Adzhubey to template/splash/frame.
   http://lists.tt2.org/pipermail/templates/2003-August/004953.html
 
-* Applied a patch from Bryce Harrington to add the absolute and 
-  relative options to ttree.  Also applied a patch from Mark Anderson 
-  to add the 'template_debug'.  Removed the old debug option which was 
-  as good as useless.  
+* Applied a patch from Bryce Harrington to add the absolute and
+  relative options to ttree.  Also applied a patch from Mark Anderson
+  to add the 'template_debug'.  Removed the old debug option which was
+  as good as useless.
   http://lists.tt2.org/pipermail/templates/2003-October/005110.html
   http://lists.tt2.org/pipermail/templates/2003-October/005126.html
 
-* Applied another patch from Mark to push files named on the command 
-  line through the process_file() sub to ensure that various options 
-  like accept checking, pemission preserving and copy processing (but 
+* Applied another patch from Mark to push files named on the command
+  line through the process_file() sub to ensure that various options
+  like accept checking, pemission preserving and copy processing (but
   not modification time) are applied.
   http://lists.tt2.org/pipermail/templates/2003-October/005132.html
 
-* Applied a variation of yet another ttree patch from Mark to add the 
+* Applied a variation of yet another ttree patch from Mark to add the
   'suffix' option for changing the suffix of output files created.
   http://lists.tt2.org/pipermail/templates/2003-October/005121.html
 
-* Applied a variation of a patch from Dylan William Hardison which 
+* Applied a variation of a patch from Dylan William Hardison which
   adds the 'depend' and 'depend_file' options to ttree.
   http://lists.tt2.org/pipermail/templates/2003-July/004783.html
   http://lists.tt2.org/pipermail/templates/2003-October/005147.html
@@ -1006,12 +1026,12 @@ Miscellaneous
 * Merged in Darren's branch to add the define_vmethod() methods to
   Template::Context and Template::Stash.
 
-* Applied patch from Axel Gerstmair for minor fixes to Makefile.PL, 
+* Applied patch from Axel Gerstmair for minor fixes to Makefile.PL,
   t/gd.t and t/date.t.
   http://template-toolkit.org/pipermail/templates/2003-April/004545.html
 
 * Added undefined() method to the Stash which get() calls if a variable
-  value is undefined.  Currently just returns '' to implement existing 
+  value is undefined.  Currently just returns '' to implement existing
   behaviour, but it provides a method hook for subclasses to redefine.
 
 * Fixed a minor bug which prevented the Stash from being subclassable
@@ -1022,27 +1042,27 @@ Miscellaneous
 # Version 2.09c - 29th April 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* applied patch from Ivan Kurmanov to XPath plugin to add handling for 
+* applied patch from Ivan Kurmanov to XPath plugin to add handling for
   comments.
 
-* modified grammar to allow 'IN' as an alternate for '=' in FOREACH 
+* modified grammar to allow 'IN' as an alternate for '=' in FOREACH
   directives, thus allowing [% FOREACH item IN [ foo, bar, baz ] %]
   http://template-toolkit.org/pipermail/templates/2003-April/004519.html
 
-* changed test for PROCESS option in Template::Service init from 'exists' 
+* changed test for PROCESS option in Template::Service init from 'exists'
   to 'defined' so that PROCESS set to undef Does The Right Thing.
   http://template-toolkit.org/pipermail/templates/2003-April/004536.html
 
 * changed Template::process() method to accept a hash reference or list
-  of output options following any filename.  This can now be used to 
+  of output options following any filename.  This can now be used to
   explicitly set binary mode (or not) for the output of a file.  Also
-  changed Template::_output() method to expect a reference to text rather 
-  than a duplicated text string (for efficiency) and also the new hash 
+  changed Template::_output() method to expect a reference to text rather
+  than a duplicated text string (for efficiency) and also the new hash
   reference of options.  Also changed the redirect and stdout filters
   accordingly.
 
-* disabled the mandatory binmode setting on all files created under 
-  MSWin32.  See previous item for details on how binmode can now be 
+* disabled the mandatory binmode setting on all files created under
+  MSWin32.  See previous item for details on how binmode can now be
   set explicitly, or link below for description of problem.
   http://template-toolkit.org/pipermail/templates/2003-April/004499.html
 
@@ -1069,7 +1089,7 @@ Miscellaneous
 # Version 2.09a - 23rd April 2003                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* added WRAPPER configuration item, documentation and tests.  Also added 
+* added WRAPPER configuration item, documentation and tests.  Also added
   'wrapper' configuration item to ttree.  See Template::Manual::Config
 
 * applied patch from Axel Gerstmair to fix File::Spec and File::Temp
@@ -1088,7 +1108,7 @@ Miscellaneous
 #------------------------------------------------------------------------
 
 * changed Template::Provider and Template::Context to propagate nested
-  exceptions (e.g. [ file => [ parse => 'blah blah' ] ]) to allow the 
+  exceptions (e.g. [ file => [ parse => 'blah blah' ] ]) to allow the
   caller to accurately differentiate between parse errors and missing
   file or other errors.
   http://lists.tt2.org/pipermail/templates/2003-March/004359.html
@@ -1116,7 +1136,7 @@ Miscellaneous
 # Version 2.08c - 4th November 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Applied a patch from Bradley Baetz to work around a bug in Perl when 
+* Applied a patch from Bradley Baetz to work around a bug in Perl when
   using an overridden die(), as CGI::Carp does, for example.
 
 * Added the Image plugin interfacing to the Image::Size module, based
@@ -1131,7 +1151,7 @@ Miscellaneous
 * Applied two patches from Leon to fix bug in constant folding with
   multiple replacements (a missing 'g' on a s///)
 
-* Applied a patch from Tatsuhiko Miyagawa to Template::Constants to 
+* Applied a patch from Tatsuhiko Miyagawa to Template::Constants to
   replace 'our' perl5.6isms.
 
 * Added the Template::Plugin::Procedural module for creating plugins that
@@ -1141,15 +1161,15 @@ Miscellaneous
 
 * Added the params() method to the CGI plugin.
 
-* Changed File::Temp and File::Basename to be loaded dynamically in 
-  Template::Document as and when needed.  Thanks to a patch from 
+* Changed File::Temp and File::Basename to be loaded dynamically in
+  Template::Document as and when needed.  Thanks to a patch from
   Bradley Baetz.
 
-* Added a preload() method to Template::Config to preload in advance 
-  all the Template::* modules typically used.  Also added call to 
+* Added a preload() method to Template::Config to preload in advance
+  all the Template::* modules typically used.  Also added call to
   preload() from Template module if $ENV{MOD_PERL} is set.
 
-* Applied a patch from Randal Schwartz to fix rowspan attribute in 
+* Applied a patch from Randal Schwartz to fix rowspan attribute in
   templates/html/cell and templates/html/row
 
 
@@ -1157,7 +1177,7 @@ Miscellaneous
 # Version 2.08a - 14th August 2002                ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Totally re-implemented the handling of the DEBUG parameter.  Added 
+* Totally re-implemented the handling of the DEBUG parameter.  Added
   DEBUG_* constants to Template::Constants which can be used to enable
   different debugging options and messages.
 
@@ -1165,7 +1185,7 @@ Miscellaneous
   of tests to use it.  Also made other minor fixes to the tests to run
   nicely (or bail politely) under Perl 5.8.0
 
-* Applied patch from Slaven Rezic to Template::Plugin::Data which 
+* Applied patch from Slaven Rezic to Template::Plugin::Data which
   modifies the locale loading to append various suffixes (e.g. '.UTF-8')
   in the case that the unadorned locale can't be loaded.
 
@@ -1189,13 +1209,13 @@ Miscellaneous
 * Fixed a bug in Date plugin introduced in last version which caused
   it to ignore the 'time' parameter.
 
-* Modified INCLUDE_PATH handling in Template::Provider to accept a 
+* Modified INCLUDE_PATH handling in Template::Provider to accept a
   reference to a subroutine or object implementing a paths() method
-  as an element in the list.  This is then called to return a 
+  as an element in the list.  This is then called to return a
   dynamically generated path.  Documented and tested.
 
 * Changed the implementation of the NAMESPACE calling code to leave
-  the namespace prefix intact on the ident list which then gets 
+  the namespace prefix intact on the ident list which then gets
   passed to the handler's ident() method.  Modified the ident()
   method of Template::Namespace::Constants to expect and remove it.
   Constant folding now *doesn't* happen for constants that return
@@ -1203,8 +1223,8 @@ Miscellaneous
   runtime variable lookups.
 
 * Added new list virtual methods: 'unique' to cull multiple identical
-  items, 'merge' to merge lists together, 'splice' which acts 
-  just like Perl's splice, and 'slice' which returns a slice of the 
+  items, 'merge' to merge lists together, 'splice' which acts
+  just like Perl's splice, and 'slice' which returns a slice of the
   list.  Also modified first and last virtual methods to take an
   argument indicating the number of items to return from the start or
   end of the list.  Added the 'chunk' scalar virtual method to split a
@@ -1214,11 +1234,11 @@ Miscellaneous
 * Moved documentation for virtual methods into a separate manpage,
   Template::Manual::VMethods
 
-* Modifed Template::Test to allow -- name testname -- comments to 
+* Modifed Template::Test to allow -- name testname -- comments to
   be added to tests to give them names, reported by test harness
   (darren)
 
-* Merged functionality of process() and include() methods into 
+* Merged functionality of process() and include() methods into
   process() with optional third $localize flag.  (darren)
 
 * Modified the OUTPUT option to accept a reference to a list (darren)
@@ -1240,7 +1260,7 @@ Miscellaneous
 
 * Changed the Perl and XS stashes to automatically promote a scalar
   to a list and apply a list virtual method (if defined) as a last
-  ditch attempt.  
+  ditch attempt.
 
 * Changed Template::Stash::Context virtual methods to import those
   of Template::Stash.
@@ -1253,19 +1273,19 @@ Miscellaneous
 
 * Added the DEBUG and DEBUG_FORMAT options and the corresponding
   DEBUG directive.
- 
-* Fixed bug introduced to Template::Provider in 2.06g which changed 
+
+* Fixed bug introduced to Template::Provider in 2.06g which changed
   handling of trailing slashes on COMPILE_DIR.
 
-* Fixed a bug in Template::Parser to preserve any post-chomp flags 
+* Fixed a bug in Template::Parser to preserve any post-chomp flags
   that were otherwise ignored when an entire directive is commented
   out, e.g.
 
     [%# blah
-      # blah 
+      # blah
     -%]
 
-* Applied a patch from Harald Joerg so that ttree considers files 
+* Applied a patch from Harald Joerg so that ttree considers files
   with equal mtime to be "not modified".
 
 * Applied a patch from Keith Murphy adding the gmt flag to the Date
@@ -1277,14 +1297,14 @@ Miscellaneous
 
 
 #------------------------------------------------------------------------
-# Version 2.07 - 17th April 2002 
+# Version 2.07 - 17th April 2002
 #------------------------------------------------------------------------
 
-* Changed example in synopsis of Template::Plugin::XML::Style to one 
+* Changed example in synopsis of Template::Plugin::XML::Style to one
   based on that posted to the mailing list by Tony Bowden.
 
 * Fixed a single/double quoting bug in docsrc which prevented [% and %]
-  being correctly displayed in the tables of contents in HTML docs. 
+  being correctly displayed in the tables of contents in HTML docs.
 
 
 #------------------------------------------------------------------------
@@ -1297,13 +1317,13 @@ Miscellaneous
 * Changed Template::Test to accept messages to ok().  Also added is()
   as an alias for match().
 
-* Fixed an oversight/bug in the XS stash where a missing aTHX_ around 
+* Fixed an oversight/bug in the XS stash where a missing aTHX_ around
   line 546 caused compilation to fail under Win32.
 
-* Applied a patch to Template::Provider from Alexander Schilling which 
+* Applied a patch to Template::Provider from Alexander Schilling which
   untaints paths before calling mkpath() to prevent errors under -T.
 
-* Fixed Template::Parser so that the INTERPOLATE option now works with 
+* Fixed Template::Parser so that the INTERPOLATE option now works with
   files > 32K, thanks to the efforts of Stephen Adkins.
 
 
@@ -1311,19 +1331,19 @@ Miscellaneous
 # Version 2.06f - 13th March 2002                 ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Fixed a bug in both the Perl and XS Stash modules which resulted in 
+* Fixed a bug in both the Perl and XS Stash modules which resulted in
   virtual methods being called on the base stash, e.g. [% size %]
   was treated as [% stash.size %].  The only exception that we allow
   through is 'import' so that we can [% import(another_hash) %]
 
 * Fixed the compilation of the XS Stash on earlier versions of Perl
-  (e.g. 5.00503) and other platforms (e.g. Win32) by including the 
+  (e.g. 5.00503) and other platforms (e.g. Win32) by including the
   ppport.h file.
 
-* Fixed a warning about undefined values in Template::Plugin::Format 
+* Fixed a warning about undefined values in Template::Plugin::Format
   raised by t/format.t
 
-* Fixed a warning in t/html.t raised when neither Apache::Util nor 
+* Fixed a warning in t/html.t raised when neither Apache::Util nor
   HTML::Entities is installed.
 
 
@@ -1334,11 +1354,11 @@ Miscellaneous
 * Fixed a minor bug in t/tiedhash.t which was trying to use the XS stash
   even if it wasn't enabled.  Thanks to Lyle Brooks for the patch.
 
-* Added the 'match' virtual method for matching a string against a 
+* Added the 'match' virtual method for matching a string against a
   regex and returning a reference to a list of (captured) (backrefs).
 
 * Changed html filter back into a fast and simple static filter.  Added
-  html_entity filter which uses Apache::Util or HTML::Entities to do 
+  html_entity filter which uses Apache::Util or HTML::Entities to do
   a complete and thorough (but slower) job.  The undocumented 'entity'
   option of the html filter is now removed (but may appear elsewhere).
 
@@ -1348,15 +1368,15 @@ Miscellaneous
 
 * Modified the 'sort' and 'nsort' list virtual methods to allow a sort
   key passed to represent a method to be called on objects in the list
-  as well as the key of a value to be fetched from hash references in 
-  the list.  e.g. [% books.sort('author') %] allows 'books' to contain 
+  as well as the key of a value to be fetched from hash references in
+  the list.  e.g. [% books.sort('author') %] allows 'books' to contain
   a list of hash refs with an 'author' key or objects with an 'author'
   method.  Thanks to Tony Bowden for suggesting this improvement.
 
-* Applied a patch from Simon Wilcox to strip MS-DOS \r characters from 
+* Applied a patch from Simon Wilcox to strip MS-DOS \r characters from
   end of lines read by the Datafile plugin.
 
-* Applied a patch from Ville Skyttä which fixes numerous minor bugs 
+* Applied a patch from Ville Skyttä which fixes numerous minor bugs
   in various splash templates.
 
 * Added the 'defined' and 'exists' virtual hash methods for testing if
@@ -1370,7 +1390,7 @@ Miscellaneous
   handling of nested elements.
 
 * Fixed handling of prefix support in template() and insert() methods
-  of Template::Content.  Any prefix is stripped from the name but passed 
+  of Template::Content.  Any prefix is stripped from the name but passed
   as the second argument to the provider fetch() method.  e.g.
   [% INCLUDE foo:bar %] calls the foo $provider->fetch('bar', 'foo') and
   [% INCLUDE http://tt2.org/t/templates/hello %] results in a call to
@@ -1381,7 +1401,7 @@ Miscellaneous
 # Version 2.06d - 22nd January 2002               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Applied a patch to the DBI plugin from Simon Matthews to stop it 
+* Applied a patch to the DBI plugin from Simon Matthews to stop it
   from closing a DBH which was passed in open from an external source.
 
 * Applied another patch from Simon to fix a bug with compiled templates
@@ -1389,7 +1409,7 @@ Miscellaneous
   rather than '<='.  See
   http://lists.tt2.org/pipermail/templates/2002-January/002361.html
 
-* Applied a patch from Doug Steinwand which fixes a minor bug in the 
+* Applied a patch from Doug Steinwand which fixes a minor bug in the
   XS Stash as reported by Andrey Brindeew:
   http://lists.tt2.org/pipermail/templates/2002-January/002475.html
 
@@ -1403,17 +1423,17 @@ Miscellaneous
   http://lists.tt2.org/pipermail/templates/2002-January/002431.html
 
 * Fixed Makefile.PL to warn, not die, about mandatory modules, leaving
-  it to the definitions in the PREREQ_PM which the CPAN module can 
+  it to the definitions in the PREREQ_PM which the CPAN module can
   understand.  Thanks to Leon for waving the flag.
 
-* Applied Leon's doc patch to the Table plugin to demonstrate 
+* Applied Leon's doc patch to the Table plugin to demonstrate
   row/column transposition.
 
 * Added ucfirst and lcfirst filters to fold first character to upper
   or lower case respectively.  Thanks to Paul Makepeace for the patch.
 
-* Fixed truncate method of String plugin to not append suffix if the 
-  string is already shorter than the required length.  Thanks to 
+* Fixed truncate method of String plugin to not append suffix if the
+  string is already shorter than the required length.  Thanks to
   Yann Kerhervé for the patch.
 
 
@@ -1426,14 +1446,14 @@ Miscellaneous
   fails.  Thanks to Tony Bowden for reporting the problem.  See
   http://lists.tt2.org/pipermail/templates/2001-December/002263.html
 
-* Added tie() method to DBI plugin which interfaces to the Tie::DBI 
-  module, based on some plugin code sent to me courtesy of Dave 
-  Hodgkinson.  Also made various minor cleanups to DBI code and updated 
-  documentation and tests.  Incidentally, this tickled the missing 
+* Added tie() method to DBI plugin which interfaces to the Tie::DBI
+  module, based on some plugin code sent to me courtesy of Dave
+  Hodgkinson.  Also made various minor cleanups to DBI code and updated
+  documentation and tests.  Incidentally, this tickled the missing
   feature in the XS stash which doesn't yet support tied hashes.
 
-* Applied a patch from Christian Schaffner which fixes a problem in 
-  the Makefile.PL for installation via the fink package manager under 
+* Applied a patch from Christian Schaffner which fixes a problem in
+  the Makefile.PL for installation via the fink package manager under
   Mac OS X.
 
 * Fixed up some of the ugliness in the docsrc tools.
@@ -1443,12 +1463,12 @@ Miscellaneous
 # Version 2.06b - 2nd December 2001               ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Added the Template::Plugin::Filter module to make plugin filters 
+* Added the Template::Plugin::Filter module to make plugin filters
   easier to write and rewrote the Template::Plugin::XML::Style to use
   it.
 
 * Added the Template::Plugin::String module which provides a nice
-  object oriented approach to string manipulation.  
+  object oriented approach to string manipulation.
 
 * Added the '_' string concatenation operator.  [% foo = bar _ baz %]
 
@@ -1461,23 +1481,23 @@ Miscellaneous
 
 * Fixed an obscured bug/oversight in Template::Plugins which tested
   generated plugin objects for truth rather than definedness to see if
-  the plugin returned was valid.  This can cause problems if your 
+  the plugin returned was valid.  This can cause problems if your
   object has an overloaded stringification operator which gets called
   (but shouldn't) and could return an untrue (but correct) value.
 
-* Fixed t/dumper.t to only have one entry in each hash to avoid hash 
+* Fixed t/dumper.t to only have one entry in each hash to avoid hash
   ordering problems.  Thanks to Randal for reporting the problem.
 
 * Added the assert() subroutine to Template::Test.
 
 * Added some more content to the FAQ.
-  
+
 
 #------------------------------------------------------------------------
 # Version 2.06a - 19th November 2001              ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Added the XML::Style plugin for doing simple XML stylesheet like 
+* Added the XML::Style plugin for doing simple XML stylesheet like
   transformations and t/xmlstyle.t.
 
 * Fixed a bug in the DBI plugin where nested loops could cause the inner
@@ -1491,15 +1511,15 @@ Miscellaneous
   http://www.tt2.org/pipermail/templates/2001-November/002028.html
 
 * Applied a patch from Stas Bekman to add 'align' to template/html/row.
-  
+
 
 #------------------------------------------------------------------------
 # Version 2.06 - 7th Nov 2001
 #------------------------------------------------------------------------
 
-* Fixed a bug in t/compile5.t which caused the following test warning on 
-  Win32: "Cannot chdir to D/blah/blah/Template-Toolkit-2.05c/t/test: No 
-  such file or directory at t\compile5.t line 73".  Thanks to Chris 
+* Fixed a bug in t/compile5.t which caused the following test warning on
+  Win32: "Cannot chdir to D/blah/blah/Template-Toolkit-2.05c/t/test: No
+  such file or directory at t\compile5.t line 73".  Thanks to Chris
   Winters for finding the bug and testing the fix.
 
 
@@ -1515,16 +1535,16 @@ Miscellaneous
 * Modified Template::Parser to correctly handle "\t" and "\r" in double
   quoted strings as well as "\n".  Added test to t/parser.t
 
-* Applied a patch from Stas Bekman to add 'valign' as an option to the 
+* Applied a patch from Stas Bekman to add 'valign' as an option to the
   html/cell template.
 
 * Applied a patch from Harald Joerg to document the 3rd $default
-  option to Template::Stash::set().  
+  option to Template::Stash::set().
 
 * Fixed a problem in the docsrc build whereby double quote strings
   were causing embedded variables to be incorrectly interpolated, e.g.
-  [% INCLUDE xyz title="set($var, $val, $default)" %] is now 
-  [% INCLUDE xyz title='set($var, $val,  $default)' %].  Thanks to 
+  [% INCLUDE xyz title="set($var, $val, $default)" %] is now
+  [% INCLUDE xyz title='set($var, $val,  $default)' %].  Thanks to
   Harald Joerg for reporting the problem.
 
 
@@ -1550,7 +1570,7 @@ Miscellaneous
   the regular Perl stash wrt accepting defined but empty keys.  See
   http://www.tt2.org/pipermail/templates/2001-September/001695.html
 
-* Applied a patch to Template::Provider from Craig Barratt to fix 
+* Applied a patch to Template::Provider from Craig Barratt to fix
   a bug when caching is turned off (CACHE_SIZE = 0).  See
   http://www.tt2.org/pipermail/templates/2001-September/001682.html
 
@@ -1566,18 +1586,18 @@ Miscellaneous
 
 * Applied a patch from Chris Nandor to use 'MSWin32' as a specific O/S
   detection rather than /win/i which gives a false positive for 'Darwin'.
-  Needless to say, that's something of an insult to Darwin  :-).  Also 
-  fixes Template::Provider to use File::Spec::file_name_is_absolute() to 
+  Needless to say, that's something of an insult to Darwin  :-).  Also
+  fixes Template::Provider to use File::Spec::file_name_is_absolute() to
   test for absolute paths instead of the previous kludge.
 
 * Updated Template::Manual::Internals to include information about
   how to prepare patches and other useful information for potential
   TT hackers.
 
-* Added some code to the XS Stash to handle trivial access to tied 
-  hashes.  Regular set/get/default should work as expected, but at 
+* Added some code to the XS Stash to handle trivial access to tied
+  hashes.  Regular set/get/default should work as expected, but at
   present intermediate hashes are not auto-vivified on assignment,
-  e.g. [% these.dont.get.created.in.XS.but.do.in.the.perl.stash = 10 %] 
+  e.g. [% these.dont.get.created.in.XS.but.do.in.the.perl.stash = 10 %]
 
 
 #------------------------------------------------------------------------
@@ -1591,15 +1611,15 @@ Miscellaneous
 # Version 2.04f - 10 Sep 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Fixed a bug in the Date plugin which was performing one localtime() too 
-  many when a date was passed in to the format() method.  e.g. the result 
+* Fixed a bug in the Date plugin which was performing one localtime() too
+  many when a date was passed in to the format() method.  e.g. the result
   from date.format('12:59::00 30/09/2001', '%H:%M') was 13:59 not 12:59.
   Thanks to Thierry-Michel Barral and Matthew Tuck for reporting the
   problem.
 
-* Incorporated Doug's new version of the XS Stash.  It fixes the problem 
-  with strings not being recognized as integers (and the item = item + 1 
-  problem). It also adds a few additional tests for this situation to 
+* Incorporated Doug's new version of the XS Stash.  It fixes the problem
+  with strings not being recognized as integers (and the item = item + 1
+  problem). It also adds a few additional tests for this situation to
   t/stash-xs.t
 
 * Fixed a minor bug in Makefile.PL which looked for 'msql' or 'mysql' as
@@ -1611,18 +1631,18 @@ Miscellaneous
 # Version 2.04e - 06 Sep 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Fixed bug in 'list' entry in $HASH_OPS in both Template/Stash.pm and 
+* Fixed bug in 'list' entry in $HASH_OPS in both Template/Stash.pm and
   Template/Stash/Context.pm to return '%$hash' instead of 'values %$hash'.
   Thanks to Craig Barrett for reporting the problem.
 
-* Applied a patch from Craig to Stash.pm and Stash/Context.pm to 
+* Applied a patch from Craig to Stash.pm and Stash/Context.pm to
   accept negative integers as array indices, counting back from the
   end of the list as in Perl.  This brings it into line with the new
   XS Stash.
   http://www.tt2.org/pipermail/templates/2001-August/001493.html
-  
+
 * And another patch from Craig to allow $var and ${var} to be used as
-  keys in hashes.  
+  keys in hashes.
   http://www.tt2.org/pipermail/templates/2001-August/001410.html
 
 * Modified Template::Plugins fetch() method to accept $factory as a
@@ -1636,15 +1656,15 @@ Miscellaneous
   http://www.tt2.org/pipermail/templates/2001-August/001406.html
 
 * Removed the eq, ne, gt, lt, ge and ne operators added in 2.04d.  Given
-  that they can (and did) break code that had existing variables with 
+  that they can (and did) break code that had existing variables with
   those names, I decided it was best to strip them out again and think
   more carefully about adding them to an official release.  Hence they're
   not going to be in 2.05.
 
 * Fixed an outrageous oversight in the HTML 'rgb' template by defining
   'orange' as a valid colour (I can't believe Leon hasn't already sent
-  me a patch for this!)  Created a new custom colour scheme in the 
-  Makefile.PL which uses it.  Hacked the Makefile.PL and the generated 
+  me a patch for this!)  Created a new custom colour scheme in the
+  Makefile.PL which uses it.  Hacked the Makefile.PL and the generated
   ttree config file to allow text colours to be specified as well as
   button background colours.
 
@@ -1653,18 +1673,18 @@ Miscellaneous
 # Version 2.04d - 29 Aug 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Incorporated Doug Steinwand's XS Stash.  This adds the files in the 
+* Incorporated Doug Steinwand's XS Stash.  This adds the files in the
   'xs' directory, t/stash-xs.t, bin/tt-bench.pl and includes some work
   on the Makefile.PL to incorporate the required prompting, etc.
 
-* Added gt, ge, lt and le as comparison operators which map directly 
+* Added gt, ge, lt and le as comparison operators which map directly
   to their Perl counterparts.  Added tests to t/stash.t and relevant
   documentation to the IF directive.
 
 * Applied some patches from Leon and Doug to enhance the coverage of
   the test suite.
 
-* Added 'sorted' as a flag to the HTML plugin to return attributes in 
+* Added 'sorted' as a flag to the HTML plugin to return attributes in
   sorted order.  Mainly for debugging purposes, as used in t/html.t.
 
 * Fixed Template::Parser.pm to recognise "\r" as a valid escape sequence
@@ -1683,17 +1703,17 @@ Miscellaneous
 # Version 2.04b - 04 Aug 2001                     ## DEVELOPER RELEASE ##
 #------------------------------------------------------------------------
 
-* Fixed a bug in the Makefile.PL which prevented the correct targets 
+* Fixed a bug in the Makefile.PL which prevented the correct targets
   from being added to the generated Makefile to install additional
-  components, build HTML docs, etc. 
+  components, build HTML docs, etc.
 
-* Applied a patch from Chris Nandor to fix a bug introduced by the taint 
+* Applied a patch from Chris Nandor to fix a bug introduced by the taint
   checks in 2.04 which barfed on ';' in filenames.  Also changes open()
   to sysopen() in Template::Document for additional security.  See
   http://www.tt2.org/pipermail/templates/2001-August/001348.html
 
 * Another part of the same pudge patch adds FACTORY as a default value
-  to Template::Parser to allow Template::Directive factory class to 
+  to Template::Parser to allow Template::Directive factory class to
   be replaced.
 
 
@@ -1704,12 +1724,12 @@ Miscellaneous
 * Changed GD plugin and tests to require GD version 1.20.  See
   http://www.tt2.org/pipermail/templates/2001-July/001212.html
 
-* Applied Craig's fix for the DBI plugin to correctly destroy a 
+* Applied Craig's fix for the DBI plugin to correctly destroy a
   statement handle to ensure that finish() gets called on it even if the
   iterator doesn't complete.  See:
   http://www.tt2.org/pipermail/templates/2001-July/001216.html
 
-* Further to Craig's points in the above post, I added get_all() and 
+* Further to Craig's points in the above post, I added get_all() and
   get() to the DBI iterator so that you can now do this:
 
   [% people = DBI.query(...) %]
@@ -1719,11 +1739,11 @@ Miscellaneous
      # third to nth person(s)
   [% END %]
 
-* Fixed Template::Provider which wasn't saving compiled templates to 
+* Fixed Template::Provider which wasn't saving compiled templates to
   disk when specified with an absolute path, as reported by Merlyn.  See
   http://www.template-toolkit.org/pipermail/templates/2001-July/001213.html
 
-* Updated Makefile.PL to accept various command line args including 
+* Updated Makefile.PL to accept various command line args including
   TT_ACCEPT to automatically accept all default values and TT_QUIET to
   shut the file up with all those yackety yack, yack messages.
 
@@ -1758,34 +1778,34 @@ Miscellaneous
     LOOP label inside loops (except in the top-level atomexpr FOREACH
     and atomexpr WHILE cases, which should be ok).
 
-* Does he ever sleep!  :-) Another patch from Craig to improve upon 
+* Does he ever sleep!  :-) Another patch from Craig to improve upon
   the ref->template mapping feature in Template::View.  Documentation
   pending.  For further details, see
   http://www.tt2.org/pipermail/templates/2001-June/001161.html
 
-* Applied a patch from Mark Fowler, which fixes the problem with 
+* Applied a patch from Mark Fowler, which fixes the problem with
   search/replace virtual methods incorrectly returning with a search
-  pattern of '0'.  e.g. [% bob = '0'; bob.replace('0', 'zero') %] 
+  pattern of '0'.  e.g. [% bob = '0'; bob.replace('0', 'zero') %]
   now returns 'zero' instead of ''.
 
-* Applied a patch from Doug Steinwand to prevent the Stash from 
-  raising undef error reporting 'Can't locate object methof "bar" via 
+* Applied a patch from Doug Steinwand to prevent the Stash from
+  raising undef error reporting 'Can't locate object methof "bar" via
   package "Foo"' unless $DEBUG is enabled.
 
 * Applied a patch to the DBI plugin from Rafael Kitover which calls
-  the DBI connect_cached() method instead of connect() to allow 
+  the DBI connect_cached() method instead of connect() to allow
   connection caching in a persistent server environment (e.g. Apache
   mod_perl).
 
-* Changed html filter to be a dynamic filter factory, allowing the 
-  'entity' option to be set to prevent entities of the form 
+* Changed html filter to be a dynamic filter factory, allowing the
+  'entity' option to be set to prevent entities of the form
   '&word;' being converted to '&amp;word;'
 
     [% FILTER html(entity = 1) %]
        < &amp; >		    # &lt; &amp; &gt;
     [% END %]
 
-* Changed Template::Stash to propogate any object errors that 
+* Changed Template::Stash to propogate any object errors that
   are references (e.g. Template::Exception objects or otherwise)
   or string that don't look like "Can't locate object method ...".
 
@@ -1801,12 +1821,12 @@ Miscellaneous
 * Applied various patches from Leon: to remove redundant "print 1..0"
   in various t/*.t files; to add '1;' to end of '.defaults.cfg' file;
   and to fix t/vmeth.t and t/leak.t to run correctly under latest
-  bleadperl. 
+  bleadperl.
 
-* Applied a patch from Jonas Liljegren to fix problems with errors 
+* Applied a patch from Jonas Liljegren to fix problems with errors
   being raised in -T taint mode.
 
-* Fixed another problem identified by Jonas so that filters are no 
+* Fixed another problem identified by Jonas so that filters are no
   longer cached.  See:
   http://www.tt2.org/pipermail/templates/2001-June/001192.html
 
@@ -1815,7 +1835,7 @@ Miscellaneous
 # Version 2.03 - 15th June 2001
 #------------------------------------------------------------------------
 
-* Added new virtual methods 'item', 'list', 'hash' to each of scalar, 
+* Added new virtual methods 'item', 'list', 'hash' to each of scalar,
   list and hash ops to Do The Right Thing to convert the original value
   to what the caller wants.  This is based on a patch supplied by Craig
   Barratt...
@@ -1833,7 +1853,7 @@ Miscellaneous
   integrating the new features into the default stash.
 
 * Applied a patch to add the Latex filter and GD plugin functionality,
-  thanks to the excellent work of Craig Barratt and Richard Tietjen.  
+  thanks to the excellent work of Craig Barratt and Richard Tietjen.
   In Craig's words:
 
     Here is a new version of my Latex filter and GD plugin code.
@@ -1847,13 +1867,13 @@ Miscellaneous
     tested against TexLive and MikTeX on WinXX.
 
   Craig's patch also included full documentation so you can read all about
-  it in the Manual and Module pages.  In addition, the Makefile.PL now 
+  it in the Manual and Module pages.  In addition, the Makefile.PL now
   searches for GD modules and external Latex programs and does some extra
   user prompting for confirmation of Latex installation/configuration.
-  Not only that, but Craig also managed to roll in a couple of other 
+  Not only that, but Craig also managed to roll in a couple of other
   minor bug fixes and documention updates.  Nice work!
 
-* Fixed the parser to accept fully dotted up variable assignments in 
+* Fixed the parser to accept fully dotted up variable assignments in
   argument lists, e.g. in INCLUDE, etc.  You can now do this:
 
   [% INCLUDE html/head
@@ -1862,10 +1882,10 @@ Miscellaneous
 
   Note however that the assignment to such variables is always "global",
   even though INCLUDE claims to localise the stash.  Remember that the
-  localisation does not perform a deep copy so the localised copy of 
+  localisation does not perform a deep copy so the localised copy of
   the 'html' variable might just be a copy of the reference to a previously
   defined hash array.  Thus, you modify the original albeit via a copy
-  of the reference to it.  See INCLUDE section of 
+  of the reference to it.  See INCLUDE section of
   Template::Manual::Directives for further details.
 
 * Added 'base' option to Template::View.  This allows one view to inherit
@@ -1875,7 +1895,7 @@ Miscellaneous
 
     [% VIEW myview.default
             prefix = 'view/default/';
-       END 
+       END
     %]
     [% VIEW myview.fancy
             base   = myview.default
@@ -1889,15 +1909,15 @@ Miscellaneous
 
 * Added the 'sealed' and 'silent' parameters to VIEW to allow view to be
   optionally unsealed (allow external variable updates/creation) and
-  to silence warnings about attempts to update sealed variables, 
+  to silence warnings about attempts to update sealed variables,
   respectively.  See the Template::Manual::Views page for more info on
   this and previosu item.
 
 * Added the HTML plugin for generating (very basic) HTML elements.
   See the Template::Plugin::HTML documentation.
 
-* Added the present() and content() methods to XML::DOM::Node in the 
-  XML::DOM plugin to make them work harmoniously with VIEWs.  See the 
+* Added the present() and content() methods to XML::DOM::Node in the
+  XML::DOM plugin to make them work harmoniously with VIEWs.  See the
   Template::Plugin::XML::DOM documentation for further details.
 
 * Did the same for Template::Plugin::XML::XPath, adding present($view)
@@ -1906,12 +1926,12 @@ Miscellaneous
   Template::Plugin::XML::DOM documentation for more details.
 
 * Added the calc() method to the Date plugin to return an interface to
-  the Date::Calc module.  e.g.     
+  the Date::Calc module.  e.g.
 
     [% USE Date; calc = Date.calc %]
     [% calc.Monday_of_Week(22, 2001).join('/') %]
 
-* Moved Template::Tutorial to Template::Tutorial::Web and added the 
+* Moved Template::Tutorial to Template::Tutorial::Web and added the
   tutorial kindly donated by Dave Cross on generating and using data
   files with TT as Template::Tutorial::Datafile.  Template::Tutorial
   is now an index to the tutorials.
@@ -1931,22 +1951,22 @@ Miscellaneous
 * Applied another patch from Eric to fix "Use of uninitialised value"
   warning when using a subclassed parser.
 
-* Applied a patch to ttree from Leon Brocard print full path for ignored 
+* Applied a patch to ttree from Leon Brocard print full path for ignored
   files.
 
 * Fixed typo in the ttree help page which incorrectly listed debug
   mode as '-d' (now '-dbg' as well as '--debug')
 
-* Fixed (hopefully once and for all!) the problem with choming the 
-  final newline in a template.  The last newline is now chomped just 
+* Fixed (hopefully once and for all!) the problem with choming the
+  final newline in a template.  The last newline is now chomped just
   like any other, depending on the POST_CHOMP flag and/or trailing '-'
-  in the directive.  e.g. 
+  in the directive.  e.g.
 
     [% FILTER latex('ps') %]
        ...
     [% END -%]
 
-  If you explicitly want a newline then make sure one is added to the 
+  If you explicitly want a newline then make sure one is added to the
   end of the template and don't enable POST_CHOMP or add a trailing '+'
   in the directive, e.g.
 
@@ -1954,7 +1974,7 @@ Miscellaneous
 
 * Made a number of fixes to the HTML generated by the Splash! and HTML
   libraries to make it conformant with HTML 3.2 specificiation.  Added
-  DOCTYPE to html/header, ALT tags, ... added html/head, html/body and 
+  DOCTYPE to html/header, ALT tags, ... added html/head, html/body and
   html/html to do more thorough job using nested variables.  Also added
   html/config to load HTML plugin.  Full conformance is still an issue,
   but we're working on it...
@@ -1967,7 +1987,7 @@ Miscellaneous
 * Updated various components of the Splash! library, cleaned up some
   ugliness (a little) and revised the examples.  Documentation in
   Template::Library::Splash is now hopelessly out of date but examples
-  are more comprehensive.  Makefile.PL now prompts user to select a 
+  are more comprehensive.  Makefile.PL now prompts user to select a
   colour scheme for creating the documentation and examples.
 
 * Fixed problems with Splash! images displaying the "wrong" colour on
@@ -1978,7 +1998,7 @@ Miscellaneous
   images.  By using simple transparency and doing away with the
   anti-aliasing it's possible to support any foreground colour for a
   set of images in a background colour.  One set of black images are
-  now distributed with TT.  These are blown into many colours during 
+  now distributed with TT.  These are blown into many colours during
   installation, implemented by the bin/gifsplash script and defined
   as the 'tt2_splash' Makefile target, run automatically as part of
   'make install'.
@@ -1995,15 +2015,15 @@ Miscellaneous
   ~/.ttreerc which included these flags :-).
 
 * Fixed Makefile.PL to check for File::Spec 0.82, thanks to the efforts
-  of Doug Steinwand and Leon who found and fixed the problem with 
+  of Doug Steinwand and Leon who found and fixed the problem with
   'splitdir' otherwise not being available.  Later changed requirement
   from 0.82 to 0.80 because this is the version currently distributed
   with ActivePerl 5.6.0 and it appears to work just fine (saves those
-  poor Win32 users from having to install any more modules than 
+  poor Win32 users from having to install any more modules than
   absolutely necessary)
 
 * Removed test for platform specific error messages from t/xpath.t
-  Removed warning from README that this test would fail.  Thanks 
+  Removed warning from README that this test would fail.  Thanks
   again to Leon for the patch and to <umun@yahoo.com> (no name
   given) for reporting the problem.
 
@@ -2015,7 +2035,7 @@ Miscellaneous
   base' doesn't work as advertised (e.g. in ensuring the module is
   loaded) in older versions of Perl.
 
-* Fixed t/leak.t to only run one particular test if Perl version is 
+* Fixed t/leak.t to only run one particular test if Perl version is
   5.6.0 or greater.  Test fails on earlier versions due to destructors
   being called in a different order.
 
@@ -2031,13 +2051,13 @@ Miscellaneous
 
 * Patched Template/Provider.pm in several places to strip out any
   extra ':' characters put in the wrong place of a path.  For example,
-  when writing compiled template "C:/foo" to disk with a COMPILE_DIR 
+  when writing compiled template "C:/foo" to disk with a COMPILE_DIR
   of "C:/bar", the resulting file is now "C:/bar/C/foo" instead of
   the erroneous "C:/bar/C:/foo".
 
 * On Win32 systems, provider prefixes must be more than 1 character in
   length.  This is a compromise for cases where you might want to do
-  something like: [% INCLUDE C:/foo/bar %].  Remains unchanged on 
+  something like: [% INCLUDE C:/foo/bar %].  Remains unchanged on
   other platforms.
 
 * On Win32 systems the DELIMITER now defaults to a slight variation of
@@ -2062,7 +2082,7 @@ Miscellaneous
 
 * Fixed File and Directory plugins to gracefully ignore Perl dying with
   "getpwuid() not supported on this platform" errors on Win32.  The
-  'uid' and 'user' attributes of File and Directory plugin objects 
+  'uid' and 'user' attributes of File and Directory plugin objects
   are left undefined.
 
 * Then, hacked t/file.t and t/directry.t test to not be run under
@@ -2070,7 +2090,7 @@ Miscellaneous
   test scripts caused by differences in '/' and '\' as path
   separators.  Need to fix these at some point.
 
-* Makefile.PL now saves configuration options in '.defaults.cfg' 
+* Makefile.PL now saves configuration options in '.defaults.cfg'
   file, using these values as defaults when run again.
 
 * Removed duplicated $VERSION from DBI and XML::DOM plugins, thanks
@@ -2087,12 +2107,12 @@ Miscellaneous
   The 'html' library implements some generally useful HTML elements.
   The 'pod/html' libraray contains some templates for converting POD to
   HTML, used in building the TT2 HTML documentation, for example.  The
-  'ps' library contains templates defining a few useful marks and other 
+  'ps' library contains templates defining a few useful marks and other
   procedures for generating PostScript pages.  The 'splash' directory
-  contains templates for the "Splash!" library which implements a 
-  widget set for building stylish HTML user interfaces.  
+  contains templates for the "Splash!" library which implements a
+  widget set for building stylish HTML user interfaces.
 
-* Added a host of example pages in the 'examples' directory which 
+* Added a host of example pages in the 'examples' directory which
   demonstrate use of the above libraries.
 
 * Added an 'images' directory to contain the small images used to build
@@ -2107,16 +2127,16 @@ Miscellaneous
   These then get run as part of "make install".
 
 * Totally re-organised the documentation, splitting the long user manual
-  into separate Template::Manual::* pages, adding the Template::FAQ, 
+  into separate Template::Manual::* pages, adding the Template::FAQ,
   Template::Internals, and various other changes.  All POD and HTML
   documentation is built from the same sources in the form of another
-  set of templates, POD files, XML files, scripts, etc., distributed 
+  set of templates, POD files, XML files, scripts, etc., distributed
   separately as the 'docsrc' bundle, and available from the web site.
   The POD documentation now gets glued onto the end of the .pm
   modules and only creates separate .pod files for those manual pages
   that don't have equivalent modules (e.g. Template::FAQ, etc.)
   NOTE: this might mean that existing .pod files from earlier versions
-  of TT might mask documentation in newer .pm files... 
+  of TT might mask documentation in newer .pm files...
 
 * Added the Template::View module, the VIEW directive and the View
   plugin which can be used collectively to create dynamic views.  This
@@ -2131,8 +2151,8 @@ Miscellaneous
 
     [% VIEW fancy_html
 	    prefix = 'splash/'		# template prefix/suffix
-	    suffix = '.tt2'		
-	    bgcol  = '#ffffff'		# and any other variables you 
+	    suffix = '.tt2'
+	    bgcol  = '#ffffff'		# and any other variables you
 	    style  = 'Fancy HTML'       # care to define as view metadata,
 	    items  = [ foo, bar.baz ]	# including complex data and
 	    foo    = bar ? baz : x.y.z  # expressions
@@ -2154,7 +2174,7 @@ Miscellaneous
 					# => [% INCLUDE splash/footer.tt2 %]
 
 * Added the facility to specify multiple templates within a PROCESS,
-  INCLUDE, INSERT or WRAPPER directive.  For all but WRAPPER, the 
+  INCLUDE, INSERT or WRAPPER directive.  For all but WRAPPER, the
   templates are processed in the order specified.
 
     [% PROCESS config + header + menu %]
@@ -2165,20 +2185,20 @@ Miscellaneous
        ...
     [% END %]
 
-  Multiple WRAPPER templates get processed in reverse order to create 
+  Multiple WRAPPER templates get processed in reverse order to create
   the correct nesting effect.  In the example above, the enclosed block
-  is processed and passed to 'titlebar' which wraps it and passes the 
-  output to 'header' which wraps it and passes the output to 'box', which 
+  is processed and passed to 'titlebar' which wraps it and passes the
+  output to 'header' which wraps it and passes the output to 'box', which
   wraps it and passes the output to 'edge' which wraps it and returns the
-  output.  Thus the specification order is outermost to innermost, but 
+  output.  Thus the specification order is outermost to innermost, but
   they are actually processed from the inside out.
 
 * Templates specified to INCLUDE, PROCESS, WRAPPER and INSERT can now
-  be given a prefix (delimited by ':', as in "file:blahblah.txt" or 
+  be given a prefix (delimited by ':', as in "file:blahblah.txt" or
   "http://www.tt2.org/index.html", for example) which maps them to a
   particular template provider or providers.  A PREFIX_MAP
   configuration option can be specified as a hash array mapping prefix
-  names to a reference to a list of providers.  For convenience, you 
+  names to a reference to a list of providers.  For convenience, you
   can also specify the argument as a string of integers, delimited by
   any non-numerical sequence, to indicate indices into the LOAD_TEMPLATES
   provider list.  e.g.
@@ -2194,15 +2214,15 @@ Miscellaneous
 
   Thus [% INCLUDE src:hello.tt2 %] indicates the 'hello.tt2' template
   to be provided by $foo or $baz, [% INCLUDE lib:hello.tt2 %] is mapped
-  to $bar and $baz, [% INCLUDE all:hello.tt2 %] can be provided by 
+  to $bar and $baz, [% INCLUDE all:hello.tt2 %] can be provided by
   $foo, $bar or $baz, and the default [% INCLUDE hello.tt2 %] is
   mapped to the entire LOAD_TEMPLATES list: $foo, $bar, $baz and $wiz.
   This is initially useful for things like ttree which would like a way
-  to differentiate between templates in one place and templates in 
+  to differentiate between templates in one place and templates in
   another.  It can also be used, of course, to provider special providers
   for certain file type, as in http://fetch.some.file.com/blah/blah/...
 
-* Fixed the parser to accept expressions on the right hand side of 
+* Fixed the parser to accept expressions on the right hand side of
   parameter definitions for INCLUDE, etc.  e.g.
 
     [% INCLUDE header
@@ -2212,7 +2232,7 @@ Miscellaneous
 
 * Added the PLUGIN_FACTORY configuration option to Template::Plugins
   to allow class names or object prototypes to be specified for plugins.
-  No module loading is attempted, unlike the existing PLUGINS which 
+  No module loading is attempted, unlike the existing PLUGINS which
   assumes entries are module names which it tries to load.  This may
   change in a future release (ideally by integration with PLUGINS) so
   it remains undocumented for now.
@@ -2246,15 +2266,15 @@ Miscellaneous
   a TODO.
 
 * Added the Pod plugin which uses the Pod::POM module to parse a Pod
-  file or text string and build an object model.  You can then walk 
-  it and present it in different ways using templates.  Great for 
-  building HTML documentation from Pod and unsurprisingly used to 
+  file or text string and build an object model.  You can then walk
+  it and present it in different ways using templates.  Great for
+  building HTML documentation from Pod and unsurprisingly used to
   build the new TT2 docs.
 
 * Applied a patch from Chris Nandor to add a new feature to the
   PRE_CHOMP and POST_CHOMP options.  When set to 1, they continue to
   act as before.  When set to 2, all whitespace is collapsed into a
-  single space.  CHOMP_NONE, CHOMP_ALL and CHOMP_COLLAPSE are 
+  single space.  CHOMP_NONE, CHOMP_ALL and CHOMP_COLLAPSE are
   defined in Template::Constants and can be imported as the :chomp
   tagset, for those who want them.
 
@@ -2265,18 +2285,18 @@ Miscellaneous
   (default: 1) to determine how often to stat the files to check for
   changes.  TT2 now supports time running backwards!  :-)
 
-* Applied a patch from Vivek Khera which fixes a memory leak in the 
-  MACRO directive, prevalent when using TT under mod_perl.  Also added 
+* Applied a patch from Vivek Khera which fixes a memory leak in the
+  MACRO directive, prevalent when using TT under mod_perl.  Also added
   t/leak.t to test that memory is properly freed and circular references
   broken by the delocalisation of the stash.  All seems to work as expected
-  including plugins that contain context references, MACRO definitions, 
+  including plugins that contain context references, MACRO definitions,
   and so on (but note that this is the test suite run from the command
   line, and doesn't explicitly test under mod_perl...)
 
 * Applied a patch from Axel Gerstmair to fix a bug in PERL blocks
   and filters which caused references to the context and stash to be
   kept in global package variables.  This meant they stayed alive for
-  far too long.  Added a couple of tests to t/leak.t to check this now 
+  far too long.  Added a couple of tests to t/leak.t to check this now
   works OK.
 
 * Fixed a bug in the parser triggered by [% CATCH DEFAULT %].  Thanks
@@ -2291,56 +2311,56 @@ Miscellaneous
 * Added the 'indent' filter to indent a block by prefixing each line with
   a specified string, or a number of spaces when the argument is numerical.
 
-* Added the 'trim' filter to remove leading/trailing whitespace and 
+* Added the 'trim' filter to remove leading/trailing whitespace and
   'collapse' filter to additionally collapse multiple whitespace characters
   to a single space.
 
-* Added escapes for ' (&apos;) and " (&quot;) to the html filter, thanks 
+* Added escapes for ' (&apos;) and " (&quot;) to the html filter, thanks
   to Lyle Brooks and Vivek Khera.  Then, having done that, I removed
-  the &apos; escape because my browser didn't recognise &apos; as a 
+  the &apos; escape because my browser didn't recognise &apos; as a
   valid entity.  What's going on here?  Need to check the HTML spec...
 
 * Added tag style 'star' of the form [* ... *]
 
-* Changed the Template::Stash get() and set() methods to accept a 
+* Changed the Template::Stash get() and set() methods to accept a
   compound variables as a single parameter and automatically convert
   it to an array.  Note that it doesn't correctly handle arguments
-  to dotted elements (e.g. foo(10).bar(20), but does mean that you can 
+  to dotted elements (e.g. foo(10).bar(20), but does mean that you can
   now write $stash->get('foo.bar.baz') instead of the more laborious
   $stash->get(['foo', 0, 'bar', 0, 'baz', 0]).
 
-* Fixed a bug in Template::Stash which was raising an error when an 
-  element on the left hand side of a '.' evaluated to a defined, but 
+* Fixed a bug in Template::Stash which was raising an error when an
+  element on the left hand side of a '.' evaluated to a defined, but
   empty value.
 
-* Fixed an obscure bug in Template::Stash which occurred when calling 
-  a scalar method on a value which contained a valid and visible object 
+* Fixed an obscure bug in Template::Stash which occurred when calling
+  a scalar method on a value which contained a valid and visible object
   package name.  e.g. [% name = 'Foo::Bar'; name.baz() %] called
   Foo::Bar->baz().
 
-* Fixed a bug in the Template::Stash 'replace' virtual method which 
-  returned the original string when the replace string was specified 
-  empty.   [% var = 'foo99'; var.replace('foo', '') %] now correctly 
-  returns '99' instead of the original string 'foo99'.  Thanks to 
+* Fixed a bug in the Template::Stash 'replace' virtual method which
+  returned the original string when the replace string was specified
+  empty.   [% var = 'foo99'; var.replace('foo', '') %] now correctly
+  returns '99' instead of the original string 'foo99'.  Thanks to
   Tryggve Johannesson and Jeremy Wadsack for reporting the problem.
 
 * Added magical handling of the 'import' variable to stash clone() and
   update methods.  This implements the V1 functionality whereby you can
   write [% INCLUDE foo import=myhash %].  Note that 'import' is lower case,
-  (V1 was upper case IMPORT) as in V2 it is in keeping with the virtual 
-  hash method (e.g. same as myhash.import(another.hash)).  Thanks to 
+  (V1 was upper case IMPORT) as in V2 it is in keeping with the virtual
+  hash method (e.g. same as myhash.import(another.hash)).  Thanks to
   Brian Cooper for raising the issue.
 
-* Yet another change to Template::Stash.  Objects which are blessed 
+* Yet another change to Template::Stash.  Objects which are blessed
   arrays will now honour virtual array methods if the object doesn't
   otherwise implement a particular method.  For example, you can now
-  write [% USE Datafile(...) %] and then [% Datafile.size %].  The 
-  '.size' now works as virtual method on the blessed ARRAY which 
-  consitutes the Datafile object.  Thanks to Keith Murphy for 
+  write [% USE Datafile(...) %] and then [% Datafile.size %].  The
+  '.size' now works as virtual method on the blessed ARRAY which
+  consitutes the Datafile object.  Thanks to Keith Murphy for
   identifying the problem.
 
-* Fixed another obscure bug, this time in Template::Parser which wasn't 
-  chomping the final newline in the input string.  Thanks to Paul 
+* Fixed another obscure bug, this time in Template::Parser which wasn't
+  chomping the final newline in the input string.  Thanks to Paul
   Makepeace for reporting the problem.
 
 * Finally identified the cause of an error occasionally being reported
@@ -2353,15 +2373,15 @@ Miscellaneous
   when I added the tracer code.  D'Oh!)
 
 * Removed some old "delegate-to-another-object" code from Template::Plugin,
-  including a nasty AUTOLOAD method which prevented derived objects from 
-  acting as transparent hashes.  If delegative functionality is required 
+  including a nasty AUTOLOAD method which prevented derived objects from
+  acting as transparent hashes.  If delegative functionality is required
   then it should be implemented as Template::Plugin::Delegate (and may
   well be in the fullness of time).
 
 * Fixed a whole bunch of typos and spellos thanks to patches from Leon,
   Paul Sharpe and Robert McArthur.
 
-  
+
 #------------------------------------------------------------------------
 # Version 2.00  1st December 2000
 #------------------------------------------------------------------------
@@ -2370,12 +2390,12 @@ Miscellaneous
   virtual methods for scalars, and fixed a warning in the split()
   method raised when an attempt was made to split an undefined value.
 
-* Changed the THROW directive to accept multiple parameters which 
+* Changed the THROW directive to accept multiple parameters which
   become named items of the 'error.info' item, thanks to a suggestion
-  from Piers Cawley.  Positional arguments can be addressed as 
-  [% error.info.n %] or as a list as [% error.info.args %].  Named 
+  from Piers Cawley.  Positional arguments can be addressed as
+  [% error.info.n %] or as a list as [% error.info.args %].  Named
   parameters can be accessed as [% error.info.name %].
-  e.g. 
+  e.g.
     [% TRY %]
     [% THROW foo 'one' 2 three=3.14 %],
     [% CATCH %]
@@ -2386,35 +2406,35 @@ Miscellaneous
     [% END %]
 
 * Moved the definition of Template::TieString from Template::Directive
-  into Template::Config (for now) to ensure that its definition is 
+  into Template::Config (for now) to ensure that its definition is
   visible even if the Template::Parser, and through it, the
-  Template::Directive module, haven't been loaded.  This fixes the 
-  bug causing the error "Can't locate object method "TIEHANDLE" 
-  via package Template::String..." raised when using EVAL_PERL with 
+  Template::Directive module, haven't been loaded.  This fixes the
+  bug causing the error "Can't locate object method "TIEHANDLE"
+  via package Template::String..." raised when using EVAL_PERL with
   compiled templates only.  In this case, the parser wasn't getting
   loaded (because it had no templates to parse, them all being pre-
-  compiled) and the Template::TieString defintion wasn't visible to 
+  compiled) and the Template::TieString defintion wasn't visible to
   the EVAL_PERL blocks that require it.  Added a test to t/compile3.t.
   Thanks to Igor Vylusko for reporting the problem.
 
 * Changed the Template::Directive Perl generator for EVAL_PERL blocks
   to generate code to first test the EVAL_PERL option in the runtime
   context and throw a 'perl error - EVAL_PERL not set' exception if
-  unset.  Thus the behaviour for EVAL_PERL when using compiled templates 
-  is now: if the EVAL_PERL option isn't set in the _compiling_ context, 
+  unset.  Thus the behaviour for EVAL_PERL when using compiled templates
+  is now: if the EVAL_PERL option isn't set in the _compiling_ context,
   then Perl code will be generated which *always* throws an exception
   'perl error - EVAL_PERL not set'.  If EVAL_PERL is set, then it will
-  generate code which tests the EVAL_PERL option in the _running_ 
-  context (which may not be the same context that compiled it), and 
+  generate code which tests the EVAL_PERL option in the _running_
+  context (which may not be the same context that compiled it), and
   throws the same error is the option is not set.  Note that [% RAWPERL %]
   blocks are added verbatim to the generated code if the EVAL_PERL
-  option is set in the compiling context and no runtime check for 
+  option is set in the compiling context and no runtime check for
   EVAL_PERL is made.  Similarly, [% PERL %] blocks could contain a
-  Perl BEGIN block, e.g. "BEGIN { # subterfuge code here }" which 
-  will always get executed at runtime, regardless of any runtime 
+  Perl BEGIN block, e.g. "BEGIN { # subterfuge code here }" which
+  will always get executed at runtime, regardless of any runtime
   EVAL_PERL option.  Thanks to Randal Schwartz for raising this issue.
 
-* Fixed an obscure bug in WRAPPER which was causing some variables to 
+* Fixed an obscure bug in WRAPPER which was causing some variables to
   have apparently strange values when within the block content.  This
   was due to the content being formed into a closure which was called
   from within the WRAPPER template, possibly after some variable values
@@ -2423,8 +2443,8 @@ Miscellaneous
     [% WRAPPER outer title="bar" %]
        The title is [% title %]
     [% END %]
-  Here, the 'outer' template should be called with a 'title' value of 
-  'bar' but with 'content' set to 'The title is foo'.  Previously, 
+  Here, the 'outer' template should be called with a 'title' value of
+  'bar' but with 'content' set to 'The title is foo'.  Previously,
   the content would have been processed from within the 'outer' template,
   resulting in a 'content' value of 'The title is bar'.  The behaviour is
   now correct.
@@ -2432,21 +2452,21 @@ Miscellaneous
 * Filter failures are now raised as 'filter' exception types, instead
   of 'undef'.
 
-* Applied a patch from Simon Matthews to fix some minor bugs in the 
+* Applied a patch from Simon Matthews to fix some minor bugs in the
   DBI plugin:
 
-  - Added _connect method to Plugin::DBI for backwards compatability with 
+  - Added _connect method to Plugin::DBI for backwards compatability with
     code from version 1 of Template that subclassed the plugin
 
-  - Changed the new mothod on the DBI plugin so that it checks to see if 
-    it is being called by a subclassed object.  
+  - Changed the new mothod on the DBI plugin so that it checks to see if
+    it is being called by a subclassed object.
 
-  - Fixed the return value in the DBI plugin when connect is called more 
+  - Fixed the return value in the DBI plugin when connect is called more
     than once in the lifetime of the plugin
 
 * Removed a dubious looking chomp() from Template::Plugins which may
-  have caused abject stringification of any error object throw by a 
-  failed plugin constructor.  Thanks to Piers Cawley for finding the 
+  have caused abject stringification of any error object throw by a
+  failed plugin constructor.  Thanks to Piers Cawley for finding the
   devious culprit.
 
 * Changed ttree to not offer to create a ~/.ttreerc file if it doesn't
@@ -2467,11 +2487,11 @@ Miscellaneous
 # Version 2.00-rc2  14th November 2000
 #------------------------------------------------------------------------
 
-* Added the 'prev' and 'next' methods to Template::Iterator and 
-  Template::Plugin::DBI::Iterator to return the previous and next 
+* Added the 'prev' and 'next' methods to Template::Iterator and
+  Template::Plugin::DBI::Iterator to return the previous and next
   items from the data set.
 
-* Added the 'sort' and 'nsort' virtual methods for hash arrays, 
+* Added the 'sort' and 'nsort' virtual methods for hash arrays,
   thanks to a patch provided by Leon Brocard.
 
 * Various fixes to DBI plugin, configuration and test:- modified
@@ -2484,38 +2504,38 @@ Miscellaneous
   problems.
 
 * Modified the XML::DOM plugin to work with XML::DOM version 1.27
-  which now uses blessed array references instead of hashes as the 
+  which now uses blessed array references instead of hashes as the
   underlying data types.  Changed Makefile.PL and t/dom.t to require
   version 1.27 or later.
 
 * Changed the Template::Iterator module to *NOT* automatically expand
   the contents of blessed ARRAY objects to construct the iteration data
-  set.  The previous behaviour caused problems with modules such as 
+  set.  The previous behaviour caused problems with modules such as
   XML::DOM where a single object passed to the iterator constructor
   would be expanded into a list of the member data, rather than being
   treated as a single item list containing that one object.  A blessed
   ARRAY reference can now provide the as_list() method which the
   iterator constructor will call to return list data.
 
-* Fixed a bug in Template::Provider to ensure that template metadata 
+* Fixed a bug in Template::Provider to ensure that template metadata
   (e.g. name, modtime, etc.) is written to compiled template files.
   Thanks to Steven Hetland for reporting the problem.
 
-* Changed the Template::Directive::template() generator method to 
-  raise an error if a context reference isn't passed to a template 
+* Changed the Template::Directive::template() generator method to
+  raise an error if a context reference isn't passed to a template
   subroutine as the first argument.
 
 * Fixed t/autoformat.t to use locale dependant numerical formatting.
-  Note that versions of Perl prior to 5.6.0 still have problems and 
-  will cause t/autoform.t tests 23 and 25 to fail under locales that 
+  Note that versions of Perl prior to 5.6.0 still have problems and
+  will cause t/autoform.t tests 23 and 25 to fail under locales that
   use a decimal separator other than '.'.  The Makefile.PL will issue
-  a warning in such cases.  Thanks to Jonas Liljegren for reporting 
+  a warning in such cases.  Thanks to Jonas Liljegren for reporting
   the problem.
 
-* Applied a patch from Leon Brocard which corrects the behaviour of 
+* Applied a patch from Leon Brocard which corrects the behaviour of
   the URL plugin to join parameters with '&amp;' instead of '&'.
 
-* Fixed a bug in the AUTOLOAD method of the Template::Plugin base 
+* Fixed a bug in the AUTOLOAD method of the Template::Plugin base
   class which caused warnings about not finding _DELEGATE pseudo-hash
   method under Perl 5.6.0.
 
@@ -2533,7 +2553,7 @@ Miscellaneous
   Updated test scripts and documentation to include examples.  Thanks
   to Stas Beckman for raising the issue.
 
-* Incorporated the DBI plugin module, written by Simon Matthews.  This 
+* Incorporated the DBI plugin module, written by Simon Matthews.  This
   features a major reorganisation of the code, fixes a few bugs, removes
   some lava flow, and has improved documentation and test script.
 
@@ -2541,41 +2561,41 @@ Miscellaneous
   external modules (and in particular, versions which may cause problems)
   and various other niceties.  Also updated the README and TODO files.
 
-* Rewrote the XML::DOM plugin, fixing the memory leakage problems and 
-  adding the toTemplate() method and friends, as provided by Simon 
+* Rewrote the XML::DOM plugin, fixing the memory leakage problems and
+  adding the toTemplate() method and friends, as provided by Simon
   Matthews.  Note that it's quite easy to send Perl into a deep
   recursive loop via the childrenToTemplate() and allChildrenToTemplate()
-  methods due to a misfeature added by abw.  This will be fixed in a 
+  methods due to a misfeature added by abw.  This will be fixed in a
   future release and may result in behavioural changes to the
   *children* methods,  so don't rely on them too heavily for now.
 
 * Incorporated the Dumper plugin from Simon Matthews which interfaces to
   the Data::Dumper module.
 
-* Fixed a bug in the Datafile plugin which was causing the last data field 
-  to be ignored.  Credit due (yet again!) to Simon Matthews for finding 
+* Fixed a bug in the Datafile plugin which was causing the last data field
+  to be ignored.  Credit due (yet again!) to Simon Matthews for finding
   the missing chomp().
 
-* Fixed a bug in Template::Directive which was generating a 'Useless use 
-  of scalar ref constructor in void context...' for empty BLOCK 
+* Fixed a bug in Template::Directive which was generating a 'Useless use
+  of scalar ref constructor in void context...' for empty BLOCK
   definitions.
 
 * Added the Wrap and Autoformat plugins which interface to Text::Wrap
-  and Text::Autoformat respectively.  Thanks to Robert McArthur for the 
+  and Text::Autoformat respectively.  Thanks to Robert McArthur for the
   original Autoformat plugin code.
 
 * Added the XML::XPath plugin, test script and documentation.
 
-* Fixed a bug in the Template::Service module which was using any 
+* Fixed a bug in the Template::Service module which was using any
   non-word characters to delimit lists of PRE/POST_PROCESS files.
-  A value such as 'config, header.html' would be interpreted as 
+  A value such as 'config, header.html' would be interpreted as
   [ 'config', 'header', 'html' ].  It now uses the DELIMITER value
   which is ':' by default, e.g. PRE_PROCESS => 'config:header.html'
   is interpreted as [ 'config', 'header.html' ].
 
-* Fixed a bug in the parser grammar which was failing to correctly 
+* Fixed a bug in the parser grammar which was failing to correctly
   identify compound variables that contained two or more consecutive
-  numbers.  For example, the variable [% pi.3.14 %] was being interpreted 
+  numbers.  For example, the variable [% pi.3.14 %] was being interpreted
   as 'pi' . '3.14', instead of 'pi' . '3' . '14'.
 
 * Further modified parser to accept single quoted BLOCK names that would
@@ -2602,8 +2622,8 @@ Miscellaneous
   the time).  BREAK is still supported as an alias for LAST.
 
 * Renamed the Template::Iterator number() method to count(), although
-  number() is still supported for backwards compatability.  The DBI 
-  plugin used count() instead of number() (an oversight, I think) but I 
+  number() is still supported for backwards compatability.  The DBI
+  plugin used count() instead of number() (an oversight, I think) but I
   decided that count() was the better name (shorter and more obvious).
   Also changed internal Template::Iterator counter variables to UPPER
   CASE to allow AUTOLOAD to be more easily reused by derived iterators
@@ -2622,20 +2642,20 @@ Miscellaneous
   couldn't be done (before ANYCASE) due to 'perl' clashing with 'PERL'
   reserved word.  'evalperl' is still provided for backwards
   compatability.  Also added 'evaltt' as an alias for the 'eval'
-  filter and 'file' as an alias for 'redirect' (which I claimed to 
-  have done back in beta 3 but obviously hadn't). 
+  filter and 'file' as an alias for 'redirect' (which I claimed to
+  have done back in beta 3 but obviously hadn't).
 
 * Fixed a bug in the perl/evalperl filter which was causing a stash
   reference to be bound in a closure that could later become
   invalidated.  This could lead to variables not getting/setting their
   correct values in subsequent calls to the same filter.
 
-* Documented the problem identified by Chris Winters where an IF 
+* Documented the problem identified by Chris Winters where an IF
   used as a side-effect to an implied SET directive doesn't behave as
   expected.  A directive of the form  [% foo = 'bar' IF condition %]
   should be written explicitly as [% SET foo = 'bar' IF condition %]
 
-* Documented the 32k size limit (or typically less) for templates when 
+* Documented the 32k size limit (or typically less) for templates when
   the INTERPOLATE option is set.
 
 #------------------------------------------------------------------------
@@ -2647,9 +2667,9 @@ Miscellaneous
   time.  Arguments are as per the FILTERS configuration option.
   These filters persist for the lifetime of the processor.
 
-* Changed the Template::Context filter() method to accept a code 
-  reference as the filter name and use it as the filter sub.  This 
-  allows filters to be bound to template variables which are then 
+* Changed the Template::Context filter() method to accept a code
+  reference as the filter name and use it as the filter sub.  This
+  allows filters to be bound to template variables which are then
   used as:
 
     [% FILTER $myfilter %]
@@ -2657,10 +2677,10 @@ Miscellaneous
   There is one catch, however.  TT will automatically call a subroutine
   bound to a variable when evaluated.  Thus you must wrap your filter
   sub in another sub: $stash->set('foo', sub { \&myfilter }); or bless
-  it into some class (any class) to fool TT into thinking it's not a 
+  it into some class (any class) to fool TT into thinking it's not a
   subroutine ref: $stash->set('bar', bless \&myfilter, 'any_old_name');
 
-* Updated documentation for FILTER directive and FILTERS option to 
+* Updated documentation for FILTER directive and FILTERS option to
   reflect the above changes.
 
 * Fixed Template::Document to run cleanly with taint checking enabled.
@@ -2671,7 +2691,7 @@ Miscellaneous
   we can trust the parser to generate "safe" code unless EVAL_PERL is
   enabled in which case all bets are off anyway.
 
-* Updated XML::DOM plugin to include changes made by Thierry-Michel 
+* Updated XML::DOM plugin to include changes made by Thierry-Michel
   Barral to accept configuration options for XML::Parser.
 
 * Fixed a bug in the Table plugin which caused the first item to be
@@ -2718,7 +2738,7 @@ Miscellaneous
       [% END %]			   $output;
                                 [% END %]
 
-* The IMPORT directive and magical IMPORT variable have been replaced 
+* The IMPORT directive and magical IMPORT variable have been replaced
   with a general purpose virtual hash method, import().
 
     [% hash1.import(hash2) %]   # was "hash1.IMPORT = hash2"
@@ -2729,13 +2749,13 @@ Miscellaneous
   filter is requested rather than copying them at construction time.
   This allows new filters to be added on-the-fly.  See t/filter.t for
   examples and Template::Filters for more info.
-  
-* Added the 'nsort' list method which sorts items using a numerical 
-  value sort rather than an alpha sort. 
+
+* Added the 'nsort' list method which sorts items using a numerical
+  value sort rather than an alpha sort.
 
     [% data = [ 1, 5, 10, 11 ] %]
     [% data.sort.join(', ')  %]     # 1, 10, 11, 5
-    [% data.nsort.join(', ') %]     # 1, 5, 10, 11  
+    [% data.nsort.join(', ') %]     # 1, 5, 10, 11
 
 * Added 'div' operator to provider integer division (e.g. 'a div b' =>
   'int(a / b)' and 'mod' which is identical to '%' but added for backwards
@@ -2745,28 +2765,28 @@ Miscellaneous
 
 * Fixed a bug in the persistent caching mechanism in Template::Provider
   which was failing to write compiled template files for source templates
-  specifed in the form [% INCLUDE foo/bar %].  Intermediate directories 
-  (like 'foo' in this example) weren't being created and the disk write 
+  specifed in the form [% INCLUDE foo/bar %].  Intermediate directories
+  (like 'foo' in this example) weren't being created and the disk write
   was failing.  Thanks to Simon Matthews for identifying this problem.
 
 * Fixed an obscure bug in the Template::Stash which was ignoring the
-  last element in a compound variable when followed by an empty 
+  last element in a compound variable when followed by an empty
   argument list.  e.g. [% cgi.param() %] would be treated as [% cgi %].
   Also fixed the DEBUG option so that undefined variables cause 'undef'
-  exceptions to be raised.  Thanks to Jonas Liljegren for reporting the 
+  exceptions to be raised.  Thanks to Jonas Liljegren for reporting the
   problems.
 
-* Added the reference operator, '\' which allows a "reference" to 
+* Added the reference operator, '\' which allows a "reference" to
   another variable to be taken.  The implementation creates a closure
-  around the referenced variable which, when called, will return the 
+  around the referenced variable which, when called, will return the
   actual variable value.  It is really a form of lazy evaluation, rather
   than genuine reference taking, but it looks and smells almost the same.
-  Primarily, it is useful for allowing sub-routine references to be 
-  passed to another sub-routine.  This is currently undocumented 
-  because I'm not sure about the validity of adding it, but see t/refs.t 
+  Primarily, it is useful for allowing sub-routine references to be
+  passed to another sub-routine.  This is currently undocumented
+  because I'm not sure about the validity of adding it, but see t/refs.t
   for examples for now.
 
-* Changed parser to automatically unescape any escaped characters in 
+* Changed parser to automatically unescape any escaped characters in
   double quoted strings except for \n and \$.  This permits strings to
   be constructed that include tag characters.  e.g.
 
@@ -2775,11 +2795,11 @@ Miscellaneous
 * Fixed a bug in the use of the 'component' variable when the current
   component is a sub-routine rather than a Template::Document.
 
-* Added the '--define var=val' option to tpage to allow template 
+* Added the '--define var=val' option to tpage to allow template
   variables to be defined from the command line.  Added support to
   ttree for various new Template configuration options.
 
-* Added $Template::Test::PRESERVE package variable which can be set to 
+* Added $Template::Test::PRESERVE package variable which can be set to
   prevent newlines in test output from being automatically mangled to
   literal '\n'.
 
@@ -2794,7 +2814,7 @@ Miscellaneous
 # Version 2.00 beta 3  10th August 2000
 #------------------------------------------------------------------------
 
-* Added the WRAPPER directive to include another template, passing the 
+* Added the WRAPPER directive to include another template, passing the
   enclosing block as the 'content' variable.  e.g.
 
   somefile:                    mytable:
@@ -2812,12 +2832,12 @@ Miscellaneous
 * Added the [% INSERT file %] directive to insert the contents of a disk
   file without processing any of the content.  Looks for the file in the
   INCLUDE_PATH and honours the ABSOLUTE and RELATIVE flags.  Added the
-  insert($file) method to Template::Context which calls the new 
+  insert($file) method to Template::Context which calls the new
   load($file) method in Template::Provider which loads the file text
   without compiling it.
 
-* Added the DEFAULT configuration option which allows you to specify a 
-  default template which should be used whenever a named template 
+* Added the DEFAULT configuration option which allows you to specify a
+  default template which should be used whenever a named template
   cannot be found.  This is ignored for templates specified with absolute
   or relative filenames, or as references to an input filehandle or text.
 
@@ -2828,7 +2848,7 @@ Miscellaneous
   should be set by default to prevent variable conflict?  This might
   change.
 
-* Reorganised the Template::Filters modules and changed the calling 
+* Reorganised the Template::Filters modules and changed the calling
   convention for requesting filters via the fetch() method.  This now
   expects a reference to the calling Template::Context object as the
   third parameter (after filter name and reference to a list of arguments).
@@ -2836,36 +2856,36 @@ Miscellaneous
   no effect.  Dynamic filter factories (denoted by a $is_dynamic flag
   in the FILTER_FACTORY table) are called to create a filter sub-routine
   (closure) for each request.  The context is now passed as the first
-  parameter, followed by the expansion of any arguments.  Filter 
+  parameter, followed by the expansion of any arguments.  Filter
   factories should return a sub-routine or (undef, $error) on error.
 
 * Added several new filters:
-  - 'stderr' prints the output to STDERR (i.e. for generating output 
+  - 'stderr' prints the output to STDERR (i.e. for generating output
     in the Apache logfile, for example).  e.g. [% message | stderr %]
 
-  - 'file' is the equivalent of the version 1 redirect() filter which 
+  - 'file' is the equivalent of the version 1 redirect() filter which
     writes the output to a new file, relative to OUTPUT_PATH.  Throws
-    a 'file' exception if OUTPUT_PATH is not set.  There should perhaps 
+    a 'file' exception if OUTPUT_PATH is not set.  There should perhaps
     be some other way to disable this without relying on OUTPUT_PATH.
 
   - 'eval' evaluates the input as a template and processes it.  Proposed
-    by Simon Matthews for times when you might be returning templates 
+    by Simon Matthews for times when you might be returning templates
     fragments from a database, for example.  e.g. [% dirtext | eval %]
 
   - 'evalperl' evaluate the input as Perl code, as suggested by Jonas
-    Liligren. Requires the EVAL_PERL option to be set and will throw a 
+    Liligren. Requires the EVAL_PERL option to be set and will throw a
     'perl' error if not (see later item).  e.g. [% perlcode | evalperl %]
 
 * Fixed a bug in Template::Provider which was mangling the metadata items
-  for the template name and modification time.  The [% template.name %] 
+  for the template name and modification time.  The [% template.name %]
   and [% template.modtime %] variables now work as expected.
 
-* Added 'component' variable, similar to 'template', but which references 
-  the current template component file or block, rather than the top-level 
+* Added 'component' variable, similar to 'template', but which references
+  the current template component file or block, rather than the top-level
   template.  Of course, these may be one and the same if you're not nesting
   any templates.
 
-* Template::Provider now reports errors raised when re-compiling 
+* Template::Provider now reports errors raised when re-compiling
   modified templates rather than ignoring them, thanks to a patch from
   Perrin Harkins.
 
@@ -2873,8 +2893,8 @@ Miscellaneous
   thanks to a patch from Rafael Kitover.
 
 * Overloaded "" stringification of Template::Exception to call as_string(),
-  again thanks to Rafael.  In a catch block you can now simply say 
-  [% error %] as well as the more explicit  [% error.type %] and/or 
+  again thanks to Rafael.  In a catch block you can now simply say
+  [% error %] as well as the more explicit  [% error.type %] and/or
   [% error.info %].
 
 * Changed Template module (via Template::Service) to return the
@@ -2888,9 +2908,9 @@ Miscellaneous
   reference before attempting to call info() or type().
 
 * Fixed a bug preventing literal newlines from being used in strings.
-  Thanks to Simon Matthews for bringing it to my attention by calling 
-  my hotel room at the Perl Conference and saying "Hello?  Is that the 
-  Template Toolkit Helpdesk?  I have a bug to report..."  :-) 
+  Thanks to Simon Matthews for bringing it to my attention by calling
+  my hotel room at the Perl Conference and saying "Hello?  Is that the
+  Template Toolkit Helpdesk?  I have a bug to report..."  :-)
   (I fixed it on his laptop a few minutes later - good service, eh?)
 
 * Changed Template::Parser to not compile PERL or RAWPERL blocks if
@@ -2898,11 +2918,11 @@ Miscellaneous
   at runtime.  This was erroneous as rogue BEGIN { } blocks could still
   be executed, as noted by Randal Schwartz.  Any PERL or RAWPERL blocks
   encountered when EVAL_PERL is disabled will now cause a 'perl' exception
-  to be thrown. 
+  to be thrown.
 
-* Added a define_block($name, $block) option to Template::Context to 
+* Added a define_block($name, $block) option to Template::Context to
   add a definition to the local BLOCKS cache.  $block can be a reference
-  to a template sub-routine or Template::Document object or template 
+  to a template sub-routine or Template::Document object or template
   text which is first compiled.
 
 * Any other errors thrown in a PERL blocks (assuming EVAL_PERL set)
@@ -2910,20 +2930,20 @@ Miscellaneous
   exceptions which prevented exceptions of other kinds being throw
   from within Perl code.
 
-* Applied a patch from Chris Dean to fix a bug in the list 'sort' 
+* Applied a patch from Chris Dean to fix a bug in the list 'sort'
   method which was converting a single element list into a hash.  The
   sort now does nothing unless there's > 1 elements in the list.
 
 * Changed Template::Stash set() method to append the assigned value to
-  the end of any arguments specified, rather than prepending it to the 
+  the end of any arguments specified, rather than prepending it to the
   front.  e.g. The foo() method called by [% myobj.foo(x, y) = z %] now
   receives arguments as foo(x, y, z) instead of foo(z, x, y).
 
 * Changed Template::Base::error() to accept a reference (e.g. exception)
-  as the first parameter.  In this case, no attempt is made to 
+  as the first parameter.  In this case, no attempt is made to
   concatenate (and thereby stringify) the arguments.
 
-* Added a direct stash() accessor method to Template::Context rather 
+* Added a direct stash() accessor method to Template::Context rather
   than relying on the slower AUTOLOAD method.
 
 * Added an iterator() method to Template::Config to require
@@ -2934,27 +2954,27 @@ Miscellaneous
   Steinwand, Rafael Kitover and Jonas Lilegren who all identified the
   problem and hounded me until I fixed it.  :-)
 
-* Fixed a problem with persistent templates not being reloaded due to 
-  the %INC hash.  This caused 1 to be returned from require() instead 
+* Fixed a problem with persistent templates not being reloaded due to
+  the %INC hash.  This caused 1 to be returned from require() instead
   of the compiled template.
 
 * Added ABSOLUTE and RELATIVE options to tpage by default.
 
 * Applied various documentation and test patches from Leon Brocard.
   Fixed docs to quote dotted exception types to prevent string
-  concatenation, as noted by Randal Schwartz.  Generally added a 
+  concatenation, as noted by Randal Schwartz.  Generally added a
   whole lot more documentation.
 
 #------------------------------------------------------------------------
 # Version 2.00 beta 2   14th July 2000
 #------------------------------------------------------------------------
 
-* Added COMPILE_DIR option.  This allows you to specify a separate 
+* Added COMPILE_DIR option.  This allows you to specify a separate
   directory in which compiled templates should be written.  The COMPILE_DIR
-  is used as a root directory and each of the INCLUDE_PATH elements is 
+  is used as a root directory and each of the INCLUDE_PATH elements is
   created below that point.  e.g. the following options
 
-    COMPILE_DIR  => '/tmp/ttcache', 
+    COMPILE_DIR  => '/tmp/ttcache',
     INCLUDE_PATH => '/user/foo/bar:/usr/share/templates',
 
   would create the following cache directories:
@@ -2962,19 +2982,19 @@ Miscellaneous
     /tmp/ttcache/user/foo/bar
     /tmp/ttcache/usr/share/templates
 
-  Templates originating from source files in the INCLUDE_PATH are thus 
+  Templates originating from source files in the INCLUDE_PATH are thus
   written in their compiled form (i.e. Perl) to the relevant COMPILE_DIR
   directory.  The COMPILE_EXT option may also be used in conjunction with
   COMPILE_DIR to append a filename extension to all compiled files.
-  
-* Fixed memory leaks caused by the huge circular reference that is the 
-  Template::Provider's linked list of cache slots.  Added a DESTROY method 
+
+* Fixed memory leaks caused by the huge circular reference that is the
+  Template::Provider's linked list of cache slots.  Added a DESTROY method
   which walks the list and explicitly breaks the chains (i.e. the NEXT/PREV
-  links), thus allowing the compiled Template::Document objects to be 
+  links), thus allowing the compiled Template::Document objects to be
   correctly destroyed and their memory repooled.  Thanks to Perrin Harkins
   for spotting the problem.
 
-* Added a work-around in Template::Stash _dotop() to the problem of the 
+* Added a work-around in Template::Stash _dotop() to the problem of the
   CGI module denying membership of the UNIVERSAL class on subsequent calls
   to UNIVERSAL::isa($cgi, 'UNIVERSAL').  It works correctly the first time,
   but returns false for all subsequent calls.  Changed this generic
@@ -3010,21 +3030,21 @@ Miscellaneous
 
 * Added cache persistence by writing real Perl to file (rather than
   the previous Data::Dumper dump of the opcode tree).  Had to
-  re-organise a bunch of code around the parser/provider/document.  
+  re-organise a bunch of code around the parser/provider/document.
   Activated by COMPILE_EXT configuration item.
 
 * Added a work-around in Template::Stash to the problem of CGI disclaiming
   membership of the UNIVERSAL class after the first method call.
 
-* Added AUTO_RESET option which is enabled by default.  Disable this 
+* Added AUTO_RESET option which is enabled by default.  Disable this
   (AUTO_RESET => 0) for block persistence across service invocations.
 
-* Fixed \@ quoting (and others) in Directive thanks to Perrin Harkins 
+* Fixed \@ quoting (and others) in Directive thanks to Perrin Harkins
   who reported the bug and Chuck Adams who provided a patch.
 
 * Added Date plugin and test, as provided by Thierry-Michel Barral.
 
-* Integrated changes to Template::Test from version 1.07 and beyond.  Now 
+* Integrated changes to Template::Test from version 1.07 and beyond.  Now
   supports -- process -- option in expect, mainly for use of t/date.t et al.
 
 * Integrated new upper and lower filters from 1.08, and '|' alias for FILTER
@@ -3032,7 +3052,7 @@ Miscellaneous
 
 * Added new directive.t test to test chomping and comments.
 
-* BLOCKS can now be defined as template text which gets automatically 
+* BLOCKS can now be defined as template text which gets automatically
   compiled into a Template::Document object.
 
 * Integrated XML plugins and tests from version 1.07
@@ -3051,7 +3071,7 @@ Miscellaneous
 * Moved Template::Utils::output into Template.pm?) and got rid of
   Template::Utils altogether.
 
-* Fixed bug in Context filter() provider method which wasn't caching 
+* Fixed bug in Context filter() provider method which wasn't caching
   filters with args.
 
 * [% CASE DEFAULT %] is now an alias for [% CASE %] (the default case),
@@ -3063,14 +3083,14 @@ Miscellaneous
 #------------------------------------------------------------------------
 
 * first public alpha release of Version 2.00
- 
+
 
 
 #========================================================================
 #                           VERSION 2.00
 #------------------------------------------------------------------------
 # The following list outlines the major differences between version 1.*
-# and version 2.00 of the Template Toolkit. 
+# and version 2.00 of the Template Toolkit.
 #========================================================================
 
 New Language Features
@@ -3080,7 +3100,7 @@ New Language Features
   a value or list of values to match.  CASE may also be left blank or
   written as [% CASE default %] to specify a default match.  Only one
   CASE matches, there is no drop-through between CASE statements.
-  
+
     [% SWITCH myvar %]
     [% CASE value1 %]
        ...
@@ -3091,7 +3111,7 @@ New Language Features
     [% CASE %]                     # default, or [% CASE default %]
        ...
     [% END %]
-  
+
 * New TRY / CATCH / FINAL construct for fully functional, nested
   exception handling.  The block following the TRY is executed and
   output if no exceptions are throw.  Otherwise, the relevant CATCH
@@ -3101,14 +3121,14 @@ New Language Features
   FINAL block, if specified, will be processed last of all, regardless
   of the result (except an uncaught exception which is throw upwards
   to any enclosing TRY block).
-  
+
     [% TRY %]
        ...blah...blah...
        [% CALL somecode %]	  # may throw an exception
        ...etc...
        [% INCLUDE someblock %]    # may have a [% THROW ... %] directive
        ...and so on...
-    [% CATCH file %]		  # catch system-generated 'file' exception 
+    [% CATCH file %]		  # catch system-generated 'file' exception
        ...
     [% CATCH DBI %]		  # catch 'DBI' or 'DBI.*'
        ...
@@ -3118,7 +3138,7 @@ New Language Features
        All done!
     [% END %]
 
-* New CLEAR directive to clear the current output buffer.  This is typically 
+* New CLEAR directive to clear the current output buffer.  This is typically
   used in a CATCH block to clear the output of a failed TRY block.  Any output
   generated in a TRY block up to the point that an exception was thrown will
   be output by default.  The [% CLEAR %] directive in a catch block clears
@@ -3148,22 +3168,22 @@ New Language Features
   POST_PROCESS headers.  Thus, your headers and footers can access
   items from the main template (e.g. title, author, section, keywords,
   flags, etc) and display them or act accordingly.
-  
+
   mytemplate:
-    [% META 
+    [% META
        title     = 'This is a Test'
        author    = 'Andy Wardley'
-       copyright = "2000, Andy Wardley" 
+       copyright = "2000, Andy Wardley"
     %]
-  
+
     <h1>[% template.title %]</h1>
     blah blah
-  
+
   header:   (a PRE_PROCESS template)
     <html>
     <head><title>[% template.title %]</title></head>
     <body>
-  
+
   footer:  (a POST_PROCESS template)
     <hr>
     &copy; Copyright [% template.copyright or '2000, MyCompany' %]
@@ -3176,7 +3196,7 @@ New Language Features
   (e.g. PERL...END processes the block and filters the output into
   Perl evaluation at runtime).
 
-* New INSERT directive which inserts the contents of a file without 
+* New INSERT directive which inserts the contents of a file without
   processing it.
 
 * New WRAPPER directive which processes the following block into the
@@ -3213,7 +3233,7 @@ New Language Features
     [% TAGS html %]
     <!-- INCLUDE header -->
 
-* The output from any directive or block can now be captured and assigned to 
+* The output from any directive or block can now be captured and assigned to
   a variable.
 
     [% htext = INCLUDE header %]
@@ -3221,14 +3241,14 @@ New Language Features
        blah blah
        [% x %] [% y %] [% z %]
     [% END %]
-  
+
     # you can even assign the output of loops, conditions, etc.
     [% numbers = FOREACH n = [2, 3, 5, 7, 11, 13] %]
        blah blah [% n %]
     [% END %]
 
 * The handling of complex expressions has been improved, permitting
-  basic directives to contain logical shortcut operators, etc.  All 
+  basic directives to contain logical shortcut operators, etc.  All
   binary operators now have the same precedence rules as Perl.
 
     [% foo or bar %]             # GET foo, or bar if foo is false (0/undef)
@@ -3245,8 +3265,8 @@ New Language Features
   with double-quoted string interpolation and text block interpolation
   via the INTERPOLATE flag.  If you've been relying on the version 1
   "feature" that ignores the leading '$' then you'll need to change your
-  templates to remove the '$' characters (except where you really want 
-  them) or set the V1DOLLAR flag to 1 to revert to the version 1 
+  templates to remove the '$' characters (except where you really want
+  them) or set the V1DOLLAR flag to 1 to revert to the version 1
   behaviour.  See the 'Gotchas' section below for more details.
 
     # version 1
@@ -3269,7 +3289,7 @@ New Language Features
 
       [% list.size %]                 # number of items in list
       [% list.max %]                  # last item number (size - 1)
-      [% list.first %]                # first item    
+      [% list.first %]                # first item
       [% list.last %]                 # last item
       [% list.push(item) %]	      # add item to end
       [% list.pop %]		      # remove item from end
@@ -3303,9 +3323,9 @@ Configuration Options
   throws a 'dbi' error then you can define an ERROR template to catch
   this.  The original template output is discarded and the ERROR template
   processed in its place.  PRE_PROCESS and POST_PROCESS templates (e.g.
-  header and footers) are left intact.  This provides a particularly 
+  header and footers) are left intact.  This provides a particularly
   useful high-level error handling abstraction where you simply create
-  templates to handle particular exceptions and provide the mapping 
+  templates to handle particular exceptions and provide the mapping
   through the ERROR hash.
 
     my $template = Template->new({
@@ -3327,7 +3347,7 @@ Configuration Options
   options (e.g CACHE_SIZE) and so on.  You can sub-class the
   Template::Provider module to allow templates to be loaded from a
   database, for example, and then define your new provider in the
-  LOAD_TEMPLATES list.  The providers are queried in order as a "Chain 
+  LOAD_TEMPLATES list.  The providers are queried in order as a "Chain
   of Responsiblity".  Each may return a compiled template, raise an
   error, or decline to serve the template and pass control onto the
   next provider in line.
@@ -3340,13 +3360,13 @@ Configuration Options
   compile modified source templates.
 
 * The Template::Provider cache can write compiled templates (e.g. Perl code)
-  to disk to create a persistent cache.  The COMPILE_EXT may be used to 
+  to disk to create a persistent cache.  The COMPILE_EXT may be used to
   specify a filename extension (e.g. '.ttc') which is used to create
-  compiled template files.  These compiled template files 
-  can then be reloaded on subsequent invocations using via Perl's 
-  require() (which is about as fast as it can get).  The Template::Parser 
+  compiled template files.  These compiled template files
+  can then be reloaded on subsequent invocations using via Perl's
+  require() (which is about as fast as it can get).  The Template::Parser
   and Template::Grammar modules are loaded on demand, so if all templates
-  have been pre-compiled then the modules don't get loaded at all.  This 
+  have been pre-compiled then the modules don't get loaded at all.  This
   is a big win, given that Template::Grammar is the biggy.
 
 * The ABSOLUTE and RELATIVE options are now used to enable the loading of
@@ -3364,7 +3384,7 @@ Configuration Options
   into particular namespaces.  The LOAD_PERL option can be used to
   load (almost) any regular Perl module and use it as a plugin.
 
-* The LOAD_FILTERS option is similar to LOAD_TEMPLATES and LOAD_PLUGINS, 
+* The LOAD_FILTERS option is similar to LOAD_TEMPLATES and LOAD_PLUGINS,
   allowing one or more custom providers to be specified for providing
   filters.  The Template::Filters module is the default provider here.
 
@@ -3375,8 +3395,8 @@ Configuration Options
   they will ignore errors and return STATUS_DECLINED to give the next
   provider a chance to deliver a valid resource.
 
-* The INTERPOLATE option is now automatically disabled within PERL and 
-  RAWPERL blocks to prevent Perl $variables from being interpreted as 
+* The INTERPOLATE option is now automatically disabled within PERL and
+  RAWPERL blocks to prevent Perl $variables from being interpreted as
   template variables.
 
     # INTERPOLATE = 1
@@ -3389,11 +3409,11 @@ Configuration Options
     [% END %]
     now we're interpolating variables again, like $var
 
-* Added the TRIM option to automatically removed leading and trailing 
+* Added the TRIM option to automatically removed leading and trailing
   whitespace from the output of templates and BLOCKs.
 
-* The CASE option has now been obsoleted and replaces by the ANYCASE 
-  option.  See comments elsewhere in this document ('Gotchas' below and 
+* The CASE option has now been obsoleted and replaces by the ANYCASE
+  option.  See comments elsewhere in this document ('Gotchas' below and
   notes for 2.00 beta 4) for further details.
 
 
@@ -3432,7 +3452,7 @@ new parser was built.  This brings a number of important benefits:
   loading, caching and persistence of templates, and will examine file
   timestamps and re-compiled modified templates as required.
 
-* Flexibility.  
+* Flexibility.
 
   Because "compiled templates" are now nothing more than Perl
   sub-routines, you can use anyone or anything to generate them and
@@ -3449,8 +3469,8 @@ Other Enhancements and Internal Features
 ----------------------------------------
 
 * Templates (i.e. sub-routines) now return their generated output,
-  rather than sending it to $context->output().  This speeds things 
-  up and makes the code simpler, as well as allowing greater 
+  rather than sending it to $context->output().  This speeds things
+  up and makes the code simpler, as well as allowing greater
   flexibility in how template sub-routines can work.
 
 * Exceptions are now raised via Perl's die() and caught by an
@@ -3460,9 +3480,9 @@ Other Enhancements and Internal Features
   caught in the appropriate place and handled accordingly.
 
 * Local named BLOCK definitions are better behaved and don't permanently
-  mask any real files.  BLOCK definitions remain local to the template in 
-  which they're defined, although they can be accessed from templates 
-  INCLUDEd or PROCESSed from within.  The PROCESS directive will export 
+  mask any real files.  BLOCK definitions remain local to the template in
+  which they're defined, although they can be accessed from templates
+  INCLUDEd or PROCESSed from within.  The PROCESS directive will export
   defined BLOCKs to the caller (as with variables) whereas INCLUDE will
   keep them "private".
 
@@ -3517,7 +3537,7 @@ Other Enhancements and Internal Features
 
       $Template::Config::PARSER = 'MyOrg::Template::MyParser';
 
-      # $tt object will create and use a MyOrg::Template::MyParser 
+      # $tt object will create and use a MyOrg::Template::MyParser
       # object as PARSER
       my $tt = Template->new({ ... })
 
@@ -3561,7 +3581,7 @@ New Plugins
 
 * The Dumper plugin provides an interface to the Data::Dumper module.
 
-* The Wrap and Autoformat plugins interface to the Text::Wrap and 
+* The Wrap and Autoformat plugins interface to the Text::Wrap and
   Text::Autoformat modules respectively.
 
 * The XML::DOM and XML::XPath plugins provide interfaces to the relevant
@@ -3577,8 +3597,8 @@ Utility Scripts
 Gotchas
 -------
 
-Things that have changed between version 1 and 2 that might catch you 
-out.  
+Things that have changed between version 1 and 2 that might catch you
+out.
 
 * Bare CATCH blocks are no longer permitted and must be explicitly
   scoped with a matching TRY.  In most cases, this simply means adding
@@ -3617,8 +3637,8 @@ out.
 
 * The ERROR option is also different.  It could previously be used
   to specify an error handling sub-routine, but is no longer required
-  (see previous point).  The ERROR option in version 2 is used to 
-  define a map of error types to template names for automatic 
+  (see previous point).  The ERROR option in version 2 is used to
+  define a map of error types to template names for automatic
   redirection for error handling.
 
 * The current exception caught in a catch block is now aliased to the
@@ -3688,7 +3708,7 @@ out.
       [% GET people.$name        %]  [% people.$name %]
       [% GET people.${user.name} %]  [% people.${user.name} %]
 
-      [% INCLUDE header 
+      [% INCLUDE header
          title = "Home Page for $name"
       %]
       [% INCLUDE header
@@ -3711,10 +3731,10 @@ out.
     $context->throw($type, $info);
     $context->throw($exception);
 
-* USERDIR and USERBLOCK are not supported (they were experimental and 
+* USERDIR and USERBLOCK are not supported (they were experimental and
   undocumented, anyway)
 
-* $Template::Directive::While::MAXITER is now 
+* $Template::Directive::While::MAXITER is now
   $Template::Directive::WHILE_MAX and may change again.
 
 * into() filter is now obsolete.  You can now simply assign the output of
@@ -3722,17 +3742,16 @@ out.
 
     [% x = INCLUDE foo %]
     [% y = BLOCK %]
-       blah blah blah 
+       blah blah blah
     [% END %]
 
 * The CASE option has been removed and replaced with the ANYCASE option
   which is the logical opposite.  Directive keywords should now be UPPER
-  CASE by default and the ANYCASE option can be enabled to revert to 
+  CASE by default and the ANYCASE option can be enabled to revert to
   the previous behaviour of accept keywords in any case.
 
-* The IMPORT directive and magical variable have been removed and 
+* The IMPORT directive and magical variable have been removed and
   replaced by a general purpose virtual hash method, import().
   [% IMPORT myhash %] should now be written [% import(myhash) %]
   and [% myhash.IMPORT = another.hash %] should be written as
   [% myhash.import(another.hash) %]
-

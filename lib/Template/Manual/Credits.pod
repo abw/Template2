@@ -72,27 +72,31 @@ modify it under the same terms as Perl itself.
 =head1 CONTRIBUTORS
 
 Many people have contributed ideas, inspiration, fixes and features to
-the Template Toolkit.  Their efforts continue to be very much appreciated.  
+the Template Toolkit.  Their efforts continue to be very much appreciated.
 Please let me know if you think anyone is missing from this list.
+
+If you submit a patch/pull request then please make sure you add your
+own name to this list and include it in the changes.
 
 Chuck Adams, Stephen Adkins, Ivan Adzhubey, Mark Anderson, Bradley Baetz,
 Thierry-Michel Barral, Craig Barratt, Stas Bekman, Robin Berjon, Tony Bowden,
 Neil Bowers, Leon Brocard, Lyle Brooks, Norbert Buchmüller, Dave Cash, Piers
 Cawley, Darren Chamberlain, Timmy Chan, Eric Cholet, Chromatic, Nik Clayton,
 Tosh Cooey, Dave Cross, Chris Dean, Francois Desarmenien,  Horst Dumcke, Mark
-Fowler, Michael Fowler, Kenny Gatdula, Axel Gerstmair, Jay Hannah,  Dylan
-William Hardison, Perrin Harkins, Bryce Harrington, Dave Hodgkinson,  Lubomir
-Host, Dave Howorth, Jon Jensen, Harald Joerg, Colin Johnson,  Colin Keith,
-Adam Kennedy, Vivek Khera, Alexey A. Kiritchun, Rafael Kitover,  Andreas
-Koenig, Ivan Kurmanov, Denis F. Latypoff, Hans von Lengerke,  Jonas Liljegren,
-Simon Napiorkowski, Breno G. de Oliveira, Leslie Michael Orchard, Paul Orrock,
-Jonathon Padfield, Steve Peters, Briac PilprE<eacute>, Yuri Pimenov, Martin
-Portman, Marc Remy, Slaven Rezic, Jess Robinson, Josh Rosenbaum, Christian
-Schaffner, Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul Sharpe,
-Ricardo Signes, Ville SkyttE<auml>, Barrie Slaymaker, David Steinbrunner, Doug
-Steinwand, Michael Stevens, Autrijus Tang, Drew Taylor, Rod Taylor, Swen
-Thuemmler, Richard Tietjen, Ben Tilly, Stathy G. Touloumis, Jim Vaughan, Simon
-Wilcox, Chris Winters.
+Fowler, Michael Fowler, Brain Fraser, Kenny Gatdula, Axel Gerstmair, Jay Hannah,
+Dylan William Hardison, Perrin Harkins, Bryce Harrington, Dave Hodgkinson,
+Lubomir Host, Dave Howorth, Jon Jensen, Harald Joerg, Colin Johnson,  Colin
+Keith, Adam Kennedy, Vivek Khera, Alexey A. Kiritchun, Rafael Kitover,  Andreas
+Koenig, Ivan Kurmanov, Denis F. Latypoff, Hans von Lengerke, John Lightsey,
+Jonas Liljegren, Simon Napiorkowski, Breno G. de Oliveira, Leslie Michael
+Orchard, Paul Orrock, Jonathon Padfield, Steve Peters, Briac PilprE<eacute>,
+Yuri Pimenov, Martin Portman, Marc Remy, Slaven Rezic, Jess Robinson, Josh
+Rosenbaum, Christian Schaffner, Mike Schilli, Randal L. Schwartz, Paul Seamons,
+Paul Sharpe, Ricardo Signes, Ville SkyttE<auml>, Barrie Slaymaker, David
+Steinbrunner, Doug Steinwand, Michael Stevens, Autrijus Tang, Drew Taylor, Rod
+Taylor, Swen Thuemmler, Richard Tietjen, Ben Tilly, Stathy G. Touloumis, Jim
+Vaughan, Simon Wilcox, Chris Winters.
+
 
 =cut
 
