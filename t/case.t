@@ -29,8 +29,8 @@ my $ttdef = Template->new({
     POST_CHOMP => 1,
 });
 
-my $ttanycase = Template->new({ 
-    ANYCASE => 1, 
+my $ttanycase = Template->new({
+    ANYCASE => 1,
     POST_CHOMP => 1,
 });
 

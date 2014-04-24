@@ -1,18 +1,16 @@
 #============================================================= -*-perl-*-
 #
-# t/plugin_leaks.t
+# t/zz-plugin-leak.t
 #
 # Test the Template::Plugins module.
 #
 # Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
-#
-# $Id$
 #
 #========================================================================
 
@@ -25,16 +23,27 @@ use Cwd qw( abs_path );
 $^W                    = 1;
 my $DEBUG = grep(/^--?d(debug)?$/, @ARGV);
 
-eval "use Test::LeakTrace";
+BEGIN {
+    unless (grep(/--dev/, @ARGV)) {
+        skip_all('Internal test for developer, add the --dev flag to run');
+    }
+    unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} ) {
+        skip_all("Developer tests not required for installation");
+    }
+}
+
+use Test::LeakTrace;
 
 if ($@) {
     skip_all('Test::LeakTrace not installed');
 }
+
 ntests(2);
 
 my $dir = abs_path(-d 't' ? 't/test/plugin' : 'test/plugin');
 my $src = abs_path(-d 't' ? 't/test/lib'    : 'test/lib');
 unshift(@INC, $dir);
+
 
 my ($input, $output);
 $output = '';
