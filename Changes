@@ -14,7 +14,12 @@
 # Version 2.26 - 25th April 2014
 #------------------------------------------------------------------------
 
-* Andy Wardley added outline directives
+* Andy Wardley added outline directives. See Template::Manual::Syntax and
+  Template::Manual::Config for details of the OUTLINE_TAG option and new
+  'outline' TAG_STYLE.  See t/outline.t for examples.
+
+* Andy Wardley improved the handling of keywords when the ANYCASE option
+  is in use.  See t/anycase.t for examples.
 
 * Chromatic fixed UTF-8 encoding in URLs in URL plugin.
   https://github.com/abw/Template2/pull/31

@@ -657,10 +657,22 @@ sub tokenise_directive {
             # set, unless (we've got some preceding tokens and) the previous
             # token is a DOT op.  This prevents the 'last' in 'data.last'
             # from being interpreted as the LAST keyword.
-            $uctoken =
-                ($anycase && (! @tokens || $tokens[-2] ne 'DOT'))
-                    ? uc $token
-                    :    $token;
+            if ($anycase) {
+                # if the token follows a dot or precedes an assignment then
+                # it's not for folding, e.g. the 'wrapper' in this:
+                # [% page = { wrapper='html' }; page.wrapper %]
+                if ((@tokens && $tokens[-2] eq 'DOT')
+                ||  ($text =~ /\G((?=\s*=))/gc)) {
+                    # keep the token unmodified
+                    $uctoken = $token;
+                }
+                else {
+                    $uctoken = uc $token;
+                }
+            }
+            else {
+                $uctoken = $token;
+            }
             if (defined ($type = $lextable->{ $uctoken })) {
                 $token = $uctoken;
             }
@@ -1024,7 +1036,7 @@ Template::Parser - LALR(1) parser for compiling template documents
 =head1 SYNOPSIS
 
     use Template::Parser;
-    
+
     $parser   = Template::Parser->new(\%config);
     $template = $parser->parse($text)
         || die $parser->error(), "\n";
@@ -1118,7 +1130,7 @@ Variables should be prefixed by a C<$> to identify them, using curly braces
 to explicitly scope the variable name where necessary.
 
     Hello ${name},
-    
+
     The day today is ${day.today}.
 
 =head2 ANYCASE
@@ -1139,7 +1151,7 @@ entirely new template language to be constructed and used by the Template
 Toolkit.
 
     use MyOrg::Template::Grammar;
-    
+
     my $parser = Template::Parser->new({
         GRAMMAR = MyOrg::Template::Grammar->new();
     });
@@ -1153,7 +1165,7 @@ The L<DEBUG|Template::Manual::Config#DEBUG> option can be used to enable
 various debugging features of the C<Template::Parser> module.
 
     use Template::Constants qw( :debug );
-    
+
     my $template = Template->new({
         DEBUG => DEBUG_PARSER | DEBUG_DIRS,
     });
