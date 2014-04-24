@@ -74,7 +74,7 @@ sub factory {
     # weaken($this);
 
     if ($self->{ _DYNAMIC }) {
-        return $self->{ _DYNAMIC_FILTER } ||= [ sub {
+        return [ sub {
             my ($context, @args) = @_;
             my $config = ref $args[-1] eq 'HASH' ? pop(@args) : { };
 
@@ -84,7 +84,7 @@ sub factory {
         }, 1 ];
     }
     else {
-        return $self->{ _STATIC_FILTER } ||= sub {
+        return sub {
             $this->filter(shift);
         };
     }
