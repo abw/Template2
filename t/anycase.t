@@ -72,3 +72,22 @@ wrapper: html
 include: header
    next: about.html
 <html>Hello World!</html><html>Much cool!</html>
+
+-- test --
+-- name template name is a keyword --
+%% block view
+This is the view
+%% end
+view: [% include view %]
+-- expect --
+view: This is the view
+
+-- test --
+-- name different kinds of include --
+%% block include
+This is the included template
+%% end
+%% include = include include
+inc: [% GET include %]
+-- expect --
+inc: This is the included template

@@ -50,6 +50,29 @@ our $VERSION = 2.89;
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 
+# The ANYCASE option can cause conflicts when reserved words are used as
+# variable names, hash keys, template names, plugin names, etc.  The
+#
+# $ANYCASE_BEFORE regex identifies where such a word precedes an assignment,
+# either as a variable (C<wrapper = 'html'>) or hash key (C<{ wrapper => 'html' }).
+# In that case it is treated as a simple words rather than being the lower case
+# equivalent of the upper case keyword (e.g. WRAPPER).
+#
+# $ANYCASE_AFTER is used to identify when such a word follows a symbols that
+# suggests it can't be a keyword, e.g. after BLOCK INCLUDE WRAPPER, USE, etc.
+our $ANYCASE_BEFORE = qr/\G((?=\s*[=\.]))/;
+our $ANYCASE_AFTER  = {
+    map { $_ => 1 }
+    qw(
+        GET SET CALL DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK USE
+        PLUGIN FILTER MACRO IN TO STEP AND OR NOT DIV MOD DOT
+        IF UNLESS ELSIF FOR WHILE SWITCH CASE META THROW CATCH VIEW
+        CMPOP BINOP COMMA
+    ),
+    '(', '[', '{'
+    # not sure about ASSIGN as it breaks C<header_html = include header>
+};
+
 
 #========================================================================
 #                        -- COMMON TAG STYLES --
@@ -661,8 +684,8 @@ sub tokenise_directive {
                 # if the token follows a dot or precedes an assignment then
                 # it's not for folding, e.g. the 'wrapper' in this:
                 # [% page = { wrapper='html' }; page.wrapper %]
-                if ((@tokens && $tokens[-2] eq 'DOT')
-                ||  ($text =~ /\G((?=\s*=))/gc)) {
+                if ((@tokens && $ANYCASE_AFTER->{ $tokens[-2] })
+                ||  ($text =~ /$ANYCASE_BEFORE/gc)) {
                     # keep the token unmodified
                     $uctoken = $token;
                 }
