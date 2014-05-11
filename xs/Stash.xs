@@ -34,10 +34,11 @@ extern "C" {
 #define PERL_NO_GET_CONTEXT
 #include "EXTERN.h"
 #include "perl.h"
+#include "XSUB.h"
+
 #define NEED_sv_2pv_flags
 #define NEED_newRV_noinc
 #include "ppport.h"
-#include "XSUB.h"
 
 #ifdef __cplusplus
 }
@@ -161,6 +162,9 @@ static TT_RET tt_fetch_item(pTHX_ SV *root, SV *key_sv, AV *args, SV **result) {
       case SVt_PVAV:
         if (looks_like_number(key_sv))
             value = av_fetch((AV *) SvRV(root), SvIV(key_sv), FALSE);
+        break;
+
+      default:
         break;
     }
 
