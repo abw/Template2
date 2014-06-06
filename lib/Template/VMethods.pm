@@ -572,12 +572,21 @@ sub list_nsort {
 
     my $sort = sub {
         my $cmp;
-        # compare each field individually
-        for my $field (@fields) {
-            my $A = _list_sort_make_key($a, [ $field ]);
-            my $B = _list_sort_make_key($b, [ $field ]);
-            ($cmp = $A <=> $B) and last;
+
+        if(@fields) {
+            # compare each field individually
+            for my $field (@fields) {
+                my $A = _list_sort_make_key($a, [ $field ]);
+                my $B = _list_sort_make_key($b, [ $field ]);
+                ($cmp = $A <=> $B) and last;
+            }
         }
+        else {
+            my $A = _list_sort_make_key($a);
+            my $B = _list_sort_make_key($b);
+            $cmp = $A <=> $B;
+        }
+
         $cmp;
     };
 
