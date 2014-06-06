@@ -569,17 +569,19 @@ sub list_sort {
 sub list_nsort {
     my ($list, @fields) = @_;
     return $list unless @$list > 1;     # no need to sort 1 item lists
-    return [
-        @fields                         # Schwartzian Transform
-        ?  map  { $_->[0] }             # for case insensitivity
-           sort { $a->[1] <=> $b->[1] }
-           map  { [ $_, _list_sort_make_key($_, \@fields) ] }
-           @$list
-        :  map  { $_->[0] }
-           sort { $a->[1] <=> $b->[1] }
-           map  { [ $_, lc $_ ] }
-           @$list,
-    ];
+
+    my $sort = sub {
+        my $cmp;
+        # compare each field individually
+        for my $field (@fields) {
+            my $A = _list_sort_make_key($a, [ $field ]);
+            my $B = _list_sort_make_key($b, [ $field ]);
+            ($cmp = $A <=> $B) and last;
+        }
+        $cmp;
+    };
+
+    return [ sort $sort @{ $list } ];
 }
 
 sub list_unique {
