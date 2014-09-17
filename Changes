@@ -11,7 +11,7 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 2.26 - 25th April 2014
+# Version 2.26 - 17th September 2014
 #------------------------------------------------------------------------
 
 * Andy Wardley added outline directives. See Template::Manual::Syntax and
@@ -32,6 +32,7 @@
 
 * John Lightsey fixed RT59208 to improve SET
   https://github.com/abw/Template2/pull/38
+  UPDATE: This had to be reverted as it cause a subtle breakage elsewhere
 
 
 #-----------------------------------------------------------------------
