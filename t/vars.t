@@ -620,3 +620,7 @@ e: 3
 -- expect --
 55
 
+-- test --
+[% SET monkey="testing" IF 1; monkey %]
+-- expect --
+testing
