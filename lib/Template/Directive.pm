@@ -243,11 +243,11 @@ sub identref {
 
 
 #------------------------------------------------------------------------
-# assign(\@ident, $value, $default)                             foo = bar
+# assign(\@ident, $value, $filters, $default)                   foo = bar
 #------------------------------------------------------------------------
 
 sub assign {
-    my ($self, $var, $val, $default) = @_;
+    my ($self, $var, $val, $filters, $default) = @_;
 
     if (ref $var) {
         if (scalar @$var == 2 && ! $var->[1]) {
@@ -258,6 +258,9 @@ sub assign {
         }
     }
     $val .= ', 1' if $default;
+    if ($filters) {
+        return &capture($self, $var, &filter($self, $filters, &get($self, $val)));
+    }
     return "\$stash->set($var, $val)";
 }
 
@@ -314,29 +317,28 @@ sub call {
 
 
 #------------------------------------------------------------------------
-# set(\@setlist)                               [% foo = bar, baz = qux %]
+# set(\@setlist)                               [% foo = bar | html, baz = qux %]
 #------------------------------------------------------------------------
 
 sub set {
     my ($self, $setlist) = @_;
     my $output;
-    while (my ($var, $val) = splice(@$setlist, 0, 2)) {
-        $output .= &assign($self, $var, $val) . ";\n";
+    while (my ($var, $val, $filters ) = splice(@$setlist, 0, 3)) {
+        $output .= &assign($self, $var, $val, $filters) . ";\n";
     }
     chomp $output;
     return $output;
 }
-
 
 #------------------------------------------------------------------------
 # default(\@setlist)                   [% DEFAULT foo = bar, baz = qux %]
 #------------------------------------------------------------------------
 
 sub default {
-    my ($self, $setlist) = @_;  
+    my ($self, $setlist) = @_;
     my $output;
-    while (my ($var, $val) = splice(@$setlist, 0, 2)) {
-        $output .= &assign($self, $var, $val, 1) . ";\n";
+    while (my ($var, $val, $filters) = splice(@$setlist, 0, 3)) {
+        $output .= &assign($self, $var, $val, $filters, 1) . ";\n";
     }
     chomp $output;
     return $output;

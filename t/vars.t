@@ -624,3 +624,18 @@ e: 3
 [% SET monkey="testing" IF 1; monkey %]
 -- expect --
 testing
+
+-- test --
+[% monkey="testing2" IF 1; monkey %]
+-- expect --
+testing2
+
+-- test --
+[% SET monkey="testing<3>" FILTER html IF 1; monkey %]
+-- expect --
+testing&lt;3&gt;
+
+-- test --
+[% monkey = "testing<4>" FILTER html IF 1; monkey %]
+-- expect --
+testing&lt;4&gt;
