@@ -6,7 +6,7 @@
 #
 # Written by Andy Wardley <abw@cpan.org>
 #
-# Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1996-2015 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -180,6 +180,20 @@ The cat sat on the mat
 [% string.size %]
 -- expect --
 1
+
+-- test --
+-- name text.empty on empty --
+[% text = '';
+   text.empty %]
+-- expect --
+1
+
+-- test --
+-- name text.empty on non-empty --
+[% text = 'bandanna';
+   text.empty %]
+-- expect --
+0
 
 -- test --
 -- name text.squote --

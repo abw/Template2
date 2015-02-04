@@ -6,7 +6,7 @@
 #
 # Written by Andy Wardley <abw@cpan.org>
 #
-# Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1996-2015 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -75,6 +75,20 @@ a, b, c, d
 [% hash.size %]
 -- expect --
 2
+
+-- test --
+-- name hash.empty on empty --
+[% empty = { };
+   empty.empty %]
+-- expect --
+1
+
+-- test --
+-- name hash.empty on non-empty --
+[% nonempty = { e => 'f' };
+   nonempty.empty %]
+-- expect --
+0
 
 -- test --
 [% hash.defined('a') ? 'good' : 'bad' %]
