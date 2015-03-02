@@ -21,6 +21,10 @@
 * Andy Wardley improved the handling of keywords when the ANYCASE option
   is in use.  See t/anycase.t for examples.
 
+* Matthew Somerville fixed an issue with indentation of multiline strings
+  in compiled templates breaking e.g. translation.
+  https://github.com/abw/Template2/pull/29
+
 * Chromatic fixed UTF-8 encoding in URLs in URL plugin.
   https://github.com/abw/Template2/pull/31
 
