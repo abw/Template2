@@ -9,7 +9,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2015 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -42,6 +42,7 @@ our $TEXT_VMETHODS = {
     hash        => \&text_hash,
     length      => \&text_length,
     size        => \&text_size,
+    empty       => \&text_empty,
     defined     => \&text_defined,
     upper       => \&text_upper,
     lower       => \&text_lower,
@@ -67,6 +68,7 @@ our $HASH_VMETHODS = {
     item    => \&hash_item,
     hash    => \&hash_hash,
     size    => \&hash_size,
+    empty   => \&hash_empty,
     each    => \&hash_each,
     keys    => \&hash_keys,
     values  => \&hash_values,
@@ -91,6 +93,7 @@ our $LIST_VMETHODS = {
     shift   => \&list_shift,
     max     => \&list_max,
     size    => \&list_size,
+    empty   => \&list_empty,
     defined => \&list_defined,
     first   => \&list_first,
     last    => \&list_last,
@@ -146,6 +149,10 @@ sub text_length {
 
 sub text_size {
     return 1;
+}
+
+sub text_empty {
+    return 0 == text_length($_[0]) ? 1 : 0;
 }
 
 sub text_defined {
@@ -364,6 +371,10 @@ sub hash_size {
     scalar keys %{$_[0]};
 }
 
+sub hash_empty {
+    return 0 == hash_size($_[0]) ? 1 : 0;
+}
+
 sub hash_each {
     # this will be changed in TT3 to do what hash_pairs() does
     [ %{ $_[0] } ];
@@ -491,6 +502,10 @@ sub list_size {
     no warnings;
     my $list = shift;
     $#$list + 1;
+}
+
+sub list_empty {
+    return 0 == list_size($_[0]) ? 1 : 0;
 }
 
 sub list_defined {

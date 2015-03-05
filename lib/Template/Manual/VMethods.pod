@@ -6,7 +6,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2015 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -85,6 +85,14 @@ Returns the length of the string representation of the item:
 
     [% IF password.length < 8 %]
        Password too short, dumbass!
+    [% END %]
+
+=head2 empty
+
+Returns true if the string is empty:
+
+    [% IF details.empty %]
+       No details specified
     [% END %]
 
 =head2 list
@@ -401,6 +409,14 @@ Delete one or more items from the hash.
 
 Returns the number of key/value pairs in the hash.
 
+=head2 empty
+
+Returns true if the hash is empty:
+
+    [% IF config.empty %]
+       No configuration available
+    [% END %]
+
 =head2 item
 
 Returns an item from the hash using a key passed as an argument.
@@ -427,6 +443,14 @@ Returns the size of a list (number of elements) and the maximum
 index number (size - 1), respectively.
 
     [% results.size %] search results matched your query
+
+=head2 empty
+
+Returns true if the list is empty:
+
+    [% IF results.empty %]
+       No results found
+    [% END %]
 
 =head2 defined
 
