@@ -857,7 +857,7 @@ variables against their root.
 =head2 undefined($ident, $args)
 
 This method is called when L<get()> encounters an undefined value.  If the 
-C<STRICT|Template::Manual::Config#STRICT> option is in effect then it will
+L<STRICT|Template::Manual::Config#STRICT> option is in effect then it will
 throw an exception indicating the use of an undefined value.  Otherwise it
 will silently return an empty string.
 
