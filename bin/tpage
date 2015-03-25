@@ -42,6 +42,7 @@ unshift(@INC, @{ $config->perl5lib });
 # get all template_* options from the config and fold keys to UPPER CASE
 my %ttopts   = $config->varlist('^template_', 1);
 my $ttmodule = delete($ttopts{ module });
+my $ttenvvars = delete($ttopts{ envvars });
 my $ucttopts = {
     map { my $v = $ttopts{ $_ }; defined $v ? (uc $_, $v) : () }
     keys %ttopts,
@@ -67,10 +68,15 @@ push(@ARGV, '-') unless @ARGV;
 my $template = $ttmodule->new($ucttopts)
     || die $ttmodule->error();
 
+my %ttvars = ();
+if ($ttenvvars) {
+    $ttvars{'env'} = \%ENV;
+}
+
 # process each input file 
 foreach my $file (@ARGV) {
     $file = \*STDIN if $file eq '-';
-    $template->process($file)
+    $template->process($file,\%ttvars)
 	|| die $template->error();
 }
 
@@ -110,6 +116,7 @@ sub read_config {
         'template_compile_ext|compile_ext=s',
         'template_compile_dir|compile_dir=s',
         'template_plugin_base|plugin_base|pluginbase=s@',
+        'template_envvars|envvars',
         'perl5lib|perllib=s@'
     );
 
@@ -166,6 +173,7 @@ Options:
    --compile_dir=DIR        Directory for compiled template files
    --perl5lib=DIR           Specify additional Perl library directories
    --template_module=MODULE Specify alternate Template module
+   --envvars                Set the 'env' variable to the environment (%ENV)
 
 See 'perldoc tpage' for further information.  
 
