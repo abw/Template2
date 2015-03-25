@@ -10,14 +10,11 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 # IMPORTANT NOTE
 #   This module is constructed from the parser/Grammar.pm.skel file by
@@ -33,7 +30,7 @@ package Template::Grammar;
 use strict;
 use warnings;
 
-our $VERSION  = 2.25;
+our $VERSION  = 2.26;
 
 my (@RESERVED, %CMPOP, $LEXTABLE, $RULES, $STATES);
 my ($factory, $rawstart);
@@ -44,21 +41,21 @@ my ($factory, $rawstart);
 # Reserved words, comparison and binary operators
 #========================================================================
 
-@RESERVED = qw( 
+@RESERVED = qw(
 	GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK END
 	USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT DIV MOD
 	IF UNLESS ELSE ELSIF FOR NEXT WHILE SWITCH CASE META IN
 	TRY THROW CATCH FINAL LAST RETURN STOP CLEAR VIEW DEBUG
     );
 
-# for historical reasons, != and == are converted to ne and eq to perform 
-# stringwise comparison (mainly because it doesn't generate "non-numerical 
+# for historical reasons, != and == are converted to ne and eq to perform
+# stringwise comparison (mainly because it doesn't generate "non-numerical
 # comparison" warnings which != and == can) but the others (e.g. < > <= >=)
-# are not converted to their stringwise equivalents.  I added 'gt' et al, 
+# are not converted to their stringwise equivalents.  I added 'gt' et al,
 # briefly for v2.04d and then took them out again in 2.04e.
 
 
-%CMPOP = qw( 
+%CMPOP = qw(
     != ne
     == eq
     <  <
@@ -67,8 +64,8 @@ my ($factory, $rawstart);
     <= <=
 );
 
-#    eq eq  # add these lines to the above to 
-#    lt lt  # enable the eq, lt and gt operators      
+#    eq eq  # add these lines to the above to
+#    lt lt  # enable the eq, lt and gt operators
 #    gt gt
 
 #========================================================================
@@ -93,23 +90,21 @@ $LEXTABLE = {
     ','       => 'COMMA',
     '\\'      => 'REF',
     'and'     => 'AND',		# explicitly specified so that qw( and or
-    'or'      => 'OR',		# not ) can always be used in lower case, 
+    'or'      => 'OR',		# not ) can always be used in lower case,
     'not'     => 'NOT',		# regardless of ANYCASE flag
     'mod'     => 'MOD',
     'div'     => 'DIV',
 };
 
 # localise the temporary variables needed to complete lexer table
-{ 
-#    my @tokens = qw< ( ) [ ] { } ${ $ / ; : ? >;
+{
     my @tokens = qw< ( ) [ ] { } ${ $ + / ; : ? >;
     my @cmpop  = keys %CMPOP;
-#    my @binop  = qw( + - * % );              # '/' above, in @tokens
     my @binop  = qw( - * % );              # '+' and '/' above, in @tokens
 
     # fill lexer table, slice by slice, with reserved words and operators
-    @$LEXTABLE{ @RESERVED, @cmpop, @binop, @tokens } 
-	= ( @RESERVED, ('CMPOP') x @cmpop, ('BINOP') x @binop, @tokens );
+    @$LEXTABLE{ @RESERVED, @cmpop, @binop, @tokens }
+			= ( @RESERVED, ('CMPOP') x @cmpop, ('BINOP') x @binop, @tokens );
 }
 
 
@@ -120,13 +115,13 @@ $LEXTABLE = {
 sub new {
     my $class = shift;
     bless {
-	LEXTABLE => $LEXTABLE,
-	STATES   => $STATES,
-	RULES    => $RULES,
+		LEXTABLE => $LEXTABLE,
+		STATES   => $STATES,
+		RULES    => $RULES,
     }, $class;
 }
 
-# update method to set package-scoped $factory lexical 
+# update method to set package-scoped $factory lexical
 sub install_factory {
     my ($self, $new_factory) = @_;
     $factory = $new_factory;
@@ -312,8 +307,8 @@ $STATES = [
 			'node' => 23,
 			'ident' => 77,
 			'term' => 95,
-			'lterm' => 56,
-			'list' => 92
+			'list' => 92,
+			'lterm' => 56
 		}
 	},
 	{#State 10
@@ -809,13 +804,13 @@ $STATES = [
 			"\${" => 37
 		},
 		GOTOS => {
-			'expr' => 151,
 			'sterm' => 68,
 			'item' => 39,
-			'assign' => 150,
 			'node' => 23,
 			'ident' => 149,
 			'term' => 58,
+			'expr' => 151,
+			'assign' => 150,
 			'lterm' => 56
 		}
 	},
@@ -1334,8 +1329,8 @@ $STATES = [
 			'atomexpr' => 48,
 			'atomdir' => 12,
 			'mdir' => 194,
-			'filter' => 29,
 			'sterm' => 68,
+			'filter' => 29,
 			'ident' => 149,
 			'perl' => 31,
 			'setlist' => 70,
@@ -1398,8 +1393,8 @@ $STATES = [
 			'atomexpr' => 48,
 			'atomdir' => 12,
 			'mdir' => 197,
-			'filter' => 29,
 			'sterm' => 68,
+			'filter' => 29,
 			'ident' => 149,
 			'perl' => 31,
 			'setlist' => 70,
@@ -2308,13 +2303,13 @@ $STATES = [
 		},
 		DEFAULT => -163,
 		GOTOS => {
-			'expr' => 257,
 			'sterm' => 68,
 			'item' => 254,
-			'param' => 255,
 			'node' => 23,
 			'ident' => 253,
 			'term' => 58,
+			'expr' => 257,
+			'param' => 255,
 			'lterm' => 56
 		}
 	},
@@ -2512,14 +2507,14 @@ $STATES = [
 			"\${" => 37
 		},
 		GOTOS => {
-			'expr' => 151,
 			'sterm' => 68,
 			'item' => 39,
-			'assign' => 150,
 			'margs' => 270,
 			'node' => 23,
 			'ident' => 149,
 			'term' => 58,
+			'expr' => 151,
+			'assign' => 150,
 			'lterm' => 56
 		}
 	},
@@ -2597,13 +2592,13 @@ $STATES = [
 		},
 		DEFAULT => -64,
 		GOTOS => {
-			'expr' => 257,
 			'sterm' => 68,
 			'item' => 254,
-			'param' => 255,
 			'node' => 23,
 			'ident' => 253,
 			'term' => 58,
+			'expr' => 257,
+			'param' => 255,
 			'lterm' => 56
 		}
 	},
@@ -2895,13 +2890,13 @@ $STATES = [
 			"\${" => 37
 		},
 		GOTOS => {
-			'expr' => 257,
 			'sterm' => 68,
 			'item' => 254,
-			'param' => 255,
 			'node' => 23,
 			'ident' => 253,
 			'term' => 58,
+			'expr' => 257,
+			'param' => 255,
 			'lterm' => 56
 		}
 	},
@@ -3462,13 +3457,13 @@ $STATES = [
 		},
 		DEFAULT => -162,
 		GOTOS => {
-			'expr' => 257,
 			'sterm' => 68,
 			'item' => 254,
-			'param' => 255,
 			'node' => 23,
 			'ident' => 253,
 			'term' => 58,
+			'expr' => 257,
+			'param' => 255,
 			'lterm' => 56
 		}
 	},
@@ -3495,13 +3490,13 @@ $STATES = [
 			"\${" => 37
 		},
 		GOTOS => {
-			'expr' => 257,
 			'sterm' => 68,
 			'item' => 254,
-			'param' => 255,
 			'node' => 23,
 			'ident' => 253,
 			'term' => 58,
+			'expr' => 257,
+			'param' => 255,
 			'lterm' => 56
 		}
 	},
@@ -4347,8 +4342,8 @@ $STATES = [
 			'atomexpr' => 48,
 			'atomdir' => 12,
 			'mdir' => 328,
-			'filter' => 29,
 			'sterm' => 68,
+			'filter' => 29,
 			'ident' => 149,
 			'perl' => 31,
 			'setlist' => 70,
@@ -4380,13 +4375,13 @@ $STATES = [
 		},
 		DEFAULT => -62,
 		GOTOS => {
-			'expr' => 257,
 			'sterm' => 68,
 			'item' => 254,
-			'param' => 255,
 			'node' => 23,
 			'ident' => 253,
 			'term' => 58,
+			'expr' => 257,
+			'param' => 255,
 			'lterm' => 56
 		}
 	},
@@ -4407,13 +4402,13 @@ $STATES = [
 		},
 		DEFAULT => -63,
 		GOTOS => {
-			'expr' => 257,
 			'sterm' => 68,
 			'item' => 254,
-			'param' => 255,
 			'node' => 23,
 			'ident' => 253,
 			'term' => 58,
+			'expr' => 257,
+			'param' => 255,
 			'lterm' => 56
 		}
 	},
@@ -5195,7 +5190,7 @@ $STATES = [
 	{#State 351
 		DEFAULT => -52
 	}
-]; 
+];
 
 
 #========================================================================
@@ -6207,11 +6202,11 @@ Template::Grammar - Parser state/rule tables for the TT grammar
 
 This module defines the state and rule tables that the L<Template::Parser>
 module uses to parse templates.  It is generated from a YACC-like grammar
-using the C<Parse::Yapp> module.  The F<parser> sub-directory of the 
-Template Toolkit source distribution contains the grammar and other 
+using the C<Parse::Yapp> module.  The F<parser> sub-directory of the
+Template Toolkit source distribution contains the grammar and other
 files required to generate this module.
 
-But you don't need to worry about any of that unless you're planning to 
+But you don't need to worry about any of that unless you're planning to
 modify the Template Toolkit language.
 
 =head1 AUTHOR
@@ -6222,7 +6217,7 @@ L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -6240,13 +6235,3 @@ L<Template::Parser>
 # End:
 #
 # vim: expandtab shiftwidth=4:
-
-
-
-
-
-
-
-
-
-

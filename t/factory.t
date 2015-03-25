@@ -5,7 +5,7 @@
 # Test use of a modified directive factory, based on something that
 # pudge suggested on #perl.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2001 Andy Wardley.  All Rights Reserved.
 #

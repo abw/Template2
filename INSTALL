@@ -1,11 +1,11 @@
 
                             Template Toolkit
 
-                              Version 2.22
+                              Version 2.26
 
-                             21st July 2009
+                             September 2014
 
-        Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -30,12 +30,12 @@ Available from CPAN in:
 
 To install the Template Toolkit from the command line:
 
-    $ tar zxf Template-Toolkit-2.22.tar.gz
-    $ cd Template-Toolkit-2.22
+    $ tar zxf Template-Toolkit-2.26.tar.gz
+    $ cd Template-Toolkit-2.26
     $ perl Makefile.PL
     $ make
     $ make test
-    $ make install    
+    $ make install
 
 The Makefile.PL will prompt for any additional configuration options.
 
@@ -49,7 +49,7 @@ further information about installation.
 PREREQUISITES
 -------------
 
-The Template Toolkit is written entirely in Perl and should run on any 
+The Template Toolkit is written entirely in Perl and should run on any
 platform on which Perl is available.  It requires Perl 5.006 or later.
 
 The 'ttree' utility uses the AppConfig module (version 1.56 or above)
@@ -70,7 +70,7 @@ and Template::Manual::Plugins for further details.
 OBTAINING AND INSTALLING THE TEMPLATE TOOLKIT
 ---------------------------------------------
 
-The latest release version of the Template Toolkit can be downloaded 
+The latest release version of the Template Toolkit can be downloaded
 from any CPAN site:
 
     http://www.cpan.org/modules/by-module/Template/
@@ -85,19 +85,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.22.
+where <version> represents the current version number, e.g. 2.26.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    $ tar zxf Template-Toolkit-2.22.tar.gz
+    $ tar zxf Template-Toolkit-2.26.tar.gz
 or
-    $ gunzip Template-Toolkit-2.22.tar.gz
-    $ tar xf Template-Toolkit-2.22.tar
+    $ gunzip Template-Toolkit-2.26.tar.gz
+    $ tar xf Template-Toolkit-2.26.tar
 
 You can then 'cd' into the directory created,
 
-    $ cd Template-Toolkit-2.22
+    $ cd Template-Toolkit-2.26
 
 and perform the usual Perl installation procedure:
 
@@ -123,7 +123,7 @@ For advice on using Perl under Microsoft Windows, have a look here:
 
     http://win32.perl.org/
 
-If you're using Strawberry Perl then you can install the Template 
+If you're using Strawberry Perl then you can install the Template
 Toolkit using the CPAN module as described above.
 
 If you're using ActivePerl then you can install it using the Perl Package
@@ -150,16 +150,16 @@ CONFIGURATION
 
 This section covers the configuration of the Template Toolkit via
 the Makefile.PL program.  If you've successfully run this and didn't
-have any problems answering any of the questions then you probably 
+have any problems answering any of the questions then you probably
 don't need to read this section.
 
 The Makefile.PL Perl program performs the module configuration and
 generates the Makefile which can then be used to build, test and
-install the Template Toolkit.  
+install the Template Toolkit.
 
     $ perl Makefile.PL
 
-The Template Toolkit now boasts a high-speed implementation of 
+The Template Toolkit now boasts a high-speed implementation of
 Template::Stash written in XS.  You can choose to build this as
 an optional module for using explicitly as an alternative to
 the regular pure-perl stash module.  In additional, you can opt
@@ -169,8 +169,8 @@ Toolkit run twice as fast!
 When prompted, answer 'y' or 'n' to build and optionally use
 the XS Stash module by default:
 
-    Do you want to build the XS Stash module? [y] 
-    Do you want to use the XS Stash for all Templates? [n] 
+    Do you want to build the XS Stash module? [y]
+    Do you want to use the XS Stash for all Templates? [n]
 
 BUILDING AND TESTING
 --------------------
@@ -179,8 +179,8 @@ This section describes the "make" and "make test" commands which build
 and test the Template Toolkit.  If you ran these without incident,
 then you can probably skip this section.
 
-The 'make' command will build the Template Toolkit modules in the 
-usual manner.  
+The 'make' command will build the Template Toolkit modules in the
+usual manner.
 
     make
 
@@ -226,8 +226,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
-

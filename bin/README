@@ -31,7 +31,7 @@ Examples:
    ttree index.html page1.html page2.html          
    ttree -v -r
    ttree -src ~/tmp/templates -dest ~/public_html/test
-   trree -f config
+   ttree -f config
 
 The other files including 'tt2inst' and 'gifsplash' are legacy scripts
 from previous version of TT2.  They will be removed at some point in

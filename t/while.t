@@ -4,7 +4,7 @@
 #
 # Test the WHILE directive
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
 #

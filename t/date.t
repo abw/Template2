@@ -4,7 +4,7 @@
 #
 # Tests the 'Date' plugin.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 2000 Andy Wardley. All Rights Reserved.
 #
@@ -21,6 +21,7 @@ use Template;
 use Template::Test;
 use Template::Plugin::Date;
 use POSIX;
+use Config;
 $^W = 1;
 
 eval "use Date::Calc";
@@ -58,19 +59,23 @@ my $params = {
 
 sub time_locale { 
     my ($time, $format, $locale) = @_;
-    my $old_locale = &POSIX::setlocale(&POSIX::LC_ALL);
+    my $old_locale = $Config{d_setlocale}
+                   ? &POSIX::setlocale(&POSIX::LC_ALL)
+                   : undef;
     
     # some systems expect locales to have a particular suffix
     for my $suffix ('', @Template::Plugin::Date::LOCALE_SUFFIX) {
         my $try_locale = $locale.$suffix;
-	    my $setlocale = &POSIX::setlocale(&POSIX::LC_ALL, $try_locale);
+	    my $setlocale = $Config{d_setlocale}
+                          ? &POSIX::setlocale(&POSIX::LC_ALL, $try_locale)
+                          : undef;
         if (defined $setlocale && $try_locale eq $setlocale) {
             $locale = $try_locale;
             last;
         }
     }
     my $datestr = &POSIX::strftime($format, localtime($time));
-    &POSIX::setlocale(&POSIX::LC_ALL, $old_locale);
+    &POSIX::setlocale(&POSIX::LC_ALL, $old_locale) if $Config{d_setlocale};
     return $datestr;
 }
 
@@ -258,6 +263,13 @@ not testing
 -- test --
 [% USE date;
    date.format('2001/09/30 12:59:00', '%H:%M')
+-%]
+-- expect --
+12:59
+
+-- test --
+[% USE date;
+   date.format('2001/09/30T12:59:00', '%H:%M')
 -%]
 -- expect --
 12:59

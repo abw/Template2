@@ -4,7 +4,7 @@
 #
 # Tests the 'View' plugin.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 2000 Andy Wardley. All Rights Reserved.
 #
@@ -811,3 +811,14 @@ c: 10
 d: 10
 e: 10
 
+-- test --
+-- name bad base --
+[%  TRY; 
+        VIEW wiz base=no_such_base_at_all; 
+        END;
+    CATCH;
+        error;
+    END
+-%]
+-- expect --
+view error - Invalid base specified for view

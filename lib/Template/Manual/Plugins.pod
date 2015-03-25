@@ -44,21 +44,6 @@ Now, if C<user.name> is an undefined value, an exception will be thrown:
 
     assert error - undefined value for name
 
-=head2 Autoformat
-
-The L<Template::Plugin::Autoformat> plugin is an interface to
-Damian Conway's L<Text::Autoformat> Perl module which provides advanced text
-wrapping and formatting. See L<Template::Plugin::Autoformat> and
-L<Text::Autoformat> for further details.
-
-    [% USE autoformat(left=10, right=20) %]
-    [% autoformat(mytext) %]	    # call autoformat sub
-    [% mytext FILTER autoformat %]  # or use autoformat filter
-
-The L<Text::Autoformat> module is available from CPAN:
-
-    L<http://www.cpan.org/modules/by-module/Text/>
-
 =head2 CGI
 
 The L<CGI|Template::Plugin::CGI> plugin is a wrapper around Lincoln Stein's
@@ -133,7 +118,7 @@ distribution from CPAN.
 
 The L<Dumper|Template::Plugin::Dumper> plugin provides an interface to the
 Data::Dumper module. See L<Template::Plugin::Dumper> and L<Data::Dumper> for
-futher details.
+further details.
 
     [% USE dumper(indent=0, pad="<br>") %]
     [% dumper.dump(myvar, yourvar) %]
@@ -284,7 +269,7 @@ details.
 
 =head2 URL
 
-The L<URL|Template::Plugin::URL> plugin provides a simple way of contructing
+The L<URL|Template::Plugin::URL> plugin provides a simple way of constructing
 URLs from a base part and a variable set of parameters. See
 L<Template::Plugin::URL> for further details.
 

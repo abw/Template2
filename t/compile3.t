@@ -5,7 +5,7 @@
 # Third test in the compile<n>.t trilogy.  Checks that modifications
 # to a source template result in a re-compilation of the template.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.

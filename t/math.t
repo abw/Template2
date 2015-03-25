@@ -4,7 +4,7 @@
 #
 # Test the Math plugin module.
 #
-# Written by Andy Wardley <abw@kfs.org> and ...
+# Written by Andy Wardley <abw@wardley.org> and ...
 #
 # Copyright (C) 2002 Andy Wardley. All Rights Reserved.
 #

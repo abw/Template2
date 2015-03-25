@@ -5,7 +5,7 @@
 # Template script testing TAGS parse-time directive to switch the
 # tokens that mark start and end of directive tags.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.

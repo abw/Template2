@@ -4,7 +4,7 @@
 #
 # Test template prefixes within INCLUDE, etc., directives.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 #

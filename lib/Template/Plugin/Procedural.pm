@@ -39,34 +39,38 @@ sub load {
     # okay, in our proxy create the autoload routine that will
     # call the right method in the real class
     no strict "refs";
-    *{ $proxy . "::AUTOLOAD" } = sub {
-        # work out what the method is called
-        $AUTOLOAD =~ s!^.*::!!;
+    unless( defined( *{ $proxy . "::AUTOLOAD" } ) ) {
+        *{ $proxy . "::AUTOLOAD" } = sub {
+            # work out what the method is called
+            $AUTOLOAD =~ s!^.*::!!;
 
-        print STDERR "Calling '$AUTOLOAD' in '$class'\n"
-            if $DEBUG;
+            print STDERR "Calling '$AUTOLOAD' in '$class'\n"
+                if $DEBUG;
 
-        # look up the sub for that method (but in a OO way)
-        my $uboat = $class->can($AUTOLOAD);
+            # look up the sub for that method (but in a OO way)
+            my $uboat = $class->can($AUTOLOAD);
 
-        # if it existed call it as a subroutine, not as a method
-        if ($uboat) {
-            shift @_;
-            return $uboat->(@_);
-        }
+            # if it existed call it as a subroutine, not as a method
+            if ($uboat) {
+                shift @_;
+                return $uboat->(@_);
+            }
 
-        print STDERR "Eeek, no such method '$AUTOLOAD'\n"
-            if $DEBUG;
+            print STDERR "Eeek, no such method '$AUTOLOAD'\n"
+                if $DEBUG;
 
-        return "";
-    };
+            return "";
+        };
+    }
 
     # create a simple new method that simply returns a blessed
     # scalar as the object.
-    *{ $proxy . "::new" } = sub {
-        my $this;
-        return bless \$this, $_[0];
-    };
+    unless( defined( *{ $proxy . "::new" } ) ) {
+        *{ $proxy . "::new" } = sub {
+            my $this;
+            return bless \$this, $_[0];
+        };
+    }
 
     return $proxy;
 }

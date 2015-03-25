@@ -15,7 +15,7 @@ select STDERR;
 $| = 1;
 select STDOUT;
 
-use vars qw( $TT_VERSION $TT_PREFIX 
+use vars qw( $TT_VERSION $TT_PREFIX
              $TT_XS_ENABLE $TT_XS_DEFAULT
              $TT_QUIET $TT_ACCEPT $TT_YES );
 
@@ -34,7 +34,7 @@ else {
     $PREFIX  = '/usr/local/tt2';
     $IMAGES  = '/tt2/images';
 }
-$MAKE=$Config{'make'}; 
+$MAKE=$Config{'make'};
 
 
 # read command line args putting TT_* into $ttconfig and
@@ -43,7 +43,7 @@ $MAKE=$Config{'make'};
 
 my (%config, %ttconfig);
 while ($_ = shift) {
-    my ($k, $v) = split(/=/);
+    my ($k, $v) = split(/=/, $_, 2);
     if ($k =~ /^TT/) {
         $ttconfig{ $k } = $v || 0;
     }
@@ -57,7 +57,7 @@ while ($_ = shift) {
 
 if (exists $ttconfig{ TT_HELP }) {
     print <<EOF;
-The following options can be specified as command line 
+The following options can be specified as command line
 arguments to 'perl Makefile.PL'.  e.g.
 
   perl Makefile.PL TT_XS_DEFAULT=y TT_ACCEPT=y
@@ -67,7 +67,7 @@ arguments to 'perl Makefile.PL'.  e.g.
   TT_QUIET       no messages             (n)
   TT_ACCEPT      accept defaults         (n)
 
-By default, the Makefile.PL runs in interactive mode, 
+By default, the Makefile.PL runs in interactive mode,
 prompting for confirmation of the various configuration
 options.  Setting the TT_ACCEPT option causes the default
 value (possibly modified by other command line options)
@@ -131,25 +131,31 @@ write_defaults();
 print "\n";
 
 
-#------------------------------------------------------------------------ 
+#------------------------------------------------------------------------
 # build options and write Makefile
 #------------------------------------------------------------------------
 
 package main;
-    
+
 my %opts = (
     %config,
     'NAME'             => 'Template',
     'DISTNAME'     => 'Template-Toolkit',
     'VERSION_FROM' => 'lib/Template.pm',
     'EXE_FILES'    => [ 'bin/tpage', 'bin/ttree' ],
-    'PMLIBDIRS'    => [ 'lib' ], 
+    'PMLIBDIRS'    => [ 'lib' ],
     'DIR'          => [ ],
-    'PREREQ_PM'    => { 
-        'AppConfig'    => $TT_APPCONFIG_VERSION,
-        'File::Spec'   => $TT_FILE_SPEC_VERSION,
-        'File::Temp'   => $TT_FILE_TEMP_VERSION,
-        'Scalar::Util' => 0,
+    'PREREQ_PM'    => {
+        'AppConfig'       => $TT_APPCONFIG_VERSION,
+        'File::Spec'      => $TT_FILE_SPEC_VERSION,
+        'File::Temp'      => $TT_FILE_TEMP_VERSION,
+        'Scalar::Util'    => 0,
+        'Test::LeakTrace' => 0,
+    },
+    'META_MERGE' => {
+        'resources' => {
+            'repository' => 'https://github.com/abw/Template2',
+        },
     },
     'dist'         => {
         'COMPRESS' => 'gzip',
@@ -159,11 +165,11 @@ my %opts = (
         'TESTS'    => join(' ', map { glob } qw( t/*.t t/vmethods/*.t )),
     },
     'clean'        => {
-        'FILES'        => join(' ', qw( docs/ttree.cfg 
-                                        examples/ttree.cfg 
-                                        t/dbi_test.cfg 
+        'FILES'        => join(' ', qw( docs/ttree.cfg
+                                        examples/ttree.cfg
+                                        t/dbi_test.cfg
                                         t/test/src/baz.ttc
-                                        t/test/src/complex.org 
+                                        t/test/src/complex.org
                                         t/test/src/complex.ttc
                                         t/test/src/evalperl.ttc
                                         t/test/src/foo.ttc )),
@@ -183,13 +189,13 @@ if ($mmv >= 5.43) {
 
 if ($ExtUtils::MakeMaker::VERSION ge '6.30_00') {
     $opts{'LICENSE' } = 'perl';
-} 
+}
 
 WriteMakefile( %opts );
 
     print <<EOF;
 
-Configuration complete.  You should now run '$MAKE', '$MAKE test' and 
+Configuration complete.  You should now run '$MAKE', '$MAKE test' and
 then '$MAKE install'.   See the README file for further information.
 EOF
 
@@ -238,7 +244,7 @@ IMPORTANT NOTE:
     of the Template Toolkit which you should be aware of.  Installing
     this version will overwrite your version $Template::VERSION files
     unless you take measures to install one or the other version in a
-    different location (i.e. perl Makefile.PL PREFIX=/other/path).  
+    different location (i.e. perl Makefile.PL PREFIX=/other/path).
 
     Please consult the README and Changes file for further details.
     Most of the changes are in the more obscure features and
@@ -315,7 +321,7 @@ sub optional_stash_xs {
 Template::Stash::XS
 -------------------
 
-The Template::Stash module is a core part of the Template Toolkit, 
+The Template::Stash module is a core part of the Template Toolkit,
 implementing the magic for accessing data using the dot notation.
 
 There is a high speed version, Template::Stash::XS, written in C.
@@ -331,13 +337,13 @@ See 'perldoc Template::Config' for further details.
 
 EOF
 
-    $TT_XS_ENABLE = (ttprompt('Do you want to build the XS Stash module?', 
+    $TT_XS_ENABLE = (ttprompt('Do you want to build the XS Stash module?',
                               $TT_XS_ENABLE) =~ /^y/i);
 
     if ($TT_XS_ENABLE) {
         $TT_XS_DEFAULT =
-            (ttprompt('Do you want to use the XS Stash by default?', 
-                      $TT_XS_DEFAULT) =~ /^y/i); 
+            (ttprompt('Do you want to use the XS Stash by default?',
+                      $TT_XS_DEFAULT) =~ /^y/i);
     }
     else {
         # If the XS stash is disabled, we cannot use it as the default stash.
@@ -347,7 +353,7 @@ EOF
     # Actually, we would have to fix 'Config.pm' only if the XS stash is
     # disabled. But this way, we are sure the correct module is used.
         fix_file(catfile('lib','Template','Config.pm'),
-                 '$STASH', 
+                 '$STASH',
                  $TT_XS_DEFAULT ? 'Template::Stash::XS' : 'Template::Stash');
 }
 
@@ -363,8 +369,8 @@ EOF
 
 sub write_defaults {
     open(FP, "> $DEFAULTS_FILE") || die "$DEFAULTS_FILE: $!\n";
-    my ( $ttxs_enable, $ttxs_default ) 
-            = map { $_ ? 'y' : 'n' } 
+    my ( $ttxs_enable, $ttxs_default )
+            = map { $_ ? 'y' : 'n' }
             ( $TT_XS_ENABLE, $TT_XS_DEFAULT );
     print FP <<EOF;
 \$TT_XS_ENABLE     = '$ttxs_enable';
@@ -382,7 +388,7 @@ EOF
 #------------------------------------------------------------------------
 # fix_file($file, $find, $fix)
 #
-# Fixes a variable definition in a file.  e.g. 
+# Fixes a variable definition in a file.  e.g.
 # fix_file('templates/splash/config', 'images', '/tt2/splash')
 #------------------------------------------------------------------------
 

@@ -640,7 +640,7 @@ sub _load {
             };
         }
 
-        return ( "$alias: $!", Template::Constants::STATUS_ERROR )
+        return ( $error, Template::Constants::STATUS_ERROR )
             unless $tolerant;
     }
 
@@ -655,7 +655,7 @@ sub _load {
 # Private method called to mark a cache slot as most recently used.
 # A reference to the slot array should be passed by parameter.  The
 # slot is relocated to the head of the linked list.  If the file from
-# which the data was loaded has been upated since it was compiled, then
+# which the data was loaded has been updated since it was compiled, then
 # it is re-loaded from disk and re-compiled.
 #------------------------------------------------------------------------
 
@@ -754,7 +754,7 @@ sub _store {
     my $size = $self->{ SIZE };
     my ($slot, $head);
 
-    # Return if memory cache disabled.  (overridding code should also check)
+    # Return if memory cache disabled.  (overriding code should also check)
     # $$$ What's the expected behaviour of store()?  Can't tell from the
     # docs if you can call store() when SIZE = 0.
     return $data->{data} if defined $size and !$size;
@@ -961,7 +961,10 @@ sub _template_content {
     my $error;
 
     local *FH;
-    if (open(FH, "< $path")) {
+    if(-d $path) {
+        $error = "$path: not a file";
+    }
+    elsif (open(FH, "< $path")) {
         local $/;
         binmode(FH);
         $data = <FH>;
@@ -1161,6 +1164,11 @@ found then C<(undef, STATUS_DECLINED)> is returned. If an error occurs (e.g.
 read error, parse error) then C<($error, STATUS_ERROR)> is returned, where
 C<$error> is the error message generated. If the L<TOLERANT> option is set the
 the method returns C<(undef, STATUS_DECLINED)> instead of returning an error.
+
+=head2 load($name)
+
+Loads a template without parsing or compiling it.  This is used by the 
+the L<INSERT|Template::Manual::Directives#INSERT> directive.
 
 =head2 store($name, $template)
 

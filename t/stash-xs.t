@@ -29,6 +29,7 @@ if ($@) {
     skip_all('cannot load Template::Stash::XS');
 }
 
+
 #------------------------------------------------------------------------
 # define some simple objects for testing
 #------------------------------------------------------------------------
@@ -106,6 +107,11 @@ my $data = {
     },
     correct => sub { die @_ },
     buggy   => Buggy->new(),
+    str_eval_die => sub {
+        # This is to test bug RT#47929
+        eval "use No::Such::Module::Exists";
+        return "str_eval_die returned";
+    },
 };
 
 my $stash = Template::Stash::XS->new($data);
@@ -118,6 +124,7 @@ match( $stash->get('baz.boz'), 30 );
 match( $stash->get('baz.boz'), 40 );
 match( $stash->get('baz.biz'), '<undef>' );
 match( $stash->get('baz(50).biz'), '<undef>' );   # args are ignored
+#match( $stash->get('str_eval_die'), '' );
 
 $stash->set( 'bar.buz' => 100 );
 match( $stash->get('bar.buz'), 100 );
@@ -403,3 +410,23 @@ foo is { "" = "full" "one" = "baz" }
 [% cmp_ol.hello %]
 -- expect --
 Hello
+
+-- test --
+Before
+[%  TRY;
+        str_eval_die;
+    CATCH;
+        "caught error: $error";
+    END;
+%]
+After
+-- expect --
+Before
+str_eval_die returned
+After
+
+-- test --
+[%  str_eval_die %]
+-- expect --
+str_eval_die returned
+

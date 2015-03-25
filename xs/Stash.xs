@@ -14,7 +14,7 @@
 *   Doug Steinwand <dsteinwand@citysearch.com>
 *
 * COPYRIGHT
-*   Copyright (C) 1996-2009 Andy Wardley.  All Rights Reserved.
+*   Copyright (C) 1996-2013 Andy Wardley.  All Rights Reserved.
 *   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 *
 *   This module is free software; you can redistribute it and/or
@@ -34,10 +34,11 @@ extern "C" {
 #define PERL_NO_GET_CONTEXT
 #include "EXTERN.h"
 #include "perl.h"
+#include "XSUB.h"
+
 #define NEED_sv_2pv_flags
 #define NEED_newRV_noinc
 #include "ppport.h"
-#include "XSUB.h"
 
 #ifdef __cplusplus
 }
@@ -161,6 +162,9 @@ static TT_RET tt_fetch_item(pTHX_ SV *root, SV *key_sv, AV *args, SV **result) {
       case SVt_PVAV:
         if (looks_like_number(key_sv))
             value = av_fetch((AV *) SvRV(root), SvIV(key_sv), FALSE);
+        break;
+
+      default:
         break;
     }
 
@@ -638,8 +642,12 @@ static SV *call_coderef(pTHX_ SV *code, AV *args) {
         if ((svp = av_fetch(args, i, FALSE))) 
             XPUSHs(*svp);
     PUTBACK;
-    count = call_sv(code, G_ARRAY);
+    count = call_sv(code, G_ARRAY|G_EVAL);
     SPAGAIN;
+
+    if (SvTRUE(ERRSV)) {
+        die_object(aTHX_ ERRSV);
+    }
 
     return fold_results(aTHX_ count);
 }
@@ -710,12 +718,12 @@ static SV* do_getset(pTHX_ SV *root, AV *ident_av, SV *value, int flags) {
 
     for(i = 0; i < end_loop; i += 2) {
         if (!(svp = av_fetch(ident_av, i, FALSE)))
-            croak(TT_STASH_PKG " %cet: bad element %d", value ? 's' : 'g', i);
+            croak(TT_STASH_PKG " %cet: bad element %i", value ? 's' : 'g', i);
 
         key = *svp;
 
         if (!(svp = av_fetch(ident_av, i + 1, FALSE)))
-            croak(TT_STASH_PKG " %cet: bad arg. %d", value ? 's' : 'g', i + 1);
+            croak(TT_STASH_PKG " %cet: bad arg. %i", value ? 's' : 'g', i + 1);
 
         if (SvROK(*svp) && SvTYPE(SvRV(*svp)) == SVt_PVAV)
             key_args = (AV *) SvRV(*svp);
@@ -732,12 +740,12 @@ static SV* do_getset(pTHX_ SV *root, AV *ident_av, SV *value, int flags) {
 
         /* call assign() to resolve the last item */
         if (!(svp = av_fetch(ident_av, size - 1, FALSE)))
-            croak(TT_STASH_PKG ": set bad ident element at %d", i);
+            croak(TT_STASH_PKG ": set bad ident element at %i", i);
 
         key = *svp;
 
         if (!(svp = av_fetch(ident_av, size, FALSE)))
-            croak(TT_STASH_PKG ": set bad ident argument at %d", i + 1);
+            croak(TT_STASH_PKG ": set bad ident argument at %i", i + 1);
         
         if (SvROK(*svp) && SvTYPE(SvRV(*svp)) == SVt_PVAV)
             key_args = (AV *) SvRV(*svp);

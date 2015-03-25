@@ -4,7 +4,7 @@
 #
 # Template script testing wrap plugin.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 #

@@ -5,7 +5,7 @@
 # Template script testing variable use with version 1 compatibility.
 # In version 1, leading '$' on variables were ignored.
 # 
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.

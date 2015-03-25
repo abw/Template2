@@ -6,7 +6,7 @@
 #
 # Written by Andy Wardley <abw@cpan.org>
 #
-# Copyright (C) 1996-2006 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1996-2015 Andy Wardley.  All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
@@ -17,7 +17,7 @@
 
 use strict;
 use warnings;
-use lib qw( ./lib ../lib ../../lib );
+use lib qw( ./lib ../lib ../../lib ../../../lib );
 use Template::Test;
 
 # make sure we're using the Perl stash
@@ -135,6 +135,20 @@ woz
 7
 
 -- test --
+-- name list.empty on empty --
+[% empty = [ ];
+   empty.empty %]
+-- expect --
+1
+
+-- test --
+-- name list.empty on non-empty --
+[% nonempty = [ 'e', 'f' ];
+   nonempty.empty %]
+-- expect --
+0
+
+-- test --
 [% empty = [ ];
    empty.size 
 %]
@@ -171,6 +185,13 @@ list two ok
 list seven ok
 
 -- test --
+[%  list = [1]; 
+    list.defined('asdf') ? 'asdf is defined' : 'asdf is not defined' 
+%]
+-- expect --
+asdf is not defined
+
+-- test --
 [% FOREACH person = people.sort('id') -%]
 [% person.name +%]
 [% END %]
@@ -179,7 +200,6 @@ Richard
 Larry
 Tom
 
--- start --
 -- test --
 [% FOREACH obj = names.sort('name') -%]
 [% obj.name +%]
@@ -198,7 +218,6 @@ Mark Jones
 Peter Jones
 Andrew Smith
 William Smith
--- stop --
 
 -- test --
 [% FOREACH obj = numbers.sort('name') -%]

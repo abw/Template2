@@ -11,7 +11,7 @@
 # WARNING
 #   Much of this module is hairy, even furry in places.  It needs
 #   a lot of tidying up and may even be moved into a different place 
-#   altogether.  The generator code is often inefficient, particulary in 
+#   altogether.  The generator code is often inefficient, particularly in 
 #   being very anal about pretty-printing the Perl code all neatly, but 
 #   at the moment, that's still high priority for the sake of easier
 #   debugging.

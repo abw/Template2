@@ -32,6 +32,7 @@ eval {
 };
 if ($@) {
     warn $@;
+    skip_all('cannot load Template::Stash::XS');
 }
 
 binmode STDOUT, ':utf8';

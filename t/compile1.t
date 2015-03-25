@@ -5,7 +5,7 @@
 # Test the facility for the Template::Provider to maintain a persistance
 # cache of compiled templates by writing generated Perl code to files.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.

@@ -21,12 +21,12 @@ use Template;
 use Test::More;
 
 # belt and braces
-unless (grep(/--abw/, @ARGV)) {
-    plan( skip_all => 'Internal test for abw, add the --abw flag to run' );
+unless (grep(/--dev/, @ARGV)) {
+    plan( skip_all => 'Internal test for developer, add the --dev flag to run' );
 }
 
 unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} ) {
-    plan( skip_all => "Author tests not required for installation" );
+    plan( skip_all => "Developer tests not required for installation" );
 }
 
 require Template::Stash::XS;
@@ -51,4 +51,3 @@ while ($a--) {
     print "pausing...\n";
     sleep 1;
 }
-

@@ -5,7 +5,7 @@
 # Template script testing the conditional binary operators: and/&&, or/||,
 # not/!, <, >, <=, >= , == and !=.
 #
-# Written by Andy Wardley <abw@kfs.org>
+# Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
