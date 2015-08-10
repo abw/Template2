@@ -16,6 +16,12 @@
 #
 #========================================================================
 
+package Template::Toolkit;
+
+1;
+
+__END__
+
 =head1 NAME
 
 Template::Toolkit - Template Processing System

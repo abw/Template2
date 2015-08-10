@@ -64,7 +64,7 @@ lib/Template/Stash.pm
 lib/Template/Stash/Context.pm
 lib/Template/Stash/XS.pm
 lib/Template/Test.pm
-lib/Template/Toolkit.pod
+lib/Template/Toolkit.pm
 lib/Template/Tools.pod
 lib/Template/Tools/tpage.pod
 lib/Template/Tools/ttree.pod
