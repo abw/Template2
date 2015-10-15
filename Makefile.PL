@@ -150,6 +150,9 @@ my %opts = (
         'File::Spec'      => $TT_FILE_SPEC_VERSION,
         'File::Temp'      => $TT_FILE_TEMP_VERSION,
         'Scalar::Util'    => 0,
+    },
+    'TEST_REQUIRES' => {
+        'CGI' => 0,
         'Test::LeakTrace' => 0,
     },
     'META_MERGE' => {
