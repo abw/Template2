@@ -647,3 +647,24 @@ last outer
 4: 1 2 3 
 5: 1 2 3 
 6: 1 2 3 
+-- test --
+-- name FORELSE_WITH_ELEMENTS --
+[% FOREACH i IN [ 1..6 ] %][% i %] [% ELSE %]NO ELEMENTS[% END %]
+-- expect --
+1 2 3 4 5 6 
+-- test --
+-- name FORELSE_WITHOUT_ELEMENTS --
+[% FOREACH i IN [ ] %][% i %] [% ELSE %]NO ELEMENTS[% END %]
+-- expect --
+NO ELEMENTS
+-- test --
+-- name FORELSE_WITH_ELEMENTS_AND_IF --
+[% FOREACH i IN [ 1..6 ] %][% IF i < 4; i; ELSE; 'X'; END %] [% ELSE %][% IF a %]NO ELEMENTS[% END %][% END %]
+-- expect --
+1 2 3 X X X 
+-- test --
+-- name FORELSE_WITHOUT_ELEMENTS_IN_ELSE --
+[% FOREACH i IN [ ] %][% IF i < 4 ; i ; ELSE; 'X'; END; %] [% ELSE %][% IF a %]NO ELEMENTS[% ELSE %]NO ELEMENTS[% END %][% END %]
+-- expect --
+NO ELEMENTS
+-- test --

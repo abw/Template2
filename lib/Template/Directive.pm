@@ -423,10 +423,11 @@ sub if {
 #------------------------------------------------------------------------
 
 sub foreach {
-    my ($self, $target, $list, $args, $block, $label) = @_;
+    my ($self, $target, $list, $args, $block, $else, $label) = @_;
     $args  = shift @$args;
     $args  = @$args ? ', { ' . join(', ', @$args) . ' }' : '';
     $label ||= 'LOOP';
+    $else ||= '';
 
     my ($loop_save, $loop_set, $loop_restore, $setiter);
     if ($target) {
@@ -443,6 +444,7 @@ sub foreach {
         $loop_restore = '$stash = $context->delocalise()';
     }
     $block = pad($block, 3) if $PRETTY;
+    $else = pad($else, 3) if $PRETTY;
 
     return <<EOF;
 
@@ -460,10 +462,14 @@ do {
     $loop_save;
     \$stash->set('loop', \$_tt_list);
     eval {
+        unless (defined \$_tt_value){
+$else
+        } else {
 $label:   while (! \$_tt_error) {
             $loop_set;
 $block;
             (\$_tt_value, \$_tt_error) = \$_tt_list->get_next();
+          }
         }
     };
     $loop_restore;
