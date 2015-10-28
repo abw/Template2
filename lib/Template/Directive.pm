@@ -462,7 +462,7 @@ do {
     $loop_save;
     \$stash->set('loop', \$_tt_list);
     eval {
-        unless (defined \$_tt_value){
+        unless (\$_tt_list->size()){
 $else
         } else {
 $label:   while (! \$_tt_error) {
