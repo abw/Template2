@@ -19,7 +19,7 @@ install:
 - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 90
 - sudo apt-get -qq install libtest-simple-perl
 - sudo apt-get -qq install libtest-harness-perl
-- sudo apt-get -qq install appconfig-perl
+- sudo apt-get -qq install libappconfig-perl
 - sudo apt-get -qq install libcgi-pm-perl
 - sudo apt-get -qq install libimage-size-perl
 - sudo apt-get -qq install libpod-pom-perl
