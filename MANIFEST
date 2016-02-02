@@ -216,7 +216,6 @@ t/tiedhash.t
 t/try.t
 t/unicode.t
 t/url.t
-t/url2.t
 t/vars.t
 t/varsv1.t
 t/view.t
@@ -231,6 +230,7 @@ t/zz-pmv.t
 t/zz-pod-coverage.t
 t/zz-pod-kwalitee.t
 t/zz-stash-xs-leak.t
+t/zz-url2.t
 TODO
 xs/Makefile.PL
 xs/MANIFEST
