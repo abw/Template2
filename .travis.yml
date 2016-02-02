@@ -20,6 +20,9 @@ install:
 - sudo apt-get -qq install libtest-simple-perl
 - sudo apt-get -qq install libtest-harness-perl
 - sudo apt-get -qq install appconfig-perl
+- sudo apt-get -qq install libcgi-pm-perl
+- sudo apt-get -qq install libimage-size-perl
+- sudo apt-get -qq install libpod-pom-perl
 # install latest LCOV (1.9 was failing)
 - cd ${TRAVIS_BUILD_DIR}
 - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
