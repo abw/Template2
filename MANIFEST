@@ -81,6 +81,7 @@ parser/Parser.yp
 parser/README
 parser/yc
 README
+t/anycase.t
 t/args.t
 t/assert.t
 t/base.t
@@ -127,14 +128,17 @@ t/list.t
 t/macro.t
 t/math.t
 t/object.t
+t/outline.t
 t/output.t
 t/parser.t
+t/parser2.t
 t/plugins.t
 t/plusfile.t
 t/pod.t
 t/prefix.t
 t/proc.t
 t/process.t
+t/process_dir.t
 t/provider.t
 t/README
 t/ref.t
@@ -213,6 +217,7 @@ t/test/tmp/README
 t/text.t
 t/throw.t
 t/tiedhash.t
+t/trace_vars.t
 t/try.t
 t/unicode.t
 t/url.t
@@ -227,10 +232,13 @@ t/vmethods/text.t
 t/while.t
 t/wrap.t
 t/wrapper.t
+t/zz-plugin-leak.t
 t/zz-pmv.t
 t/zz-pod-coverage.t
 t/zz-pod-kwalitee.t
 t/zz-stash-xs-leak.t
+t/zz-url2.t
+testrules.yml
 TODO
 xs/Makefile.PL
 xs/MANIFEST

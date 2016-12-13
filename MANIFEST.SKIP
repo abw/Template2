@@ -4,6 +4,7 @@
 \bdiffs?\b
 ^MANIFEST\.
 ^RELEASE
+^MYMETA
 ^Makefile$
 ^Template-Toolkit-\d\.\d+\.tar\.gz$
 ~$
@@ -12,6 +13,7 @@
 \.ttc$
 \.gz$
 \.defaults\.cfg
+^\.git
 ^benchmark/
 ^blib/
 ^clib/
@@ -59,5 +61,6 @@
 ^xs/Stash.o
 ^xs/XS.bs
 ^xs/pm_to_blib
+^xs/MYMETA
 ^templates/xhtml
 ^templates/jscript
