@@ -904,6 +904,8 @@ sub _init {
     # EXPOSE_BLOCKS - make blocks visible as pseudo-files
     # DEBUG_FORMAT  - format for generating template runtime debugging messages
     # DEBUG         - format for generating template runtime debugging messages
+    # PRE_COMPILE_HOOK - hook to be run after template has been loaded from file,
+    #                    but before template is compiled
 
     $self->{ RECURSION } = $config->{ RECURSION } || 0;
     $self->{ EVAL_PERL } = $config->{ EVAL_PERL } || 0;
@@ -921,6 +923,7 @@ sub _init {
         ? $config->{ DEBUG } & ( Template::Constants::DEBUG_CONTEXT
                                | Template::Constants::DEBUG_FLAGS )
         : $DEBUG;
+    $self->{ PRE_COMPILE_HOOK } = $config->{ PRE_COMPILE_HOOK } || 0;
 
     return $self;
 }
