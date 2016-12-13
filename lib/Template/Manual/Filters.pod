@@ -323,7 +323,7 @@ second argument.
 
 Output:
 
-    I have much to say&hellip;
+    I have much to say on this&hellip;
 
 =head1 repeat(iterations)
 

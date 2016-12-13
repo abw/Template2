@@ -564,8 +564,16 @@ sub truncate_filter_factory {
     $len  = $TRUNCATE_LENGTH unless defined $len;
     $char = $TRUNCATE_ADDON  unless defined $char;
 
-    # Length of char is the minimum length
     my $lchar = length $char;
+    my $extra = $char;
+    my $CER = '[:#_A-Za-z][:A-Za-z0-9\-\_]+';
+
+    if ($char =~ /\&($CER;)/) {
+      $extra =~ s,\&($CER;),_,g;
+      $lchar = length $extra;
+    }
+
+    # Length of char is the minimum length
     if ($len < $lchar) {
         $char  = substr($char, 0, $len);
         $lchar = $len;

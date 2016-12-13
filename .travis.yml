@@ -1,0 +1,43 @@
+sudo: required
+dist: trusty
+language: cpp
+compiler:
+- gcc
+before_install:
+# for gcc with C++11 support
+- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+- sudo apt-get update
+install:
+# install GTest and GMock
+- sudo apt-get -qq install libgtest-dev
+- "cd /usr/src/gtest && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -"
+- sudo apt-get -qq install google-mock
+- "cd /usr/src/gmock && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -"
+# update to gcc with C++11 support
+- sudo apt-get -qq install gcc-4.9 g++-4.9
+- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 90
+- sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 90
+- sudo apt-get -qq install libtest-simple-perl
+- sudo apt-get -qq install libtest-harness-perl
+- sudo apt-get -qq install libappconfig-perl
+- sudo apt-get -qq install libcgi-pm-perl
+- sudo apt-get -qq install libimage-size-perl
+- sudo apt-get -qq install libpod-pom-perl
+# install latest LCOV (1.9 was failing)
+- cd ${TRAVIS_BUILD_DIR}
+- wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
+- tar xf lcov_1.11.orig.tar.gz
+- sudo make -C lcov-1.11/ install
+- gem install coveralls-lcov
+- lcov --version
+- g++ --version
+before_script:
+- cd ${TRAVIS_BUILD_DIR}
+# init coverage to 0 (optional)
+- lcov --directory . --zerocounters
+script:
+- cd ${TRAVIS_BUILD_DIR}
+# Check that this works this way
+- perl Makefile.PL TT_XS_ENABLE=y TT_XS_DEFAULT=y TT_ACCEPT=y
+- make
+- make test
