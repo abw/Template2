@@ -23,9 +23,20 @@ $^W = 1;
 
 $Template::Test::DEBUG = 0;
 
+my $dir    = -d 't' ? 't/test' : 'test';
 my $config = {
+    INCLUDE_PATH => "$dir/src:$dir/lib",
+    START_TAG => quotemeta('[['),
+    END_TAG   => quotemeta(']]'),
     POST_CHOMP => 1,
+    PRE_COMPILE_HOOK => \&my_pre_compile_hook,
 };
+
+sub my_pre_compile_hook {
+    my ( $data, $filename, $name ) = @_;
+
+    return "[<$name>$data]";
+}
 
 my $replace = {
     a => 'alpha',
@@ -37,57 +48,26 @@ test_expect(\*DATA, $config, $replace);
 __DATA__
 
 -- test --
-[% BLOCK foo %]
-This is block foo, a is [% a %]
-[% END %]
-[% b = INCLUDE foo %]
-[% c = INCLUDE foo a = 'ammended' %]
-b: <[% b %]>
-c: <[% c %]>
+A latex ams article
+
+[[ INCLUDE texfile1
+   intro_sec='Introduction' ]]
+
+From \eqref{eq:lib:texfile1:1} it follows that ...
 -- expect --
-b: <This is block foo, a is alpha>
-c: <This is block foo, a is ammended>
+A latex ams article
 
--- test --
-[% d = BLOCK %]
-This is the block, a is [% a %]
-[% END %]
-[% a = 'charlie' %]
-a: [% a %]   d: [% d %]
--- expect --
-a: charlie   d: This is the block, a is alpha
-
--- test --
-[% e = IF a == 'alpha' %]
-a is [% a %]
-[% ELSE %]
-that was unexpected
-[% END %]
-e: [% e %]
--- expect --
-e: a is alpha
-
--- test --
-[% a = FOREACH b = [1 2 3] %]
-[% b %],
-[%- END %]
-a is [% a %]
-
--- expect --
-a is 1,2,3,
-
--- test --
-[% BLOCK userinfo %]
-name: [% user +%]
-[% END %]
-[% out = PROCESS userinfo FOREACH user = [ 'tom', 'dick', 'larry' ] %]
-Output:
-[% out %]
--- expect --
-Output:
-name: tom
-name: dick
-name: larry
-
-
-
+[<texfile1>\section{Introduction}
+The equation ...
+\begin{align}
+  \label{eq:1}
+  \phi(\delta, \tau) =
+\end{align}
+[<texfile2>\subsection{Another section}
+\begin{align}
+  \label{eq:1}
+  y = x^2
+\end{align}
+]End
+]
+From \eqref{eq:lib:texfile1:1} it follows that ...

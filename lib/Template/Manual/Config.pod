@@ -988,6 +988,29 @@ accessed via the C<template> variable (which you are still free to
 use within C<WRAPPER> templates), but gives you more flexibility in
 the type and complexity of data that you can define.
 
+=head2 PRE_COMPILE_HOOK
+
+This hook can be used if you want to do some custom processing of
+the raw text of a template read from file just before it is handed over to the
+parser and compiled.
+
+    my $template = Template->new({
+        PRE_COMPILE_HOOK => \&my_pre_compile_hook,
+    });
+
+    sub my_pre_compile_hook {
+        my ( $data, $filename, $name ) = @_;
+
+        return "[<$name>$data]";
+    }
+
+Here, the hook function C<my_pre_compile_hook> will be called for each included
+template file just before the template is to be compiled. It will receive three
+arguments C<$data>, C<$filename>, and C<$name>, and it should return a
+(possibly) modified version of C<$data>. Further, C<$data> is a string representing 
+the content of the file, C<$filename> is the name of the file, and C<$name> is
+the name of the template.
+
 =head2 ERROR
 
 The C<ERROR> (or C<ERRORS> if you prefer) configuration item can be used to

@@ -478,10 +478,11 @@ sub _fetch {
         $self->{ NOTFOUND }->{ $name } = time;
         return ( $template, $error );
     }
-
     if ( $self->{ PRE_COMPILE_HOOK } ) {
         $template->{text}
-          = $self->{ PRE_COMPILE_HOOK}->($template->{path}, $template->{text});
+          = $self->{ PRE_COMPILE_HOOK}->(
+              $template->{text}, $template->{path}, $template->{name}
+          );
     }
 
     # compile template source

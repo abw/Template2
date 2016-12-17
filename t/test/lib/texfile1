@@ -1,0 +1,9 @@
+\section{[[ intro_sec ]]}
+The equation ...
+\begin{align}
+  \label{eq:1}
+  \phi(\delta, \tau) =
+\end{align}
+[[ INCLUDE texfile2
+   section='Another section']]
+End
