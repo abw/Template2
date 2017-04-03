@@ -138,6 +138,7 @@ sub module_version {
     return ${"${class}::VERSION"};
 }
 
+sub DESTROY { 1 } # noop
 
 1;
 
