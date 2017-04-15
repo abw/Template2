@@ -744,6 +744,8 @@ sub define_block {
     $self->debug("compiled block '$name':\n$block")
         if $self->{ DEBUG } & Template::Constants::DEBUG_PARSER;
 
+    warn "Block redefined: $name\n" if exists $defblock->{ $name };
+
     $defblock->{ $name } = $block;
 
     return undef;
