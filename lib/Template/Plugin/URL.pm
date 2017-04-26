@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 
+use utf8;
 our $VERSION = 2.74;
 our $JOINT   = '&amp;';
 
