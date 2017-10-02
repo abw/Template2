@@ -10,3 +10,5 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
+script:
+  - export PERL_MM_USE_DEFAULT=1 &&  perl Makefile.PL && make test
