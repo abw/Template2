@@ -264,10 +264,10 @@ sub _dump {
 #-----------------------------------------------------------------------
 
 our $UNSAFE_SPEC = {
-    RFC2732 => q{A-Za-z0-9\-_.!~*'()},
-    RFC3986 => q{A-Za-z0-9\-\._~},
+    RFC2732 => q{A-Za-z0-9\-_.~!*'()},
+    RFC3986 => q{A-Za-z0-9\-_.~},
 };
-our $UNSAFE_CHARS = $UNSAFE_SPEC->{ RFC2732 };
+our $UNSAFE_CHARS = $UNSAFE_SPEC->{ RFC3986 };
 our $URI_REGEX;
 our $URL_REGEX;
 our $URI_ESCAPES;
