@@ -616,7 +616,7 @@ sub list_unique {
 sub list_import {
     my $list = shift;
     push(@$list, grep defined, map ref eq 'ARRAY' ? @$_ : undef, @_);
-    return $list;
+    return '';
 }
 
 sub list_merge {

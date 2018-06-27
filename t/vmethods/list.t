@@ -286,7 +286,8 @@ Tom
 -- name list import one --
 [% list_one = [ 1 2 3 ];
    list_two = [ 4 5 6 ];
-   list_one.import(list_two).join(', ') %]
+   list_one.import(list_two);
+   list_one.join(', ') %]
 -- expect --
 1, 2, 3, 4, 5, 6
 
@@ -295,7 +296,8 @@ Tom
 [% list_one = [ 1 2 3 ];
    list_two = [ 4 5 6 ];
    list_three = [ 7 8 9 0 ];
-   list_one.import(list_two, list_three).join(', ') %]
+   list_one.import(list_two, list_three);
+   list_one.join(', ') %]
 -- expect --
 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
 
