@@ -21,11 +21,12 @@ use lib qw( ./lib ../lib );
 
 use Template;
 use Test::More;
+use File::Path qw (remove_tree);
 
 my $testdir  = 'testdir';
 my $CACHEDIR = 'ttcache';
 
-`rm -rf $CACHEDIR $testdir`;
+remove_tree("$CACHEDIR", "$testdir");
 
 my $config = {COMPILE_DIR  => $CACHEDIR};
 my $tt1 = Template->new($config);
@@ -38,7 +39,7 @@ EOF
 
 my $expected1 = "file error - $testdir: not found";
 
-my $expected2 = "file error - ./$testdir: not a file";
+my $expected2 = $^O ne 'MSWin32' ? "file error - ./$testdir: not a file" : "file error - $testdir: not a file";
 
 my $expected3 = <<'EOF';
 This is the first test
@@ -77,4 +78,4 @@ is($ret, $expected3, 'Correctly PROCESSed file');
 
 done_testing();
 
-`rm -rf $CACHEDIR $testdir`;
+remove_tree("$CACHEDIR", "$testdir");
