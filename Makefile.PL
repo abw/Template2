@@ -87,7 +87,7 @@ $TT_XS_DEFAULT    = 'y';
 $TT_QUIET         = 'n';
 $TT_ACCEPT        = 'n';
 
-my $DEFAULTS_FILE   = '.defaults.cfg';
+my $DEFAULTS_FILE   = './.defaults.cfg';
 my $DEFAULTS = '';
 
 if (-f $DEFAULTS_FILE) {

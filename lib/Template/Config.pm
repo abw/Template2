@@ -36,7 +36,7 @@ $PARSER    = 'Template::Parser';
 $PLUGINS   = 'Template::Plugins';
 $PROVIDER  = 'Template::Provider';
 $SERVICE   = 'Template::Service';
-$STASH     = 'Template::Stash';
+$STASH     = 'Template::Stash::XS';
 $CONSTANTS = 'Template::Namespace::Constants';
 
 @PRELOAD   = ( $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
