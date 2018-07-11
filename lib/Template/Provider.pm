@@ -562,13 +562,9 @@ sub _compiled_filename {
 
 sub _load_compiled {
     my ($self, $file) = @_;
-    my $compiled;
 
-    # load compiled template via require();  we zap any
-    # %INC entry to ensure it is reloaded (we don't
-    # want 1 returned by require() to say it's in memory)
-    delete $INC{ $file };
-    eval { $compiled = require $file; };
+    my $fpath = File::Spec->rel2abs($file);
+    my $compiled = do $fpath;
     return $@
         ? $self->error("compiled template $compiled: $@")
         : $compiled;
