@@ -209,7 +209,13 @@ sub ident {
         # handler defined?
         if (@$ident > 2 && ($ns = $self->{ NAMESPACE })) {
             my $key = $ident->[0];
-            $key =~ s/^'(.+)'$/$1/s;
+
+            # a faster alternate to $key =~ s/^'(.+)'$/$1/s
+            if ( index( $key, q[']) == 0 ) {
+                substr( $key, 0, 1, '' );
+                substr( $key, -1, 1, '' ); # remove the last char blindly
+            }
+
             if ($ns = $ns->{ $key }) {
                 return $ns->ident($ident);
             }
