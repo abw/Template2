@@ -954,21 +954,26 @@ sub _parse {
             or $status = ACCEPT;
 
         # use dummy sub if code ref doesn't exist
-        $code = sub { $_[1] }
-            unless $code;
+        if ( !$code ) {
+            $coderet = $len ? $stack->[ -$len ]->[1] : undef;
+        } else {
+            # $code = sub { $_[1] }
+            #     unless $code;
 
-        @codevars = $len
-                ?   map { $_->[1] } @$stack[ -$len .. -1 ]
-                :   ();
+            @codevars = $len
+                    ?   map { $_->[1] } @$stack[ -$len .. -1 ]
+                    :   ();
 
-        eval {
-            $coderet = &$code( $self, @codevars );
-        };
-        if ($@) {
-            my $err = $@;
-            chomp $err;
-            return $self->_parse_error($err);
+            eval {
+                $coderet = &$code( $self, @codevars );
+            };
+            if ($@) {
+                my $err = $@;
+                chomp $err;
+                return $self->_parse_error($err);
+            }
         }
+
 
         # reduce stack by $len
         splice(@$stack, -$len, $len);
