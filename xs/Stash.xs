@@ -771,15 +771,21 @@ static SV* do_getset(pTHX_ SV *root, AV *ident_av, SV *value, int flags) {
     return root;
 }
 
-
+#define TT_BUFF_SIZE    64
 /* return [ map { s/\(.*$//; ($_, 0) } split(/\./, $str) ];
  */
 static AV *convert_dotted_string(pTHX_ const char *str, I32 len) {
+    char prealloc[64];   /* small pre allocated buffer */
     AV *av = newAV();
     char *buf, *b;
     int b_len = 0;
 
-    New(0, buf, len + 1, char);
+    if ( len + 1 < TT_BUFF_SIZE ) { /* use the pre allocated buffer */
+        buf = prealloc;
+    } else { /* need a malloc */
+        New(0, buf, len + 1, char);
+    }
+
     if (!buf) 
         croak(TT_STASH_PKG ": New() failed for convert_dotted_string");
 
@@ -799,7 +805,8 @@ static AV *convert_dotted_string(pTHX_ const char *str, I32 len) {
         }
     }
 
-    Safefree(buf);
+    if (buf != prealloc) Safefree(buf);
+
     return (AV *) sv_2mortal((SV *) av);
 }
 
