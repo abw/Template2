@@ -1,5 +1,14 @@
 branches:
 language: perl
+env:
+  global:
+    - PERL_USE_UNSAFE_INC=0
+    - AUTHOR_TESTING=1
+    - AUTOMATED_TESTING=1
+    - RELEASE_TESTING=1
+  matrix:
+    - TT_STASH=y
+    - TT_STASH=n
 perl:
   - "5.26"
   - "5.24"
@@ -11,9 +20,4 @@ perl:
   - "5.12"
   - "5.10"
 script:
-  - export PERL_USE_UNSAFE_INC=0
-  - export AUTHOR_TESTING=1
-  - export AUTOMATED_TESTING=1
-  - export RELEASE_TESTING=1
-  - export PERL_MM_USE_DEFAULT=1
-  - perl Makefile.PL && make test
+  - perl Makefile.PL TT_XS_DEFAULT=$TT_STASH TT_ACCEPT=$TT_STASH && make test
