@@ -20,6 +20,7 @@ use lib qw( ./lib ../lib ../blib/lib ../blib/arch ./blib/lib ./blib/arch );
 use utf8;
 use Template;
 use Template::Test;
+use Template::Config;
 
 BEGIN {
     unless ($] > 5.007) {
@@ -27,17 +28,14 @@ BEGIN {
     }
 }
 
-eval {
-    require Template::Stash::XS;
-};
-if ($@) {
-    warn $@;
-    skip_all('cannot load Template::Stash::XS');
+# only run the test when compiled with Template::Stash
+if ( $Template::Config::STASH ne 'Template::Stash::XS' ) {
+    skip_all('Template::Config is not using Template::Stash::XS');
 }
 
-binmode STDOUT, ':utf8';
+require Template::Stash::XS;
 
-$Template::Config::STASH = 'Template::Stash::XS';
+binmode STDOUT, ':utf8';
 
 my $data = {
     ascii => 'key',

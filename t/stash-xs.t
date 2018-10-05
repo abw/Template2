@@ -20,15 +20,14 @@ use lib qw( ./lib ../lib ../blib/lib ../blib/arch ./blib/lib ./blib/arch );
 use Template::Constants qw( :status );
 use Template;
 use Template::Test;
+use Template::Config;
 
-eval {
-    require Template::Stash::XS;
-};
-if ($@) {
-    warn $@;
-    skip_all('cannot load Template::Stash::XS');
+# only run the test when compiled with Template::Stash
+if ( $Template::Config::STASH ne 'Template::Stash::XS' ) {
+    skip_all('Template::Config is not using Template::Stash::XS');
 }
 
+require Template::Stash::XS;
 
 #------------------------------------------------------------------------
 # define some simple objects for testing
