@@ -497,7 +497,11 @@ sub _dotop {
             # real throwing
 
             my $class = ref($root) || $root;
-            die $@ if ref($@) || ($@ !~ /Can't locate object method "\Q$item\E" via package "\Q$class\E"/);
+            # this is very fragile...
+            die $@ if ( ref($@)
+                || ( $] >= 5.019 && ($@ !~ m/Can't locate object method "\Q$item\E" via package "\Q$class\E"/) )
+                || ( $] <= 5.018 && ($@ !~ m/Undefined subroutine/) )
+                );
 
             # failed to call object method, so try some fallbacks
             if (reftype $root eq 'HASH') {
