@@ -562,13 +562,29 @@ sub _compiled_filename {
 
 sub _load_compiled {
     my ($self, $file) = @_;
+
+    # Implicitly Relative paths are not supported
+    # by "require" and invoke @INC traversal, where relative
+    # paths only traditionally worked prior to Perl 5.26
+    # due to the presence of '.' in @INC
+    #
+    # Given load_compiled never wants to traverse @INC, forcing
+    # an absolute path for the loaded file and the INC key is
+    # sensible.
+    #
+    # NB: %INC Keys are always identical to their respective
+    # "require" invocations regardless of OS, and the only time
+    # one needs to care about slash direction is when dealing
+    # with Module::Name -> Module/Name.pm translation.
+    my $fpath = File::Spec->rel2abs( $file );
+
     my $compiled;
 
     # load compiled template via require();  we zap any
     # %INC entry to ensure it is reloaded (we don't
     # want 1 returned by require() to say it's in memory)
-    delete $INC{ $file };
-    eval { $compiled = require $file; };
+    delete $INC{ $fpath };
+    eval { $compiled = require $fpath; };
     return $@
         ? $self->error("compiled template $compiled: $@")
         : $compiled;
