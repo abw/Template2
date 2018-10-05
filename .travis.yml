@@ -20,5 +20,5 @@ perl:
   - "5.12"
   - "5.10"
 script:
-  - perl Makefile.PL TT_XS_DEFAULT=$TT_STASH_AS_XS TT_XS_ENABLE=$TT_STASH_AS_XS TT_QUIET=n TT_ACCEPT=y
+  - perl Makefile.PL TT_XS_DEFAULT=$TT_STASH_AS_XS TT_XS_ENABLE=$TT_STASH_AS_XS TT_QUIET=n TT_ACCEPT=y && make test
 
