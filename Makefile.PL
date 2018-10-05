@@ -156,9 +156,16 @@ my %opts = (
         'Test::LeakTrace' => 0,
     },
     'META_MERGE' => {
-        'resources' => {
-            'repository' => 'https://github.com/abw/Template2',
-        },
+        'meta-spec' => { version => 2 },
+        "resources" => {
+            "bugtracker" => { web => "https://github.com/abw/Template2/issues" },
+            "homepage"   => "http://www.template-toolkit.org",
+            "repository" => {
+                "type" => "git",
+                "url" => "git://github.com/abw/Template2.git",
+                "web" => "https://github.com/abw/Template2"
+            },
+        }
     },
     'dist'         => {
         'COMPRESS' => 'gzip',
