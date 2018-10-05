@@ -7,8 +7,8 @@ env:
     - AUTOMATED_TESTING=1
     - RELEASE_TESTING=1
   matrix:
-    - TT_STASH=y
-    - TT_STASH=n
+    - TT_STASH_AS_XS=y
+    - TT_STASH_AS_XS=n
 perl:
   - "5.26"
   - "5.24"
@@ -20,4 +20,5 @@ perl:
   - "5.12"
   - "5.10"
 script:
-  - perl Makefile.PL TT_XS_DEFAULT=$TT_STASH TT_XS_ENABLE=$TT_STASH TT_QUIET=y && make test
+  - perl Makefile.PL TT_XS_DEFAULT=$TT_STASH_AS_XS TT_XS_ENABLE=$TT_STASH_AS_XS TT_QUIET=n TT_ACCEPT=y
+
