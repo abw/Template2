@@ -74,8 +74,8 @@ lib/Template/Tutorial/Web.pod
 lib/Template/View.pm
 lib/Template/VMethods.pm
 Makefile.PL
-MANIFEST
-META.yml			Module meta-data (added by MakeMaker)
+MANIFEST			This list of files
+META.yml
 parser/Grammar.pm.skel
 parser/Parser.yp
 parser/README
@@ -87,6 +87,7 @@ t/assert.t
 t/base.t
 t/binop.t
 t/block.t
+t/block_duplicate.t
 t/blocks.t
 t/capture.t
 t/case.t
@@ -221,7 +222,6 @@ t/trace_vars.t
 t/try.t
 t/unicode.t
 t/url.t
-t/url2.t
 t/vars.t
 t/varsv1.t
 t/view.t
