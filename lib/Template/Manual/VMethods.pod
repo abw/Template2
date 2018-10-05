@@ -637,6 +637,12 @@ keys generated for each item starting at the number specified.
     [% hash.1  %]               # beer
     [% hash.2  %]               # peanuts
 
+=head2 item
+
+Returns an item from the list using an index passed as an argument.
+
+    [% list.item(0) %]  # same as list.0
+
 =head1 Automagic Promotion of Scalar to List for Virtual Methods
 
 In addition to the scalar virtual methods listed in the previous
