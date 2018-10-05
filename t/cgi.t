@@ -13,7 +13,7 @@
 # under the same terms as Perl itself.
 #
 # $Id$
-# 
+#
 #========================================================================
 
 use strict;
@@ -31,46 +31,50 @@ if ($@) {
     skip_all("no CGI module");
 }
 
-
 my $cgi = CGI->new('');
-$cgi = join("\n", $cgi->checkbox_group(
-		-name     => 'words',
-                -values   => [ 'eenie', 'meenie', 'minie', 'moe' ],
-	        -defaults => [ 'eenie', 'meenie' ],
-)); 
+$cgi = join(
+    "\n",
+    $cgi->checkbox_group(
+        -name     => 'words',
+        -values   => [ 'eenie', 'meenie', 'minie', 'moe' ],
+        -defaults => [ 'eenie', 'meenie' ],
+    )
+);
 
-
-test_expect(\*DATA, undef, { cgicheck => $cgi, barf => \&barf });
+test_expect( \*DATA, undef, { cgicheck => $cgi, barf => \&barf } );
 
 sub barf {
     carp('failed');
 }
 
-
 __END__
 -- test --
+[% USE scalar -%]
 [% USE cgi = CGI('id=abw&name=Andy+Wardley'); global.cgi = cgi -%]
-name: [% global.cgi.param('name') %]
+name: [% global.cgi.scalar.param('name') %]
 -- expect --
 name: Andy Wardley
 
 -- test --
-name: [% global.cgi.param('name') %]
+[% USE scalar -%]
+name: [% global.cgi.scalar.param('name') %]
 
 -- expect --
 name: Andy Wardley
 
 -- test --
+[% USE scalar -%]
 [% FOREACH key = global.cgi.param.sort -%]
-   * [% key %] : [% global.cgi.param(key) %]
+   * [% key %] : [% global.cgi.scalar.param(key) %]
 [% END %]
 -- expect --
    * id : abw
    * name : Andy Wardley
 
 -- test --
+[% USE scalar -%]
 [% FOREACH key = global.cgi.param().sort -%]
-   * [% key %] : [% global.cgi.param(key) %]
+   * [% key %] : [% global.cgi.scalar.param(key) %]
 [% END %]
 -- expect --
    * id : abw
