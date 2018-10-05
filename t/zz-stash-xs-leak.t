@@ -18,6 +18,8 @@ use warnings;
 use lib qw( ./lib ../lib ../blib/lib ../blib/arch ./blib/lib ./blib/arch );
 use Template::Constants qw( :status );
 use Template;
+use Template::Config;
+
 use Test::More;
 
 # belt and braces
@@ -27,6 +29,11 @@ unless (grep(/--dev/, @ARGV)) {
 
 unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} ) {
     plan( skip_all => "Developer tests not required for installation" );
+}
+
+# only run the test when compiled with Template::Stash
+if ( $Template::Config::STASH ne 'Template::Stash::XS' ) {
+    skip_all('Template::Config is not using Template::Stash::XS');
 }
 
 require Template::Stash::XS;
