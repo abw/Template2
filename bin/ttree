@@ -632,6 +632,7 @@ sub read_config {
         'template_default|default=s',
         'template_error|error=s',
         'template_debug|debug=s',
+        'template_strict|strict',
         'template_start_tag|start_tag|starttag=s',
         'template_end_tag|end_tag|endtag=s',
         'template_tag_style|tag_style|tagstyle=s',
