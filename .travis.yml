@@ -1,4 +1,7 @@
 branches:
+  except:
+    - /^issue\d+$/i
+    - /^gh\d+$/i
 language: perl
 env:
   global:
