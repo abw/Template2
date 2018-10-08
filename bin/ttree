@@ -292,16 +292,6 @@ sub process_tree {
             }
         }
 
-        # check against acceptance list
-        if (@$accept) {
-            unless ((-d $abspath && $recurse) || grep { $path =~ /$_/ } @$accept) {
-                printf yellow("  - %-32s (not accepted)\n"), $path
-                    if $verbose > 1;
-                $n_skip++;
-                next FILE;
-            }
-        }
-
         if (-d $abspath) {
             if ($recurse) {
                 my ($uid, $gid, $mode);
@@ -388,6 +378,16 @@ sub process_file {
                 $check = $copy_pattern;
                 last;
             }
+        }
+    }
+
+    # check against acceptance list
+    if (not $copy_file and @$accept) {
+        unless (grep { $filename =~ /$_/ } @$accept) {
+            printf yellow("  - %-32s (not accepted)\n"), $file
+                if $verbose > 1;
+            $n_skip++;
+            return;
         }
     }
 
