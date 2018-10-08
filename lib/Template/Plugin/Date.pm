@@ -78,8 +78,10 @@ sub now {
 sub format {
     my $self   = shift;
     my $params = ref($_[$#_]) eq 'HASH' ? pop(@_) : { };
-    my $time   = shift(@_) || $params->{ time } || $self->{ time } 
-                           || $self->now();
+
+    my $time   = shift(@_);
+    $time = $params->{ time } || $self->{ time } || $self->now() if !defined $time;
+
     my $format = @_ ? shift(@_) 
                     : ($params->{ format } || $self->{ format } || $FORMAT);
     my $locale = @_ ? shift(@_)
