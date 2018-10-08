@@ -20,7 +20,7 @@ use Test::More;
 
 plan( skip_all => "Author tests not required for installation" )
     unless $ENV{ RELEASE_TESTING   }
-        or $ENV{ AUTOMATED_TESTING };
+        or $ENV{ AUTHOR_TESTING };
 
 eval "use Test::Pod 1.00";
 plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
