@@ -39,6 +39,9 @@ my $format = {
     'timeday' => 'the time is %H:%M:%S on %A',
 };
 
+binmode STDOUT, ":utf8";
+binmode DATA, ":utf8";
+
 my $time = time;
 my @ltime = localtime($time);
 
@@ -273,3 +276,9 @@ not testing
 -%]
 -- expect --
 12:59
+-- test --
+[% USE date;
+    date.format('2009/02/30 8:22:03', '%A, %e %B %Y', locale => 'ru_RU.UTF-8')
+-%]
+-- expect --
+Понедельник,  2 Март 2009

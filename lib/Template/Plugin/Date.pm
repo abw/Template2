@@ -30,6 +30,7 @@ use Config ();
 
 use constant HAS_SETLOCALE => $Config::Config{d_setlocale};
 
+use Encode qw/_utf8_on/;
 our $VERSION = 2.78;
 our $FORMAT  = '%H:%M:%S %d-%b-%Y';    # default strftime() format
 our @LOCALE_SUFFIX = qw( .ISO8859-1 .ISO_8859-15 .US-ASCII .UTF-8 );
@@ -143,11 +144,17 @@ sub format {
                 last;
             }
         }
-        $datestr = &POSIX::strftime($format, @date);
-        &POSIX::setlocale(&POSIX::LC_ALL, $old_locale) if HAS_SETLOCALE;
+        $datestr = POSIX::strftime($format, @date);
+        if( $locale =~ /utf\-?8/i ){
+            _utf8_on( $datestr );
+        }
+        POSIX::setlocale(POSIX::LC_ALL, $old_locale) if HAS_SETLOCALE;
     }
     else {
-        $datestr = &POSIX::strftime($format, @date);
+        $datestr = POSIX::strftime($format, @date);
+        if( POSIX::setlocale(POSIX::LC_ALL) =~ /utf\-?8/i ){
+            _utf8_on( $datestr );
+        }
     }
 
     return $datestr;
