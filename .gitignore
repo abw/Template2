@@ -1,6 +1,12 @@
+/.DS_Store
+/Makefile.old
+/cover_db/
+/MYMETA.json
+/MYMETA.yml
+*.orig
+*.rej
+.svn
 .defaults.cfg
-MYMETA.json
-MYMETA.yml
 MANIFEST.bak
 Template-Toolkit-*.tar.gz
 Makefile
