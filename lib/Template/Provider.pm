@@ -907,7 +907,7 @@ sub _compile {
 
         unless ($error) {
             return $data                                        ## RETURN ##
-                if $data->{ data } = $DOCUMENT->new($parsedoc);
+                if $data->{ data } = $self->{DOCUMENT}->new($parsedoc);
             $error = $Template::Document::ERROR;
         }
     }

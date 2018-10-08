@@ -251,8 +251,23 @@ my $uselist = [
     ttd2   => $ttd2, 
     ttdbad => $ttd3 ];
 
-test_expect(\*DATA, $uselist, $vars);
+#------------------------------------------------------------------------
+# What about if a DOCUMENT class is specified.
+#------------------------------------------------------------------------
+require "$lib/document.pm" || die $!;
+is $provabs->{DOCUMENT}, 'Template::Document', "Default document class is specified ok";
+my $provdoc = Template::Provider->new({
+    ABSOLUTE => 1,
+    DOCUMENT => 'Test::Template::Document',
+    LOAD_TEMPLATES => [ $provabs ],
+}) || die $Template::Provider::ERROR;
+is $provdoc->{DOCUMENT}, 'Test::Template::Document', "Custom document class is specified ok";
+my ($doc_abs) = $provabs->fetch($absfile);
+my ($doc_oth) = $provdoc->fetch($absfile);
+is ref $doc_abs, 'Template::Document';
+is ref $doc_oth, 'Test::Template::Document';
 
+test_expect(\*DATA, $uselist, $vars);
 
 __DATA__
 -- test --
