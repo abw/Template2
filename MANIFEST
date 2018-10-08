@@ -128,6 +128,7 @@ t/lib/Template/Plugin/Simple.pm
 t/list.t
 t/macro.t
 t/math.t
+t/math_rand.t
 t/object.t
 t/outline.t
 t/output.t
