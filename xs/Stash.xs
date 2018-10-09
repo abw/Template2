@@ -100,8 +100,12 @@ static SV*      hash_dot_values(pTHX_ HV*, AV*);
 static SV*      scalar_dot_defined(pTHX_ SV*, AV*);
 static SV*      scalar_dot_length(pTHX_ SV*, AV*);
 
+#if PERL_VERSION >= 19
+
 #define THROW_SIZE 64
 static char throw_fmt[] = "Can't locate object method \"%s\" via package \"%s\"";
+
+#endif
 
 /* dispatch table for XS versions of special "virtual methods",
  * names must be in alphabetical order          
@@ -342,7 +346,9 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                 SPAGAIN;
                 
                 if (SvTRUE(ERRSV)) {
+#if PERL_VERSION >= 19
                     char throw_str[THROW_SIZE+1];
+#endif
                     (void) POPs;                /* remove undef from stack */
                     PUTBACK;
                     result = NULL;
@@ -365,10 +371,17 @@ static SV *dotop(pTHX_ SV *root, SV *key_sv, AV *args, int flags) {
                          * to fit into throw_str then snprintf() doesn't add the
                          * terminating NULL 
                          */
+#if PERL_VERSION >= 19
                         snprintf(throw_str, THROW_SIZE, throw_fmt, item, HvNAME(stash));
                         throw_str[THROW_SIZE] = '\0';
-
-                        if (! strstr( SvPV(ERRSV, PL_na), throw_str)) 
+#endif
+                        if (
+#if PERL_VERSION >= 19
+                            ! strstr( SvPV(ERRSV, PL_na), throw_str)
+#else
+                            ! strstr( SvPV(ERRSV, PL_na), "Undefined subroutine")
+#endif
+                            )
                             die_object(aTHX_ ERRSV);
                     }
                 } else {
@@ -758,15 +771,21 @@ static SV* do_getset(pTHX_ SV *root, AV *ident_av, SV *value, int flags) {
     return root;
 }
 
-
+#define TT_BUFF_SIZE    64
 /* return [ map { s/\(.*$//; ($_, 0) } split(/\./, $str) ];
  */
 static AV *convert_dotted_string(pTHX_ const char *str, I32 len) {
+    char prealloc[64];   /* small pre allocated buffer */
     AV *av = newAV();
     char *buf, *b;
     int b_len = 0;
 
-    New(0, buf, len + 1, char);
+    if ( len + 1 < TT_BUFF_SIZE ) { /* use the pre allocated buffer */
+        buf = prealloc;
+    } else { /* need a malloc */
+        New(0, buf, len + 1, char);
+    }
+
     if (!buf) 
         croak(TT_STASH_PKG ": New() failed for convert_dotted_string");
 
@@ -786,7 +805,8 @@ static AV *convert_dotted_string(pTHX_ const char *str, I32 len) {
         }
     }
 
-    Safefree(buf);
+    if (buf != prealloc) Safefree(buf);
+
     return (AV *) sv_2mortal((SV *) av);
 }
 

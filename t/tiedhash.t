@@ -18,24 +18,22 @@
 
 use strict;
 use warnings;
+# should not prove be responsible for this?
 use lib qw( blib/lib blib/arch lib ../blib/lib ../blib/arch ../lib );
 use Template::Test;
 use Template::Stash;
+use Template::Config;
+
 our $DEBUG = grep(/-d/, @ARGV);
-
-eval {
-    require Template::Stash::XS;
-};
-if ($@) {
-    warn $@;
-    skip_all('cannot load Template::Stash::XS');
-}
-
-#print "stash: $Template::Config::STASH\n";
-#$Template::Config::STASH = 'Template::Stash::XS';
-
 our $STORE_PREFIX = '';
 our $FETCH_PREFIX = '';
+
+# only run the test when compiled with Template::Stash
+if ( $Template::Config::STASH ne 'Template::Stash::XS' ) {
+    skip_all('Template::Config is not using Template::Stash::XS');
+}
+
+require Template::Stash::XS;
 
 #------------------------------------------------------------------------
 package My::Tied::Hash;

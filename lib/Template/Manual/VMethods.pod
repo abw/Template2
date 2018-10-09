@@ -153,7 +153,7 @@ appears in the source string, provide a true value for the C<global>
 argument following the pattern.
 
     [% text = 'bandanna';
-       text.match('an+', 1).join(', )      # an, ann
+       text.match('an+', 1).join(', ')      # an, ann
     %]
 
 =head2 repeat(n)
@@ -552,7 +552,7 @@ current list.
        two   = [ 4 5 6 ];
        three = [ 7 8 9 ];
        one.import(two, three);
-       one.join(', );     # 1, 2, 3, 4, 5, 6, 7, 8, 9
+       one.join(', ');     # 1, 2, 3, 4, 5, 6, 7, 8, 9
     %]
 
 =head2 merge
@@ -636,6 +636,12 @@ keys generated for each item starting at the number specified.
     [% hash = list.hash(1) %]
     [% hash.1  %]               # beer
     [% hash.2  %]               # peanuts
+
+=head2 item
+
+Returns an item from the list using an index passed as an argument.
+
+    [% list.item(0) %]  # same as list.0
 
 =head1 Automagic Promotion of Scalar to List for Virtual Methods
 

@@ -10,6 +10,42 @@
 #
 #========================================================================
 
+* Matthew Somerville stopped a list import from printing an ARRAY(...) string.
+  https://github.com/abw/Template2/issues/33
+
+
+#-----------------------------------------------------------------------
+# Unreleased
+#------------------------------------------------------------------------
+
+* Matthew Somerville switched uri/url to use RFC3986 as per the docs, and
+  updated the documentation to match the history.
+  https://github.com/abw/Template2/issues/35
+
+
+#-----------------------------------------------------------------------
+# Version 2.27 - 13th December 2016
+#------------------------------------------------------------------------
+
+* Ghost fixed the regex in the uri/url filters, removing double quotes
+  to make it RFC3986 compliant.
+  https://github.com/abw/Template2/issues/35
+
+* Sean Zellmer added testrules.yml to always run compile*.t sequentially
+  https://github.com/abw/Template2/pull/45
+
+* Simon Dawson added 'empty' vmethods for scalar, list and hash
+  https://github.com/abw/Template2/pull/46
+
+* Dennis Clark added --envvars option to tpage
+  https://github.com/abw/Template2/pull/49
+
+* Yanick Champoux made Template::Toolkit a module
+  https://github.com/abw/Template2/pull/51
+
+* Various warnings silenced and typos fixed.
+
+
 #-----------------------------------------------------------------------
 # Version 2.26 - 17th September 2014
 #------------------------------------------------------------------------

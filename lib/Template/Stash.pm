@@ -497,7 +497,9 @@ sub _dotop {
             # real throwing
 
             my $class = ref($root) || $root;
-            die $@ if ref($@) || ($@ !~ /Can't locate object method "\Q$item\E" via package "\Q$class\E"/);
+
+            # Fail only if the function exists
+            die $@ if ( ref($@) || $root->can($item) );
 
             # failed to call object method, so try some fallbacks
             if (reftype $root eq 'HASH') {

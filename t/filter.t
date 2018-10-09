@@ -945,12 +945,12 @@ fOOBAR
 -- test --
 [% "foo(bar)" | uri %]
 -- expect --
-foo(bar)
+foo%28bar%29
 
 -- test --
 [% "foo(bar)" | url %]
 -- expect --
-foo(bar)
+foo%28bar%29
 
 -- test --
 [% use_rfc3986;
