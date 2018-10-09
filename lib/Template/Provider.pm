@@ -212,7 +212,7 @@ sub load {
           foreach my $dir (@$paths) {
               $path = File::Spec->catfile($dir, $name);
               last INCPATH
-                  if $self->_template_modified($path);
+                  if defined $self->_template_modified($path);
           }
           undef $path;      # not found
       }
@@ -643,7 +643,7 @@ sub _load {
     }
 
     # Otherwise, it's the name of the template
-    if ( $self->_template_modified( $name ) ) {  # does template exist?
+    if ( defined $self->_template_modified( $name ) ) {  # does template exist?
         my ($text, $error, $mtime ) = $self->_template_content( $name );
         unless ( $error )  {
             $text = $self->_decode_unicode($text) if $self->{ UNICODE };
@@ -861,7 +861,7 @@ sub _compile {
 
         $parsedoc->{ METADATA } = {
             'name'    => $data->{ name },
-            'modtime' => $data->{ time },
+            'modtime' => $data->{ 'time' },
             %{ $parsedoc->{ METADATA } },
         };
 
@@ -887,13 +887,13 @@ sub _compile {
 
             # set atime and mtime of newly compiled file, don't bother
             # if time is undef
-            if (!defined($error) && defined $data->{ time }) {
+            if (!defined($error) && defined $data->{ 'time' }) {
                 my ($cfile) = $compfile =~ /^(.+)$/s or do {
                     return("invalid filename: $compfile",
                            Template::Constants::STATUS_ERROR);
                 };
 
-                my ($ctime) = $data->{ time } =~ /^(\d+)$/;
+                my ($ctime) = $data->{ 'time' } =~ /^(\d+)$/;
                 unless ($ctime || $ctime eq 0) {
                     return("invalid time: $ctime",
                            Template::Constants::STATUS_ERROR);
@@ -931,9 +931,15 @@ sub _compile {
 
 sub _compiled_is_current {
     my ( $self, $template_name ) = @_;
-    my $compiled_name   = $self->_compiled_filename($template_name) || return;
-    my $compiled_mtime  = (stat($compiled_name))[9] || return;
-    my $template_mtime  = $self->_template_modified( $template_name ) || return;
+
+    my $compiled_name   = $self->_compiled_filename($template_name);
+    return unless defined $compiled_name;
+
+    my $compiled_mtime  = (stat($compiled_name))[9];
+    return unless defined $compiled_mtime;
+
+    my $template_mtime  = $self->_template_modified( $template_name );
+    return unless defined $template_mtime;
 
     # This was >= in the 2.15, but meant that downgrading
     # a source template would not get picked up.
@@ -1008,8 +1014,8 @@ sub _template_content {
 
 sub _modified {
     my ($self, $name, $time) = @_;
-    my $load = $self->_template_modified($name)
-        || return $time ? 1 : 0;
+    my $load = $self->_template_modified($name);
+    return $time ? 1 : 0 unless defined $load;
 
     return $time
          ? $load > $time
