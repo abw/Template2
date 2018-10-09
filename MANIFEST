@@ -139,6 +139,7 @@ t/plusfile.t
 t/pod.t
 t/prefix.t
 t/proc.t
+t/process-relative.t
 t/process.t
 t/process_dir.t
 t/provider.t
