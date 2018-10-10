@@ -75,13 +75,13 @@ sub define_vmethod {
     my $op;
     $type = lc $type;
 
-    if ($type =~ /^scalar|item$/) {
+    if ($type =~ /^(scalar|item)$/) {
         $op = $SCALAR_OPS;
     }
     elsif ($type eq 'hash') {
         $op = $HASH_OPS;
     }
-    elsif ($type =~ /^list|array$/) {
+    elsif ($type =~ /^(list|array)$/) {
         $op = $LIST_OPS;
     }
     else {

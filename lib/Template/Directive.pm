@@ -685,7 +685,7 @@ $block
     };
     if (\$@) {
         \$_tt_error = \$context->catch(\$@, \\\$output);
-        die \$_tt_error if \$_tt_error->type =~ /^return|stop\$/;
+        die \$_tt_error if \$_tt_error->type =~ /^(return|stop)\$/;
         \$stash->set('error', \$_tt_error);
         \$stash->set('e', \$_tt_error);
         if (defined (\$_tt_handler = \$_tt_error->select_handler($handlers))) {
