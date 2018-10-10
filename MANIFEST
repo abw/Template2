@@ -129,6 +129,7 @@ t/list.t
 t/macro.t
 t/math.t
 t/math_rand.t
+t/mtime-zero.t
 t/object.t
 t/outline.t
 t/output.t
