@@ -123,10 +123,67 @@ sub new {
     }, $class;
 }
 
+# track usages of objects using the factory
+#	this is an over complex object
+#	used to track how many objects are currently using the shared factory
+my $_factory_usages;
+
+DESTROY {
+	my ( $self ) = @_;
+
+	# on Grammar destruction check if we can safely trigger the destroy for the factory
+	$self->unregister_factory() if $self;
+
+	return;
+}
+
+sub unregister_factory {
+	my ( $self ) = @_;
+
+	return unless $self && ref $_factory_usages;
+	return unless "$factory" eq $_factory_usages->{CURRENT};
+
+	if ( $_factory_usages->{HOLD_BY}->{ "$self" } ) {
+		delete $_factory_usages->{HOLD_BY}->{ "$self" };
+	}
+
+	if ( ! scalar keys %{ $_factory_usages->{HOLD_BY} } ) {
+		# avoid a memory leak from factory
+		undef $factory;
+		undef $_factory_usages;
+	}
+
+	return;
+}
+
+sub register_factory {
+	my ( $self ) = @_;
+
+	return unless $factory;
+
+	$_factory_usages //= { CURRENT => "", HOLD_BY => {} };
+
+	if ( "$factory" ne $_factory_usages->{CURRENT} ) {
+		# we have updated the factory, should not care about the previous one...
+		$_factory_usages->{HOLD_BY} = {}; 		  # reset who hold the factory
+		$_factory_usages->{CURRENT} = "$factory"; # stringify it
+	}
+
+	$_factory_usages->{HOLD_BY}->{ "$self" } = 1; # we are using this factory
+
+	return;
+}
+
 # update method to set package-scoped $factory lexical
 sub install_factory {
     my ($self, $new_factory) = @_;
+
     $factory = $new_factory;
+
+    # register the current factory in order to clean it on destroy if possible
+    $self->register_factory();
+
+    return $factory;
 }
 
 
