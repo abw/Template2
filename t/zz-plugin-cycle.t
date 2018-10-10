@@ -19,9 +19,11 @@ use lib qw( t/lib ./lib ../lib ../blib/arch );
 use Template;
 use Template::Plugin::Simple;
 
-use Test::More tests => 1;
+use Test::More;
 
 plan( skip_all => "Developer test" ) unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} );
+
+plan tests => 1;
 
 #use Test::LeakTrace;
 eval { require Test::LeakTrace };
