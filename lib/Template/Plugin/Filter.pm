@@ -49,6 +49,12 @@ sub new {
         _CONFIG  => $config,
     }, $class;
 
+
+    if ( defined $context ) {
+        # avoid circular reference and memory leak
+        weaken( $self->{_CONTEXT} );
+    }
+
     return $self->init($config)
         || $class->error($self->error());
 }
