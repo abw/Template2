@@ -49,12 +49,6 @@ sub new {
         _CONFIG  => $config,
     }, $class;
 
-
-    if ( defined $context ) {
-        # avoid circular reference and memory leak
-        weaken( $self->{_CONTEXT} );
-    }
-
     return $self->init($config)
         || $class->error($self->error());
 }
@@ -70,14 +64,8 @@ sub factory {
     my $self = shift;
     my $this = $self;
     
-    # This causes problems: https://rt.cpan.org/Ticket/Display.html?id=46691
-    # If the plugin is loaded twice in different templates (one INCLUDEd into
-    # another) then the filter gets garbage collected when the inner template 
-    # ends (at least, I think that's what's happening).  So I'm going to take
-    # the "suck it and see" approach, comment it out, and wait for someone to
-    # complain that this module is leaking memory.  
-    
-    # weaken($this);
+    # avoid a memory leak
+    weaken( $this->{_CONTEXT} ) if ref $this->{_CONTEXT};
 
     if ($self->{ _DYNAMIC }) {
         return [ sub {
