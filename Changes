@@ -18,10 +18,82 @@
 # Unreleased
 #------------------------------------------------------------------------
 
-* Matthew Somerville switched uri/url to use RFC3986 as per the docs, and
+#-----------------------------------------------------------------------
+# Version 2.28 - 11th October 2018
+#------------------------------------------------------------------------
+
+* Add and enable Travis CI to track GitHub Pull Requests
+
+* Template is now using GitHub as the official Bug Tracker
+
+* Nicolas R. fixed a circular reference in Template::Plugin::Filter
+  https://github.com/abw/Template2/issues/152
+
+* Nicolas R. adjusted group regexes to not be greedy
+  https://github.com/abw/Template2/issues/94
+
+* Nicolas R. added unit tests to cover regression from RT 91172
+  https://github.com/abw/Template2/issues/122
+
+* Nicolas R. added support for template files having mtime=0
+  https://github.com/abw/Template2/issues/102
+
+* Todd Rinaldo fixed rand calls with no args in Math plugin
+  https://github.com/abw/Template2/issues/155
+
+* Todd Rinaldo corrected ttree 2.22 logic change
+  https://github.com/abw/Template2/issues/148
+
+* Todd Rinaldo turned off automated testing for tests using optional modules
+  https://github.com/abw/Template2/issues/156
+
+* Nicolas R. adjusted unit tests to not force Stash::XS
+
+* Nicolas R. added a pre allocated buffer in Stash.xs to avoid malloc/free
+  https://github.com/abw/Template2/issues/82
+
+* Nicolas R. optmized Template::Parser by avoiding a dummy sub
+  https://github.com/abw/Template2/issues/83
+
+* Nicolas R. optimized Template:Directive by using index
+  https://github.com/abw/Template2/issues/84
+
+* Nicolas R. adjust _dotop logic in Stash for perl 5.28 and earlier
+  https://github.com/abw/Template2/issues/81
+
+* Todd Rinaldo documented VMethod method called 'item'
+  https://github.com/abw/Template2/issues/90
+
+* Nicolas R. adjusted t/filter.t after recent switch to RFC3986
+  https://github.com/abw/Template2/issues/179
+
+* Nicolas R. fixed warnings from t/cgi.t
+  https://github.com/abw/Template2/issues/178
+
+* Ivan Krylov added STRICT option to ttree
+  https://github.com/abw/Template2/issues/81
+
+* Kent Fredric fixed relative path handling in templates on Perl 5.26+
+  https://github.com/abw/Template2/issues/80
+
+* Tom Delmas fixed some typo from documentation
+  https://github.com/abw/Template2/issues/76
+
+* Matthew Somerville switched uri/url to use RFC3986
   updated the documentation to match the history.
   https://github.com/abw/Template2/issues/35
 
+* Sebastien Deseille used remove_tree helper to remove directories
+  https://github.com/abw/Template2/issues/67
+
+* Nick Hibma - Add Sortkeys to DUMPER_ARGS
+  https://github.com/abw/Template2/issues/64
+
+* E. Choroba added a warn on duplicate block name
+  https://github.com/abw/Template2/issues/61
+
+* Jason Lewis fixed some typo in ttree.pod
+  https://github.com/abw/Template2/issues/58
 
 #-----------------------------------------------------------------------
 # Version 2.27 - 13th December 2016
