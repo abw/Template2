@@ -162,7 +162,7 @@ my %opts = (
             "homepage"   => "http://www.template-toolkit.org",
             "repository" => {
                 "type" => "git",
-                "url" => "git://github.com/abw/Template2.git",
+                "url" => "https://github.com/abw/Template2.git",
                 "web" => "https://github.com/abw/Template2"
             },
         }
