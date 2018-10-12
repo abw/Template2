@@ -86,7 +86,6 @@ our $RELATIVE_PATH = qr[(?:^|/)\.+/];
 # 5.6, even though we never call _decode_unicode() on those systems
 BEGIN {
     if ($] < 5.006) {
-        package bytes;
         $INC{'bytes.pm'} = 1;
     }
 }
