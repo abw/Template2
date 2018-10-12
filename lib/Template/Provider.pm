@@ -81,17 +81,6 @@ my $boms = [
 # regex to match relative paths
 our $RELATIVE_PATH = qr[(?:^|/)\.+/];
 
-
-# hack so that 'use bytes' will compile on versions of Perl earlier than
-# 5.6, even though we never call _decode_unicode() on those systems
-BEGIN {
-    if ($] < 5.006) {
-        package bytes;
-        $INC{'bytes.pm'} = 1;
-    }
-}
-
-
 #========================================================================
 #                         -- PUBLIC METHODS --
 #========================================================================
