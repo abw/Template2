@@ -29,6 +29,7 @@ eval "use Date::Calc";
 my $got_date_calc = 0;
 $got_date_calc++ unless $@;
 
+local $ENV{TZ} = 'Europe/London';
 
 $Template::Test::DEBUG = 0;
 
@@ -273,3 +274,24 @@ not testing
 -%]
 -- expect --
 12:59
+
+-- test --
+[% USE date( use_offset = 1 );
+   date.format( '2001/09/30T12:59:00', '%H:%M %z' )
+-%]
+-- expect --
+12:59 +0100
+
+-- test --
+[% USE date( use_offset = 1 );
+   date.format( '2001/09/30T12:59:00', '%H:%M' )
+-%]
+-- expect --
+12:59
+
+-- test --
+[% USE date;
+   date.format( time = '2001/09/30T12:59:00', format = '%H:%M %z', use_offset = 1 )
+-%]
+-- expect --
+12:59 +0100

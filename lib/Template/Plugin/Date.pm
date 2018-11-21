@@ -86,15 +86,17 @@ sub format {
                     : ($params->{ locale } || $self->{ locale });
     my $gmt = @_ ? shift(@_)
             : ($params->{ gmt } || $self->{ gmt });
+    my $offset = @_ ? shift(@_)
+            : ( $params->{ use_offset } || $self->{ use_offset });
     my (@date, $datestr);
 
     if ($time =~ /^-?\d+$/) {
         # $time is now in seconds since epoch
         if ($gmt) {
-            @date = (gmtime($time))[0..6];
+            @date = (gmtime($time))[ 0 .. ( $offset ? 6 : 8 ) ];
         }
         else {
-            @date = (localtime($time))[0..6];
+            @date = (localtime($time))[ 0 .. ( $offset ? 6 : 8 ) ];
         }
     }
     else {
@@ -123,6 +125,11 @@ sub format {
         $date[4] -= 1;     # correct month number 1-12 to range 0-11
         $date[5] -= 1900;  # convert absolute year to years since 1900
         $time = &POSIX::mktime(@date);
+
+        if ($offset) {
+            push @date, $gmt
+                ? (gmtime($time))[6..8] : (localtime($time))[6..8];
+        }
     }
     
     if ($locale) {
@@ -243,10 +250,11 @@ Template::Plugin::Date - Plugin to generate formatted date strings
     # named parameters 
     [% date.format(mytime, format = '%H:%M:%S') %]
     [% date.format(locale = 'en_GB') %]
-    [% date.format(time   = date.now, 
-                   format = '%H:%M:%S', 
-                   locale = 'en_GB) %]
-    
+    [% date.format(time       = date.now,
+                   format     = '%H:%M:%S',
+                   locale     = 'en_GB'
+                   use_offset = 1) %]
+
     # specify default format to plugin
     [% USE date(format = '%H:%M:%S', locale = 'de_DE') %]
     
@@ -313,6 +321,11 @@ seconds-since-the-epoch input:
 Note that in this case, if the local time is not GMT, then also specifying
 'C<%Z>' (time zone) in the format parameter will lead to an extremely 
 misleading result.
+
+To maintain backwards compatibility, using the C<%z> placeholder in the format
+string (to output the UTC offset) currently requires the C<use_offset>
+parameter to be set to a true value. This can also be passed as the fifth
+parameter to format (but the former will probably be clearer).
 
 Any or all of these parameters may be named.  Positional parameters
 should always be in the order C<($time, $format, $locale)>.
