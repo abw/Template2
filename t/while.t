@@ -28,7 +28,7 @@ $Template::Test::DEBUG = 0;
 $Template::Directive::WHILE_MAX = 100;
 
 my $config = {
-    INTERPOLATE => 1, 
+    INTERPOLATE => 1,
     POST_CHOMP  => 1,
 };
 
@@ -110,7 +110,7 @@ Reset list
 error: [% error.info %]
 [% END %]
 -- expect --
-...................................................................................................
+....................................................................................................
 error: WHILE loop terminated (> 100 iterations)
 
 
@@ -125,7 +125,7 @@ Reset list
 * x-ray
 * zulu
 -- test --
-[%  
+[%
     i = 1;
     WHILE i <= 10;
         SWITCH i;
