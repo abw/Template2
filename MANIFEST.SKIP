@@ -63,3 +63,5 @@
 ^templates/xhtml
 ^templates/jscript
 ^\.travis.yml
+appveyor.cmd
+appveyor.yml
