@@ -27,7 +27,7 @@ environment:
 install:
   - 'call appveyor.cmd perl_setup'
   - '%perl% -V'
-  - '%cpanm% --installdeps -n AppConfig File::Spec File::Temp Scalar::Util CGI Test::LeakTrace'
+  - '%cpanm% --installdeps -n AppConfig File::Spec File::Temp Scalar::Util CGI Test::LeakTrace Template::Stash Template::Stash::XS'
 
 build: off
 
