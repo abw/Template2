@@ -23,7 +23,7 @@ package Template::Plugin::Filter;
 use strict;
 use warnings;
 use base 'Template::Plugin';
-use Scalar::Util 'weaken';
+use Scalar::Util 'weaken', 'isweak';
 
 
 our $VERSION = 1.38;
@@ -65,7 +65,8 @@ sub factory {
     my $this = $self;
     
     # avoid a memory leak
-    weaken( $this->{_CONTEXT} ) if ref $this->{_CONTEXT};
+    weaken( $this->{_CONTEXT} ) if ref $this->{_CONTEXT}
+            && !isweak $this->{_CONTEXT};
 
     if ($self->{ _DYNAMIC }) {
         return [ sub {
