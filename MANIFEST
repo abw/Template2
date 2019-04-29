@@ -236,6 +236,7 @@ t/while.t
 t/wrap.t
 t/wrapper.t
 t/zz-plugin-cycle.t
+t/zz-plugin-leak-gh-213.t
 t/zz-plugin-leak-rt-46691.t
 t/zz-plugin-leak.t
 t/zz-pmv.t
