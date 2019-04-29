@@ -92,10 +92,7 @@ my $stderr;
 
     $tt->process(
         't1.txt',
-        {   'name'  => 'jason',
-            'name2' => 'fred',
-            'name3' => 'jim',
-        },
+        {},
         \$out
     ) || print STDERR "Error: " . $tt->error();
 
