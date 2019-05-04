@@ -287,6 +287,12 @@ All the &lt;tags&gt; should be escaped &amp; protected
 The &lt;cat&gt; sat on the &lt;mat&gt;
 
 -- test --
+[% SET text = "The <cat> sat on the <mat>" FILTER html %]
+[% text %]
+-- expect --
+The &lt;cat&gt; sat on the &lt;mat&gt;
+
+-- test --
 [% FILTER html %]
 "It isn't what I expected", he replied.
 [% END %]

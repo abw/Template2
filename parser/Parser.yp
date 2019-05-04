@@ -259,6 +259,7 @@ anonblock:  BLOCK blockargs ';' block END
 ;
 
 capture:    ident ASSIGN mdir       { $factory->capture(@_[1, 3])         }
+        |   SET ident ASSIGN mdir   { $factory->capture(@_[2, 4])         }
 ;
 
 macro:      MACRO IDENT '(' margs ')'
