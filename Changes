@@ -16,6 +16,7 @@
 
 * Bump version requirement for CGI.pm
 * Fix taint issue in Template::Provider (jwakely)
+* Allow SET to have FILTER used in it (dracos)
 
 #-----------------------------------------------------------------------
 # Version 3.007 - 27th January 2020
