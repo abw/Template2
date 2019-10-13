@@ -728,6 +728,25 @@ also provided as an alias for C<LAST>.
        [% match.score %] : [% match.url %]
     [% END %]
 
+The C<FOREACH> directive has an optional C<ELSE> statement to handle the case
+when the list is empty.
+
+    [% FOREACH user IN userlist %]
+       Name: [% user.name %]    Email: [% user.email %]
+    [% ELSE %]
+      There are no users in the list
+    [% END %]
+
+This is a shorthand syntax for the equivalent variant
+
+    [% IF (userlist.count > 0) %]
+      [% FOREACH user IN userlist %]
+         Name: [% user.name %]    Email: [% user.email %]
+      [% END %]
+    [% ELSE %]
+      There are no users in the list
+    [% END %]
+
 The C<FOREACH> directive is implemented using the L<Template::Iterator>
 module.  A reference to the iterator object for a C<FOREACH> directive is
 implicitly available in the C<loop> variable.  The following methods 
