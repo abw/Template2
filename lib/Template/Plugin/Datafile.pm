@@ -27,7 +27,7 @@ our $VERSION = '3.003';
 
 sub new {
     my ($class, $context, $filename, $params) = @_;
-    my ($delim, $line, @fields, @data, @results);
+    my ($delim, $encoding, $line, @fields, @data, @results);
     my $self = [ ];
     local *FD;
     local $/ = "\n";
@@ -35,11 +35,12 @@ sub new {
     $params ||= { };
     $delim = $params->{'delim'} || ':';
     $delim = quotemeta($delim);
+    $encoding = defined $params->{'encoding'} ? ':encoding('.$params->{'encoding'}.')' : '';
 
     return $class->error("No filename specified")
         unless $filename;
 
-    open(FD, '<', $filename)
+    open(FD, '<'.$encoding, $filename)
         || return $class->error("$filename: $!");
 
     # first line of file should contain field definitions
