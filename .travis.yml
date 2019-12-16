@@ -12,6 +12,7 @@ env:
   matrix:
     - TT_STASH_AS_XS=y
     - TT_STASH_AS_XS=n
+
 perl:
   - "5.30"
   - "5.28"
@@ -24,6 +25,18 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
+
+matrix:
+  fast_finish: true
+
+before_install:
+  - mkdir /home/travis/bin || true
+  - eval $(curl https://travis-perl.github.io/init) --auto
+  - cpanm -n App::cpm Carton::Snapshot
+
+install:
+  - cpm install -g --no-test --with-test
+
 script:
   - perl Makefile.PL TT_XS_DEFAULT=$TT_STASH_AS_XS TT_XS_ENABLE=$TT_STASH_AS_XS TT_QUIET=n TT_ACCEPT=y && make test
 

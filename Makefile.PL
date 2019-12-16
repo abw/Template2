@@ -154,6 +154,7 @@ my %opts = (
     'TEST_REQUIRES' => {
         'CGI' => 0,
         'Test::LeakTrace' => 0,
+        'Test-Simple' => 1.302170,
     },
     'META_MERGE' => {
         'meta-spec' => { version => 2 },
