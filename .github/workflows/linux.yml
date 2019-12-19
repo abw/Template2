@@ -1,0 +1,39 @@
+name: linux
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+
+jobs:
+  perl:
+    env:
+      PERL_USE_UNSAFE_INC: 0
+      AUTHOR_TESTING: 1
+      AUTOMATED_TESTING: 1
+      RELEASE_TESTING: 1
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version: [latest, 5.28, 5.26, 5.24, 5.22, "5.20", 5.18, 5.16, 5.14, 5.12, "5.10", 5.8]
+        XS: [y, n]
+
+    container:
+      image: perl:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: perl -V
+        run: perl -V
+      - name: Install Dependencies
+        run: cpanm -v --installdeps --notest . && cpanm -n Test::More
+      - name: Makefile.PL
+        run: perl Makefile.PL TT_XS_DEFAULT=${{ matrix.XS }} TT_XS_ENABLE=${{ matrix.XS }} TT_QUIET=n TT_ACCEPT=y
+      - name: make test
+        run: make test
