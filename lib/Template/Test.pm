@@ -26,6 +26,8 @@ use warnings;
 use Template qw( :template );
 use Exporter;
 
+use constant MSWin32 => $^O eq 'MSWin32';
+
 our $VERSION = 2.75;
 our $DEBUG   = 0;
 our @ISA     = qw( Exporter );
@@ -44,7 +46,7 @@ our ($loaded, %callsign);
 
 # always set binmode on Win32 machines so that any output generated
 # is true to what we expect 
-$Template::BINMODE = ($^O eq 'MSWin32') ? 1 : 0;
+$Template::BINMODE = (MSWin32) ? 1 : 0;
 
 my @results = ();
 my ($ntests, $ok_count);
