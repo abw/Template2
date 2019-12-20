@@ -115,29 +115,35 @@ sub get_first {
 #------------------------------------------------------------------------
 
 sub get_next {
-    my $self = shift;
-    my ($max, $index) = @$self{ qw( MAX INDEX ) };
-    my $data = $self->{ _DATASET };
+    my ( $max, $index ) = @{ $_[0] }{qw( MAX INDEX )};
 
     # warn about incorrect usage
-    unless (defined $index) {
-        my ($pack, $file, $line) = caller();
+    if ( !defined $index ) {
+        my ( $pack, $file, $line ) = caller();
         warn("iterator get_next() called before get_first() at $file line $line\n");
-        return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
+        return ( undef, Template::Constants::STATUS_DONE );    ## RETURN ##
     }
 
     # if there's still some data to go...
-    if ($index < $max) {
-        # update counters and flags
-        $index++;
-        @$self{ qw( INDEX COUNT FIRST LAST ) }
-        = ( $index, $index + 1, 0, $index == $max ? 1 : 0 );
-        @$self{ qw( PREV NEXT ) } = @$data[ $index - 1, $index + 1 ];
-        return $data->[ $index ];                           ## RETURN ##
+    elsif ( $index >= $max ) {
+        return ( undef, Template::Constants::STATUS_DONE );    ## RETURN ##
     }
-    else {
-        return (undef, Template::Constants::STATUS_DONE);   ## RETURN ##
-    }
+
+    my $self = shift;
+    my $dataset = $self->{_DATASET};
+    
+    $index++;
+
+    # update counters and flags
+    @$self{qw( INDEX COUNT FIRST LAST PREV NEXT )} = (
+        $index,                                            # INDEX
+        $index + 1,                                        # COUNT
+        0,                                                 # FIRST
+        $index == $max ? 1 : 0,                            # LAST
+        @$dataset[ $index - 1, $index + 1 ]                # PREV, NEXT
+    );
+
+    return $dataset->[ $index ];                           ## RETURN ##
 }
 
 
