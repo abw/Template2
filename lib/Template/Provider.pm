@@ -446,21 +446,27 @@ sub _fetch {
         }
     }
 
-    # Is there an up-to-date compiled version on disk?
-    if (my $template_mtime = $self->_compiled_is_current($name)) {
-        # require() the compiled template.
-        my $compiled_template = $self->_load_compiled( $self->_compiled_filename($name) );
+    my($template,$error);
+    my $uncompiled_template_mtime = $self->_template_modified( $name );  # does template exist?
+    if (defined $uncompiled_template_mtime) {
+      # Is there an up-to-date compiled version on disk?
+      if (my $template_mtime = $self->_compiled_is_current($name, $uncompiled_template_mtime)) {
+          # require() the compiled template.
+          my $compiled_template = $self->_load_compiled( $self->_compiled_filename($name) );
 
-        # Store and return the compiled template
-        return $self->store( $name, $compiled_template, $template_mtime ) if $compiled_template;
+          # Store and return the compiled template
+          return $self->store( $name, $compiled_template, $template_mtime ) if $compiled_template;
 
-        # Problem loading compiled template:
-        # warn and continue to fetch source template
-        warn($self->error(), "\n");
+          # Problem loading compiled template:
+          # warn and continue to fetch source template
+          warn($self->error(), "\n");
+      }
+
+      # load template from source
+      ($template, $error) = $self->_load($name, $t_name);
+    } else {
+      $error = Template::Constants::STATUS_DECLINED; #not found
     }
-
-    # load template from source
-    my ($template, $error) = $self->_load($name, $t_name);
 
     if ($error) {
         # Template could not be fetched.  Add to the negative/notfound cache.
@@ -923,7 +929,7 @@ sub _compile {
 #------------------------------------------------------------------------
 
 sub _compiled_is_current {
-    my ( $self, $template_name ) = @_;
+    my ( $self, $template_name, $uncompiled_template_mtime ) = @_;
 
     my $compiled_name   = $self->_compiled_filename($template_name);
     return unless defined $compiled_name;
@@ -931,7 +937,7 @@ sub _compiled_is_current {
     my $compiled_mtime  = (stat($compiled_name))[9];
     return unless defined $compiled_mtime;
 
-    my $template_mtime  = $self->_template_modified( $template_name );
+    my $template_mtime  = $uncompiled_template_mtime || $self->_template_modified( $template_name )  or return;
     return unless defined $template_mtime;
 
     # This was >= in the 2.15, but meant that downgrading
