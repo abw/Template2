@@ -402,6 +402,7 @@ sub _init {
     # look for user-provided UNICODE parameter or use default from package var
     $self->{ UNICODE      } = defined $params->{ UNICODE }
                                     ? $params->{ UNICODE } : $UNICODE;
+    $self->{ PRE_COMPILE_HOOK } = $params->{ PRE_COMPILE_HOOK } || 0;
 
     return $self;
 }
@@ -467,6 +468,12 @@ sub _fetch {
         # Template could not be fetched.  Add to the negative/notfound cache.
         $self->{ NOTFOUND }->{ $name } = time;
         return ( $template, $error );
+    }
+    if ( $self->{ PRE_COMPILE_HOOK } ) {
+        $template->{text}
+          = $self->{ PRE_COMPILE_HOOK}->(
+              $template->{text}, $template->{path}, $template->{name}
+          );
     }
 
     # compile template source

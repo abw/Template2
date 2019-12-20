@@ -172,7 +172,8 @@ sub _init {
                             ? $config->{ AUTO_RESET } : 1;
     $self->{ DEBUG      } = ( $config->{ DEBUG } || 0 )
                             & Template::Constants::DEBUG_SERVICE;
-    
+    $self->{ PRE_COMPILE_HOOK } = $config->{ PRE_COMPILE_HOOK } || 0;
+
     $context = $self->{ CONTEXT } = $config->{ CONTEXT }
         || Template::Config->context($config)
         || return $self->error(Template::Config->error);
