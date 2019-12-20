@@ -161,10 +161,11 @@ sub fetch {
 #------------------------------------------------------------------------
 
 sub store {
-    my ($self, $name, $data) = @_;
+    my ($self, $name, $data, $mtime) = @_;
     $self->_store($name, {
-        data => $data,
-        load => 0,
+        data  => $data,
+        load  => 0,
+        mtime => $mtime
     });
 }
 
@@ -446,12 +447,12 @@ sub _fetch {
     }
 
     # Is there an up-to-date compiled version on disk?
-    if ($self->_compiled_is_current($name)) {
+    if (my $template_mtime = $self->_compiled_is_current($name)) {
         # require() the compiled template.
         my $compiled_template = $self->_load_compiled( $self->_compiled_filename($name) );
 
         # Store and return the compiled template
-        return $self->store( $name, $compiled_template ) if $compiled_template;
+        return $self->store( $name, $compiled_template, $template_mtime ) if $compiled_template;
 
         # Problem loading compiled template:
         # warn and continue to fetch source template
@@ -767,12 +768,12 @@ sub _store {
     # docs if you can call store() when SIZE = 0.
     return $data->{data} if defined $size and !$size;
 
+    # check the modification time -- extra stat here
+    my $load = $data->{ mtime } || $self->_modified($name);
+
     # extract the compiled template from the data hash
     $data = $data->{ data };
     $self->debug("_store($name, $data)") if $self->{ DEBUG };
-
-    # check the modification time -- extra stat here
-    my $load = $self->_modified($name);
 
     if (defined $size && $self->{ SLOTS } >= $size) {
         # cache has reached size limit, so reuse oldest entry
@@ -935,7 +936,7 @@ sub _compiled_is_current {
 
     # This was >= in the 2.15, but meant that downgrading
     # a source template would not get picked up.
-    return $compiled_mtime == $template_mtime;
+    return $compiled_mtime == $template_mtime ?  $template_mtime : 0;
 }
 
 
