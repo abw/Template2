@@ -111,7 +111,7 @@ warn: [% warn %]
 Hello
 World
 file: (eval)
-line: 10
+line: 11
 warn: Argument "" isn't numeric in addition (+)
 
 -- test --
