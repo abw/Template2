@@ -41,6 +41,7 @@ my ($factory, $rawstart);
 # Reserved words, comparison and binary operators
 #========================================================================
 
+BEGIN {
 @RESERVED = qw(
 	GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK END
 	USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT DIV MOD
@@ -107,6 +108,7 @@ $LEXTABLE = {
 			= ( @RESERVED, ('CMPOP') x @cmpop, ('BINOP') x @binop, @tokens );
 }
 
+} # --- END BEGIN
 
 #========================================================================
 # CLASS METHODS
@@ -128,6 +130,7 @@ sub install_factory {
 }
 
 
+BEGIN {
 #========================================================================
 # States
 #========================================================================
@@ -6184,6 +6187,7 @@ sub
 	]
 ];
 
+} #--- END BEGIN
 
 
 1;
