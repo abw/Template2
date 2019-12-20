@@ -21,15 +21,15 @@ use Template::Plugin::Simple;
 
 use Test::More;
 
-plan( skip_all => "Developer test" ) unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} );
-
-plan tests => 1;
+plan skip_all => "Developer test" unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} );
 
 #use Test::LeakTrace;
 eval { require Test::LeakTrace };
-if ($@) {
-    skip_all('Test::LeakTrace not installed');
+if ( $@ or !$INC{'Test/LeakTrace.pm'} ) {
+    plan skip_all => 'Test::LeakTrace not installed';
 }
+
+plan tests => 1;
 
 note "Searching for leak using Test::LeakTrace...";
 
