@@ -80,7 +80,7 @@ parser/Grammar.pm.skel
 parser/Parser.yp
 parser/README
 parser/yc
-README
+README.md
 t/anycase.t
 t/args.t
 t/assert.t
