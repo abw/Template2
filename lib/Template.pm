@@ -28,8 +28,6 @@ use Template::Config;
 use Template::Constants;
 use Template::Provider;
 use Template::Service;
-use File::Basename;
-use File::Path;
 use Scalar::Util qw(blessed);
 
 our $VERSION = '2.29';
@@ -181,10 +179,12 @@ sub _output {
     }
     # a simple string is taken as a filename
     elsif (! $reftype) {
+        require File::Basename;
+        require File::Path;
         local *FP;
         # make destination directory if it doesn't exist
-        my $dir = dirname($where);
-        eval { mkpath($dir) unless -d $dir; };
+        my $dir = File::Basename::dirname($where);
+        eval { File::Path::mkpath($dir) unless -d $dir; };
         if ($@) {
             # strip file name and line number from error raised by die()
             ($error = $@) =~ s/ at \S+ line \d+\n?$//;

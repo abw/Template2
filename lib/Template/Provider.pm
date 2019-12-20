@@ -44,7 +44,6 @@ use base 'Template::Base';
 use Template::Config;
 use Template::Constants;
 use Template::Document;
-use File::Basename;
 use File::Spec;
 
 use constant PREV   => 0;
@@ -366,7 +365,6 @@ sub _init {
     # create COMPILE_DIR and sub-directories representing each INCLUDE_PATH
     # element in which to store compiled files
     if ($cdir) {
-        require File::Path;
         foreach my $dir (@$path) {
             next if ref $dir;
             my $wdir = $dir;
@@ -374,7 +372,10 @@ sub _init {
             $wdir =~ /(.*)/;  # untaint
             $wdir = "$1";     # quotes work around bug in Strawberry Perl
             $wdir = File::Spec->catfile($cdir, $wdir);
-            File::Path::mkpath($wdir) unless -d $wdir;
+            if (! -d $wdir) {
+              require File::Path;
+              File::Path::mkpath($wdir);
+            }
         }
     }
 
@@ -859,11 +860,13 @@ sub _compile {
 
         # write the Perl code to the file $compfile, if defined
         if ($compfile) {
+            require File::Basename;
             my $basedir = &File::Basename::dirname($compfile);
             $basedir =~ /(.*)/;
             $basedir = $1;
 
             unless (-d $basedir) {
+                require File::Path;
                 eval { File::Path::mkpath($basedir) };
                 $error = "failed to create compiled templates directory: $basedir ($@)"
                     if ($@);
