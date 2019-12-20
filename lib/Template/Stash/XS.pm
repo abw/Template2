@@ -15,26 +15,18 @@ use strict;
 use warnings;
 use Template;
 use Template::Stash;
+use XSLoader;
 
 our $AUTOLOAD;
 
-BEGIN {
-    require DynaLoader;
-    @Template::Stash::XS::ISA = qw( DynaLoader Template::Stash );
+our @ISA = qw( Template::Stash );
 
-    eval {
-        bootstrap Template::Stash::XS $Template::VERSION;
-    };
-    if ($@) {
-        die "Couldn't load Template::Stash::XS $Template::VERSION:\n\n$@\n";
-    }
-}
+XSLoader::load 'Template::Stash::XS', $Template::VERSION;
 
 sub DESTROY {
     # no op
     1;
 }
-
 
 # catch missing method calls here so perl doesn't barf 
 # trying to load *.al files 
