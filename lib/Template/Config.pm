@@ -79,6 +79,7 @@ sub load {
     my ($class, $module) = @_;
     $module =~ s[::][/]g;
     $module .= '.pm';
+    return 1 if $INC{$module};
     eval { require $module; };
     return $@ ? $class->error("failed to load $module: $@") : 1;
 }
