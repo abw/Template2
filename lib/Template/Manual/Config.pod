@@ -141,7 +141,7 @@ Output:
 The C<PRE_CHOMP> and C<POST_CHOMP> options can help to clean up some of this
 extraneous whitespace.  Both are disabled by default.
 
-    my $template = Template-E<gt>new({
+    my $template = Template->new({
         PRE_CHOMP  => 1,
         POST_CHOMP => 1,
     });
