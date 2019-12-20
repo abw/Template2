@@ -533,6 +533,9 @@ sub _fetch_path {
 
 sub _compiled_filename {
     my ($self, $file) = @_;
+
+    return $self->{ COMPILEDPATH }{$file} if $self->{ COMPILEDPATH }{$file};
+
     my ($compext, $compdir) = @$self{ qw( COMPILE_EXT COMPILE_DIR ) };
     my ($path, $compiled);
 
@@ -544,7 +547,7 @@ sub _compiled_filename {
     $path =~ s[:][]g if $^O eq 'MSWin32';
 
     $compiled = "$path$compext";
-    $compiled = File::Spec->catfile($compdir, $compiled) if length $compdir;
+    $self->{ COMPILEDPATH }{$file} = $compiled = File::Spec->catfile($compdir, $compiled) if length $compdir;
 
     return $compiled;
 }
