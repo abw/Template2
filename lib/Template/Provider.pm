@@ -47,12 +47,13 @@ use Template::Document;
 use File::Basename;
 use File::Spec;
 
-use constant PREV   => 0;
-use constant NAME   => 1;   # template name -- indexed by this name in LOOKUP
-use constant DATA   => 2;   # Compiled template
-use constant LOAD   => 3;   # mtime of template
-use constant NEXT   => 4;   # link to next item in cache linked list
-use constant STAT   => 5;   # Time last stat()ed
+use constant PREV    => 0;
+use constant NAME    => 1;   # template name -- indexed by this name in LOOKUP
+use constant DATA    => 2;   # Compiled template
+use constant LOAD    => 3;   # mtime of template
+use constant NEXT    => 4;   # link to next item in cache linked list
+use constant STAT    => 5;   # Time last stat()ed
+use constant MSWin32 => $^O eq 'MSWin32';
 
 our $VERSION = 2.94;
 our $DEBUG   = 0 unless defined $DEBUG;
@@ -337,7 +338,7 @@ sub _init {
 
     # tweak delim to ignore C:/
     unless (defined $dlim) {
-        $dlim = ($^O eq 'MSWin32') ? ':(?!\\/)' : ':';
+        $dlim = MSWin32 ? ':(?!\\/)' : ':';
     }
 
     # coerce INCLUDE_PATH to an array ref, if not already so
@@ -371,7 +372,7 @@ sub _init {
         foreach my $dir (@$path) {
             next if ref $dir;
             my $wdir = $dir;
-            $wdir =~ s[:][]g if $^O eq 'MSWin32';
+            $wdir =~ s[:][]g if MSWin32;
             $wdir =~ /(.*)/;  # untaint
             $wdir = "$1";     # quotes work around bug in Strawberry Perl
             $wdir = File::Spec->catfile($cdir, $wdir);
@@ -545,7 +546,7 @@ sub _compiled_filename {
 
     $path = $file;
     $path =~ /^(.+)$/s or die "invalid filename: $path";
-    $path =~ s[:][]g if $^O eq 'MSWin32';
+    $path =~ s[:][]g if MSWin32;
 
     $compiled = "$path$compext";
     $self->{ COMPILEDPATH }{$file} = $compiled = File::Spec->catfile($compdir, $compiled) if length $compdir;
