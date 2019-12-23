@@ -72,9 +72,8 @@ sub new {
         $COMPERR = '';
 
         # DON'T LOOK NOW! - blindly untainting can make you go blind!
-        $block =~ /(.*)/s;
-        $block = $1;
-        
+        $block = each %{ { $block => undef } } if ${^TAINT};    #untaint
+
         $block = eval $block;
         return $class->error($@)
             unless defined $block;
@@ -293,7 +292,7 @@ sub write_perl_file {
     my ($fh, $tmpfile);
     
     return $class->error("invalid filename: $file")
-        unless $file =~ /^(.+)$/s;
+        unless defined $file && length $file;
 
     eval {
         require File::Temp;

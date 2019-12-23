@@ -210,7 +210,7 @@ sub get {
     $root = $self;
 
     if (ref $ident eq 'ARRAY'
-        || ($ident =~ /\./) 
+        || (index($ident,'.') > -1)
         && ($ident = [ map { s/\(.*$//; ($_, 0) } split(/\./, $ident) ])) {
         my $size = $#$ident;
 

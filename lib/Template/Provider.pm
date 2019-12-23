@@ -372,9 +372,8 @@ sub _init {
         foreach my $dir (@$path) {
             next if ref $dir;
             my $wdir = $dir;
-            $wdir =~ s[:][]g if MSWin32;
-            $wdir =~ /(.*)/;  # untaint
-            $wdir = "$1";     # quotes work around bug in Strawberry Perl
+            $wdir =~ tr[:][]d if MSWin32;
+            $wdir = each %{ { $wdir => undef } } if ${^TAINT};    #untaint
             $wdir = File::Spec->catfile($cdir, $wdir);
             File::Path::mkpath($wdir) unless -d $wdir;
         }
@@ -551,8 +550,9 @@ sub _compiled_filename {
         unless $compext || $compdir;
 
     $path = $file;
-    $path =~ /^(.+)$/s or die "invalid filename: $path";
-    $path =~ s[:][]g if MSWin32;
+    $path or die "invalid filename: $path";
+    $path =~ tr[:][]d if MSWin32;
+
 
     $compiled = "$path$compext";
     $self->{ COMPILEDPATH }{$file} = $compiled = File::Spec->catfile($compdir, $compiled) if length $compdir;
@@ -868,8 +868,7 @@ sub _compile {
         # write the Perl code to the file $compfile, if defined
         if ($compfile) {
             my $basedir = &File::Basename::dirname($compfile);
-            $basedir =~ /(.*)/;
-            $basedir = $1;
+            $basedir = each %{ { $basedir => undef } } if ${^TAINT};    #untaint
 
             unless (-d $basedir) {
                 eval { File::Path::mkpath($basedir) };
@@ -888,13 +887,14 @@ sub _compile {
             # set atime and mtime of newly compiled file, don't bother
             # if time is undef
             if (!defined($error) && defined $data->{ 'time' }) {
-                my ($cfile) = $compfile =~ /^(.+)$/s or do {
+                my $cfile = each %{ { $compfile => undef } };
+                if (!length $cfile) {
                     return("invalid filename: $compfile",
                            Template::Constants::STATUS_ERROR);
                 };
 
-                my ($ctime) = $data->{ 'time' } =~ /^(\d+)$/;
-                unless ($ctime || $ctime eq 0) {
+                my $ctime = $data->{ time };
+                if (!length $ctime || $ctime =~ tr{0-9}{}c) {
                     return("invalid time: $ctime",
                            Template::Constants::STATUS_ERROR);
                 }

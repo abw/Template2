@@ -411,7 +411,8 @@ sub AUTOLOAD {
     $item =~ s/.*:://;
     return if $item eq 'DESTROY';
 
-    if ($item =~ /^[\._]/) {
+    my $starts_with = substr($item,0,1);
+    if ($starts_with eq '.' || $starts_with eq '_') {
         return $self->{ _CONTEXT }->throw(Template::Constants::ERROR_VIEW,
                             "attempt to view private member: $item");
     }
