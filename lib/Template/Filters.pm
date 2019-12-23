@@ -26,7 +26,7 @@ use base 'Template::Base';
 use Template::Constants;
 use Scalar::Util 'blessed';
 
-our $VERSION         = '3.001';
+our $VERSION         = '3.002';
 our $AVAILABLE       = { };
 our $TRUNCATE_LENGTH = 32;
 our $TRUNCATE_ADDON  = '...';

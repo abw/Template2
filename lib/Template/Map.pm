@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use base 'Template::Base';
 
-our $VERSION  = '3.001';
+our $VERSION  = '3.002';
 our $DEBUG    = 0 unless defined $DEBUG;
 our $MAP = {
     HASH    => 'hash',
