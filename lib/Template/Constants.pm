@@ -121,13 +121,12 @@ sub debug_flags {
     my (@flags, $flag, $value);
     $debug = $self unless defined($debug) || ref($self);
     
-    if ($debug =~ /^\d+$/) {
+    if ( $debug !~ tr{0-9}{}c) {
         foreach $flag (@DEBUG) {
-            next if $flag =~ /^DEBUG_(OFF|ALL|FLAGS)$/;
+            next if $flag eq 'DEBUG_OFF' || $flag eq 'DEBUG_ALL' || $flag eq 'DEBUG_FLAGS';
 
             # don't trash the original
-            my $copy = $flag;
-            $flag =~ s/^DEBUG_//;
+            substr($flag,0,6,'') if index($flag,'DEBUG_') == 0;
             $flag = lc $flag;
             return $self->error("no value for flag: $flag")
                 unless defined($value = $DEBUG_OPTIONS->{ $flag });

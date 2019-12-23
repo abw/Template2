@@ -247,7 +247,7 @@ sub AUTOLOAD {
     return if $item eq 'DESTROY';
 
     # alias NUMBER to COUNT for backwards compatibility
-    $item = 'COUNT' if $item =~ /NUMBER/i;
+    $item = 'COUNT' if CORE::index(uc $item,'NUMBER') > -1;
 
     return $self->{ uc $item };
 }

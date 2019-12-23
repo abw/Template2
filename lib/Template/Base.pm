@@ -115,7 +115,7 @@ sub debug {
     my $msg  = join('', @_);
     my ($pkg, $file, $line) = caller();
 
-    unless ($msg =~ /\n$/) {
+    unless (substr($msg,-1) eq "\n") {
         $msg .= ($self->{ DEBUG } & Template::Constants::DEBUG_CALLER)
             ? " at $file line $line\n"
             : "\n";
