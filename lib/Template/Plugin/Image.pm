@@ -22,7 +22,7 @@ use base 'Template::Plugin';
 use Template::Exception;
 use File::Spec;
 
-our $VERSION = 1.21;
+our $VERSION = '3.000';
 our $AUTOLOAD;
 
 BEGIN {

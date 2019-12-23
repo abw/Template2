@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 
-our $VERSION = 1.16;
+our $VERSION = '3.000';
 our $AUTOLOAD;
 
 

@@ -24,7 +24,7 @@ use strict;
 use warnings;
 use base 'Template::Base';
 
-our $VERSION = 2.70;
+our $VERSION = '3.000';
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 our $AUTOLOAD;

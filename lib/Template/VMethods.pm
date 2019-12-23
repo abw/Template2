@@ -27,7 +27,7 @@ use Scalar::Util qw( blessed looks_like_number );
 use Template::Filters;
 require Template::Stash;
 
-our $VERSION = 2.16;
+our $VERSION = '3.000';
 our $DEBUG   = 0 unless defined $DEBUG;
 our $PRIVATE = $Template::Stash::PRIVATE;
 

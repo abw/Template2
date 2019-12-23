@@ -29,7 +29,7 @@ use strict;
 use warnings;
 use base 'Template::Base';
 
-our $VERSION  = 2.91;
+our $VERSION  = '3.000';
 our $DEBUG    = 0 unless defined $DEBUG;
 our @BASEARGS = qw( context );
 our $AUTOLOAD;
