@@ -150,14 +150,19 @@ sub textblock {
 #------------------------------------------------------------------------
 
 sub text {
-    my ($self, $text) = @_;
-    for ($text) {
-        s/(["\$\@\\])/\\$1/g;
-        s/\n/\\n/g;
-    }
-    return '"' . $text . '"';
-}
+    my ( $self, $text ) = @_;
 
+    return '' if !length $text;
+
+    if ( $text =~ tr{$@\\}{} ) {
+        $text =~ s/(["\$\@\\])/\\$1/g;
+        $text =~ s/\n/\\n/g;
+        return '"' . $text . '"';
+    }
+
+    $text =~ s{'}{\\'}g if index( $text, q{'} ) != -1;
+    return q{'} . $text . q{'};
+}
 
 #------------------------------------------------------------------------
 # quoted(\@items)                                               "foo$bar"

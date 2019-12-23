@@ -77,7 +77,7 @@ die "parser error: ", $parser->error(), "\n"
 my $text = $parsed->{ BLOCK };
 
 ok( scalar $text =~ /'Andy \\'Da Man\\' Wardley'/, 'author folded' );
-ok( scalar $text =~ /"back is " . '#ffffff'/, 'col.back folded' );
+ok( scalar $text =~ /'back is ' . '#ffffff'/, 'col.back folded' );
 ok( scalar $text =~ /stash->get\(\['col', 0, 'user', 0\]\)/, 'col.user unfolded' );
 
 
@@ -101,7 +101,7 @@ die "parser error: ", $parser->error(), "\n"
 $text = $parsed->{ BLOCK };
 
 ok( scalar $text =~ /'Andy \\'Da Man\\' Wardley'/, 'author folded' );
-ok( scalar $text =~ /"back is " . '#ffffff'/, 'col.back folded' );
+ok( scalar $text =~ /'back is ' . '#ffffff'/, 'col.back folded' );
 ok( scalar $text =~ /stash->get\(\['col', 0, 'user', 0\]\)/, 'col.user unfolded' );
 
 #------------------------------------------------------------------------
