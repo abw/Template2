@@ -61,6 +61,8 @@
 
 * Reduce op complexity in some regexes to reduce overhead.
 
+* Remove old_new function from Template::Plugin
+
 #-----------------------------------------------------------------------
 # Version 2.29 - 29th April 2019
 #------------------------------------------------------------------------
