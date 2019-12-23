@@ -301,6 +301,16 @@ Tom
 
 
 -- test --
+-- name list import two --
+[% list_one = [ 1 2 3 ];
+   list_two = [ 4 5 6 ];
+   list_three = [ 7 8 9 0 ];
+   list_one.import(list_two).import(list_three).join(', ') %]
+-- expect --
+1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+
+
+-- test --
 -- name list merge one --
 [% list_one = [ 1 2 3 ];
    list_two = [ 4 5 6 ];
