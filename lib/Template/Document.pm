@@ -26,7 +26,7 @@ use warnings;
 use base 'Template::Base';
 use Template::Constants;
 
-our $VERSION = 2.79;
+our $VERSION = '3.000';
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 our ($COMPERR, $AUTOLOAD, $UNICODE);

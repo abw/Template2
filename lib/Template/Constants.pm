@@ -29,7 +29,7 @@ use vars qw( $DEBUG_OPTIONS @STATUS @ERROR @CHOMP @DEBUG @ISA );
 # ... so we'll do it the Old Skool way just to keep it quiet
 @ISA = qw( Exporter );
 
-our $VERSION = 2.75;
+our $VERSION = '3.000';
 
 
 #========================================================================

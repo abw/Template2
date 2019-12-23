@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 
-our $VERSION = 2.70;
+our $VERSION = '3.000';
 
 
 sub new {
