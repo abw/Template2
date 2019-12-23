@@ -10,13 +10,54 @@
 #
 #========================================================================
 
-* Matthew Somerville stopped a list import from printing an ARRAY(...) string.
-  https://github.com/abw/Template2/issues/33
-
-
 #-----------------------------------------------------------------------
 # Unreleased
 #------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------
+# Version 2.30 - 23rd December 2019
+#------------------------------------------------------------------------
+
+* Switch to github actions for CI testing
+
+* @nataraj-hates-MS-for-stealing-github fixed a minor metacpan POD issue
+  with Template::Manual::Config
+
+* Display github actions CI status in README
+
+* Reverted behavior change to import vmethod and updated documentation to clarify that it chains.
+
+* Use XSLoader for Template::Stash::XS
+
+* Cache compiled filename so we don't have to figure it out multiple times
+
+* Speed up Template Toolkit template by about 10% with single quotes
+
+* Avoid a double stat in Provider.pm by caching the mtime.
+
+* Avoid destruction segfault on Template objects due to global destruction issues.
+
+* Avoid requiring in modules that are already loaded.
+
+* Switch win32 logic to a constant to speed up processing speed
+
+* Switch regexes to simple string checks to speed up parsing.
+
+* Ensure we only load plugins once per context.
+
+* Reduce the number of stat()s needed to find a compiled template.
+
+* Optimize get_next overhead for frequent calls by avoiding AUTOLOAD.
+
+* Reduce Template Toolkit get_next overhead
+
+* Update with yapp parser using sort()
+
+* Add BEGIN blocks to Template::Grammar
+
+* Set date to epoch when doing date.format(0)
+
+* Reduce op complexity in some regexes to reduce overhead.
 
 #-----------------------------------------------------------------------
 # Version 2.29 - 29th April 2019
