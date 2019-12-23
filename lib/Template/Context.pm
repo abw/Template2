@@ -762,25 +762,25 @@ sub debugging {
     my @args = @_;
 
     if (@args) {
-        if ($args[0] =~ /^(on|1)$/i) {
+        if ($args[0] eq '1' || lc($args[0]) eq 'on' ) {
             $self->{ DEBUG_DIRS } = 1;
             shift(@args);
         }
-        elsif ($args[0] =~ /^(off|0)$/i) {
+        elsif ($args[0] eq '0' || lc($args[0]) eq 'off') {
             $self->{ DEBUG_DIRS } = 0;
             shift(@args);
         }
     }
 
     if (@args) {
-        if ($args[0] =~ /^msg$/i) {
+        if (lc($args[0]) eq 'msg') {
             return unless $self->{ DEBUG_DIRS };
             my $format = $self->{ DEBUG_FORMAT };
             $format = $DEBUG_FORMAT unless defined $format;
             $format =~ s/\$(\w+)/$hash->{ $1 }/ge;
             return $format;
         }
-        elsif ($args[0] =~ /^format$/i) {
+        elsif ( lc($args[0]) eq 'format' ) {
             $self->{ DEBUG_FORMAT } = $args[1];
         }
         # else ignore

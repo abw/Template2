@@ -75,13 +75,13 @@ sub define_vmethod {
     my $op;
     $type = lc $type;
 
-    if ($type =~ /^(scalar|item)$/) {
+    if ($type eq 'scalar' || $type eq 'item') {
         $op = $SCALAR_OPS;
     }
     elsif ($type eq 'hash') {
         $op = $HASH_OPS;
     }
-    elsif ($type =~ /^(list|array)$/) {
+    elsif ($type eq 'list' || $type eq 'array') {
         $op = $LIST_OPS;
     }
     else {
@@ -257,7 +257,7 @@ sub set {
 
     ELEMENT: {
         if (ref $ident eq 'ARRAY'
-            || ($ident =~ /\./) 
+            || (index($ident,'.') != -1) # has a '.' in it somewhere
             && ($ident = [ map { s/\(.*$//; ($_, 0) }
                            split(/\./, $ident) ])) {
             
@@ -667,7 +667,7 @@ sub _dump_frame {
     foreach $key (keys %$self) {
         $value = $self->{ $key };
         $value = '<undef>' unless defined $value;
-        next if $key =~ /^\./;
+        next if index($key,'.') == 0; # has '.' as the first char.
         if (ref($value) eq 'ARRAY') {
             $value = '[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
                                  @$value) . ' ]';
