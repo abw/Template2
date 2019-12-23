@@ -244,14 +244,14 @@ EOF
 
 sub version_check {
     eval "use Template";
-    unless ($@ or $Template::VERSION =~ /^2/) {
+    unless ($@ or $Template::VERSION =~ /^[23]/) {
         warn(<<EOF) unless $TT_QUIET;
 
 IMPORTANT NOTE:
 
     You have version $Template::VERSION of the Template Toolkit installed.
 
-    There are some minor incompatabilities between version 1 and 2
+    There are some minor incompatabilities between version 1 and 2 or 3
     of the Template Toolkit which you should be aware of.  Installing
     this version will overwrite your version $Template::VERSION files
     unless you take measures to install one or the other version in a
