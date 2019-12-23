@@ -40,7 +40,7 @@ sub die {
 
 package TestObject;
 
-use vars qw( $AUTOLOAD );
+our $AUTOLOAD;
 
 sub new {
     my ($class, $params) = @_;

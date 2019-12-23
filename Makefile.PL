@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use 5.006;
+use 5.008;
 use lib qw( ./lib );
 use Config;
 use File::Spec::Functions qw( catfile );
@@ -15,9 +15,10 @@ select STDERR;
 $| = 1;
 select STDOUT;
 
-use vars qw( $TT_VERSION $TT_PREFIX
-             $TT_XS_ENABLE $TT_XS_DEFAULT
-             $TT_QUIET $TT_ACCEPT $TT_YES );
+our ( $TT_VERSION, $TT_PREFIX,
+      $TT_XS_ENABLE, $TT_XS_DEFAULT,
+      $TT_QUIET, $TT_ACCEPT, $TT_YES
+);
 
 # check O/S to set sensible defaults
 

@@ -178,7 +178,7 @@ sub throw {
 
 package Template::Plugin::Date::Calc;
 use base qw( Template::Plugin );
-use vars qw( $AUTOLOAD );
+our $AUTOLOAD;
 *throw = \&Template::Plugin::Date::throw;
 
 sub AUTOLOAD {
@@ -197,7 +197,7 @@ sub AUTOLOAD {
 
 package Template::Plugin::Date::Manip;
 use base qw( Template::Plugin );
-use vars qw( $AUTOLOAD );
+our $AUTOLOAD;
 *throw = \&Template::Plugin::Date::throw;
 
 sub AUTOLOAD {

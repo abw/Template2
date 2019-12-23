@@ -30,7 +30,7 @@ $Template::Test::PRESERVE = 1;
 
 #------------------------------------------------------------------------
 package Holler;
-use vars qw( $TRACE $PREFIX );
+our ( $TRACE, $PREFIX );
 $TRACE = '';
 $PREFIX = 'Holler:';
 

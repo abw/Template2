@@ -83,7 +83,7 @@ unlink($file2);
 package My::Template;
 use Template;
 use base qw( Template );
-use vars qw( $MESSAGE );
+our $MESSAGE;
 
 sub DEBUG {
     my $self = shift;

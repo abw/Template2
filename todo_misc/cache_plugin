@@ -116,13 +116,12 @@ Content-Disposition: inline;
 package Template::Plugin::Cache;
 
 use strict;
-use vars qw( $VERSION );
 use base qw( Template::Plugin );
 use Template::Plugin;
 
 use File::Cache;
 
-$VERSION = 0.1;
+our $VERSION = 0.1;
 
 #------------------------------------------------------------------------
 # new(\%options)

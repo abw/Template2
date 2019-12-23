@@ -525,12 +525,11 @@ module.  That module might look something like this:
     package MyOrg::Apache::User;
     
     use strict;
-    use vars qw( $VERSION );
     use Apache::Constants qw( :common );
     use Template qw( :template );
     use CGI;
     
-    $VERSION = 1.59;
+    our $VERSION = 1.59;
     
     sub handler {
         my $r = shift;
