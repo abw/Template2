@@ -204,11 +204,34 @@ sub parity {
     shift->{ COUNT } % 2 ? ODD : EVEN;
 }
 
+sub index {
+    return $_[0]->{INDEX};
+}
+
+sub count {
+    return $_[0]->{COUNT};
+}
+
+sub number { # This is here for backward compatibility per sub AUTOLOAD
+    return $_[0]->{COUNT};
+}
+
+sub first {
+    return $_[0]->{FIRST};
+}
+
+sub last {
+    return $_[0]->{LAST};
+}
+
+sub size {
+    return $_[0]->{SIZE};
+}
 
 #------------------------------------------------------------------------
 # AUTOLOAD
 #
-# Provides access to internal fields (e.g. size, first, last, max, etc)
+# Provides access to internal fields (e.g. prev, next, etc)
 #------------------------------------------------------------------------
 
 sub AUTOLOAD {
