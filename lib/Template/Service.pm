@@ -30,7 +30,7 @@ use Scalar::Util 'blessed';
 
 use constant EXCEPTION => 'Template::Exception';
 
-our $VERSION = '3.000';
+our $VERSION = '3.001';
 our $DEBUG   = 0 unless defined $DEBUG;
 our $ERROR   = '';
 

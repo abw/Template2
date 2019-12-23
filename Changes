@@ -15,10 +15,16 @@
 #------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
-# Version 3.000 - 23rd December 2019
+# Version 3.001 - 23rd December 2019
 #------------------------------------------------------------------------
 
 * Remove 'use vars' and drop officialy 5.6 support.
+
+* Remove old_new function from Template::Plugin
+
+#-----------------------------------------------------------------------
+# Version 3.000 - 23rd December 2019
+#------------------------------------------------------------------------
 
 * Bump all packages versions to 3.000
 
@@ -62,8 +68,6 @@
 * Set date to epoch when doing date.format(0)
 
 * Reduce op complexity in some regexes to reduce overhead.
-
-* Remove old_new function from Template::Plugin
 
 #-----------------------------------------------------------------------
 # Version 2.29 - 29th April 2019

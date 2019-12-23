@@ -28,7 +28,7 @@ use warnings;
 use base 'Template::Base';
 use Template::Constants;
 
-our $VERSION = '3.000';
+our $VERSION = '3.001';
 our $DEBUG   = 0 unless defined $DEBUG;
 our $PLUGIN_BASE = 'Template::Plugin';
 our $STD_PLUGINS = {
