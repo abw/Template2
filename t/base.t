@@ -28,7 +28,7 @@ ntests(24);
 #------------------------------------------------------------------------
 package Template::Fail;
 use base qw( Template::Base );
-use vars qw( $ERROR );
+our $ERROR;
 use Template::Base;
 
 sub _init {
@@ -42,7 +42,7 @@ sub _init {
 #------------------------------------------------------------------------
 package Template::Named;
 use base qw( Template::Base );
-use vars qw( $ERROR );
+our $ERROR;
 use Template::Base;
 
 sub _init {
@@ -63,7 +63,7 @@ sub name {
 package Template::Version;
 use Template::Base;
 use base qw( Template::Base );
-use vars qw( $ERROR $VERSION );
+our ( $ERROR, $VERSION );
 $VERSION = 3.14;
 
 

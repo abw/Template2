@@ -22,15 +22,13 @@ require Exporter;
 use strict;
 use warnings;
 use Exporter;
-# Perl::MinimumVersion seems to think this is a Perl 5.008ism...
-# use base qw( Exporter );
-use vars qw( @EXPORT_OK %EXPORT_TAGS );
-use vars qw( $DEBUG_OPTIONS @STATUS @ERROR @CHOMP @DEBUG @ISA );
-# ... so we'll do it the Old Skool way just to keep it quiet
-@ISA = qw( Exporter );
+
+use base qw( Exporter );
+
+our ( @EXPORT_OK, %EXPORT_TAGS );
+our ( $DEBUG_OPTIONS, @STATUS, @ERROR, @CHOMP, @DEBUG, @ISA );
 
 our $VERSION = '3.000';
-
 
 #========================================================================
 #                         ----- EXPORTER -----

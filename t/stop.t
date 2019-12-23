@@ -18,7 +18,7 @@
 
 use strict;
 use lib qw( ./lib ../lib ../blib/lib ../blib/arch ./blib/lib ./blib/arch );
-use vars qw( $DEBUG );
+our $DEBUG;
 use Template::Test;
 use Template::Parser;
 use Template::Exception;

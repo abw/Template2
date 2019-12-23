@@ -21,29 +21,32 @@ package Template::Config;
 use strict;
 use warnings;
 use base 'Template::Base';
-use vars qw( $VERSION $DEBUG $ERROR $INSTDIR
-             $PARSER $PROVIDER $PLUGINS $FILTERS $ITERATOR 
-             $LATEX_PATH $PDFLATEX_PATH $DVIPS_PATH
-             $STASH $SERVICE $CONTEXT $CONSTANTS @PRELOAD );
 
-$VERSION   = '3.000';
+our $VERSION   = '3.000';
+
+our $DEBUG;
 $DEBUG     = 0 unless defined $DEBUG;
-$ERROR     = '';
-$CONTEXT   = 'Template::Context';
-$FILTERS   = 'Template::Filters';
-$ITERATOR  = 'Template::Iterator';
-$PARSER    = 'Template::Parser';
-$PLUGINS   = 'Template::Plugins';
-$PROVIDER  = 'Template::Provider';
-$SERVICE   = 'Template::Service';
+our $ERROR     = '';
+our $CONTEXT   = 'Template::Context';
+our $FILTERS   = 'Template::Filters';
+our $ITERATOR  = 'Template::Iterator';
+our $PARSER    = 'Template::Parser';
+our $PLUGINS   = 'Template::Plugins';
+our $PROVIDER  = 'Template::Provider';
+our $SERVICE   = 'Template::Service';
+our $STASH;
 $STASH     = 'Template::Stash::XS';
-$CONSTANTS = 'Template::Namespace::Constants';
+our $CONSTANTS = 'Template::Namespace::Constants';
 
-@PRELOAD   = ( $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
+our $LATEX_PATH;
+our $PDFLATEX_PATH;
+our $DVIPS_PATH;
+
+our @PRELOAD   = ( $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
                $PLUGINS, $PROVIDER, $SERVICE, $STASH );
 
 # the following is set at installation time by the Makefile.PL 
-$INSTDIR  = '';
+our $INSTDIR  = '';
 
 
 #========================================================================

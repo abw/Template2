@@ -15,7 +15,7 @@
 
 use strict;
 use lib qw( ./lib ../lib );
-use vars qw( $DEBUG );
+our $DEBUG;
 use Template::Test;
 $^W = 1;
 
