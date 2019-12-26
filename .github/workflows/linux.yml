@@ -60,8 +60,8 @@ jobs:
         run: $CPM_INSTALL_PLUGIN Template::Plugin::CSV
       - name: Template::Plugin::URI
         run: $CPM_INSTALL_PLUGIN Template::Plugin::URI
-      # - name: Template::Plugin::Autoformat
-      #   run: $CPM_INSTALL_PLUGIN Template::Plugin::Autoformat
+      - name: Template::Plugin::Autoformat
+        run: $CPM_INSTALL_PLUGIN Template::Plugin::Autoformat
       # - name: Template-DBI
       #   run: $CPM_INSTALL_PLUGIN Template::Plugin::DBI
       # - name: Template::Plugin::Map

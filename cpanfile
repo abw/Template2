@@ -14,4 +14,7 @@ on "test" => sub {
         requires "Test::Builder"             => 0;
         requires "Test::CPAN::Meta"          => 0;
         requires "Test::More"                => 0;
+
+        # required for testing some plugins on 5.8
+        requires "Module::Build"             => 0;
 };
