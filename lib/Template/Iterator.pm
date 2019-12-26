@@ -444,6 +444,11 @@ on the first item.
 Returns the next item in the data set or C<undef> if the iterator is on the 
 last item.
 
+=head2 number()
+
+This is an alias to 'count' to provide backward compatibility.
+View L<count>.
+
 =head2 parity()
 
 Returns the text string C<even> or C<odd> to indicate the parity of the 

@@ -17,4 +17,6 @@ on "test" => sub {
 
         # required for testing some plugins on 5.8
         requires "Module::Build"             => 0;
+        requires "Test::Pod"                 => 0;
+        requires "Test::Pod::Coverage"       => 0;
 };
