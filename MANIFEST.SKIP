@@ -63,3 +63,4 @@
 ^templates/xhtml
 ^templates/jscript
 ^\.travis.yml
+cpanfile

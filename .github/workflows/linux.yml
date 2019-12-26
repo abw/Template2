@@ -11,17 +11,31 @@ on:
 jobs:
   perl:
     env:
-      PERL_USE_UNSAFE_INC: 0
+      # some plugins still needs this to run their tests...
+      PERL_USE_UNSAFE_INC: 1
       AUTHOR_TESTING: 1
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 1
+      CPM_INSTALL_PLUGIN: "cpm install -g --test --show-build-log-on-failure"
 
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        perl-version: [latest, 5.28, 5.26, 5.24, 5.22, "5.20", 5.18, 5.16, 5.14, 5.12, "5.10", 5.8]
+        perl-version:
+          - 'latest'
+          - '5.28'
+          - '5.26'
+          - '5.24'
+          - '5.22'
+          - '5.20'
+          - '5.18'
+          - '5.16'
+          - '5.14'
+          - '5.12'
+          - '5.10'
+          - '5.8'
         XS: [y, n]
 
     container:
@@ -31,9 +45,26 @@ jobs:
       - uses: actions/checkout@v1
       - name: perl -V
         run: perl -V
+      - name: Install cpm
+        run: cpanm -n App::cpm Carton::Snapshot
       - name: Install Dependencies
-        run: cpanm -v --installdeps --notest . && cpanm -n Test::More
+        run: cpm install -g --no-test --show-build-log-on-failure --cpanfile cpanfile
       - name: Makefile.PL
         run: perl Makefile.PL TT_XS_DEFAULT=${{ matrix.XS }} TT_XS_ENABLE=${{ matrix.XS }} TT_QUIET=n TT_ACCEPT=y
       - name: make test
         run: make test
+      - name: make install
+        run: make install
+      # Try to install multiple plugins to confirm we do not break them
+      - name: Template::Plugin::CSV
+        run: $CPM_INSTALL_PLUGIN Template::Plugin::CSV
+      - name: Template::Plugin::URI
+        run: $CPM_INSTALL_PLUGIN Template::Plugin::URI
+      # - name: Template::Plugin::Autoformat
+      #   run: $CPM_INSTALL_PLUGIN Template::Plugin::Autoformat
+      # - name: Template-DBI
+      #   run: $CPM_INSTALL_PLUGIN Template::Plugin::DBI
+      # - name: Template::Plugin::Map
+      #   run: $CPM_INSTALL_PLUGIN Template::Plugin::Map
+      # - name: Template::XML
+      #   run: $CPM_INSTALL_PLUGIN Template::XML
