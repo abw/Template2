@@ -15,6 +15,16 @@
 #------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
+# Version 3.003 - 27th December 2019
+#------------------------------------------------------------------------
+
+* Revert 'Ensure we only load plugins once per context' which was breaking
+multiple plugins including: Template-Plugin-Autoformat, Template-DBI, Template-Plugin-Map,
+Template-Provider-FromDATA, Template-XML...
+
+* Add an additional GitHub Actions workflow to check plugins for future releases.
+
+#-----------------------------------------------------------------------
 # Version 3.002 - 23rd December 2019
 #------------------------------------------------------------------------
 
