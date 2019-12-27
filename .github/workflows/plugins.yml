@@ -1,0 +1,59 @@
+name: plugins
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+
+jobs:
+  perl:
+    env:
+      # some plugins still needs this to run their tests...
+      PERL_USE_UNSAFE_INC: 1
+      AUTHOR_TESTING: 0
+      AUTOMATED_TESTING: 0
+      RELEASE_TESTING: 0
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin:
+          - 'Template::Plugin::Autoformat'
+          - 'Template::Plugin::Cache'
+          - 'Template::Plugin::CSV'
+          - 'Template::Plugin::DBI'
+          - 'Template::Plugin::Dump'
+          - 'Template::Plugin::HTML::Template'
+          - 'Template::Plugin::JSON'
+          - 'Template::Plugin::Map'
+          - 'Template::Plugin::MIME'
+          - 'Template::Plugin::URI'
+          - 'Template::Plugin::XML'
+          - 'Template::Provider::FromDATA'
+        perl-version:
+          - 'latest'
+        XS: [y, n]
+
+    container:
+      image: perl:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: perl -V
+        run: perl -V
+      - name: Install cpm
+        run: cpanm -n App::cpm Carton::Snapshot
+      - name: Install Dependencies
+        run: cpm install -g --no-test --show-build-log-on-failure --cpanfile cpanfile.plugins
+      - name: Makefile.PL
+        run: perl Makefile.PL TT_XS_DEFAULT=${{ matrix.XS }} TT_XS_ENABLE=${{ matrix.XS }} TT_QUIET=n TT_ACCEPT=y
+      - name: make install
+        run: make install
+      # Try to install multiple plugins to confirm we do not break them
+      - name: install plugin
+        run: cpm install -g --test --show-build-log-on-failure ${{ matrix.plugin }}

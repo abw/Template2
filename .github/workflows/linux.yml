@@ -12,11 +12,10 @@ jobs:
   perl:
     env:
       # some plugins still needs this to run their tests...
-      PERL_USE_UNSAFE_INC: 1
+      PERL_USE_UNSAFE_INC: 0
       AUTHOR_TESTING: 1
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 1
-      CPM_INSTALL_PLUGIN: "cpm install -g --test --show-build-log-on-failure"
 
     runs-on: ubuntu-latest
 
@@ -55,18 +54,3 @@ jobs:
         run: make test
       - name: make install
         run: make install
-      # Try to install multiple plugins to confirm we do not break them
-      - name: Template::Plugin::CSV
-        run: $CPM_INSTALL_PLUGIN Template::Plugin::CSV
-      - name: Template::Plugin::URI
-        run: $CPM_INSTALL_PLUGIN Template::Plugin::URI
-        env:
-          RELEASE_TESTING: 0
-      - name: Template::Plugin::Autoformat
-        run: $CPM_INSTALL_PLUGIN Template::Plugin::Autoformat
-      # - name: Template-DBI
-      #   run: $CPM_INSTALL_PLUGIN Template::Plugin::DBI
-      # - name: Template::Plugin::Map
-      #   run: $CPM_INSTALL_PLUGIN Template::Plugin::Map
-      # - name: Template::XML
-      #   run: $CPM_INSTALL_PLUGIN Template::XML
