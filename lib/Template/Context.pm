@@ -188,28 +188,13 @@ sub plugin {
     $self->debug("plugin($name, ", defined $args ? @$args : '[ ]', ')')
         if $self->{ DEBUG };
 
-    if ( !$args && $self->{ _PLUGIN_CONTEXT_CACHE }{$name} ) {
-        return $self->{ _PLUGIN_CONTEXT_CACHE }{$name};
-    }
+    return $self->{ _PLUGIN_CONTEXT_CACHE }{$name} if !$args && $self->{ _PLUGIN_CONTEXT_CACHE }{$name};
 
     # request the named plugin from each of the LOAD_PLUGINS providers in turn
     foreach my $provider (@{ $self->{ LOAD_PLUGINS } }) {
         ($plugin, $error) = $provider->fetch($name, $args, $self);
-        if (!$error) {
-            my $plugin_has_filter;
-            if ( $self->{LOAD_FILTERS} ) {
-                foreach my $filter ( @{$self->{LOAD_FILTERS}} ) {
-                    next unless ref $filter && ref $filter->{FILTERS};
-                    if (  $filter->{FILTERS}->{$name} ) {
-                        # do not cache plugins with filters
-                        $plugin_has_filter = 1;
-                        last;
-                    }
-                }
-            }
-            if ( !$args && !$plugin_has_filter ) {
-                $self->{ _PLUGIN_CONTEXT_CACHE }{$name} = $plugin;
-            }
+        unless($error) {
+          $self->{ _PLUGIN_CONTEXT_CACHE }{$name} = $plugin if !$args;
           return $plugin;
         }
         if ($error == Template::Constants::STATUS_ERROR) {
