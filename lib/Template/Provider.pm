@@ -448,25 +448,25 @@ sub _fetch {
 
     my($template,$error);
     my $uncompiled_template_mtime = $self->_template_modified( $name );  # does template exist?
-    if (defined $uncompiled_template_mtime) {
-      # Is there an up-to-date compiled version on disk?
-      if (my $template_mtime = $self->_compiled_is_current($name, $uncompiled_template_mtime)) {
-          # require() the compiled template.
-          my $compiled_template = $self->_load_compiled( $self->_compiled_filename($name) );
 
-          # Store and return the compiled template
-          return $self->store( $name, $compiled_template, $template_mtime ) if $compiled_template;
+    # some templates like Provider::FromDATA does not provide mtime information
+    $uncompiled_template_mtime = 0 unless defined $uncompiled_template_mtime;
 
-          # Problem loading compiled template:
-          # warn and continue to fetch source template
-          warn($self->error(), "\n");
-      }
+    # Is there an up-to-date compiled version on disk?
+    if (my $template_mtime = $self->_compiled_is_current($name, $uncompiled_template_mtime)) {
+        # require() the compiled template.
+        my $compiled_template = $self->_load_compiled( $self->_compiled_filename($name) );
 
-      # load template from source
-      ($template, $error) = $self->_load($name, $t_name);
-    } else {
-      $error = Template::Constants::STATUS_DECLINED; #not found
+        # Store and return the compiled template
+        return $self->store( $name, $compiled_template, $template_mtime ) if $compiled_template;
+
+        # Problem loading compiled template:
+        # warn and continue to fetch source template
+        warn($self->error(), "\n");
     }
+
+    # load template from source
+    ($template, $error) = $self->_load($name, $t_name);
 
     if ($error) {
         # Template could not be fetched.  Add to the negative/notfound cache.

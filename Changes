@@ -19,8 +19,11 @@
 #------------------------------------------------------------------------
 
 * Revert 'Ensure we only load plugins once per context' which was breaking
-multiple plugins including: Template-Plugin-Autoformat, Template-DBI, Template-Plugin-Map,
-Template-Provider-FromDATA, Template-XML...
+multiple plugins including: Template-Plugin-Autoformat, Template-DBI,
+Template-Plugin-Map, Template-XML...
+
+* Fix _fetch when mtime is not provided by the plugin.
+This is fixing Template-Provider-FromDATA.
 
 * Add an additional GitHub Actions workflow to check plugins for future releases.
 
