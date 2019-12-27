@@ -24,7 +24,7 @@ use warnings;
 use Template::Exception;
 use Scalar::Util qw();
 
-our $VERSION   = '3.002';
+our $VERSION   = '3.003';
 our $MONAD     = 'Template::Monad::Scalar';
 our $EXCEPTION = 'Template::Exception';
 our $AUTOLOAD;

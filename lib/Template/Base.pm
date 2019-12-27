@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use Template::Constants;
 
-our $VERSION = '3.002';
+our $VERSION = '3.003';
 
 
 #------------------------------------------------------------------------

@@ -25,7 +25,7 @@ use Template::VMethods;
 use Template::Exception;
 use Scalar::Util qw( blessed reftype );
 
-our $VERSION    = '3.002';
+our $VERSION    = '3.003';
 our $DEBUG      = 0 unless defined $DEBUG;
 our $PRIVATE    = qr/^[_.]/;
 our $UNDEF_TYPE = 'var.undef';
