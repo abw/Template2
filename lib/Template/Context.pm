@@ -187,16 +187,11 @@ sub plugin {
     
     $self->debug("plugin($name, ", defined $args ? @$args : '[ ]', ')')
         if $self->{ DEBUG };
-
-    return $self->{ _PLUGIN_CONTEXT_CACHE }{$name} if !$args && $self->{ _PLUGIN_CONTEXT_CACHE }{$name};
-
+    
     # request the named plugin from each of the LOAD_PLUGINS providers in turn
     foreach my $provider (@{ $self->{ LOAD_PLUGINS } }) {
         ($plugin, $error) = $provider->fetch($name, $args, $self);
-        unless($error) {
-          $self->{ _PLUGIN_CONTEXT_CACHE }{$name} = $plugin if !$args;
-          return $plugin;
-        }
+        return $plugin unless $error;
         if ($error == Template::Constants::STATUS_ERROR) {
             $self->throw($plugin) if ref $plugin;
             $self->throw(Template::Constants::ERROR_PLUGIN, $plugin);
