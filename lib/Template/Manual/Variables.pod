@@ -496,7 +496,7 @@ most common use is to retrieve an element from a hash where the key is
 stored in a variable.
 
     [% uid = 'abw' %]
-    [% users.$uid %]         # same as 'userlist.abw'
+    [% users.$uid %]         # same as 'users.abw'
 
 Curly braces can be used to delimit interpolated variable names where
 necessary.
