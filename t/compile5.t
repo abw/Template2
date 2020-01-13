@@ -66,13 +66,13 @@ ok( -f $blam, 'cached blam' );
 
 my @foo_times = (stat $foo)[8,9];
 
-open(FOO, $foo) || die "$foo: $!\n";
+open(FOO, '<', $foo) || die "$foo: $!\n";
 local $/ = undef;
 my $content = <FOO>;
 close(FOO);
 
 $content =~ s/the foo file/the newly hacked foo file/;
-open(FOO, "> $foo") || die "$foo: $!\n";
+open(FOO, ">", $foo) || die "$foo: $!\n";
 print FOO $content;
 close(FOO);
 
@@ -84,12 +84,12 @@ utime( @foo_times, $foo );
 
 my @blam_times = (stat $blam)[8,9];
 
-open(BLAM, $blam) || die "$blam: $!\n";
+open(BLAM, '<', $blam) || die "$blam: $!\n";
 local $/ = undef;
 $content = <BLAM>;
 close(BLAM);
 $content =~ s/blam/wam-bam/g;
-open(BLAM, "> $blam") || die "$blam: $!\n";
+open(BLAM, ">", $blam) || die "$blam: $!\n";
 print BLAM $content;
 close(BLAM);
 

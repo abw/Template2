@@ -189,7 +189,7 @@ sub _output {
             # strip file name and line number from error raised by die()
             ($error = $@) =~ s/ at \S+ line \d+\n?$//;
         }
-        elsif (open(FP, ">$where")) {
+        elsif (open(FP, '>', $where)) {
             # binmode option can be 1 or a specific layer, e.g. :utf8
             my $bm = $options->{ binmode  };
             if ($bm && $bm eq 1) {

@@ -79,7 +79,7 @@ sub load_gifs {
     }
 
     foreach my $f (@files) {
-	open(GIF, "$gifdir/$f") || die "$gifdir/$f: $!\n";
+	open(GIF, "<", "$gifdir/$f") || die "$gifdir/$f: $!\n";
 	$gifs->{ $f } = <GIF>;
 	close(GIF);
     }

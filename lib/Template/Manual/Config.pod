@@ -1149,7 +1149,7 @@ example 2 (text string):
 
 example 3 (file handle):
 
-    open (TOUT, "> $file") || die "$file: $!\n";
+    open (TOUT, ">", $file) || die "$file: $!\n";
     my $template = Template->new({
         OUTPUT => \*TOUT,
     });

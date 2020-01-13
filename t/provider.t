@@ -63,7 +63,7 @@ my $vars = {
 sub update_file {
     local *FP;
     sleep(2);     # ensure file time stamps are different
-    open(FP, ">$newfile") || die "$newfile: $!\n";
+    open(FP, ">", $newfile) || die "$newfile: $!\n";
     print(FP @_) || die "failed to write $newfile: $!\n";
     close(FP);
 }
@@ -156,7 +156,7 @@ ok( $ttglob, 'Created template for glob test' );
 # Make sure we have a multi-line template file so $/ is tested.
 my $glob_file = abs_path($dir) . '/baz';
 
-open GLOBFILE, $glob_file or die "Failed to open '$absfile': $!";
+open GLOBFILE, '<', $glob_file or die "Failed to open '$absfile': $!";
 my $outstr = '';
 
 $ttglob->process( \*GLOBFILE, { a => 'globtest' }, \$outstr ) || die $ttglob->error;

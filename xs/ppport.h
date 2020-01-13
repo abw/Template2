@@ -2786,7 +2786,7 @@ my $filename;
 my $patch_opened = 0;
 
 for $filename (@files) {
-  unless (open IN, "<$filename") {
+  unless (open IN, "<", $filename) {
     warn "Unable to read from $filename: $!\n";
     next;
   }
@@ -3041,7 +3041,7 @@ for $filename (@files) {
       }
       else {
         local *F;
-        if (open F, ">$newfile") {
+        if (open F, ">", $newfile) {
           info("Writing copy of '$filename' with changes to '$newfile'");
           print F $c;
           close F;
@@ -3134,7 +3134,7 @@ sub run_diff
   while (-e "$tmp.$suf") { $suf++ }
   $tmp = "$tmp.$suf";
 
-  if (open F, ">$tmp") {
+  if (open F, ">", $tmp) {
     print F $str;
     close F;
 
@@ -3322,7 +3322,7 @@ END
   $c =~ s!^\s*#\s*!#!mg;
   $c =~ s!^\s+!!mg;
 
-  open OUT, ">$0" or die "cannot strip $0: $!\n";
+  open OUT, ">", $0 or die "cannot strip $0: $!\n";
   print OUT "$pl$c\n";
 
   exit 0;
