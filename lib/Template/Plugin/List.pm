@@ -26,7 +26,7 @@ use Template::Exception;
 use overload q|""| => "text",
              fallback => 1;
 
-our $VERSION = '3.003';
+our $VERSION = '3.004';
 our $ERROR   = '';
 
 

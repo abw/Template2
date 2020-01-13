@@ -24,7 +24,7 @@ use base 'Template::Plugin';
 use Pod::POM;
 
 
-our $VERSION = '3.003';
+our $VERSION = '3.004';
 
 #------------------------------------------------------------------------
 # new($context, \%config)

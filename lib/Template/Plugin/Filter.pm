@@ -26,7 +26,7 @@ use base 'Template::Plugin';
 use Scalar::Util 'weaken', 'isweak';
 
 
-our $VERSION = '3.003';
+our $VERSION = '3.004';
 our $DYNAMIC = 0 unless defined $DYNAMIC;
 
 
