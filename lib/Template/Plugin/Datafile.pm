@@ -93,6 +93,7 @@ Template::Plugin::Datafile - Plugin to construct records from a simple data file
 
     [% USE mydata = datafile('/path/to/datafile') %]
     [% USE mydata = datafile('/path/to/datafile', delim = '|') %]
+    [% USE mydata = datafile('/path/to/datafile', encoding = 'UTF-8') %]
     
     [% FOREACH record = mydata %]
        [% record.this %]  [% record.that %]
@@ -110,6 +111,8 @@ A absolute filename must be specified (for this initial implementation at
 least - in a future version it might also use the C<INCLUDE_PATH>).  An 
 optional C<delim> parameter may also be provided to specify an alternate
 delimiter character.
+The optional C<encoding> parameter may be used to specify the input file
+encoding.
 
     [% USE userlist = datafile('/path/to/file/users')     %]
     [% USE things   = datafile('items', delim = '|') %]
