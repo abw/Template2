@@ -21,4 +21,8 @@ on "test" => sub {
         requires "Test::Pod::Coverage"       => 0;
         requires "Test::Warnings"            => 0;
         requires "Pod::Coverage::TrustPod"   => 0;
+
+        requires "DateTime::Format::Mail"    => 0;
+        requires "DateTime::Format::W3CDTF"  => 0;
+        requires "XML::Parser"               => 0;
 };
