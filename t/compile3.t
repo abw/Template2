@@ -106,7 +106,7 @@ copy("$file.org", $file) || die "failed to copy $file.org to $file\n";
 sub append_file {
     local *FP;
     sleep(2);     # ensure file time stamps are different
-    open(FP, ">>$file") || die "$file: $!\n";
+    open(FP, ">>", $file) || die "$file: $!\n";
     print FP @_;
     close(FP);
 }

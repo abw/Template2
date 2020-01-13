@@ -694,7 +694,7 @@ sub _white(@)  { @_ }                   # nullop
 sub write_config {
     my $file = shift;
 
-    open(CONFIG, ">$file") || die "failed to create $file: $!\n";
+    open(CONFIG, ">", $file) || die "failed to create $file: $!\n";
     print(CONFIG <<END_OF_CONFIG);
 #------------------------------------------------------------------------
 # sample .ttreerc file created automatically by $NAME version $VERSION

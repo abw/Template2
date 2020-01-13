@@ -55,13 +55,13 @@ ok( scalar $out =~ /^name: baz/ );
 
 my @current_times = (stat $compiled)[8,9];
 
-open(FOO, $compiled) || die "$compiled: $!\n";
+open(FOO, '<', $compiled) || die "$compiled: $!\n";
 local $/ = undef;
 my $foo = <FOO>;
 close(FOO);
 
 $foo =~ s/the foo file/the hacked foo file/;
-open(FOO, "> $compiled") || die "$compiled: $!\n";
+open(FOO, ">", $compiled) || die "$compiled: $!\n";
 print FOO $foo;
 close(FOO);
 

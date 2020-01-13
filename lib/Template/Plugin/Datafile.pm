@@ -36,11 +36,11 @@ sub new {
     $delim = $params->{'delim'} || ':';
     $delim = quotemeta($delim);
 
-    return $class->fail("No filename specified")
+    return $class->error("No filename specified")
         unless $filename;
 
-    open(FD, $filename)
-        || return $class->fail("$filename: $!");
+    open(FD, '<', $filename)
+        || return $class->error("$filename: $!");
 
     # first line of file should contain field definitions
     while (! $line || $line =~ /^#/) {
@@ -50,7 +50,7 @@ sub new {
     }
 
     (@fields = split(/\s*$delim\s*/, $line)) 
-        || return $class->fail("first line of file must contain field names");
+        || return $class->error("first line of file must contain field names");
 
     # read each line of the file
     while (<FD>) {

@@ -40,7 +40,7 @@ unlink($file1) if -f $file1;
 ok( $tt->process('foo', &callsign, $f1) );
 ok( -f $file1 );
 
-open(FP, $file1) || die "$file1: $!\n";
+open(FP, '<', $file1) || die "$file1: $!\n";
 local $/ = undef;
 my $out = <FP>;
 close(FP);
@@ -64,7 +64,7 @@ unlink($file2) if -f $file2;
 ok( $tt->process('foo', &callsign) );
 ok( -f $file2 );
 
-open(FP, $file2) || die "$file2: $!\n";
+open(FP, '<', $file2) || die "$file2: $!\n";
 local $/ = undef;
 $out = <FP>;
 close(FP);

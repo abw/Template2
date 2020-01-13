@@ -54,13 +54,13 @@ sub fix_file {
 
     my $regex = '(' . join('|', map { quotemeta } keys %$fixes) . ')';
     
-    open(FP, "< $file") || die "$file: $!\n";
+    open(FP, "<", $file) || die "$file: $!\n";
     my $text = <FP>;
     close(FP);
 
     $text =~ s/^(\s*${regex}\s*=\s*)'.*?'/"$1'$fixes->{$2}'"/meg;
 
-    open(FP, "> $file") || die "$file: $!\n";
+    open(FP, ">", $file) || die "$file: $!\n";
     print FP $text;
     close(FP);
 }

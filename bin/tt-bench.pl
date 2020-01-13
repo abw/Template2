@@ -124,7 +124,7 @@ if (@ARGV) {
 } else {
   $template = "$TMPDIR/testing.tmpl";
   unlink $template;
-  open FH, ">$template"; 
+  open FH, ">", $template;
   while(<DATA>) { last if /^__END__/; print FH; } close FH;
 }
 

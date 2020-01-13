@@ -344,7 +344,7 @@ EOF
 #--------------------------------------------------------------------
 
 sub write_defaults {
-    open(FP, "> $DEFAULTS_FILE") || die "$DEFAULTS_FILE: $!\n";
+    open(FP, ">", $DEFAULTS_FILE) || die "$DEFAULTS_FILE: $!\n";
     my ( $ttxs_enable, $ttxs_default )
             = map { $_ ? 'y' : 'n' }
             ( $TT_XS_ENABLE, $TT_XS_DEFAULT );
@@ -375,14 +375,14 @@ sub fix_file {
 
     $find = quotemeta($find);
 
-    open(FP, "< $file") || die "$file: $!\n";
+    open(FP, "<", $file) || die "$file: $!\n";
     my $text = <FP>;
     close(FP);
 
     ($text =~ s/^(\s*${find}\s*=\s*)'.*?'/$1'$fix'/m)
         || die "$find not found in $file\n";
 
-    open(FP, "> $file") || die "$file: $!\n";
+    open(FP, ">", $file) || die "$file: $!\n";
     print FP $text;
     close(FP);
 }
