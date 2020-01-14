@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -919,7 +919,7 @@ Template Toolkit version 2.26, released January 2014.
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

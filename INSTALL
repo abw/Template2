@@ -1,11 +1,11 @@
 
                             Template Toolkit
 
-                              Version 2.29
+                              Version 3.004
 
-                             April 2019
+                             January 2020
 
-        Copyright (C) 1996-2019 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -30,8 +30,8 @@ Available from CPAN in:
 
 To install the Template Toolkit from the command line:
 
-    $ tar zxf Template-Toolkit-2.29.tar.gz
-    $ cd Template-Toolkit-2.29
+    $ tar zxf Template-Toolkit-3.004.tar.gz
+    $ cd Template-Toolkit-3.004
     $ perl Makefile.PL
     $ make
     $ make test
@@ -85,19 +85,19 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 2.29.
+where <version> represents the current version number, e.g. 3.004.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    $ tar zxf Template-Toolkit-2.29.tar.gz
+    $ tar zxf Template-Toolkit-3.004.tar.gz
 or
-    $ gunzip Template-Toolkit-2.29.tar.gz
-    $ tar xf Template-Toolkit-2.29.tar
+    $ gunzip Template-Toolkit-3.004.tar.gz
+    $ tar xf Template-Toolkit-3.004.tar
 
 You can then 'cd' into the directory created,
 
-    $ cd Template-Toolkit-2.29
+    $ cd Template-Toolkit-3.004
 
 and perform the usual Perl installation procedure:
 
@@ -226,7 +226,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2016 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
