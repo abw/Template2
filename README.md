@@ -2,9 +2,9 @@
 
                             Template Toolkit
 
-                              Version 2.29
+                              Version 3.005
 
-                             April 2019
+                             January 2020
 
         Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved
 
@@ -44,6 +44,19 @@ other offline document systems.
 
 WHAT'S NEW?
 -----------
+
+Version 3.005 adds an encoding option to Datafile plugin
+and refresh the contributor list and copyrights for 2020.
+
+Version 3.004 fixes CVE-2019-19781 by enforcing three-args open.
+
+Version 3.003 fixes some compatibility issues with several Plugins.
+
+Version 3.002 is a maintenance release fixing a warning during install.
+
+Version 3.001 drops officialy Perl 5.6 support.
+
+Version 3.000 provides several performance improvements.
 
 Version 2.29 is a maintenance release fixing a cycling weaken issue.
 
