@@ -11,12 +11,14 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
-# Version 3.005 -
+# Version 3.005 - 15th January 2020
 #------------------------------------------------------------------------
 
 * Add encoding option to Datafile plugin
-* Update Copyrights for 2020
+* Add support for '%z' in Date plugin.
+* Fix for WHILE_MAX which was stopping one iteration earlier.
 * Refresh contributor list
+* Update Copyrights for year 2020
 
 #-----------------------------------------------------------------------
 # Version 3.004 - 13th January 2020
