@@ -6,7 +6,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -64,7 +64,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
 
 The Template Toolkit is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -78,23 +78,29 @@ Please let me know if you think anyone is missing from this list.
 If you submit a patch/pull request then please make sure you add your
 own name to this list and include it in the changes.
 
-Amiri Barksdale, Thierry-Michel Barral, Craig Barratt, Stas Bekman, Robin Berjon,
-Tony Bowden, Neil Bowers, Leon Brocard, Lyle Brooks, Norbert Buchmüller,
-Dave Cash, Piers Cawley, Darren Chamberlain, Timmy Chan, Eric Cholet, Chromatic,
-Nik Clayton, Tosh Cooey, Dave Cross, Chris Dean, Francois Desarmenien, Horst Dumcke,
-Mark Fowler, Michael Fowler, Brian Fraser, Kenny Gatdula, Axel Gerstmair, Jay Hannah,  Dylan
-William Hardison, Perrin Harkins, Bryce Harrington, Dave Hodgkinson,  Lubomir
-Host, Dave Howorth, Jon Jensen, Harald Joerg, Colin Johnson,  Colin Keith,
-Adam Kennedy, Vivek Khera, Alexey A. Kiritchun, Rafael Kitover,  Andreas
-Koenig, Ivan Kurmanov, Denis F. Latypoff, Hans von Lengerke,  Jonas Liljegren,
-Simon Napiorkowski, Breno G. de Oliveira, Leslie Michael Orchard, Paul Orrock,
-Jonathon Padfield, Steve Peters, Briac PilprE<eacute>, Yuri Pimenov, Martin
-Portman, Marc Remy, Slaven Rezic, Jess Robinson, Josh Rosenbaum, Christian
-Schaffner, Mike Schilli, Randal L. Schwartz, Paul Seamons, Paul Sharpe,
-Ricardo Signes, Ville SkyttE<auml>, Barrie Slaymaker, David Steinbrunner, Doug
-Steinwand, Michael Stevens, Autrijus Tang, Drew Taylor, Rod Taylor, Swen
-Thuemmler, Richard Tietjen, Ben Tilly, Stathy G. Touloumis, Jim Vaughan, Simon
-Wilcox, Chris Winters.
+Adam Kennedy, ahollandECS, Alexey A. Kiritchun, Amiri Barksdale, Andreas Koenig,
+Andy Wardley, Autrijus Tang, Axel Gerstmair, Barrie Slaymaker, Ben Tilly,
+Breno G. de Oliveira, Briac PilprE<eacute>, Brian Fraser, Brian Wightman,
+Bryce Harrington, Chris Dean, Chris Winters, Christian, chromatic, Colin Johnson,
+Colin Keith, Craig Barratt, Darren Chamberlain, Dave Cash, Dave Cross, Dave Hodgkinson,
+Dave Howorth, Dave Jacoby, David Steinbrunner, Denis F. Latypoff, Dennis Clark,
+Doug, Drew Taylor, Dylan, E. Choroba, Eric Cholet, Francois Desarmenien,
+François Andriot, fREW Schmidt, gordon-fish, Guido Flohr, Hans von Lengerke,
+Harald Joerg, Horst Dumcke, Ivan Krylov, Ivan Kurmanov, Jacques Germishuys,
+Jason Lewis, Jay Hannah, Jens Rehsack, Jess Robinson, Jim Vaughan, John Lightsey,
+John Napiorkowski, Jon Jensen, Jonas Liljegren, Jonathon Padfield, Jose Luis Martinez,
+Josh Rosenbaum, Kenny Gatdula, Kent Fredric, Kevin M. Goess, Koenig, Leon Brocard,
+Leslie Michael Orchard, Lubomir, Lyle Brooks, Marc Remy, Mark Fowler, Martin,
+Matthew Somerville, Michael Fowler, Michael Stevens, Mike Schilli,
+Mikhail Klyuchnikov from Positive Technologies, nataraj, Neil Bowers, Nick Hibma,
+Nicolas R, Nik Clayton, Norbert Buchmüller, Paul Orrock, Paul Seamons, Paul Sharpe,
+Perrin Harkins, Philippe Bruhat (BooK), Piers Cawley, Portman, Rafael Kitover,
+Randal L. Schwartz, Ricardo Signes, Richard Tietjen, Robin Berjon, Rod Taylor, Schaffner,
+sdeseille, Sean McAfee, Sean Zellmer, Simon, Simon Dawson, Simon Matthews, Simon Napiorkowski,
+Slaven Rezic, Smylers, Stas Bekman, Stathy G. Touloumis, stefano-b, Steinwand,
+Steve Peters, Swen, Thierry-Michel Barral, Thuemmler, Timmy Chan, Todd Rinaldo, Tom Delmas,
+Tony Bowden, Tosh Cooey, Ville SkyttE<auml>, Vivek Khera, Wilcox, William Hardison,
+Yanick Champoux, Yuri Pimenov.
 
 =cut
 

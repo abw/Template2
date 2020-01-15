@@ -6,7 +6,7 @@
 
                              April 2019
 
-        Copyright (C) 1996-2019 Andy Wardley.  All Rights Reserved
+        Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved
 
           This is free software; you can redistribute it and/or
              modify it under the same terms as Perl itself.
@@ -349,7 +349,7 @@ See Template::Manual::Credits for details.
 COPYRIGHT
 ---------
 
-Copyright (C) 1996-2019 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
