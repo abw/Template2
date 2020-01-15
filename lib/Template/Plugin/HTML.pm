@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 
-our $VERSION = '3.004';
+our $VERSION = '3.005';
 
 sub new {
     my ($class, $context, @args) = @_;

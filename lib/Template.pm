@@ -32,7 +32,7 @@ use File::Basename;
 use File::Path;
 use Scalar::Util qw(blessed);
 
-our $VERSION = '3.004';
+our $VERSION = '3.005';
 our $ERROR   = '';
 our $DEBUG   = 0;
 our $BINMODE = 0 unless defined $BINMODE;
