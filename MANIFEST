@@ -103,6 +103,7 @@ t/constants.t
 t/context.t
 t/datafile.t
 t/date.t
+t/date_offset.t
 t/debug.t
 t/directive.t
 t/directry.t
