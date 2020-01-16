@@ -24,7 +24,7 @@ use warnings;
 use base 'Template::Plugin';
 use Scalar::Util 'blessed';
 
-our $VERSION = '3.005';
+our $VERSION = '3.006';
 our $AUTOLOAD;
 
 
