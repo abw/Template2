@@ -2,7 +2,7 @@
 
                             Template Toolkit
 
-                              Version 3.006
+                              Version 3.007
 
                              January 2020
 
@@ -44,6 +44,8 @@ other offline document systems.
 
 WHAT'S NEW?
 -----------
+
+Version 3.007 fixes a cpanm issue.
 
 Version 3.006 adds an encoding option to Datafile plugin
 and refresh the contributor list and copyrights for 2020.

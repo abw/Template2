@@ -28,7 +28,7 @@ use Exporter;
 
 use constant MSWin32 => $^O eq 'MSWin32';
 
-our $VERSION = '3.006';
+our $VERSION = '3.007';
 our $DEBUG   = 0;
 our @ISA     = qw( Exporter );
 our @EXPORT  = qw( ntests ok is match flush skip_all test_expect callsign banner );

@@ -25,7 +25,7 @@ use warnings;
 use base 'Template::Plugin';
 use Template::Iterator;
 
-our $VERSION = '3.006';
+our $VERSION = '3.007';
 
 #------------------------------------------------------------------------
 # new($context, \@data, \%args)

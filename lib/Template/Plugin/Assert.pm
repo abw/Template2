@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use Template::Exception;
 
-our $VERSION   = '3.006';
+our $VERSION   = '3.007';
 our $MONAD     = 'Template::Monad::Assert';
 our $EXCEPTION = 'Template::Exception';
 our $AUTOLOAD;
