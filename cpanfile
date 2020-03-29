@@ -1,5 +1,6 @@
 # Template::Plugin::CGI
 requires "CGI" => ">= 4.44";
+requires "HTML::Entities" => ">= 0";
 
 on 'configure' => sub {
   requires "ExtUtils::MakeMaker" => "0";
