@@ -153,6 +153,7 @@ my %opts = (
     },
     'TEST_REQUIRES' => {
         'CGI' => 0,
+        'HTML::Entities' => 0,
         'Test::LeakTrace' => 0,
     },
     'META_MERGE' => {
