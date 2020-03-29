@@ -31,6 +31,11 @@ if ($@) {
     skip_all("no CGI module");
 }
 
+eval "use HTML::Entities";
+if ($@) {
+    skip_all("no HTML::Entities module");
+}
+
 my $cgi = CGI->new('');
 $cgi = join(
     "\n",
