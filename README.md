@@ -2,7 +2,7 @@
 
                             Template Toolkit
 
-                              Version 3.007
+                              Version 3.008
 
                              January 2020
 
@@ -44,6 +44,8 @@ other offline document systems.
 
 WHAT'S NEW?
 -----------
+
+Version 3.008 fixes some testing issue with CGI and taint issues.
 
 Version 3.007 fixes a cpanm issue.
 

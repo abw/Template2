@@ -23,7 +23,7 @@ use warnings;
 use base 'Template::Plugin';
 use CGI;
 
-our $VERSION = '3.007';
+our $VERSION = '3.008';
 
 sub new {
     my $class   = shift;
