@@ -577,6 +577,8 @@ sub _load_compiled {
     # one needs to care about slash direction is when dealing
     # with Module::Name -> Module/Name.pm translation.
     my $fpath = File::Spec->rel2abs( $file );
+    $fpath =~ /^(.*)$/s;
+    $fpath = $1;
 
     my $compiled;
 
