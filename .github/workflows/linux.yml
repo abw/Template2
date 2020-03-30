@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         perl-version:
-          - 'latest'
+          - '5.30'
           - '5.28'
           - '5.26'
           - '5.24'
@@ -38,7 +38,7 @@ jobs:
         XS: [y, n]
 
     container:
-      image: perl:${{ matrix.perl-version }}
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
 
     steps:
       - uses: actions/checkout@v2
