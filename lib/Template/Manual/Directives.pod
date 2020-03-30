@@ -111,9 +111,9 @@ Simple expressions can also be used, as per C<GET>.
        six    = twenty mod 7
     %]
 
-You can concatenate strings together using the C<' _ '> operator.  In Perl 5,
-the C<.> is used for string concatenation, but in Perl 6, as in the Template
-Toolkit, the C<.> will be used as the method calling operator and C<' _ '> will
+You can concatenate strings together using the C<'_'> underscore operator.  In Perl 5,
+the C<.> dot is used for string concatenation, but in Perl 6, as in the Template
+Toolkit, the C<.> dot will be used as the method calling operator and C<'_'> underscore will
 be used for string concatenation.  Note that the operator must be 
 specified with surrounding whitespace which, as Larry says, is construed as
 a feature:

@@ -168,7 +168,7 @@ Lincoln Stein's C<CGI> module.  e.g.
     [% USE url('/cgi-bin/woz.pl') %]
     [% url(name="Elrich von Benjy d'Weiro") %]
 
-Here the spaces and "C<'>" character are escaped in the output:
+Here the space and "C<'>" single quote characters are escaped in the output:
 
     /cgi-bin/woz.pl?name=Elrich%20von%20Benjy%20d%27Weiro
 

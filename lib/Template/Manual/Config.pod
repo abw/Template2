@@ -199,8 +199,8 @@ template will be processed as if written:
 
     [% FOREACH user IN userlist %][% user %][% END %]
 
-To remove all whitespace including any number of newlines, use the 'C<~>'
-character instead.
+To remove all whitespace including any number of newlines, use the ('C<~>')
+tilde character instead.
 
     [% FOREACH user IN userlist %]
 
@@ -208,7 +208,7 @@ character instead.
 
     [% END %]
 
-To collapse all whitespace to a single space, use the 'C<=>' character.
+To collapse all whitespace to a single space, use the 'C<=>' equals sign character.
 
     [% FOREACH user IN userlist %]
 
@@ -221,7 +221,7 @@ Here the template is processed as if written:
     [% FOREACH user IN userlist %] [% user %] [% END %]
 
 If you have C<PRE_CHOMP> or C<POST_CHOMP> set as configuration options then
-you can use 'C<+>' to disable any chomping options (i.e.  leave the
+you can use the 'C<+>' plus sign to disable any chomping options (i.e. leave the
 whitespace intact) on a per-directive basis.
 
     [% FOREACH user IN userlist %]
@@ -290,7 +290,8 @@ to be recognised and interpolated accordingly.
         INTERPOLATE => 1,
     });
 
-Variables should be prefixed by a 'C<$>' to identify them.  Curly braces
+Variables should be prefixed by a 'C<$>' dollar sign to identify them.
+Curly braces 'C<{>' and 'C<}>'
 can be used in the familiar Perl/shell style to explicitly scope the
 variable name where required.
 
@@ -355,7 +356,7 @@ template files are located.  When a template is requested that isn't
 defined locally as a C<BLOCK>, each of the C<INCLUDE_PATH> directories is
 searched in turn to locate the template file.  Multiple directories
 can be specified as a reference to a list or as a single string where
-each directory is delimited by 'C<:>'.
+each directory is delimited by the 'C<:>' colon character.
 
     my $template = Template->new({
         INCLUDE_PATH => '/usr/local/templates',
@@ -371,8 +372,8 @@ each directory is delimited by 'C<:>'.
     });
 
 On Win32 systems, a little extra magic is invoked, ignoring delimiters
-that have 'C<:>' followed by a 'C</>' or 'C<\>'.  This avoids confusion when using
-directory names like 'C<C:\Blah Blah>'.
+that have 'C<:>' colon followed by a 'C</>' slash or 'C<\>' blackslash.
+This avoids confusion when using directory names like 'C<C:\Blah Blah>'.
 
 When specified as a list, the C<INCLUDE_PATH> path can contain elements
 which dynamically generate a list of C<INCLUDE_PATH> directories.  These
@@ -431,7 +432,7 @@ or:
 
 Used to provide an alternative delimiter character sequence for
 separating paths specified in the C<INCLUDE_PATH>.  The default
-value for C<DELIMITER> is 'C<:>'.
+value for C<DELIMITER> is the 'C<:>' colon character.
 
     my $template = Template->new({
         DELIMITER    => '; ',
@@ -439,7 +440,8 @@ value for C<DELIMITER> is 'C<:>'.
     });
 
 On Win32 systems, the default delimiter is a little more intelligent,
-splitting paths only on 'C<:>' characters that aren't followed by a 'C</>'.
+splitting paths only on 'C<:>' colon characters that aren't followed by a
+'C</>' slash character.
 This means that the following should work as planned, splitting the
 C<INCLUDE_PATH> into 2 separate directories, C<C:/foo> and C<C:/bar>.
 
@@ -449,7 +451,7 @@ C<INCLUDE_PATH> into 2 separate directories, C<C:/foo> and C<C:/bar>.
     });
 
 However, if you're using Win32 then it's recommended that you
-explicitly set the C<DELIMITER> character to something else (e.g. 'C<;>')
+explicitly set the C<DELIMITER> character to something else (e.g. 'C<;>' semicolon)
 rather than rely on this subtle magic.
 
 =head2 ABSOLUTE
