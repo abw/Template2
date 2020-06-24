@@ -362,6 +362,11 @@ before and after
  solo golf
  solo golf
 
+ -- test --
+ [% SET a = 'works' IF b.defined %]
+ -- expect --
+works
+
 -- test --
 [% a = b
    b = c
