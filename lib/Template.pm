@@ -915,7 +915,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 VERSION
 
-Template Toolkit version 2.26, released January 2014.
+Template Toolkit version 3.008, released on 30 March 2020.
 
 =head1 COPYRIGHT
 

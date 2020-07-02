@@ -70,7 +70,7 @@ This is fixing Template-Provider-FromDATA.
 # Version 3.001 - 23rd December 2019
 #------------------------------------------------------------------------
 
-* Remove 'use vars' and drop officialy 5.6 support.
+* Remove 'use vars' and officially drop 5.6 support.
 
 * Remove old_new function from Template::Plugin
 
@@ -103,7 +103,7 @@ This is fixing Template-Provider-FromDATA.
 
 * Switch win32 logic to a constant to speed up processing speed
 
-* Switch regexes to simple string checks to speed up parsing.
+* Switch from regexes to simple string checks to speed up parsing.
 
 * Ensure we only load plugins once per context.
 

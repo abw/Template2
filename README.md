@@ -58,7 +58,7 @@ Version 3.003 fixes some compatibility issues with several Plugins.
 
 Version 3.002 is a maintenance release fixing a warning during install.
 
-Version 3.001 drops officialy Perl 5.6 support.
+Version 3.001 officially drops Perl 5.6 support.
 
 Version 3.000 provides several performance improvements.
 

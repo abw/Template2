@@ -748,7 +748,7 @@ L<http://wardley.org/|http://wardley.org/>
 =head1 VERSION
 
 1.63, distributed as part of the
-Template Toolkit version 2.19, released on 27 April 2007.
+Template Toolkit version 3.008, released on 30 March 2020.
 
 =head1 COPYRIGHT
 
