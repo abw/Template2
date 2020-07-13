@@ -2,9 +2,9 @@
 
                             Template Toolkit
 
-                              Version 3.008
+                              Version 3.009
 
-                             January 2020
+                                July 2020
 
         Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved
 
@@ -44,6 +44,8 @@ other offline document systems.
 
 WHAT'S NEW?
 -----------
+
+Version 3.009 revert "Allow SET to have FILTER used in it"
 
 Version 3.008 fixes some testing issue with CGI and taint issues.
 
