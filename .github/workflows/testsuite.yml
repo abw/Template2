@@ -1,0 +1,207 @@
+name: testsuite
+
+on:
+  push:
+    branches:
+      - "*"
+    tags-ignore:
+      - "*"
+  pull_request:
+
+jobs:
+  ubuntu:
+    env:
+      PERL_USE_UNSAFE_INC: 0
+      AUTHOR_TESTING: 1
+      AUTOMATED_TESTING: 1
+      RELEASE_TESTING: 1
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: perl -V
+        run: perl -V
+      - name: install dependencies
+        uses: perl-actions/install-with-cpm@v1.3
+        with:
+          cpanfile: "cpanfile"
+      - name: Makefile.PL
+        run: perl Makefile.PL TT_QUIET=n TT_ACCEPT=y
+      - name: make test
+        run: make test
+      - name: make install
+        run: sudo make install
+
+  linux:
+    name: "linux ${{ matrix.perl-version }}"
+    needs: [ubuntu]
+    env:
+      PERL_USE_UNSAFE_INC: 0
+      AUTHOR_TESTING: 1
+      AUTOMATED_TESTING: 1
+      RELEASE_TESTING: 1
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        XS: [y, n]
+        perl-version:
+          [
+            "5.32",
+            "5.30",
+            "5.28",
+            "5.26",
+            "5.24",
+            "5.22",
+            "5.20",
+            "5.18",
+            "5.16",
+            "5.14",
+            "5.12",
+            "5.10",
+            "5.8",
+          ]
+
+    container:
+      image: perl:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: perl -V
+        run: perl -V
+      - name: install dependencies
+        uses: perl-actions/install-with-cpm@v1.3
+        with:
+          sudo: false
+          cpanfile: "cpanfile"
+      - name: Makefile.PL
+        run: perl Makefile.PL TT_XS_DEFAULT=${{ matrix.XS }} TT_XS_ENABLE=${{ matrix.XS }} TT_QUIET=n TT_ACCEPT=y
+      - name: make test
+        run: make test
+      - name: make install
+        run: make install
+
+  macOS:
+    needs: [ubuntu]
+    env:
+      PERL_USE_UNSAFE_INC: 0
+      AUTHOR_TESTING: 1
+      AUTOMATED_TESTING: 1
+      RELEASE_TESTING: 1
+
+    runs-on: macOS-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version: [latest]
+        XS: [y, n]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: perl -V
+        run: perl -V
+      - name: install dependencies
+        uses: perl-actions/install-with-cpm@v1.3
+        with:
+          sudo: false
+          cpanfile: "cpanfile"
+      - name: Makefile.PL
+        run: perl Makefile.PL TT_XS_DEFAULT=${{ matrix.XS }} TT_XS_ENABLE=${{ matrix.XS }} TT_QUIET=n TT_ACCEPT=y
+      - name: make test
+        run: make test
+
+  plugins:
+    needs: [ubuntu,linux]
+    env:
+      # some plugins still needs this to run their tests...
+      PERL_USE_UNSAFE_INC: 1
+      AUTHOR_TESTING: 0
+      AUTOMATED_TESTING: 0
+      RELEASE_TESTING: 0
+
+    runs-on: ubuntu-latest
+
+    name: "${{ matrix.plugin }} XS=${{ matrix.XS }}"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin:
+          - 'Template::Plugin::Autoformat'
+          - 'Template::Plugin::Cache'
+          - 'Template::Plugin::Comma'
+          - 'Template::Plugin::CSV'
+          - 'Template::Plugin::DateTime'
+          - 'Template::Plugin::DBI'
+          - 'Template::Plugin::Dump'
+          - 'Template::Plugin::encoding'
+          - 'Template::Plugin::Gettext'
+          - 'Template::Plugin::HTML::Template'
+          - 'Template::Plugin::JavaScript'
+          - 'Template::Plugin::JSON'
+          - 'Template::Plugin::Map'
+          - 'Template::Plugin::Markdown'
+          - 'Template::Plugin::MIME'
+          - 'Template::Plugin::TimeDate'
+          - 'Template::Plugin::URI'
+          - 'Template::Plugin::XML'
+          - 'Template::Provider::FromDATA'
+        perl-version:
+          - 'latest'
+        XS: [y, n]
+
+    container:
+      image: perl:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: perl -V
+        run: perl -V
+      - name: Install cpm
+        run: cpanm -n App::cpm Carton::Snapshot
+      - name: Install Dependencies
+        run: cpm install -g --no-test --show-build-log-on-failure --cpanfile cpanfile.plugins
+      - name: Makefile.PL
+        run: perl Makefile.PL TT_XS_DEFAULT=${{ matrix.XS }} TT_XS_ENABLE=${{ matrix.XS }} TT_QUIET=n TT_ACCEPT=y
+      - name: make install
+        run: make install
+      # Try to install multiple plugins to confirm we do not break them
+      - name: install plugin
+        run: cpm install -g --test --show-build-log-on-failure ${{ matrix.plugin }}
+
+
+  # windows:
+  #   needs: [ubuntu]
+  #   env:
+  #     PERL_USE_UNSAFE_INC: 0
+  #     AUTHOR_TESTING: 0
+  #     AUTOMATED_TESTING: 1
+  #     RELEASE_TESTING: 0
+
+  #   runs-on: windows-latest
+
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       perl-version: [latest]
+
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - name: Set up Perl
+  #       run: |
+  #         choco install strawberryperl
+  #         echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
+  #     - name: perl -V
+  #       run: perl -V
+  #     - name: install dependencies
+  #       uses: perl-actions/install-with-cpm@v1.3
+  #       with:
+  #         sudo: false
+  #         cpanfile: "cpanfile"
+  #     - run: perl Makefile.PL
+  #     - run: make test
+
