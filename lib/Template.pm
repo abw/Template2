@@ -917,6 +917,27 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 Template Toolkit version 3.009, released on July 13 2020.
 
+=head1 SUPPORT
+
+The Template Toolkit mailing list provides a forum for discussing
+issues relating to the use and abuse of the Template Toolkit.  There
+are a number of knowledgeable and helpful individuals who frequent the
+list (including the author) who can often offer help or suggestions.
+Please respect their time and patience by checking the documentation
+and/or mailing list archives before asking questions that may already
+have been answered.
+
+To subscribe to the mailing list, send an email to:
+
+    template-toolkit+subscribe@groups.io
+
+You can also use the web interface:
+
+    https://groups.io/g/template-toolkit
+
+For information about commercial support and consultancy for the Template
+Toolkit, please contact the author.
+
 =head1 COPYRIGHT
 
 Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.

@@ -335,23 +335,11 @@ have been answered.
 
 To subscribe to the mailing list, send an email to:
 
-    templates-request@template-toolkit.org
+    template-toolkit+subscribe@groups.io
 
-with the message 'subscribe' in the body.  You can also use the web
-interface to subscribe or browse the archives:
+You can also use the web interface:
 
-    http://mail.template-toolkit.org/mailman/listinfo/templates
-
-A low-volume, moderated mailing list exists for announcements about new
-releases of the Template Toolkit and related products.  To subscribe, send
-an email to:
-
-    templates-announce-request@template-toolkit.org
-
-with the message 'subscribe' in the body.  A web interface also exists
-for subscription and browsing the archives:
-
-    http://mail.template-toolkit.org/mailman/listinfo/templates-announce
+    https://groups.io/g/template-toolkit
 
 For information about commercial support and consultancy for the Template
 Toolkit, please contact the author.
