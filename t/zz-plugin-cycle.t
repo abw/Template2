@@ -23,15 +23,19 @@ use Test::More;
 
 plan skip_all => "Developer test" unless ( $ENV{AUTOMATED_TESTING} or $ENV{RELEASE_TESTING} );
 
-#use Test::LeakTrace;
 eval { require Test::LeakTrace };
 if ( $@ or !$INC{'Test/LeakTrace.pm'} ) {
     plan skip_all => 'Test::LeakTrace not installed';
 }
 
-plan tests => 1;
+plan tests => 2;
+
+note "plugin_simple_test();";
+
+ok plugin_simple_test(), "plugin_simple_test";
 
 note "Searching for leak using Test::LeakTrace...";
+
 
 my $no_leaks = Test::LeakTrace::no_leaks_ok( \&plugin_simple_test, 'no leak from Template::Plugin' );
 
@@ -49,9 +53,25 @@ if ( !$no_leaks ) {
 exit;
 
 sub plugin_simple_test {
-    my $tpl = Template->new( PLUGIN_BASE => 'test' );
+    my $tpl = Template->new({
+        PLUGIN_BASE => [ 'test' ],
+        DEBUG => 1,
+    }) or die;
     $tpl->context->plugin( 'Simple', [] );
 
     return $tpl;
 }
 
+package test::Simple;
+
+sub new {
+    my ($pkg) = @_;
+    return bless {}, $pkg;
+}
+
+sub load {
+    my $class   = shift;
+    return $class;
+}
+
+1;
