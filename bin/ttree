@@ -75,7 +75,7 @@ my $suffix   = $config->suffix;
 my $binmode  = $config->binmode;
 my $depends  = $config->depend;
 my $depsfile = $config->depend_file;
-my $assets   = $config->assets;
+my $copy_dir = $config->copy_dir;
 my ($n_proc, $n_unmod, $n_skip, $n_copy, $n_link, $n_mkdir) = (0) x 6;
 
 my $srcdir   = $config->src
@@ -192,7 +192,7 @@ if ($verbose) {
           "      Ignore: [ @$ignore ]\n",
           "        Copy: [ @$copy ]\n",
           "        Link: [ @$link ]\n",
-          "      Assets: [ @$assets ]\n",
+          "    Copy_Dir: [ @$copy_dir ]\n",
           "      Accept: [ @$accept ]\n",
           "      Suffix: [ $sfx ]\n");
     print("      Module: $ttmodule ", $ttmodule->module_version(), "\n")
@@ -375,10 +375,10 @@ sub process_file {
     }
 
     unless ($link_file) {
-	foreach my $asset_prefix (@$assets) {
-	    if ( index($file, "$asset_prefix/") == 0 ) {
+	foreach my $prefix (@$copy_dir) {
+	    if ( index($file, "$prefix/") == 0 ) {
 		$copy_file = 1;
-		$check = "assets: $asset_prefix";
+		$check = "copy_dir: $prefix";
 		last;
 	    }
 	}
@@ -628,7 +628,7 @@ sub read_config {
         'depend=s%',
         'depend_debug|depdbg',
         'depend_file|depfile=s' => { EXPAND => EXPAND_ALL },
-        'assets=s@',
+        'copy_dir=s@',
         'template_module|module=s',
         'template_anycase|anycase',
         'template_encoding|encoding=s',
@@ -825,7 +825,7 @@ File search specifications (all may appear multiple times):
    --ignore=REGEX           Ignore files matching REGEX
    --copy=REGEX             Copy files matching REGEX
    --link=REGEX             Link files matching REGEX
-   --assets=DIR             Copy files in assets dir DIR
+   --copy_dir=DIR           Copy files in dir DIR (recursive)
    --accept=REGEX           Process only files matching REGEX 
 
 File Dependencies Options:
@@ -1067,7 +1067,7 @@ The C<ignore>, C<copy>, C<link> and C<accept> options are used to
 specify Perl regexen to filter file names. Files that match any of the
 C<ignore> options will not be processed. Remaining files that match
 any of the C<copy> or C<link> regexen will be copied or linked to the
-destination directory. Files that reside in any of the C<assets>
+destination directory. Files that reside in any of the C<copy_dir>
  directories are also copied. Remaining files that then match any of the
 C<accept> criteria are then processed via the Template Toolkit. If no
 C<accept> parameter is specified then all files will be accepted for
