@@ -191,7 +191,7 @@ sub _output {
         }
         elsif (open(FP, '>', $where)) {
             # binmode option can be 1 or a specific layer, e.g. :utf8
-            my $bm = $options->{ binmode  };
+            my $bm = $options->{ binmode  } // $BINMODE;
             if ($bm && $bm eq 1) {
                 binmode FP;
             }
