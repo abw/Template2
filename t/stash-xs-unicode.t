@@ -21,6 +21,11 @@ use utf8;
 use Template;
 use Template::Test;
 use Template::Config;
+use File::Spec;
+
+# MacOS Catalina won't allow Dynaloader to load from relative paths
+# Error: file system relative paths not allowed in hardened program
+@INC = map { File::Spec->rel2abs($_) } @INC;
 
 BEGIN {
     unless ($] > 5.007) {

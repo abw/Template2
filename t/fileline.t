@@ -26,6 +26,11 @@ use lib qw( ./lib ../lib ./blib/lib ../blib/lib ./blib/arch ../blib/arch );
 use Template::Test;
 use Template::Parser;
 use Template::Directive;
+use File::Spec;
+
+# MacOS Catalina won't allow Dynaloader to load from relative paths
+# Error: file system relative paths not allowed in hardened program
+@INC = map { File::Spec->rel2abs($_) } @INC;
 
 #$Template::Parser::DEBUG = 1;
 #$Template::Directive::PRETTY = 1;

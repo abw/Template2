@@ -22,6 +22,11 @@ our $DEBUG;
 use Template::Test;
 use Template::Parser;
 use Template::Exception;
+use File::Spec;
+
+# MacOS Catalina won't allow Dynaloader to load from relative paths
+# Error: file system relative paths not allowed in hardened program
+@INC = map { File::Spec->rel2abs($_) } @INC;
 
 #$Template::Parser::DEBUG = 1;
 $DEBUG = 1;
