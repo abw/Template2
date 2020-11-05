@@ -190,36 +190,6 @@ sub AUTOLOAD {
     return $self->{ $method };
 }
 
-
-#========================================================================
-#                     -----  PRIVATE METHODS -----
-#========================================================================
-
-
-#------------------------------------------------------------------------
-# _dump()
-#
-# Debug method which returns a string representing the internal state
-# of the object.
-#------------------------------------------------------------------------
-
-sub _dump {
-    my $self = shift;
-    my $dblks;
-    my $output = "$self : $self->{ name }\n";
-
-    $output .= "BLOCK: $self->{ _BLOCK }\nDEFBLOCKS:\n";
-
-    if ($dblks = $self->{ _DEFBLOCKS }) {
-        foreach my $b (keys %$dblks) {
-            $output .= "    $b: $dblks->{ $b }\n";
-        }
-    }
-
-    return $output;
-}
-
-
 #========================================================================
 #                      ----- CLASS METHODS -----
 #========================================================================
