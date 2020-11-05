@@ -638,51 +638,6 @@ sub _assign {
     return undef;
 }
 
-
-#------------------------------------------------------------------------
-# _dump()
-#
-# Debug method which returns a string representing the internal state
-# of the object.  The method calls itself recursively to dump sub-hashes.
-#------------------------------------------------------------------------
-
-sub _dump {
-    my $self   = shift;
-    return "[Template::Stash] " . $self->_dump_frame(2);
-}
-
-sub _dump_frame {
-    my ($self, $indent) = @_;
-    $indent ||= 1;
-    my $buffer = '    ';
-    my $pad    = $buffer x $indent;
-    my $text   = "{\n";
-    local $" = ', ';
-
-    my ($key, $value);
-
-    return $text . "...excessive recursion, terminating\n"
-        if $indent > 32;
-    
-    foreach $key (keys %$self) {
-        $value = $self->{ $key };
-        $value = '<undef>' unless defined $value;
-        next if index($key,'.') == 0; # has '.' as the first char.
-        if (ref($value) eq 'ARRAY') {
-            $value = '[ ' . join(', ', map { defined $_ ? $_ : '<undef>' }
-                                 @$value) . ' ]';
-        }
-        elsif (ref $value eq 'HASH') {
-            $value = _dump_frame($value, $indent + 1);
-        }
-        
-        $text .= sprintf("$pad%-16s => $value\n", $key);
-    }
-    $text .= $buffer x ($indent - 1) . '}';
-    return $text;
-}
-
-
 1;
 
 __END__

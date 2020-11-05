@@ -252,33 +252,6 @@ sub AUTOLOAD {
     return $self->{ uc $item };
 }
 
-
-#========================================================================
-#                   -----  PRIVATE DEBUG METHODS -----
-#========================================================================
-
-#------------------------------------------------------------------------
-# _dump()
-#
-# Debug method which returns a string detailing the internal state of 
-# the iterator object.
-#------------------------------------------------------------------------
-
-sub _dump {
-    my $self = shift;
-    join('',
-         "  Data: ", $self->{ _DATA  }, "\n",
-         " Index: ", $self->{ INDEX  }, "\n",
-         "Number: ", $self->{ NUMBER }, "\n",
-         "   Max: ", $self->{ MAX    }, "\n",
-         "  Size: ", $self->{ SIZE   }, "\n",
-         " First: ", $self->{ FIRST  }, "\n",
-         "  Last: ", $self->{ LAST   }, "\n",
-         "\n"
-     );
-}
-
-
 1;
 
 __END__

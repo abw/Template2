@@ -247,39 +247,6 @@ sub _recover {
     return $output;
 }
 
-
-
-#------------------------------------------------------------------------
-# _dump()
-#
-# Debug method which return a string representing the internal object
-# state. 
-#------------------------------------------------------------------------
-
-sub _dump {
-    my $self = shift;
-    my $context = $self->{ CONTEXT }->_dump();
-    $context =~ s/\n/\n    /gm;
-
-    my $error = $self->{ ERROR };
-    $error = join('', 
-          "{\n",
-          (map { "    $_ => $error->{ $_ }\n" }
-           keys %$error),
-          "}\n")
-    if ref $error;
-    
-    local $" = ', ';
-    return <<EOF;
-$self
-PRE_PROCESS  => [ @{ $self->{ PRE_PROCESS } } ]
-POST_PROCESS => [ @{ $self->{ POST_PROCESS } } ]
-ERROR        => $error
-CONTEXT      => $context
-EOF
-}
-
-
 1;
 
 __END__

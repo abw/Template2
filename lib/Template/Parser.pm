@@ -1029,32 +1029,6 @@ sub _parse_error {
     return $self->error("line $line: $msg");
 }
 
-
-#------------------------------------------------------------------------
-# _dump()
-#
-# Debug method returns a string representing the internal state of the
-# object.
-#------------------------------------------------------------------------
-
-sub _dump {
-    my $self = shift;
-    my $output = "[Template::Parser] {\n";
-    my $format = "    %-16s => %s\n";
-    my $key;
-
-    foreach $key (qw( START_TAG END_TAG TAG_STYLE ANYCASE INTERPOLATE
-                      PRE_CHOMP POST_CHOMP V1DOLLAR )) {
-        my $val = $self->{ $key };
-        $val = '<undef>' unless defined $val;
-        $output .= sprintf($format, $key, $val);
-    }
-
-    $output .= '}';
-    return $output;
-}
-
-
 1;
 
 __END__

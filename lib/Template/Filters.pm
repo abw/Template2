@@ -211,49 +211,6 @@ sub _init {
     return $self;
 }
 
-
-
-#------------------------------------------------------------------------
-# _dump()
-#
-# Debug method
-#------------------------------------------------------------------------
-
-sub _dump {
-    my $self = shift;
-    my $output = "[Template::Filters] {\n";
-    my $format = "    %-16s => %s\n";
-    my $key;
-
-    foreach $key (qw( TOLERANT )) {
-        my $val = $self->{ $key };
-        $val = '<undef>' unless defined $val;
-        $output .= sprintf($format, $key, $val);
-    }
-
-    my $filters = $self->{ FILTERS };
-    $filters = join('', map {
-        sprintf("    $format", $_, $filters->{ $_ });
-    } keys %$filters);
-    $filters = "{\n$filters    }";
-
-    $output .= sprintf($format, 'FILTERS (local)' => $filters);
-
-    $filters = $FILTERS;
-    $filters = join('', map {
-        my $f = $filters->{ $_ };
-        my ($ref, $dynamic) = ref $f eq 'ARRAY' ? @$f : ($f, 0);
-        sprintf("    $format", $_, $dynamic ? 'dynamic' : 'static');
-    } sort keys %$filters);
-    $filters = "{\n$filters    }";
-
-    $output .= sprintf($format, 'FILTERS (global)' => $filters);
-
-    $output .= '}';
-    return $output;
-}
-
-
 #========================================================================
 #                         -- STATIC FILTER SUBS --
 #========================================================================
