@@ -302,10 +302,26 @@ folded into a hash array by the constructor.
 =head2 process($template, \%vars, $output, %options)
 
 The C<process()> method is called to process a template. The first parameter
-indicates the input template as one of: a filename relative to
-C<INCLUDE_PATH>, if defined; a reference to a text string containing the
-template text; or a file handle reference (e.g. C<IO::Handle> or sub-class) or
-C<GLOB> (e.g. C<\*STDIN>), from which the template can be read. A reference to
+indicates the input template as one of:
+
+=over 4
+
+=item *
+
+a filename relative to C<INCLUDE_PATH>, if defined
+
+=item *
+
+a reference to a text string containing the template text
+
+=item *
+
+a file handle reference (e.g. C<IO::Handle> or sub-class) or C<GLOB>
+(e.g. C<\*STDIN>), from which the template can be read.
+
+=back
+
+A reference to
 a hash array may be passed as the second parameter, containing definitions of
 template variables.
 
@@ -331,13 +347,34 @@ template variables.
 By default, the processed template output is printed to C<STDOUT>. The
 C<process()> method then returns C<1> to indicate success. A third parameter
 may be passed to the C<process()> method to specify a different output location.
-This value may be one of: a plain string indicating a filename which will be
-opened (relative to C<OUTPUT_PATH>, if defined) and the output written to; a file
-GLOB opened ready for output; a reference to a scalar (e.g. a text string) to
-which output/error is appended; a reference to a subroutine which is called,
-passing the output as a parameter; or any object reference which implements a
-C<print()> method (e.g. C<IO::Handle>, C<Apache::Request>, etc.) which will be called,
-passing the generated output as a parameter.
+This value may be one of:
+
+=over 4
+
+=item *
+
+a plain string indicating a filename which will be opened (relative to
+C<OUTPUT_PATH>, if defined) and the output written to
+
+=item *
+
+a file GLOB opened ready for output
+
+=item *
+
+a reference to a scalar (e.g. a text string) to which output/error is appended
+
+=item *
+
+a reference to a subroutine which is called, passing the output as a parameter
+
+=item *
+
+any object reference which implements a C<print()> method (e.g. C<IO::Handle>,
+C<Apache::Request>, etc.) which will be called, passing the generated output
+as a parameter.
+
+=back
 
 Examples:
 
