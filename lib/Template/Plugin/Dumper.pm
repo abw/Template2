@@ -40,39 +40,44 @@ our $AUTOLOAD;
 
 sub new {
     my ($class, $context, $params) = @_;
-    my ($key, $val);
-    $params ||= { };
-
-
-    foreach my $arg (@DUMPER_ARGS) {
-        no strict 'refs';
-        if (defined ($val = $params->{ lc $arg })
-            or defined ($val = $params->{ $arg })) {
-            ${"Data\::Dumper\::$arg"} = $val;
-        }
-    }
 
     bless { 
         _CONTEXT => $context, 
+        params   => $params || {},
     }, $class;
 }
 
-sub dump {
+sub get_dump_obj {
     my $self = shift;
-    my $content = Dumper @_;
-    return $content;
+
+    my $dumper_obj = Data::Dumper->new( \@_ );
+
+    my $params = $self->{ params };
+
+    foreach my $arg ( @DUMPER_ARGS ) {
+        my $val = exists $params->{ lc $arg } ? $params->{ lc $arg }
+                :                               $params->{    $arg };
+
+        $dumper_obj->$arg( $val ) if defined $val;
+    }
+
+    return $dumper_obj;
 }
 
+sub dump { scalar shift->get_dump_obj( @_ )->Dump() }
 
 sub dump_html {
     my $self = shift;
-    my $content = Dumper @_;
+
+    my $content = $self->dump( @_ );
+
     for ($content) {
         s/&/&amp;/g;
         s/</&lt;/g;
         s/>/&gt;/g;
         s/\n/<br>\n/g;
     }
+
     return $content;
 }
 
