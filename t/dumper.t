@@ -80,6 +80,16 @@ $VAR1 = {<br>
 
 -- expect --
 >> $bob1 = {
->>   'baz' => 'boo'
->> };
+>>           'baz' => 'boo'
+>>         };
+
+-- test --
+[% USE Dumper -%]
+[% Dumper.dump(params) -%]
+
+-- expect --
+$VAR1 = {
+          'baz' => 'boo'
+        };
+
 
