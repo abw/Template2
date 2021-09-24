@@ -370,7 +370,10 @@ sub _init {
             next if ref $dir;
             my $wdir = $dir;
             $wdir =~ tr[:][]d if MSWin32;
-            $wdir = each %{ { $wdir => undef } } if ${^TAINT};    #untaint
+            {
+                no warnings 'syntax';
+                $wdir = each %{ { $wdir => undef } } if ${^TAINT};    #untaint
+            }
             $wdir = File::Spec->catfile($cdir, $wdir);
             File::Path::mkpath($wdir) unless -d $wdir;
         }
@@ -869,7 +872,10 @@ sub _compile {
         # write the Perl code to the file $compfile, if defined
         if ($compfile) {
             my $basedir = &File::Basename::dirname($compfile);
-            $basedir = each %{ { $basedir => undef } } if ${^TAINT};    #untaint
+            {
+                no warnings 'syntax';
+                $basedir = each %{ { $basedir => undef } } if ${^TAINT};    #untaint
+            }
 
             unless (-d $basedir) {
                 eval { File::Path::mkpath($basedir) };
@@ -888,7 +894,10 @@ sub _compile {
             # set atime and mtime of newly compiled file, don't bother
             # if time is undef
             if (!defined($error) && defined $data->{ 'time' }) {
-                my $cfile = each %{ { $compfile => undef } };
+                my $cfile = do {
+                    no warnings 'syntax';
+                    each %{ { $compfile => undef } };
+                };
                 if (!length $cfile) {
                     return("invalid filename: $compfile",
                            Template::Constants::STATUS_ERROR);
