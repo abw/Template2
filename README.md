@@ -234,7 +234,7 @@ e.g.
     perldoc Template
 
 If you're using a Unix based system then the pages should also be
-converted to manpages suring the 'make install'.  Thus, you can also:
+converted to manpages during 'make install'.  Thus, you can also:
 
     man Template
 
