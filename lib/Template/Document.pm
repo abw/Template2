@@ -72,7 +72,10 @@ sub new {
         $COMPERR = '';
 
         # DON'T LOOK NOW! - blindly untainting can make you go blind!
-        $block = each %{ { $block => undef } } if ${^TAINT};    #untaint
+        {
+            no warnings 'syntax';
+            $block = each %{ { $block => undef } } if ${^TAINT};    #untaint
+        }
 
         $block = eval $block;
         return $class->error($@)
