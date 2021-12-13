@@ -2,7 +2,7 @@
 
                             Template Toolkit
 
-                              Version 3.009
+                              Version 3.010
 
                                 July 2020
 
@@ -44,6 +44,9 @@ other offline document systems.
 
 WHAT'S NEW?
 -----------
+
+Version 3.010 Maintenance release: several fixes and documentation improvements.
+              ttree updates.
 
 Version 3.009 revert "Allow SET to have FILTER used in it"
 

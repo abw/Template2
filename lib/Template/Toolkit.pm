@@ -18,7 +18,7 @@
 
 package Template::Toolkit;
 
-our $VERSION = '3.009';
+our $VERSION = '3.010';
 
 1;
 

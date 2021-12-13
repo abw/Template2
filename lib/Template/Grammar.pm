@@ -30,7 +30,7 @@ package Template::Grammar;
 use strict;
 use warnings;
 
-our $VERSION  = '3.009';
+our $VERSION  = '3.010';
 
 my (@RESERVED, %CMPOP, $LEXTABLE, $RULES, $STATES);
 my ($factory, $rawstart);

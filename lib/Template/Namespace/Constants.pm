@@ -26,7 +26,7 @@ use Template::Config;
 use Template::Directive;
 use Template::Exception;
 
-our $VERSION = '3.009';
+our $VERSION = '3.010';
 our $DEBUG   = 0 unless defined $DEBUG;
 
 
