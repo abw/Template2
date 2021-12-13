@@ -11,6 +11,34 @@
 #========================================================================
 
 #-----------------------------------------------------------------------
+# Version 3.010 - 13th December 2021
+#------------------------------------------------------------------------
+
+Bug Fixes:
+* Fix breakage when VMethods is loaded before Stash. (Felipe Gasper)
+* Fix unicode issues in Plugin::Date (Nicolas R)
+* Use "defined" instead of "//" because the latter is not available in Perl v5.8. (Louis Strous)
+* Fix FILTER redirect does not honor binmode (Louis Strous)
+
+Improvements:
+* Avoid anonymous hash warnings starting with Perl 5.35.2 (Graham Ollis)
+* Use Data::Dumper as an object. (Justin Wheeler)
+* ttree: Rename --assets to --copy_dir. (Johan Vromans)
+* ttree: Implement assets directories. (Johan Vromans)
+
+Tests:
+* Add Test2 to Test requirements
+* Fix t/zz-plugin-cycle.t errors (Nicolas R)
+* Test for Dumper global vars. (Justin Wheeler)
+* Remove unused _dump code (Nicolas R)
+* Fixed tests failing on MacOS Catalina due to Dynaloader and relative paths (Andy Wardley)
+
+Documentation:
+* Update README.md (philip r brenan)
+* Add support group to README and Template.pm. (Johan Vromans)
+* Make the process() documentation clearer. (Dave Cross)
+
+#-----------------------------------------------------------------------
 # Version 3.009 - 13th July 2020
 #------------------------------------------------------------------------
 
