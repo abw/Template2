@@ -25,11 +25,9 @@ use strict;
 use warnings;
 use Scalar::Util qw( blessed looks_like_number );
 use Template::Filters;
-require Template::Stash;
 
 our $VERSION = '3.009';
 our $DEBUG   = 0 unless defined $DEBUG;
-our $PRIVATE = $Template::Stash::PRIVATE;
 
 our $ROOT_VMETHODS = {
     inc     => \&root_inc,
@@ -109,6 +107,10 @@ our $LIST_VMETHODS = {
     splice  => \&list_splice,
 };
 
+# Template::Stash needs the above, so defer loading this module
+# until they are defined.
+require Template::Stash;
+our $PRIVATE = $Template::Stash::PRIVATE;
 
 #========================================================================
 # root virtual methods
