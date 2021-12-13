@@ -153,9 +153,7 @@ my %opts = (
     },
     'TEST_REQUIRES' => {
         'CGI' => 4.11,
-        'Test::LeakTrace'           => 0,
-        'Test2::V0'                 => 0,
-        'Test2::Plugin::NoWarnings' => 0,
+        'Test::LeakTrace' => 0,
     },
     'META_MERGE' => {
         'meta-spec' => { version => 2 },

@@ -1,9 +1,6 @@
 use strict;
 
-use Test2::V0;
-use Test2::Plugin::NoWarnings;
-
-plan tests => 1;
+use Test::More tests => 1;
 
 require Template::VMethods;
 require Template::Stash;

@@ -27,7 +27,6 @@ Improvements:
 * ttree: Implement assets directories. (Johan Vromans)
 
 Tests:
-* Add Test2 to Test requirements
 * Fix t/zz-plugin-cycle.t errors (Nicolas R)
 * Test for Dumper global vars. (Justin Wheeler)
 * Remove unused _dump code (Nicolas R)
