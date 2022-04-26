@@ -71,7 +71,7 @@ use strict;
 use warnings;
 use base 'Template::Stash';
 
-our $VERSION = '3.010';
+our $VERSION = '3.100';
 our $DEBUG   = 0 unless defined $DEBUG;
 
 
@@ -708,7 +708,7 @@ L<http://wardley.org/|http://wardley.org/>
 =head1 VERSION
 
 1.63, distributed as part of the
-Template Toolkit version 3.010, released on 30 March 2020.
+Template Toolkit version 3.100, released on 30 March 2020.
 
 =head1 COPYRIGHT
 

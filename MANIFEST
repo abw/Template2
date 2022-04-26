@@ -37,7 +37,6 @@ lib/Template/Namespace/Constants.pm
 lib/Template/Parser.pm
 lib/Template/Plugin.pm
 lib/Template/Plugin/Assert.pm
-lib/Template/Plugin/CGI.pm
 lib/Template/Plugin/Datafile.pm
 lib/Template/Plugin/Date.pm
 lib/Template/Plugin/Directory.pm

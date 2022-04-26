@@ -152,7 +152,6 @@ my %opts = (
         'Scalar::Util'    => 0,
     },
     'TEST_REQUIRES' => {
-        'CGI' => 4.11,
         'Test::LeakTrace' => 0,
     },
     'META_MERGE' => {

@@ -20,6 +20,7 @@ use strict;
 use Template;
 use Template::Stash;
 use Template::Stash::XS;
+use Template::Plugin::CGI; # might be a different dist
 use BSD::Resource;
 use CGI;
 

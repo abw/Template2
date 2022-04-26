@@ -106,6 +106,7 @@ Jonas Liljegren answers:
     
     <p>The value is [% CGI.cookie('cookie_name') | html %]
 
+You will need to have L<Template::Plugin::CGI> installed.
 
 =head1 Extending the Template Toolkit
 
