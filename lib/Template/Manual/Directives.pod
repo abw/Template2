@@ -920,7 +920,7 @@ to re-use with the same configuration.
     [% END %]
     
     [% FILTER echo %]
-    Mother, should I build a wall?
+    Mother, should I build the wall?
     [% END %]
 
 Output:
@@ -928,8 +928,8 @@ Output:
     Is there anybody out there?
     Is there anybody out there?
 
-    Mother, should I build a wall?
-    Mother, should I build a wall?
+    Mother, should I build the wall?
+    Mother, should I build the wall?
 
 The C<FILTER> directive automatically quotes the name of the filter.  As
 with C<INCLUDE> et al, you can use a variable to provide the name of the 
