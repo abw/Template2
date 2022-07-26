@@ -7,10 +7,9 @@ binop.t         Binary operators
 block.t         BLOCK definition
 capture.t       Capture directive output and assign to a variable
 case.t          CASE option to switch case sensitivity
-cgi.t           CGI plugin (Template::Plugin::CGI)
 compile1.t      Compile templates to Perl code and save to file
 compile2.t      Reload above compiled templates without re-parsing
-compile3.t      Ensure that touching source template causes re-compilation 
+compile3.t      Ensure that touching source template causes re-compilation
 compile4.t      Compiling templates to a COMPILE_DIR
 compile5.t      Reload templates from a COMPILE_DIR
 config.t        Template::Config factory module
