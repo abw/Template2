@@ -1,17 +1,13 @@
+# Template Toolkit
 
-                            Template Toolkit
+Version 3.101, July 2022
 
-                              Version 3.100
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved
 
-                             January 2020
+This is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
 
-        Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved
-
-          This is free software; you can redistribute it and/or
-             modify it under the same terms as Perl itself.
-
-QUICK INSTALL
--------------
+# Quick Install
 
 If you have the CPAN module installed then you can install the Template
 Toolkit like this from the command line:
@@ -45,9 +41,7 @@ further information about installation.
 
     http://template-toolkit.org/download/index.html
 
-
-PREREQUISITES
--------------
+# Prerequisites
 
 The Template Toolkit is written entirely in Perl and should run on any
 platform on which Perl is available.  It requires Perl 5.006 or later.
@@ -67,8 +61,7 @@ unless you plan to use those particular plugins.  See Template::Plugins
 and Template::Manual::Plugins for further details.
 
 
-OBTAINING AND INSTALLING THE TEMPLATE TOOLKIT
----------------------------------------------
+# Obtaining and Installing the Template Toolkit
 
 The latest release version of the Template Toolkit can be downloaded
 from any CPAN site:
@@ -85,7 +78,7 @@ The Template Toolkit is distributed as a gzipped tar archive file:
 
     Template-Toolkit-<version>.tar.gz
 
-where <version> represents the current version number, e.g. 3.100.
+where `version` represents the current version number, e.g. 3.100.
 
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
@@ -116,8 +109,7 @@ libraries, HTML documentation and examples can be correctly viewed via
 your web browser.  The INSTALLATION section covers this.
 
 
-INSTALLING ON MICROSOFT WIN32 PLATFORMS
----------------------------------------
+# Installing on Microsoft WIN32 Platforms
 
 For advice on using Perl under Microsoft Windows, have a look here:
 
@@ -145,8 +137,7 @@ In this case, you should substitute 'nmake' for 'make' in all the
 instructions contained herein.
 
 
-CONFIGURATION
--------------
+# Configuration
 
 This section covers the configuration of the Template Toolkit via
 the Makefile.PL program.  If you've successfully run this and didn't
@@ -172,8 +163,7 @@ the XS Stash module by default:
     Do you want to build the XS Stash module? [y]
     Do you want to use the XS Stash for all Templates? [n]
 
-BUILDING AND TESTING
---------------------
+# Building and Testing
 
 This section describes the "make" and "make test" commands which build
 and test the Template Toolkit.  If you ran these without incident,
@@ -194,8 +184,7 @@ results of the individual tests:
     make test TEST_VERBOSE=1
 
 
-INSTALLATION
-------------
+# Installation
 
 This section describes the final installation of the Template Toolkit
 via the "make install" and covers any additional steps you may need to
@@ -214,19 +203,15 @@ e.g.
 
     use lib qw( /home/abw/lib/perl5/site_perl/5.10.0 );
 
-
-AUTHOR
-------
+# Author
 
 The Template Toolkit was written by Andy Wardley <abw@wardley.org> with
 the invaluable assistance and contributions from many other people.
 See Template::Manual::Credits for details.
 
+# Copyright
 
-COPYRIGHT
----------
-
-Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

@@ -1,17 +1,14 @@
 
-                            Template Toolkit
+# Template Toolkit
 
-                              Version 3.100
+Version 3.101, July 2022
 
-                             January 2020
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved
 
-        Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved
+This is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
 
-          This is free software; you can redistribute it and/or
-             modify it under the same terms as Perl itself.
-
-HACKER'S GUIDE
---------------
+# HACKER'S GUIDE
 
 Please hack on the Template Toolkit.  It has been designed to be
 extensible and has literally dozens of programmer hooks that you can
@@ -28,27 +25,21 @@ The internals document also contains information about preparing and
 applying patches, updating the documentation and various other
 useful tips.
 
-
-SOURCE CODE
------------
+# SOURCE CODE
 
 The source code repository for the Template Toolkit is hosted at Github.
 
     https://github.com/abw/Template2
 
-
-AUTHOR
-------
+# AUTHOR
 
 The Template Toolkit was written by Andy Wardley <abw@wardley.org>
 with the invaluable assistance and contributions from many other
 people.  See Template::Manual::Credits for details.
 
+# COPYRIGHT
 
-COPYRIGHT
----------
-
-Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

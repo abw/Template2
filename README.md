@@ -1,19 +1,15 @@
 [![](https://github.com/abw/Template2/workflows/linux/badge.svg)](https://github.com/abw/Template2/actions) [![](https://github.com/abw/Template2/workflows/macos/badge.svg)](https://github.com/abw/Template2/actions)
 
-                            Template Toolkit
+# Template Toolkit
 
-                              Version 3.100
+Version 3.101, July 2022
 
-                                July 2020
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved
 
-        Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved
+This is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
 
-          This is free software; you can redistribute it and/or
-             modify it under the same terms as Perl itself.
-
-
-INSTALLATION
-------------
+# INSTALLATION
 
 If you have the CPAN module installed then you can install the Template
 Toolkit from the command line like so:
@@ -24,9 +20,7 @@ Please see the separate INSTALL file for further information on installing
 the Template Toolkit, including what to do if you don't have the CPAN
 module installed, and/or installation on MS Windows.
 
-
-DESCRIPTION
------------
+# DESCRIPTION
 
 The Template Toolkit is a collection of modules which implement a
 fast, flexible, powerful and extensible template processing system.
@@ -42,11 +36,12 @@ simplify the process of creating and managing static web content and
 other offline document systems.
 
 
-WHAT'S NEW?
------------
+# WHAT'S NEW?
 
-Version 3.100 Maintenance release: several fixes and documentation improvements.
-              ttree updates.
+Version 3.101 Added meta() method to Template::Document
+
+Version 3.100 Maintenance release: several fixes, documentation improvements
+and ttree updates.
 
 Version 3.009 revert "Allow SET to have FILTER used in it"
 
@@ -160,9 +155,7 @@ of minor bug fixes.
 See the Changes file for further details of the changes in these and
 earlier releases.
 
-
-GENERAL FEATURES
-----------------
+# GENERAL FEATURES
 
 Some of the key features of the Template Toolkit are listed below.
 See the documentation for further detail.
@@ -215,8 +208,7 @@ See the documentation for further detail.
   * standard filters for html, case folding, regex search and replace, etc.
 
 
-DOCUMENTATION
--------------
+# DOCUMENTATION
 
 The Template Toolkit is provided with enough documentation to keep all
 but the most voracious reader happy for quite some time.
@@ -305,9 +297,7 @@ it's usually marked as such.  In particular, the documentation for the
 internals (Template::Manual::Internals) and FAQ (Template::FAQ) are
 perpetually under construction.
 
-
-SOURCE CODE
------------
+# SOURCE CODE
 
 The source code for the Template Toolkit is maintained in a public git
 repository at github:
@@ -325,8 +315,7 @@ mailing list first (see below). Don't forget to update the documentation and
 tests where relevant
 
 
-SUPPORT
--------
+# SUPPORT
 
 The Template Toolkit mailing list provides a forum for discussing
 issues relating to the use and abuse of the Template Toolkit.  There
@@ -347,19 +336,15 @@ You can also use the web interface:
 For information about commercial support and consultancy for the Template
 Toolkit, please contact the author.
 
-
-AUTHOR
-------
+# AUTHOR
 
 The Template Toolkit was written by Andy Wardley <abw@wardley.org> with
 the invaluable assistance and contributions from many other people.
 See Template::Manual::Credits for details.
 
+# COPYRIGHT
 
-COPYRIGHT
----------
-
-Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
