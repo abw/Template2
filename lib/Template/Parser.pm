@@ -283,8 +283,9 @@ sub text_splitter {
             (?:
               (?:
               ^$out           # outline tag at start of line
-              (.*?)           # $2 - content of that line
-              (?:\n|$)        # end of that line or file
+              (.*?            # $2 - content of that line
+                (?:\n|$)      # end of that line or file
+              )
               )
               |
               (?:
@@ -416,11 +417,11 @@ sub split_text {
             else {
 
                 if(s/^($CHOMP_FLAGS)?(\s*)//so && $2) {
-                  my $chomped = $2;
-                  my $linecount = ($chomped =~ tr/\n//); # newlines in chomped whitespace
-                  $linecount ||= 0;
-                  $prelines += $linecount;
-                  $dirlines -= $linecount;
+                    my $chomped = $2;
+                    my $linecount = ($chomped =~ tr/\n//); # newlines in chomped whitespace
+                    $linecount ||= 0;
+                    $prelines += $linecount;
+                    $dirlines -= $linecount;
                 }
                 # PRE_CHOMP: process whitespace before tag
                 $chomp = $1 ? $1 : $prechomp;
