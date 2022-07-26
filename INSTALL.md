@@ -1,12 +1,3 @@
-# Template Toolkit
-
-Version 3.101, July 2022
-
-Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved
-
-This is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
 # Quick Install
 
 If you have the CPAN module installed then you can install the Template
@@ -26,8 +17,8 @@ Available from CPAN in:
 
 To install the Template Toolkit from the command line:
 
-    $ tar zxf Template-Toolkit-3.100.tar.gz
-    $ cd Template-Toolkit-3.100
+    $ tar zxf Template-Toolkit-3.101.tar.gz
+    $ cd Template-Toolkit-3.101
     $ perl Makefile.PL
     $ make
     $ make test
@@ -83,14 +74,14 @@ where `version` represents the current version number, e.g. 3.100.
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    $ tar zxf Template-Toolkit-3.100.tar.gz
+    $ tar zxf Template-Toolkit-3.101.tar.gz
 or
-    $ gunzip Template-Toolkit-3.100.tar.gz
-    $ tar xf Template-Toolkit-3.100.tar
+    $ gunzip Template-Toolkit-3.101.tar.gz
+    $ tar xf Template-Toolkit-3.101.tar
 
 You can then 'cd' into the directory created,
 
-    $ cd Template-Toolkit-3.100
+    $ cd Template-Toolkit-3.101
 
 and perform the usual Perl installation procedure:
 
@@ -203,15 +194,3 @@ e.g.
 
     use lib qw( /home/abw/lib/perl5/site_perl/5.10.0 );
 
-# Author
-
-The Template Toolkit was written by Andy Wardley <abw@wardley.org> with
-the invaluable assistance and contributions from many other people.
-See Template::Manual::Credits for details.
-
-# Copyright
-
-Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself.
