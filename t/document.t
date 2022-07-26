@@ -6,13 +6,11 @@
 #
 # Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 1996-2000 Andy Wardley.  All Rights Reserved.
+# Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 # Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
-#
-# $Id$
 #
 #========================================================================
 
@@ -46,12 +44,12 @@ package main;
 my $doc = Template::Document->new({
     BLOCK     => sub { my $c = shift; return "some output" },
     DEFBLOCKS => {
-	foo => sub { return 'the foo block' },
-	bar => sub { return 'the bar block' },
+        foo => sub { return 'the foo block' },
+        bar => sub { return 'the bar block' },
     },
     METADATA  => {
-	author  => 'Andy Wardley',
-	version => 3.14,
+        author  => 'Andy Wardley',
+        version => 3.14,
     },
 });
 
@@ -69,7 +67,7 @@ ok( &{ $doc->blocks->{ foo } } eq 'the foo block' );
 ok( &{ $doc->blocks->{ bar } } eq 'the bar block' );
 
 my $dir   = -d 't' ? 't/test' : 'test';
-my $tproc = Template->new({ 
+my $tproc = Template->new({
     INCLUDE_PATH => "$dir/src",
 });
 
@@ -80,7 +78,7 @@ __END__
 # test metadata
 [% META
    author = 'Tom Smith'
-   version = 1.23 
+   version = 1.23
 -%]
 version [% template.version %] by [% template.author %]
 -- expect --

@@ -176,6 +176,23 @@ sub process {
 }
 
 #------------------------------------------------------------------------
+# meta()
+#
+# Return the META items, i.e. anything that isn't prefixed with a _, e.g.
+# _BLOCKS, or the name or modtime items.
+#------------------------------------------------------------------------
+
+sub meta {
+    my $self = shift;
+    return {
+        map { $_ => $self->{ $_ } }
+        grep { ! /^(_|modtime$|name$)/ }
+        keys %$self
+    };
+}
+
+
+#------------------------------------------------------------------------
 # AUTOLOAD
 #
 # Provides pseudo-methods for read-only access to various internal
@@ -435,6 +452,10 @@ Returns a reference to the hash array of named C<DEFBLOCKS> subroutines.
 Returns a reference to a hash of variables used in the template.
 This requires the L<TRACE_VARS|Template::Manual::Config#TRACE_VARS>
 option to be enabled.
+
+=head2 meta()
+
+Return a reference to a hash of any META items defined in the template.
 
 =head2 AUTOLOAD
 
