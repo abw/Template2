@@ -3,14 +3,14 @@
 # Template::Plugin::Datafile
 #
 # DESCRIPTION
-#   Template Toolkit Plugin which reads a datafile and constructs a 
+#   Template Toolkit Plugin which reads a datafile and constructs a
 #   list object containing hashes representing records in the file.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -50,7 +50,7 @@ sub new {
         $line =~ s/\r$//;
     }
 
-    (@fields = split(/\s*$delim\s*/, $line)) 
+    (@fields = split(/\s*$delim\s*/, $line))
         || return $class->error("first line of file must contain field names");
 
     # read each line of the file
@@ -73,7 +73,7 @@ sub new {
 
 #    return $self;
     bless $self, $class;
-}       
+}
 
 
 sub as_list {
@@ -94,21 +94,21 @@ Template::Plugin::Datafile - Plugin to construct records from a simple data file
     [% USE mydata = datafile('/path/to/datafile') %]
     [% USE mydata = datafile('/path/to/datafile', delim = '|') %]
     [% USE mydata = datafile('/path/to/datafile', encoding = 'UTF-8') %]
-    
+
     [% FOREACH record = mydata %]
        [% record.this %]  [% record.that %]
     [% END %]
 
 =head1 DESCRIPTION
 
-This plugin provides a simple facility to construct a list of hash 
+This plugin provides a simple facility to construct a list of hash
 references, each of which represents a data record of known structure,
 from a data file.
 
     [% USE datafile(filename) %]
 
-A absolute filename must be specified (for this initial implementation at 
-least - in a future version it might also use the C<INCLUDE_PATH>).  An 
+A absolute filename must be specified (for this initial implementation at
+least - in a future version it might also use the C<INCLUDE_PATH>).  An
 optional C<delim> parameter may also be provided to specify an alternate
 delimiter character.
 The optional C<encoding> parameter may be used to specify the input file
@@ -126,9 +126,9 @@ items, also delimited by colons.  e.g.
     abw : Andy Wardley : abw@tt2.org : 555-1234
     sam : Simon Matthews : sam@tt2.org : 555-9876
 
-Each line is read, split into composite fields, and then used to 
+Each line is read, split into composite fields, and then used to
 initialise a hash array containing the field names as relevant keys.
-The plugin returns a blessed list reference containing the hash 
+The plugin returns a blessed list reference containing the hash
 references in the order as defined in the file.
 
     [% FOREACH user = userlist %]
@@ -150,7 +150,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

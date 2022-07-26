@@ -1,4 +1,4 @@
-#================================================================= -*-Perl-*- 
+#================================================================= -*-Perl-*-
 #
 # Template::Namespace::Constants
 #
@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -64,7 +64,7 @@ sub ident {
             return Template::Directive->ident(\@save);
         }
 
-        # if args is non-zero then it must be eval'ed 
+        # if args is non-zero then it must be eval'ed
         if ($ident->[$e * 2 + 1]) {
             my $args = $ident->[$e * 2 + 1];
             my $comp = eval "$args";
@@ -105,7 +105,7 @@ Template::Namespace::Constants - Compile time constant folding
 
     # easy way to define constants
     use Template;
-    
+
     my $tt = Template->new({
         CONSTANTS => {
             pi => 3.14,
@@ -115,7 +115,7 @@ Template::Namespace::Constants - Compile time constant folding
 
     # nitty-gritty, hands-dirty way
     use Template::Namespace::Constants;
-    
+
     my $tt = Template->new({
         NAMESPACE => {
             constants => Template::Namespace::Constants->new({
@@ -156,7 +156,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -4,18 +4,18 @@
 #
 # DESCRIPTION
 #   Module implementing a template processing service which wraps a
-#   template within PRE_PROCESS and POST_PROCESS templates and offers 
+#   template within PRE_PROCESS and POST_PROCESS templates and offers
 #   ERROR recovery.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-# 
+#
 #============================================================================
 
 package Template::Service;
@@ -45,8 +45,8 @@ our $ERROR   = '';
 # Process a template within a service framework.  A service may encompass
 # PRE_PROCESS and POST_PROCESS templates and an ERROR hash which names
 # templates to be substituted for the main template document in case of
-# error.  Each service invocation begins by resetting the state of the 
-# context object via a call to reset().  The AUTO_RESET option may be set 
+# error.  Each service invocation begins by resetting the state of the
+# context object via a call to reset().  The AUTO_RESET option may be set
 # to 0 (default: 1) to bypass this step.
 #------------------------------------------------------------------------
 
@@ -56,14 +56,16 @@ sub process {
     my ($name, $output, $procout, $error);
     $output = '';
 
-    $self->debug("process($template, ", 
-                 defined $params ? $params : '<no params>',
-                 ')') if $self->{ DEBUG };
+    $self->debug(
+        "process($template, ",
+        defined $params ? $params : '<no params>',
+        ')'
+    ) if $self->{ DEBUG };
 
     $context->reset()
         if $self->{ AUTO_RESET };
 
-    # pre-request compiled template from context so that we can alias it 
+    # pre-request compiled template from context so that we can alias it
     # in the stash for pre-processed templates to reference
     eval { $template = $context->template($template) };
     return $self->error($@)
@@ -73,7 +75,7 @@ sub process {
     # and set the 'template' variable
     $params ||= { };
     # TODO: change this to C<||=> so we can use a template parameter
-    $params->{ template } = $template 
+    $params->{ template } = $template
         unless ref $template eq 'CODE';
     $context->localise($params);
 
@@ -98,7 +100,7 @@ sub process {
             last SERVICE
                 unless defined ($procout = $self->_recover(\$error));
         }
-        
+
         if (defined $procout) {
             # WRAPPER
             eval {
@@ -110,7 +112,7 @@ sub process {
             last SERVICE if ($error = $@);
             $output .= $procout;
         }
-        
+
         # POST_PROCESS
         eval {
             foreach $name (@{ $self->{ POST_PROCESS } }) {
@@ -135,7 +137,7 @@ sub process {
 
 #------------------------------------------------------------------------
 # context()
-# 
+#
 # Returns the internal CONTEXT reference.
 #------------------------------------------------------------------------
 
@@ -154,7 +156,7 @@ sub _init {
     my $delim = $config->{ DELIMITER };
     $delim = ':' unless defined $delim;
 
-    # coerce PRE_PROCESS, PROCESS and POST_PROCESS to arrays if necessary, 
+    # coerce PRE_PROCESS, PROCESS and POST_PROCESS to arrays if necessary,
     # by splitting on non-word characters
     foreach $item (qw( PRE_PROCESS PROCESS POST_PROCESS WRAPPER )) {
         $data = $config->{ $item };
@@ -166,17 +168,17 @@ sub _init {
     # unset PROCESS option unless explicitly specified in config
     $self->{ PROCESS } = undef
         unless defined $config->{ PROCESS };
-    
+
     $self->{ ERROR      } = $config->{ ERROR } || $config->{ ERRORS };
     $self->{ AUTO_RESET } = defined $config->{ AUTO_RESET }
                             ? $config->{ AUTO_RESET } : 1;
     $self->{ DEBUG      } = ( $config->{ DEBUG } || 0 )
                             & Template::Constants::DEBUG_SERVICE;
-    
+
     $context = $self->{ CONTEXT } = $config->{ CONTEXT }
         || Template::Config->context($config)
         || return $self->error(Template::Config->error);
-    
+
     return $self;
 }
 
@@ -184,12 +186,12 @@ sub _init {
 #------------------------------------------------------------------------
 # _recover(\$exception)
 #
-# Examines the internal ERROR hash array to find a handler suitable 
+# Examines the internal ERROR hash array to find a handler suitable
 # for the exception object passed by reference.  Selecting the handler
-# is done by delegation to the exception's select_handler() method, 
-# passing the set of handler keys as arguments.  A 'default' handler 
-# may also be provided.  The handler value represents the name of a 
-# template which should be processed. 
+# is done by delegation to the exception's select_handler() method,
+# passing the set of handler keys as arguments.  A 'default' handler
+# may also be provided.  The handler value represents the name of a
+# template which should be processed.
 #------------------------------------------------------------------------
 
 sub _recover {
@@ -198,8 +200,8 @@ sub _recover {
     my ($hkey, $handler, $output);
 
     # there shouldn't ever be a non-exception object received at this
-    # point... unless a module like CGI::Carp messes around with the 
-    # DIE handler. 
+    # point... unless a module like CGI::Carp messes around with the
+    # DIE handler.
     return undef
         unless blessed($$error) && $$error->isa(EXCEPTION);
 
@@ -228,13 +230,13 @@ sub _recover {
         $handler = $handlers;
         $self->debug("using default error handler") if $self->{ DEBUG };
     }
-    
+
     eval { $handler = $context->template($handler) };
     if ($@) {
         $$error = $@;
         return undef;                       ## RETURN
     };
-    
+
     $context->stash->set('error', $$error);
     eval {
         $output .= $context->process($handler);
@@ -258,24 +260,24 @@ Template::Service - General purpose template processing service
 =head1 SYNOPSIS
 
     use Template::Service;
-    
+
     my $service = Template::Service->new({
         PRE_PROCESS  => [ 'config', 'header' ],
         POST_PROCESS => 'footer',
         ERROR        => {
-            user     => 'user/index.html', 
+            user     => 'user/index.html',
             dbi      => 'error/database',
             default  => 'error/default',
         },
     });
-    
+
     my $output = $service->process($template_name, \%replace)
         || die $service->error(), "\n";
 
 =head1 DESCRIPTION
 
 The C<Template::Service> module implements an object class for providing
-a consistent template processing service. 
+a consistent template processing service.
 
 Standard header (L<PRE_PROCESS|PRE_PROCESS_POST_PROCESS>) and footer
 (L<POST_PROCESS|PRE_PROCESS_POST_PROCESS>) templates may be specified which
@@ -292,7 +294,7 @@ L<new()|Template#new()> constructor method and will be forwarded to the
 L<Template::Service> constructor.
 
     use Template;
-    
+
     my $template = Template->new({
         PRE_PROCESS  => 'header',
         POST_PROCESS => 'footer',
@@ -308,12 +310,12 @@ L<SERVICE> item.
 
     use Template;
     use Template::Service;
-    
+
     my $service = Template::Service->new({
         PRE_PROCESS  => 'header',
         POST_PROCESS => 'footer',
     });
-    
+
     my $template = Template->new({
         SERVICE => $service,
     });
@@ -323,13 +325,13 @@ handlers.
 
     use Template;
     use MyOrg::Template::Service;
-    
+
     my $service = MyOrg::Template::Service->new({
         PRE_PROCESS  => 'header',
         POST_PROCESS => 'footer',
         COOL_OPTION  => 'enabled in spades',
     });
-    
+
     my $template = Template->new({
         SERVICE => $service,
     });
@@ -343,9 +345,9 @@ L<service()|Template::Config#service()> factory method when a default service
 object is required. Thus the previous example could be written as:
 
     use Template;
-    
+
     $Template::Config::SERVICE = 'MyOrg::Template::Service';
-    
+
     my $template = Template->new({
         PRE_PROCESS  => 'header',
         POST_PROCESS => 'footer',
@@ -364,7 +366,7 @@ as a list of C<name =E<gt> value> pairs.
         PRE_PROCESS  => 'header',
         POST_PROCESS => 'footer',
     });
-    
+
     my $service2 = Template::Service->new( ERROR => 'error.html' );
 
 The C<new()> method returns a C<Template::Service> object or C<undef> on
@@ -374,7 +376,7 @@ C<$Template::Service::ERROR> package variable.
 
     my $service = Template::Service->new(\%config)
         || die Template::Service->error();
-        
+
     my $service = Template::Service->new(\%config)
         || die $Template::Service::ERROR;
 
@@ -426,7 +428,7 @@ C<PROCESS>, C<WRAPPER>, etc.
         POST_PROCESS => 'footer',
     };
 
-Multiple templates may be specified as a reference to a list.  Each is 
+Multiple templates may be specified as a reference to a list.  Each is
 processed in the order defined.
 
     my $service = Template::Service->new({
@@ -440,13 +442,13 @@ The L<PROCESS|Template::Manual::Config#PROCESS> option may be set to contain
 the name(s) of template files which should be processed instead of the main
 template passed to the C<Template::Service> L<process()> method. This can be used to
 apply consistent wrappers around all templates, similar to the use of
-L<PRE_PROCESS|PRE_PROCESS_POST_PROCESS> and 
+L<PRE_PROCESS|PRE_PROCESS_POST_PROCESS> and
 L<POST_PROCESS|PRE_PROCESS_POST_PROCESS> templates.
 
     my $service = Template::Service->new({
         PROCESS  => 'content',
     };
-    
+
     # processes 'content' instead of 'foo.html'
     $service->process('foo.html');
 
@@ -474,8 +476,8 @@ array mapping exception types to templates which should be used for error
 handling. If an uncaught exception is raised from within a template then the
 appropriate error template will instead be processed.
 
-If specified as a single value then that template will be processed 
-for all uncaught exceptions. 
+If specified as a single value then that template will be processed
+for all uncaught exceptions.
 
     my $service = Template::Service->new({
         ERROR => 'error.html'
@@ -500,7 +502,7 @@ The L<AUTO_RESET|Template::Manual::Config#AUTO_RESET> option is set by default
 and causes the local C<BLOCKS> cache for the L<Template::Context> object to be
 reset on each call to the L<Template> L<process()|Template#process()> method.
 This ensures that any C<BLOCK>s defined within a template will only persist until
-that template is finished processing. 
+that template is finished processing.
 
 =head2 DEBUG
 
@@ -509,7 +511,7 @@ debugging messages from the C<Template::Service> module by setting it to include
 the C<DEBUG_SERVICE> value.
 
     use Template::Constants qw( :debug );
-    
+
     my $template = Template->new({
         DEBUG => DEBUG_SERVICE,
     });
@@ -520,7 +522,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

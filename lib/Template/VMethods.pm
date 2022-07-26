@@ -9,13 +9,10 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2015 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
-#
-# REVISION
-#   $Id$
 #
 #============================================================================
 
@@ -266,19 +263,23 @@ sub text_split {
     # For versions of Perl prior to 5.18 we have to be very careful about
     # spelling out each possible combination of arguments because split()
     # is very sensitive to them, for example C<split(' ', ...)> behaves
-    # differently to C<$space=' '; split($space, ...)>.  Test 33 of 
+    # differently to C<$space=' '; split($space, ...)>.  Test 33 of
     # vmethods/text.t depends on this behaviour.
 
     if ($] < 5.018) {
         if (defined $limit) {
-            return [ defined $split
-                     ? split($split, $str, $limit)
-                     : split(' ', $str, $limit) ];
+            return [
+                defined $split
+                    ? split($split, $str, $limit)
+                    : split(' ', $str, $limit)
+            ];
         }
         else {
-            return [ defined $split
-                     ? split($split, $str)
-                     : split(' ', $str) ];
+            return [
+                defined $split
+                    ? split($split, $str)
+                    : split(' ', $str)
+            ];
         }
     }
 
@@ -408,11 +409,13 @@ sub hash_list {
     return ($what eq 'keys')   ? [   keys %$hash ]
         :  ($what eq 'values') ? [ values %$hash ]
         :  ($what eq 'each')   ? [        %$hash ]
-        :  # for now we do what pairs does but this will be changed
-           # in TT3 to return [ $hash ] by default
-        [ map { { key => $_ , value => $hash->{ $_ } } }
-          sort keys %$hash
-          ];
+        :
+        [
+            # for now we do what pairs does but this will be changed
+            # in TT3 to return [ $hash ] by default
+            map { { key => $_ , value => $hash->{ $_ } } }
+            sort keys %$hash
+        ];
 }
 
 sub hash_exists {
@@ -549,22 +552,22 @@ sub list_join {
 }
 
 sub _list_sort_make_key {
-   my ($item, $fields) = @_;
-   my @keys;
+    my ($item, $fields) = @_;
+    my @keys;
 
-   if (ref($item) eq 'HASH') {
-       @keys = map { $item->{ $_ } } @$fields;
-   }
-   elsif (blessed $item) {
-       @keys = map { $item->can($_) ? $item->$_() : $item } @$fields;
-   }
-   else {
-       @keys = $item;
-   }
+    if (ref($item) eq 'HASH') {
+        @keys = map { $item->{ $_ } } @$fields;
+    }
+    elsif (blessed $item) {
+        @keys = map { $item->can($_) ? $item->$_() : $item } @$fields;
+    }
+    else {
+        @keys = $item;
+    }
 
-   # ugly hack to generate a single string using a delimiter that is
-   # unlikely (but not impossible) to be found in the wild.
-   return lc join('/*^UNLIKELY^*/', map { defined $_ ? $_ : '' } @keys);
+    # ugly hack to generate a single string using a delimiter that is
+    # unlikely (but not impossible) to be found in the wild.
+    return lc join('/*^UNLIKELY^*/', map { defined $_ ? $_ : '' } @keys);
 }
 
 sub list_sort {
@@ -576,10 +579,10 @@ sub list_sort {
             sort { $a->[1] cmp $b->[1] }
             map  { [ $_, _list_sort_make_key($_, \@fields) ] }
             @$list
-        :  map  { $_->[0] }
-           sort { $a->[1] cmp $b->[1] }
-           map  { [ $_, lc $_ ] }
-           @$list,
+        :   map  { $_->[0] }
+            sort { $a->[1] cmp $b->[1] }
+            map  { [ $_, lc $_ ] }
+            @$list,
     ];
 }
 
@@ -676,7 +679,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

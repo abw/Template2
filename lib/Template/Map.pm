@@ -3,19 +3,19 @@
 # Template::Map
 #
 # DESCRIPTION
-#   This module implements a generic name to template mapping service.  It 
+#   This module implements a generic name to template mapping service.  It
 #   replaces part of the functionality of the experimental Template::View
 #   module.
 #
 # NOTE
-#   This is a work-in-progress.  It is not part of the standard TT 
+#   This is a work-in-progress.  It is not part of the standard TT
 #   distribution and may never be.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -38,13 +38,13 @@ our $MAP = {
 };
 our $METHOD = 'TT_name';
 
-#$DEBUG = 1;    
+#$DEBUG = 1;
 
 #------------------------------------------------------------------------
 # _init(\%config)
 #
-# Initialisation method called by the Template::Base class new() 
-# constructor.  
+# Initialisation method called by the Template::Base class new()
+# constructor.
 #------------------------------------------------------------------------
 
 sub _init {
@@ -100,11 +100,11 @@ sub name {
 
     return $map->{ $type }
         if defined $map->{ $type };
-    
+
     if ( UNIVERSAL::can($item, $method) ) {
 	$self->DEBUG("Calling \$item->$method\n") if $DEBUG;
 	$name = $item->$method();
-    }   
+    }
     else {
 	($name = $type) =~ s/\W+/_/g;
     }

@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2001-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2001-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -23,8 +23,9 @@ use strict;
 use warnings;
 use base 'Template::Plugin';
 use Template::Exception;
-use overload q|""| => "text",
-             fallback => 1;
+use overload
+    q|""| => "text",
+    fallback => 1;
 
 our $VERSION = '3.100';
 our $ERROR   = '';
@@ -41,17 +42,22 @@ sub new {
 
     $class = ref($class) || $class;
 
-    my $list = defined $config->{ list } 
+    my $list = defined $config->{ list }
         ? $config->{ list }
-        : (scalar @args == 1 && ref $args[0] eq 'ARRAY' ? CORE::shift(@args) 
-           : [ @_ ]);
+        : (scalar @args == 1 && ref $args[0] eq 'ARRAY'
+            ? CORE::shift(@args)
+            : [ @_ ]
+        );
 
     print STDERR " list: [ @$list ]\n";
     print STDERR "class: [$class]\n";
 
-    my $joint = defined $config->{ joint } ? $config->{ joint }
-                      : $config->{ join  } ? $config->{ join  } 
-                      : ', ';
+    my $joint =
+        defined $config->{ joint }
+        ? $config->{ joint }
+        : $config->{ join }
+            ? $config->{ join }
+            : ', ';
 
     bless {
         list  => $text,
@@ -72,8 +78,8 @@ sub item {
 
 
 sub hash {                              ### not sure about this one ###
-    my $self = shift; 
-    my $n = 0; 
+    my $self = shift;
+    my $n = 0;
     return { map { ($n++, $_) } @{ $self->{ list } } };
 }
 
@@ -129,14 +135,14 @@ sub shift {
 sub max {
     local $^W = 0;
     my $list = $_[0]->{ list };
-    return $#$list; 
+    return $#$list;
 }
 
 
 sub size {
     local $^W = 0;
     my $list = $_[0]->{ list };
-    return $#$list + 1; 
+    return $#$list + 1;
 }
 
 

@@ -9,7 +9,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2001-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2001-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -31,7 +31,7 @@ our $ERROR   = '';
 
 *centre  = \*center;
 *append  = \*push;
-*prepend = \*unshift; 
+*prepend = \*unshift;
 
 #------------------------------------------------------------------------
 
@@ -42,13 +42,13 @@ sub new {
 
     $class = ref($class) || $class;
 
-    my $text = defined $config->{ text } 
+    my $text = defined $config->{ text }
         ? $config->{ text }
         : (@args ? shift(@args) : '');
 
 #    print STDERR "text: [$text]\n";
 #    print STDERR "class: [$class]\n";
-    
+
     my $self = bless {
         text     => $text,
         filters  => [ ],
@@ -247,14 +247,14 @@ sub upper {
 sub lower {
     my $self = CORE::shift;
     $self->{ text } = lc $self->{ text };
-    return $self;    
+    return $self;
 }
 
 
 sub capital {
     my $self = CORE::shift;
     $self->{ text } =~ s/^(.)/\U$1/;
-    return $self;    
+    return $self;
 }
 
 #------------------------------------------------------------------------
@@ -276,21 +276,21 @@ sub chomp {
 sub trim {
     my $self = CORE::shift;
     for ($self->{ text }) {
-        s/^\s+//; 
-        s/\s+$//; 
+        s/^\s+//;
+        s/\s+$//;
     }
-    return $self;    
+    return $self;
 }
 
 
 sub collapse {
     my $self = CORE::shift;
     for ($self->{ text }) {
-        s/^\s+//; 
-        s/\s+$//; 
-        s/\s+/ /g 
+        s/^\s+//;
+        s/\s+$//;
+        s/\s+/ /g
     }
-    return $self;    
+    return $self;
 
 }
 
@@ -307,7 +307,7 @@ sub truncate {
     return $self unless defined $length;
     $suffix ||= '';
     return $self if CORE::length $self->{ text } <= $length;
-    $self->{ text } = CORE::substr($self->{ text }, 0, 
+    $self->{ text } = CORE::substr($self->{ text }, 0,
                              $length - CORE::length($suffix)) . $suffix;
     return $self;
 }
@@ -326,7 +326,7 @@ sub substr {
         else {
             return CORE::substr( $self->{text}, $offset, $length );
         }
-    } 
+    }
     else {
         return CORE::substr( $self->{text}, $offset );
     }
@@ -416,9 +416,9 @@ Template::Plugin::String - Object oriented interface for string manipulation
 =head1 DESCRIPTION
 
 This module implements a C<String> class for doing stringy things to
-text in an object-oriented way. 
+text in an object-oriented way.
 
-You can create a C<String> object via the C<USE> directive, adding any 
+You can create a C<String> object via the C<USE> directive, adding any
 initial text value as an argument or as the named parameter C<text>.
 
     [% USE String %]
@@ -431,7 +431,7 @@ to:
 
     [% USE greeting = String 'Hello World' %]
 
-Once you've got a C<String> object, you can use it as a prototype to 
+Once you've got a C<String> object, you can use it as a prototype to
 create other C<String> objects with the C<new()> method.
 
     [% USE String %]
@@ -442,12 +442,12 @@ or the named parameter C<text>.
 
     [% greeting = String.new( text => 'Hello World' ) %]
 
-You can also call C<copy()> to create a new C<String> as a copy of the 
+You can also call C<copy()> to create a new C<String> as a copy of the
 original.
 
     [% greet2 = greeting.copy %]
 
-The C<String> object has a C<text()> method to return the content of the 
+The C<String> object has a C<text()> method to return the content of the
 string.
 
     [% greeting.text %]
@@ -464,7 +464,7 @@ of text, interpolating it into other strings, for example:
     [% msg = "It printed '$greeting' and then dumped core\n" %]
 
 You also have the benefit of numerous other methods for manipulating
-the string.  
+the string.
 
     [% msg.append("PS  Don't eat the yellow snow") %]
 
@@ -485,9 +485,9 @@ the string being printed.  To suppress printing of the string, you can
 use the C<CALL> directive.
 
     [% foo = String.new('foo') %]
-    
+
     [% foo.append('bar') %]         # prints "foobar"
-    
+
     [% CALL foo.append('bar') %]    # nothing
 
 =head1 CONSTRUCTOR METHODS
@@ -563,9 +563,9 @@ to modify the string then simply take a copy first.
     [% str.copy.append('.html') %]
 
 These methods all return a reference to the C<String> object itself.  This
-has two important benefits.  The first is that when used as above, the 
+has two important benefits.  The first is that when used as above, the
 C<String> object 'C<str>' returned by the C<append()> method will be stringified
-with a call to its C<text()> method.  This will return the newly modified 
+with a call to its C<text()> method.  This will return the newly modified
 string content.  In other words, a directive like:
 
     [% str.append('.html') %]
@@ -585,7 +585,7 @@ Here are the methods:
 
 =head2 push($suffix, ...) / append($suffix, ...)
 
-Appends all arguments to the end of the string.  The 
+Appends all arguments to the end of the string.  The
 C<append()> method is provided as an alias for C<push()>.
 
     [% msg.push('foo', 'bar') %]
@@ -628,8 +628,8 @@ As per L<left()> but right padding the C<String> to a length of C<$pad>.
 
 =head2 center($pad) / centre($pad)
 
-As per L<left()> and L<right()> but formatting the C<String> to be centered within 
-a space padded string of length C<$pad>.  The C<centre()> method is provided as 
+As per L<left()> and L<right()> but formatting the C<String> to be centered within
+a space padded string of length C<$pad>.  The C<centre()> method is provided as
 an alias for C<center()>.
 
     [% msg.center(20) %]    # American spelling
@@ -658,13 +658,13 @@ Converts the string to lower case
 
 =head2 capital()
 
-Converts the first character of the string to upper case.  
+Converts the first character of the string to upper case.
 
     [% USE String("foo") %]
     [% String.capital %]  # => 'Foo'
 
 The remainder of the string is left untouched.  To force the string to
-be all lower case with only the first letter capitalised, you can do 
+be all lower case with only the first letter capitalised, you can do
 something like this:
 
     [% USE String("FOO") %]
@@ -707,7 +707,7 @@ Truncates the string to C<$length> characters.
     [% String.truncate(4) %]  # => 'long'
 
 If C<$suffix> is specified then it will be appended to the truncated
-string.  In this case, the string will be further shortened by the 
+string.  In this case, the string will be further shortened by the
 length of the suffix to ensure that the newly constructed string
 complete with suffix is exactly C<$length> characters long.
 
@@ -741,7 +741,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

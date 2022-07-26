@@ -9,7 +9,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -28,8 +28,8 @@ doesn't work as you might expect:
 
     [% a = b IF c %]
 
-The parser interprets it as an attempt to set C<a> to the result of 
-C<b IF c>, like this: 
+The parser interprets it as an attempt to set C<a> to the result of
+C<b IF c>, like this:
 
     [% a = (b IF c) %]
 
@@ -45,13 +45,13 @@ NOTE: this will be fixed in TT3
 =head2 If I'm using TT to write out a TT template, is there a good way to escape [% and %]?
 
 You can do something like this:
- 
+
     [% stag = "[\%"
        etag = "%\]"
     %]
- 
+
 and then:
- 
+
     [% stag; 'hello'; etag %]
 
 Or you can use the C<TAGS> directive, like so:
@@ -80,7 +80,7 @@ Order the data into rows:
     Steve     Karen     Jeff
     Brooklyn  Nantucket Fairfax
     NY        MA        VA
-    
+
     [% USE table(data, rows=3) %]
 
 Then ask for each column
@@ -97,13 +97,13 @@ And then print each item in the column going across the output rows
 
 Jeff Boes E<lt>jboes@nexcerpt.comE<gt> asks:
 
-    Does anyone have a quick-n-dirty approach to accessing 
-    cookies from templates? 
+    Does anyone have a quick-n-dirty approach to accessing
+    cookies from templates?
 
 Jonas Liljegren answers:
 
     [% USE CGI %]
-    
+
     <p>The value is [% CGI.cookie('cookie_name') | html %]
 
 You will need to have L<Template::Plugin::CGI> installed.
@@ -112,7 +112,7 @@ You will need to have L<Template::Plugin::CGI> installed.
 
 =head2 Can I serve templates from a database?
 
-Short answer: yes, Chris Nandor has done this for Slash.  You need to 
+Short answer: yes, Chris Nandor has done this for Slash.  You need to
 subclass L<Template::Provider>.  See the mailing list archives for further
 info.
 
@@ -125,7 +125,7 @@ in the F<Changes> file around version 2.01 for more info on C<PREFIX_MAP> - it
 may not be properly documented anywhere else...yet!). e.g.
 
     use Template::Provider::HTTP;
-    
+
     my $file = Template::Provider( INCLUDE_PATH => [...] );
     my $http = Template::Provider::HTTP->new(...);
     my $tt2  = Template->new({
@@ -141,7 +141,7 @@ Now a template specified as:
 
     [% INCLUDE foo %]
 
-will be served by the 'file' provider (the default).  Otherwise you 
+will be served by the 'file' provider (the default).  Otherwise you
 can explicitly add a prefix:
 
     [% INCLUDE file:foo.html %]
@@ -193,7 +193,7 @@ menu:
     [% template.name  %]     # index.html
 
 In contrast, the C<component> variable always references the I<current>
-template being processed.  
+template being processed.
 
 index.html
 
@@ -238,7 +238,7 @@ config/main:
 
     [%  DEFAULT  style   = 'text'
                  section =  template.section or 'home';
-                 
+
         PROCESS  config/site
               +  config/urls
               +  config/macros
@@ -302,11 +302,11 @@ First of all, make sure that your template files define a Byte Order
 Mark L<http://en.wikipedia.org/wiki/Byte_Order_Mark>
 
 If you for some reason don't want to add BOM to your templates, you can
-force Template to use a particular encoding (e.g. C<utf8>) for your 
+force Template to use a particular encoding (e.g. C<utf8>) for your
 templates with the C<ENCODING> option.
 
-    my $template = Template->new({ 
-        ENCODING => 'utf8' 
+    my $template = Template->new({
+        ENCODING => 'utf8'
     });
 
 =head1 Questions About This FAQ

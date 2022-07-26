@@ -11,7 +11,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it an/or
 #   modify it under the same terms as Perl itself.
@@ -37,11 +37,11 @@ our $AUTOLOAD;
 #------------------------------------------------------------------------
 # load()
 #
-# Class method called when the plugin module is first loaded.  It 
+# Class method called when the plugin module is first loaded.  It
 # returns the name of a class (by default, its own class) or a prototype
-# object which will be used to instantiate new objects.  The new() 
-# method is then called against the class name (class method) or 
-# prototype object (object method) to create a new instances of the 
+# object which will be used to instantiate new objects.  The new()
+# method is then called against the class name (class method) or
+# prototype object (object method) to create a new instances of the
 # object.
 #------------------------------------------------------------------------
 
@@ -53,15 +53,15 @@ sub load {
 #------------------------------------------------------------------------
 # new($context, $delegate, @params)
 #
-# Object constructor which is called by the Template::Context to 
-# instantiate a new Plugin object.  This base class constructor is 
-# used as a general mechanism to load and delegate to other Perl 
+# Object constructor which is called by the Template::Context to
+# instantiate a new Plugin object.  This base class constructor is
+# used as a general mechanism to load and delegate to other Perl
 # modules.  The context is passed as the first parameter, followed by
-# a reference to a delegate object or the name of the module which 
-# should be loaded and instantiated.  Any additional parameters passed 
+# a reference to a delegate object or the name of the module which
+# should be loaded and instantiated.  Any additional parameters passed
 # to the USE directive are forwarded to the new() constructor.
-# 
-# A plugin object is returned which has an AUTOLOAD method to delegate 
+#
+# A plugin object is returned which has an AUTOLOAD method to delegate
 # requests to the underlying object.
 #------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ sub new {
 
 #------------------------------------------------------------------------
 # fail($error)
-# 
+#
 # Version 1 error reporting function, now replaced by error() inherited
 # from Template::Base.  Raises a "deprecated function" warning and then
 # calls error().
@@ -100,7 +100,7 @@ Template::Plugin - Base class for Template Toolkit plugins
     use base qw( Template::Plugin );
     use Template::Plugin;
     use MyModule;
-    
+
     sub new {
         my $class   = shift;
         my $context = shift;
@@ -111,18 +111,18 @@ Template::Plugin - Base class for Template Toolkit plugins
 
 =head1 DESCRIPTION
 
-A "plugin" for the Template Toolkit is simply a Perl module which 
-exists in a known package location (e.g. C<Template::Plugin::*>) and 
-conforms to a regular standard, allowing it to be loaded and used 
+A "plugin" for the Template Toolkit is simply a Perl module which
+exists in a known package location (e.g. C<Template::Plugin::*>) and
+conforms to a regular standard, allowing it to be loaded and used
 automatically.
 
-The C<Template::Plugin> module defines a base class from which other 
+The C<Template::Plugin> module defines a base class from which other
 plugin modules can be derived.  A plugin does not have to be derived
 from Template::Plugin but should at least conform to its object-oriented
 interface.
 
 It is recommended that you create plugins in your own package namespace
-to avoid conflict with toolkit plugins.  e.g. 
+to avoid conflict with toolkit plugins.  e.g.
 
     package MyOrg::Template::Plugin::FooBar;
 
@@ -130,7 +130,7 @@ Use the L<PLUGIN_BASE|Template::Manual::Config#PLUGIN_BASE> option to specify
 the namespace that you use. e.g.
 
     use Template;
-    my $template = Template->new({ 
+    my $template = Template->new({
         PLUGIN_BASE => 'MyOrg::Template::Plugin',
     });
 
@@ -150,7 +150,7 @@ name.  The calling context then uses this class name to call the C<new()>
 package method.
 
     package MyPlugin;
-    
+
     sub load {               # called as MyPlugin->load($context)
         my ($class, $context) = @_;
         return $class;       # returns 'MyPlugin'
@@ -173,32 +173,32 @@ directive.
 
 =head2 error($error)
 
-This method, inherited from the L<Template::Base> module, is used for 
+This method, inherited from the L<Template::Base> module, is used for
 reporting and returning errors.   It can be called as a package method
-to set/return the C<$ERROR> package variable, or as an object method to 
+to set/return the C<$ERROR> package variable, or as an object method to
 set/return the object C<_ERROR> member.  When called with an argument, it
 sets the relevant variable and returns C<undef.>  When called without an
 argument, it returns the value of the variable.
 
     package MyPlugin;
     use base 'Template::Plugin';
-    
+
     sub new {
         my ($class, $context, $dsn) = @_;
-        
+
         return $class->error('No data source specified')
             unless $dsn;
-        
+
         bless {
             _DSN => $dsn,
         }, $class;
     }
 
     package main;
-    
+
     my $something = MyPlugin->new()
         || die MyPlugin->error(), "\n";
-        
+
     $something->do_something()
         || die $something->error(), "\n";
 
@@ -209,7 +209,7 @@ calls the L<new()> and L<error()> methods against the package name returned by
 the L<load()> method. In pseudo-code terms looks something like this:
 
     $class  = MyPlugin->load($context);       # returns 'MyPlugin'
-    
+
     $object = $class->new($context, @params)  # MyPlugin->new(...)
         || die $class->error();               # MyPlugin->error()
 
@@ -218,22 +218,22 @@ object instance.  In this case, L<new()> and L<error()> are then called as
 I<object> methods against that prototype instance.
 
     package YourPlugin;
-    
+
     sub load {
         my ($class, $context) = @_;
         bless {
             _CONTEXT => $context,
         }, $class;
     }
-    
+
     sub new {
         my ($self, $context, @params) = @_;
         return $self;
     }
 
-In this example, we have implemented a 'Singleton' plugin.  One object 
+In this example, we have implemented a 'Singleton' plugin.  One object
 gets created when L<load()> is called and this simply returns itself for
-each call to L<new().>   
+each call to L<new().>
 
 Another implementation might require individual objects to be created
 for every call to L<new(),> but with each object sharing a reference to
@@ -241,7 +241,7 @@ some other object to maintain cached data, database handles, etc.
 This pseudo-code example demonstrates the principle.
 
     package MyServer;
-    
+
     sub load {
         my ($class, $context) = @_;
         bless {
@@ -249,18 +249,18 @@ This pseudo-code example demonstrates the principle.
             _CACHE   => { },
         }, $class;
     }
-    
+
     sub new {
         my ($self, $context, @params) = @_;
         MyClient->new($self, @params);
     }
-    
+
     sub add_to_cache   { ... }
-    
+
     sub get_from_cache { ... }
 
     package MyClient;
-    
+
     sub new {
         my ($class, $server, $blah) = @_;
         bless {
@@ -268,12 +268,12 @@ This pseudo-code example demonstrates the principle.
             _BLAH   => $blah,
         }, $class;
     }
-    
+
     sub get {
         my $self = shift;
         $self->{ _SERVER }->get_from_cache(@_);
     }
-    
+
     sub put {
         my $self = shift;
         $self->{ _SERVER }->add_to_cache(@_);
@@ -289,7 +289,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

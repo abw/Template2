@@ -5,14 +5,14 @@
 # DESCRIPTION
 #   Module defining a test harness which processes template input and
 #   then compares the output against pre-define expected output.
-#   Generates test output compatible with Test::Harness.  This was 
+#   Generates test output compatible with Test::Harness.  This was
 #   originally the t/texpect.pl script.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -45,7 +45,7 @@ our $PRESERVE = 0    # don't mangle newlines in output/expect
 our ($loaded, %callsign);
 
 # always set binmode on Win32 machines so that any output generated
-# is true to what we expect 
+# is true to what we expect
 $Template::BINMODE = (MSWin32) ? 1 : 0;
 
 my @results = ();
@@ -53,7 +53,7 @@ my ($ntests, $ok_count);
 *is = \&match;
 
 END {
-    # ensure flush() is called to print any cached results 
+    # ensure flush() is called to print any cached results
     flush();
 }
 
@@ -61,19 +61,19 @@ END {
 #------------------------------------------------------------------------
 # ntests($n)
 #
-# Declare how many (more) tests are expected to come.  If ok() is called 
+# Declare how many (more) tests are expected to come.  If ok() is called
 # before ntests() then the results are cached instead of being printed
-# to STDOUT.  When ntests() is called, the total number of tests 
+# to STDOUT.  When ntests() is called, the total number of tests
 # (including any cached) is known and the "1..$ntests" line can be
-# printed along with the cached results.  After that, calls to ok() 
+# printed along with the cached results.  After that, calls to ok()
 # generated printed output immediately.
 #------------------------------------------------------------------------
 
 sub ntests {
     $ntests = shift;
-    # add any pre-declared extra tests, or pre-stored test @results, to 
+    # add any pre-declared extra tests, or pre-stored test @results, to
     # the grand total of tests
-    $ntests += $EXTRA + scalar @results;     
+    $ntests += $EXTRA + scalar @results;
     $ok_count = 1;
     print $ntests ? "1..$ntests\n" : "1..$ntests # skip $REASON\n";
     # flush cached results
@@ -87,7 +87,7 @@ sub ntests {
 # ok($truth, $msg)
 #
 # Tests the value passed for truth and generates an "ok $n" or "not ok $n"
-# line accordingly.  If ntests() hasn't been called then we cached 
+# line accordingly.  If ntests() hasn't been called then we cached
 # results for later, instead.
 #------------------------------------------------------------------------
 
@@ -139,7 +139,7 @@ sub match {
     my $count = $ok_count ? $ok_count : scalar @results + 1;
 
     # force stringification of $result to avoid 'no eq method' overload errors
-    $result = "$result" if ref $result;    
+    $result = "$result" if ref $result;
 
     if ($result eq $expect) {
         return ok(1, $msg);
@@ -180,10 +180,10 @@ sub skip_all {
 #------------------------------------------------------------------------
 # test_expect($input, $template, \%replace)
 #
-# This is the main testing sub-routine.  The $input parameter should be a 
+# This is the main testing sub-routine.  The $input parameter should be a
 # text string or a filehandle reference (e.g. GLOB or IO::Handle) from
-# which the input text can be read.  The input should contain a number 
-# of tests which are split up and processed individually, comparing the 
+# which the input text can be read.  The input should contain a number
+# of tests which are split up and processed individually, comparing the
 # generated output against the expected output.  Tests should be defined
 # as follows:
 #
@@ -191,15 +191,15 @@ sub skip_all {
 #   test input
 #   -- expect --
 #   expected output
-# 
+#
 #   -- test --
 #    etc...
 #
-# The number of tests is determined and ntests() is called to generate 
+# The number of tests is determined and ntests() is called to generate
 # the "0..$n" line compatible with Test::Harness.  Each test input is
 # then processed by the Template object passed as the second parameter,
 # $template.  This may also be a hash reference containing configuration
-# which are used to instantiate a Template object, or may be left 
+# which are used to instantiate a Template object, or may be left
 # undefined in which case a default Template object will be instantiated.
 # The third parameter, also optional, may be a reference to a hash array
 # defining template variables.  This is passed to the template process()
@@ -233,7 +233,7 @@ sub test_expect {
 
     @tests = split(/^\s*--\s*test\s*--\s*\n/im, $input);
 
-    # if the first line of the file was '--test--' (optional) then the 
+    # if the first line of the file was '--test--' (optional) then the
     # first test will be empty and can be discarded
     shift(@tests) if $tests[0] =~ /^\s*$/;
 
@@ -270,9 +270,9 @@ sub test_expect {
     foreach $input (@tests) {
         $count++;
         my $name = '';
-        
+
         if ($input =~ s/^\s*-- name:? (.*?) --\s*\n//im) {
-            $name = $1; 
+            $name = $1;
         }
         else {
             $name = "template text $count";
@@ -283,11 +283,11 @@ sub test_expect {
         if ($input =~ s/^\s*-- todo:? (.*?) --\s*\n//im) {
             $todo = ( $1 eq '' ) ? 'No reason given' : $1;
         }
-        
+
         # split input by a line like "-- expect --"
-        ($input, $expect) = 
+        ($input, $expect) =
             split(/^\s*--\s*expect\s*--\s*\n/im, $input);
-        $expect = '' 
+        $expect = ''
             unless defined $expect;
 
         $output = '';
@@ -317,44 +317,50 @@ sub test_expect {
         # processed OK
         ok(1, "$name processed OK: " . subtext($input));
 
-        # another hack: if the '-- expect --' section starts with 
-        # '-- process --' then we process the expected output 
+        # another hack: if the '-- expect --' section starts with
+        # '-- process --' then we process the expected output
         # before comparing it with the generated output.  This is
-        # slightly twisted but it makes it possible to run tests 
+        # slightly twisted but it makes it possible to run tests
         # where the expected output isn't static.  See t/date.t for
         # an example.
 
         if ($expect =~ s/^\s*--+\s*process\s*--+\s*\n//im) {
             my $out;
             $tproc->process(\$expect, $params, \$out) || do {
-                warn("Template process failed (expect): ", 
-                     $tproc->error(), "\n");
+                warn(
+                    "Template process failed (expect): ",
+                    $tproc->error(), "\n"
+                );
                 # report failure and automatically fail the expect match
-                ok(0, "failed to process expected output ["
-                   . subtext($expect) . ']');
+                ok(
+                    0,
+                    "failed to process expected output [" . subtext($expect) . ']'
+                );
                 next;
             };
             $expect = $out;
-        };      
-        
+        };
+
         # strip any trailing blank lines from expected and real output
         foreach ($expect, $output) {
             s/[\n\r]*\Z//mg;
         }
-        
+
         $match = ($expect eq $output) ? 1 : 0;
         if (! $match || $DEBUG) {
             print "MATCH FAILED\n"
                 unless $match;
-            
+
             my ($copyi, $copye, $copyo) = ($input, $expect, $output);
             unless ($PRESERVE) {
                 foreach ($copyi, $copye, $copyo) {
                     s/\n/\\n/g;
                 }
             }
-            printf(" input: [%s]\nexpect: [%s]\noutput: [%s]\n", 
-                   $copyi, $copye, $copyo);
+            printf(
+                " input: [%s]\nexpect: [%s]\noutput: [%s]\n",
+                $copyi, $copye, $copyo
+            );
         }
 
         my $testprefix = $name;
@@ -369,15 +375,15 @@ sub test_expect {
 #------------------------------------------------------------------------
 # callsign()
 #
-# Returns a hash array mapping lower a..z to their phonetic alphabet 
+# Returns a hash array mapping lower a..z to their phonetic alphabet
 # equivalent.
 #------------------------------------------------------------------------
 
 sub callsign {
     my %callsign;
-    @callsign{ 'a'..'z' } = qw( 
-        alpha bravo charlie delta echo foxtrot golf hotel india 
-        juliet kilo lima mike november oscar papa quebec romeo 
+    @callsign{ 'a'..'z' } = qw(
+        alpha bravo charlie delta echo foxtrot golf hotel india
+        juliet kilo lima mike november oscar papa quebec romeo
         sierra tango umbrella victor whisky x-ray yankee zulu );
     return \%callsign;
 }
@@ -385,7 +391,7 @@ sub callsign {
 
 #------------------------------------------------------------------------
 # banner($text)
-# 
+#
 # Prints a banner with the specified text if $DEBUG is set.
 #------------------------------------------------------------------------
 
@@ -417,37 +423,37 @@ Template::Test - Module for automating TT2 test scripts
 =head1 SYNOPSIS
 
     use Template::Test;
-   
+
     $Template::Test::DEBUG = 0;   # set this true to see each test running
     $Template::Test::EXTRA = 2;   # 2 extra tests follow test_expect()...
-    
+
     # ok() can be called any number of times before test_expect
     ok( $true_or_false )
-    
-    # test_expect() splits $input into individual tests, processes each 
+
+    # test_expect() splits $input into individual tests, processes each
     # and compares generated output against expected output
     test_expect($input, $template, \%replace );
-    
+
     # $input is text or filehandle (e.g. DATA section after __END__)
     test_expect( $text );
     test_expect( \*DATA );
-    
+
     # $template is a Template object or configuration hash
     my $template_cfg = { ... };
     test_expect( $input, $template_cfg );
     my $template_obj = Template->new($template_cfg);
     test_expect( $input, $template_obj );
-    
+
     # $replace is a hash reference of template variables
     my $replace = {
         a => 'alpha',
         b => 'bravo'
     };
     test_expect( $input, $template, $replace );
-    
+
     # ok() called after test_expect should be declared in $EXTRA (2)
-    ok( $true_or_false )   
-    ok( $true_or_false )   
+    ok( $true_or_false )
+    ok( $true_or_false )
 
 =head1 DESCRIPTION
 
@@ -463,25 +469,25 @@ the distribution for examples of use.
 The C<test_expect()> subroutine splits an input document into a number
 of separate tests, processes each one using the Template Toolkit and
 then compares the generated output against an expected output, also
-specified in the input document.  It generates the familiar 
+specified in the input document.  It generates the familiar
 C<ok>/C<not ok> output compatible with C<Test::Harness>.
 
 The test input should be specified as a text string or a reference to
-a filehandle (e.g. C<GLOB> or C<IO::Handle>) from which it can be read.  In 
+a filehandle (e.g. C<GLOB> or C<IO::Handle>) from which it can be read.  In
 particular, this allows the test input to be placed after the C<__END__>
 marker and read via the C<DATA> filehandle.
 
     use Template::Test;
-    
+
     test_expect(\*DATA);
-    
+
     __END__
     # this is the first test (this is a comment)
     -- test --
     blah blah blah [% foo %]
     -- expect --
     blah blah blah value_of_foo
-    
+
     # here's the second test (no surprise, so is this)
     -- test --
     more blah blah [% bar %]
@@ -492,7 +498,7 @@ Blank lines between test sections are generally ignored.  Any line starting
 with C<#> is treated as a comment and is ignored.
 
 The second and third parameters to C<test_expect()> are optional.  The second
-may be either a reference to a Template object which should be used to 
+may be either a reference to a Template object which should be used to
 process the template fragments, or a reference to a hash array containing
 configuration values which should be used to instantiate a new Template
 object.
@@ -503,7 +509,7 @@ object.
         POST_CHOMP   => 1,
     };
     test_expect(\*DATA, $config);
-    
+
     # or create Template object explicitly
     my $template = Template->new($config);
     test_expect(\*DATA, $template);
@@ -516,7 +522,7 @@ passed to the L<Template> L<process()|Template#process()> method.
         a => 'alpha',
         b => 'bravo',
     };
-    
+
     test_expect(\*DATA, $config, $replace);
 
 The second parameter may be left undefined to specify a default L<Template>
@@ -532,9 +538,9 @@ the second parameter.
     my $tt2 = Template->new({ ... });
     my @tts = [ one => $tt1, two => $tt1 ];
 
-The first object in the list is used by default.  Other objects may be 
-switched in with a 'C<-- use $name -->' marker.  This should immediately 
-follow a 'C<-- test -->' line.  That object will then be used for the rest 
+The first object in the list is used by default.  Other objects may be
+switched in with a 'C<-- use $name -->' marker.  This should immediately
+follow a 'C<-- test -->' line.  That object will then be used for the rest
 of the test, or until a different object is selected.
 
     -- test --
@@ -542,23 +548,23 @@ of the test, or until a different object is selected.
     [% blah %]
     -- expect --
     blah, blah
-    
+
     -- test --
     still using one...
     -- expect --
     ...
-    
+
     -- test --
     -- use two --
     [% blah %]
     -- expect --
     blah, blah, more blah
 
-The C<test_expect()> sub counts the number of tests, and then calls L<ntests()> 
-to generate the familiar "C<1..$ntests\n>" test harness line.  Each 
-test defined generates two test numbers.  The first indicates 
-that the input was processed without error, and the second that the 
-output matches that expected. 
+The C<test_expect()> sub counts the number of tests, and then calls L<ntests()>
+to generate the familiar "C<1..$ntests\n>" test harness line.  Each
+test defined generates two test numbers.  The first indicates
+that the input was processed without error, and the second that the
+output matches that expected.
 
 Additional test may be run before C<test_expect()> by calling L<ok()>. These
 test results are cached until L<ntests()> is called and the final number of
@@ -568,34 +574,34 @@ Subsequent calls to L<ok()> then generate an output line immediately.
 
     my $something = SomeObject->new();
     ok( $something );
-    
+
     my $other = AnotherThing->new();
     ok( $other );
-    
+
     test_expect(\*DATA);
 
-If any tests are to follow after C<test_expect()> is called then these 
+If any tests are to follow after C<test_expect()> is called then these
 should be pre-declared by setting the C<$EXTRA> package variable.  This
 value (default: C<0>) is added to the grand total calculated by L<ntests()>.
 The results of the additional tests are also registered by calling L<ok()>.
 
     $Template::Test::EXTRA = 2;
-    
+
     # can call ok() any number of times before test_expect()
-    ok( $did_that_work );             
+    ok( $did_that_work );
     ok( $make_sure );
-    ok( $dead_certain ); 
-    
+    ok( $dead_certain );
+
     # <some> number of tests...
     test_expect(\*DATA, $config, $replace);
-    
+
     # here's those $EXTRA tests
     ok( defined $some_result && ref $some_result eq 'ARRAY' );
     ok( $some_result->[0] eq 'some expected value' );
 
 If you don't want to call C<test_expect()> at all then you can call
-C<ntests($n)> to declare the number of tests and generate the test 
-header line.  After that, simply call L<ok()> for each test passing 
+C<ntests($n)> to declare the number of tests and generate the test
+header line.  After that, simply call L<ok()> for each test passing
 a true or false values to indicate that the test passed or failed.
 
     ntests(2);
@@ -610,24 +616,24 @@ end of the script and then printed in one go before the program exits.
     ok( $y );
 
 You can identify only a specific part of the input file for testing
-using the 'C<-- start -->' and 'C<-- stop -->' markers.  Anything before the 
-first 'C<-- start -->' is ignored, along with anything after the next 
+using the 'C<-- start -->' and 'C<-- stop -->' markers.  Anything before the
+first 'C<-- start -->' is ignored, along with anything after the next
 'C<-- stop -->' marker.
 
     -- test --
     this is test 1 (not performed)
     -- expect --
     this is test 1 (not performed)
-    
+
     -- start --
-    
+
     -- test --
     this is test 2
     -- expect --
     this is test 2
-        
+
     -- stop --
-    
+
     ...
 
 =head2 ntests()
@@ -647,7 +653,7 @@ I<false> and vice-versa.
 
 For historical reasons and general utility, the module also defines a
 C<callsign()> subroutine which returns a hash mapping the letters C<a>
-to C<z> to their phonetic alphabet equivalent (e.g. radio callsigns). 
+to C<z> to their phonetic alphabet equivalent (e.g. radio callsigns).
 This is used by many of the test scripts as a known source of variable values.
 
     test_expect(\*DATA, $config, callsign());
@@ -675,7 +681,7 @@ The $DEBUG package variable can be set to enable debugging mode.
 
 The $PRESERVE package variable can be set to stop the test_expect()
 from converting newlines in the output and expected output into
-the literal strings '\n'. 
+the literal strings '\n'.
 
 =head1 HISTORY
 
@@ -702,7 +708,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

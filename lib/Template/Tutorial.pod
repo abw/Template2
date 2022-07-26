@@ -9,7 +9,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -24,7 +24,7 @@ Template::Tutorial - Template Toolkit Tutorials
 
 =head2 Template::Tutorial::Web
 
-The L<Template::Tutorial::Web> tutorial shows how you can use the 
+The L<Template::Tutorial::Web> tutorial shows how you can use the
 Template Toolkit to generate static and dynamic web content.
 
 =head2 Template::Tutorial::Datafile

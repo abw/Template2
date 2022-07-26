@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -5226,7 +5226,7 @@ sub
 		 'chunks', 2,
 sub
 #line 71 "Parser.yp"
-{ push(@{$_[1]}, $_[2]) 
+{ push(@{$_[1]}, $_[2])
                                         if defined $_[2]; $_[1]           }
 	],
 	[#Rule 5
@@ -5473,7 +5473,7 @@ sub
 		 'case', 5,
 sub
 #line 160 "Parser.yp"
-{ unshift(@{$_[5]}, [ @_[2, 4] ]); 
+{ unshift(@{$_[5]}, [ @_[2, 4] ]);
                                       $_[5];                              }
 	],
 	[#Rule 53
@@ -5615,7 +5615,7 @@ sub
 		 'view', 6,
 sub
 #line 207 "Parser.yp"
-{ $factory->view(@_[2,5], 
+{ $factory->view(@_[2,5],
                                                      $_[0]->pop_defblock) }
 	],
 	[#Rule 76
@@ -5629,15 +5629,15 @@ sub
 sub
 #line 212 "Parser.yp"
 { ${$_[0]->{ INPERL }}--;
-                                      $_[0]->{ EVAL_PERL } 
-                                      ? $factory->perl($_[4])             
+                                      $_[0]->{ EVAL_PERL }
+                                      ? $factory->perl($_[4])
                                       : $factory->no_perl();              }
 	],
 	[#Rule 78
 		 '@5-1', 0,
 sub
 #line 218 "Parser.yp"
-{ ${$_[0]->{ INPERL }}++; 
+{ ${$_[0]->{ INPERL }}++;
                                       $rawstart = ${$_[0]->{'LINE'}};     }
 	],
 	[#Rule 79
@@ -5645,7 +5645,7 @@ sub
 sub
 #line 220 "Parser.yp"
 { ${$_[0]->{ INPERL }}--;
-                                      $_[0]->{ EVAL_PERL } 
+                                      $_[0]->{ EVAL_PERL }
                                       ? $factory->rawperl($_[4], $rawstart)
                                       : $factory->no_perl();              }
 	],
@@ -5667,7 +5667,7 @@ sub
 #line 234 "Parser.yp"
 { my $name = join('/', @{ $_[0]->{ DEFBLOCKS } });
                                       pop(@{ $_[0]->{ DEFBLOCKS } });
-                                      $_[0]->define_block($name, $_[4]); 
+                                      $_[0]->define_block($name, $_[4]);
                                       undef
                                     }
 	],
@@ -5764,8 +5764,8 @@ sub
 		 'meta', 3,
 sub
 #line 283 "Parser.yp"
-{ for ($_[3]) { s/^'//; s/'$//; 
-                                                       s/\\'/'/g  }; 
+{ for ($_[3]) { s/^'//; s/'$//;
+                                                       s/\\'/'/g  };
                                          [ @_[1,3] ] }
 	],
 	[#Rule 101
@@ -5895,7 +5895,7 @@ sub
 		 'ident', 3,
 sub
 #line 335 "Parser.yp"
-{ push(@{$_[1]}, 
+{ push(@{$_[1]},
                                            map {($_, 0)} split(/\./, $_[3]));
                                       $_[1];                              }
 	],
@@ -5931,7 +5931,7 @@ sub
 sub
 #line 347 "Parser.yp"
 { $_[0]->{ V1DOLLAR }
-                                       ? "'$_[2]'" 
+                                       ? "'$_[2]'"
                                        : $factory->ident(["'$_[2]'", 0])  }
 	],
 	[#Rule 133
@@ -6055,7 +6055,7 @@ sub
 		 'args', 4,
 sub
 #line 384 "Parser.yp"
-{ push(@{$_[1]->[0]}, "'', " . 
+{ push(@{$_[1]->[0]}, "'', " .
                                       $factory->assign(@_[2,4])); $_[1]  }
 	],
 	[#Rule 155
@@ -6158,7 +6158,7 @@ sub
 		 'quoted', 2,
 sub
 #line 434 "Parser.yp"
-{ push(@{$_[1]}, $_[2]) 
+{ push(@{$_[1]}, $_[2])
                                           if defined $_[2]; $_[1]         }
 	],
 	[#Rule 176
@@ -6221,7 +6221,7 @@ L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

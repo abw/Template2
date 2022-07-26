@@ -6,7 +6,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -26,14 +26,14 @@ before using the plugin.
 
 =head2 Assert
 
-New in 2.20!  The L<Assert|Template::Plugin::Assert> plugin adds an 
+New in 2.20!  The L<Assert|Template::Plugin::Assert> plugin adds an
 C<assert> virtual method that you can use to catch undefined values.
 
 For example, consider this dotop:
 
     [% user.name %]
 
-If C<user.name> is an undefined value then TT will silently ignore the 
+If C<user.name> is an undefined value then TT will silently ignore the
 fact and print nothing.  If you C<USE> the C<assert> plugin then you
 can add the C<assert> vmethod between the C<user> and C<name> elements,
 like so:
@@ -54,7 +54,7 @@ recent versions Perl, or is available from CPAN.
     [% USE CGI %]
     [% CGI.param('param_name') %]
     [% CGI.start_form %]
-    [% CGI.popup_menu( Name   => 'color', 
+    [% CGI.popup_menu( Name   => 'color',
                        Values => [ 'Green', 'Brown' ] ) %]
     [% CGI.end_form %]
 
@@ -78,7 +78,7 @@ L<Template::Plugin::Datafile> for further details.
 example:
 
     [% USE userlist = datafile('/tmp/mydata') %]
-    
+
     [% FOREACH user = userlist %]
        [% user.name %] ([% user.id %])
     [% END %]
@@ -91,7 +91,7 @@ routine. See L<Template::Plugin::Date> and L<POSIX> for further details.
 
     [% USE date %]
     [% date.format %]		# current time/date
-    
+
     File last modified: [% date.format(template.modtime) %]
 
 =head2 Directory
@@ -140,10 +140,10 @@ This module implements a base class plugin which can be subclassed
 to easily create your own modules that define and install new filters.
 
     package MyOrg::Template::Plugin::MyFilter;
-    
+
     use Template::Plugin::Filter;
     use base qw( Template::Plugin::Filter );
-    
+
     sub filter {
         my ($self, $text) = @_;
         # ...mungify $text...
@@ -154,7 +154,7 @@ Example of use:
 
     # now load it...
     [% USE MyFilter %]
-    
+
     # ...and use the returned object as a filter
     [% FILTER $MyFilter %]
       ...
@@ -199,7 +199,7 @@ name, or the default plugin name, C<iterator>. See
 L<Template::Plugin::Iterator> for further details.
 
     [% USE iterator(list, args) %]
-    
+
     [% FOREACH item = iterator %]
        [% '<ul>' IF iterator.first %]
        <li>[% item %]
@@ -213,7 +213,7 @@ which parses POD documents into an internal object model which can
 then be traversed and presented through the Template Toolkit.
 
     [% USE Pod(podfile) %]
-    
+
     [% FOREACH head1 = Pod.head1;
          FOREACH head2 = head1/head2;
            ...
@@ -224,19 +224,19 @@ then be traversed and presented through the Template Toolkit.
 =head2 Scalar
 
 The Template Toolkit calls user-defined subroutines and object methods
-using Perl's array context by default.  
+using Perl's array context by default.
 
     # TT2 calls object methods in array context by default
     [% object.method %]
 
-This plugin module provides a way for you to call subroutines and methods 
+This plugin module provides a way for you to call subroutines and methods
 in scalar context.
 
     [% USE scalar %]
-    
+
     # force it to use scalar context
     [% object.scalar.method %]
-    
+
     # also works with subroutine references
     [% scalar.my_sub_ref %]
 
@@ -248,10 +248,10 @@ further details.
 
     [% USE String 'Hello' %]
     [% String.append(' World') %]
-    
+
     [% msg = String.new('Another string') %]
     [% msg.replace('string', 'text') %]
-    
+
     The string "[% msg %]" is [% msg.length %] characters long.
 
 =head2 Table
@@ -262,7 +262,7 @@ columns, with an optional overlap. See L<Template::Plugin::Table> for further
 details.
 
     [% USE table(list, rows=10, overlap=1) %]
-    
+
     [% FOREACH item = table.col(3) %]
        [% item %]
     [% END %]
@@ -274,10 +274,10 @@ URLs from a base part and a variable set of parameters. See
 L<Template::Plugin::URL> for further details.
 
     [% USE mycgi = url('/cgi-bin/bar.pl', debug=1) %]
-    
+
     [% mycgi %]
        # ==> /cgi/bin/bar.pl?debug=1
-       
+
     [% mycgi(mode='submit') %]
        # ==> /cgi/bin/bar.pl?mode=submit&debug=1
 

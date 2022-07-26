@@ -1,5 +1,5 @@
 #==============================================================================
-# 
+#
 # Template::Plugin::Pod
 #
 # DESCRIPTION
@@ -9,7 +9,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2000-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2000-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -49,7 +49,7 @@ Template::Plugin::Pod - Plugin interface to Pod::POM (Pod Object Model)
 =head1 SYNOPSIS
 
     [% USE Pod(podfile) %]
-    
+
     [% FOREACH head1 = Pod.head1;
          FOREACH head2 = head1/head2;
            ...
@@ -67,7 +67,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

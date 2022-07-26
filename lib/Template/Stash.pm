@@ -3,14 +3,14 @@
 # Template::Stash
 #
 # DESCRIPTION
-#   Definition of an object class which stores and manages access to 
-#   variables for the Template Toolkit. 
+#   Definition of an object class which stores and manages access to
+#   variables for the Template Toolkit.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -41,23 +41,23 @@ our $UNDEF_INFO = 'undefined variable: %s';
 #
 # If any of $ROOT_OPS, $SCALAR_OPS, $HASH_OPS or $LIST_OPS are already
 # defined then we merge their contents with the default virtual methods
-# define by Template::VMethods.  Otherwise we can directly alias the 
+# define by Template::VMethods.  Otherwise we can directly alias the
 # corresponding Template::VMethod package vars.
 #------------------------------------------------------------------------
 
-our $ROOT_OPS = defined $ROOT_OPS 
+our $ROOT_OPS = defined $ROOT_OPS
     ? { %{$Template::VMethods::ROOT_VMETHODS}, %$ROOT_OPS }
     : $Template::VMethods::ROOT_VMETHODS;
 
-our $SCALAR_OPS = defined $SCALAR_OPS 
+our $SCALAR_OPS = defined $SCALAR_OPS
     ? { %{$Template::VMethods::TEXT_VMETHODS}, %$SCALAR_OPS }
     : $Template::VMethods::TEXT_VMETHODS;
 
-our $HASH_OPS = defined $HASH_OPS 
+our $HASH_OPS = defined $HASH_OPS
     ? { %{$Template::VMethods::HASH_VMETHODS}, %$HASH_OPS }
     : $Template::VMethods::HASH_VMETHODS;
 
-our $LIST_OPS = defined $LIST_OPS 
+our $LIST_OPS = defined $LIST_OPS
     ? { %{$Template::VMethods::LIST_VMETHODS}, %$LIST_OPS }
     : $Template::VMethods::LIST_VMETHODS;
 
@@ -102,7 +102,7 @@ sub define_vmethod {
 # new(\%params)
 #
 # Constructor method which creates a new Template::Stash object.
-# An optional hash reference may be passed containing variable 
+# An optional hash reference may be passed containing variable
 # definitions that will be used to initialise the stash.
 #
 # Returns a reference to a newly created Template::Stash.
@@ -130,15 +130,15 @@ sub new {
 #------------------------------------------------------------------------
 # clone(\%params)
 #
-# Creates a copy of the current stash object to effect localisation 
-# of variables.  The new stash is blessed into the same class as the 
+# Creates a copy of the current stash object to effect localisation
+# of variables.  The new stash is blessed into the same class as the
 # parent (which may be a derived class) and has a '_PARENT' member added
 # which contains a reference to the parent stash that created it
 # ($self).  This member is used in a successive declone() method call to
 # return the reference to the parent.
-# 
-# A parameter may be provided which should reference a hash of 
-# variable/values which should be defined in the new stash.  The 
+#
+# A parameter may be provided which should reference a hash of
+# variable/values which should be defined in the new stash.  The
 # update() method is called to define these new variables in the cloned
 # stash.
 #
@@ -158,12 +158,12 @@ sub clone {
         undef $import;
     }
 
-    my $clone = bless { 
+    my $clone = bless {
         %$self,         # copy all parent members
         %$params,       # copy all new data
         '_PARENT' => $self,     # link to parent
     }, ref $self;
-    
+
     # perform hash import if defined
     &{ $HASH_OPS->{ import } }($clone, $import)
         if defined $import;
@@ -171,16 +171,16 @@ sub clone {
     return $clone;
 }
 
-    
+
 #------------------------------------------------------------------------
-# declone($export) 
+# declone($export)
 #
 # Returns a reference to the PARENT stash.  When called in the following
 # manner:
 #    $stash = $stash->declone();
 # the reference count on the current stash will drop to 0 and be "freed"
-# and the caller will be left with a reference to the parent.  This 
-# contains the state of the stash before it was cloned.  
+# and the caller will be left with a reference to the parent.  This
+# contains the state of the stash before it was cloned.
 #------------------------------------------------------------------------
 
 sub declone {
@@ -191,13 +191,13 @@ sub declone {
 
 #------------------------------------------------------------------------
 # get($ident)
-# 
+#
 # Returns the value for an variable stored in the stash.  The variable
-# may be specified as a simple string, e.g. 'foo', or as an array 
+# may be specified as a simple string, e.g. 'foo', or as an array
 # reference representing compound variables.  In the latter case, each
-# pair of successive elements in the list represent a node in the 
-# compound variable.  The first is the variable name, the second a 
-# list reference of arguments or 0 if undefined.  So, the compound 
+# pair of successive elements in the list represent a node in the
+# compound variable.  The first is the variable name, the second a
+# list reference of arguments or 0 if undefined.  So, the compound
 # variable [% foo.bar('foo').baz %] would be represented as the list
 # [ 'foo', 0, 'bar', ['foo'], 'baz', 0 ].  Returns the value of the
 # identifier or an empty string if undefined.  Errors are thrown via
@@ -214,10 +214,10 @@ sub get {
         && ($ident = [ map { s/\(.*$//; ($_, 0) } split(/\./, $ident) ])) {
         my $size = $#$ident;
 
-        # if $ident is a list reference, then we evaluate each item in the 
-        # identifier against the previous result, using the root stash 
+        # if $ident is a list reference, then we evaluate each item in the
+        # identifier against the previous result, using the root stash
         # ($self) as the first implicit 'result'...
-        
+
         foreach (my $i = 0; $i <= $size; $i += 2) {
             $result = $self->_dotop($root, @$ident[$i, $i+1]);
             last unless defined $result;
@@ -228,8 +228,8 @@ sub get {
         $result = $self->_dotop($root, $ident, $args);
     }
 
-    return defined $result 
-        ? $result 
+    return defined $result
+        ? $result
         : $self->undefined($ident, $args);
 }
 
@@ -238,14 +238,14 @@ sub get {
 # set($ident, $value, $default)
 #
 # Updates the value for a variable in the stash.  The first parameter
-# should be the variable name or array, as per get().  The second 
+# should be the variable name or array, as per get().  The second
 # parameter should be the intended value for the variable.  The third,
 # optional parameter is a flag which may be set to indicate 'default'
 # mode.  When set true, the variable will only be updated if it is
 # currently undefined or has a false value.  The magical 'IMPORT'
 # variable identifier may be used to indicate that $value is a hash
 # reference whose values should be imported.  Returns the value set,
-# or an empty string if not set (e.g. default mode).  In the case of 
+# or an empty string if not set (e.g. default mode).  In the case of
 # IMPORT, returns the number of items imported from the hash.
 #------------------------------------------------------------------------
 
@@ -258,12 +258,14 @@ sub set {
     ELEMENT: {
         if (ref $ident eq 'ARRAY'
             || (index($ident,'.') != -1) # has a '.' in it somewhere
-            && ($ident = [ map { s/\(.*$//; ($_, 0) }
-                           split(/\./, $ident) ])) {
-            
-            # a compound identifier may contain multiple elements (e.g. 
-            # foo.bar.baz) and we must first resolve all but the last, 
-            # using _dotop() with the $lvalue flag set which will create 
+            && ($ident = [
+                map { s/\(.*$//; ($_, 0) }
+                split(/\./, $ident)
+            ])) {
+
+            # a compound identifier may contain multiple elements (e.g.
+            # foo.bar.baz) and we must first resolve all but the last,
+            # using _dotop() with the $lvalue flag set which will create
             # intermediate hashes if necessary...
             my $size = $#$ident;
             foreach (my $i = 0; $i < $size - 2; $i += 2) {
@@ -271,25 +273,27 @@ sub set {
                 last ELEMENT unless defined $result;
                 $root = $result;
             }
-            
+
             # then we call _assign() to assign the value to the last element
-            $result = $self->_assign($root, @$ident[$size-1, $size], 
-                                     $value, $default);
+            $result = $self->_assign(
+                $root, @$ident[$size-1, $size],
+                $value, $default
+            );
         }
         else {
             $result = $self->_assign($root, $ident, 0, $value, $default);
         }
     }
-    
+
     return defined $result ? $result : '';
 }
 
 
 #------------------------------------------------------------------------
 # getref($ident)
-# 
-# Returns a "reference" to a particular item.  This is represented as a 
-# closure which will return the actual stash item when called.  
+#
+# Returns a "reference" to a particular item.  This is represented as a
+# closure which will return the actual stash item when called.
 #------------------------------------------------------------------------
 
 sub getref {
@@ -299,22 +303,23 @@ sub getref {
 
     if (ref $ident eq 'ARRAY') {
         my $size = $#$ident;
-        
+
         foreach (my $i = 0; $i <= $size; $i += 2) {
-            ($item, $args) = @$ident[$i, $i + 1]; 
+            ($item, $args) = @$ident[$i, $i + 1];
             last if $i >= $size - 2;  # don't evaluate last node
-            last unless defined 
+            last unless defined
                 ($root = $self->_dotop($root, $item, $args));
         }
     }
     else {
         $item = $ident;
     }
-    
+
     if (defined $root) {
-        return sub { my @args = (@{$args||[]}, @_);
-                     $self->_dotop($root, $item, \@args);
-                 }
+        return sub {
+            my @args = (@{$args||[]}, @_);
+            $self->_dotop($root, $item, \@args);
+        }
     }
     else {
         return sub { '' };
@@ -359,9 +364,9 @@ sub undefined {
         # Sorry, but we can't provide a sensible source file and line without
         # re-designing the whole architecture of TT (see TT3)
         die Template::Exception->new(
-            $UNDEF_TYPE, 
+            $UNDEF_TYPE,
             sprintf(
-                $UNDEF_INFO, 
+                $UNDEF_INFO,
                 $self->_reconstruct_ident($ident)
             )
         ) if $self->{ _STRICT };
@@ -384,7 +389,7 @@ sub _reconstruct_ident {
             if $args && ref $args eq 'ARRAY';
         push(@output, $name);
     }
-    
+
     return join('.', @output);
 }
 
@@ -396,19 +401,19 @@ sub _reconstruct_ident {
 #------------------------------------------------------------------------
 # _dotop($root, $item, \@args, $lvalue)
 #
-# This is the core 'dot' operation method which evaluates elements of 
-# variables against their root.  All variables have an implicit root 
-# which is the stash object itself (a hash).  Thus, a non-compound 
+# This is the core 'dot' operation method which evaluates elements of
+# variables against their root.  All variables have an implicit root
+# which is the stash object itself (a hash).  Thus, a non-compound
 # variable 'foo' is actually '(stash.)foo', the compound 'foo.bar' is
 # '(stash.)foo.bar'.  The first parameter is a reference to the current
-# root, initially the stash itself.  The second parameter contains the 
+# root, initially the stash itself.  The second parameter contains the
 # name of the variable element, e.g. 'foo'.  The third optional
-# parameter is a reference to a list of any parenthesised arguments 
-# specified for the variable, which are passed to sub-routines, object 
-# methods, etc.  The final parameter is an optional flag to indicate 
+# parameter is a reference to a list of any parenthesised arguments
+# specified for the variable, which are passed to sub-routines, object
+# methods, etc.  The final parameter is an optional flag to indicate
 # if this variable is being evaluated on the left side of an assignment
-# (e.g. foo.bar.baz = 10).  When set true, intermediated hashes will 
-# be created (e.g. bar) if necessary.  
+# (e.g. foo.bar.baz = 10).  When set true, intermediated hashes will
+# be created (e.g. bar) if necessary.
 #
 # Returns the result of evaluating the item against the root, having
 # performed any variable "magic".  The value returned can then be used
@@ -435,12 +440,12 @@ sub _dotop {
     return undef if $PRIVATE && $item =~ /$PRIVATE/;
 
     if ($atroot || $rootref eq 'HASH') {
-        # if $root is a regular HASH or a Template::Stash kinda HASH (the 
-        # *real* root of everything).  We first lookup the named key 
+        # if $root is a regular HASH or a Template::Stash kinda HASH (the
+        # *real* root of everything).  We first lookup the named key
         # in the hash, or create an empty hash in its place if undefined
         # and the $lvalue flag is set.  Otherwise, we check the HASH_OPS
         # pseudo-methods table, calling the code if found, or return undef.
-        
+
         if (defined($value = $root->{ $item })) {
             return $value unless ref $value eq 'CODE';      ## RETURN
             @result = &$value(@$args);                      ## @result
@@ -451,7 +456,7 @@ sub _dotop {
         }
         # ugly hack: only allow import vmeth to be called on root stash
         elsif (($value = $HASH_OPS->{ $item })
-               && ! $atroot || $item eq 'import') {
+            && ! $atroot || $item eq 'import') {
             @result = &$value($root, @$args);               ## @result
         }
         elsif ( ref $item eq 'ARRAY' ) {
@@ -459,8 +464,8 @@ sub _dotop {
             return [@$root{@$item}];                        ## RETURN
         }
     }
-    elsif ($rootref eq 'ARRAY') {    
-        # if root is an ARRAY then we check for a LIST_OPS pseudo-method 
+    elsif ($rootref eq 'ARRAY') {
+        # if root is an ARRAY then we check for a LIST_OPS pseudo-method
         # or return the numerical index into the array, or undef
         if ($value = $LIST_OPS->{ $item }) {
             @result = &$value($root, @$args);               ## @result
@@ -475,21 +480,21 @@ sub _dotop {
             return [@$root[@$item]];                        ## RETURN
         }
     }
-    
+
     # NOTE: we do the can-can because UNIVSERAL::isa($something, 'UNIVERSAL')
     # doesn't appear to work with CGI, returning true for the first call
-    # and false for all subsequent calls. 
-    
+    # and false for all subsequent calls.
+
     # UPDATE: that doesn't appear to be the case any more
-    
+
     elsif (blessed($root) && $root->can('can')) {
 
-        # if $root is a blessed reference (i.e. inherits from the 
+        # if $root is a blessed reference (i.e. inherits from the
         # UNIVERSAL object base class) then we call the item as a method.
-        # If that fails then we try to fallback on HASH behaviour if 
+        # If that fails then we try to fallback on HASH behaviour if
         # possible.
-        eval { @result = $root->$item(@$args); };       
-        
+        eval { @result = $root->$item(@$args); };
+
         if ($@) {
             # temporary hack - required to propagate errors thrown
             # by views; if $@ is a ref (e.g. Template::Exception
@@ -516,12 +521,12 @@ sub _dotop {
             }
             elsif (reftype $root eq 'ARRAY') {
                 if( $value = $LIST_OPS->{ $item }) {
-                   @result = &$value($root, @$args);
+                    @result = &$value($root, @$args);
                 }
                 elsif( $item =~ /^-?\d+$/ ) {
-                   $value = $root->[$item];
-                   return $value unless ref $value eq 'CODE';      ## RETURN
-                   @result = &$value(@$args);                      ## @result
+                    $value = $root->[$item];
+                    return $value unless ref $value eq 'CODE';      ## RETURN
+                    @result = &$value(@$args);                      ## @result
                 }
                 elsif ( ref $item eq 'ARRAY' ) {
                     # array slice
@@ -578,7 +583,7 @@ sub _dotop {
 #
 # Similar to _dotop() above, but assigns a value to the given variable
 # instead of simply returning it.  The first three parameters are the
-# root item, the item and arguments, as per _dotop(), followed by the 
+# root item, the item and arguments, as per _dotop(), followed by the
 # value to which the variable should be set and an optional $default
 # flag.  If set true, the variable will only be set if currently false
 # (undefined/zero)
@@ -597,7 +602,7 @@ sub _assign {
 
     # or if an attempt is made to update a private member, starting _ or .
     return undef if $PRIVATE && $item =~ /$PRIVATE/;
-    
+
     if ($rootref eq 'HASH' || $atroot) {
         # if the root is a hash we set the named key
         return ($root->{ $item } = $value)          ## RETURN
@@ -610,19 +615,19 @@ sub _assign {
     }
     elsif (blessed($root)) {
         # try to call the item as a method of an object
-        
+
         return $root->$item(@$args, $value)         ## RETURN
             unless $default && $root->$item();
-        
+
 # 2 issues:
 #   - method call should be wrapped in eval { }
 #   - fallback on hash methods if object method not found
 #
-#     eval { $result = $root->$item(@$args, $value); };     
-# 
+#     eval { $result = $root->$item(@$args, $value); };
+#
 #     if ($@) {
 #         die $@ if ref($@) || ($@ !~ /Can't locate object method/);
-# 
+#
 #         # failed to call object method, so try some fallbacks
 #         if (UNIVERSAL::isa($root, 'HASH') && exists $root->{ $item }) {
 #         $result = ($root->{ $item } = $value)
@@ -649,24 +654,24 @@ Template::Stash - Magical storage for template variables
 =head1 SYNOPSIS
 
     use Template::Stash;
-    
+
     my $stash = Template::Stash->new(\%vars);
-    
+
     # get variable values
     $value = $stash->get($variable);
     $value = $stash->get(\@compound);
-    
+
     # set variable value
     $stash->set($variable, $value);
     $stash->set(\@compound, $value);
-    
+
     # default variable value
     $stash->set($variable, $value, 1);
     $stash->set(\@compound, $value, 1);
-    
+
     # set variable values en masse
     $stash->update(\%new_vars)
-    
+
     # methods for (de-)localising variables
     $stash = $stash->clone(\%new_vars);
     $stash = $stash->declone();
@@ -675,7 +680,7 @@ Template::Stash - Magical storage for template variables
 
 The C<Template::Stash> module defines an object class which is used to store
 variable values for the runtime use of the template processor.  Variable
-values are stored internally in a hash reference (which itself is blessed 
+values are stored internally in a hash reference (which itself is blessed
 to create the object) and are accessible via the L<get()> and L<set()> methods.
 
 Variables may reference hash arrays, lists, subroutines and objects
@@ -692,14 +697,14 @@ localising changes made to variables.
 =head2 new(\%params)
 
 The C<new()> constructor method creates and returns a reference to a new
-C<Template::Stash> object.  
+C<Template::Stash> object.
 
     my $stash = Template::Stash->new();
 
 A hash reference may be passed to provide variables and values which
 should be used to initialise the stash.
 
-    my $stash = Template::Stash->new({ var1 => 'value1', 
+    my $stash = Template::Stash->new({ var1 => 'value1',
                                        var2 => 'value2' });
 
 =head2 get($variable)
@@ -711,16 +716,16 @@ The C<get()> method retrieves the variable named by the first parameter.
 Dotted compound variables can be retrieved by specifying the variable
 elements by reference to a list.  Each node in the variable occupies
 two entries in the list.  The first gives the name of the variable
-element, the second is a reference to a list of arguments for that 
+element, the second is a reference to a list of arguments for that
 element, or C<0> if none.
 
     [% foo.bar(10).baz(20) %]
-    
+
     $stash->get([ 'foo', 0, 'bar', [ 10 ], 'baz', [ 20 ] ]);
 
 =head2 set($variable, $value, $default)
 
-The C<set()> method sets the variable name in the first parameter to the 
+The C<set()> method sets the variable name in the first parameter to the
 value specified in the second.
 
     $stash->set('var1', 'value1');
@@ -733,7 +738,7 @@ set only if it did not have a true value before.
 Dotted compound variables may be specified as per L<get()> above.
 
     [% foo.bar = 30 %]
-    
+
     $stash->set([ 'foo', 0, 'bar', 0 ], 30);
 
 The magical variable 'C<IMPORT>' can be specified whose corresponding
@@ -742,7 +747,7 @@ copied (i.e. imported) into the current namespace.
 
     # foo.bar = baz, foo.wiz = waz
     $stash->set('foo', { 'bar' => 'baz', 'wiz' => 'waz' });
-    
+
     # import 'foo' into main namespace: bar = baz, wiz = waz
     $stash->set('IMPORT', $stash->get('foo'));
 
@@ -772,14 +777,14 @@ updated in the cloned stash and when L<declone()> is called, the original stash
 is returned with all its members intact and in the same state as they were
 before C<clone()> was called.
 
-For convenience, a hash of parameters may be passed into C<clone()> which 
-is used to update any simple variable (i.e. those that don't contain any 
-namespace elements like C<foo> and C<bar> but not C<foo.bar>) variables while 
-cloning the stash.  For adding and updating complex variables, the L<set()> 
+For convenience, a hash of parameters may be passed into C<clone()> which
+is used to update any simple variable (i.e. those that don't contain any
+namespace elements like C<foo> and C<bar> but not C<foo.bar>) variables while
+cloning the stash.  For adding and updating complex variables, the L<set()>
 method should be used after calling C<clone().>  This will correctly resolve
 and/or create any necessary namespace hashes.
 
-A cloned stash maintains a reference to the stash that it was copied 
+A cloned stash maintains a reference to the stash that it was copied
 from in its C<_PARENT> member.
 
 =head2 declone()
@@ -808,12 +813,12 @@ the first argument.
 
 =head2 dotop($root, $item, \@args, $lvalue)
 
-This is the core C<dot> operation method which evaluates elements of 
+This is the core C<dot> operation method which evaluates elements of
 variables against their root.
 
 =head2 undefined($ident, $args)
 
-This method is called when L<get()> encounters an undefined value.  If the 
+This method is called when L<get()> encounters an undefined value.  If the
 L<STRICT|Template::Manual::Config#STRICT> option is in effect then it will
 throw an exception indicating the use of an undefined value.  Otherwise it
 will silently return an empty string.
@@ -827,7 +832,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2013 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

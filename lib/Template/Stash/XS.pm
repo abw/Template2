@@ -1,10 +1,10 @@
 #============================================================= -*-Perl-*-
-# 
+#
 # Template::Stash::XS
-# 
+#
 # DESCRIPTION
 #
-#   Perl bootstrap for XS module. Inherits methods from 
+#   Perl bootstrap for XS module. Inherits methods from
 #   Template::Stash when not implemented in the XS module.
 #
 #========================================================================
@@ -28,8 +28,8 @@ sub DESTROY {
     1;
 }
 
-# catch missing method calls here so perl doesn't barf 
-# trying to load *.al files 
+# catch missing method calls here so perl doesn't barf
+# trying to load *.al files
 
 sub AUTOLOAD {
     my ($self, @args) = @_;
@@ -98,7 +98,7 @@ variable like so:
 
     my $tt2 = Template->new();
 
-The XS stash will then be automatically used.  
+The XS stash will then be automatically used.
 
 If you want to use the XS stash by default and don't want to
 re-install the Template Toolkit, then you can manually modify the
@@ -119,7 +119,7 @@ Doug Steinwand E<lt>dsteinwand@citysearch.comE<gt>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2013 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -12,7 +12,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -42,7 +42,7 @@ our $AUTOLOAD;
 #------------------------------------------------------------------------
 # new(\@target, \%options)
 #
-# Constructor method which creates and returns a reference to a new 
+# Constructor method which creates and returns a reference to a new
 # Template::Iterator object.  A reference to the target data (array
 # or hash) may be passed for the object to iterate through.
 #------------------------------------------------------------------------
@@ -55,8 +55,10 @@ sub new {
     if (ref $data eq 'HASH') {
         # map a hash into a list of { key => ???, value => ??? } hashes,
         # one for each key, sorted by keys
-        $data = [ map { { key => $_, value => $data->{ $_ } } }
-                  sort keys %$data ];
+        $data = [
+            map { { key => $_, value => $data->{ $_ } } }
+            sort keys %$data
+        ];
     }
     elsif (blessed($data) && $data->can('as_list')) {
         $data = $data->as_list();
@@ -80,10 +82,10 @@ sub new {
 #------------------------------------------------------------------------
 # get_first()
 #
-# Initialises the object for iterating through the target data set.  The 
+# Initialises the object for iterating through the target data set.  The
 # first record is returned, if defined, along with the STATUS_OK value.
-# If there is no target data, or the data is an empty set, then undef 
-# is returned with the STATUS_DONE value.  
+# If there is no target data, or the data is an empty set, then undef
+# is returned with the STATUS_DONE value.
 #------------------------------------------------------------------------
 
 sub get_first {
@@ -93,11 +95,11 @@ sub get_first {
     $self->{ _DATASET } = $self->{ _DATA };
     my $size = scalar @$data;
     my $index = 0;
-    
+
     return (undef, Template::Constants::STATUS_DONE) unless $size;
 
     # initialise various counters, flags, etc.
-    @$self{ qw( SIZE MAX INDEX COUNT FIRST LAST ) } 
+    @$self{ qw( SIZE MAX INDEX COUNT FIRST LAST ) }
             = ( $size, $size - 1, $index, 1, 1, $size > 1 ? 0 : 1, undef );
     @$self{ qw( PREV NEXT ) } = ( undef, $self->{ _DATASET }->[ $index + 1 ]);
 
@@ -110,7 +112,7 @@ sub get_first {
 # get_next()
 #
 # Called repeatedly to access successive elements in the data set.
-# Should only be called after calling get_first() or a warning will 
+# Should only be called after calling get_first() or a warning will
 # be raised and (undef, STATUS_DONE) returned.
 #------------------------------------------------------------------------
 
@@ -131,7 +133,7 @@ sub get_next {
 
     my $self = shift;
     my $dataset = $self->{_DATASET};
-    
+
     $index++;
 
     # update counters and flags
@@ -153,8 +155,8 @@ sub get_next {
 # Method which returns all remaining items in the iterator as a Perl list
 # reference.  May be called at any time in the life-cycle of the iterator.
 # The get_first() method will be called automatically if necessary, and
-# then subsequent get_next() calls are made, storing each returned 
-# result until the list is exhausted.  
+# then subsequent get_next() calls are made, storing each returned
+# result until the list is exhausted.
 #------------------------------------------------------------------------
 
 sub get_all {
@@ -186,7 +188,7 @@ sub get_all {
     if ($index < $max) {
         $index++;
         push @data, @{ $self->{ _DATASET } } [ $index..$max ];
-        
+
         # update counters and flags
         @$self{ qw( INDEX COUNT FIRST LAST ) }
         = ( $max, $max + 1, 0, 1 );
@@ -266,26 +268,26 @@ Template::Iterator - Data iterator used by the FOREACH directive
 
 =head1 DESCRIPTION
 
-The C<Template::Iterator> module defines a generic data iterator for use 
-by the C<FOREACH> directive.  
+The C<Template::Iterator> module defines a generic data iterator for use
+by the C<FOREACH> directive.
 
 It may be used as the base class for custom iterators.
 
 =head1 PUBLIC METHODS
 
-=head2 new($data) 
+=head2 new($data)
 
 Constructor method.  A reference to a list of values is passed as the
-first parameter.  Subsequent calls to L<get_first()> and L<get_next()> calls 
+first parameter.  Subsequent calls to L<get_first()> and L<get_next()> calls
 will return each element from the list.
 
     my $iter = Template::Iterator->new([ 'foo', 'bar', 'baz' ]);
 
-The constructor will also accept a reference to a hash array and will 
+The constructor will also accept a reference to a hash array and will
 expand it into a list in which each entry is a hash array containing
 a 'C<key>' and 'C<value>' item, sorted according to the hash keys.
 
-    my $iter = Template::Iterator->new({ 
+    my $iter = Template::Iterator->new({
         foo => 'Foo Item',
         bar => 'Bar Item',
     });
@@ -306,8 +308,8 @@ This is equivalent to:
 
     my $iter = Template::Iterator->new([ 'foo' ]);
 
-Note that a single item which is an object based on a blessed ARRAY 
-references will NOT be treated as an array and will be folded into 
+Note that a single item which is an object based on a blessed ARRAY
+references will NOT be treated as an array and will be folded into
 a list containing that one object reference.
 
     my $list = bless [ 'foo', 'bar' ], 'MyListClass';
@@ -321,14 +323,14 @@ If the object provides an C<as_list()> method then the L<Template::Iterator>
 constructor will call that method to return the list of data.  For example:
 
     package MyListObject;
-    
+
     sub new {
         my $class = shift;
         bless [ @_ ], $class;
     }
 
     package main;
-    
+
     my $list = MyListObject->new('foo', 'bar');
     my $iter = Template::Iterator->new($list);
 
@@ -340,43 +342,43 @@ The iterator will return only one item, a reference to the C<MyListObject>
 object, C<$list>.
 
 By adding an C<as_list()> method to the C<MyListObject> class, we can force
-the C<Template::Iterator> constructor to treat the object as a list and 
+the C<Template::Iterator> constructor to treat the object as a list and
 use the data contained within.
 
     package MyListObject;
-    
+
     ...
-    
+
     sub as_list {
         my $self = shift;
         return $self;
     }
-    
+
     package main;
-    
+
     my $list = MyListObject->new('foo', 'bar');
     my $iter = Template::Iterator->new($list);
 
-The iterator will now return the two items, 'C<foo>' and 'C<bar>', which the 
+The iterator will now return the two items, 'C<foo>' and 'C<bar>', which the
 C<MyObjectList> encapsulates.
 
 =head2 get_first()
 
 Returns a C<($value, $error)> pair for the first item in the iterator set.
 The C<$error> returned may be zero or undefined to indicate a valid datum
-was successfully returned.  Returns an error of C<STATUS_DONE> if the list 
+was successfully returned.  Returns an error of C<STATUS_DONE> if the list
 is empty.
 
 =head2 get_next()
 
 Returns a C<($value, $error)> pair for the next item in the iterator set.
-Returns an error of C<STATUS_DONE> if all items in the list have been 
+Returns an error of C<STATUS_DONE> if all items in the list have been
 visited.
 
 =head2 get_all()
 
-Returns a C<(\@values, $error)> pair for all remaining items in the iterator 
-set.  Returns an error of C<STATUS_DONE> if all items in the list have been 
+Returns a C<(\@values, $error)> pair for all remaining items in the iterator
+set.  Returns an error of C<STATUS_DONE> if all items in the list have been
 visited.
 
 =head2 size()
@@ -385,7 +387,7 @@ Returns the size of the data set or undef if unknown.
 
 =head2 max()
 
-Returns the maximum index number (i.e. the index of the last element) 
+Returns the maximum index number (i.e. the index of the last element)
 which is equivalent to L<size()> - C<1>.
 
 =head2 index()
@@ -395,11 +397,11 @@ Returns the current index number which is in the range C<0> to L<max()>.
 =head2 count()
 
 Returns the current iteration count in the range C<1> to L<size()>.  This is
-equivalent to L<index()> + C<1>.  
+equivalent to L<index()> + C<1>.
 
 =head2 first()
 
-Returns a boolean value to indicate if the iterator is currently on 
+Returns a boolean value to indicate if the iterator is currently on
 the first iteration of the set.
 
 =head2 last()
@@ -414,7 +416,7 @@ on the first item.
 
 =head2 next()
 
-Returns the next item in the data set or C<undef> if the iterator is on the 
+Returns the next item in the data set or C<undef> if the iterator is on the
 last item.
 
 =head2 number()
@@ -424,7 +426,7 @@ View L<count>.
 
 =head2 parity()
 
-Returns the text string C<even> or C<odd> to indicate the parity of the 
+Returns the text string C<even> or C<odd> to indicate the parity of the
 current iteration count (starting at 1).  This is typically used to create
 striped I<zebra tables>.
 
@@ -456,7 +458,7 @@ You can then style the C<tr.odd> and C<tr.even> elements using CSS:
         background-color: black;
         color: white;
     }
-    
+
     tr.even td {
         background-color: white;
         color: black;
@@ -480,7 +482,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -6,11 +6,11 @@
 #   Plugin for encapsulating information about a file system directory.
 #
 # AUTHORS
-#   Michael Stevens <michael@etla.org>, with some mutilations from 
+#   Michael Stevens <michael@etla.org>, with some mutilations from
 #   Andy Wardley <abw@wardley.org>.
 #
 # COPYRIGHT
-#   Copyright (C) 2000-2007 Michael Stevens, Andy Wardley.
+#   Copyright (C) 2000-2022 Michael Stevens, Andy Wardley.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -72,7 +72,7 @@ sub scan {
     $config ||= { };
     local *DH;
     my ($dir, @files, $name, $abs, $rel, $item);
-    
+
     # set 'noscan' in config if recurse isn't set, to ensure Directories
     # created don't try to scan deeper
     $config->{ noscan } = 1 unless $config->{ recurse };
@@ -81,7 +81,7 @@ sub scan {
     opendir(DH, $dir) or return $self->throw("$dir: $!");
 
     @files = readdir DH;
-    closedir(DH) 
+    closedir(DH)
         or return $self->throw("$dir close: $!");
 
     my ($path, $files, $dirs, $list) = @$self{ qw( path files dirs list ) };
@@ -134,7 +134,7 @@ sub present {
 
 #------------------------------------------------------------------------
 # content($view)
-# 
+#
 # Present directory content to a Template::View.
 #------------------------------------------------------------------------
 
@@ -171,17 +171,17 @@ Template::Plugin::Directory - Plugin for generating directory listings
 =head1 SYNOPSIS
 
     [% USE dir = Directory(dirpath) %]
-    
+
     # files returns list of regular files
     [% FOREACH file = dir.files %]
        [% file.name %] [% file.path %] ...
     [% END %]
-    
+
     # dirs returns list of sub-directories
     [% FOREACH subdir = dir.dirs %]
        [% subdir.name %] [% subdir.path %] ...
     [% END %]
-    
+
     # list returns both interleaved in order
     [% FOREACH item = dir.list %]
        [% IF item.isdir %]
@@ -190,19 +190,19 @@ Template::Plugin::Directory - Plugin for generating directory listings
           File: [% item.name %]
        [% END %]
     [% END %]
-    
+
     # define a VIEW to display dirs/files
     [% VIEW myview %]
        [% BLOCK file %]
        File: [% item.name %]
        [% END %]
-       
+
        [% BLOCK directory %]
-       Directory: [% item.name %] 
+       Directory: [% item.name %]
        [% item.content(myview) | indent -%]
        [% END %]
     [% END %]
-    
+
     # display directory content using view
     [% myview.print(dir) %]
 
@@ -218,7 +218,7 @@ The constructor expects a directory name as an argument.
 
     [% USE dir = Directory('/tmp') %]
 
-It then provides access to the files and sub-directories contained within 
+It then provides access to the files and sub-directories contained within
 the directory.
 
     # regular files (not directories)
@@ -262,15 +262,15 @@ is a directory or false if it is a regular file.
        [% END %]
     [% END %]
 
-This example shows how you might walk down a directory tree, displaying 
-content as you go.  With the recurse flag disabled, as is the default, 
+This example shows how you might walk down a directory tree, displaying
+content as you go.  With the recurse flag disabled, as is the default,
 we need to explicitly call the C<scan()> method on each directory, to force
-it to lookup files and further sub-directories contained within. 
+it to lookup files and further sub-directories contained within.
 
     [% USE dir = Directory(dirpath) %]
     * [% dir.path %]
     [% INCLUDE showdir %]
-    
+
     [% BLOCK showdir -%]
       [% FOREACH file = dir.list -%]
         [% IF file.isdir -%]
@@ -299,13 +299,13 @@ a test in F<t/directry.t> which produces the following output:
 
 The C<recurse> flag can be set (disabled by default) to cause the
 constructor to automatically recurse down into all sub-directories,
-creating a new C<Template::Plugin::Directory> object for each one and 
+creating a new C<Template::Plugin::Directory> object for each one and
 filling it with any further content.  In this case there is no need
 to explicitly call the C<scan()> method.
 
     [% USE dir = Directory(dirpath, recurse=1) %]
        ...
-       
+
         [% IF file.isdir -%]
         * [% file.name %]
           [% INCLUDE showdir dir=file FILTER indent(4) -%]
@@ -320,7 +320,7 @@ a C<VIEW ... END> block and should contain C<BLOCK> definitions for files
     [% BLOCK file %]
        - [% item.name %]
     [% END %]
-    
+
     [% BLOCK directory %]
        * [% item.name %]
          [% item.content(myview) FILTER indent %]
@@ -355,14 +355,14 @@ block should explicitly call a C<scan()> on each directory.
     [% BLOCK file %]
        - [% item.name %]
     [% END %]
-    
+
     [% BLOCK directory %]
        * [% item.name %]
          [% item.scan %]
          [% item.content(myview) FILTER indent %]
     [% END %]
     [% END %]
-    
+
     [% USE dir = Directory(dirpath) %]
     [% myview.print(dir) %]
 
@@ -375,7 +375,7 @@ documentation for C<VIEW> support, and made a few other minor tweaks.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000-2007 Michael Stevens, Andy Wardley.
+Copyright (C) 2000-2022 Michael Stevens, Andy Wardley.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

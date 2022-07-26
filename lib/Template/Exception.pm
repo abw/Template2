@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -34,11 +34,11 @@ our $VERSION = '3.100';
 #
 # Constructor method used to instantiate a new Template::Exception
 # object.  The first parameter should contain the exception type.  This
-# can be any arbitrary string of the caller's choice to represent a 
-# specific exception.  The second parameter should contain any 
-# information (i.e. error message or data reference) relevant to the 
-# specific exception event.  The third optional parameter may be a 
-# reference to a scalar containing output text from the template 
+# can be any arbitrary string of the caller's choice to represent a
+# specific exception.  The second parameter should contain any
+# information (i.e. error message or data reference) relevant to the
+# specific exception event.  The third optional parameter may be a
+# reference to a scalar containing output text from the template
 # block up to the point where the exception was thrown.
 #------------------------------------------------------------------------
 
@@ -73,18 +73,18 @@ sub type_info {
 # text()
 # text(\$pretext)
 #
-# Method to return the text referenced by the TEXT member.  A text 
-# reference may be passed as a parameter to supercede the existing 
+# Method to return the text referenced by the TEXT member.  A text
+# reference may be passed as a parameter to supercede the existing
 # member.  The existing text is added to the *end* of the new text
 # before being stored.  This facility is provided for template blocks
-# to gracefully de-nest when an exception occurs and allows them to 
-# reconstruct their output in the correct order. 
+# to gracefully de-nest when an exception occurs and allows them to
+# reconstruct their output in the correct order.
 #------------------------------------------------------------------------
 
 sub text {
     my ($self, $newtextref) = @_;
     my $textref = $self->[ TEXT ];
-    
+
     if ($newtextref) {
         $$newtextref .= $$textref if $textref && $textref ne $newtextref;
         $self->[ TEXT ] = $newtextref;
@@ -114,10 +114,10 @@ sub as_string {
 
 #------------------------------------------------------------------------
 # select_handler(@types)
-# 
-# Selects the most appropriate handler for the exception TYPE, from 
+#
+# Selects the most appropriate handler for the exception TYPE, from
 # the list of types passed in as parameters.  The method returns the
-# item which is an exact match for TYPE or the closest, more 
+# item which is an exact match for TYPE or the closest, more
 # generic handler (e.g. foo being more generic than foo.bar, etc.)
 #------------------------------------------------------------------------
 
@@ -130,13 +130,13 @@ sub select_handler {
     while ($type) {
         return $type if $hlut{ $type };
 
-        # strip .element from the end of the exception type to find a 
+        # strip .element from the end of the exception type to find a
         # more generic handler
         $type =~ s/\.?[^\.]*$//;
     }
     return undef;
 }
-    
+
 1;
 
 __END__
@@ -148,14 +148,14 @@ Template::Exception - Exception handling class module
 =head1 SYNOPSIS
 
     use Template::Exception;
-    
+
     my $exception = Template::Exception->new($type, $info);
     $type = $exception->type;
     $info = $exception->info;
     ($type, $info) = $exception->type_info;
-    
+
     print $exception->as_string();
-    
+
     $handler = $exception->select_handler(\@candidates);
 
 =head1 DESCRIPTION
@@ -182,7 +182,7 @@ or from Perl code by calling C<die()> with a C<Template::Exception> object,
 
 or by simply calling C<die()> with an error string.  This is
 automagically caught and converted to an  exception of 'C<undef>'
-type (that's the literal string 'C<undef>' rather than Perl's 
+type (that's the literal string 'C<undef>' rather than Perl's
 undefined value) which can then be handled in the usual way.
 
     die "I'm sorry Dave, I can't do that";
@@ -209,7 +209,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

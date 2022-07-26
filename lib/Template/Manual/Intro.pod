@@ -6,7 +6,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -21,21 +21,21 @@ Template::Manual::Intro - Introduction to the Template Toolkit
 
 The Template Toolkit is a collection of Perl modules which implement a
 fast, flexible, powerful and extensible template processing system.
-It is most often used for generating dynamic web content, although it can 
-be used equally well for processing any kind of text documents.  
+It is most often used for generating dynamic web content, although it can
+be used equally well for processing any kind of text documents.
 
 At the simplest level it provides an easy way to process template
 files, filling in embedded variable references with their equivalent
 values.  Here's an example of a template.
 
     Dear [% name %],
-    
-    It has come to our attention that your account is in 
+
+    It has come to our attention that your account is in
     arrears to the sum of [% debt %].
-    
-    Please settle your account before [% deadline %] or we 
+
+    Please settle your account before [% deadline %] or we
     will be forced to revoke your Licence to Thrill.
-    
+
     The Management.
 
 By default, template directives are embedded within the character
@@ -45,8 +45,8 @@ You can set the C<INTERPOLATE> option, for example, if you prefer to
 embed your variables in Perl style:
 
     Dear $name,
-    
-    It has come to our attention that your account is in 
+
+    It has come to our attention that your account is in
     arrears to the sum of $debt.
 
     ...etc...
@@ -62,7 +62,7 @@ constructor method, L<new()|Template#new()>, which are then used to
 configure the generate object.
 
     use Template;
-    
+
     my $tt = Template->new({
         INCLUDE_PATH => '/usr/local/templates',
         INTERPOLATE  => 1,
@@ -78,7 +78,7 @@ hash array of variable definitions for substitution in the template.
         debt     => '3 riffs and a solo',
         deadline => 'the next chorus',
     };
-    
+
     $tt->process('letters/overdrawn', $vars)
         || die $tt->error(), "\n";
 
@@ -100,17 +100,17 @@ files which can then be processed into other documents as required. All
 defined variables are inherited by these templates along with any additional
 "local" values specified.
 
-    [% PROCESS header 
+    [% PROCESS header
          title = "The Cat Sat on the Mat"
     %]
-    
+
     [% PROCESS menu %]
-    
+
     The location of the missing feline has now been established.
     Thank you for your assistance.
-    
+
     [% INSERT legal/disclaimer %]
-    
+
     [% PROCESS footer %]
 
 You can also define a template as a BLOCK within the same file and
@@ -120,7 +120,7 @@ for building up repetitive elements such as tables, menus, etc.
     [% BLOCK tabrow %]
        <tr><td>[% name %]</td><td>[% email %]</td></tr>
     [% END %]
-    
+
     <table>
     [% PROCESS tabrow name="tom"   email="tom@here.org"    %]
     [% PROCESS tabrow name="dick"  email="disk@there.org"  %]
@@ -155,9 +155,9 @@ C<ELSIF>, C<ELSE>, C<SWITCH>, C<CASE>, etc.
     [% FOREACH section = menu %]
        <a href="[% root %]/[% section %]/index.html">[% section %]</a>
     [% END %]
-    
+
     <b>Client</b>: [% client.name %] (id: [% client.id %])
-    
+
     [% IF shopcart.nitems %]
        Your shopping cart contains the following items:
        <ul>
@@ -165,9 +165,9 @@ C<ELSIF>, C<ELSE>, C<SWITCH>, C<CASE>, etc.
          <li>[% item.name %] : [% item.qty %] @ [% item.price %]
        [% END %]
        </ul>
-       
+
        [% checkout(shopcart.total) %]
-       
+
     [% ELSE %]
        No items currently in shopping cart.
     [% END %]
@@ -197,7 +197,7 @@ between the two layers, allowing data to be generated in code and then
 passed to a template component for displaying (pipeline model) or for
 sub-routine or object references to be bound to variables which can
 then be called from the template as and when required (callback
-model).  
+model).
 
 The directives that the Template Toolkit provide implement their own
 mini programming language, but they're not really designed for

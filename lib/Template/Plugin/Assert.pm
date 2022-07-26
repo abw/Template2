@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2008 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2008-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -55,7 +55,7 @@ sub AUTOLOAD {
     my $item = $AUTOLOAD;
     $item =~ s/.*:://;
     return if $item eq 'DESTROY';
-    
+
     # lookup the named values
     my $stash = $self->{ _CONTEXT }->stash;
     my $value = $stash->dotop($stash, $item, \@args);
@@ -103,7 +103,7 @@ Template::Plugin::Assert - trap undefined values
 =head1 SYNOPSIS
 
     [% USE assert %]
-    
+
     # throws error if any undefined values are returned
     [% object.assert.method %]
     [% hash.assert.key %]
@@ -118,7 +118,7 @@ For example, consider this dotop:
 
     [% user.name %]
 
-If C<user.name> is an undefined value then TT will silently ignore the 
+If C<user.name> is an undefined value then TT will silently ignore the
 fact and print nothing.  If you C<USE> the C<assert> plugin then you
 can add the C<assert> vmethod between the C<user> and C<name> elements,
 like so:
@@ -135,7 +135,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2008 Andy Wardley.  All Rights Reserved.
+Copyright (C) 2008-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

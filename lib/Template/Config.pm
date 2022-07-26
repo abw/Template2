@@ -9,13 +9,13 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
 #========================================================================
- 
+
 package Template::Config;
 
 use strict;
@@ -42,10 +42,12 @@ our $LATEX_PATH;
 our $PDFLATEX_PATH;
 our $DVIPS_PATH;
 
-our @PRELOAD   = ( $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
-               $PLUGINS, $PROVIDER, $SERVICE, $STASH );
+our @PRELOAD = (
+    $CONTEXT, $FILTERS, $ITERATOR, $PARSER,
+    $PLUGINS, $PROVIDER, $SERVICE, $STASH
+);
 
-# the following is set at installation time by the Makefile.PL 
+# the following is set at installation time by the Makefile.PL
 our $INSTDIR  = '';
 
 
@@ -101,10 +103,11 @@ sub load {
 sub parser {
     my $class  = shift;
     my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
-               ? shift : { @_ };
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($PARSER);
-    return $PARSER->new($params) 
+    return $PARSER->new($params)
         || $class->error("failed to create parser: ", $PARSER->error);
 }
 
@@ -118,13 +121,16 @@ sub parser {
 
 sub provider {
     my $class  = shift;
-    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
-               ? shift : { @_ };
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($PROVIDER);
-    return $PROVIDER->new($params) 
-        || $class->error("failed to create template provider: ",
-                         $PROVIDER->error);
+    return $PROVIDER->new($params)
+        || $class->error(
+            "failed to create template provider: ",
+            $PROVIDER->error
+        );
 }
 
 
@@ -137,13 +143,16 @@ sub provider {
 
 sub plugins {
     my $class  = shift;
-    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
-               ? shift : { @_ };
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($PLUGINS);
     return $PLUGINS->new($params)
-        || $class->error("failed to create plugin provider: ",
-                         $PLUGINS->error);
+        || $class->error(
+            "failed to create plugin provider: ",
+            $PLUGINS->error
+        );
 }
 
 
@@ -156,13 +165,16 @@ sub plugins {
 
 sub filters {
     my $class  = shift;
-    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
-               ? shift : { @_ };
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($FILTERS);
     return $FILTERS->new($params)
-        || $class->error("failed to create filter provider: ",
-                         $FILTERS->error);
+        || $class->error(
+            "failed to create filter provider: ",
+            $FILTERS->error
+        );
 }
 
 
@@ -186,54 +198,66 @@ sub iterator {
 #------------------------------------------------------------------------
 # stash(\%vars)
 #
-# Instantiate a new template variable stash object (default: 
+# Instantiate a new template variable stash object (default:
 # Template::Stash). Returns object or undef, as above.
 #------------------------------------------------------------------------
 
 sub stash {
     my $class  = shift;
-    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
-               ? shift : { @_ };
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($STASH);
-    return $STASH->new($params) 
-        || $class->error("failed to create stash: ", $STASH->error);
+    return $STASH->new($params)
+        || $class->error(
+            "failed to create stash: ",
+            $STASH->error
+        );
 }
 
 
 #------------------------------------------------------------------------
 # context(\%params)
 #
-# Instantiate a new template context object (default: Template::Context). 
+# Instantiate a new template context object (default: Template::Context).
 # Returns object or undef, as above.
 #------------------------------------------------------------------------
 
 sub context {
     my $class  = shift;
-    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
-               ? shift : { @_ };
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($CONTEXT);
-    return $CONTEXT->new($params) 
-        || $class->error("failed to create context: ", $CONTEXT->error);
+    return $CONTEXT->new($params)
+        || $class->error(
+            "failed to create context: ",
+            $CONTEXT->error
+        );
 }
 
 
 #------------------------------------------------------------------------
 # service(\%params)
 #
-# Instantiate a new template context object (default: Template::Service). 
+# Instantiate a new template context object (default: Template::Service).
 # Returns object or undef, as above.
 #------------------------------------------------------------------------
 
 sub service {
     my $class  = shift;
-    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
-               ? shift : { @_ };
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($SERVICE);
-    return $SERVICE->new($params) 
-        || $class->error("failed to create context: ", $SERVICE->error);
+    return $SERVICE->new($params)
+        || $class->error(
+            "failed to create context: ",
+            $SERVICE->error
+        );
 }
 
 
@@ -241,32 +265,35 @@ sub service {
 # constants(\%params)
 #
 # Instantiate a new namespace handler for compile time constant folding
-# (default: Template::Namespace::Constants). 
+# (default: Template::Namespace::Constants).
 # Returns object or undef, as above.
 #------------------------------------------------------------------------
 
 sub constants {
     my $class  = shift;
-    my $params = defined($_[0]) && ref($_[0]) eq 'HASH' 
-               ? shift : { @_ };
+    my $params = defined($_[0]) && ref($_[0]) eq 'HASH'
+        ? shift
+        : { @_ };
 
     return undef unless $class->load($CONSTANTS);
-    return $CONSTANTS->new($params) 
-        || $class->error("failed to create constants namespace: ", 
-                         $CONSTANTS->error);
+    return $CONSTANTS->new($params)
+        || $class->error(
+            "failed to create constants namespace: ",
+            $CONSTANTS->error
+        );
 }
 
 
 #------------------------------------------------------------------------
 # instdir($dir)
 #
-# Returns the root installation directory appended with any local 
+# Returns the root installation directory appended with any local
 # component directory passed as an argument.
 #------------------------------------------------------------------------
 
 sub instdir {
     my ($class, $dir) = @_;
-    my $inst = $INSTDIR 
+    my $inst = $INSTDIR
         || return $class->error("no installation directory");
     chop $inst while substr($inst,-1) eq '/';
     $inst .= "/$dir" if $dir;
@@ -276,8 +303,8 @@ sub instdir {
 
 #========================================================================
 # This should probably be moved somewhere else in the long term, but for
-# now it ensures that Template::TieString is available even if the 
-# Template::Directive module hasn't been loaded, as is the case when 
+# now it ensures that Template::TieString is available even if the
+# Template::Directive module hasn't been loaded, as is the case when
 # using compiled templates and Template::Parser hasn't yet been loaded
 # on demand.
 #========================================================================
@@ -315,7 +342,7 @@ Template::Config - Factory module for instantiating other TT2 modules
 
 This module implements various methods for loading and instantiating
 other modules that comprise the Template Toolkit.  It provides a consistent
-way to create toolkit components and allows custom modules to be used in 
+way to create toolkit components and allows custom modules to be used in
 place of the regular ones.
 
 Package variables such as C<$STASH>, C<$SERVICE>, C<$CONTEXT>, etc., contain
@@ -404,7 +431,7 @@ as an argument will be appended to the returned directory.
     my $template = Template::Config->instdir('templates')
         || die "$Template::Config::ERROR\n";
 
-Returns C<undef> and sets C<$Template::Config::ERROR> appropriately if the 
+Returns C<undef> and sets C<$Template::Config::ERROR> appropriately if the
 optional components of the Template Toolkit have not been installed.
 
 =head1 AUTHOR
@@ -413,7 +440,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

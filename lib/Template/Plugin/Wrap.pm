@@ -9,7 +9,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -62,16 +62,16 @@ Template::Plugin::Wrap - Plugin interface to Text::Wrap
 =head1 SYNOPSIS
 
     [% USE wrap %]
-    
+
     # call wrap subroutine
     [% wrap(mytext, width, initial_tab,  subsequent_tab) %]
-    
+
     # or use wrap FILTER
     [% mytext FILTER wrap(width, initital_tab, subsequent_tab) %]
 
 =head1 DESCRIPTION
 
-This plugin provides an interface to the L<Text::Wrap> module which 
+This plugin provides an interface to the L<Text::Wrap> module which
 provides simple paragraph formatting.
 
 It defines a C<wrap> subroutine which can be called, passing the input
@@ -79,12 +79,12 @@ text and further optional parameters to specify the page width (default:
 72), and tab characters for the first and subsequent lines (no defaults).
 
     [% USE wrap %]
-    
+
     [% text = BLOCK %]
-    First, attach the transmutex multiplier to the cross-wired 
+    First, attach the transmutex multiplier to the cross-wired
     quantum homogeniser.
     [% END %]
-    
+
     [% wrap(text, 40, '* ', '  ') %]
 
 Output:
@@ -93,7 +93,7 @@ Output:
       multiplier to the cross-wired quantum
       homogeniser.
 
-It also registers a C<wrap> filter which accepts the same three optional 
+It also registers a C<wrap> filter which accepts the same three optional
 arguments but takes the input text directly via the filter input.
 
 Example 1:
@@ -112,14 +112,14 @@ Output:
 Example 2:
 
     [% FILTER bullet -%]
-    Then remodulate the shield to match the harmonic frequency, taking 
+    Then remodulate the shield to match the harmonic frequency, taking
     care to correct the phase difference.
     [% END %]
 
 Output:
 
     * Then remodulate the shield to match
-      the harmonic frequency, taking 
+      the harmonic frequency, taking
       care to correct the phase difference.
 
 =head1 AUTHOR
@@ -131,7 +131,7 @@ with help from Tim Pierce and many others.
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

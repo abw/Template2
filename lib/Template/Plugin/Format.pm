@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -37,10 +37,10 @@ sub new {
 sub make_formatter {
     my $format = shift;
     $format = '%s' unless defined $format;
-    return sub { 
+    return sub {
         my @args = @_;
         push(@args, '') unless @args;
-        return sprintf($format, @args); 
+        return sprintf($format, @args);
     }
 }
 
@@ -58,7 +58,7 @@ Template::Plugin::Format - Plugin to create formatting functions
     [% USE format %]
     [% commented = format('# %s') %]
     [% commented('The cat sat on the mat') %]
-    
+
     [% USE bold = format('<b>%s</b>') %]
     [% bold('Hello') %]
 
@@ -73,7 +73,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

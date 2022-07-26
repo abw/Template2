@@ -9,13 +9,13 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
 #
 #============================================================================
- 
+
 package Template::Constants;
 
 require Exporter;
@@ -37,7 +37,7 @@ our $VERSION = '3.100';
 # STATUS constants returned by directives
 use constant STATUS_OK       =>   0;      # ok
 use constant STATUS_RETURN   =>   1;      # ok, block ended by RETURN
-use constant STATUS_STOP     =>   2;      # ok, stopped by STOP 
+use constant STATUS_STOP     =>   2;      # ok, stopped by STOP
 use constant STATUS_DONE     =>   3;      # ok, iterator done
 use constant STATUS_DECLINED =>   4;      # ok, declined to service request
 use constant STATUS_ERROR    => 255;      # error condition
@@ -96,10 +96,10 @@ $DEBUG_OPTIONS  = {
 
 @STATUS  = qw( STATUS_OK STATUS_RETURN STATUS_STOP STATUS_DONE
                STATUS_DECLINED STATUS_ERROR );
-@ERROR   = qw( ERROR_FILE ERROR_VIEW ERROR_UNDEF ERROR_PERL 
+@ERROR   = qw( ERROR_FILE ERROR_VIEW ERROR_UNDEF ERROR_PERL
                ERROR_RETURN ERROR_FILTER ERROR_PLUGIN );
 @CHOMP   = qw( CHOMP_NONE CHOMP_ALL CHOMP_ONE CHOMP_COLLAPSE CHOMP_GREEDY );
-@DEBUG   = qw( DEBUG_OFF DEBUG_ON DEBUG_UNDEF DEBUG_VARS 
+@DEBUG   = qw( DEBUG_OFF DEBUG_ON DEBUG_UNDEF DEBUG_VARS
                DEBUG_DIRS DEBUG_STASH DEBUG_CONTEXT DEBUG_PARSER
                DEBUG_PROVIDER DEBUG_PLUGINS DEBUG_FILTERS DEBUG_SERVICE
                DEBUG_ALL DEBUG_CALLER DEBUG_FLAGS );
@@ -118,7 +118,7 @@ sub debug_flags {
     my ($self, $debug) = @_;
     my (@flags, $flag, $value);
     $debug = $self unless defined($debug) || ref($self);
-    
+
     if ( $debug !~ tr{0-9}{}c) {
         foreach $flag (@DEBUG) {
             next if $flag eq 'DEBUG_OFF' || $flag eq 'DEBUG_ALL' || $flag eq 'DEBUG_FLAGS';
@@ -168,13 +168,13 @@ Template::Constants - Defines constants for the Template Toolkit
 The C<Template::Constants> modules defines, and optionally exports into the
 caller's namespace, a number of constants used by the L<Template> package.
 
-Constants may be used by specifying the C<Template::Constants> package 
+Constants may be used by specifying the C<Template::Constants> package
 explicitly:
 
     use Template::Constants;
     print Template::Constants::STATUS_DECLINED;
 
-Constants may be imported into the caller's namespace by naming them as 
+Constants may be imported into the caller's namespace by naming them as
 options to the C<use Template::Constants> statement:
 
     use Template::Constants qw( STATUS_DECLINED );
@@ -186,17 +186,17 @@ to import sets of constants: 'C<:status>', 'C<:error>', 'C<:all>'.
     use Template::Constants qw( :status );
     print STATUS_DECLINED;
 
-Consult the documentation for the C<Exporter> module for more information 
+Consult the documentation for the C<Exporter> module for more information
 on exporting variables.
 
 =head1 EXPORTABLE TAG SETS
 
-The following tag sets and associated constants are defined: 
+The following tag sets and associated constants are defined:
 
     :status
         STATUS_OK             # no problem, continue
         STATUS_RETURN         # ended current block then continue (ok)
-        STATUS_STOP           # controlled stop (ok) 
+        STATUS_STOP           # controlled stop (ok)
         STATUS_DONE           # iterator is all done (ok)
         STATUS_DECLINED       # provider declined to service request (ok)
         STATUS_ERROR          # general error condition (not ok)
@@ -242,7 +242,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

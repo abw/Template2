@@ -6,7 +6,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -25,7 +25,7 @@ The C<format> filter takes a format string as a parameter (as per
 C<printf()>) and formats each line of text accordingly.
 
     [% FILTER format('<!-- %-40s -->') %]
-    This is a block of text filtered 
+    This is a block of text filtered
     through the above format.
     [% END %]
 
@@ -76,7 +76,7 @@ Output:
 
 =head1 trim
 
-Trims any leading or trailing whitespace from the input text.  Particularly 
+Trims any leading or trailing whitespace from the input text.  Particularly
 useful in conjunction with C<INCLUDE>, C<PROCESS>, etc., having the same effect
 as the C<TRIM> configuration option.
 
@@ -89,13 +89,13 @@ Leading and trailing whitespace (which would be reduced to a single space)
 is removed, as per trim.
 
     [% FILTER collapse %]
-    
+
        The   cat
-       
+
        sat    on
-       
+
        the   mat
-       
+
     [% END %]
 
 Output:
@@ -122,7 +122,7 @@ The C<html> filter is fast and simple but it doesn't encode the full
 range of HTML entities that your text may contain.  The C<html_entity>
 filter uses either the C<Apache::Util> module (which is written in C and
 is therefore faster) or the C<HTML::Entities> module (written in Perl but
-equally as comprehensive) to perform the encoding.  
+equally as comprehensive) to perform the encoding.
 
 If one or other of these modules are installed on your system then the text
 will be encoded (via the C<escape_html()> or C<encode_entities()> subroutines
@@ -131,7 +131,7 @@ entities (e.g. converting 'C<?>' to 'C<&eacute;>'). If neither module is
 available on your system then an 'C<html_entity>' exception will be thrown
 reporting an appropriate message.
 
-If you want to force TT to use one of the above modules in preference to 
+If you want to force TT to use one of the above modules in preference to
 the other, then call either of the L<Template::Filters> class methods:
 L<use_html_entities()|Template::Filters/use_html_entities()> or
 L<use_apache_util()|Template::Filters/use_apache_util()>.
@@ -149,13 +149,13 @@ built-in entity.
 
 =head1 html_para
 
-This filter formats a block of text into HTML paragraphs.  A sequence of 
-two or more newlines is used as the delimiter for paragraphs which are 
+This filter formats a block of text into HTML paragraphs.  A sequence of
+two or more newlines is used as the delimiter for paragraphs which are
 then wrapped in HTML C<E<lt>pE<gt>>...C<E<lt>/pE<gt>> tags.
 
     [% FILTER html_para %]
     The cat sat on the mat.
-    
+
     Mary had a little lamb.
     [% END %]
 
@@ -164,7 +164,7 @@ Output:
     <p>
     The cat sat on the mat.
     </p>
-    
+
     <p>
     Mary had a little lamb.
     </p>
@@ -176,7 +176,7 @@ sequence C<E<lt>brE<gt>E<lt>brE<gt>> to join paragraphs.
 
     [% FILTER html_break %]
     The cat sat on the mat.
-    
+
     Mary had a little lamb.
     [% END %]
 
@@ -190,7 +190,7 @@ Output:
 =head1 html_line_break
 
 This filter replaces any newlines with C<E<lt>brE<gt>> HTML tags,
-thus preserving the line breaks of the original text in the 
+thus preserving the line breaks of the original text in the
 HTML output.
 
     [% FILTER html_line_break %]
@@ -205,7 +205,7 @@ Output:
 
 =head1 uri
 
-This filter URI escapes the input text, converting any characters 
+This filter URI escapes the input text, converting any characters
 outside of the permitted URI character set (as defined by RFC 3986)
 into a C<%nn> hex escape.
 
@@ -221,7 +221,7 @@ is typically used to encode parameters in a URL that could otherwise
 be interpreted as part of the URL.  Here's an example:
 
     [% path  = 'http://tt2.org/example'
-       back  = '/other?foo=bar&baz=bam' 
+       back  = '/other?foo=bar&baz=bam'
        title = 'Earth: "Mostly Harmless"'
     %]
     <a href="[% path %]?back=[% back | uri %]&title=[% title | uri %]">
@@ -233,7 +233,7 @@ lines:
     baz%3Dbam&title=Earth%3A%20%22Mostly%20Harmless%22">
 
 Without the uri filter the output would look like this (also split across
-two lines). 
+two lines).
 
     <a href="http://tt2.org/example?back=/other?foo=bar
     &baz=bam&title=Earth: "Mostly Harmless"">
@@ -255,11 +255,11 @@ you should use the B<url> (note spelling) filter for this purpose.
 
    <a href="[% page_url | url %]">   # CORRECT
 
-Please note that this behaviour was changed in version 2.16 of the 
+Please note that this behaviour was changed in version 2.16 of the
 Template Toolkit.  Prior to that, the uri filter did not encode the
 reserved characters, making it technically incorrect according to the
-RFC 2396 specification (since superceded by RFC2732 and RFC3986).  So we 
-fixed it in 2.16 and provided the url filter to implement the old behaviour 
+RFC 2396 specification (since superceded by RFC2732 and RFC3986).  So we
+fixed it in 2.16 and provided the url filter to implement the old behaviour
 of not encoding reserved characters.
 
 As of version 2.28 of the Template Toolkit, the C<uri> and L<url> filters
@@ -281,9 +281,9 @@ method in L<Template::Filters>
 
 The url filter is a less aggressive version of the uri filter.  It encodes
 any characters outside of the permitted URI character set (as defined by RFC 2396)
-into C<%nn> hex escapes.  However, unlike the uri filter, the url filter does 
-B<not> encode the reserved characters C<&>, C<@>, C</>, C<;>, C<:>, C<=>, C<+>, 
-C<?> and C<$>.  
+into C<%nn> hex escapes.  However, unlike the uri filter, the url filter does
+B<not> encode the reserved characters C<&>, C<@>, C</>, C<;>, C<:>, C<=>, C<+>,
+C<?> and C<$>.
 
 =head1 indent(pad)
 
@@ -293,7 +293,7 @@ width (spaces).  Defaults to 4 spaces if unspecified.
 
     [% FILTER indent('ME> ') %]
     blah blah blah
-    cabbages, rhubard, onions 
+    cabbages, rhubard, onions
     [% END %]
 
 Output:
@@ -308,7 +308,7 @@ of 32.  Truncated text will be terminated with 'C<...>' (i.e. the 'C<...>'
 falls inside the required length, rather than appending to it).
 
     [% FILTER truncate(21) %]
-    I have much to say on this matter that has previously 
+    I have much to say on this matter that has previously
     been said on more than one occasion.
     [% END %]
 
@@ -316,11 +316,11 @@ Output:
 
     I have much to say...
 
-If you want to use something other than 'C<...>' you can pass that as a 
+If you want to use something other than 'C<...>' you can pass that as a
 second argument.
 
     [% FILTER truncate(26, '&hellip;') %]
-    I have much to say on this matter that has previously 
+    I have much to say on this matter that has previously
     been said on more than one occasion.
     [% END %]
 
@@ -344,26 +344,26 @@ Output:
     We want more beer and we want more beer,
     We are the more beer wanters!
 
-=head1 remove(string) 
+=head1 remove(string)
 
-Searches the input text for any occurrences of the specified string and 
-removes them.  A Perl regular expression may be specified as the search 
+Searches the input text for any occurrences of the specified string and
+removes them.  A Perl regular expression may be specified as the search
 string.
 
     [% "The  cat  sat  on  the  mat" FILTER remove('\s+') %]
 
-Output: 
+Output:
 
     Thecatsatonthemat
 
-=head1 replace(search, replace) 
+=head1 replace(search, replace)
 
 Similar to the remove filter described above, but taking a second parameter
 which is used as a replacement string for instances of the search string.
 
     [% "The  cat  sat  on  the  mat" | replace('\s+', '_') %]
 
-Output: 
+Output:
 
     The_cat_sat_on_the_mat
 
@@ -381,7 +381,7 @@ file, specified relative to the C<OUTPUT_PATH> configuration item.
 or more succinctly, using side-effect notation:
 
     [%  FOREACH user IN myorg.userlist;
-          INCLUDE userinfo 
+          INCLUDE userinfo
             FILTER redirect("users/${user.id}.html");
         END
     %]
@@ -391,13 +391,13 @@ A C<file> exception will be thrown if the C<OUTPUT_PATH> option is undefined.
 An optional C<binmode> argument can follow the filename to explicitly set
 the output file to binary mode.
 
-    [% PROCESS my/png/generator 
+    [% PROCESS my/png/generator
          FILTER redirect("images/logo.png", binmode=1) %]
 
 For backwards compatibility with earlier versions, a single true/false
 value can be used to set binary mode.
 
-    [% PROCESS my/png/generator 
+    [% PROCESS my/png/generator
          FILTER redirect("images/logo.png", 1) %]
 
 For the sake of future compatibility and clarity, if nothing else, we
@@ -421,7 +421,7 @@ The following example:
 
     [% fragment | eval %]
 
-is therefore equivalent to 
+is therefore equivalent to
 
     The cat sat on the [% place %]
 
@@ -435,8 +435,8 @@ thrown.
 
     [% my_perl_code | perl %]
 
-In most cases, the C<[% PERL %]> ... C<[% END %]> block should suffice for 
-evaluating Perl code, given that template directives are processed 
+In most cases, the C<[% PERL %]> ... C<[% END %]> block should suffice for
+evaluating Perl code, given that template directives are processed
 before being evaluate as Perl.  Thus, the previous example could have
 been written in the more verbose form:
 
@@ -462,7 +462,7 @@ binmode perl function).
 
     [% PROCESS something/cool
            FILTER stdout(binmode=1) # recommended %]
-    
+
     [% PROCESS something/cool
            FILTER stdout(1)         # alternate %]
 

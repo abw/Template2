@@ -6,7 +6,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -19,7 +19,7 @@ Template::Manual::Internals - Template Toolkit internals
 
 =head1 Introduction
 
-This section of the documentation is aimed at developers wishing to 
+This section of the documentation is aimed at developers wishing to
 know more about how the Template Toolkit works on the inside in order
 to extend or adapt it to their own needs.
 
@@ -72,7 +72,7 @@ object.
 L<Template::Context> is the runtime engine for the Template Toolkit -
 the module that hangs everything together in the lower levels of the
 Template Toolkit and that one that does most of the real work, albeit
-by crafty delegation to various other friendly helper modules.  
+by crafty delegation to various other friendly helper modules.
 
 Given a template name (or perhaps a reference to a scalar or file
 handle) the context process() method must load and compile, or fetch a
@@ -80,7 +80,7 @@ cached copy of a previously compiled template, corresponding to that
 name.  It does this by calling on a list of one or more
 L<Template::Provider> objects (the C<LOAD_TEMPLATES> posse) who themselves
 might get involved with a L<Template::Parser> to help turn source
-templates into executable Perl code (but more on that later).  
+templates into executable Perl code (but more on that later).
 
 Thankfully, all of this complexity is hidden away behind a simple
 L<template()|Template::Context#template()> method. You call it passing a
@@ -107,7 +107,7 @@ access runtime resources and Template Toolkit functionality.
 
 What we're trying to say here is this:  not only does the L<Template::Context>
 object receive calls from the I<outside>, i.e. those originating in user
-code calling the process() method on a Template object, but it also 
+code calling the process() method on a Template object, but it also
 receives calls from the I<inside>, i.e. those originating in template
 directives of the form C<[% PROCESS template %]>.
 
@@ -120,7 +120,7 @@ code annotations showing a typical invocation sequence.
      `--------'     my $tt = Template->new( ... );
           |         $tt->process($template, \%vars);
           |                                                     Outside
-    - - - | - - - - - - - - - - - - - - - - - - - - - - - - - - - - T T 
+    - - - | - - - - - - - - - - - - - - - - - - - - - - - - - - - - T T
           |         package Template;                            Inside
           V
     +----------+    sub process($template, \%vars) {
@@ -146,7 +146,7 @@ code annotations showing a typical invocation sequence.
           |         }
           |
           V         package Template::Context;
-    +----------+    
+    +----------+
     | Context  |    sub process($template, \%vars) {
     +----------+        # fetch compiled template
           |             $template = $self->template($template)
@@ -155,9 +155,9 @@ code annotations showing a typical invocation sequence.
           |             # process template
           |             $template->process($self)
           |         }
-          V     
+          V
     +----------+    package Template::Document;
-    | Document |    
+    | Document |
     +----------+    sub process($context) {
                         $output = &{ $self->BLOCK }($context);
                     }
@@ -253,10 +253,10 @@ This translates to the stash call:
 
     $stash->get([ 'title', ['The Cat Sat on the Mat'] ]);
 
-Dotted compound variables can be requested by passing a single 
-list reference to the C<get()> method in place of the variable 
+Dotted compound variables can be requested by passing a single
+list reference to the C<get()> method in place of the variable
 name.  Each pair of elements in the list should correspond to the
-variable name and reference to a list of arguments for each 
+variable name and reference to a list of arguments for each
 dot-delimited element of the variable.
 
     [% foo(1, 2).bar(3, 4).baz(5) %]
@@ -265,7 +265,7 @@ is thus equivalent to
 
     $stash->get([ foo => [1,2], bar => [3,4], baz => [5] ]);
 
-If there aren't any arguments for an element, you can specify an 
+If there aren't any arguments for an element, you can specify an
 empty, zero or null argument list.
 
     [% foo.bar %]
@@ -274,14 +274,14 @@ empty, zero or null argument list.
 The L<set()|Template::Stash#set()> method works in a similar way. It takes a
 variable name and a variable value which should be assigned to it.
 
-    [% x = 10 %]         
+    [% x = 10 %]
     $stash->set('x', 10);
-    
+
     [% x.y = 10 %]
     $stash->set([ 'x', 0, 'y', 0 ], 10);
 
 So the stash gives us access to template variables and the context provides
-the higher level functionality. 
+the higher level functionality.
 
 Alongside the L<process()|Template::Context#process()> method lies the
 L<include()|Template::Context#include()> method. Just as with the C<PROCESS> /
@@ -304,7 +304,7 @@ can be implemented by rewriting the Perl code and calling C<include()>.
     [% WRAPPER foo -%]
        blah blah [% x %]
     [%- END %]
-    
+
     $context->include('foo', {
         content => 'blah blah ' . $stash->get('x'),
     });
@@ -316,7 +316,7 @@ L<filter()|Template::Context#filter()>.
 
     # TT USE directive
     [% USE foo = Bar(10) %]
-    
+
     # equivalent Perl
     $stash->set('foo', $context->plugin('Bar', [10]));
 
@@ -324,7 +324,7 @@ L<filter()|Template::Context#filter()>.
     [% FILTER bar(20) %]
        blah blah blah
     [% END %]
-    
+
     # equivalent Perl
     my $filter = $context->filter('bar', [20]);
     &$filter('blah blah blah');
@@ -347,20 +347,20 @@ counterparts in Perl.
 The best way to get a better understanding of what's going on underneath
 the hood is to set the C<$Template::Parser::DEBUG> flag to a true value
 and start processing templates.  This will cause the parser to print the
-generated Perl code for each template it compiles to C<STDERR>.  You'll 
+generated Perl code for each template it compiles to C<STDERR>.  You'll
 probably also want to set the C<$Template::Directive::PRETTY> option to
 have the Perl pretty-printed for human consumption.
 
     use Template;
     use Template::Parser;
     use Template::Directive;
-    
+
     $Template::Parser::DEBUG = 1;
     $Template::Directive::PRETTY = 1;
-    
+
     my $template = Template->new();
     $template->process(\*DATA, { cat => 'dog', mat => 'log' });
-    
+
     __DATA__
     The [% cat %] sat on the [% mat %]
 
@@ -376,7 +376,7 @@ The output sent to C<STDERR> would look something like this:
         my $stash   = $context->stash;
         my $output  = '';
         my $error;
-        
+
         eval { BLOCK: {
             $output .=  "The ";
             $output .=  $stash->get('cat');
@@ -388,7 +388,7 @@ The output sent to C<STDERR> would look something like this:
             $error = $context->catch($@, \$output);
             die $error unless $error->type eq 'return';
         }
-    
+
         return $output;
     }
 
@@ -397,7 +397,7 @@ The output sent to C<STDERR> would look something like this:
 Please feel free to hack on the Template Toolkit.  If you find a bug
 that needs fixing, if you have an idea for something that's missing,
 or you feel inclined to tackle something on the TODO list, then by all
-means go ahead and do it!  
+means go ahead and do it!
 
 If you're contemplating something non-trivial then you'll probably
 want to bring it up on the mailing list first to get an idea about the
@@ -408,10 +408,10 @@ The source code repository for the Template Toolkit is hosted at Github.
 
     https://github.com/abw/Template2
 
-Clone the repository, make your changes, commit them, then send a pull 
-request.  
+Clone the repository, make your changes, commit them, then send a pull
+request.
 
-Once you've made your changes, please remember to update the test 
+Once you've made your changes, please remember to update the test
 suite by adding extra tests to one of the existing test scripts in
 the C<t> sub-directory, or by adding a new test script of your own.
 And of course, run C<make test> to ensure that all the tests pass
@@ -419,7 +419,7 @@ with your new code.
 
 Don't forget that any files you do add will need to be added to the
 MANIFEST.  Running C<make manifest> will do this for you, but you need
-to make sure you haven't got any other temporary files lying around 
+to make sure you haven't got any other temporary files lying around
 that might also get added to it.
 
 Documentation is often something that gets overlooked but it's just as
@@ -432,11 +432,11 @@ interspersed throughout the code. In my not-so-humble opinion, it makes both
 the code and the documentation harder to read (same kinda problem as embedding
 Perl in HTML).
 
-Then add a line to the Changes file giving a very brief description of what 
-you've done.  There's no need to go into detail here (save that for the commit 
+Then add a line to the Changes file giving a very brief description of what
+you've done.  There's no need to go into detail here (save that for the commit
 message, comments in code or docuemtation where appropriate).
 
-Please also make sure you add your name to the lib/Template/Manual/Credits.pod 
+Please also make sure you add your name to the lib/Template/Manual/Credits.pod
 file (if it isn't already there).
 
 Then commit your changes and send a pull request.

@@ -4,14 +4,14 @@
 #
 # DESCRIPTION
 #   Template Toolkit module implementing a base class plugin
-#   object which acts like a filter and can be used with the 
+#   object which acts like a filter and can be used with the
 #   FILTER directive.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2001-2019 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2001-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -63,7 +63,7 @@ sub init {
 sub factory {
     my $self = shift;
     my $this = $self;
-    
+
     # avoid a memory leak
     weaken( $this->{_CONTEXT} ) if ref $this->{_CONTEXT}
             && !isweak $this->{_CONTEXT};
@@ -126,21 +126,21 @@ Template::Plugin::Filter - Base class for plugin filters
 =head1 SYNOPSIS
 
     package MyOrg::Template::Plugin::MyFilter;
-    
+
     use Template::Plugin::Filter;
     use base qw( Template::Plugin::Filter );
-    
+
     sub filter {
         my ($self, $text) = @_;
-        
+
         # ...mungify $text...
-        
+
         return $text;
     }
 
     # now load it...
     [% USE MyFilter %]
-    
+
     # ...and use the returned object as a filter
     [% FILTER $MyFilter %]
       ...
@@ -152,11 +152,11 @@ This module implements a base class for plugin filters.  It hides
 the underlying complexity involved in creating and using filters
 that get defined and made available by loading a plugin.
 
-To use the module, simply create your own plugin module that is 
+To use the module, simply create your own plugin module that is
 inherited from the C<Template::Plugin::Filter> class.
 
     package MyOrg::Template::Plugin::MyFilter;
-    
+
     use Template::Plugin::Filter;
     use base qw( Template::Plugin::Filter );
 
@@ -166,9 +166,9 @@ to be filtered.
 
     sub filter {
         my ($self, $text) = @_;
-        
+
         # ...mungify $text...
-        
+
         return $text;
     }
 
@@ -193,9 +193,9 @@ Then you C<USE> your plugin in the normal way.
 
 The object returned is stored in the variable of the same name,
 'C<MyFilter>'.  When you come to use it as a C<FILTER>, you should add
-a dollar prefix.  This indicates that you want to use the filter 
-stored in the variable 'C<MyFilter>' rather than the filter named 
-'C<MyFilter>', which is an entirely different thing (see later for 
+a dollar prefix.  This indicates that you want to use the filter
+stored in the variable 'C<MyFilter>' rather than the filter named
+'C<MyFilter>', which is an entirely different thing (see later for
 information on defining filters by name).
 
     [% FILTER $MyFilter %]
@@ -205,7 +205,7 @@ information on defining filters by name).
 You can, of course, assign it to a different variable.
 
     [% USE blat = MyFilter %]
-    
+
     [% FILTER $blat %]
        ...text to be filtered...
     [% END %]
@@ -225,25 +225,25 @@ would allow the C<filter()> method to do something like this:
 
     sub filter {
         my ($self, $text) = @_;
-        
+
         my $args = $self->{ _ARGS   };  # [ 'foo', 'bar' ]
         my $conf = $self->{ _CONFIG };  # { baz => 'blam' }
-        
+
         # ...munge $text...
-        
+
         return $text;
     }
 
 By default, plugins derived from this module will create static
-filters.  A static filter is created once when the plugin gets 
+filters.  A static filter is created once when the plugin gets
 loaded via the C<USE> directive and re-used for all subsequent
 C<FILTER> operations.  That means that any argument specified with
 the C<FILTER> directive are ignored.
 
-Dynamic filters, on the other hand, are re-created each time 
+Dynamic filters, on the other hand, are re-created each time
 they are used by a C<FILTER> directive.  This allows them to act
 on any parameters passed from the C<FILTER> directive and modify
-their behaviour accordingly.  
+their behaviour accordingly.
 
 There are two ways to create a dynamic filter.  The first is to
 define a C<$DYNAMIC> class variable set to a true value.
@@ -274,16 +274,16 @@ would allow the C<filter()> method to work like this:
 
     sub filter {
         my ($self, $text, $args, $conf) = @_;
-        
+
         # $args = [ 'foo', 'bar' ]
         # $conf = { baz => 'blam' }
     }
 
 In this case can pass parameters to both the USE and FILTER directives,
-so your filter() method should probably take that into account.  
+so your filter() method should probably take that into account.
 
     [% USE MyFilter 'foo' wiz => 'waz' %]
-    
+
     [% FILTER $MyFilter 'bar' biz => 'baz' %]
        ...
     [% END %]
@@ -295,18 +295,18 @@ data.
 
     sub filter {
         my ($self, $text, $args, $conf) = @_;
-        
-        $args = $self->merge_args($args); 
+
+        $args = $self->merge_args($args);
         $conf = $self->merge_config($conf);
-        
-        # $args = [ 'foo', 'bar' ]      
-        # $conf = { wiz => 'waz', biz => 'baz' }        
+
+        # $args = [ 'foo', 'bar' ]
+        # $conf = { wiz => 'waz', biz => 'baz' }
         ...
     }
 
 You can also have your plugin install itself as a named filter by
-calling the C<install_filter()> method from the C<init()> method.  You 
-should provide a name for the filter, something that you might 
+calling the C<install_filter()> method from the C<init()> method.  You
+should provide a name for the filter, something that you might
 like to make a configuration option.
 
     sub init {
@@ -319,20 +319,20 @@ like to make a configuration option.
 This allows the plugin filter to be used as follows:
 
     [% USE MyFilter %]
-    
-    [% FILTER myfilter %] 
-       ... 
+
+    [% FILTER myfilter %]
+       ...
     [% END %]
 
 or
 
     [% USE MyFilter name = 'swipe' %]
-        
-    [% FILTER swipe %] 
-       ... 
+
+    [% FILTER swipe %]
+       ...
     [% END %]
 
-Alternately, you can allow a filter name to be specified as the 
+Alternately, you can allow a filter name to be specified as the
 first positional argument.
 
     sub init {
@@ -343,7 +343,7 @@ first positional argument.
     }
 
     [% USE MyFilter 'swipe' %]
-    
+
     [% FILTER swipe %]
        ...
     [% END %]
@@ -355,29 +355,29 @@ Here's a complete example of a plugin filter module.
     package My::Template::Plugin::Change;
     use Template::Plugin::Filter;
     use base qw( Template::Plugin::Filter );
-    
+
     sub init {
         my $self = shift;
-        
+
         $self->{ _DYNAMIC } = 1;
-        
+
         # first arg can specify filter name
         $self->install_filter($self->{ _ARGS }->[0] || 'change');
-        
+
         return $self;
     }
-    
+
     sub filter {
         my ($self, $text, $args, $config) = @_;
-        
+
         $config = $self->merge_config($config);
         my $regex = join('|', keys %$config);
-        
+
         $text =~ s/($regex)/$config->{ $1 }/ge;
-        
+
         return $text;
     }
-    
+
     1;
 
 =head1 AUTHOR
@@ -386,7 +386,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

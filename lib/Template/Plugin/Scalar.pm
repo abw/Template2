@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2008 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2008-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -42,8 +42,8 @@ sub load {
 
 sub scalar_monad {
     # create a .scalar monad which wraps the hash- or list-based object
-    # and delegates any method calls back to it, calling them in scalar 
-    # context, e.g. foo.scalar.bar becomes $MONAD->new($foo)->bar and 
+    # and delegates any method calls back to it, calling them in scalar
+    # context, e.g. foo.scalar.bar becomes $MONAD->new($foo)->bar and
     # the monad calls $foo->bar in scalar context
     $MONAD->new(shift);
 }
@@ -63,7 +63,7 @@ sub AUTOLOAD {
     my $item = $AUTOLOAD;
     $item =~ s/.*:://;
     return if $item eq 'DESTROY';
-    
+
     # lookup the named values
     my $stash = $self->{ _CONTEXT }->stash;
     my $value = $stash->{ $item };
@@ -121,20 +121,20 @@ Template::Plugin::Scalar - call object methods in scalar context
 =head1 SYNOPSIS
 
     [% USE scalar %]
-    
+
     # TT2 calls object methods in array context by default
     [% object.method %]
-    
+
     # force it to use scalar context
     [% object.scalar.method %]
-    
+
     # also works with subroutine references
     [% scalar.my_sub_ref %]
 
 =head1 DESCRIPTION
 
 The Template Toolkit calls user-defined subroutines and object methods
-using Perl's array context by default.  This plugin module provides a way 
+using Perl's array context by default.  This plugin module provides a way
 for you to call subroutines and methods in scalar context.
 
 =head1 AUTHOR
@@ -143,7 +143,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2008 Andy Wardley.  All Rights Reserved.
+Copyright (C) 2008-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

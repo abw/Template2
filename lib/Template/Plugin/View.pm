@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2000-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2000-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -53,15 +53,15 @@ Template::Plugin::View - Plugin to create views (Template::View)
 
     [% USE view(
             prefix = 'splash/'          # template prefix/suffix
-            suffix = '.tt2'             
-            bgcol  = '#ffffff'          # and any other variables you 
+            suffix = '.tt2'
+            bgcol  = '#ffffff'          # and any other variables you
             style  = 'Fancy HTML'       # care to define as view metadata,
             items  = [ foo, bar.baz ]   # including complex data and
             foo    = bar ? baz : x.y.z  # expressions
     %]
-    
+
     [% view.title %]                    # access view metadata
-    
+
     [% view.header(title = 'Foo!') %]   # view "methods" process blocks or
     [% view.footer %]                   # templates with prefix/suffix added
 
@@ -77,7 +77,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

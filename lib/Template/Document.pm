@@ -4,7 +4,7 @@
 #
 # DESCRIPTION
 #   Module defining a class of objects which encapsulate compiled
-#   templates, storing additional block definitions and metadata 
+#   templates, storing additional block definitions and metadata
 #   as well as the compiled Perl sub-routine representing the main
 #   template content.
 #
@@ -54,8 +54,8 @@ BEGIN {
 #------------------------------------------------------------------------
 # new(\%document)
 #
-# Creates a new self-contained Template::Document object which 
-# encapsulates a compiled Perl sub-routine, $block, any additional 
+# Creates a new self-contained Template::Document object which
+# encapsulates a compiled Perl sub-routine, $block, any additional
 # BLOCKs defined within the document ($defblocks, also Perl sub-routines)
 # and additional $metadata about the document.
 #------------------------------------------------------------------------
@@ -83,14 +83,14 @@ sub new {
     }
 
     # same for any additional BLOCK definitions
-    @$defblocks{ keys %$defblocks } = 
+    @$defblocks{ keys %$defblocks } =
         # MORE BLIND UNTAINTING - turn away if you're squeamish
-        map { 
-            ref($_) 
-                ? $_ 
+        map {
+            ref($_)
+                ? $_
                 : ( /(.*)/s && eval($1) or return $class->error($@) )
-            } values %$defblocks;
-    
+        } values %$defblocks;
+
     bless {
         %$metadata,
         _BLOCK     => $block,
@@ -104,7 +104,7 @@ sub new {
 #------------------------------------------------------------------------
 # block()
 #
-# Returns a reference to the internal sub-routine reference, _BLOCK, 
+# Returns a reference to the internal sub-routine reference, _BLOCK,
 # that constitutes the main document template.
 #------------------------------------------------------------------------
 
@@ -116,7 +116,7 @@ sub block {
 #------------------------------------------------------------------------
 # blocks()
 #
-# Returns a reference to a hash array containing any BLOCK definitions 
+# Returns a reference to a hash array containing any BLOCK definitions
 # from the template.  The hash keys are the BLOCK name and the values
 # are references to Template::Document objects.  Returns 0 (# an empty hash)
 # if no blocks are defined.
@@ -130,7 +130,7 @@ sub blocks {
 #-----------------------------------------------------------------------
 # variables()
 #
-# Returns a reference to a hash of variables used in the template.  
+# Returns a reference to a hash of variables used in the template.
 # This requires the TRACE_VARS option to be enabled.
 #-----------------------------------------------------------------------
 
@@ -153,9 +153,10 @@ sub process {
 
 
     # check we're not already visiting this template
-    return $context->throw(Template::Constants::ERROR_FILE, 
-                           "recursion into '$self->{ name }'")
-        if $self->{ _HOT } && ! $context->{ RECURSION };   ## RETURN ##
+    return $context->throw(
+        Template::Constants::ERROR_FILE,
+        "recursion into '$self->{ name }'"
+    ) if $self->{ _HOT } && ! $context->{ RECURSION };   ## RETURN ##
 
     $context->visit($self, $defblocks);
 
@@ -170,16 +171,15 @@ sub process {
 
     die $context->catch($@)
         if $@;
-        
+
     return $output;
 }
-
 
 #------------------------------------------------------------------------
 # AUTOLOAD
 #
-# Provides pseudo-methods for read-only access to various internal 
-# members. 
+# Provides pseudo-methods for read-only access to various internal
+# members.
 #------------------------------------------------------------------------
 
 sub AUTOLOAD {
@@ -205,8 +205,8 @@ sub AUTOLOAD {
 #     METADATA   # a hash of template metadata
 #     BLOCK      # string containing Perl sub definition for main block
 #     DEFBLOCKS  # hash containing further subs for addional BLOCK defs
-# It returns a string containing Perl code which, when evaluated and 
-# executed, will instantiate a new Template::Document object with the 
+# It returns a string containing Perl code which, when evaluated and
+# executed, will instantiate a new Template::Document object with the
 # above data.  On error, it returns undef with an appropriate error
 # message set in $ERROR.
 #------------------------------------------------------------------------
@@ -224,11 +224,15 @@ sub as_perl {
     } keys %$defblocks);
     $defblocks =~ s/\s+$//;
 
-    $metadata = join('', map { 
-        my $x = $metadata->{ $_ }; 
-        $x =~ s/(['\\])/\\$1/g; 
-        "        '$_' => '$x',\n";
-    } keys %$metadata);
+    $metadata = join(
+        '',
+        map {
+            my $x = $metadata->{ $_ };
+            $x =~ s/(['\\])/\\$1/g;
+            "        '$_' => '$x',\n";
+        }
+        keys %$metadata
+    );
     $metadata =~ s/\s+$//;
 
     return <<EOF
@@ -263,18 +267,18 @@ EOF
 sub write_perl_file {
     my ($class, $file, $content) = @_;
     my ($fh, $tmpfile);
-    
+
     return $class->error("invalid filename: $file")
         unless defined $file && length $file;
 
     eval {
         require File::Temp;
         require File::Basename;
-        ($fh, $tmpfile) = File::Temp::tempfile( 
-            DIR => File::Basename::dirname($file) 
+        ($fh, $tmpfile) = File::Temp::tempfile(
+            DIR => File::Basename::dirname($file)
         );
         my $perlcode = $class->as_perl($content) || die $!;
-        
+
         if ($UNICODE && is_utf8($perlcode)) {
             $perlcode = "use utf8;\n\n$perlcode";
             binmode $fh, ":utf8";
@@ -295,10 +299,10 @@ sub write_perl_file {
 #------------------------------------------------------------------------
 
 sub catch_warnings {
-    $COMPERR .= join('', @_); 
+    $COMPERR .= join('', @_);
 }
 
-    
+
 1;
 
 __END__
@@ -310,7 +314,7 @@ Template::Document - Compiled template document object
 =head1 SYNOPSIS
 
     use Template::Document;
-    
+
     $doc = Template::Document->new({
         BLOCK => sub { # some perl code; return $some_text },
         DEFBLOCKS => {
@@ -322,7 +326,7 @@ Template::Document - Compiled template document object
             version => 3.14,
         }
     }) || die $Template::Document::ERROR;
-    
+
     print $doc->process($context);
 
 =head1 DESCRIPTION
@@ -333,16 +337,16 @@ C<Template::Document> instance to encapsulate a template as it is compiled
 into Perl code.
 
 The constructor method, L<new()>, expects a reference to a hash array
-containing the C<BLOCK>, C<DEFBLOCKS> and C<METADATA> items.  
+containing the C<BLOCK>, C<DEFBLOCKS> and C<METADATA> items.
 
 The C<BLOCK> item should contain a reference to a Perl subroutine or a textual
 representation of Perl code, as generated by the L<Template::Parser> module.
-This is then evaluated into a subroutine reference using C<eval()>. 
+This is then evaluated into a subroutine reference using C<eval()>.
 
 The C<DEFLOCKS> item should reference a hash array containing further named
 C<BLOCK>s which may be defined in the template. The keys represent C<BLOCK>
 names and the values should be subroutine references or text strings of Perl
-code as per the main C<BLOCK> item. 
+code as per the main C<BLOCK> item.
 
 The C<METADATA> item should reference a hash array of metadata items relevant
 to the document.
@@ -428,8 +432,8 @@ Returns a reference to the hash array of named C<DEFBLOCKS> subroutines.
 
 =head2 variables()
 
-Returns a reference to a hash of variables used in the template.  
-This requires the L<TRACE_VARS|Template::Manual::Config#TRACE_VARS> 
+Returns a reference to a hash of variables used in the template.
+This requires the L<TRACE_VARS|Template::Manual::Config#TRACE_VARS>
 option to be enabled.
 
 =head2 AUTOLOAD
@@ -480,7 +484,7 @@ processed at runtime).
 =head2 is_utf8()
 
 This is mapped to C<utf8::is_utf8> for versions of Perl that have it (> 5.008)
-or to C<Encode::is_utf8> for Perl 5.008.  Earlier versions of Perl are not 
+or to C<Encode::is_utf8> for Perl 5.008.  Earlier versions of Perl are not
 supported.
 
 =head1 AUTHOR

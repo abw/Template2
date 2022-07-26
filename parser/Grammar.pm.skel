@@ -10,7 +10,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 #   Copyright (C) 1998-2000 Canon Research Centre Europe Ltd.
 #
 #   This module is free software; you can redistribute it and/or
@@ -43,18 +43,17 @@ my ($factory, $rawstart);
 
 BEGIN {
 @RESERVED = qw(
-	GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK END
-	USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT DIV MOD
-	IF UNLESS ELSE ELSIF FOR NEXT WHILE SWITCH CASE META IN
-	TRY THROW CATCH FINAL LAST RETURN STOP CLEAR VIEW DEBUG
-    );
+    GET CALL SET DEFAULT INSERT INCLUDE PROCESS WRAPPER BLOCK END
+    USE PLUGIN FILTER MACRO PERL RAWPERL TO STEP AND OR NOT DIV MOD
+    IF UNLESS ELSE ELSIF FOR NEXT WHILE SWITCH CASE META IN
+    TRY THROW CATCH FINAL LAST RETURN STOP CLEAR VIEW DEBUG
+);
 
 # for historical reasons, != and == are converted to ne and eq to perform
 # stringwise comparison (mainly because it doesn't generate "non-numerical
 # comparison" warnings which != and == can) but the others (e.g. < > <= >=)
 # are not converted to their stringwise equivalents.  I added 'gt' et al,
 # briefly for v2.04d and then took them out again in 2.04e.
-
 
 %CMPOP = qw(
     != ne
@@ -105,7 +104,7 @@ $LEXTABLE = {
 
     # fill lexer table, slice by slice, with reserved words and operators
     @$LEXTABLE{ @RESERVED, @cmpop, @binop, @tokens }
-			= ( @RESERVED, ('CMPOP') x @cmpop, ('BINOP') x @binop, @tokens );
+        = ( @RESERVED, ('CMPOP') x @cmpop, ('BINOP') x @binop, @tokens );
 }
 
 } # --- END BEGIN
@@ -117,9 +116,9 @@ $LEXTABLE = {
 sub new {
     my $class = shift;
     bless {
-		LEXTABLE => $LEXTABLE,
-		STATES   => $STATES,
-		RULES    => $RULES,
+        LEXTABLE => $LEXTABLE,
+        STATES   => $STATES,
+        RULES    => $RULES,
     }, $class;
 }
 
@@ -178,7 +177,7 @@ L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

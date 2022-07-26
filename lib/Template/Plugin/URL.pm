@@ -3,14 +3,14 @@
 # Template::Plugin::URL
 #
 # DESCRIPTION
-#   Template Toolkit Plugin for constructing URL's from a base stem 
+#   Template Toolkit Plugin for constructing URL's from a base stem
 #   and adaptable parameters.
 #
 # AUTHOR
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2000-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2000-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -42,10 +42,12 @@ sub new {
         my $newbase = shift unless ref $_[0] eq 'HASH';
         my $newargs = shift || { };
         my $combo   = { %$args, %$newargs };
-        my $urlargs = join($JOINT,
-                           map  { args($_, $combo->{ $_ }) }
-                           grep { defined $combo->{ $_ } && length $combo->{ $_ } }
-                           sort keys %$combo);
+        my $urlargs = join(
+            $JOINT,
+            map  { args($_, $combo->{ $_ }) }
+            grep { defined $combo->{ $_ } && length $combo->{ $_ } }
+            sort keys %$combo
+        );
 
         my $query = $newbase || $base || '';
         $query .= '?' if length $query && length $urlargs;
@@ -59,17 +61,17 @@ sub new {
 sub args {
     my ($key, $val) = @_;
     $key = escape($key);
-    
+
     return map {
         "$key=" . escape($_);
     } ref $val eq 'ARRAY' ? @$val : $val;
-    
+
 }
 
 #------------------------------------------------------------------------
 # escape($url)
-# 
-# URL-encode data.  Borrowed with minor modifications from CGI.pm.  
+#
+# URL-encode data.  Borrowed with minor modifications from CGI.pm.
 # Kudos to Lincold Stein.
 #------------------------------------------------------------------------
 
@@ -92,24 +94,24 @@ Template::Plugin::URL - Plugin to construct complex URLs
 =head1 SYNOPSIS
 
     [% USE url('/cgi-bin/foo.pl') %]
-    
+
     [% url(debug = 1, id = 123) %]
        # ==> /cgi/bin/foo.pl?debug=1&amp;id=123
 
     [% USE mycgi = url('/cgi-bin/bar.pl', mode='browse', debug=1) %]
-    
+
     [% mycgi %]
        # ==> /cgi/bin/bar.pl?mode=browse&amp;debug=1
-    
+
     [% mycgi(mode='submit') %]
        # ==> /cgi/bin/bar.pl?mode=submit&amp;debug=1
-    
+
     [% mycgi(debug='d2 p0', id='D4-2k[4]') %]
        # ==> /cgi-bin/bar.pl?mode=browse&amp;debug=d2%20p0&amp;id=D4-2k%5B4%5D
 
 =head1 DESCRIPTION
 
-The C<URL> plugin can be used to construct complex URLs from a base stem 
+The C<URL> plugin can be used to construct complex URLs from a base stem
 and a hash array of additional query parameters.
 
 The constructor should be passed a base URL and optionally, a hash array
@@ -121,7 +123,7 @@ it would look something like the following:
     [% USE url('/cgi-bin/baz.pl', mode='browse', debug=1) %]
 
 When the plugin is then called without any arguments, the default base
-and parameters are returned as a formatted query string.  
+and parameters are returned as a formatted query string.
 
     [% url %]
 
@@ -159,8 +161,8 @@ producing
     /cgi-bin/waz.pl?mode=browse&amp;test=1
     /cgi-bin/waz.pl?mode=browse&amp;debug=1&amp;test=1
 
-The ordering of the parameters is non-deterministic due to fact that 
-Perl's hashes themselves are unordered.  This isn't a problem as the 
+The ordering of the parameters is non-deterministic due to fact that
+Perl's hashes themselves are unordered.  This isn't a problem as the
 ordering of CGI parameters is insignificant (to the best of my knowledge).
 All values will be properly escaped thanks to some code borrowed from
 Lincoln Stein's C<CGI> module.  e.g.
@@ -184,7 +186,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

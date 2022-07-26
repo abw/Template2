@@ -9,7 +9,7 @@
 #   Andy Wardley   <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 2002-2007 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 2002-2022 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -29,9 +29,9 @@ our $AUTOLOAD;
 #------------------------------------------------------------------------
 # new($context, \%config)
 #
-# This constructor method creates a simple, empty object to act as a 
+# This constructor method creates a simple, empty object to act as a
 # receiver for future object calls.  No doubt there are many interesting
-# configuration options that might be passed, but I'll leave that for 
+# configuration options that might be passed, but I'll leave that for
 # someone more knowledgable in these areas to contribute...
 #------------------------------------------------------------------------
 
@@ -222,7 +222,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2007 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
