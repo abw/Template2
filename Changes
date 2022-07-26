@@ -17,6 +17,9 @@
 Improvements:
 * Added meta() method to Template::Document to return all META items
 
+Bug Fixes:
+* Fixed incorrect line numbers when using outline tags
+
 #-----------------------------------------------------------------------
 # Version 3.100
 #------------------------------------------------------------------------

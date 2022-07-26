@@ -38,7 +38,8 @@ other offline document systems.
 
 # What's New?
 
-Version 3.101 Added meta() method to Template::Document
+Version 3.101 Added meta() method to Template::Document and fixed
+incorrect line numbers when using outline tags
 
 Version 3.100 Maintenance release: several fixes, documentation improvements
 and ttree updates.
