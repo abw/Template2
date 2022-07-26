@@ -90,7 +90,6 @@ t/block_duplicate.t
 t/blocks.t
 t/capture.t
 t/case.t
-t/cgi.t
 t/chomp.t
 t/compile1.t
 t/compile2.t
