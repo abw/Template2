@@ -19,6 +19,7 @@ Improvements:
 
 Bug Fixes:
 * Fixed incorrect line numbers when using outline tags
+* Fixed incorrect Apache::Util(s) module in t/html.t
 
 #-----------------------------------------------------------------------
 # Version 3.100
