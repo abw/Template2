@@ -6,15 +6,14 @@
 #
 # Written by Andy Wardley <abw@wardley.org>
 #
-# Copyright (C) 2001 Andy Wardley. All Rights Reserved.
+# Copyright (C) 2001-2022 Andy Wardley. All Rights Reserved.
 #
 # This is free software; you can redistribute it and/or modify it
 # under the same terms as Perl itself.
 #
-# $Id$
-#
 #========================================================================
 
+use utf8;
 use strict;
 use warnings;
 use lib qw( ./lib ../lib );
@@ -30,13 +29,13 @@ $Template::Test::PRESERVE = $DEBUG;
 # behaviour of html filter depends on these being available
 #------------------------------------------------------------------------
 
-use constant HAS_HTML_Entities => eval { 
+use constant HAS_HTML_Entities => eval {
     require HTML::Entities;
     1;
 };
-use constant HAS_Apache_Util   => eval { 
+use constant HAS_Apache_Util   => eval {
     require Apache::Util;
-    Apache::Utils::escape_html('');
+    Apache::Util::escape_html('');
     1;
 };
 
@@ -51,7 +50,7 @@ my $vars = {
     entities => HAS_HTML_Entities || HAS_Apache_Util || 0,
 };
 
-test_expect(\*DATA, $cfg, $vars); 
+test_expect(\*DATA, $cfg, $vars);
 
 __DATA__
 -- test --
@@ -71,8 +70,8 @@ OK
 
 -- test --
 -- name html entity --
-[%  TRY; 
-        text = "Léon Brocard" | html_entity;
+[%  TRY;
+        text = "LÃ©on Brocard" | html_entity;
 
         IF text == "L&eacute;on Brocard";
             'passed';
