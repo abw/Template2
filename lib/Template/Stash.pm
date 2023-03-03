@@ -151,7 +151,7 @@ sub clone {
 
     # look out for magical 'import' argument which imports another hash
     my $import = $params->{ import };
-    if (defined $import && ref $import eq 'HASH') {
+    if (ref $import eq 'HASH') {
         delete $params->{ import };
     }
     else {
@@ -341,7 +341,7 @@ sub update {
 
     # look out for magical 'import' argument to import another hash
     my $import = $params->{ import };
-    if (defined $import && ref $import eq 'HASH') {
+    if (ref $import eq 'HASH') {
         @$self{ keys %$import } = values %$import;
         delete $params->{ import };
     }
