@@ -436,8 +436,9 @@ sub hash_delete {
 
 sub hash_import {
     my ($hash, $imp) = @_;
-    $imp = {} unless ref $imp eq 'HASH';
-    @$hash{ keys %$imp } = values %$imp;
+    if (ref $imp eq 'HASH') {
+        @$hash{ keys %$imp } = values %$imp;
+    }
     return '';
 }
 

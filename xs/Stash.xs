@@ -1192,17 +1192,12 @@ get(root, ident, ...)
     SV *root
     SV *ident
     CODE:
-    AV *args;
     int flags = get_debug_flag(aTHX_ root);
     int n;
     STRLEN len;
     char *str;
 
     /* look for a list ref of arguments, passed as third argument */
-    args = 
-        (items > 2 && SvROK(ST(2)) && SvTYPE(SvRV(ST(2))) == SVt_PVAV) 
-        ? (AV *) SvRV(ST(2)) : Nullav;
-     
     if (SvROK(ident) && (SvTYPE(SvRV(ident)) == SVt_PVAV)) {
         RETVAL = do_getset(aTHX_ root, (AV *) SvRV(ident), NULL, flags);
 
@@ -1218,6 +1213,9 @@ get(root, ident, ...)
     } 
     else {
         /* otherwise ident is a scalar so we call dotop() just once */
+        AV * const args =
+            (items > 2 && SvROK(ST(2)) && SvTYPE(SvRV(ST(2))) == SVt_PVAV)
+            ? (AV *) SvRV(ST(2)) : Nullav;
         RETVAL = dotop(aTHX_ root, ident, args, flags);
     }
 
