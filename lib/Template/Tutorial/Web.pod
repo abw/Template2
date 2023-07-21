@@ -526,7 +526,7 @@ module.  That module might look something like this:
     
     use strict;
     use Apache::Constants qw( :common );
-    use Template qw( :template );
+    use Template;
     use CGI;
     
     our $VERSION = 1.59;

@@ -23,7 +23,7 @@ package Template::Test;
 
 use strict;
 use warnings;
-use Template qw( :template );
+use Template;
 use Exporter;
 
 use constant MSWin32 => $^O eq 'MSWin32';
