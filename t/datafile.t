@@ -18,7 +18,7 @@
 
 use strict;
 use lib qw( ./lib ./blib/lib ./blib/arch ../lib ../blib/lib ../blib/arch );
-use Template qw( :status );
+use Template;
 use Template::Test;
 use File::Spec;
 

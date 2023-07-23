@@ -18,7 +18,7 @@
 
 use strict;
 use lib qw( ./lib ../lib );
-use Template qw( :status );
+use Template;
 use Template::Test;
 $^W = 1;
 

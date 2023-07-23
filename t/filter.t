@@ -18,7 +18,7 @@ use strict;
 use warnings;
 use lib qw( ./lib ../lib );
 use Template::Filters;
-use Template qw( :status );
+use Template;
 use Template::Parser;
 use Template::Test;
 use Template::Constants qw( :debug );
