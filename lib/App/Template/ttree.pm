@@ -372,7 +372,7 @@ sub process_tree {
         # check against ignore list
         foreach $check (@$ignore) {
             if ($path =~ /$check/) {
-                $self->emit_log( sprintf yellow("  - %-32s (ignored, matches /$check/)\n"), $path )
+                $self->emit_log( yellow(sprintf "  - %-32s (ignored, matches /$check/)\n", $path ) )
                     if $verbose > 1;
                 $n_skip++;
                 next FILE;
@@ -396,7 +396,7 @@ sub process_tree {
                     # chown($uid, $gid, $target) || warn "chown($target): $!\n";
 
                     $n_mkdir++;
-                    $self->emit_log( sprintf green("  + %-32s (created target directory)\n"), $path )
+                    $self->emit_log( green( sprintf "  + %-32s (created target directory)\n", $path ) )
                         if $verbose;
                 }
                 # recurse into directory
@@ -404,7 +404,7 @@ sub process_tree {
             }
             else {
                 $n_skip++;
-                $self->emit_log( sprintf yellow("  - %-32s (directory, not recursing)\n"), $path )
+                $self->emit_log( yellow(sprintf "  - %-32s (directory, not recursing)\n", $path ) )
                     if $verbose > 1;
             }
         }
@@ -533,7 +533,7 @@ sub process_file {
     # check against acceptance list
     if (not $copy_file and @$accept) {
         unless (grep { $filename =~ /$_/ } @$accept) {
-            $self->emit_log( sprintf yellow("  - %-32s (not accepted)\n"), $file )
+            $self->emit_log( yellow( sprintf "  - %-32s (not accepted)\n", $file ) )
                 if $verbose > 1;
             $n_skip++;
             return;
@@ -558,7 +558,7 @@ sub process_file {
         }
 
         if ($desttime >= $srctime) {
-            $self->emit_log( sprintf yellow("  - %-32s (not modified)\n"), $file )
+            $self->emit_log( yellow( sprintf "  - %-32s (not modified)\n", $file ) )
                 if $verbose > 1;
             $n_unmod++;
             return;
@@ -578,7 +578,7 @@ sub process_file {
 
         unless ($copy_file) {
             $n_link++;
-            $self->emit_log( sprintf green("  > %-32s (linked, matches $check)\n"), $file )
+            $self->emit_log( green( sprintf "  > %-32s (linked, matches $check)\n", $file ) )
                 if $verbose;
             return;
         }
@@ -596,7 +596,7 @@ sub process_file {
             }
         }
 
-        $self->emit_log( sprintf green("  > %-32s (copied, matches $check)\n"), $file )
+        $self->emit_log( green( sprintf "  > %-32s (copied, matches $check)\n", $file ) )
             if $verbose;
 
         return;
@@ -605,8 +605,8 @@ sub process_file {
     $n_proc++;
 
     if ($verbose) {
-        $self->emit_log( sprintf(green("  + %-32s"), $file) );
-        $self->emit_log( sprint(green(" (changed suffix to $new_suffix)")) ) if $new_suffix;
+        $self->emit_log( green( sprintf "  + %-32s", $file) );
+        $self->emit_log( green( sprintf " (changed suffix to $new_suffix)") ) if $new_suffix;
         $self->emit_log( "\n" );
     }
 
