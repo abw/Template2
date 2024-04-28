@@ -335,7 +335,7 @@ sub _init {
 
     # tweak delim to ignore C:/
     unless (defined $dlim) {
-        $dlim = MSWin32 ? ':(?!\\/)' : ':';
+        $dlim = MSWin32 ? qr/:(?!\\|\/)/ : qr/:/;
     }
 
     # coerce INCLUDE_PATH to an array ref, if not already so
