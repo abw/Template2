@@ -182,6 +182,15 @@ L<Variable Interpolation>).
     [% pagename = 'next' %]
     [% page.$pagename %]       # same as [% page.next %]
 
+You can also access hash entry using C<item()> method. This might be helpful
+if you have complex key name.
+
+    <pre>
+    [% files.item('example.txt').content %]
+    </pre>
+
+See L<Template::Manual::VMethods|Template::Manual::VMethods/"item"> for more info.
+
 When you assign to a variable that contains multiple namespace
 elements (i.e. it has one or more 'C<.>' characters in the name),
 any hashes required to represent intermediate namespaces will be
