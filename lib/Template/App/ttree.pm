@@ -1,8 +1,8 @@
-package App::Template::ttree;
+package Template::App::ttree;
 
 #========================================================================
 #
-# App::Template::ttree
+# Template::App::ttre
 #
 # DESCRIPTION
 #   Script for processing all directory trees containing templates.
@@ -1027,7 +1027,7 @@ __END__
 
 =head1 NAME
 
-App::Template::ttree - Backend of ttree
+Template::App::ttree - Backend of ttree
 
 =head1 SYNOPSIS
 

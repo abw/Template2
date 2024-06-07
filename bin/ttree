@@ -24,9 +24,9 @@
 #========================================================================
 
 use strict;
-use App::Template::ttree;
+use Template::App::ttree;
 
-my $ttree = App::Template::ttree->new;
+my $ttree = Template::App::ttree->new;
 $ttree->offer_create_a_sample_config_file();
 $ttree->run();
 exit(0);
