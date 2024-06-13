@@ -117,3 +117,11 @@ e is not set
 $ END
 -- expect --
 e is set to echo
+
+-- test --
+-- name optional whitespace before outline tag --
+-- use outline --
+    %% a
+	%% b
+-- expect --
+alphabravo

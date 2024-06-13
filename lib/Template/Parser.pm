@@ -282,7 +282,7 @@ sub text_splitter {
           \A(.*?)             # $1 - start of line up to directive
             (?:
               (?:
-              ^$out           # outline tag at start of line
+              ^\V*$out        # outline tag at start of line (with optional whitespace)
               (.*?            # $2 - content of that line
                 (?:\n|$)      # end of that line or file
               )
