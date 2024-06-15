@@ -711,7 +711,7 @@ sub _refresh {
                 if $self->{ DEBUG };
 
             ($data, $error) = $self->_load($slot->[ NAME ], $slot->[ DATA ]->{ name });
-            ($data, $error) = $self->_compile($data)
+            ($data, $error) = $self->_compile($data, $self->_compiled_filename($slot->[ NAME ]))
                 unless $error;
 
             if ($error) {
@@ -1010,7 +1010,7 @@ sub _template_content {
         local $/;
         binmode(FH);
         $data = <FH>;
-        $mod_date = (stat($path))[9];
+        $mod_date = $self->_template_modified($path);
         close(FH);
     }
     else {
