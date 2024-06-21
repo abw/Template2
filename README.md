@@ -2,7 +2,7 @@
 
 # Template Toolkit
 
-Version 3.101, August 2022
+Version 3.102, August 2022
 
 Copyright (C) 1996-2022 Andy Wardley.  All Rights Reserved
 
@@ -37,6 +37,8 @@ other offline document systems.
 
 
 # What's New?
+
+Version 3.102 Various performance improvements. Update docs on complex keys. Remove unncessary imports for modern Perls.
 
 Version 3.101 Added meta() method to Template::Document and fixed
 incorrect line numbers when using outline tags

@@ -17,8 +17,8 @@ Available from CPAN in:
 
 To install the Template Toolkit from the command line:
 
-    $ tar zxf Template-Toolkit-3.101.tar.gz
-    $ cd Template-Toolkit-3.101
+    $ tar zxf Template-Toolkit-3.102.tar.gz
+    $ cd Template-Toolkit-3.102
     $ perl Makefile.PL
     $ make
     $ make test
@@ -74,14 +74,14 @@ where `version` represents the current version number, e.g. 3.100.
 To install the Template Toolkit, unpack the distribution archive to
 create an installation directory.  Something like this:
 
-    $ tar zxf Template-Toolkit-3.101.tar.gz
+    $ tar zxf Template-Toolkit-3.102.tar.gz
 or
-    $ gunzip Template-Toolkit-3.101.tar.gz
-    $ tar xf Template-Toolkit-3.101.tar
+    $ gunzip Template-Toolkit-3.102.tar.gz
+    $ tar xf Template-Toolkit-3.102.tar
 
 You can then 'cd' into the directory created,
 
-    $ cd Template-Toolkit-3.101
+    $ cd Template-Toolkit-3.102
 
 and perform the usual Perl installation procedure:
 
