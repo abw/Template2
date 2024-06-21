@@ -64,3 +64,4 @@
 ^templates/jscript
 ^\.travis.yml
 cpanfile
+^\.editorconfig
