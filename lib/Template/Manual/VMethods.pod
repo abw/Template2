@@ -486,6 +486,8 @@ pattern.
        ...
     [% END %]
 
+If the pattern is C<undef> or an empty string, no items are returned.
+
 =head2 sort, nsort
 
 Returns the items in alpha (C<sort>) or numerical (C<nsort>) order.

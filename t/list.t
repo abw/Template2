@@ -52,6 +52,7 @@ my $vars = {
 	      { name => 'flute', url => '/blow.html'   },
 	      { name => 'organ', url => '/tulips.html' }, ],
     nest => [ [ 3, 1, 4 ], [ 2, [ 7, 1, 8 ] ] ],
+    ids  => [qw( 2112 5150 0 90125 )],
 };
 
 my $config = {};
@@ -200,3 +201,35 @@ romeo, sierra, foxtrot
 [% data.grep('^r').join(', ') %]
 -- expect --
 romeo
+-- test --
+[% data.grep('XX').join(', ') %]
+-- expect --
+
+-- test --
+[% data.grep('').join(', ') %]
+-- expect --
+
+-- test --
+[% data.grep(undef).join(', ') %]
+-- expect --
+
+-- test --
+[% ids.grep('2').join(', ') %]
+-- expect --
+2112, 90125
+-- test --
+[% ids.grep('7').join(', ') %]
+-- expect --
+
+-- test --
+[% ids.grep('0').join(', ') %]
+-- expect --
+5150, 0, 90125
+-- test --
+[% ids.grep('').join(', ') %]
+-- expect --
+
+-- test --
+[% ids.grep(undef).join(', ') %]
+-- expect --
+

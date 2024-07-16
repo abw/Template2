@@ -542,7 +542,7 @@ sub list_reverse {
 
 sub list_grep {
     my ($list, $pattern) = @_;
-    $pattern ||= '';
+    $pattern = '' unless defined $pattern;
     return [ grep /$pattern/, @$list ];
 }
 
