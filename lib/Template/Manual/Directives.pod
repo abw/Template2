@@ -498,7 +498,7 @@ directives.
 
     [% BLOCK tabrow %]
     <tr>
-      <td>[% name %]<td>
+      <td>[% name %]</td>
       <td>[% email %]</td>
     </tr>
     [% END %]
