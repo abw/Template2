@@ -975,3 +975,16 @@ foo(bar)
 [% "foo(bar)" | uri %]
 -- expect --
 foo(bar)
+
+-- test --
+[% "I have much to say on this matter that has previously 
+    been said on more than one occasion." | truncate(27,"&hellip;") %]
+-- expect --
+I have much to say on this&hellip;
+
+-- test --
+[% "I have much to say on this matter that has previously 
+    been said on more than one occasion." | truncate(27,"&#x2026;") %]
+-- expect --
+I have much to say on this&#x2026;
+
