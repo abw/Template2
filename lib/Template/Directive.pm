@@ -574,12 +574,12 @@ sub while {
 
 # WHILE
 do {
-    my \$_tt_failsafe = $WHILE_MAX;
+    my \$_tt_failsafe = \$Template::Directive::WHILE_MAX;
 $label:
     while (($expr) && --\$_tt_failsafe >= 0) {
 $block
     }
-    die "WHILE loop terminated (> $WHILE_MAX iterations)\\n"
+    die "WHILE loop terminated (> " . \$Template::Directive::WHILE_MAX . " iterations)\\n"
         if \$_tt_failsafe < 0;
 };
 EOF
