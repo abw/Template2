@@ -4,11 +4,9 @@ bin/tt-bench.pl
 bin/tt2inst
 bin/ttree
 Changes
-HACKING
 HACKING.md
 images/tt2power.gif
 images/ttdotorg.gif
-INSTALL
 INSTALL.md
 lib/Template.pm
 lib/Template/App/ttree.pm
