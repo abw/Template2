@@ -6,8 +6,13 @@
 
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More;
 use File::Temp qw(tempdir);
+
+eval "use AppConfig";
+plan skip_all => "AppConfig not installed" if $@;
+
+plan tests => 4;
 
 use_ok('Template::App::ttree');
 
