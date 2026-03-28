@@ -4,11 +4,9 @@ bin/tt-bench.pl
 bin/tt2inst
 bin/ttree
 Changes
-HACKING
 HACKING.md
 images/tt2power.gif
 images/ttdotorg.gif
-INSTALL
 INSTALL.md
 lib/Template.pm
 lib/Template/App/ttree.pm
@@ -36,6 +34,7 @@ lib/Template/Manual/Variables.pod
 lib/Template/Manual/Views.pod
 lib/Template/Manual/VMethods.pod
 lib/Template/Modules.pod
+lib/Template/Map.pm
 lib/Template/Namespace/Constants.pm
 lib/Template/Parser.pm
 lib/Template/Plugin.pm
@@ -50,6 +49,7 @@ lib/Template/Plugin/Format.pm
 lib/Template/Plugin/HTML.pm
 lib/Template/Plugin/Image.pm
 lib/Template/Plugin/Iterator.pm
+lib/Template/Plugin/List.pm
 lib/Template/Plugin/Math.pm
 lib/Template/Plugin/Pod.pm
 lib/Template/Plugin/Procedural.pm
@@ -99,9 +99,12 @@ t/compile2.t
 t/compile3.t
 t/compile4.t
 t/compile5.t
+t/compile6.t
 t/config.t
+t/config_methods.t
 t/constants.t
 t/context.t
+t/context_methods.t
 t/datafile.t
 t/date.t
 t/date_offset.t
@@ -110,6 +113,7 @@ t/debug.t
 t/directive.t
 t/directry.t
 t/document.t
+t/document_methods.t
 t/dumper.t
 t/error.t
 t/evalperl.t
@@ -132,6 +136,7 @@ t/lib/Template/Plugin/Simple.pm
 t/list.t
 t/load_order_vmethods_stash.t
 t/macro.t
+t/map.t
 t/math.t
 t/math_rand.t
 t/meta.t
@@ -143,6 +148,7 @@ t/output.t
 t/parser.t
 t/parser2.t
 t/plugins.t
+t/plugins_preloaded.t
 t/plusfile.t
 t/pod.t
 t/prefix.t
@@ -159,6 +165,7 @@ t/skel.t
 t/stash-xs-unicode.t
 t/stash-xs.t
 t/stash.t
+t/stash_clone.t
 t/stashc.t
 t/stop.t
 t/strcat.t
@@ -229,6 +236,7 @@ t/text.t
 t/throw.t
 t/tiedhash.t
 t/trace_vars.t
+t/truncate_cer.t
 t/try.t
 t/unicode.t
 t/url.t
