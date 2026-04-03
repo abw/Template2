@@ -592,7 +592,7 @@ sub _load_compiled {
     delete $INC{ $fpath };
     eval { $compiled = require $fpath; };
     return $@
-        ? $self->error("compiled template $compiled: $@")
+        ? $self->error("compiled template $fpath: $@")
         : $compiled;
 }
 
