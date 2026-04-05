@@ -577,11 +577,10 @@ sub _load_compiled {
     # Unlike require(), do() doesn't consult or modify %INC,
     # so we avoid the previous hack of deleting %INC entries
     # to force reloads (see GH #177).
-    my $compiled;
-    eval { $compiled = do $fpath; };
-    return $@
-        ? $self->error("compiled template $fpath: $@")
-        : $compiled;
+    my $compiled = do $fpath;
+    return $self->error("compiled template $fpath: $@")
+        if $@;
+    return $compiled;
 }
 
 #------------------------------------------------------------------------
