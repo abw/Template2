@@ -220,7 +220,7 @@ sub AUTOLOAD {
     return if $item eq 'DESTROY';
 
     if ($item =~ /^(?:data|size|nrows|ncols|overlap|pad)$/) {
-        return $self->{ $item };
+        return $self->{ '_' . uc $item };
     }
     else {
         return (undef, "no such table method: $item");
