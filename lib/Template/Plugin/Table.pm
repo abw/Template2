@@ -198,7 +198,7 @@ sub rows {
 #------------------------------------------------------------------------
 # cols()
 #
-# Returns all rows as a reference to a list of rows.
+# Returns all columns as a reference to a list of columns.
 #------------------------------------------------------------------------
 
 sub cols {
